@@ -130,6 +130,10 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<2>::edge,
             pybind11::return_value_policy::reference_internal)
+        .def("translate", &Triangulation<2>::translate<0>,
+            pybind11::return_value_policy::reference_internal)
+        .def("translate", &Triangulation<2>::translate<1>,
+            pybind11::return_value_policy::reference_internal)
         .def("pairing", &Triangulation<2>::pairing)
         .def("isIsomorphicTo", &Triangulation<2>::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<2>::findAllIsomorphisms<

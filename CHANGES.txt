@@ -142,6 +142,7 @@ Version 7.1  [ TODO ]
             - New suite of routines dualToPrimal().
             - New routine pairing().
             - New routines for tight encodings and decodings.
+            - New routine translate().
             - The join() routine now checks all its preconditions, and
               throws an exception if any precondition fails.
         Class Triangulation<3>:

@@ -47,25 +47,20 @@ using regina::Triangulation;
 
 namespace {
     template <int dim, int k = dim>
-    struct add_pachner {
+    struct add_subdims {
         template <typename Class>
         static void add(Class& c) {
+            if constexpr (k < dim) {
+                c.def("translate", &Triangulation<dim>::template translate<k>,
+                    pybind11::return_value_policy::reference_internal);
+            }
             c.def("pachner", &Triangulation<dim>::template pachner<k>,
                 pybind11::arg(),
                 pybind11::arg("check") = true,
                 pybind11::arg("perform") = true);
-            add_pachner<dim, k - 1>::add(c);
-        }
-    };
 
-    template <int dim>
-    struct add_pachner<dim, 0> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("pachner", &Triangulation<dim>::template pachner<0>,
-                pybind11::arg(),
-                pybind11::arg("check") = true,
-                pybind11::arg("perform") = true);
+            if constexpr (k > 0)
+                add_subdims<dim, k - 1>::add(c);
         }
     };
 }
@@ -233,7 +228,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("dumpConstruction", &Triangulation<dim>::dumpConstruction)
         .def_readonly_static("dimension", &Triangulation<dim>::dimension)
     ;
-    add_pachner<dim>::add(c);
+    add_subdims<dim>::add(c);
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c);

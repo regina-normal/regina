@@ -145,6 +145,14 @@ void addTriangulation4(pybind11::module_& m) {
         .def("tetrahedron", (regina::Face<4, 3>* (Triangulation<4>::*)(size_t))(
             &Triangulation<4>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
+        .def("translate", &Triangulation<4>::translate<0>,
+            pybind11::return_value_policy::reference_internal)
+        .def("translate", &Triangulation<4>::translate<1>,
+            pybind11::return_value_policy::reference_internal)
+        .def("translate", &Triangulation<4>::translate<2>,
+            pybind11::return_value_policy::reference_internal)
+        .def("translate", &Triangulation<4>::translate<3>,
+            pybind11::return_value_policy::reference_internal)
         .def("pairing", &Triangulation<4>::pairing)
         .def("isIsomorphicTo", &Triangulation<4>::isIsomorphicTo)
         .def("makeCanonical", &Triangulation<4>::makeCanonical)

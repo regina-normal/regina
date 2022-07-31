@@ -994,6 +994,39 @@ class TriangulationBase :
         auto pentachoron(size_t index) const;
 
         /**
+         * Translates a face of some other triangulation into the corresponding
+         * face of this triangulation, using simplex numbers for the
+         * translation.
+         *
+         * Typically this routine would be used when the given face comes
+         * from a triangulation that is combinatorially identical to this,
+         * and you wish to obtain the corresponding face of this triangulation.
+         *
+         * Specifically: if \a other refers to face \a i of top-dimensional
+         * simplex number \a k of some other triangulation, then this routine
+         * will return face \a i of top-dimensional simplex number \a k of this
+         * triangulation.  Note that this routine does \e not use the face
+         * indices within each triangulation (which is outside the user's
+         * control), but rather the simplex numbering (which the user has
+         * full control over).
+         *
+         * This routine behaves correctly even if \a other is a null pointer.
+         *
+         * \pre This triangulation contains at least as many top-dimensional
+         * simplices as the triangulation containing \a other (though, as noted
+         * above, in typical scenarios both triangulations would actually be
+         * combinatorially identical).
+         *
+         * \tparam subdim the face dimension; this must be between 0 and
+         * <i>dim</i>-1 inclusive.
+         *
+         * @param other the face to translate.
+         * @return the corresponding face of this triangulation.
+         */
+        template <int subdim>
+        Face<dim, subdim>* translate(const Face<dim, subdim>* other) const;
+
+        /**
          * Returns the dual graph of this triangulation, expressed as a
          * facet pairing.
          *
@@ -3751,6 +3784,18 @@ inline auto TriangulationBase<dim>::pentachoron(size_t index) const {
         ensureSkeleton();
         return std::get<4>(faces_)[index];
     }
+}
+
+template <int dim>
+template <int subdim>
+inline Face<dim, subdim>* TriangulationBase<dim>::translate(
+        const Face<dim, subdim>* other) const {
+    if (other) {
+        const auto& emb = other->front();
+        return simplices_[emb.simplex()->index()]->template face<subdim>(
+            emb.face());
+    } else
+        return nullptr;
 }
 
 template <int dim>
