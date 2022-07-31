@@ -5615,19 +5615,12 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            const auto& mEmb = m->front();
-            const auto& o1Emb = other1->front();
-            const auto& o2Emb = other2->front();
-
             // To test the meridian, we use the fact that filling along
             // the meridian produces the 3-sphere.
             {
                 Triangulation<3> tmp(t);
-                tmp.fillTorus(
-                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
-                    tmp.simplex(o1Emb.simplex()->index())->edge(o1Emb.edge()),
-                    tmp.simplex(o2Emb.simplex()->index())->edge(o2Emb.edge()),
-                    0, 1, 1);
+                tmp.fillTorus(tmp.translate(m), tmp.translate(other1),
+                    tmp.translate(other2), 0, 1, 1);
                 if (! tmp.isSphere()) {
                     std::ostringstream msg;
                     msg << name << ": filling along meridian "
@@ -5692,10 +5685,6 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            const auto& mEmb = m->front();
-            const auto& lEmb = l->front();
-            const auto& oEmb = other->front();
-
             // If we fill along the curve p*meridian + q*longitude,
             // we should be left with homology Z_p.
             //
@@ -5704,9 +5693,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             {
                 Triangulation<3> tmp(t);
                 tmp.fillTorus(
-                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
-                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
-                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    tmp.translate(m), tmp.translate(l), tmp.translate(other),
                     1, 0, 1);
                 if (! tmp.homology().isZ()) {
                     std::ostringstream msg;
@@ -5718,9 +5705,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             {
                 Triangulation<3> tmp(t);
                 tmp.fillTorus(
-                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
-                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
-                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    tmp.translate(m), tmp.translate(l), tmp.translate(other),
                     2, 3, 5);
                 if (! tmp.homology().isZn(3)) {
                     std::ostringstream msg;
@@ -5733,9 +5718,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             {
                 Triangulation<3> tmp(t);
                 tmp.fillTorus(
-                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
-                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
-                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    tmp.translate(m), tmp.translate(l), tmp.translate(other),
                     2, 3, 1);
                 if (! tmp.homology().isZn(3)) {
                     std::ostringstream msg;
@@ -5751,9 +5734,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             {
                 Triangulation<3> tmp(t);
                 tmp.fillTorus(
-                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
-                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
-                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    tmp.translate(m), tmp.translate(l), tmp.translate(other),
                     0, 1, 1);
                 if (! tmp.isSphere()) {
                     std::ostringstream msg;
