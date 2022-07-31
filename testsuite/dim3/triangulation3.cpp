@@ -5638,7 +5638,18 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void meridian() {
-            verifyMeridian(lst3_4_7, "LST(3,4,7)");
+            verifyMeridian(Example<3>::lst(0,1), "LST(0,1,1)");
+            verifyMeridian(Example<3>::lst(1,1), "LST(1,1,2)");
+            verifyMeridian(Example<3>::lst(1,2), "LST(1,2,3)");
+            verifyMeridian(Example<3>::lst(1,3), "LST(1,3,4)");
+            verifyMeridian(Example<3>::lst(1,4), "LST(1,4,5)");
+            verifyMeridian(Example<3>::lst(2,3), "LST(2,3,5)");
+            verifyMeridian(Example<3>::lst(2,5), "LST(2,5,7)");
+            verifyMeridian(Example<3>::lst(3,4), "LST(3,4,7)");
+            verifyMeridian(Example<3>::lst(3,5), "LST(3,5,8)");
+            verifyMeridian(Example<3>::lst(4,5), "LST(4,5,9)");
+            verifyMeridian(Example<3>::lst(4,7), "LST(4,7,11)");
+
             verifyMeridian(figure8, "Figure eight");
             verifyMeridian(trefoil, "Trefoil");
             verifyMeridian(knot18, "18-crossing knot");
@@ -5754,7 +5765,18 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void meridianLongitude() {
-            verifyMeridianLongitude(lst3_4_7, "LST(3,4,7)");
+            verifyMeridianLongitude(Example<3>::lst(0,1), "LST(0,1,1)");
+            verifyMeridianLongitude(Example<3>::lst(1,1), "LST(1,1,2)");
+            verifyMeridianLongitude(Example<3>::lst(1,2), "LST(1,2,3)");
+            verifyMeridianLongitude(Example<3>::lst(1,3), "LST(1,3,4)");
+            verifyMeridianLongitude(Example<3>::lst(1,4), "LST(1,4,5)");
+            verifyMeridianLongitude(Example<3>::lst(2,3), "LST(2,3,5)");
+            verifyMeridianLongitude(Example<3>::lst(2,5), "LST(2,5,7)");
+            verifyMeridianLongitude(Example<3>::lst(3,4), "LST(3,4,7)");
+            verifyMeridianLongitude(Example<3>::lst(3,5), "LST(3,5,8)");
+            verifyMeridianLongitude(Example<3>::lst(4,5), "LST(4,5,9)");
+            verifyMeridianLongitude(Example<3>::lst(4,7), "LST(4,7,11)");
+
             verifyMeridianLongitude(figure8, "Figure eight");
             verifyMeridianLongitude(trefoil, "Trefoil");
             verifyMeridianLongitude(knot18, "18-crossing knot");
