@@ -123,6 +123,7 @@ void addNormalSurface(pybind11::module_& m) {
             s.writeXMLData(std::cout, f, list);
         })
         .def("isEmpty", &NormalSurface::isEmpty)
+        .def("hasMultipleOctDiscs", &NormalSurface::hasMultipleOctDiscs)
         .def("isCompact", &NormalSurface::isCompact)
         .def("eulerChar", &NormalSurface::eulerChar)
         .def("isOrientable", &NormalSurface::isOrientable)
