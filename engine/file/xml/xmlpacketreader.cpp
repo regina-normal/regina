@@ -334,7 +334,7 @@ void XMLPacketReader::commit() {
             if (! id_.empty())
                 resolver_.storeID(id_, packet_);
             if ((! anon_) && parent_ && ! packet_->parent())
-                parent_->insertChildLast(packet_);
+                parent_->append(packet_);
         }
     }
 }

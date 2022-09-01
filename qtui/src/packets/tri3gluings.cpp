@@ -991,7 +991,7 @@ void Tri3GluingsUI::drillEdge() {
             }
             if (ans) {
                 ans->setLabel(tri->adornedLabel("Drilled"));
-                tri->insertChildLast(ans);
+                tri->append(ans);
                 enclosingPane->getMainWindow()->packetView(*ans, true, true);
             }
         }
@@ -1036,7 +1036,7 @@ void Tri3GluingsUI::boundaryComponents() {
                 chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
@@ -1066,7 +1066,7 @@ void Tri3GluingsUI::vertexLinks() {
                 chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
@@ -1089,7 +1089,7 @@ void Tri3GluingsUI::splitIntoComponents() {
         std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
             base = std::make_shared<regina::Container>();
-            tri->insertChildLast(base);
+            tri->append(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
             base = tri->shared_from_this();
@@ -1099,8 +1099,7 @@ void Tri3GluingsUI::splitIntoComponents() {
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::make_packet(std::move(c),
-                label.str()));
+            base->append(regina::make_packet(std::move(c), label.str()));
         }
 
         // Make sure the new components are visible.
@@ -1161,7 +1160,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             std::shared_ptr<Packet> base;
             if (tri->firstChild()) {
                 base = std::make_shared<regina::Container>();
-                tri->insertChildLast(base);
+                tri->append(base);
                 base->setLabel(tri->adornedLabel("Summands"));
             } else
                 base = tri->shared_from_this();
@@ -1170,8 +1169,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             for (auto& s : ans) {
                 std::ostringstream label;
                 label << "Summand #" << ++which;
-                base->insertChildLast(regina::make_packet(std::move(s),
-                    label.str()));
+                base->append(regina::make_packet(std::move(s), label.str()));
             }
 
             // Make sure the new summands are visible.
@@ -1279,11 +1277,10 @@ void Tri3GluingsUI::makeZeroEfficient() {
         for (auto& s : summands) {
             std::ostringstream label;
             label << "Summand #" << ++which;
-            decomp->insertChildLast(regina::make_packet(std::move(s),
-                label.str()));
+            decomp->append(regina::make_packet(std::move(s), label.str()));
         }
 
-        tri->insertChildLast(decomp);
+        tri->append(decomp);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
             *decomp->lastChild());
 
@@ -1415,7 +1412,7 @@ void Tri3GluingsUI::toSnapPea() {
             "(shortest, second shortest) basis on each cusp.</qt>"));
 
     ans->setLabel(tri->label());
-    tri->insertChildLast(ans);
+    tri->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 

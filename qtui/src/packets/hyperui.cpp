@@ -204,7 +204,7 @@ void HyperHeaderUI::viewTriangulation() {
         auto copy = regina::make_packet<regina::Triangulation<4>>(
             std::in_place, tri);
         copy->setLabel(surfaces->adornedLabel("Triangulation"));
-        surfaces->insertChildLast(copy);
+        surfaces->append(copy);
 
         enclosingPane->getMainWindow()->packetView(*copy, true, true);
     } else {

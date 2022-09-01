@@ -222,7 +222,7 @@ void Tri3SnapPeaUI::toSnapPea() {
             "(shortest, second shortest) basis on each cusp.</qt>"));
 
     ans->setLabel(reginaTri->label());
-    reginaTri->insertChildLast(ans);
+    reginaTri->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 

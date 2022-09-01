@@ -203,7 +203,7 @@ void SurfacesHeaderUI::viewTriangulation() {
         auto copy = regina::make_packet<regina::Triangulation<3>>(
             std::in_place, tri);
         copy->setLabel(surfaces->adornedLabel("Triangulation"));
-        surfaces->insertChildLast(copy);
+        surfaces->append(copy);
 
         enclosingPane->getMainWindow()->packetView(*copy, true, true);
     } else {

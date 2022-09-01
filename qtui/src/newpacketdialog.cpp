@@ -131,7 +131,7 @@ void NewPacketDialog::slotOk() {
     if (newPacket->label().empty())
         newPacket->setLabel(newPacket->typeName());
     if (! newPacket->parent())
-        parentPacket->insertChildLast(newPacket);
+        parentPacket->append(newPacket);
 
     accept();
 }

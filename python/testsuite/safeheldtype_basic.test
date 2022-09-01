@@ -43,7 +43,7 @@ print("Deleting parent:")
 c  = Container()
 c1 = Container()
 
-c.insertChildFirst(c1)
+c.prepend(c1)
 
 c = None
 
@@ -53,10 +53,10 @@ except RuntimeError:
     print("Got exception")
 
 print("Deleting matriarch:")
-    
+
 c  = Container()
-c.insertChildFirst(Container())
-c.firstChild().insertChildFirst(Container())
+c.prepend(Container())
+c.firstChild().prepend(Container())
 
 c1 = c.firstChild()
 c2 = c.firstChild().firstChild()
@@ -79,8 +79,8 @@ c = Container()
 c1 = Container()
 c2 = Container()
 
-c.insertChildFirst(c1)
-c1.insertChildFirst(c2)
+c.prepend(c1)
+c1.prepend(c2)
 
 print(c)
 print(c1)

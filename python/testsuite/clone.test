@@ -40,8 +40,8 @@ root = Container()
 
 tri = PacketOfTriangulation3(Example3.poincare())
 list = PacketOfNormalSurfaces(tri, NS_STANDARD)
-tri.insertChildLast(list)
-root.insertChildLast(tri)
+tri.append(list)
+root.append(tri)
 
 tri2 = tri.cloneAsSibling(True)
 list2 = tri2.firstChild()
@@ -61,8 +61,8 @@ print(not tri2.samePacket(s2.triangulation().packet()))
 
 tri = PacketOfTriangulation4(Example4.s3xs1())
 list = PacketOfNormalHypersurfaces(tri, HS_STANDARD)
-tri.insertChildLast(list)
-root.insertChildLast(tri)
+tri.append(list)
+root.append(tri)
 
 tri2 = tri.cloneAsSibling(True)
 list2 = tri2.firstChild()
@@ -82,8 +82,8 @@ print(not tri2.samePacket(s2.triangulation().packet()))
 
 tri = PacketOfTriangulation3(Example3.whiteheadLink())
 list = PacketOfAngleStructures(tri)
-tri.insertChildLast(list)
-root.insertChildLast(tri)
+tri.append(list)
+root.append(tri)
 
 tri2 = tri.cloneAsSibling(True)
 list2 = tri2.firstChild()

@@ -127,7 +127,7 @@ std::shared_ptr<Packet> Packet::root() const {
         return const_cast<Packet*>(this)->shared_from_this();
 }
 
-void Packet::insertChildFirst(std::shared_ptr<Packet> child) {
+void Packet::prepend(std::shared_ptr<Packet> child) {
     fireEvent(&PacketListener::childToBeAdded, *child);
 
     child->treeParent_ = weak_from_this();
@@ -143,7 +143,7 @@ void Packet::insertChildFirst(std::shared_ptr<Packet> child) {
     fireEvent(&PacketListener::childWasAdded, *firstTreeChild_);
 }
 
-void Packet::insertChildLast(std::shared_ptr<Packet> child) {
+void Packet::append(std::shared_ptr<Packet> child) {
     fireEvent(&PacketListener::childToBeAdded, *child);
 
     child->treeParent_ = weak_from_this();
@@ -159,10 +159,10 @@ void Packet::insertChildLast(std::shared_ptr<Packet> child) {
     fireEvent(&PacketListener::childWasAdded, *lastTreeChild_);
 }
 
-void Packet::insertChildAfter(std::shared_ptr<Packet> newChild,
+void Packet::insert(std::shared_ptr<Packet> newChild,
         std::shared_ptr<Packet> prevChild) {
     if (! prevChild) {
-        insertChildFirst(newChild);
+        prepend(newChild);
         return;
     }
 
@@ -226,9 +226,9 @@ void Packet::reparent(const std::shared_ptr<Packet>& newParent, bool first) {
         makeOrphan();
 
     if (first)
-        newParent->insertChildFirst(me);
+        newParent->prepend(me);
     else
-        newParent->insertChildLast(me);
+        newParent->append(me);
 }
 
 void Packet::transferChildren(const std::shared_ptr<Packet>& newParent) {
@@ -607,10 +607,9 @@ std::shared_ptr<Packet> Packet::cloneAsSibling(bool cloneDescendants,
     auto ans = internalClonePacket();
     ans->setLabel(adornedLabel("Clone"));
     if (end)
-        parent->insertChildLast(ans);
+        parent->append(ans);
     else
-        parent->insertChildAfter(ans,
-            const_cast<Packet*>(this)->shared_from_this());
+        parent->insert(ans, const_cast<Packet*>(this)->shared_from_this());
     if (cloneDescendants)
         internalCloneDescendants(*ans);
     return ans;
@@ -650,7 +649,7 @@ void Packet::internalCloneDescendants(Packet& parent) const {
     for (auto child = firstTreeChild_; child; child = child->nextTreeSibling_) {
         auto clone = child->internalClonePacket();
         clone->setLabel(child->label_);
-        parent.insertChildLast(clone);
+        parent.append(clone);
         child->internalCloneDescendants(*clone);
     }
 }

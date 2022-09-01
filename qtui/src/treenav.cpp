@@ -53,7 +53,7 @@ void ReginaMain::moveShallow() {
     }
 
     packet->makeOrphan();
-    grandparent->insertChildAfter(packet, parent);
+    grandparent->insert(packet, parent);
 
     treeView->selectPacket(packet, true);
 }
@@ -79,9 +79,9 @@ void ReginaMain::moveDeep() {
 
     packet->makeOrphan();
     if (down)
-        newParent->insertChildFirst(packet);
+        newParent->prepend(packet);
     else
-        newParent->insertChildLast(packet);
+        newParent->append(packet);
 
     treeView->selectPacket(packet, true);
 }

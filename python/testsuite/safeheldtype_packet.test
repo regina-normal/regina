@@ -56,7 +56,7 @@ p = Attachment()
 t = Text()
 
 c = Container()
-c.insertChildFirst(t1)
+c.prepend(t1)
 
 print(c.countChildren())
 
@@ -93,9 +93,9 @@ print("-----------------------------------------------------------")
 print("Nested tests:")
 print()
 
-t2.insertChildFirst(t3)
-t2.insertChildFirst(p)
-p.insertChildLast(t)
+t2.prepend(t3)
+t2.prepend(p)
+p.append(t)
 t.setText("Hello World")
 
 print(t.text())
@@ -106,7 +106,7 @@ l = p.firstChild()
 
 print(l.text())
 
-t2.insertChildAfter(Text("New"), t3)
+t2.insert(Text("New"), t3)
 
 print(t2.countChildren())
 print(t2.countDescendants())
@@ -157,8 +157,8 @@ d3 = Triangulation3(); d3.newTetrahedra(3)
 p1 = PacketOfTriangulation3(d1)
 p2 = PacketOfTriangulation3(d2)
 p3 = PacketOfTriangulation3(d3)
-p1.insertChildLast(p2)
-p2.insertChildLast(p3)
+p1.append(p2)
+p2.append(p3)
 
 print(p1)
 print(p2)

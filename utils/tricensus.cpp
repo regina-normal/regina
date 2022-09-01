@@ -243,9 +243,9 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         auto packet = regina::make_packet(std::move(tri), out.str());
         if (threads > 1) {
             std::unique_lock<std::mutex> lock(outputMutex);
-            container->insertChildLast(packet);
+            container->append(packet);
         } else {
-            container->insertChildLast(packet);
+            container->append(packet);
         }
     }
     ++nSolns;
@@ -287,7 +287,7 @@ void foundFacePairing(const regina::FacetPairing<dim>& pairing,
     if (subContainers) {
         auto subContainer = std::make_shared<regina::Container>();
         subContainer->setLabel(pairing.str());
-        container->insertChildLast(subContainer);
+        container->append(subContainer);
 
         findAllPerms<dim>(pairing, std::move(autos),
             ! orientability.hasFalse(), ! finiteness.hasFalse(),
@@ -742,8 +742,8 @@ int runCensus() {
         census = std::make_shared<regina::Container>();
         census->setLabel("Triangulations");
 
-        parent->insertChildLast(desc);
-        parent->insertChildLast(census);
+        parent->append(desc);
+        parent->append(census);
     }
 
     // Start the census running.
@@ -809,7 +809,7 @@ int runCensus() {
             pairingPacket->setLabel(
                 dim4 ? "Facet Pairings" : dim2 ? "Edge Pairings" :
                 "Face Pairings");
-            parent->insertChildAfter(pairingPacket, desc);
+            parent->insert(pairingPacket, desc);
         }
     } else {
         // An ordinary all-face-pairings census.

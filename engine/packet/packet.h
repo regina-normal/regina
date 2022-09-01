@@ -681,6 +681,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * every parent packet stores (either directly or indirectly) a
          * shared_ptr to every one of its descendants in the packet tree.
          *
+         * In Regina 7.0 and earlier, this routine was called
+         * insertChildFirst().
+         *
          * This routine takes small constant time.
          *
          * \pre The given child has no parent packet.
@@ -688,7 +691,21 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * @param child the child to insert.
          */
-        void insertChildFirst(std::shared_ptr<Packet> child);
+        void prepend(std::shared_ptr<Packet> child);
+
+        /**
+         * Deprecated routine that inserts the given packet as the
+         * first child of this packet.
+         *
+         * \deprecated This routine has been renamed to prepend().
+         * See prepend() for further details.
+         *
+         * \pre The given child has no parent packet.
+         * \pre This packet is not a descendant of the given child.
+         *
+         * @param child the child to insert.
+         */
+        [[deprecated]] void insertChildFirst(std::shared_ptr<Packet> child);
 
         /**
          * Inserts the given packet as the last child of this packet.
@@ -697,6 +714,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * every parent packet stores (either directly or indirectly) a
          * shared_ptr to every one of its descendants in the packet tree.
          *
+         * In Regina 7.0 and earlier, this routine was called insertChildLast().
+         *
          * This routine takes small constant time.
          *
          * \pre The given child has no parent packet.
@@ -704,7 +723,21 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * @param child the child to insert.
          */
-        void insertChildLast(std::shared_ptr<Packet> child);
+        void append(std::shared_ptr<Packet> child);
+
+        /**
+         * Deprecated routine that inserts the given packet as the
+         * last child of this packet.
+         *
+         * \deprecated This routine has been renamed to append().
+         * See append() for further details.
+         *
+         * \pre The given child has no parent packet.
+         * \pre This packet is not a descendant of the given child.
+         *
+         * @param child the child to insert.
+         */
+        [[deprecated]] void insertChildLast(std::shared_ptr<Packet> child);
 
         /**
          * Inserts the given packet as a child of this packet at the
@@ -713,6 +746,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This packet will take ownership of \a child, in the sense that
          * every parent packet stores (either directly or indirectly) a
          * shared_ptr to every one of its descendants in the packet tree.
+         *
+         * In Regina 7.0 and earlier, this routine was called
+         * insertChildAfter().
          *
          * This routine takes small constant time.
          *
@@ -725,7 +761,26 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * which \a newChild will be inserted, or \c null if \a newChild
          * is to be the first child of this packet.
          */
-        void insertChildAfter(std::shared_ptr<Packet> newChild,
+        void insert(std::shared_ptr<Packet> newChild,
+            std::shared_ptr<Packet> prevChild);
+
+        /**
+         * Deprecated routine that inserts the given packet as a child of
+         * this packet at the given location in this packet's child list.
+         *
+         * \deprecated This routine has been renamed to insert().
+         * See insert() for further details.
+         *
+         * \pre Parameter \a newChild has no parent packet.
+         * \pre This packet is already the parent of \a prevChild.
+         * \pre This packet is not a descendant of \a newChild.
+         *
+         * @param newChild the child to insert.
+         * @param prevChild the preexisting child of this packet after
+         * which \a newChild will be inserted, or \c null if \a newChild
+         * is to be the first child of this packet.
+         */
+        [[deprecated]] void insertChildAfter(std::shared_ptr<Packet> newChild,
             std::shared_ptr<Packet> prevChild);
 
         /**
@@ -758,7 +813,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * and inserts it as a child of the given packet instead.
          *
          * This routine is essentially a combination of makeOrphan()
-         * followed by either insertChildFirst() or insertChildLast().
+         * followed by either prepend() or append().
          *
          * Even if you are not holding a shared_ptr to this packet yourself,
          * this routine is still safe to use: it will maintain a shared_ptr
@@ -3888,6 +3943,19 @@ inline PacketData<Held>::ChangeEventSpan::~ChangeEventSpan() {
         if (! p.changeEventSpans_)
             p.fireEvent(&PacketListener::packetWasChanged);
     }
+}
+
+inline void Packet::insertChildFirst(std::shared_ptr<Packet> child) {
+    prepend(std::move(child));
+}
+
+inline void Packet::insertChildLast(std::shared_ptr<Packet> child) {
+    append(std::move(child));
+}
+
+inline void Packet::insertChildAfter(std::shared_ptr<Packet> newChild,
+        std::shared_ptr<Packet> prevChild) {
+    insert(std::move(newChild), std::move(prevChild));
 }
 
 inline SubtreeIterator<false> Packet::begin() {

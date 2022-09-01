@@ -326,7 +326,7 @@ void AngleStructureUI::viewTriangulation() {
         auto copy = regina::make_packet<regina::Triangulation<3>>(
             std::in_place, tri);
         copy->setLabel(structures_->adornedLabel("Triangulation"));
-        structures_->insertChildLast(copy);
+        structures_->append(copy);
 
         enclosingPane->getMainWindow()->packetView(*copy, true, true);
     } else {

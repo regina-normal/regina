@@ -132,8 +132,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         }
 
         if (treeParent && ! (tracker && tracker->isCancelled()))
-            treeParent->insertChildLast(
-                static_cast<PacketOf<AngleStructures>*>(this)->
+            treeParent->append(static_cast<PacketOf<AngleStructures>*>(this)->
                 shared_from_this());
 
         if (tracker)
@@ -161,8 +160,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
 
         // All done!
         if (treeParent && ! (tracker && tracker->isCancelled()))
-            treeParent->insertChildLast(
-                static_cast<PacketOf<AngleStructures>*>(this)->
+            treeParent->append(static_cast<PacketOf<AngleStructures>*>(this)->
                 shared_from_this());
 
         if (tracker)

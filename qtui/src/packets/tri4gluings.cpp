@@ -805,7 +805,7 @@ void Tri4GluingsUI::boundaryComponents() {
                 std::in_place, chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
@@ -835,7 +835,7 @@ void Tri4GluingsUI::vertexLinks() {
                 chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
-            tri->insertChildLast(ans);
+            tri->append(ans);
             enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
@@ -858,7 +858,7 @@ void Tri4GluingsUI::splitIntoComponents() {
         std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
             base = std::make_shared<regina::Container>();
-            tri->insertChildLast(base);
+            tri->append(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
             base = tri->shared_from_this();
@@ -868,8 +868,7 @@ void Tri4GluingsUI::splitIntoComponents() {
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::make_packet(std::move(c),
-                label.str()));
+            base->append(regina::make_packet(std::move(c), label.str()));
         }
 
         // Make sure the new components are visible.

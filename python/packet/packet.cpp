@@ -115,9 +115,12 @@ void addPacket(pybind11::module_& m) {
         .def("countChildren", &Packet::countChildren)
         .def("countDescendants", &Packet::countDescendants)
         .def("totalTreeSize", &Packet::totalTreeSize)
-        .def("insertChildFirst", &Packet::insertChildFirst)
-        .def("insertChildLast", &Packet::insertChildLast)
-        .def("insertChildAfter", &Packet::insertChildAfter)
+        .def("prepend", &Packet::prepend)
+        .def("insertChildFirst", &Packet::prepend) // deprecated
+        .def("append", &Packet::append)
+        .def("insertChildLast", &Packet::append) // deprecated
+        .def("insert", &Packet::insert)
+        .def("insertChildAfter", &Packet::insert) // deprecated
         .def("makeOrphan", &Packet::makeOrphan)
         .def("reparent", &Packet::reparent,
             pybind11::arg(), pybind11::arg("first") = false)

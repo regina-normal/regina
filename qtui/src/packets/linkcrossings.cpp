@@ -724,7 +724,7 @@ void LinkCrossingsUI::moves() {
 void LinkCrossingsUI::complement() {
     auto ans = make_packet(link->complement(),
         link->adornedLabel("Complement"));
-    link->insertChildLast(ans);
+    link->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 
@@ -738,7 +738,7 @@ void LinkCrossingsUI::snapPea() {
     auto ans = regina::make_packet<regina::SnapPeaTriangulation>(
         std::in_place, *link);
     ans->setLabel(link->adornedLabel("Complement"));
-    link->insertChildLast(ans);
+    link->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 

@@ -125,8 +125,7 @@ void NormalSurfaces::Enumerator::enumerate() {
 
     // Insert the results into the packet tree, but only once they are ready.
     if (treeParent_ && ! (tracker_ && tracker_->isCancelled()))
-        treeParent_->insertChildLast(
-            static_cast<PacketOf<NormalSurfaces>*>(list_)->
+        treeParent_->append(static_cast<PacketOf<NormalSurfaces>*>(list_)->
             shared_from_this());
 
     if (tracker_)

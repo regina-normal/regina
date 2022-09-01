@@ -323,7 +323,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
     // If the root packet is not a container, create a new fake root above it.
     if (data->type() != regina::PACKET_CONTAINER) {
         auto newRoot = std::make_shared<regina::Container>();
-        newRoot->insertChildLast(data);
+        newRoot->append(data);
         data = newRoot;
 
         // We will assume the user knows what (s)he is doing here, and so
