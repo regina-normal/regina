@@ -122,7 +122,9 @@ Version 7.1  [ TODO ]
         Class Packet:
             - Renamed insertChildFirst(), insertChildLast() and
               insertChildAfter() to prepend(), append() and insert().
-              The old names have been kept as deprecated aliases.
+              Also, some (but not all) of the preconditions for these functions
+              are now explicitly tested, with exceptions thrown if they fail.
+              The old function names have been kept as deprecated aliases.
         Class Perm<n>:
             - New routines for tight encodings and decodings.
         Type safe_tuple_element<...>:

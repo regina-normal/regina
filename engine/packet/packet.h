@@ -689,6 +689,11 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre The given child has no parent packet.
          * \pre This packet is not a descendant of the given child.
          *
+         * \exception InvalidArgument The argument \a child already has a
+         * parent packet.  Note that, although this tests \e one of our
+         * preconditions, there are other preconditions that are \e not
+         * tested, and for which no exceptions are thrown.
+         *
          * @param child the child to insert.
          */
         void prepend(std::shared_ptr<Packet> child);
@@ -702,6 +707,11 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given child has no parent packet.
          * \pre This packet is not a descendant of the given child.
+         *
+         * \exception InvalidArgument The argument \a child already has a
+         * parent packet.  Note that, although this tests \e one of our
+         * preconditions, there are other preconditions that are \e not
+         * tested, and for which no exceptions are thrown.
          *
          * @param child the child to insert.
          */
@@ -721,6 +731,11 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre The given child has no parent packet.
          * \pre This packet is not a descendant of the given child.
          *
+         * \exception InvalidArgument The argument \a child already has a
+         * parent packet.  Note that, although this tests \e one of our
+         * preconditions, there are other preconditions that are \e not
+         * tested, and for which no exceptions are thrown.
+         *
          * @param child the child to insert.
          */
         void append(std::shared_ptr<Packet> child);
@@ -734,6 +749,11 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given child has no parent packet.
          * \pre This packet is not a descendant of the given child.
+         *
+         * \exception InvalidArgument The argument \a child already has a
+         * parent packet.  Note that, although this tests \e one of our
+         * preconditions, there are other preconditions that are \e not
+         * tested, and for which no exceptions are thrown.
          *
          * @param child the child to insert.
          */
@@ -756,6 +776,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre This packet is already the parent of \a prevChild.
          * \pre This packet is not a descendant of \a newChild.
          *
+         * \exception InvalidArgument The argument \a newChild already has a
+         * parent packet, and/or the argument \a prevChild is non-null and
+         * does not have this packet as its parent.  Note that, although this
+         * tests \e some of our preconditions, there are other preconditions
+         * that are \e not tested, and for which no exceptions are thrown.
+         *
          * @param newChild the child to insert.
          * @param prevChild the preexisting child of this packet after
          * which \a newChild will be inserted, or \c null if \a newChild
@@ -774,6 +800,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre Parameter \a newChild has no parent packet.
          * \pre This packet is already the parent of \a prevChild.
          * \pre This packet is not a descendant of \a newChild.
+         *
+         * \exception InvalidArgument The argument \a newChild already has a
+         * parent packet, and/or the argument \a prevChild is non-null and
+         * does not have this packet as its parent.  Note that, although this
+         * tests \e some of our preconditions, there are other preconditions
+         * that are \e not tested, and for which no exceptions are thrown.
          *
          * @param newChild the child to insert.
          * @param prevChild the preexisting child of this packet after

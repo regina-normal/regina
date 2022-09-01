@@ -128,6 +128,10 @@ std::shared_ptr<Packet> Packet::root() const {
 }
 
 void Packet::prepend(std::shared_ptr<Packet> child) {
+    if (child->hasParent())
+        throw InvalidArgument("The new child packet being prepended "
+            "already has a parent packet");
+
     fireEvent(&PacketListener::childToBeAdded, *child);
 
     child->treeParent_ = weak_from_this();
@@ -144,6 +148,10 @@ void Packet::prepend(std::shared_ptr<Packet> child) {
 }
 
 void Packet::append(std::shared_ptr<Packet> child) {
+    if (child->hasParent())
+        throw InvalidArgument("The new child packet being appended "
+            "already has a parent packet");
+
     fireEvent(&PacketListener::childToBeAdded, *child);
 
     child->treeParent_ = weak_from_this();
@@ -165,6 +173,13 @@ void Packet::insert(std::shared_ptr<Packet> newChild,
         prepend(newChild);
         return;
     }
+
+    if (newChild->hasParent())
+        throw InvalidArgument("The new child packet being inserted "
+            "already has a parent packet");
+    if (prevChild->treeParent_.lock().get() != this)
+        throw InvalidArgument("The insertion location is neither null "
+            "nor a child of this parent packet");
 
     fireEvent(&PacketListener::childToBeAdded, *newChild);
 
