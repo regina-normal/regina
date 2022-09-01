@@ -45,6 +45,9 @@ void addScript(pybind11::module_& m) {
         .def("swap", &Script::swap)
         .def("text", &Script::text)
         .def("setText", &Script::setText)
+        // We define Packet::append() again, since otherwise this is
+        // hidden by the binding for Script::append().
+        .def("append", &regina::Packet::append)
         .def("append", &Script::append)
         .def("countVariables", &Script::countVariables)
         .def("variableName", &Script::variableName)
