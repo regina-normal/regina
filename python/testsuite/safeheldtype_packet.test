@@ -61,7 +61,8 @@ c.prepend(t1)
 print(c.countChildren())
 
 print(t1.isoSig())
-t1.newTetrahedron()
+dummy = t1.newTetrahedron()
+dummy = None
 
 print(c.firstChild())
 print(c.firstChild().isoSig())
@@ -72,7 +73,8 @@ print(c.firstChild().isoSig())
 
 temp = c.lastChild()
 
-temp.newTetrahedron()
+dummy = temp.newTetrahedron()
+dummy = None
 
 print(temp.isoSig())
 
@@ -151,9 +153,9 @@ print("Make orphan:")
 print("-----------------------------------------------------------")
 print()
 
-d1 = Triangulation3(); d1.newTetrahedron()
-d2 = Triangulation3(); d2.newTetrahedra(2)
-d3 = Triangulation3(); d3.newTetrahedra(3)
+d1 = Triangulation3(); dummy = d1.newTetrahedron(); dummy = None
+d2 = Triangulation3(); dummy = d2.newTetrahedra(2); dummy = None
+d3 = Triangulation3(); dummy = d3.newTetrahedra(3); dummy = None
 p1 = PacketOfTriangulation3(d1)
 p2 = PacketOfTriangulation3(d2)
 p3 = PacketOfTriangulation3(d3)

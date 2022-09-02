@@ -41,7 +41,7 @@ def checksum(str):
 def vitalStats(tri, name):
 	# To guard against accidental changes.
 	old = tri.detail()
-
+	
 	print("-------------------------------")
 	print(name)
 	print("-------------------------------")
@@ -76,30 +76,30 @@ def vitalStats(tri, name):
 		print("H2Z2:", tri.homologyH2Z2(), "Z_2")
 	if tri.isValid() and tri.isClosed() and tri.countTetrahedra() > 0:
 		print("TV(5, 3) =", tri.turaevViro(5, 3))
-
+		
 		tv = tri.turaevViroApprox(5, 3)
-
+		
 		# We round the figures to 5 decimal places so that machines with
 		# different precisions do not give different output.
-
+		
 		# The case of 0 must also be handled specially, since rounding
 		# may give either 0 or -0.
-
+		
 		if tv < 0.00001 and tv > -0.00001:
 			tv = 0
 		print("TV(5, 3) ~ %.5f" % tv)
-
+	
 	# Normal surface computations should only be run on sufficiently
 	# small triangulations, so as to keep the tests relatively fast.
 	if tri.countTetrahedra() < 7:
 		print("0-efficient:", tri.isZeroEfficient())
 		if tri.isConnected():
 			print("Splitting surface:", tri.hasSplittingSurface())
-
+	
 	# Though this can use normal surfaces, its prechecks and
 	# optimisations should make it fast enough for our examples.
 	print("3-sphere:", tri.isSphere())
-
+	
 	# Some of the following operations can create large triangulations,
 	# which give *lots* of output when we try to dump their face gluings
 	# and skeletal details.  We'd like to keep the output files small,
@@ -108,32 +108,32 @@ def vitalStats(tri, name):
 	t = regina.Triangulation3(tri)
 	t.makeDoubleCover()
 	print("Checksum =", checksum(t.detail()))
-
+	
 	print("Ideal to finite:")
 	t = regina.Triangulation3(tri)
 	print("Result =", t.idealToFinite())
 	print("Checksum =", checksum(t.detail()))
-
+	
 	print("Finite to ideal:")
 	t = regina.Triangulation3(tri)
 	print("Result =", t.finiteToIdeal())
 	print("Checksum =", checksum(t.detail()))
-
+	
 	print("Barycentric subdivision:")
 	t = regina.Triangulation3(tri)
 	t.barycentricSubdivision()
 	print("Checksum =", checksum(t.detail()))
-
+	
 	try:
 		print("Dehydration:", tri.dehydrate())
 	except NotImplemented:
 		print("Dehydration: (none)")
 	print("Isomorphism signature:", tri.isoSig())
 	print("Result of splitIntoComponents:", len(tri.triangulateComponents()))
-
+	
 	if tri.detail() != old:
 		print("ERROR: Original triangulation has changed!")
-
+	
 	print()
 
 t = regina.Triangulation3()

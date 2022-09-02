@@ -64,9 +64,6 @@ blacklist="$blacklist callbacks census enumerate equality"
 blacklist="$blacklist listener memory1 memory2 memory3"
 blacklist="$blacklist snappea snapshot sort treetraversal"
 blacklist="$blacklist deprecated"
-# Other cases that are currently broken (TODO: fix these):
-blacklist="$blacklist exception groups integer listview presentations"
-blacklist="$blacklist safeheldtype_packet standardtri trigeneral utf8"
 
 echo "----------------------------------------------------------------"
 echo "Test suite for python bindings with a basic embedded interpreter"
