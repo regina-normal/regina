@@ -56,9 +56,9 @@ if g.node(0).adj(0):
 	print('Non-null graph arc')
 else:
 	print('Null graph arc')
-	
+
 if ModelLinkGraphArc():
 	print('Non-null graph arc')
 else:
 	print('Null graph arc')
-	
+
