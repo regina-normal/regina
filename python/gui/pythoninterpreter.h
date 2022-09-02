@@ -43,6 +43,7 @@
 #define __PYTHONINTERPRETER_H
 
 #include <Python.h>
+#include <memory>
 #include <mutex>
 #include <string>
 
