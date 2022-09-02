@@ -42,12 +42,21 @@
  * one line at a time (so even if a script is passed via the command line,
  * it behaves as though the input were interactive).
  *
+ * The interpreter runs under a strict time limit: it will exit with
+ * non-zero error status if the hard-coded timeout limit is exceeded.
+ * This is so that deadlock scenarios can be detected and reported effectively.
+ *
  * The main reason for having this basic interpreter is so we can more easily
  * test for problems that might occur in the Qt GUI (e.g., problems related to
  * multithreading, or subinterpreters, or the global interpreter lock).
  */
 
+const int timeout = 10; // measured in seconds
+
 bool mainThread = true;
+
+std::mutex mutex; // guards cond
+std::condition_variable cond;
 
 class NativeOutputStream : public regina::python::PythonOutputStream {
     private:
@@ -78,7 +87,21 @@ void usage(const char* progName, const std::string& error = std::string()) {
     exit(1);
 }
 
+void watcher() {
+    std::unique_lock<std::mutex> lock(mutex);
+    if (cond.wait_for(lock, std::chrono::seconds(timeout)) ==
+            std::cv_status::timeout) {
+        std::cerr << "ERROR: Timed out after " << timeout  << "s." << std::endl;
+
+        // We assume the python code is deadlocked; we will not be able to
+        // clean up Python properly.
+        exit(3);
+    }
+}
+
 void run(regina::python::PythonInterpreter& py, std::istream& input) {
+    std::thread w(watcher);
+
     std::string line;
     while (input) {
         std::getline(input, line);
@@ -90,6 +113,9 @@ void run(regina::python::PythonInterpreter& py, std::istream& input) {
             }).join();
         }
     }
+
+    cond.notify_one();
+    w.join();
 }
 
 int main(int argc, char* argv[]) {
