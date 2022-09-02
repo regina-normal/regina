@@ -33,3 +33,5 @@
 
 # As of Regina 7.1, there are no deprecated functions that have
 # sufficiently interesting reimplementations that we need to test them here.
+
+pass

@@ -63,7 +63,6 @@ blacklist="file i18n memory1 orb pdf repr"
 blacklist="$blacklist callbacks census enumerate equality"
 blacklist="$blacklist listener memory1 memory2 memory3"
 blacklist="$blacklist snappea snapshot sort treetraversal"
-blacklist="$blacklist deprecated"
 
 echo "----------------------------------------------------------------"
 echo "Test suite for python bindings with a basic embedded interpreter"
