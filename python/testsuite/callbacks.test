@@ -131,7 +131,7 @@ def testIso(inner, innerName, outer, outerName, countOnly = False):
         inner.findAllIsomorphisms(outer, displayIso)
         print(comp + ' -> subcomplexes, display')
         inner.findAllSubcomplexesIn(outer, displayIso)
-
+    
     global isoCount
     print(comp + ' -> isomorphisms, stop after 5')
     isoCount = 0
@@ -141,7 +141,7 @@ def testIso(inner, innerName, outer, outerName, countOnly = False):
     else:
         print('    search ran to completion, count:', isoCount)
     print(comp + ' -> subcomplexes, stop after 5')
-
+    
     isoCount = 0
     ans = inner.findAllSubcomplexesIn(outer, stopAfter5Iso)
     if ans:
