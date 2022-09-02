@@ -34,6 +34,7 @@
 #include "../gui/pythonoutputstream.h"
 #include <fstream>
 #include <iostream>
+#include <condition_variable>
 #include <thread>
 
 /**
