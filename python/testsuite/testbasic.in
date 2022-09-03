@@ -78,6 +78,21 @@ if ! test -f ../../CMakeCache.txt -a -f "$executable"; then
 	exit 1
 fi
 
+# Make sure Python will be able to import regina.
+os='@CMAKE_SYSTEM_NAME@'
+case "$os" in
+	Darwin )
+		export DYLD_LIBRARY_PATH="../../engine:$DYLD_LIBRARY_PATH"
+		;;
+	Windows )
+		export PATH="../../engine:$PATH"
+		;;
+	* )
+		export LD_LIBRARY_PATH="../../engine:$LD_LIBRARY_PATH"
+		;;
+esac
+export PYTHONPATH="..:$PYTHONPATH"
+
 found=
 broken=
 

@@ -50,6 +50,9 @@
  * The main reason for having this basic interpreter is so we can more easily
  * test for problems that might occur in the Qt GUI (e.g., problems related to
  * multithreading, or subinterpreters, or the global interpreter lock).
+ *
+ * This interpreter does not set LD_LIBRARY_PATH or PYTHONPATH at all;
+ * it is up to whoever calls this interpreter to set these paths appropriately.
  */
 
 const int timeout = 10; // measured in seconds

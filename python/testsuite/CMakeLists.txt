@@ -23,7 +23,7 @@ IF (WIN32)
   ADD_TEST(python-test bash testall)
   ADD_TEST(python-basic bash testbasic)
   # We do not need to add the engine DLL location to the path, since
-  # regina-python does this for us.
+  # regina-python (used in testall) and testbasic (directly) do this for us.
 ELSE (WIN32)
   ADD_TEST(python-test ./testall)
   ADD_TEST(python-basic ./testbasic)
