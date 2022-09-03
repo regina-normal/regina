@@ -144,6 +144,8 @@ int main(int argc, char* argv[]) {
     }
 
     py.executeLine("from regina import *");
+    std::string exec = argv[0];
+    py.executeLine("regina.GlobalDirs.deduceDirs('" + exec + "');");
 
     if (input.empty()) {
         run(py, std::cin);
