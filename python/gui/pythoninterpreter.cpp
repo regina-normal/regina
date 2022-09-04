@@ -86,7 +86,12 @@
 
 namespace regina::python {
 
+#if PY_VERSION_HEX >= 0x030a0000
+static PyCompilerFlags pyCompFlags =
+    { PyCF_DONT_IMPLY_DEDENT | PyCF_ALLOW_INCOMPLETE_INPUT };
+#else
 static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
+#endif
 
 std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
