@@ -472,7 +472,7 @@ void HyperCoordinateUI::triangulate() {
     // Go ahead and triangulate it.
     auto ans = make_packet(use.triangulate(),
         "Hypersurface #" + std::to_string(whichSurface));
-    surfaces->insertChildLast(ans);
+    surfaces->append(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 

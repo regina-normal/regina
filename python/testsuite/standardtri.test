@@ -75,7 +75,7 @@ def describeSatRegion(r):
 def describe(t, name):
 	print(name + ':')
 	print(prefix(1) + 'IsoSig: ' + t.isoSig())
-
+	
 	std = StandardTriangulation.recognise(t)
 	if std:
 		mfd = std.manifold()
@@ -83,10 +83,10 @@ def describe(t, name):
 			print(prefix(1) + 'Standard: ' + std.name(), '=', mfd.name())
 		else:
 			print(prefix(1) + 'Standard: ' + std.name(), '= ?')
-
+	
 	# We assume the triangulation is connected.
 	c = t.component(0)
-
+	
 	sub = AugTriSolidTorus.recognise(c)
 	if sub:
 		print(prefix(1) + 'Aug. tri. solid torus: ' + sub.name())
@@ -102,13 +102,13 @@ def describe(t, name):
 				print(prefix(2) + 'Chain type: unknown')
 		else:
 			print(prefix(2) + 'No chain')
-
+	
 	sub = LayeredChainPair.recognise(c)
 	if sub:
 		print(prefix(1) + 'Layered chain pair: ' + sub.name())
 		print(prefix(2) + 'Chain lengths:',
 			sub.chain(0).index(), sub.chain(1).index())
-
+	
 	sub = LayeredLensSpace.recognise(c)
 	if sub:
 		print(prefix(1) + 'Layered lens space: ' + sub.name())
@@ -119,7 +119,7 @@ def describe(t, name):
 			print(prefix(2) + 'Snapped')
 		else:
 			print(prefix(2) + 'Twisted')
-
+	
 	sub = LayeredLoop.recognise(c)
 	if sub:
 		print(prefix(1) + 'Layered loop: ' + sub.name())
@@ -130,7 +130,7 @@ def describe(t, name):
 			print(prefix(2) + 'Untwisted,', sub.length())
 			print(prefix(2) + 'Hinges:', sub.hinge(0).index(),
 				sub.hinge(1).index())
-
+	
 	sub = PlugTriSolidTorus.recognise(c)
 	if sub:
 		print(prefix(1) + 'Plugged tri. solid torus: ' + sub.name())
@@ -152,20 +152,20 @@ def describe(t, name):
 			print(prefix(2) + 'Equator: major')
 		else:
 			print(prefix(2) + 'Equator: minor')
-
+	
 	sub = BlockedSFS.recognise(t)
 	if sub:
 		print(prefix(1) + 'Blocked SFS')
 		print(prefix(2) + 'Region:')
 		describeSatRegion(sub.region())
-
+	
 	sub = BlockedSFSLoop.recognise(t)
 	if sub:
 		print(prefix(1) + 'Blocked SFS Loop')
 		print(prefix(2) + 'Region:')
 		describeSatRegion(sub.region())
 		print(prefix(2) + 'Matching:', sub.matchingReln())
-
+	
 	sub = BlockedSFSPair.recognise(t)
 	if sub:
 		print(prefix(1) + 'Blocked SFS Pair')
@@ -174,7 +174,7 @@ def describe(t, name):
 		print(prefix(2) + 'Region 1:')
 		describeSatRegion(sub.region(1))
 		print(prefix(2) + 'Matching:', sub.matchingReln())
-
+	
 	sub = BlockedSFSTriple.recognise(t)
 	if sub:
 		print(prefix(1) + 'Blocked SFS Triple')
@@ -186,7 +186,7 @@ def describe(t, name):
 		describeSatRegion(sub.end(1))
 		print(prefix(2) + 'Matching 0:', sub.matchingReln(0))
 		print(prefix(2) + 'Matching 1:', sub.matchingReln(1))
-
+	
 	for f in t.triangles():
 		for g in t.triangles():
 			if g == f:
@@ -197,7 +197,7 @@ def describe(t, name):
 				print(prefix(2) + 'Triangles:', f.index(), g.index())
 				print(prefix(2) + 'Equator:',
 					f.edge(0).index(), f.edge(1).index(), f.edge(2).index())
-
+	
 	for a in t.tetrahedra():
 		for b in t.tetrahedra():
 			if b == a:
@@ -209,8 +209,8 @@ def describe(t, name):
 				ball = sub.snappedBall(0)
 				print(prefix(2) + 'Equator:',
 					ball.tetrahedron().edge(ball.equatorEdge()).index())
-
-
+	
+	
 	for tet in t.tetrahedra():
 		sub = LayeredSolidTorus.recogniseFromBase(tet)
 		if sub:
@@ -223,7 +223,7 @@ def describe(t, name):
 				sub.topEdge(0, 0), sub.topEdge(0, 1), '/',
 				sub.topEdge(1, 0), sub.topEdge(1, 1), '/',
 				sub.topEdge(2, 0), sub.topEdge(2, 1))
-
+	
 	for tet in t.tetrahedra():
 		sub = SnappedBall.recognise(tet)
 		if sub:
@@ -231,7 +231,7 @@ def describe(t, name):
 			print(prefix(2) + 'Tet:', tet.index())
 			print(prefix(2) + 'Internal faces:',
 				sub.internalFace(0), sub.internalFace(1))
-
+	
 	for tet in t.tetrahedra():
 		for p in Perm4.S4:
 			if p[0] > p[3]:
@@ -428,19 +428,28 @@ t9 = [ 'jLALMLQbcceffhiiiemkbtilubc', 'jLALALQbccfefihiilpkusudego',
 
 for i in t1:
 	describeSig(i)
+
 for i in t2:
 	describeSig(i)
+
 for i in t3:
 	describeSig(i)
+
 for i in t4:
 	describeSig(i)
+
 for i in t5:
 	describeSig(i)
+
 for i in t6:
 	describeSig(i)
+
 for i in t7:
 	describeSig(i)
+
 for i in t8:
 	describeSig(i)
+
 for i in t9:
 	describeSig(i)
+

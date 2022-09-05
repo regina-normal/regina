@@ -56,12 +56,7 @@
     // import mechanism).
 
     // Declare the entry point for Regina's python module:
-    #if PY_MAJOR_VERSION >= 3
-        #define REGINA_PYTHON_INIT PyInit_regina
-    #else
-        #define REGINA_PYTHON_INIT initregina
-    #endif
-    PyMODINIT_FUNC REGINA_PYTHON_INIT();
+    PyMODINIT_FUNC PyInit_regina();
 #endif
 
 // Convert the Python version x.y into the form "x" "y":
@@ -86,7 +81,18 @@
 
 namespace regina::python {
 
+#if PY_VERSION_HEX >= 0x030a0300
+// Unfortunately python versions 3.10.[0-2] are broken: they reject incomplete
+// code (e.g., bracketed lists that span multiple lines) as a syntax error.
+// This is fixed with the PyCF_DONT_IMPLY_DEDENT flag that was introduced
+// in python 3.10.3.
+static PyCompilerFlags pyCompFlags =
+    { PyCF_DONT_IMPLY_DEDENT | PyCF_ALLOW_INCOMPLETE_INPUT };
+#else
+// Python 3.9 and earlier used a different method for compilation, which
+// does not have such problems.
 static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
+#endif
 
 std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
@@ -95,7 +101,8 @@ pybind11::scoped_interpreter* mainInterpreter;
 
 PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream& pyStdOut,
-        regina::python::PythonOutputStream& pyStdErr) :
+        regina::python::PythonOutputStream& pyStdErr,
+        bool fixPythonPath) :
         caughtSystemExit(false),
         output(pyStdOut), errors(pyStdErr),
         completer(nullptr), completerFunc(nullptr) {
@@ -105,40 +112,43 @@ PythonInterpreter::PythonInterpreter(
     if (pythonInitialised)
         PyEval_AcquireThread(mainState);
     else {
+        if (fixPythonPath) {
 #ifdef PYTHON_CORE_IN_ZIP
-        // Regina is shipping its own copy of python, which means the
-        // core python libraries are bundled as a zip file.
-        //
-        // We need to manually include the python zip and the path to zlib.pyd
-        // on the python path, *before* the first interpreter is initialised.
-        //
-        // Here we assume that pythonXY.zip and zlib.pyd are installed
-        // in the same directory as the regina python module.
+            // Regina is shipping its own copy of python, which means the
+            // core python libraries are bundled as a zip file.
+            //
+            // We need to manually include the python zip and the path to
+            // zlib.pyd on the python path, *before* the first interpreter
+            // is initialised.
+            //
+            // Here we assume that pythonXY.zip and zlib.pyd are installed
+            // in the same directory as the regina python module.
 
-        const char* oldPath = getenv("PYTHONPATH");
-        std::string newPath("PYTHONPATH=");
-        newPath += regina::GlobalDirs::pythonModule();
-        #if defined(REGINA_INSTALL_WINDOWS)
-            newPath += ";";
+            const char* oldPath = getenv("PYTHONPATH");
+            std::string newPath("PYTHONPATH=");
             newPath += regina::GlobalDirs::pythonModule();
-            newPath += "/python" REGINA_PY_VERSION ".zip;";
-        #else
-            newPath += ":";
-            newPath += regina::GlobalDirs::pythonModule();
-            newPath += "/python" REGINA_PY_VERSION ".zip:";
-        #endif
+            #if defined(REGINA_INSTALL_WINDOWS)
+                newPath += ";";
+                newPath += regina::GlobalDirs::pythonModule();
+                newPath += "/python" REGINA_PY_VERSION ".zip;";
+            #else
+                newPath += ":";
+                newPath += regina::GlobalDirs::pythonModule();
+                newPath += "/python" REGINA_PY_VERSION ".zip:";
+            #endif
 
-        if (oldPath)
-            newPath += oldPath;
+            if (oldPath)
+                newPath += oldPath;
 
-        putenv(strdup(newPath.c_str()));
+            putenv(strdup(newPath.c_str()));
 #endif
+        }
 
 #ifdef PYTHON_STATIC_LINK
         // Regina's python module is statically linked into the GUI; it
         // is not shipped as a separate module on the filesystem.
         // Tell python how to find it.
-        if (PyImport_AppendInittab("regina", &REGINA_PYTHON_INIT) == -1) {
+        if (PyImport_AppendInittab("regina", &PyInit_regina) == -1) {
             errors.write("ERROR: PyImport_AppendInittab(\"regina\", ...) "
                 "failed.\n");
             errors.flush();
@@ -394,13 +404,8 @@ void PythonInterpreter::prependReginaToSysPath() {
 
             // Since this is a filesystem path, we assume it comes direct from
             // the filesystem, and is not necessary encoded using UTF-8.
-#if PY_MAJOR_VERSION >= 3
             PyObject* regModuleDirPy =
                 PyUnicode_DecodeFSDefault(regModuleDir.c_str());
-#else
-            PyObject* regModuleDirPy =
-                PyString_FromString(regModuleDir.c_str());
-#endif
             PyList_Insert(path, 0, regModuleDirPy);
             Py_DECREF(regModuleDirPy);
         }
@@ -460,12 +465,8 @@ bool PythonInterpreter::setVar(const char* name,
     try {
         pybind11::object obj = pybind11::cast(value);
         if (obj.ptr()) {
-#if PY_MAJOR_VERSION >= 3
             // PyUnicode_FromString assumes UTF-8 encoding.
             PyObject* nameStr = PyUnicode_FromString(name); // New ref.
-#else
-            PyObject* nameStr = PyString_FromString(name); // New ref.
-#endif
             if (PyDict_SetItem(mainNamespace, nameStr, obj.ptr())) {
                 PyErr_Print();
                 PyErr_Clear();

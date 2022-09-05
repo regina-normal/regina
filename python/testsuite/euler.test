@@ -34,7 +34,7 @@
 def printEuler(t, name):
 	print(t.eulerCharTri(), t.eulerCharManifold(), \
 		'---', name)
-
+	
 	# Consistency check, while we're here.
 	eHom = regina.HomologicalData(t).eulerChar()
 	if eHom != t.eulerCharManifold():
@@ -56,7 +56,7 @@ printEuler(regina.Example3.solidKleinBottle(),
 printEuler(regina.Example3.lst(3,4), "LST(3,4,7)")
 
 tri = regina.Triangulation3()
-tri.newTetrahedron()
+dummy = tri.newTetrahedron()
 printEuler(tri, "Solid ball")
 
 # Ideal:

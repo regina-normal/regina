@@ -203,16 +203,20 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
             regina::NS_VERTEX : regina::NS_FUNDAMENTAL) |
         (embedded->isChecked() ?
             regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR);
-    std::thread([&, coordSystem, which, this]() {
+    std::thread t([&, coordSystem, which, this]() {
         try {
             ans = regina::make_packet<NormalSurfaces>(std::in_place,
                 tri, coordSystem, which, regina::NS_ALG_DEFAULT, &tracker);
         } catch (const regina::ReginaException&) {
             // Leave ans as null.
         }
-    }).detach();
+    });
 
     if (dlg.run()) {
+        // The enumeration algorithm should have finished, though there may be
+        // some final housekeeping still happening in the enumeration thread.
+        t.join();
+
         if (ans) {
             ans->setLabel(ui->tr("%1 %2 surfaces")
                 .arg(Coordinates::adjective(coordSystem, true))
@@ -239,6 +243,11 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
         }
         return ans;
     } else {
+        // The enumeration was cancelled.
+        // We do not need to wait for the enumeration thread to finish,
+        // since its results are being discarded anyway.
+        t.detach();
+
         ReginaSupport::info(parentWidget,
             ui->tr("The normal surface enumeration was cancelled."));
         return nullptr;

@@ -117,9 +117,12 @@ print(t)
 print()
 
 n = NormalSurfaces(Example3.figureEight(), NS_QUAD)
+
 for s in n:
 	s.setName('foo')
+
 for s in n:
 	print(s.name())
+
 print()
 

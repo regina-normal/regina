@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
 
-        ans->insertChildLast(data);
+        ans->append(data);
     }
 
     // Tidy up the final data file and write it.

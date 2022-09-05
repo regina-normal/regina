@@ -41,13 +41,13 @@ def dumpSurfaces(name, tri, triName, coords = regina.NS_STANDARD, which = regina
 		print("-------------------------------")
 		print()
 		return
-
+	
 	print("-------------------------------")
 	print(triName)
 	print(name)
 	print("-------------------------------")
 	print()
-
+	
 	# Dump the surfaces in sort order, since we don't really mind if the
 	# ordering changes between releases.
 	surfaces = slist.detail().split('\n')
@@ -56,7 +56,7 @@ def dumpSurfaces(name, tri, triName, coords = regina.NS_STANDARD, which = regina
 	surfaces.reverse()
 	for s in surfaces:
 		print(s)
-
+	
 	# Nothing else to say.
 	print()
 

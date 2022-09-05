@@ -41,13 +41,13 @@ def dumpAngles(name, tri, triName, tautOnly = False):
 		print("-------------------------------")
 		print()
 		return
-
+	
 	print("-------------------------------")
 	print(triName)
 	print(name)
 	print("-------------------------------")
 	print()
-
+	
 	# Dump the angle structures in sort order, since we don't really mind if
 	# the ordering changes between releases.
 	structures = slist.detail().split('\n')
@@ -56,7 +56,7 @@ def dumpAngles(name, tri, triName, tautOnly = False):
 	structures.reverse()
 	for s in structures:
 		print(s)
-
+	
 	# Nothing else to say.
 	print()
 

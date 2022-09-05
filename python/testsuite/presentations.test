@@ -39,15 +39,15 @@ print(e.power(-1))
 print(e.power(0))
 print(e.power(1))
 print(e.power(2))
-e.substitute(3, GroupExpression('Eg'))
+dummy = e.substitute(3, GroupExpression('Eg'))
 print(e)
-e.substitute([GroupExpression('aB'), \
-              GroupExpression('c'), \
-              GroupExpression(''), \
-              GroupExpression('B^2'), \
-              GroupExpression('A'), \
-              GroupExpression('g'), \
-              GroupExpression('f')])
+dummy = e.substitute([GroupExpression('aB'), \
+                      GroupExpression('c'), \
+                      GroupExpression(''), \
+                      GroupExpression('B^2'), \
+                      GroupExpression('A'), \
+                      GroupExpression('g'), \
+                      GroupExpression('f')])
 print(e)
 
 e = GroupExpression('a^7dB^2D')

@@ -89,18 +89,27 @@ std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
-    std::thread([&, this]() {
+    std::thread t([&, this]() {
         ans = regina::make_packet<regina::AngleStructures>(std::in_place,
             tri, tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
-    }).detach();
+    });
 
     if (dlg.run()) {
+        // The enumeration algorithm should have finished, though there may be
+        // some final housekeeping still happening in the enumeration thread.
+        t.join();
+
         if (tautOnly->isChecked())
             ans->setLabel("Taut angle structures");
         else
             ans->setLabel("Vertex angle structures");
         return ans;
     } else {
+        // The enumeration was cancelled.
+        // We do not need to wait for the enumeration thread to finish,
+        // since its results are being discarded anyway.
+        t.detach();
+
         ReginaSupport::info(parentWidget,
             ui->tr("The angle structure enumeration was cancelled."));
         return nullptr;

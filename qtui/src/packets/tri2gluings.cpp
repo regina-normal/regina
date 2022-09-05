@@ -586,7 +586,7 @@ void Tri2GluingsUI::splitIntoComponents() {
         std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
             base = std::make_shared<regina::Container>();
-            tri->insertChildLast(base);
+            tri->append(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
             base = tri->shared_from_this();
@@ -596,8 +596,7 @@ void Tri2GluingsUI::splitIntoComponents() {
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::make_packet(std::move(c),
-                label.str()));
+            base->append(regina::make_packet(std::move(c), label.str()));
         }
 
         // Make sure the new components are visible.
