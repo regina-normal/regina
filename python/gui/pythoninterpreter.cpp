@@ -56,12 +56,7 @@
     // import mechanism).
 
     // Declare the entry point for Regina's python module:
-    #if PY_MAJOR_VERSION >= 3
-        #define REGINA_PYTHON_INIT PyInit_regina
-    #else
-        #define REGINA_PYTHON_INIT initregina
-    #endif
-    PyMODINIT_FUNC REGINA_PYTHON_INIT();
+    PyMODINIT_FUNC PyInit_regina();
 #endif
 
 // Convert the Python version x.y into the form "x" "y":
@@ -149,7 +144,7 @@ PythonInterpreter::PythonInterpreter(
         // Regina's python module is statically linked into the GUI; it
         // is not shipped as a separate module on the filesystem.
         // Tell python how to find it.
-        if (PyImport_AppendInittab("regina", &REGINA_PYTHON_INIT) == -1) {
+        if (PyImport_AppendInittab("regina", &PyInit_regina) == -1) {
             errors.write("ERROR: PyImport_AppendInittab(\"regina\", ...) "
                 "failed.\n");
             errors.flush();
@@ -405,13 +400,8 @@ void PythonInterpreter::prependReginaToSysPath() {
 
             // Since this is a filesystem path, we assume it comes direct from
             // the filesystem, and is not necessary encoded using UTF-8.
-#if PY_MAJOR_VERSION >= 3
             PyObject* regModuleDirPy =
                 PyUnicode_DecodeFSDefault(regModuleDir.c_str());
-#else
-            PyObject* regModuleDirPy =
-                PyString_FromString(regModuleDir.c_str());
-#endif
             PyList_Insert(path, 0, regModuleDirPy);
             Py_DECREF(regModuleDirPy);
         }
@@ -471,12 +461,8 @@ bool PythonInterpreter::setVar(const char* name,
     try {
         pybind11::object obj = pybind11::cast(value);
         if (obj.ptr()) {
-#if PY_MAJOR_VERSION >= 3
             // PyUnicode_FromString assumes UTF-8 encoding.
             PyObject* nameStr = PyUnicode_FromString(name); // New ref.
-#else
-            PyObject* nameStr = PyString_FromString(name); // New ref.
-#endif
             if (PyDict_SetItem(mainNamespace, nameStr, obj.ptr())) {
                 PyErr_Print();
                 PyErr_Clear();
