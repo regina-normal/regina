@@ -135,12 +135,13 @@ void LinkCodesUI::refresh() {
             code->setWordWrapMode(QTextOption::WordWrap);
             return;
         }
-        std::string alpha = link->dt(true);
-        std::string numer = link->dt(false);
-        if (alpha.empty())
-            ans = numer.c_str();
-        else
+        if (link->size() > 26) {
+            ans = link->dt(false).c_str();
+        } else {
+            std::string alpha = link->dt(true);
+            std::string numer = link->dt(false);
             ans = (alpha + "\n\n" + numer + "\n").c_str();
+        }
 
         code->setWordWrapMode(QTextOption::WordWrap);
     } else if (type->currentIndex() == 2) {
