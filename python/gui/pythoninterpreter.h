@@ -164,10 +164,16 @@ class PythonInterpreter {
     public:
         /**
          * Constructor and destructor.
+         *
+         * In the constructor, if \a fixPythonPath is \c true \e and if
+         * Regina ships its own copy of Python, then this constructor
+         * will adjust the Python path so that Regina's copy of the core
+         * Python libraries can be found.
          */
         PythonInterpreter(
             regina::python::PythonOutputStream& pyStdOut,
-            regina::python::PythonOutputStream& pyStdErr);
+            regina::python::PythonOutputStream& pyStdErr,
+            bool fixPythonPath = true);
         ~PythonInterpreter();
 
         /**

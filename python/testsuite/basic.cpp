@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
 
     NativeOutputStream out(std::cout);
     NativeOutputStream err(std::cerr);
-    regina::python::PythonInterpreter py(out, err);
+    regina::python::PythonInterpreter py(out, err, false);
     if (! py.importRegina()) {
         std::cerr << "ERROR: Could not import regina";
         exit(2);

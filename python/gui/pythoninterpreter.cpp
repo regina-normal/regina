@@ -101,7 +101,8 @@ pybind11::scoped_interpreter* mainInterpreter;
 
 PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream& pyStdOut,
-        regina::python::PythonOutputStream& pyStdErr) :
+        regina::python::PythonOutputStream& pyStdErr,
+        bool fixPythonPath) :
         caughtSystemExit(false),
         output(pyStdOut), errors(pyStdErr),
         completer(nullptr), completerFunc(nullptr) {
@@ -111,34 +112,37 @@ PythonInterpreter::PythonInterpreter(
     if (pythonInitialised)
         PyEval_AcquireThread(mainState);
     else {
+        if (fixPythonPath) {
 #ifdef PYTHON_CORE_IN_ZIP
-        // Regina is shipping its own copy of python, which means the
-        // core python libraries are bundled as a zip file.
-        //
-        // We need to manually include the python zip and the path to zlib.pyd
-        // on the python path, *before* the first interpreter is initialised.
-        //
-        // Here we assume that pythonXY.zip and zlib.pyd are installed
-        // in the same directory as the regina python module.
+            // Regina is shipping its own copy of python, which means the
+            // core python libraries are bundled as a zip file.
+            //
+            // We need to manually include the python zip and the path to
+            // zlib.pyd on the python path, *before* the first interpreter
+            // is initialised.
+            //
+            // Here we assume that pythonXY.zip and zlib.pyd are installed
+            // in the same directory as the regina python module.
 
-        const char* oldPath = getenv("PYTHONPATH");
-        std::string newPath("PYTHONPATH=");
-        newPath += regina::GlobalDirs::pythonModule();
-        #if defined(REGINA_INSTALL_WINDOWS)
-            newPath += ";";
+            const char* oldPath = getenv("PYTHONPATH");
+            std::string newPath("PYTHONPATH=");
             newPath += regina::GlobalDirs::pythonModule();
-            newPath += "/python" REGINA_PY_VERSION ".zip;";
-        #else
-            newPath += ":";
-            newPath += regina::GlobalDirs::pythonModule();
-            newPath += "/python" REGINA_PY_VERSION ".zip:";
-        #endif
+            #if defined(REGINA_INSTALL_WINDOWS)
+                newPath += ";";
+                newPath += regina::GlobalDirs::pythonModule();
+                newPath += "/python" REGINA_PY_VERSION ".zip;";
+            #else
+                newPath += ":";
+                newPath += regina::GlobalDirs::pythonModule();
+                newPath += "/python" REGINA_PY_VERSION ".zip:";
+            #endif
 
-        if (oldPath)
-            newPath += oldPath;
+            if (oldPath)
+                newPath += oldPath;
 
-        putenv(strdup(newPath.c_str()));
+            putenv(strdup(newPath.c_str()));
 #endif
+        }
 
 #ifdef PYTHON_STATIC_LINK
         // Regina's python module is statically linked into the GUI; it
