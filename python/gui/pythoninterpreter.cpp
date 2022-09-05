@@ -112,8 +112,8 @@ PythonInterpreter::PythonInterpreter(
     if (pythonInitialised)
         PyEval_AcquireThread(mainState);
     else {
-        if (fixPythonPath) {
 #ifdef PYTHON_CORE_IN_ZIP
+        if (fixPythonPath) {
             // Regina is shipping its own copy of python, which means the
             // core python libraries are bundled as a zip file.
             //
@@ -141,8 +141,8 @@ PythonInterpreter::PythonInterpreter(
                 newPath += oldPath;
 
             putenv(strdup(newPath.c_str()));
-#endif
         }
+#endif
 
 #ifdef PYTHON_STATIC_LINK
         // Regina's python module is statically linked into the GUI; it
@@ -173,7 +173,7 @@ PythonInterpreter::PythonInterpreter(
         // If this fails, do so silently; we'll see the same error again
         // immediately in the first subinterpreter.
         importReginaIntoNamespace(PyModule_GetDict(PyImport_AddModule(
-            "__main__")));
+            "__main__")), fixPythonPath);
 
         // With pybind11, it seems that we need to *use* regina's bindings in
         // the first interpreter that imports them; otherwise subsequent
@@ -412,10 +412,10 @@ void PythonInterpreter::prependReginaToSysPath() {
     }
 }
 
-bool PythonInterpreter::importRegina() {
+bool PythonInterpreter::importRegina(bool fixPythonPath) {
     PyEval_RestoreThread(state);
 
-    bool ok = importReginaIntoNamespace(mainNamespace);
+    bool ok = importReginaIntoNamespace(mainNamespace, fixPythonPath);
 
     // Also set up a completer if we can, but if not then just fail silently.
     if (ok) {
@@ -440,11 +440,14 @@ bool PythonInterpreter::importRegina() {
     return ok;
 }
 
-bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace) {
+bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace,
+        bool fixPythonPath) {
+    if (fixPythonPath) {
 #ifndef PYTHON_STATIC_LINK
-    // Adjust the python path if we need to.
-    prependReginaToSysPath();
+        // Adjust the python path if we need to.
+        prependReginaToSysPath();
 #endif
+    }
 
     // Import the module.
     PyObject* regModule = PyImport_ImportModule("regina"); // New ref.

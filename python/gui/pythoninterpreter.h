@@ -165,10 +165,17 @@ class PythonInterpreter {
         /**
          * Constructor and destructor.
          *
-         * In the constructor, if \a fixPythonPath is \c true \e and if
-         * Regina ships its own copy of Python, then this constructor
-         * will adjust the Python path so that Regina's copy of the core
-         * Python libraries can be found.
+         * In the constructor, if \a fixPythonPath is \c true then:
+         *
+         * - if Regina ships its own copy of Python, then this constructor
+         *   will adjust the Python path so that Regina's copy of the core
+         *   Python libraries can be found;
+         *
+         * - if necessary, this constructor will also adjust the Python path
+         *   so that Regina's own module can be found.
+         *
+         * If \a fixPythonPath is \c false then the Python path will not be
+         * touched at all.
          */
         PythonInterpreter(
             regina::python::PythonOutputStream& pyStdOut,
@@ -193,9 +200,12 @@ class PythonInterpreter {
          * This function also sets up a completer object, for use with
          * complete().
          *
+         * If \a fixPythonPath is \c true, then this routine will (before the
+         * import) adjust the Python path so that Regina's module can be found.
+         *
          * Returns \c true on success or \c false on failure.
          */
-        bool importRegina();
+        bool importRegina(bool fixPythonPath = true);
 
         /**
          * Set the given variable in Python's main namespace to
@@ -299,9 +309,13 @@ class PythonInterpreter {
          * that is referenced by the current python thread state, to which
          * the given namespace must belong.
          *
+         * If \a fixPythonPath is \c true, then this routine will (before the
+         * import) adjust the Python path so that Regina's module can be found.
+         *
          * Returns \c true on success or \c false on failure.
          */
-        static bool importReginaIntoNamespace(PyObject* useNamespace);
+        static bool importReginaIntoNamespace(PyObject* useNamespace,
+            bool fixPythonPath = true);
 };
 
 inline PrefixCompleter::PrefixCompleter() : initialised_(false) {

@@ -51,8 +51,9 @@
  * test for problems that might occur in the Qt GUI (e.g., problems related to
  * multithreading, or subinterpreters, or the global interpreter lock).
  *
- * This interpreter does not set LD_LIBRARY_PATH or PYTHONPATH at all;
- * it is up to whoever calls this interpreter to set these paths appropriately.
+ * This interpreter is designed to be run directly out of the source tree.
+ * It does not set LD_LIBRARY_PATH, PYTHONHOME or PYTHONPATH at all; it is
+ * up to whoever calls this interpreter to set these paths appropriately.
  */
 
 const int timeout = 10; // measured in seconds
@@ -145,8 +146,11 @@ int main(int argc, char* argv[]) {
 
     NativeOutputStream out(std::cout);
     NativeOutputStream err(std::cerr);
+    // In the new python interpreter, do not adjust the Python path to reflect
+    // Regina's installation location, since this tool is designed to be
+    // run directly out of the source tree.
     regina::python::PythonInterpreter py(out, err, false);
-    if (! py.importRegina()) {
+    if (! py.importRegina(false)) {
         std::cerr << "ERROR: Could not import regina";
         exit(2);
     }
