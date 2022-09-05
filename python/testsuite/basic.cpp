@@ -82,8 +82,10 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName << " [ -t ] [ <commands> ]\n";
+    std::cerr << "    " << progName << " -v\n";
     std::cerr << std::endl;
     std::cerr << "    -t : Execute commands in a different thread\n";
+    std::cerr << "    -v : Output the Python version being used\n";
     std::cerr << std::endl;
     std::cerr << "    <script> : Read commands line-by-line from the "
         "given file (otherwise\n";
@@ -132,8 +134,14 @@ int main(int argc, char* argv[]) {
             usage(argv[0]);
         mainThread = false;
         input = argv[2];
-    } else if (argc == 2)
+    } else if (argc == 2) {
+        if (strcmp(argv[1], "-v") == 0) {
+            std::cout << PY_MAJOR_VERSION << '.' << PY_MINOR_VERSION << '.'
+                << PY_MICRO_VERSION << std::endl;
+            return 0;
+        }
         input = argv[1];
+    }
 
     NativeOutputStream out(std::cout);
     NativeOutputStream err(std::cerr);

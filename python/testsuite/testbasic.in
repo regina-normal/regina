@@ -56,6 +56,7 @@ set -e
 executable=./basic
 testdir='@BASH_CMAKE_SOURCE_DIR@/python/testsuite'
 testoutdir=`mktemp -d -t regina.XXX`
+pyver=`"$executable" -v`
 
 # Cases that expect the python/testsuite directory as an argument:
 blacklist="file i18n memory1 orb pdf repr"
@@ -68,6 +69,23 @@ echo "----------------------------------------------------------------"
 echo "Test suite for python bindings with a basic embedded interpreter"
 echo "----------------------------------------------------------------"
 echo
+
+# Python 3.10.[0-2] cannot process several of our test scripts due to a
+# breakage in the line-by-line compilation (this was fixed with the
+# introduction of the constant PyCF_ALLOW_INCOMPLETE_INPUT in Python 3.10.3).
+# Note: these *are* still tested with testall (which runs within a normal python
+# interpreter); just not testbasic (which embeds python in a C++ program).
+case "$pyver" in
+	3.10.[0-2]*)
+		echo "WARNING: Skipping several tests due to broken line-by-line"
+		echo "         compilation in embedded python 3.10.[0-2]."
+		echo
+		blacklist="$blacklist embeddings faces groups hypersurfaces iterators"
+		blacklist="$blacklist listview presentations refs skeleton standardtri"
+		;;
+	*)
+		;;
+esac
 
 if ! test -f ../../CMakeCache.txt -a -f "$executable"; then
 	echo "ERROR: You do not appear to be within the python/testsuite directory"
