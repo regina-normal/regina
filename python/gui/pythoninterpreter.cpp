@@ -86,10 +86,16 @@
 
 namespace regina::python {
 
-#if PY_VERSION_HEX >= 0x030a0000
+#if PY_VERSION_HEX >= 0x030a0300
+// Unfortunately python versions 3.10.[0-2] are broken: they reject incomplete
+// code (e.g., bracketed lists that span multiple lines) as a syntax error.
+// This is fixed with the PyCF_DONT_IMPLY_DEDENT flag that was introduced
+// in python 3.10.3.
 static PyCompilerFlags pyCompFlags =
     { PyCF_DONT_IMPLY_DEDENT | PyCF_ALLOW_INCOMPLETE_INPUT };
 #else
+// Python 3.9 and earlier used a different method for compilation, which
+// does not have such problems.
 static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 #endif
 
