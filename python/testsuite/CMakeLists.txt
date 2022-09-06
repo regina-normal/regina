@@ -19,12 +19,22 @@ add_executable(basic
   ../gui/pythonoutputstream.cpp)
 target_link_libraries(basic ${ENGINE_LIBRARY} ${Python_LIBRARIES})
 
+# We always run the main python test suite (testall).
+#
+# We only run the embedded interpreter tests (testbasic) if we are
+# building the GUI, since this is designed to simulate problems that
+# could appear in the GUI's own embedded interpreter.
+#
 IF (WIN32)
-  ADD_TEST(python-test bash testall)
-  ADD_TEST(python-basic bash testbasic)
   # We do not need to add the engine DLL location to the path, since
   # regina-python (used in testall) and testbasic (directly) do this for us.
+  ADD_TEST(python-test bash testall)
+  if (QT_FOUND)
+    ADD_TEST(python-basic bash testbasic)
+  endif (QT_FOUND)
 ELSE (WIN32)
   ADD_TEST(python-test ./testall)
-  ADD_TEST(python-basic ./testbasic)
+  if (QT_FOUND)
+    ADD_TEST(python-basic ./testbasic)
+  endif (QT_FOUND)
 ENDIF (WIN32)
