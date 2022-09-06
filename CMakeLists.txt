@@ -337,9 +337,9 @@ IF (NOT DISABLE_PYTHON)
     ENDIF ()
   ENDIF (Python_FOUND)
 
-  # We need to properly escape the python executable for use in the bash
-  # script regina-python.
+  # We need to properly escape some python locations for use in various scripts.
   REGINA_ESCAPE_PERL (Python_EXECUTABLE)
+  REGINA_ESCAPE_BASH (Python_EXECUTABLE)
 ENDIF (NOT DISABLE_PYTHON)
 
 FIND_PACKAGE(KVStore)

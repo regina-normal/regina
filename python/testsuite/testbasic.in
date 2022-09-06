@@ -83,15 +83,30 @@ os='@CMAKE_SYSTEM_NAME@'
 case "$os" in
 	Darwin )
 		export DYLD_LIBRARY_PATH="../../engine:$DYLD_LIBRARY_PATH"
+		export PYTHONPATH="..:$PYTHONPATH"
 		;;
 	Windows )
+		# The PYTHONHOME directory is incorrectly hard-coded in msys2.
+		# Work out the correct value by asking the python interpreter directly.
+		PYTHON='@BASH_Python_EXECUTABLE@'
+		if [ ! -e "$PYTHON" ]; then
+			echo "ERROR: Python interpreter not found: $PYTHON"
+			exit 1
+		fi
+		export PYTHONHOME="`"$PYTHON" -c 'import sys; print(sys.prefix)'`"
+		if [ ! -d "$PYTHONHOME" ]; then
+			echo "ERROR: Python home not found: $PYTHONHOME"
+			exit 1
+		fi
+
 		export PATH="../../engine:$PATH"
+		export PYTHONPATH="..;$PYTHONPATH"
 		;;
 	* )
 		export LD_LIBRARY_PATH="../../engine:$LD_LIBRARY_PATH"
+		export PYTHONPATH="..:$PYTHONPATH"
 		;;
 esac
-export PYTHONPATH="..:$PYTHONPATH"
 
 # Python 3.10.[0-2] cannot process several of our test scripts due to a
 # breakage in the line-by-line compilation (this was fixed with the
