@@ -40,6 +40,7 @@
 #include "../helpers.h"
 
 using pybind11::overload_cast;
+using regina::python::GILCallbackManager;
 using regina::Crossing;
 using regina::StrandRef;
 using regina::Link;
@@ -202,27 +203,27 @@ void addLink(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>())
         .def("jones", &Link::jones,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>())
         .def("homfly", &Link::homfly,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>())
         .def("homflyAZ", &Link::homflyAZ,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>())
         .def("homflyLM", &Link::homflyLM,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>())
         .def("knowsBracket", &Link::knowsBracket)
         .def("knowsJones", &Link::knowsJones)
         .def("knowsHomfly", &Link::knowsHomfly)
@@ -300,16 +301,16 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("height") = 1,
             pybind11::arg("nThreads") = 1,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>())
         .def("rewrite", [](const Link& link, int height, int threads,
                 const std::function<bool(const std::string&, Link&&)>& action) {
             if (threads == 1) {
                 return link.rewrite(height, 1, nullptr, action);
             } else {
-                pybind11::gil_scoped_release release;
+                GILCallbackManager manager;
                 return link.rewrite(height, threads, nullptr,
                     [&](const std::string& sig, Link&& link) -> bool {
-                        pybind11::gil_scoped_acquire acquire;
+                        GILCallbackManager<>::ScopedAcquire acquire(manager);
                         return action(sig, std::move(link));
                     });
             }

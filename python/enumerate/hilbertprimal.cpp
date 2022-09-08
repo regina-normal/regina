@@ -36,6 +36,7 @@
 #include "enumerate/hilbertprimal.h"
 #include "../helpers.h"
 
+using regina::python::GILCallbackManager;
 using regina::HilbertPrimal;
 using regina::VectorInt;
 
@@ -45,10 +46,13 @@ void addHilbertPrimal(pybind11::module_& m) {
                 const std::vector<VectorInt>& r,
                 const regina::ValidityConstraints& c,
                 regina::ProgressTracker* p) {
-            HilbertPrimal::enumerate<VectorInt>(a, r.begin(), r.end(), c, p);
+            GILCallbackManager<false> manager;
+            HilbertPrimal::enumerate<VectorInt>([&](VectorInt&& v) {
+                GILCallbackManager<false>::ScopedAcquire acquire(manager);
+                a(std::move(v));
+            }, r.begin(), r.end(), c, p);
         }, pybind11::arg(), pybind11::arg(), pybind11::arg(),
-            pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::arg("tracker") = nullptr)
         .def_static("enumerate", [](const std::vector<VectorInt>& r,
                 const regina::ValidityConstraints& c,
                 regina::ProgressTracker* p) {
@@ -59,7 +63,7 @@ void addHilbertPrimal(pybind11::module_& m) {
             return ans;
         }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>())
     ;
     regina::python::no_eq_operators(c);
 }

@@ -186,8 +186,10 @@ PythonInterpreter::PythonInterpreter(
         mainState = PyThreadState_Get();
     }
 
-    // Create the new interpreter.
+    // Create the new interpreter and note the thread that it should be used
+    // with.
     state = Py_NewInterpreter();
+    thread = std::this_thread::get_id();
 
     // Record the main module.
     mainModule = PyImport_AddModule("__main__"); // Borrowed ref.
@@ -255,7 +257,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     strcpy(cmdBuffer, fullCommand.c_str());
 
     // Acquire the global interpreter lock.
-    PyEval_RestoreThread(state);
+    ScopedThreadRestore thread(*this);
 
     // Attempt to compile the command with no additional newlines.
     PyObject* code = Py_CompileStringFlags(
@@ -284,7 +286,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
 
         // Clean up.
         Py_DECREF(code);
-        state = PyEval_SaveThread();
 
         delete[] cmdBuffer;
         currentCode.clear();
@@ -305,7 +306,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     if (code) {
         // We're waiting on more code.
         Py_DECREF(code);
-        state = PyEval_SaveThread();
 
         delete[] cmdBuffer;
         currentCode = currentCode + command + '\n';
@@ -332,7 +332,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
         Py_XDECREF(errValue);
         Py_XDECREF(errTrace);
         Py_XDECREF(errStr1);
-        state = PyEval_SaveThread();
 
         delete[] cmdBuffer;
         currentCode = currentCode + command + '\n';
@@ -352,7 +351,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
             Py_XDECREF(errTrace);
             Py_DECREF(errStr1);
             Py_DECREF(errStr2);
-            state = PyEval_SaveThread();
 
             delete[] cmdBuffer;
             currentCode = currentCode + command + '\n';
@@ -365,7 +363,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
 
             Py_DECREF(errStr1);
             Py_DECREF(errStr2);
-            state = PyEval_SaveThread();
 
             delete[] cmdBuffer;
             currentCode.clear();
@@ -378,7 +375,6 @@ bool PythonInterpreter::executeLine(const std::string& command) {
         Py_XDECREF(errTrace);
         Py_XDECREF(errStr1);
         Py_XDECREF(errStr2);
-        state = PyEval_SaveThread();
 
         errors.write("ERROR: Python compile error details "
             "are not available.\n");
@@ -413,7 +409,7 @@ void PythonInterpreter::prependReginaToSysPath() {
 }
 
 bool PythonInterpreter::importRegina(bool fixPythonPath) {
-    PyEval_RestoreThread(state);
+    ScopedThreadRestore thread(*this);
 
     bool ok = importReginaIntoNamespace(mainNamespace, fixPythonPath);
 
@@ -436,7 +432,6 @@ bool PythonInterpreter::importRegina(bool fixPythonPath) {
         PyErr_Clear();
     }
 
-    state = PyEval_SaveThread();
     return ok;
 }
 
@@ -462,7 +457,7 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace,
 
 bool PythonInterpreter::setVar(const char* name,
         std::shared_ptr<Packet> value) {
-    PyEval_RestoreThread(state);
+    ScopedThreadRestore thread(*this);
 
     bool ok = false;
     try {
@@ -487,18 +482,16 @@ bool PythonInterpreter::setVar(const char* name,
         errors.flush();
     }
 
-    state = PyEval_SaveThread();
     return ok;
 }
 
 bool PythonInterpreter::runCode(const char* code) {
-    PyEval_RestoreThread(state);
+    ScopedThreadRestore thread(*this);
 
     PyObject* ans = PyRun_String(const_cast<char*>(code), Py_file_input,
         mainNamespace, mainNamespace);
     if (ans) {
         Py_DECREF(ans);
-        state = PyEval_SaveThread();
         return true;
     } else {
         // If the user called exit(), this will have thrown a SystemExit
@@ -510,7 +503,6 @@ bool PythonInterpreter::runCode(const char* code) {
             PyErr_Print();
         }
         PyErr_Clear();
-        state = PyEval_SaveThread();
         return false;
     }
 }
@@ -563,7 +555,7 @@ int PythonInterpreter::complete(const std::string& text, PythonCompleter& c) {
     if (! completerFunc)
         return -1;
 
-    PyEval_RestoreThread(state);
+    ScopedThreadRestore thread(*this);
 
     try {
         pybind11::handle func(completerFunc);
@@ -572,18 +564,15 @@ int PythonInterpreter::complete(const std::string& text, PythonCompleter& c) {
             pybind11::object ans = func(text, which);
             if (ans.is_none()) {
                 // No more completions available.
-                state = PyEval_SaveThread();
                 return which;
             }
             ++which;
             if (! c.addCompletion(pybind11::cast<std::string>(ans))) {
                 // The PythonCompleter object does not want more completions.
-                state = PyEval_SaveThread();
                 return which;
             }
         }
     } catch (std::runtime_error& e) {
-        state = PyEval_SaveThread();
         return -1;
     }
 }

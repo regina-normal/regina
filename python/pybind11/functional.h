@@ -76,12 +76,18 @@ public:
             func_handle(function &&f_) noexcept : f(std::move(f_)) {}
             func_handle(const func_handle &f_) { operator=(f_); }
             func_handle &operator=(const func_handle &f_) {
-                gil_scoped_acquire acq;
+                // Called on the way into a Regina function that expects
+                // a std::function argument.  In such situations the
+                // interpreter should already be holding the GIL.
+                // gil_scoped_acquire acq;
                 f = f_.f;
                 return *this;
             }
             ~func_handle() {
-                gil_scoped_acquire acq;
+                // Called on the way into and also out of a Regina function
+                // that expects a std::function argument.  In such situations
+                // the interpreter should already be holding the GIL.
+                // gil_scoped_acquire acq;
                 function kill_f(std::move(f));
             }
         };
@@ -91,7 +97,10 @@ public:
             func_handle hfunc;
             explicit func_wrapper(func_handle &&hf) noexcept : hfunc(std::move(hf)) {}
             Return operator()(Args... args) const {
-                gil_scoped_acquire acq;
+                // Called when a std::function is executed as a callback within
+                // one of Regina's own functions.  In such situations Regina's
+                // Python bindings are responsible for ensuring the GIL is held.
+                // gil_scoped_acquire acq;
                 object retval(hfunc.f(std::forward<Args>(args)...));
                 /* Visual studio 2015 parser issue: need parentheses around this expression */
                 return (retval.template cast<Return>());

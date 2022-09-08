@@ -45,6 +45,7 @@
 #include "../generic/isosig-bindings.h"
 
 using pybind11::overload_cast;
+using regina::python::GILCallbackManager;
 using regina::Isomorphism;
 using regina::MatrixInt;
 using regina::Triangulation;
@@ -225,17 +226,17 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("height") = 1,
             pybind11::arg("nThreads") = 1,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>())
         .def("retriangulate", [](const Triangulation<4>& tri, int height,
                 int threads, const std::function<bool(const std::string&,
                     Triangulation<4>&&)>& action) {
             if (threads == 1) {
                 return tri.retriangulate(height, 1, nullptr, action);
             } else {
-                pybind11::gil_scoped_release release;
+                GILCallbackManager manager;
                 return tri.retriangulate(height, threads, nullptr,
                     [&](const std::string& sig, Triangulation<4>&& t) -> bool {
-                        pybind11::gil_scoped_acquire acquire;
+                        GILCallbackManager<>::ScopedAcquire acquire(manager);
                         return action(sig, std::move(t));
                     });
             }

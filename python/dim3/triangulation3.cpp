@@ -49,6 +49,7 @@
 #include "../generic/isosig-bindings.h"
 
 using pybind11::overload_cast;
+using regina::python::GILCallbackManager;
 using regina::Example;
 using regina::Isomorphism;
 using regina::MatrixInt;
@@ -278,7 +279,7 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg("parity") = true,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>())
         .def("turaevViroApprox", &Triangulation<3>::turaevViroApprox,
             pybind11::arg(), pybind11::arg("whichRoot") = 1,
             pybind11::arg("alg") = regina::ALG_DEFAULT)
@@ -325,17 +326,17 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("height") = 1,
             pybind11::arg("nThreads") = 1,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<regina::python::GILScopedRelease>())
         .def("retriangulate", [](const Triangulation<3>& tri, int height,
                 int threads, const std::function<bool(const std::string&,
                     Triangulation<3>&&)>& action) {
             if (threads == 1) {
                 return tri.retriangulate(height, 1, nullptr, action);
             } else {
-                pybind11::gil_scoped_release release;
+                GILCallbackManager manager;
                 return tri.retriangulate(height, threads, nullptr,
                     [&](const std::string& sig, Triangulation<3>&& t) -> bool {
-                        pybind11::gil_scoped_acquire acquire;
+                        GILCallbackManager<>::ScopedAcquire acquire(manager);
                         return action(sig, std::move(t));
                     });
             }

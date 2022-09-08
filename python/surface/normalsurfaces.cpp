@@ -73,7 +73,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             pybind11::arg("which") = regina::NS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<pybind11::gil_scoped_release>())
+            pybind11::call_guard<GILScopedRelease>())
         .def(pybind11::init<const NormalSurfaces&, regina::NormalTransform>())
         .def(pybind11::init<const NormalSurfaces&, const SurfaceFilter&>())
         .def(pybind11::init<const NormalSurfaces&>())
@@ -120,7 +120,7 @@ void addNormalSurfaces(pybind11::module_& m) {
         pybind11::arg("which") = regina::NS_LIST_DEFAULT,
         pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
         pybind11::arg("tracker") = nullptr,
-        pybind11::call_guard<pybind11::gil_scoped_release>());
+        pybind11::call_guard<GILScopedRelease>());
     regina::python::add_packet_constructor<const NormalSurfaces&,
         regina::NormalTransform>(wrap);
 

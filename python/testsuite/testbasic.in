@@ -155,7 +155,12 @@ while IFS= read -r -d $'\0' i; do
 		continue
 	fi
 
-	for multithreading in 0 1; do
+	# We do not test with a separate execution thread for now, since the
+	# current implementation of PythonInterpreter requires code to be executed
+	# from the same thread that created the interpreter.
+	#
+	# for multithreading in 0 1; do
+	for multithreading in 0; do
 		# Run the test.
 		#
 		# Since we have "set -e", we need "&& dummy=" to prevent this line to
@@ -168,7 +173,8 @@ while IFS= read -r -d $'\0' i; do
 		# characters were being dumped at the beginning of the python output.
 		#
 		if [ "$multithreading" = 0 ]; then
-			echo -n "Running $testname (main thread) ... "
+			# echo -n "Running $testname (main thread) ... "
+			echo -n "Running $testname ... "
 			TERM= PYTHONIOENCODING=utf8 \
 				"$executable" "$i" > "$observed" 2>&1 && dummy=
 		else

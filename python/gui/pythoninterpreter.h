@@ -43,9 +43,12 @@
 #define __PYTHONINTERPRETER_H
 
 #include <Python.h>
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <string>
+#include <thread>
+#include "utilities/exception.h"
 
 namespace regina {
     class Packet;
@@ -134,6 +137,9 @@ class PythonInterpreter {
         static bool pythonInitialised;
             /**< Has the python system been initialised yet? */
 
+        std::thread::id thread;
+            /**< The ID of the C++ thread to be used exclusively with this
+                 subinterpreter. */
         PyThreadState* state;
             /**< The first thread state created in this particular
                  subinterpreter. */
@@ -163,7 +169,7 @@ class PythonInterpreter {
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          *
          * In the constructor, if \a fixPythonPath is \c true then:
          *
@@ -181,6 +187,13 @@ class PythonInterpreter {
             regina::python::PythonOutputStream& pyStdOut,
             regina::python::PythonOutputStream& pyStdErr,
             bool fixPythonPath = true);
+
+        /**
+         * Destructor.
+         *
+         * \pre This is called from the same C++ thread that created
+         * this Python interpreter.
+         */
         ~PythonInterpreter();
 
         /**
@@ -191,6 +204,9 @@ class PythonInterpreter {
          * This is intended for use in an interactive Python session.
          *
          * You should always test exitAttempted() after executing user code.
+         *
+         * \pre This is called from the same C++ thread that created
+         * this Python interpreter.
          */
         bool executeLine(const std::string& command);
 
@@ -203,7 +219,10 @@ class PythonInterpreter {
          * If \a fixPythonPath is \c true, then this routine will (before the
          * import) adjust the Python path so that Regina's module can be found.
          *
-         * Returns \c true on success or \c false on failure.
+         * \pre This is called from the same C++ thread that created
+         * this Python interpreter.
+         *
+         * @return \c true on success or \c false on failure.
          */
         bool importRegina(bool fixPythonPath = true);
 
@@ -211,7 +230,10 @@ class PythonInterpreter {
          * Set the given variable in Python's main namespace to
          * represent the given Regina packet.
          *
-         * Returns \c true on success or \c false on failure.
+         * \pre This is called from the same C++ thread that created
+         * this Python interpreter.
+         *
+         * @return \c true on success or \c false on failure.
          */
         bool setVar(const char* name, std::shared_ptr<Packet> value);
 
@@ -224,7 +246,10 @@ class PythonInterpreter {
          *
          * You should always test exitAttempted() after executing user code.
          *
-         * Returns \c true on success or \c false on failure.
+         * \pre This is called from the same C++ thread that created
+         * this Python interpreter.
+         *
+         * @return \c true on success or \c false on failure.
          */
         bool runScript(const regina::Script* script);
 
@@ -262,6 +287,9 @@ class PythonInterpreter {
          * (i) \a completer returns \c false to signify that no more
          * completions are required, or (ii) no more completions can be found.
          *
+         * \pre This is called from the same C++ thread that created
+         * this Python interpreter.
+         *
          * @param text the Python text to complete.
          * @param completer the callback object that will receive the
          * resulting completions (if any).
@@ -275,7 +303,22 @@ class PythonInterpreter {
 
     private:
         /**
+         * Ensures that the current C++ thread is in fact the thread that
+         * created this subinterpreter.
+         *
+         * When this function is called, it is typically verifying a
+         * precondition to some other member function of PythonInterpreter.
+         * Therefore the behaviour when this check \e fails is subject to
+         * change in future versions of Regina (since in theory, it should
+         * never happen).
+         */
+        void verifyThread() const;
+
+        /**
          * Run the given Python code in Python's main namespace.
+         *
+         * \pre This is called from the same C++ thread that created
+         * this Python interpreter.
          */
         bool runCode(const char* code);
 
@@ -316,6 +359,52 @@ class PythonInterpreter {
          */
         static bool importReginaIntoNamespace(PyObject* useNamespace,
             bool fixPythonPath = true);
+
+        /**
+         * An object that calls PyEval_RestoreThread() on construction
+         * and PyEval_SaveThread() on destruction.  This manages both
+         * (i) the Python thread state for the subinterpreter being used,
+         * and also (ii) the Python global interpreter lock.
+         *
+         * This class insists that the same C++ that created the Python
+         * subinterpreter is also used for both construction and destruction
+         * of the ScopedThreadRestore object.
+         *
+         * An object of this type cannot be copied or moved.
+         */
+        class ScopedThreadRestore {
+            private:
+                PythonInterpreter& interpreter_;
+                    /**< The Python subinterpreter being used. */
+
+            public:
+                /**
+                 * Restores the primary Python thread for the given Python
+                 * subinterpreter.
+                 *
+                 * \pre This constructor is called from the same C++ thread
+                 * that created the given interpreter.
+                 */
+                ScopedThreadRestore(PythonInterpreter& interpreter) :
+                        interpreter_(interpreter) {
+                    interpreter.verifyThread();
+                    PyEval_RestoreThread(interpreter.state);
+                }
+
+                /**
+                 * Saves the current Python thread.
+                 *
+                 * \pre This destructor is called from the same C++ thread
+                 * as the corresponding constructor.
+                 */
+                ~ScopedThreadRestore() {
+                    interpreter_.state = PyEval_SaveThread();
+                }
+
+                ScopedThreadRestore(const ScopedThreadRestore&) = delete;
+                ScopedThreadRestore& operator = (const ScopedThreadRestore&)
+                    = delete;
+        };
 };
 
 inline PrefixCompleter::PrefixCompleter() : initialised_(false) {
@@ -327,6 +416,19 @@ inline const std::string& PrefixCompleter::prefix() const {
 
 inline bool PythonInterpreter::exitAttempted() const {
     return caughtSystemExit;
+}
+
+inline void PythonInterpreter::verifyThread() const {
+    if (std::this_thread::get_id() != thread) {
+        /*
+        std::cerr << "ERROR: A PythonInterpreter was used from the wrong "
+            "C++ thread.\n\n"
+            "Please report this to the Regina developers!\n"
+            << std::endl;
+        */
+        throw regina::FailedPrecondition(
+            "PythonInterpreter used from the wrong C++ thread");
+    }
 }
 
 } // namespace regina::python
