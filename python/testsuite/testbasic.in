@@ -57,6 +57,11 @@ executable=./basic
 testdir='@BASH_CMAKE_SOURCE_DIR@/python/testsuite'
 testoutdir=`mktemp -d -t regina.XXX`
 
+# REGINA_HOME can be deduced from the executable path, but on Windows this
+# deduction gives the wrong style of path (windows vs unix style) for use
+# with the embedded basic Python interpreter.  Fix it explicitly here.
+export REGINA_HOME=../../engine
+
 # Cases that expect the python/testsuite directory as an argument:
 blacklist="file i18n memory1 orb pdf repr"
 
