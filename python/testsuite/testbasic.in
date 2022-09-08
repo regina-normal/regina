@@ -59,6 +59,9 @@ testoutdir=`mktemp -d -t regina.XXX`
 
 # Cases that expect the python/testsuite directory as an argument:
 blacklist="file i18n memory1 orb pdf repr"
+# Cases that use the PacketListener machinery, which does not currently
+# work with subinterpreters:
+blacklist="$blacklist listener memory2 memory3 snappea snapshot"
 
 echo "----------------------------------------------------------------"
 echo "Test suite for python bindings with a basic embedded interpreter"
