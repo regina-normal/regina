@@ -232,7 +232,7 @@ def displaySig(s, autos):
     print('    ' + s.str(), ' -> automorphisms: ', len(autos))
 
 print('Enumerating splitting surface signatures:')
-SigCensus.formCensus(3, displaySig)
+dummy = SigCensus.formCensus(3, displaySig)
 print()
 
 ########################################################################
@@ -259,7 +259,7 @@ def displayRegion(r):
 
 print('Finding regions:')
 t = Triangulation3.rehydrate('jofdiaabcceffhiiiedkgiilpsw')
-SatRegion.find(t, False, displayRegion)
+dummy = SatRegion.find(t, False, displayRegion)
 print()
 
 ########################################################################
@@ -277,4 +277,5 @@ c = [ (a[0].isoSig(), a[1]) for a in \
 c.sort()
 for i in c:
     print('  ' + i[0], i[1])
+
 print()

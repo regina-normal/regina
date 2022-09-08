@@ -45,13 +45,13 @@ if tree.find():
 	print('Found:', tree.buildSurface())
 else:
 	print('No solution')
-print('Visited:', tree.visited())
 
+print('Visited:', tree.visited())
 print()
 
 t = Example3.figureEight()
 tree = TautEnumeration(t)
-tree.run(dumpStructure)
+dummy = tree.run(dumpStructure)
 print('Visited:', tree.visited())
 print('Solutions:', tree.solutions())
 
@@ -59,7 +59,7 @@ print()
 
 t = Example3.figureEight()
 tree = TreeEnumeration(t, NS_QUAD)
-tree.run(dumpSurface)
+dummy = tree.run(dumpSurface)
 print('Visited:', tree.visited())
 print('Solutions:', tree.solutions())
 
@@ -67,7 +67,7 @@ print()
 
 t = Example3.trefoil()
 tree = TreeEnumeration_NonSpun(t, NS_QUAD)
-tree.run(dumpSurface)
+dummy = tree.run(dumpSurface)
 print('Visited:', tree.visited())
 print('Solutions:', tree.solutions())
 
@@ -89,21 +89,25 @@ if dat.isFeasible():
 	print(dat.extractSolution([0, 0]))
 else:
 	print('Not feasible')
+
 dat.constrainPositive(2)
 if dat.isFeasible():
 	print(dat.extractSolution([3, 0]))
 else:
 	print('Not feasible')
+
 dat.constrainZero(3) # already zero, should do nothing
 if dat.isFeasible():
 	print(dat.extractSolution([3, 0]))
 else:
 	print('Not feasible')
+
 dat.constrainPositive(5)
 if dat.isFeasible():
 	print(dat.extractSolution([3, 3]))
 else:
 	print('Not feasible')
+
 dat.constrainZero(4)
 if dat.isFeasible():
 	print(dat.extractSolution([3, 3]))
@@ -135,11 +139,13 @@ if dat.isFeasible():
 	print(dat.extractSolution([0, 0, 0] + [0] * 12))
 else:
 	print('Not feasible')
+
 dat.constrainPositive(0)
 if dat.isFeasible():
 	print(dat.extractSolution([1, 0, 0] + [0] * 12))
 else:
 	print('Not feasible')
+
 ban = BanBoundary(tab)
 ban.enforceBans(dat)
 if dat.isFeasible():
@@ -163,17 +169,20 @@ if dat.isFeasible():
 	print(dat.extractSolution([0] * 30))
 else:
 	print('Not feasible')
+
 dat.constrainPositive(35) # should be the "real" triangle coordinate #1
 if dat.isFeasible():
 	print(dat.extractSolution([0] * 23 + [1] + [0] * 6))
 else:
 	print('Not feasible')
+
 ban = BanBoundary(tab)
 ban.enforceBans(dat)
 if dat.isFeasible():
 	print(dat.extractSolution([0] * 23 + [1] + [0] * 6))
 else:
 	print('Not feasible')
+
 dat.constrainPositive(36) # should be the "real" triangle coordinate #2
 if dat.isFeasible():
 	print(dat.extractSolution([0] * 23 + [1,1] + [0] * 5))

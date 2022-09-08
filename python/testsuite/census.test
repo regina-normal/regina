@@ -61,7 +61,7 @@ def foundPartial2(g):
 def partial2(p, isos):
 	global s, partial
 	print(p.str())
-
+	
 	partial = []
 	s = GluingPermSearcher2(p, isos, False)
 	s.partialSearch(2, foundPartial2)
@@ -104,7 +104,7 @@ def foundPartial3(g):
 def partial3(p, isos):
 	global s, partial
 	print(p.str())
-
+	
 	partial = []
 	s = CompactSearcher(p, isos, True, PURGE_NON_MINIMAL)
 	s.partialSearch(2, foundPartial3)
@@ -142,7 +142,7 @@ def foundPartial4(g):
 def partial4(p, isos):
 	global s, partial
 	print(p.str())
-
+	
 	partial = []
 	s = GluingPermSearcher4(p, isos, True, True)
 	s.partialSearch(2, foundPartial4)

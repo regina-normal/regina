@@ -60,9 +60,7 @@ testoutdir=`mktemp -d -t regina.XXX`
 # Cases that expect the python/testsuite directory as an argument:
 blacklist="file i18n memory1 orb pdf repr"
 # Cases that currently lock in the callback machinery (TODO: fix these):
-blacklist="$blacklist callbacks census enumerate equality"
-blacklist="$blacklist listener memory1 memory2 memory3"
-blacklist="$blacklist snappea snapshot sort treetraversal"
+blacklist="$blacklist listener memory2 memory3 snappea snapshot"
 
 echo "----------------------------------------------------------------"
 echo "Test suite for python bindings with a basic embedded interpreter"
