@@ -190,4 +190,16 @@ class gil_scoped_release {
 };
 #endif
 
+class safe_gil_scoped_acquire {
+    gil_scoped_acquire* gil { nullptr };
+public:
+    safe_gil_scoped_acquire() {
+        if (! PyGILState_Check())
+            gil = new gil_scoped_acquire();
+    }
+    ~safe_gil_scoped_acquire() {
+        delete gil;
+    }
+};
+
 PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)

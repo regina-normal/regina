@@ -35,3 +35,59 @@ index ad5608c25..00b97c1d8 100644
                  object retval(hfunc.f(std::forward<Args>(args)...));
                  /* Visual studio 2015 parser issue: need parentheses around this expression */
                  return (retval.template cast<Return>());
+diff --git a/python/pybind11/gil.h b/python/pybind11/gil.h
+index b73aaa3f5..e4b2f1de6 100644
+--- a/python/pybind11/gil.h
++++ b/python/pybind11/gil.h
+@@ -190,4 +190,16 @@ class gil_scoped_release {
+ };
+ #endif
+ 
++class safe_gil_scoped_acquire {
++    gil_scoped_acquire* gil { nullptr };
++public:
++    safe_gil_scoped_acquire() {
++        if (! PyGILState_Check())
++            gil = new gil_scoped_acquire();
++    }
++    ~safe_gil_scoped_acquire() {
++        delete gil;
++    }
++};
++
+ PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)
+diff --git a/python/pybind11/iostream.h b/python/pybind11/iostream.h
+index 95449a07b..6dbcf91e2 100644
+--- a/python/pybind11/iostream.h
++++ b/python/pybind11/iostream.h
+@@ -98,7 +98,7 @@ private:
+     // This function must be non-virtual to be called in a destructor.
+     int _sync() {
+         if (pbase() != pptr()) { // If buffer is not empty
+-            gil_scoped_acquire tmp;
++            safe_gil_scoped_acquire tmp;
+             // This subtraction cannot be negative, so dropping the sign.
+             auto size        = static_cast<size_t>(pptr() - pbase());
+             size_t remainder = utf8_remainder();
+diff --git a/python/pybind11/pybind11.h b/python/pybind11/pybind11.h
+index bfc1c368c..976a50c40 100644
+--- a/python/pybind11/pybind11.h
++++ b/python/pybind11/pybind11.h
+@@ -2304,7 +2304,7 @@ void print(Args &&...args) {
+ 
+ error_already_set::~error_already_set() {
+     if (m_type) {
+-        gil_scoped_acquire gil;
++        safe_gil_scoped_acquire gil;
+         error_scope scope;
+         m_type.release().dec_ref();
+         m_value.release().dec_ref();
+@@ -2411,7 +2411,7 @@ template <class T> function get_override(const T *this_ptr, const char *name) {
+ 
+ #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
+     do {                                                                                          \
+-        pybind11::gil_scoped_acquire gil;                                                         \
++        pybind11::safe_gil_scoped_acquire gil;                                                    \
+         pybind11::function override                                                               \
+             = pybind11::get_override(static_cast<const cname *>(this), name);                     \
+         if (override) {                                                                           \

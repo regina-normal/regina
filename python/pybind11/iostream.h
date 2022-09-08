@@ -98,7 +98,7 @@ private:
     // This function must be non-virtual to be called in a destructor.
     int _sync() {
         if (pbase() != pptr()) { // If buffer is not empty
-            gil_scoped_acquire tmp;
+            safe_gil_scoped_acquire tmp;
             // This subtraction cannot be negative, so dropping the sign.
             auto size        = static_cast<size_t>(pptr() - pbase());
             size_t remainder = utf8_remainder();
