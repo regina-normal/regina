@@ -58,9 +58,9 @@ class Watcher(PacketListener):
 w = Watcher()
 
 print('Creating...')
-c = Container(); c.setLabel('c'); cw = Watcher(); c.listen(cw)
-t = Text('text'); t.setLabel('t'); tw = Watcher(); t.listen(tw)
-u = Text('essay'); u.setLabel('u'); uw = Watcher(); u.listen(uw)
+c = Container(); c.setLabel('c'); cw = Watcher(); dummy = c.listen(cw)
+t = Text('text'); t.setLabel('t'); tw = Watcher(); dummy = t.listen(tw)
+u = Text('essay'); u.setLabel('u'); uw = Watcher(); dummy = u.listen(uw)
 print('Inserting children t,u...')
 c.append(t)
 c.append(u)
@@ -85,10 +85,10 @@ t = None
 
 # Now test the order in which destruction events are fired.
 print('Preparing order test...')
-x = Container(); x.setLabel('x'); xw = Watcher(); x.listen(xw)
-y = Container(); y.setLabel('y'); yw = Watcher(); y.listen(yw)
-z1 = Container(); z1.setLabel('z1'); z1w = Watcher(); z1.listen(z1w)
-z2 = Container(); z2.setLabel('z2'); z2w = Watcher(); z2.listen(z2w)
+x = Container(); x.setLabel('x'); xw = Watcher(); dummy = x.listen(xw)
+y = Container(); y.setLabel('y'); yw = Watcher(); dummy = y.listen(yw)
+z1 = Container(); z1.setLabel('z1'); z1w = Watcher(); dummy = z1.listen(z1w)
+z2 = Container(); z2.setLabel('z2'); z2w = Watcher(); dummy = z2.listen(z2w)
 x.append(z1)
 x.append(z2)
 z1.append(y)
