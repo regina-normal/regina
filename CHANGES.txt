@@ -196,6 +196,10 @@ Version 7.1  [ TODO ]
         - For classes that have a bool() cast operator, this is now wrapped in
           Python using the special __bool__() function (i.e., Python will now
           cast such objects to bool in the same way).
+        - Fixed a deadlock in the GUI with functions that used callbacks (e.g.,
+          Triangulation3.retriangulate()).  These functions *did* work with
+          command-line regina-python.  The issue in the GUI was due to an
+          incompatibility with pybind11 and multiple Python subinterpreters.
     UTILITIES:
         tricensus:
             - Now supports multithreading via the new --threads option.
