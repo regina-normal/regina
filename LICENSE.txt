@@ -1,6 +1,6 @@
 
                Regina - Software for low-dimensional topology
-            Copyright (c) 1999-2021, The Regina development team
+            Copyright (c) 1999-2022, The Regina development team
 
 
 CITATION:
@@ -10,7 +10,7 @@ you would any other paper that you use.  A suggested form of reference is:
 
   Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
   "Regina: Software for low-dimensional topology",
-  http://regina-normal.github.io/, 1999-2021.
+  http://regina-normal.github.io/, 1999-2022.
 
 
 AUTHORS:

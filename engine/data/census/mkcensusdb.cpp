@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Create a census database from a list of key-value pairs               *
  *                                                                        *
- *  Copyright (c) 2014-2021, Ben Burton                                   *
+ *  Copyright (c) 2014-2022, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *

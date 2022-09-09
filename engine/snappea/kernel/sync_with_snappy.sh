@@ -3,7 +3,7 @@
 # Regina - Software for low-dimensional topology
 # Upstream synchronisation for the SnapPea kernel
 #
-# Copyright (c) 2014-2021, Ben Burton
+# Copyright (c) 2014-2022, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # --------------------------------------------------------------------------

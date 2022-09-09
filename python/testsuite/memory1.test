@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2021, Ben Burton
+# Copyright (c) 2015-2022, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests the lifetime management of packets.

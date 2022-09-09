@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Source Code Statistics
 #
-# Copyright (c) 2003-2021, Ben Burton
+# Copyright (c) 2003-2022, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: distcheck <dist-tarball>
