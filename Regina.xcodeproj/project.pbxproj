@@ -3243,6 +3243,35 @@
 		054C6A7D1DCC20DA005373F0 /* strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = strings.h; sourceTree = "<group>"; };
 		054C6A811DCC2127005373F0 /* example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
 		054C6A841DCC2148005373F0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		054DF93E28CABBC300EC3D81 /* sizes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sizes.cpp; sourceTree = "<group>"; };
+		054DF93F28CABBC300EC3D81 /* tree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tree.cpp; sourceTree = "<group>"; };
+		054DF94028CABC2800EC3D81 /* basic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = basic.cpp; sourceTree = "<group>"; };
+		054DF94128CABC2900EC3D81 /* testbasic.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testbasic.in; sourceTree = "<group>"; };
+		054DF94228CABC8300EC3D81 /* retriangulate.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = retriangulate.out; sourceTree = "<group>"; };
+		054DF94328CABC8300EC3D81 /* tricensus.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = tricensus.filter; sourceTree = "<group>"; };
+		054DF94428CABC8300EC3D81 /* regconcat.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regconcat.filter; sourceTree = "<group>"; };
+		054DF94528CABC8300EC3D81 /* censuslookup.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = censuslookup.test; sourceTree = "<group>"; };
+		054DF94628CABC8300EC3D81 /* regconvert.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regconvert.test; sourceTree = "<group>"; };
+		054DF94728CABC8400EC3D81 /* regconcat.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regconcat.test; sourceTree = "<group>"; };
+		054DF94828CABC8400EC3D81 /* trisetcmp.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = trisetcmp.out; sourceTree = "<group>"; };
+		054DF94928CABC8400EC3D81 /* regfiletype.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regfiletype.test; sourceTree = "<group>"; };
+		054DF94A28CABC8400EC3D81 /* sigcensus.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = sigcensus.test; sourceTree = "<group>"; };
+		054DF94B28CABC8400EC3D81 /* regfiledump.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regfiledump.test; sourceTree = "<group>"; };
+		054DF94C28CABC8400EC3D81 /* runtest.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = runtest.sh; sourceTree = "<group>"; };
+		054DF94D28CABC8400EC3D81 /* tricensus.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = tricensus.test; sourceTree = "<group>"; };
+		054DF94E28CABC8400EC3D81 /* tricensus.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = tricensus.out; sourceTree = "<group>"; };
+		054DF94F28CABC8400EC3D81 /* regconcat.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = regconcat.out; sourceTree = "<group>"; };
+		054DF95028CABC8400EC3D81 /* trisetcmp.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = trisetcmp.test; sourceTree = "<group>"; };
+		054DF95128CABC8500EC3D81 /* regconvert.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = regconvert.out; sourceTree = "<group>"; };
+		054DF95228CABC8500EC3D81 /* regfiledump.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = regfiledump.out; sourceTree = "<group>"; };
+		054DF95328CABC8500EC3D81 /* retriangulate.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = retriangulate.filter; sourceTree = "<group>"; };
+		054DF95428CABC8500EC3D81 /* sigcensus.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = sigcensus.out; sourceTree = "<group>"; };
+		054DF95528CABC8500EC3D81 /* regconvert.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = regconvert.filter; sourceTree = "<group>"; };
+		054DF95628CABC8500EC3D81 /* genout.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = genout.in; sourceTree = "<group>"; };
+		054DF95728CABC8500EC3D81 /* testall.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testall.in; sourceTree = "<group>"; };
+		054DF95828CABC8500EC3D81 /* regfiletype.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = regfiletype.out; sourceTree = "<group>"; };
+		054DF95928CABC8500EC3D81 /* censuslookup.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = censuslookup.out; sourceTree = "<group>"; };
+		054DF95A28CABC8600EC3D81 /* retriangulate.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = retriangulate.test; sourceTree = "<group>"; };
 		054F7DF0278EA2970036B923 /* bool.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = bool.test; sourceTree = "<group>"; };
 		054F7DF1278EA2970036B923 /* bool.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = bool.out; sourceTree = "<group>"; };
 		054F7E27180B93770090B1F3 /* WelcomePopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePopupController.h; sourceTree = "<group>"; };
@@ -4376,8 +4405,6 @@
 		05CAE6A2274B0FC2007C93F3 /* isosig-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "isosig-bindings.h"; sourceTree = "<group>"; };
 		05CAE6A3274B94C9007C93F3 /* snappea.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = snappea.out; sourceTree = "<group>"; };
 		05CAE6A4274B94C9007C93F3 /* snappea.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = snappea.test; sourceTree = "<group>"; };
-		05CAE6A5274E1E6C007C93F3 /* deprecated.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = deprecated.test; sourceTree = "<group>"; };
-		05CAE6A6274E1E6C007C93F3 /* deprecated.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = deprecated.out; sourceTree = "<group>"; };
 		05CAE6A7274E1E6C007C93F3 /* exception.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = exception.test; sourceTree = "<group>"; };
 		05CAE6A8274E1E6C007C93F3 /* exception.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = exception.out; sourceTree = "<group>"; };
 		05CAED55274F777400D0A35C /* abeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = abeliangroup.cpp; sourceTree = "<group>"; };
@@ -5124,6 +5151,7 @@
 				05431FD11C40F67C009BC072 /* alltypes.test */,
 				05772F03270CFB6000D26D8A /* angles.out */,
 				05772F08270CFB6000D26D8A /* angles.test */,
+				054DF94028CABC2800EC3D81 /* basic.cpp */,
 				054F7DF1278EA2970036B923 /* bool.out */,
 				054F7DF0278EA2970036B923 /* bool.test */,
 				05CAE6842746878C007C93F3 /* bytes.out */,
@@ -5138,8 +5166,6 @@
 				05A0251E25D48E500091372D /* constructors.out */,
 				05A0251D25D48E500091372D /* constructors.test */,
 				050F5D861B9BAB9C00C1F681 /* cube.orb */,
-				05CAE6A6274E1E6C007C93F3 /* deprecated.out */,
-				05CAE6A5274E1E6C007C93F3 /* deprecated.test */,
 				05CAE60F2743F1ED007C93F3 /* discs.out */,
 				05CAE6102743F1ED007C93F3 /* discs.test */,
 				050F5D871B9BAB9C00C1F681 /* dodec.orb */,
@@ -5235,6 +5261,7 @@
 				0598027C2667067C002D5D57 /* swapping.out */,
 				059802802667067C002D5D57 /* swapping.test */,
 				050F5DA21B9BAB9C00C1F681 /* testall.in */,
+				054DF94128CABC2900EC3D81 /* testbasic.in */,
 				050F5DA31B9BAB9C00C1F681 /* theta_in_solid_torus.orb */,
 				057B0CAE26A2AC4E0017F5EA /* tightencode.out */,
 				057B0CAD26A2AC4E0017F5EA /* tightencode.test */,
@@ -7091,7 +7118,32 @@
 		05685FEE1F9713B000085B44 /* testsuite */ = {
 			isa = PBXGroup;
 			children = (
+				054DF95928CABC8500EC3D81 /* censuslookup.out */,
+				054DF94528CABC8300EC3D81 /* censuslookup.test */,
+				054DF95628CABC8500EC3D81 /* genout.in */,
 				05685FEF1F9713D900085B44 /* README.txt */,
+				054DF94428CABC8300EC3D81 /* regconcat.filter */,
+				054DF94F28CABC8400EC3D81 /* regconcat.out */,
+				054DF94728CABC8400EC3D81 /* regconcat.test */,
+				054DF95528CABC8500EC3D81 /* regconvert.filter */,
+				054DF95128CABC8500EC3D81 /* regconvert.out */,
+				054DF94628CABC8300EC3D81 /* regconvert.test */,
+				054DF95228CABC8500EC3D81 /* regfiledump.out */,
+				054DF94B28CABC8400EC3D81 /* regfiledump.test */,
+				054DF95828CABC8500EC3D81 /* regfiletype.out */,
+				054DF94928CABC8400EC3D81 /* regfiletype.test */,
+				054DF95328CABC8500EC3D81 /* retriangulate.filter */,
+				054DF94228CABC8300EC3D81 /* retriangulate.out */,
+				054DF95A28CABC8600EC3D81 /* retriangulate.test */,
+				054DF94C28CABC8400EC3D81 /* runtest.sh */,
+				054DF95428CABC8500EC3D81 /* sigcensus.out */,
+				054DF94A28CABC8400EC3D81 /* sigcensus.test */,
+				054DF95728CABC8500EC3D81 /* testall.in */,
+				054DF94328CABC8300EC3D81 /* tricensus.filter */,
+				054DF94E28CABC8400EC3D81 /* tricensus.out */,
+				054DF94D28CABC8400EC3D81 /* tricensus.test */,
+				054DF94828CABC8400EC3D81 /* trisetcmp.out */,
+				054DF95028CABC8400EC3D81 /* trisetcmp.test */,
 			);
 			path = testsuite;
 			sourceTree = "<group>";
@@ -7454,6 +7506,8 @@
 			isa = PBXGroup;
 			children = (
 				059D017925B6A715004150F7 /* shell.cpp */,
+				054DF93E28CABBC300EC3D81 /* sizes.cpp */,
+				054DF93F28CABBC300EC3D81 /* tree.cpp */,
 			);
 			path = timing;
 			sourceTree = "<group>";
