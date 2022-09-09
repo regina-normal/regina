@@ -130,7 +130,7 @@ esac
 found=
 broken=
 
-# Decide on a suitable timeout for our tests.
+# Decide on a suitable timeout (measured in seconds) for our tests.
 case "$os" in
 	Windows )
 		# The Windows simulator is *enormously* slow.
@@ -138,7 +138,7 @@ case "$os" in
 		timeout=1800
 		;;
 	* )
-		timeout=10
+		timeout=30
 		;;
 esac
 
