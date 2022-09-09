@@ -130,6 +130,18 @@ esac
 found=
 broken=
 
+# Decide on a suitable timeout for our tests.
+case "$os" in
+	Windows )
+		# The Windows simulator is *enormously* slow.
+		# Give it half an hour (gulp).
+		timeout=1800
+		;;
+	* )
+		timeout=10
+		;;
+esac
+
 # We need to loop through all files $testdir/*.test .
 # Because $testdir may contain spaces, we use a slightly tortured loop
 # with the source 'find' statement at the end (not the beginning).
@@ -177,11 +189,11 @@ while IFS= read -r -d $'\0' i; do
 			# echo -n "Running $testname (main thread) ... "
 			echo -n "Running $testname ... "
 			TERM= PYTHONIOENCODING=utf8 \
-				"$executable" "$i" > "$observed" 2>&1 && dummy=
+				"$executable" -t "$timeout" "$i" > "$observed" 2>&1 && dummy=
 		else
 			echo -n "Running $testname (separate thread) ... "
 			TERM= PYTHONIOENCODING=utf8 \
-				"$executable" -t "$i" > "$observed" 2>&1 && dummy=
+				"$executable" -m -t "$timeout" "$i" > "$observed" 2>&1 && dummy=
 		fi
 
 		# Catch exitcode.

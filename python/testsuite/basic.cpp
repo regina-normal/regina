@@ -43,8 +43,8 @@
  * one line at a time (so even if a script is passed via the command line,
  * it behaves as though the input were interactive).
  *
- * The interpreter runs under a strict time limit: it will exit with
- * non-zero error status if the hard-coded timeout limit is exceeded.
+ * If -t <seconds> is passed, the interpreter runs under a strict time limit:
+ * it will exit with non-zero error status if the given time limit is exceeded.
  * This is so that deadlock scenarios can be detected and reported effectively.
  *
  * The main reason for having this basic interpreter is so we can more easily
@@ -56,12 +56,11 @@
  * up to whoever calls this interpreter to set these paths appropriately.
  */
 
-const int timeout = 100; // measured in seconds
-
+long timeout = 0; // measured in seconds
 bool mainThread = true;
 
+std::condition_variable cond; // used with timeout mechanism
 std::mutex mutex; // guards cond
-std::condition_variable cond;
 
 class NativeOutputStream : public regina::python::PythonOutputStream {
     private:
@@ -82,10 +81,11 @@ void usage(const char* progName, const std::string& error = std::string()) {
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " [ -t ] [ <commands> ]\n";
+    std::cerr << "    " << progName << " [ -m ] [ -t <seconds> ] [ <commands> ]\n";
     std::cerr << "    " << progName << " -v\n";
     std::cerr << std::endl;
-    std::cerr << "    -t : Execute commands in a different thread\n";
+    std::cerr << "    -m : Execute commands in a different thread\n";
+    std::cerr << "    -t : Timeout after the given number of seconds\n";
     std::cerr << "    -v : Output the Python version being used\n";
     std::cerr << std::endl;
     std::cerr << "    <script> : Read commands line-by-line from the "
@@ -107,8 +107,6 @@ void watcher() {
 }
 
 void run(regina::python::PythonInterpreter& py, std::istream& input) {
-    std::thread w(watcher);
-
     std::string line;
     while (input) {
         std::getline(input, line);
@@ -120,28 +118,50 @@ void run(regina::python::PythonInterpreter& py, std::istream& input) {
             }).join();
         }
     }
-
-    cond.notify_one();
-    w.join();
 }
 
 int main(int argc, char* argv[]) {
     std::string input;
 
-    if (argc > 3)
-        usage(argv[0]);
-    else if (argc == 3) {
-        if (strcmp(argv[1], "-t") != 0)
-            usage(argv[0]);
-        mainThread = false;
-        input = argv[2];
-    } else if (argc == 2) {
-        if (strcmp(argv[1], "-v") == 0) {
-            std::cout << PY_MAJOR_VERSION << '.' << PY_MINOR_VERSION << '.'
-                << PY_MICRO_VERSION << std::endl;
-            return 0;
+    for (int i = 1; i < argc; ++i) {
+        if (*argv[i] == '-') {
+            if (! (argv[i][1] && ! argv[i][2]))
+                usage(argv[0], "Unknown option.");
+            switch (argv[i][1]) {
+                case 'v':
+                    if (argc == 2) {
+                        std::cout << PY_MAJOR_VERSION << '.'
+                            << PY_MINOR_VERSION << '.'
+                            << PY_MICRO_VERSION << std::endl;
+                        return 0;
+                    } else
+                        usage(argv[0],
+                            "Argument -v cannot be used with other options.");
+                case 'm':
+                    mainThread = false;
+                    break;
+                case 't':
+                    if (i == argc - 1)
+                        usage(argv[0], "Missing timeout argument.");
+                    ++i;
+                    {
+                        char* err = nullptr;
+                        timeout = strtol(argv[i], &err, 10);
+                        if (*err)
+                            usage(argv[0], "Timeout should be an integer.");
+                        else if (timeout <= 0)
+                            usage(argv[0],
+                                "Timeout should be strictly positive.");
+                    }
+                    break;
+                default:
+                    usage(argv[0], "Unknown option.");
+            }
+        } else {
+            if (i != argc - 1)
+                usage(argv[0], "The <commands> argument must come last.");
+            input = argv[i];
         }
-        input = argv[1];
     }
 
     NativeOutputStream out(std::cout);
@@ -160,7 +180,14 @@ int main(int argc, char* argv[]) {
     py.executeLine("regina.GlobalDirs.deduceDirs('" + exec + "');");
 
     if (input.empty()) {
-        run(py, std::cin);
+        if (timeout) {
+            std::thread w(watcher);
+            run(py, std::cin);
+            cond.notify_one();
+            w.join();
+        } else {
+            run(py, std::cin);
+        }
     } else {
         std::ifstream in(input);
         if (! in) {
@@ -168,7 +195,14 @@ int main(int argc, char* argv[]) {
                 << std::endl;
             return 1;
         }
-        run(py, in);
+        if (timeout) {
+            std::thread w(watcher);
+            run(py, in);
+            cond.notify_one();
+            w.join();
+        } else {
+            run(py, in);
+        }
     }
 
     return 0;
