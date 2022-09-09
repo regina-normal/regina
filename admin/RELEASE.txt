@@ -23,6 +23,8 @@ Program version:
 Plus copyright years in:
     engine/doxygen/doc-footer.html
     python/modulemain.cpp
+    qtui/src/regina.plist
+    qtui/src/reginaabout.cpp (several places)
     ... and the copyright statement in the license (see below)
 
 Full license details:

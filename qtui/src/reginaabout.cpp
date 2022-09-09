@@ -55,7 +55,7 @@
 #define NMZ_VERSION_STRING REGINA_XSTR(NMZ_VERSION)
 
 const QString ReginaAbout::regCopyright(
-    tr("Copyright (c) 1999-2021, The Regina development team"));
+    tr("Copyright (c) 1999-2022, The Regina development team"));
 
 const QString ReginaAbout::regDescription(
     tr("Software for low-dimensional topology"));
@@ -66,13 +66,13 @@ const QString ReginaAbout::regReleased(
 const QString ReginaAbout::regWebsite("http://regina-normal.github.io/");
 
 const QString ReginaAbout::regLicense( tr( 
-    "Copyright (c) 1999-2021, The Regina development team\n\n"
+    "Copyright (c) 1999-2022, The Regina development team\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
     "  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,\n"
     "  \"Regina: Software for low-dimensional topology\",\n"
-    "  http://regina-normal.github.io/, 1999-2021.\n\n"
+    "  http://regina-normal.github.io/, 1999-2022.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"

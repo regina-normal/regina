@@ -39,7 +39,7 @@
  *  <center><b>
  *  Regina<br>
  *  Software for low-dimensional topology<br>
- *  Copyright &copy; 1999-2021, The Regina development team
+ *  Copyright &copy; 1999-2022, The Regina development team
  *  </b></center>
  *
  *  This documentation describes the functions, classes and related
@@ -65,7 +65,7 @@
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
  *  "Regina: Software for low-dimensional topology",
- *  http://regina-normal.github.io/ , 1999-2021.
+ *  http://regina-normal.github.io/ , 1999-2022.
  *
  *  <h3>Authors</h3>
  *
