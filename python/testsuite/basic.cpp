@@ -56,7 +56,7 @@
  * up to whoever calls this interpreter to set these paths appropriately.
  */
 
-const int timeout = 10; // measured in seconds
+const int timeout = 100; // measured in seconds
 
 bool mainThread = true;
 
