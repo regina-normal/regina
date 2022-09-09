@@ -68,7 +68,6 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
     // union of vertex links.  Make sure we are linking just the one vertex.
 
     Vertex<4>* ans = nullptr;
-    LargeInteger ansMult;
 
     for (size_t pent = 0; pent < nPents; pent++) {
         const Pentachoron<4>* p = tri.pentachoron(pent);
@@ -80,7 +79,6 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
                 if (! ans) {
                     // We've found our first and only possible candidate.
                     ans = p->vertex(type);
-                    ansMult = coord;
                 } else if (ans != p->vertex(type)) {
                     // We seem to be linking more than one vertex.
                     return nullptr;
@@ -173,6 +171,12 @@ const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
 
     // All good!
     return ans;
+}
+
+std::pair<const Triangle<4>*, const Triangle<4>*>
+        NormalHypersurface::isThinTriangleLink() const {
+    // TODO: Implement this.
+    return { nullptr, nullptr };
 }
 
 } // namespace regina

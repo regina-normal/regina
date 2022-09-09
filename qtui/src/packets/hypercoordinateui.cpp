@@ -131,11 +131,20 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
 
             if ((v = s.isVertexLink()))
                 return tr("Vertex %1").arg(v->index());
-            else if ((e = s.isThinEdgeLink())) {
-                return tr("Edge %1").
-                    arg(e->index());
-            } else
-                return QVariant();
+            else if ((e = s.isThinEdgeLink()))
+                return tr("Edge %1").arg(e->index());
+            else {
+                auto thin = s.isThinTriangleLink();
+                if (! thin.first)
+                    return QVariant();
+                else if (! thin.second)
+                    return tr("Triangle %1").
+                        arg(thin.first->index());
+                else
+                    return tr("Triangles %1, %2").
+                        arg(thin.first->index()).
+                        arg(thin.second->index());
+            }
         } else {
             // The default case:
             regina::LargeInteger ans = Coordinates::getCoordinate(coordSystem_,

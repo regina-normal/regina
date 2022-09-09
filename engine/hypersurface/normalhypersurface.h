@@ -788,11 +788,14 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Determines whether or not this hypersurface is vertex linking.
          * A <i>vertex linking</i> hypersurface contains only tetrahedra.
          *
+         * This behaves differently from isVertexLink(), which only detects
+         * the link of a single vertex (or a multiple of such a link).
+         * In contrast, this routine will also detect the union of
+         * several \e different vertex links.
+         *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
-         *
-         * \todo \opt Cache results.
          *
          * @return \c true if and only if this hypersurface is vertex linking.
          */
@@ -801,30 +804,66 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Determines whether or not a rational multiple of this hypersurface
          * is the link of a single vertex.
          *
+         * This behaves differently from isVertexLinking(), which will also
+         * detect a union of several different vertex links.  In contrast,
+         * this routine will only identify the link of a \e single vertex
+         * (or a multiple of such a link).
+         *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * \todo \opt Cache results.
-         *
-         * @return the vertex linked by this hypersurface, or \c null if this
-         * hypersurface is not the link of a single vertex.
+         * @return the vertex linked by a rational multiple of this
+         * hypersurface, or \c null if this hypersurface is not a multiple of
+         * a single vertex link.
          */
         const Vertex<4>* isVertexLink() const;
         /**
          * Determines whether or not a rational multiple of this hypersurface
          * is the thin link of a single edge.
          *
+         * Here a \e thin edge link is a normal hypersurface which appears
+         * naturally as the frontier of a regular neighbourhood of an edge,
+         * with no need for any further normalisation.
+         *
+         * A hypersurface (or its rational multiple) can be the thin edge
+         * link of at most one edge.
+         *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * \todo \opt Cache results.
-         *
-         * @return the edge linked by this hypersurface, or \c null if this
-         * hypersurface is not a thin edge link.
+         * @return the edge linked by a rational multiple of this hypersurface,
+         * or \c null if this hypersurface is not a multiple of a single
+         * thin edge link.
          */
         const Edge<4>* isThinEdgeLink() const;
+        /**
+         * Determines whether or not a rational multiple of this hypersurface
+         * is the thin link of a single triangle.
+         *
+         * Here a \e thin triangle link is a normal hypersurface which appears
+         * naturally as the frontier of a regular neighbourhood of a triangle,
+         * with no need for any further normalisation.
+         *
+         * A hypersurface (or its rational multiple) can be the thin triangle
+         * link of at most two triangles.  If there are indeed two different
+         * triangles \a t1 and \a t2 for which a rational multiple of this
+         * hypersurface can be expressed as the thin triangle link, then
+         * the pair (\a t1, \a t2) will be returned.  If there is only one
+         * such triangle \a t, then the pair (\a t, \c null) will be returned.
+         * If no rational multiple of this hypersurface is the thin link
+         * of any triangle, then the pair (\c null, \c null) will be returned.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * @return a pair containing the triangle(s) linked by a rational
+         * multiple of this hypersurface, as described above.
+         */
+        std::pair<const Triangle<4>*, const Triangle<4>*> isThinTriangleLink()
+            const;
 
         /**
          * Returns the first homology group of this hypersurface.

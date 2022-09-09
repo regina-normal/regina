@@ -79,7 +79,6 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
     // union of vertex links.  Make sure we are linking just the one vertex.
 
     Vertex<3>* ans = nullptr;
-    LargeInteger ansMult;
 
     for (size_t tet = 0; tet < nTets; tet++) {
         const Tetrahedron<3>* t = tri.tetrahedron(tet);
@@ -91,7 +90,6 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
                 if (! ans) {
                     // We've found our first and only possible candidate.
                     ans = t->vertex(type);
-                    ansMult = coord;
                 } else if (ans != t->vertex(type)) {
                     // We seem to be linking more than one vertex.
                     return nullptr;

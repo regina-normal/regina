@@ -110,6 +110,8 @@ void addNormalHypersurface(pybind11::module_& m) {
             pybind11::return_value_policy::reference)
         .def("isThinEdgeLink", &NormalHypersurface::isThinEdgeLink,
             pybind11::return_value_policy::reference)
+        .def("isThinTriangleLink", &NormalHypersurface::isThinTriangleLink,
+            pybind11::return_value_policy::reference)
         .def("homology", &NormalHypersurface::homology,
             pybind11::return_value_policy::reference_internal)
         .def("triangulate", &NormalHypersurface::triangulate)
