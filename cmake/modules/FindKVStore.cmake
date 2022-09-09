@@ -17,7 +17,7 @@
 # - the library supports reading from multiple processes (e.g., not LevelDB);
 # - the library supports duplicate keys (e.g., not Kyoto Cabinet).
 #
-# Copyright (c) 2021, Ben Burton <bab@debian.org>
+# Copyright (c) 2021-2022, Ben Burton <bab@debian.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
