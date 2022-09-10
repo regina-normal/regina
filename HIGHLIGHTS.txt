@@ -18,7 +18,8 @@ Version 7.1  [ TODO ]
           handlebody recognition (thanks to Alex He).
         - The tricensus utility now supports multithreaded operation, and
           has a new output option that preserves simplex/vertex labelling.
-        - Includes the standard K3 surface as a ready-made example 4-manifold.
+        - Includes the standard K3 surface as a ready-made example 4-manifold
+          (thanks to Rhuaidi Burke for the relatively small triangulation).
         - Greater support for "tight encodings" for several types of objects;
           these use short text tokens, with no loss of information and no
           simplex/vertex/crossing relabelling.  These need Python or C++ to use.
@@ -28,10 +29,16 @@ Version 7.1  [ TODO ]
         - Everything that was deprecated in version 7.0 has now been removed
           entirely.  See https://regina-normal.github.io/api/regina7.html
           for instructions on how to update your scripts.
-        - The join() operation for simplices in triangulations now checks its
-          preconditions, and throws an exception if they fail.  This is because
-          incorrect use of join() is a common source of errors for users.
+        - Some routines now verify some of their easy-to-test preconditions,
+          and throw exceptions if they fail.  Expanding this type of testing
+          will be an ongoing project across future releases, and it will never
+          cover *all* preconditions (since some are too expensive to test
+          automatically).  The initial focus will be on routines that are
+          common sources of user errors (e.g., Simplex::join()).
         - Python now wraps all C++ bool() cast operators.
+        - Fixed a deadlock that occured in GUI python consoles (not in
+          command-line python or regina-python) when working with callbacks
+          (e.g., when passing a pure python function to retriangulate()).
 
 Version 7.0  [ 19 December, 2021 ]
 
