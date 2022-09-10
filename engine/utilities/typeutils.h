@@ -126,6 +126,8 @@ constexpr void for_constexpr(Action&& action) {
  * but it may differ (particuarly if the return type of \a action
  * depends upon its integer argument).
  *
+ * @param value the runtime value that determines the selection; that is, the
+ * argument that will be passed to the given action as a compile-time constant.
  * @param action the action to perform for whichever integer \a i matches
  * the given runtime value.  See above for the interface that \a action
  * should adhere to.
@@ -195,6 +197,8 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  * \exception std::runtime_error the given runtime value is not within the
  * range <i>from</i>, ..., (<i>to</i>-1).
  *
+ * @param value the runtime value that determines the selection; that is, the
+ * argument that will be passed to the given action as a compile-time constant.
  * @param action the action to perform for whichever integer \a i matches
  * the given runtime value.  See above for the interface that \a action
  * should adhere to.
