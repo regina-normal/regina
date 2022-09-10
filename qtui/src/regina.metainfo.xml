@@ -61,6 +61,16 @@
   </provides>
 
   <releases>
+    <release version="7.1" date="2022-09-15">
+      <description>
+        <p>
+          Adds intersection forms, normalised edge links, handlebody
+          recognition, multithreaded census construction, and widespread
+          support for tight encodings, plus several other features and
+          improvements.
+        </p>
+      </description>
+    </release>
     <release version="7.0" date="2021-12-19">
       <description>
         <p>

@@ -78,7 +78,7 @@
       where the triangulation might be embeddable;
      </para></listitem>
      <listitem><para>
-      3-sphere, 3-ball, solid torus and unknot recognition,
+      3-sphere, 3-ball, handlebody and unknot recognition,
       as well as connected sum decomposition,
       irreducibility testing and Hakenness testing;
      </para></listitem>
@@ -205,7 +205,7 @@
    To analyse 4-manifold triangulations, &regina; offers a similar
    suite of algebraic and combinatorial tools, including
    detailed information about the skeleton and edge/vertex links,
-   various homology and homotopy groups,
+   various homology and homotopy groups, intersection forms,
    analysis and tree decompositions of the facet pairing graph,
    isomorphism testing, and isomorphism signatures.
   </para>
