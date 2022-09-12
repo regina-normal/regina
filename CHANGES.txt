@@ -141,6 +141,8 @@ Version 7.1  [ 15 September, 2022 ]
         Struct TightEncodable<T>:
             - New base class for classes that support tight encodings
               and decodings.
+        Class Triangle<3>:
+            - New routine linkingSurface().
         Class Triangulation<dim>:
             - New suite of routines countBoundaryFaces().
             - New suite of public routines dualBoundaryMap() (these were
@@ -169,6 +171,7 @@ Version 7.1  [ 15 September, 2022 ]
             - New routines longitudeCuts() and meridian().
             - Routines longitude() and meridianLongitude() now throw
               exceptions on error instead of returning null.
+            - New routine linkingSurface().
         Class Triangulation<4>:
             - New routine intersectionForm().
             - New optimisations that reduce the need for 3-sphere/3-ball

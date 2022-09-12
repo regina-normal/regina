@@ -1179,6 +1179,30 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
+         * Returns the link of the given face as a normal surface.
+         *
+         * Be aware that, after constructing the link as the frontier of a
+         * regular neighbourhood of the given face, making this \e normal might
+         * require further normalisation steps.
+         *
+         * Because of this, the resulting surface might not be recognised as a
+         * \e thin link (i.e., a link of a face where no normalisation is
+         * required, as recognised by routines such as
+         * NormalSurface::isThinEdgeLink()).  Indeed, in some pathological
+         * cases, the resulting surface might even be empty (since there
+         * are scenarios in which the link normalises away to nothing).
+         *
+         * \tparam subdim the dimension of the face to link; this must be
+         * between 0 and 2 inclusive.
+         *
+         * \pre The given face is in fact a face of this triangulation.
+         *
+         * @return the corresponding face linking normal surface.
+         */
+        template <int subdim>
+        NormalSurface linkingSurface(const Face<3, subdim>& face) const;
+
+        /**
          * Determines if this triangulation is 0-efficient.
          * A triangulation is 0-efficient if its only normal spheres and
          * discs are vertex linking, and if it has no 2-sphere boundary

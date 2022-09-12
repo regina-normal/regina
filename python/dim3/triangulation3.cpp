@@ -292,6 +292,9 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("meridianLongitude", &Triangulation<3>::meridianLongitude,
             pybind11::return_value_policy::reference_internal)
+        .def("linkingSurface", &Triangulation<3>::linkingSurface<0>)
+        .def("linkingSurface", &Triangulation<3>::linkingSurface<1>)
+        .def("linkingSurface", &Triangulation<3>::linkingSurface<2>)
         .def("isZeroEfficient", &Triangulation<3>::isZeroEfficient)
         .def("knowsZeroEfficient", &Triangulation<3>::knowsZeroEfficient)
         .def("hasSplittingSurface", &Triangulation<3>::hasSplittingSurface)

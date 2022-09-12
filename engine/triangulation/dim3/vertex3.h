@@ -309,6 +309,10 @@ inline long Face<3, 0>::linkEulerChar() const {
     return linkEulerChar_;
 }
 
+inline NormalSurface Face<3, 0>::linkingSurface() const {
+    return triangulation().linkingSurface(*this);
+}
+
 } // namespace regina
 
 #endif

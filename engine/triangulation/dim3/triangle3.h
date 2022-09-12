@@ -163,6 +163,23 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          */
         bool isCone();
 
+        /**
+         * Returns the link of this triangle as a normal surface.
+         *
+         * Be aware that, after constructing the link as the frontier of a
+         * regular neighbourhood of the triangle, making this \e normal might
+         * require further normalisation steps.
+         *
+         * Because of this, the resulting surface might not be recognised as a
+         * \e thin triangle link (i.e., a triangle link where no normalisation
+         * is required).  Indeed, in some pathological cases, the resulting
+         * surface might even be empty (since there are scenarios in which
+         * the triangle link normalises away to nothing).
+         *
+         * @return the corresponding triangle linking normal surface.
+         */
+        NormalSurface linkingSurface() const;
+
     private:
         /**
          * Creates a new triangle and marks it as belonging to the
@@ -196,6 +213,10 @@ inline bool Face<3, 2>::isMobiusBand() {
 inline bool Face<3, 2>::isCone() {
     type();
     return (type_ == DUNCEHAT || type_ == CONE || type_ == HORN);
+}
+
+inline NormalSurface Face<3, 2>::linkingSurface() const {
+    return triangulation().linkingSurface(*this);
 }
 
 } // namespace regina

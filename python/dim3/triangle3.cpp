@@ -68,6 +68,7 @@ void addTriangle3(pybind11::module_& m) {
         .def("subtype", &Triangle<3>::subtype)
         .def("isMobiusBand", &Triangle<3>::isMobiusBand)
         .def("isCone", &Triangle<3>::isCone)
+        .def("linkingSurface", &Triangle<3>::linkingSurface)
         .def("isValid", &Triangle<3>::isValid)
         .def("hasBadIdentification", &Triangle<3>::hasBadIdentification)
         .def("hasBadLink", &Triangle<3>::hasBadLink)

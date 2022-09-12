@@ -109,6 +109,10 @@ inline Face<3, 1>::Face(Component<3>* component) :
         detail::FaceBase<3, 1>(component) {
 }
 
+inline NormalSurface Face<3, 1>::linkingSurface() const {
+    return triangulation().linkingSurface(*this);
+}
+
 } // namespace regina
 
 #endif

@@ -4,7 +4,6 @@ SET ( FILES
   complement.cpp
   crushtri.cpp
   decompose.cpp
-  edge3.cpp
   homology.cpp
   homologicaldata.cpp
   hydrate.cpp
