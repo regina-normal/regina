@@ -175,6 +175,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("isOriented", &Triangulation<2>::isOriented)
         .def("isIdeal", &Triangulation<2>::isIdeal)
         .def("isConnected", &Triangulation<2>::isConnected)
+        .def("fundamentalGroup", &Triangulation<2>::fundamentalGroup,
+            pybind11::return_value_policy::reference_internal)
         .def("isMinimal", &Triangulation<2>::isMinimal)
         .def("orient", &Triangulation<2>::orient)
         .def("reflect", &Triangulation<2>::reflect)
