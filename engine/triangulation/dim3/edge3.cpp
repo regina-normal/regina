@@ -42,8 +42,12 @@ NormalSurface Face<3, 1>::linkingSurface() const {
     //
     // However, this normalisation always involves expanding the edge
     // into a larger subcomplex using the following rules:
-    // - at least two edges of a triangle -> absorb the full triangle
-    // - at least two triangles of a tetrahedron -> absorb the full tetrahedron
+    // 1) at least two edges of a triangle -> absorb the full triangle
+    // 2) at least two triangles of a tetrahedron -> absorb the full tetrahedron
+    //
+    // Strictly speaking, only rule (1) is necessary, and we really only need
+    // to track the edges of the subcomplex; however, we track triangles and
+    // tetrahedra also to simplify some other parts of the implementation.
     //
     // The resulting edge link is then the frontier of a regular neighbourhood
     // of the resulting subcomplex.
