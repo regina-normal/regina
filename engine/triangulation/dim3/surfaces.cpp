@@ -328,13 +328,14 @@ bool Triangulation<3>::hasSplittingSurface() const {
 }
 
 template <int subdim>
-NormalSurface Triangulation<3>::linkingSurface(const Face<3, subdim>& face)
-        const {
+std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface(
+        const Face<3, subdim>& face) const {
     static_assert(0 <= subdim && subdim < 3,
         "Triangulation<3>::linkingSurface() requires a face of dimension "
         "0, 1 or 2.");
 
     Vector<LargeInteger> coords(7 * size());
+    bool thin = true;
 
     if constexpr (subdim == 0) {
         // Vertex links are trivial to construct.
@@ -417,6 +418,7 @@ NormalSurface Triangulation<3>::linkingSurface(const Face<3, subdim>& face)
 
                     if (found == 2) {
                         // Absorb the entire tetrahedron.
+                        thin = false;
                         use3[tet->index()] = true;
 
                         for (int j = 0; j < 4; ++j) {
@@ -472,6 +474,7 @@ NormalSurface Triangulation<3>::linkingSurface(const Face<3, subdim>& face)
 
                         if (found == 2) {
                             // Absorb the entire triangle.
+                            thin = false;
                             use2[triangle->index()] = true;
                             process2.push(triangle);
 
@@ -540,17 +543,17 @@ doneTet:
         delete[] use3;
     }
 
-    return NormalSurface(*this, NS_STANDARD, std::move(coords));
+    return { NormalSurface(*this, NS_STANDARD, std::move(coords)), thin };
 }
 
 // Instantiate linkingSurface() for all possible template arguments,
 // so that the implementation can stay out of the headers.
-template NormalSurface Triangulation<3>::linkingSurface<0>(const Face<3, 0>&)
-    const;
-template NormalSurface Triangulation<3>::linkingSurface<1>(const Face<3, 1>&)
-    const;
-template NormalSurface Triangulation<3>::linkingSurface<2>(const Face<3, 2>&)
-    const;
+template std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface<0>(
+    const Face<3, 0>&) const;
+template std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface<1>(
+    const Face<3, 1>&) const;
+template std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface<2>(
+    const Face<3, 2>&) const;
 
 } // namespace regina
 

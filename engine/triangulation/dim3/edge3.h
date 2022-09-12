@@ -74,20 +74,19 @@ class Face<3, 1> : public detail::FaceBase<3, 1> {
         /**
          * Returns the link of this edge as a normal surface.
          *
-         * Be aware that, after constructing the edge link as the frontier of
-         * a regular neighbourhood of the edge, making this \e normal might
-         * require further normalisation steps (this will happen if the edge
-         * appears more than once within the same triangle).
+         * Constructing the link of a edge begins with building the frontier
+         * of a regular neighbourhood of the edge.  If this is already a
+         * normal surface, then then link is called \e thin.  Otherwise
+         * the usual normalisation steps are performed until the surface
+         * becomes normal; note that these normalisation steps could
+         * change the topology of the surface, and in some pathological
+         * cases could even reduce it to the empty surface.
          *
-         * Because of this, the resulting surface might not be recognised as a
-         * \e thin edge link (i.e., an edge link where no normalisation is
-         * required).  Indeed, in some pathological cases, the resulting
-         * surface might even be empty (since there are scenarios in which
-         * the edge link normalises away to nothing).
-         *
-         * @return the corresponding edge linking normal surface.
+         * @return a pair (\a s, \a thin), where \a s is the edge linking
+         * normal surface, and \a thin is \c true if and only if this link
+         * is thin (i.e., no additional normalisation steps were required).
          */
-        NormalSurface linkingSurface() const;
+        std::pair<NormalSurface, bool> linkingSurface() const;
 
     protected:
         /**
@@ -109,7 +108,7 @@ inline Face<3, 1>::Face(Component<3>* component) :
         detail::FaceBase<3, 1>(component) {
 }
 
-inline NormalSurface Face<3, 1>::linkingSurface() const {
+inline std::pair<NormalSurface, bool> Face<3, 1>::linkingSurface() const {
     return triangulation().linkingSurface(*this);
 }
 

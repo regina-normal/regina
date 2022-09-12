@@ -91,7 +91,7 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                 tri, regina::NS_STANDARD);
 
             for (auto e : tri.edges()) {
-                NormalSurface link = e->linkingSurface();
+                auto [ link, thin ] = e->linkingSurface();
 
                 if (! (matching * link.vector()).isZero()) {
                     std::ostringstream msg;
@@ -140,14 +140,40 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                 }
                 */
 
-                auto found = link.isNormalEdgeLink();
-                if (std::find(found.begin(), found.end(), e) == found.end()) {
-                    std::ostringstream msg;
-                    msg << "Triangulation " << name <<
-                        ", edge " << e->index() << ": linking surface "
-                        << link.vector() << " is not recognised as a "
-                        "normalised edge link of the edge in question.";
-                    CPPUNIT_FAIL(msg.str());
+                {
+                    auto found = link.isNormalEdgeLink();
+                    if (std::find(found.begin(), found.end(), e) ==
+                            found.end()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name <<
+                            ", edge " << e->index() << ": linking surface "
+                            << link.vector() << " is not recognised as a "
+                            "normalised edge link of the edge in question.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                {
+                    auto found = link.isThinEdgeLink();
+                    if (thin) {
+                        if (e != found.first && e != found.second) {
+                            std::ostringstream msg;
+                            msg << "Triangulation " << name <<
+                                ", edge " << e->index() << ": linking surface "
+                                << link.vector() << " is not recognised as a "
+                                "thin edge link of the edge in question.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } else {
+                        if (e == found.first || e == found.second) {
+                            std::ostringstream msg;
+                            msg << "Triangulation " << name <<
+                                ", edge " << e->index() << ": linking surface "
+                                << link.vector() << " is incorrectly "
+                                "recognised as a thin edge link of the "
+                                "edge in question.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
                 }
             }
 
@@ -159,7 +185,7 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                 auto link = s.isThinEdgeLink();
                 if (link.first) {
                     if (! s.isTwoSided()) {
-                        if (s + s != link.first->linkingSurface()) {
+                        if (s + s != link.first->linkingSurface().first) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
                                 ", edge " << link.first->index() <<
@@ -168,7 +194,7 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                             CPPUNIT_FAIL(msg.str());
                         }
                     } else  {
-                        if (s != link.first->linkingSurface()) {
+                        if (s != link.first->linkingSurface().first) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
                                 ", edge " << link.first->index() <<
@@ -181,7 +207,7 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                     if (link.second) {
                         // If the surface is the thin link of two
                         // distinct edges then it must be two-sided.
-                        if (s != link.second->linkingSurface()) {
+                        if (s != link.second->linkingSurface().first) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
                                 ", edge " << link.second->index() <<
@@ -205,27 +231,36 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                 //   *thin* edge link from edge 4.
                 // - Edge 1 has a link that normalises away to nothing.
 
+                // We unroll what should be a for loop here, since
+                // NormalSurface does not have a default constructor.
+                std::pair<NormalSurface, bool> link[5] {
+                    tri.edge(0)->linkingSurface(),
+                    tri.edge(1)->linkingSurface(),
+                    tri.edge(2)->linkingSurface(),
+                    tri.edge(3)->linkingSurface(),
+                    tri.edge(4)->linkingSurface() };
+
                 for (int i = 2; i < 5; ++i) {
-                    if (tri.edge(i)->linkingSurface().isThinEdgeLink().first
-                            != tri.edge(i)) {
+                    if ((! link[i].second) ||
+                            (link[i].first.isThinEdgeLink().first !=
+                            tri.edge(i))) {
                         std::ostringstream msg;
                         msg << "Triangulation dLQbcbcaefv, edge " << i << ": "
                             "linking surface is not a thin edge link.";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
-                if (tri.edge(0)->linkingSurface().isThinEdgeLink().first
-                        != tri.edge(4)) {
+                if (link[0].second || link[0].first != link[4].first) {
                     std::ostringstream msg;
                     msg << "Triangulation dLQbcbcaefv, edge 0: "
-                        "linking surface is not the thin link of edge 4 "
-                        "as expected.";
+                        "linking surface is not think and also the "
+                        "thin link of edge 4, as expected.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (! tri.edge(1)->linkingSurface().isEmpty()) {
+                if (link[1].second || ! link[1].first.isEmpty()) {
                     std::ostringstream msg;
                     msg << "Triangulation dLQbcbcaefv, edge 1: "
-                        "linking surface is not zero as expected.";
+                        "linking surface is not thick and empty, as expected.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

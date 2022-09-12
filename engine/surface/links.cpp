@@ -297,7 +297,7 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
         // Treat the empty surface separately.
         std::vector<const Edge<3>*> ans;
         for (auto e : tri.edges())
-            if (e->linkingSurface().isEmpty())
+            if (e->linkingSurface().first.isEmpty())
                 ans.push_back(e);
         return ans;
     }
@@ -484,7 +484,7 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
 
     std::vector<const Edge<3>*> ans;
     for (auto e : weightZero)
-        if (e->linkingSurface() == mult)
+        if (e->linkingSurface().first == mult)
             ans.push_back(e);
     return ans;
 }

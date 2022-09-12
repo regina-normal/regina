@@ -1181,26 +1181,26 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Returns the link of the given face as a normal surface.
          *
-         * Be aware that, after constructing the link as the frontier of a
-         * regular neighbourhood of the given face, making this \e normal might
-         * require further normalisation steps.
-         *
-         * Because of this, the resulting surface might not be recognised as a
-         * \e thin link (i.e., a link of a face where no normalisation is
-         * required, as recognised by routines such as
-         * NormalSurface::isThinEdgeLink()).  Indeed, in some pathological
-         * cases, the resulting surface might even be empty (since there
-         * are scenarios in which the link normalises away to nothing).
+         * Constructing the link of a face begins with building the frontier
+         * of a regular neighbourhood of the face.  If this is already a
+         * normal surface, then then link is called \e thin.  Otherwise
+         * the usual normalisation steps are performed until the surface
+         * becomes normal; note that these normalisation steps could
+         * change the topology of the surface, and in some pathological
+         * cases could even reduce it to the empty surface.
          *
          * \tparam subdim the dimension of the face to link; this must be
          * between 0 and 2 inclusive.
          *
-         * \pre The given face is in fact a face of this triangulation.
+         * \pre The given face is a face of this triangulation.
          *
-         * @return the corresponding face linking normal surface.
+         * @return a pair (\a s, \a thin), where \a s is the face linking
+         * normal surface, and \a thin is \c true if and only if this link
+         * is thin (i.e., no additional normalisation steps were required).
          */
         template <int subdim>
-        NormalSurface linkingSurface(const Face<3, subdim>& face) const;
+        std::pair<NormalSurface, bool> linkingSurface(
+            const Face<3, subdim>& face) const;
 
         /**
          * Determines if this triangulation is 0-efficient.
