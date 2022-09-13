@@ -173,7 +173,9 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 4)) {
             const regina::Vertex<3>* v = s.isVertexLink();
             auto [ eLinks, eThin ] = s.isNormalEdgeLink();
+            auto [ tLinks, tThin ] = s.isNormalTriangleLink();
             auto ePos = eLinks.begin();
+            auto tPos = tLinks.begin();
 
             QString ans;
 
@@ -197,7 +199,6 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     }
                 }
             }
-
             if (eLinks.size() > eThin) {
                 if (ans.isEmpty()) {
                     // eThin == 0.
@@ -215,6 +216,44 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                         ans += tr("; normal edges %1").arg((*ePos++)->index());
                         for ( ; ePos != eLinks.end(); ++ePos)
                             ans += tr(", %1").arg((*ePos++)->index());
+                    }
+                }
+            }
+
+            if (tThin) {
+                if (ans.isEmpty()) {
+                    if (tThin == 1) {
+                        ans += tr("Thin triangle %1").arg((*tPos++)->index());
+                    } else {
+                        ans += tr("Thin triangles %1, %2").
+                            arg((*tPos++)->index()).arg((*tPos++)->index());
+                    }
+                } else {
+                    if (tThin == 1) {
+                        ans += tr("; thin triangle %1").arg((*tPos++)->index());
+                    } else {
+                        ans += tr("; thin triangles %1, %2").
+                            arg((*tPos++)->index()).arg((*tPos++)->index());
+                    }
+                }
+            }
+            if (tLinks.size() > tThin) {
+                if (ans.isEmpty()) {
+                    // tThin == 0.
+                    if (tLinks.size() == 1) {
+                        ans += tr("Normal triangle %1").arg((*tPos++)->index());
+                    } else {
+                        ans += tr("Normal triangles %1").arg((*tPos++)->index());
+                        for ( ; tPos != tLinks.end(); ++tPos)
+                            ans += tr(", %1").arg((*tPos++)->index());
+                    }
+                } else {
+                    if (tLinks.size() == tThin + 1) {
+                        ans += tr("; normal triangle %1").arg((*tPos++)->index());
+                    } else {
+                        ans += tr("; normal triangles %1").arg((*tPos++)->index());
+                        for ( ; tPos != tLinks.end(); ++tPos)
+                            ans += tr(", %1").arg((*tPos++)->index());
                     }
                 }
             }

@@ -138,6 +138,8 @@ void addNormalSurface(pybind11::module_& m) {
             pybind11::return_value_policy::reference)
         .def("isNormalEdgeLink", &NormalSurface::isNormalEdgeLink,
             pybind11::return_value_policy::reference)
+        .def("isNormalTriangleLink", &NormalSurface::isNormalTriangleLink,
+            pybind11::return_value_policy::reference)
         .def("isSplitting", &NormalSurface::isSplitting)
         .def("isCentral", &NormalSurface::isCentral)
         .def("countBoundaries", &NormalSurface::countBoundaries)

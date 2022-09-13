@@ -1107,6 +1107,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \e normalised edge link (which could end up far away from the
          * edge, or could be normalised into a surface with different
          * topology, or could even be normalised away to nothing).
+         * Although isNormalEdgeLink() will also indicate thin edge links,
+         * this test has significantly less overhead (and so should be faster).
          *
          * A surface (or its rational multiple) can be the \e thin edge link
          * of at most two edges.  If there are indeed two different edges
@@ -1169,6 +1171,51 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * of these links are thin, as described above.
          */
         std::pair<std::vector<const Edge<3>*>, int> isNormalEdgeLink() const;
+        /**
+         * Determines whether or not a rational multiple of this surface
+         * is the normalised link of a single triangle.
+         *
+         * Here the phrase \e normalised link of a triangle \a t means the
+         * frontier of a regular neighbourhood of \a t, converted into a
+         * normal surface by expanding away from the triangle using the
+         * normalisation process.  It could be that there is no normalisation
+         * required at all (in which case it is also a \e thin triangle link).
+         * However, it could be that the normalisation process expands
+         * the surface far away from the triangle itself, or changes its
+         * topology, or disconnects the surface, or even normalises it
+         * away to an empty surface.
+         *
+         * Unlike edge links, there is no separate routine isThinTriangleLink();
+         * if you need this information then you can extract it from the return
+         * value of this function (which indicates how many links are thin).
+         *
+         * A surface (or its rational multiple) could be the normalised link
+         * of many triangles.  The return value will be a pair (\a v, \a thin),
+         * where:
+         *
+         * - \a v is a vector containing all such triangles.  This will begin
+         *   with the triangles for which this surface is a thin link, followed
+         *   by the triangles where normalisation was required; within each
+         *   category the triangles will be ordered by their index within the
+         *   triangulation.
+         *
+         * - \a thin is either 0, 1 or 2, indicating how many triangles this
+         *   surface is a thin link for.
+         *
+         * If no rational multiple of this surface is the normalised link of
+         * any triangle, then \a link will be 0 and \a v will be the empty
+         * vector.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * @return a vector containing the triangle(s) linked by a rational
+         * multiple of this surface and an integer indicating how many
+         * of these links are thin, as described above.
+         */
+        std::pair<std::vector<const Triangle<3>*>, int> isNormalTriangleLink()
+            const;
         /**
          * Determines whether or not this surface is a splitting surface.
          * A \a splitting surface is a compact surface containing
@@ -1760,6 +1807,24 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * result as a property.
          */
         void calculateBoundaries() const;
+
+        /**
+         * Determines whether or not a rational multiple of this surface
+         * \e could be the normalised link of a face of positive dimension.
+         *
+         * A non-null return value is \e not a guarantee that this surface
+         * \e is such a link; however, if this routine returns no value then
+         * this \e is a guarantee that the surface is not such a link.
+         *
+         * The precise tests that this routine carries out involve a trade-off
+         * between speed and mathematical power, and so are subject to change
+         * in future versions of Regina.
+         *
+         * @return the precise multiple of this surface that \e could be a
+         * normalised non-vertex face link, or no value if we can prove
+         * that this surface is not such a link.
+         */
+        std::optional<NormalSurface> couldLinkFace() const;
 
     friend class XMLNormalSurfaceReader;
 };
