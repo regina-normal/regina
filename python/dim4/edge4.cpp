@@ -93,6 +93,7 @@ void addEdge4(pybind11::module_& m) {
             return new regina::Triangulation<2>(e.buildLink());
         })
         .def("buildLinkInclusion", &Edge<4>::buildLinkInclusion)
+        .def("linkingSurface", &Edge<4>::linkingSurface)
         .def_static("ordering", &Edge<4>::ordering)
         .def_static("faceNumber", &Edge<4>::faceNumber)
         .def_static("containsVertex", &Edge<4>::containsVertex)

@@ -84,6 +84,7 @@ void addTetrahedron4(pybind11::module_& m) {
         .def("isLinkOrientable", &Tetrahedron<4>::isLinkOrientable)
         .def("isBoundary", &Tetrahedron<4>::isBoundary)
         .def("inMaximalForest", &Tetrahedron<4>::inMaximalForest)
+        .def("linkingSurface", &Tetrahedron<4>::linkingSurface)
         .def_static("ordering", &Tetrahedron<4>::ordering)
         .def_static("faceNumber", &Tetrahedron<4>::faceNumber)
         .def_static("containsVertex", &Tetrahedron<4>::containsVertex)

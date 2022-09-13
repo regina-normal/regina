@@ -213,8 +213,7 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  */
 template <int dim, int subdim>
 class Face : public detail::FaceBase<dim, subdim> {
-    static_assert(dim == 2 || dim > 4 ||
-        (dim == 4 && subdim >= 2 && subdim <= 3),
+    static_assert(dim == 2 || dim > 4,
         "The generic implementation of Face<dim, subdim> "
         "should not be used for those face class that are specialised "
         "in Regina's standard dimensions.");

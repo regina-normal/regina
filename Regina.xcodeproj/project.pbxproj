@@ -691,6 +691,10 @@
 		053CAB2D1DA710FE00A92F98 /* perm3.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB291DA710FE00A92F98 /* perm3.h */; };
 		053CAB2E1DA710FE00A92F98 /* perm4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB2A1DA710FE00A92F98 /* perm4.h */; };
 		053CAB2F1DA710FE00A92F98 /* perm5.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB2B1DA710FE00A92F98 /* perm5.h */; };
+		053CB70828D0168D006B37B0 /* tetrahedron4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CB70528D0168B006B37B0 /* tetrahedron4.h */; };
+		053CB70928D0168D006B37B0 /* hypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CB70628D0168C006B37B0 /* hypersurfaces.cpp */; };
+		053CB70A28D0168D006B37B0 /* hypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CB70628D0168C006B37B0 /* hypersurfaces.cpp */; };
+		053CB70B28D0168D006B37B0 /* triangle4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CB70728D0168C006B37B0 /* triangle4.h */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		0541AF4B1B8BE2F5002E166B /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* cyclotomic.cpp */; };
@@ -1767,9 +1771,7 @@
 		05C1BEE71DCA89E3007C946B /* triangulation7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BECB1DCA89DA007C946B /* triangulation7.cpp */; };
 		05C1BEE81DCA89E3007C946B /* triangulation8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BECC1DCA89DA007C946B /* triangulation8.cpp */; };
 		05C1BEF11DCAB4DC007C946B /* isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BEF01DCAB4DC007C946B /* isomorphism.h */; };
-		05C2659A2824917700232420 /* edge3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265982824917700232420 /* edge3.cpp */; };
 		05C2659B2824917700232420 /* edge3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C265992824917700232420 /* edge3.h */; };
-		05C2659C2824917A00232420 /* edge3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265982824917700232420 /* edge3.cpp */; };
 		05C2659F2825FB0800232420 /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C2659D2825FB0300232420 /* links.cpp */; };
 		05C265A02825FB0900232420 /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C2659D2825FB0300232420 /* links.cpp */; };
 		05C265A3282B3B3900232420 /* tri4composition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265A1282B3B3900232420 /* tri4composition.cpp */; };
@@ -3074,6 +3076,9 @@
 		053CAB291DA710FE00A92F98 /* perm3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm3.h; sourceTree = "<group>"; };
 		053CAB2A1DA710FE00A92F98 /* perm4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm4.h; sourceTree = "<group>"; };
 		053CAB2B1DA710FE00A92F98 /* perm5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm5.h; sourceTree = "<group>"; };
+		053CB70528D0168B006B37B0 /* tetrahedron4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetrahedron4.h; sourceTree = "<group>"; };
+		053CB70628D0168C006B37B0 /* hypersurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypersurfaces.cpp; sourceTree = "<group>"; };
+		053CB70728D0168C006B37B0 /* triangle4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangle4.h; sourceTree = "<group>"; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		0541AF491B8BE2F5002E166B /* cyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclotomic.h; sourceTree = "<group>"; };
@@ -4305,7 +4310,6 @@
 		05C1BED21DCA89DA007C946B /* triangulation14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation14.cpp; sourceTree = "<group>"; };
 		05C1BED31DCA89DA007C946B /* triangulation15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation15.cpp; sourceTree = "<group>"; };
 		05C1BEF01DCAB4DC007C946B /* isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
-		05C265982824917700232420 /* edge3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edge3.cpp; sourceTree = "<group>"; };
 		05C265992824917700232420 /* edge3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edge3.h; sourceTree = "<group>"; };
 		05C2659D2825FB0300232420 /* links.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links.cpp; sourceTree = "<group>"; };
 		05C265A1282B3B3900232420 /* tri4composition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4composition.cpp; sourceTree = "<group>"; };
@@ -7755,7 +7759,6 @@
 				05F0A01D1DBF0B5E00117BFC /* component3.h */,
 				05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */,
 				05F0A01F1DBF0B5E00117BFC /* decompose.cpp */,
-				05C265982824917700232420 /* edge3.cpp */,
 				05C265992824917700232420 /* edge3.h */,
 				05E7DA332758760100B01C09 /* homologicaldata.cpp */,
 				05E7DA342758760100B01C09 /* homologicaldata.h */,
@@ -7790,12 +7793,15 @@
 				05F09FE71DBF078800117BFC /* component4.h */,
 				05F09FE81DBF078800117BFC /* edge4.cpp */,
 				05F09FE91DBF078800117BFC /* edge4.h */,
+				053CB70628D0168C006B37B0 /* hypersurfaces.cpp */,
 				05F09FEC1DBF078800117BFC /* pentachoron4.h */,
 				05DC13801FEB86E900171D66 /* retriangulate.cpp */,
 				05F09FED1DBF078800117BFC /* simplify.cpp */,
 				05F09FEE1DBF078800117BFC /* simplifyglobal.cpp */,
 				05F09FEF1DBF078800117BFC /* skeleton.cpp */,
 				05F09FF01DBF078800117BFC /* subdivide.cpp */,
+				053CB70528D0168B006B37B0 /* tetrahedron4.h */,
+				053CB70728D0168C006B37B0 /* triangle4.h */,
 				05F09FF51DBF078800117BFC /* triangulation4.cpp */,
 				05F09FF61DBF078800117BFC /* triangulation4.h */,
 				05F09FF71DBF078800117BFC /* vertex4.cpp */,
@@ -7868,6 +7874,7 @@
 				05721EEA1F97153E00A83FFC /* graph.h in Headers */,
 				054208761DF0D0B50018AB24 /* definition.h in Headers */,
 				05A067251DFA68190047872E /* pluggedtorusbundle.h in Headers */,
+				053CB70828D0168D006B37B0 /* tetrahedron4.h in Headers */,
 				05C265C228307D0600232420 /* facetpairing-canonical-impl.h in Headers */,
 				055115001DCDF63000EC753C /* isomorphism.h in Headers */,
 				05A0672F1DFA68190047872E /* satblocktypes.h in Headers */,
@@ -7974,6 +7981,7 @@
 				052F9F40180600FB00FAE4DF /* matrix2.h in Headers */,
 				05888BD8283F0F8B00181D2D /* tightencoding-impl.h in Headers */,
 				058C305F1DCAF6F8006162D2 /* forward.h in Headers */,
+				053CB70B28D0168D006B37B0 /* triangle4.h in Headers */,
 				054209231DF28C990018AB24 /* context.h in Headers */,
 				05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */,
 				05199A5D25C63CCE0006B8FA /* typeutils.h in Headers */,
@@ -9338,7 +9346,6 @@
 				05249EB71DBC16C4001FE29E /* example2.cpp in Sources */,
 				052FA19E1806129B00FAE4DF /* perm3.cpp in Sources */,
 				05277AC825CF9D16001E4134 /* intutils.cpp in Sources */,
-				05C2659C2824917A00232420 /* edge3.cpp in Sources */,
 				05721F1D1F97165E00A83FFC /* link.cpp in Sources */,
 				05721EF71F97156600A83FFC /* simplify.cpp in Sources */,
 				0512E09226DF34D100DDB222 /* sfsalt.cpp in Sources */,
@@ -9531,6 +9538,7 @@
 				05772ECE270CF99C00D26D8A /* xmlsnappeawriter.cpp in Sources */,
 				0586426B19D92D550019E056 /* SurfacesMatching.mm in Sources */,
 				05E7DA322755019600B01C09 /* markedabeliangroup.cpp in Sources */,
+				053CB70A28D0168D006B37B0 /* hypersurfaces.cpp in Sources */,
 				05249ECE1DBC16D6001FE29E /* pyforeign.cpp in Sources */,
 				05C1BEB81DCA7CB3007C946B /* boundary2.cpp in Sources */,
 				052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */,
@@ -10290,7 +10298,6 @@
 				0591E7E21C4F750200793A9C /* normalhypersurfaces.cpp in Sources */,
 				052F9F73180600FB00FAE4DF /* choose_generators.c in Sources */,
 				054208C51DF0D2740018AB24 /* torusbundle.cpp in Sources */,
-				05C2659A2824917700232420 /* edge3.cpp in Sources */,
 				052FA04D180600FB00FAE4DF /* orientable.cpp in Sources */,
 				052F9F90180600FB00FAE4DF /* my_malloc.c in Sources */,
 				05C1BED61DCA89DA007C946B /* triangulation4.cpp in Sources */,
@@ -10329,6 +10336,7 @@
 				05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */,
 				05888BD7283F0F8B00181D2D /* tightencoding.cpp in Sources */,
 				05AA71EE1FB17E0100186E30 /* flype.cpp in Sources */,
+				053CB70928D0168D006B37B0 /* hypersurfaces.cpp in Sources */,
 				052F9F5D180600FB00FAE4DF /* text.cpp in Sources */,
 				05FB46E81DD92D4A00BB00E5 /* homgrouppresentation.cpp in Sources */,
 				0512E09C26DF354500DDB222 /* triangles.cpp in Sources */,

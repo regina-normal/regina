@@ -46,6 +46,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
+#include "hypersurface/normalhypersurface.h"
 #include "progress/progresstracker.h"
 #include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"
@@ -1113,6 +1114,42 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         bool idealToFinite();
 
         /*@}*/
+        /**
+         * \name Normal Hypersurfaces
+         */
+        /*@{*/
+
+        /**
+         * Returns the link of the given face as a normal hypersurface.
+         *
+         * Constructing the link of a face begins with building the frontier
+         * of a regular neighbourhood of the face.  If this is already a
+         * normal hypersurface, then then link is called \e thin.  Otherwise
+         * some basic normalisation steps are performed until the hypersurface
+         * becomes normal; note that these normalisation steps could
+         * change the topology of the hypersurface, and in some pathological
+         * cases could even reduce it to the empty hypersurface.
+         *
+         * Although normalisation of arbitrary embedded 3-manifolds is messy,
+         * for face links the process is thankfully simpler.  Essentially,
+         * any changes will be limited to operations analagous to compressions
+         * and boundary compressions along discs and 3-balls, as well as
+         * removing trivial 4-sphere components.
+         *
+         * \tparam subdim the dimension of the face to link; this must be
+         * between 0 and 3 inclusive.
+         *
+         * \pre The given face is a face of this triangulation.
+         *
+         * @return a pair (\a s, \a thin), where \a s is the face linking
+         * normal hypersurface, and \a thin is \c true if and only if this link
+         * is thin (i.e., no additional normalisation steps were required).
+         */
+        template <int subdim>
+        std::pair<NormalHypersurface, bool> linkingSurface(
+            const Face<4, subdim>& face) const;
+
+        /*@}*/
 
     private:
         /**
@@ -1148,6 +1185,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/dim4/pentachoron4.h"
+#include "triangulation/dim4/tetrahedron4.h"
+#include "triangulation/dim4/triangle4.h"
 #include "triangulation/dim4/edge4.h"
 #include "triangulation/dim4/vertex4.h"
 #include "triangulation/dim4/component4.h"

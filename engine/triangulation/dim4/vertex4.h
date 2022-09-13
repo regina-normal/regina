@@ -176,6 +176,18 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          */
         bool isIdeal() const;
 
+        /**
+         * Returns the link of this vertex as a normal hypersurface.
+         *
+         * Note that vertex linking hypersurfaces only ever contain tetrahedra
+         * (not prisms).  Moreover, vertex links are always thin
+         * (i.e., after constructing the frontier of a regular neighbourhood
+         * of the vertex, no further normalisation steps are required).
+         *
+         * @return the corresponding vertex linking normal hypersurface.
+         */
+        NormalHypersurface linkingSurface() const;
+
     private:
         /**
          * Creates a new vertex and marks it as belonging to the
@@ -202,6 +214,10 @@ inline const Triangulation<3>& Face<4, 0>::buildLink() const {
 
 inline bool Face<4, 0>::isIdeal() const {
     return ideal_;
+}
+
+inline NormalHypersurface Face<4, 0>::linkingSurface() const {
+    return std::move(triangulation().linkingSurface(*this).first);
 }
 
 } // namespace regina

@@ -32,7 +32,7 @@ Version 7.1  [ 15 September, 2022 ]
         Class Cut:
             - New class for describing graph-style cuts on triangulations or
               facet pairings.
-        Class Edge<3>:
+        Class Edge<3>, Edge<4>:
             - Now specialised (instead of using the generic Face template).
             - New routine linkingSurface().
         Class Example<2>:
@@ -133,6 +133,9 @@ Version 7.1  [ 15 September, 2022 ]
         Class SnaPeaTriangulation:
             - The Link constructor now throws an exception if the link is so
               large that SnapPea cannot handle it.
+        Class Tetrahedron<4>:
+            - Now specialised (instead of using the generic Face template).
+            - New routine linkingSurface().
         Class TreeTraversal<...>, TreeEnumeration<...>, TautEnumeration<...>,
                 TreeSingleSoln<...>:
             - Now supports ban constraints whose class constructors require
@@ -142,6 +145,9 @@ Version 7.1  [ 15 September, 2022 ]
             - New base class for classes that support tight encodings
               and decodings.
         Class Triangle<3>:
+            - New routine linkingSurface().
+        Class Triangle<4>:
+            - Now specialised (instead of using the generic Face template).
             - New routine linkingSurface().
         Class Triangulation<dim>:
             - New suite of routines countBoundaryFaces().
@@ -174,11 +180,12 @@ Version 7.1  [ 15 September, 2022 ]
             - New routine linkingSurface().
         Class Triangulation<4>:
             - New routine intersectionForm().
+            - New routine linkingSurface().
             - New optimisations that reduce the need for 3-sphere/3-ball
               recognition when modifying a triangulation.
         Class Vector:
             - Routine scaleDown() now returns the gcd that was used.
-        Class Vertex<3>:
+        Class Vertex<3>, Vertex<4>:
             - New routine linkingSurface().
         Function for_constexpr():
             - New routine to support compile-time for loops.

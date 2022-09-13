@@ -304,6 +304,10 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true )
+        .def("linkingSurface", &Triangulation<4>::linkingSurface<0>)
+        .def("linkingSurface", &Triangulation<4>::linkingSurface<1>)
+        .def("linkingSurface", &Triangulation<4>::linkingSurface<2>)
+        .def("linkingSurface", &Triangulation<4>::linkingSurface<3>)
         .def("insertTriangulation", &Triangulation<4>::insertTriangulation)
         .def("isoSig", &Triangulation<4>::isoSig<>)
         .def("isoSig_EdgeDegrees",

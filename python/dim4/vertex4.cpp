@@ -80,6 +80,7 @@ void addVertex4(pybind11::module_& m) {
         .def("hasBadLink", &Vertex<4>::hasBadLink)
         .def("isIdeal", &Vertex<4>::isIdeal)
         .def("isBoundary", &Vertex<4>::isBoundary)
+        .def("linkingSurface", &Vertex<4>::linkingSurface)
         .def_static("ordering", &Vertex<4>::ordering)
         .def_static("faceNumber", &Vertex<4>::faceNumber)
         .def_static("containsVertex", &Vertex<4>::containsVertex)

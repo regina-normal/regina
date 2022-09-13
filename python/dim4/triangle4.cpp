@@ -88,6 +88,7 @@ void addTriangle4(pybind11::module_& m) {
         .def("isValid", &Triangle<4>::isValid)
         .def("hasBadIdentification", &Triangle<4>::hasBadIdentification)
         .def("hasBadLink", &Triangle<4>::hasBadLink)
+        .def("linkingSurface", &Triangle<4>::linkingSurface)
         .def_static("ordering", &Triangle<4>::ordering)
         .def_static("faceNumber", &Triangle<4>::faceNumber)
         .def_static("containsVertex", &Triangle<4>::containsVertex)

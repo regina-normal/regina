@@ -164,6 +164,29 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          */
         Isomorphism<4> buildLinkInclusion() const;
 
+        /**
+         * Returns the link of this edge as a normal hypersurface.
+         *
+         * Constructing the link of a edge begins with building the frontier
+         * of a regular neighbourhood of the edge.  If this is already a
+         * normal hypersurface, then then link is called \e thin.  Otherwise
+         * some basic normalisation steps are performed until the hypersurface
+         * becomes normal; note that these normalisation steps could
+         * change the topology of the hypersurface, and in some pathological
+         * cases could even reduce it to the empty hypersurface.
+         *
+         * Although normalisation of arbitrary embedded 3-manifolds is messy,
+         * for edge links the process is thankfully simpler.  Essentially,
+         * any changes will be limited to operations analagous to compressions
+         * and boundary compressions along discs and 3-balls, as well as
+         * removing trivial 4-sphere components.
+         *
+         * @return a pair (\a s, \a thin), where \a s is the edge linking
+         * normal hypersurface, and \a thin is \c true if and only if this link
+         * is thin (i.e., no additional normalisation steps were required).
+         */
+        std::pair<NormalHypersurface, bool> linkingSurface() const;
+
     private:
         /**
          * Creates a new edge and marks it as belonging to the
@@ -182,6 +205,10 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
 
 inline Face<4, 1>::Face(Component<4>* component) :
         detail::FaceBase<4, 1>(component), link_(nullptr) {
+}
+
+inline std::pair<NormalHypersurface, bool> Face<4, 1>::linkingSurface() const {
+    return triangulation().linkingSurface(*this);
 }
 
 } // namespace regina

@@ -350,11 +350,6 @@ std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface(
         // 2) at least two triangles of a tetrahedron -> absorb the full
         //    tetrahedron.
         //
-        // Strictly speaking, only rule (1) is necessary, and we really only
-        // need to track the edges of the subcomplex; however, we track
-        // triangles and tetrahedra also to simplify some other parts of the
-        // implementation.
-        //
         // The resulting face link is then the frontier of a regular
         // neighbourhood of the resulting subcomplex.
         //
