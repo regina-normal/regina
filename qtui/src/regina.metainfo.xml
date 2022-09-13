@@ -61,7 +61,7 @@
   </provides>
 
   <releases>
-    <release version="7.1" date="2022-09-15">
+    <release version="7.1" date="2022-09-25">
       <description>
         <p>
           Adds intersection forms, normalised edge links, handlebody
