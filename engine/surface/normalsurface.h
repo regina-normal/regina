@@ -1141,22 +1141,34 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * In particular, this test behaves differently from isThinEdgeLink(),
          * which tests for thin edge links only (where no additional
-         * normalisation is required).
+         * normalisation is required).  If you are only interested in thin
+         * edge links, then you should call isThinEdgeLink(), which has much
+         * less overhead.
          *
          * A surface (or its rational multiple) could be the normalised link
-         * of many edges.  The return value will be a vector containing all
-         * such edges, ordered by the index of each edge in the triangulation.
+         * of many edges.  The return value will be a pair (\a v, \a thin),
+         * where:
+         *
+         * - \a v is a vector containing all such edges.  This will begin
+         *   with the edges for which this surface is a thin link, followed by
+         *   the edges where normalisation was required; within each category
+         *   the edges will be ordered by their index within the triangulation.
+         *
+         * - \a thin is either 0, 1 or 2, indicating how many edges this
+         *   surface is a thin link for.
+         *
          * If no rational multiple of this surface is the normalised link of
-         * any edge, then the empty vector will be returned.
+         * any edge, then \a link will be 0 and \a v will be the empty vector.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
          * @return a vector containing the edge(s) linked by a rational
-         * multiple of this surface, as described above.
+         * multiple of this surface and an integer indicating how many
+         * of these links are thin, as described above.
          */
-        std::vector<const Edge<3>*> isNormalEdgeLink() const;
+        std::pair<std::vector<const Edge<3>*>, int> isNormalEdgeLink() const;
         /**
          * Determines whether or not this surface is a splitting surface.
          * A \a splitting surface is a compact surface containing

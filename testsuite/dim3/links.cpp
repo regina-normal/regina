@@ -154,15 +154,37 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                 */
 
                 {
-                    auto found = link.isNormalEdgeLink();
-                    if (std::find(found.begin(), found.end(), e) ==
-                            found.end()) {
+                    auto [ allEdges, nThin] = link.isNormalEdgeLink();
+
+                    auto found = std::find(allEdges.begin(), allEdges.end(), e);
+                    if (found == allEdges.end()) {
                         std::ostringstream msg;
                         msg << "Triangulation " << name <<
                             ", edge " << e->index() << ": linking surface "
                             << link.vector() << " is not recognised as a "
                             "normalised edge link of the edge in question.";
                         CPPUNIT_FAIL(msg.str());
+                    }
+                    if (thin) {
+                        if (found - allEdges.begin() >= nThin) {
+                            std::ostringstream msg;
+                            msg << "Triangulation " << name <<
+                                ", edge " << e->index() << ": linking surface "
+                                << link.vector() << " is incorrectly "
+                                "recognised as a non-thin normalised "
+                                "link of the edge in question.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } else {
+                        if (found - allEdges.begin() < nThin) {
+                            std::ostringstream msg;
+                            msg << "Triangulation " << name <<
+                                ", edge " << e->index() << ": linking surface "
+                                << link.vector() << " is incorrectly "
+                                "recognised as a thin normalised "
+                                "link of the edge in question.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
                     }
                 }
                 {

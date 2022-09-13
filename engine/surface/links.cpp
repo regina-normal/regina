@@ -288,22 +288,28 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
         return { ans[1], ans[0] };
 }
 
-std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
+std::pair<std::vector<const Edge<3>*>, int> NormalSurface::isNormalEdgeLink()
+        const {
     // Get a local reference to the triangulation so we do not have to
     // repeatedly bounce through the snapshot.
     const Triangulation<3>& tri(*triangulation_);
 
+    std::pair<std::vector<const Edge<3>*>, int> ans;
+    ans.second = 0;
+
     if (isEmpty()) {
         // Treat the empty surface separately.
-        std::vector<const Edge<3>*> ans;
+        // Note: none of these edge links will be thin.
         for (auto e : tri.edges())
             if (e->linkingSurface().first.isEmpty())
-                ans.push_back(e);
+                ans.first.push_back(e);
         return ans;
     }
 
-    if (! normal())
-        return {};
+    if (! normal()) {
+        // We have no edge links at all.
+        return ans;
+    }
 
     // All edge weights should be in { 0, k, 2k } for some k, and the
     // weight of an edge that we are linking should be zero.
@@ -319,7 +325,7 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
         if (w == 0) {
             weightZero.push_back(e);
         } else if (w.isInfinite()) {
-            return {};
+            return ans; // empty
         } else if (k == 0) {
             // First non-zero weight we've seen.
             k = w;
@@ -334,18 +340,18 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
                     k = w;
                 } else {
                     // This cannot be an edge link.
-                    return {};
+                    return ans; // empty
                 }
             }
         } else {
             // Both k and 2k have already been seen.
             if (w != k && w != kk)
-                return {};
+                return ans; // empty
         }
     }
 
     if (weightZero.empty())
-        return {};
+        return ans; // empty
 
     // We have one or more candidate edges that we could be linking
     // (since they have weight zero), and the edge weights are
@@ -386,7 +392,7 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
         if (scale != k) {
             // The edge weights were {0,k,2k}, but the normal coordinates were
             // not.
-            return {};
+            return ans; // empty
         }
     } else {
         // All non-zero edge weights were equal to k.
@@ -445,7 +451,7 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
                     goto noMoreScaling;
                 } else {
                     // This can never be an edge link.
-                    return {};
+                    return ans; // empty
                 }
             }
 
@@ -478,14 +484,33 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
             // scaled down to 2; otherwise we cannot have a normalised
             // edge link at all.
             if (scale + scale != k)
-                return {};
+                return ans; // empty
         }
     }
 
-    std::vector<const Edge<3>*> ans;
-    for (auto e : weightZero)
-        if (e->linkingSurface().first == mult)
-            ans.push_back(e);
+    for (auto e : weightZero) {
+        auto link = e->linkingSurface();
+        if (link.first == mult) {
+            if (link.second) {
+                // Thin link.
+                // Note: this vector insertion is costly, but it only happens
+                // at most twice.
+                if (ans.second == 0) {
+                    ans.first.insert(ans.first.begin(), e);
+                } else {
+                    // We only have at most two thin edge links, so we
+                    // must be inserting at position 1.
+                    auto pos = ans.first.begin();
+                    ++pos;
+                    ans.first.insert(pos, e);
+                }
+                ++ans.second;
+            } else {
+                // Not a thin link.
+                ans.first.push_back(e);
+            }
+        }
+    }
     return ans;
 }
 

@@ -171,57 +171,58 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 return QString(QChar(0x2014 /* emdash */));
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 6) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 4)) {
-            const regina::Vertex<3>* v;
+            const regina::Vertex<3>* v = s.isVertexLink();
+            auto [ eLinks, eThin ] = s.isNormalEdgeLink();
+            auto ePos = eLinks.begin();
 
-            if ((v = s.isVertexLink()))
-                return tr("Vertex %1").arg(v->index());
-            else {
-                auto edgeLinks = s.isNormalEdgeLink();
-                if (edgeLinks.empty())
-                    return QVariant();
-                auto thin = s.isThinEdgeLink();
-                if (! thin.first) {
-                    auto it = edgeLinks.begin();
-                    if (edgeLinks.size() == 1) {
-                        return tr("Normal edge %1").
-                            arg((*it)->index());
+            QString ans;
+
+            if (v)
+                ans = tr("Vertex %1").arg(v->index());
+
+            if (eThin) {
+                if (ans.isEmpty()) {
+                    if (eThin == 1) {
+                        ans += tr("Thin edge %1").arg((*ePos++)->index());
                     } else {
-                        QString ans = tr("Normal edges %1").
-                            arg((*it)->index());
-                        for (++it; it != edgeLinks.end(); ++it)
-                            ans.append(tr(", %1").arg((*it)->index()));
-                        return ans;
+                        ans += tr("Thin edges %1, %2").
+                            arg((*ePos++)->index()).arg((*ePos++)->index());
                     }
-                } else if (! thin.second) {
-                    QString ans = tr("Thin edge %1").
-                        arg(thin.first->index());
-                    if (edgeLinks.size() > 1) {
-                        if (edgeLinks.size() == 2)
-                            ans.append(tr("; normal edge "));
-                        else
-                            ans.append(tr("; normal edges "));
-
-                        bool first = true;
-                        for (auto e : edgeLinks) {
-                            if (e == thin.first)
-                                continue;
-                            if (first)
-                                first = false;
-                            else
-                                ans.append(", ");
-                            ans.append(QString::number(e->index()));
-                        }
-                        return ans;
-                    }
-                    return ans;
                 } else {
-                    // A thin edge link of two distinct edges cannot be
-                    // a normalised edge link of any others.
-                    return tr("Thin edges %1, %2").
-                        arg(thin.first->index()).
-                        arg(thin.second->index());
+                    if (eThin == 1) {
+                        ans += tr("; thin edge %1").arg((*ePos++)->index());
+                    } else {
+                        ans += tr("; thin edges %1, %2").
+                            arg((*ePos++)->index()).arg((*ePos++)->index());
+                    }
                 }
             }
+
+            if (eLinks.size() > eThin) {
+                if (ans.isEmpty()) {
+                    // eThin == 0.
+                    if (eLinks.size() == 1) {
+                        ans += tr("Normal edge %1").arg((*ePos++)->index());
+                    } else {
+                        ans += tr("Normal edges %1").arg((*ePos++)->index());
+                        for ( ; ePos != eLinks.end(); ++ePos)
+                            ans += tr(", %1").arg((*ePos++)->index());
+                    }
+                } else {
+                    if (eLinks.size() == eThin + 1) {
+                        ans += tr("; normal edge %1").arg((*ePos++)->index());
+                    } else {
+                        ans += tr("; normal edges %1").arg((*ePos++)->index());
+                        for ( ; ePos != eLinks.end(); ++ePos)
+                            ans += tr(", %1").arg((*ePos++)->index());
+                    }
+                }
+            }
+
+            if (ans.isEmpty())
+                return QVariant();
+            else
+                return ans;
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 5)) {
             if (s.isSplitting())
