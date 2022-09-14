@@ -115,7 +115,8 @@ Version 7.1  [ 25 September, 2022 ]
             - New operators * and *= for taking integer multiples.  The old
               doubleSurface() is now deprecated.
             - New routine scaleDown().
-            - New routines isNormalEdgeLink() and isNormalTriangleLink().
+            - New routines isNormalEdgeLink(), isThinTriangleLink() and
+              isNormalTriangleLink().
             - New routine removeOcts().
             - Routine cutAlong() can now work with almost normal surfaces
               (i.e., it can now handle octagons).

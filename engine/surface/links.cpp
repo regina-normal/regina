@@ -335,6 +335,43 @@ std::pair<std::vector<const Edge<3>*>, int> NormalSurface::isNormalEdgeLink()
     return ans;
 }
 
+std::pair<const Triangle<3>*, const Triangle<3>*>
+        NormalSurface::isThinTriangleLink() const {
+    // This is essentially the same implementation as isNormalTriangleLink(),
+    // just slimmed down slightly to account for some extra facts that
+    // we know about thin links.
+
+    std::pair<const Triangle<3>*, const Triangle<3>*> ans { nullptr, nullptr };
+
+    // Thin links are never empty.
+    if (isEmpty())
+        return ans;
+
+    std::optional<NormalSurface> mult = couldLinkFace();
+    if (! mult)
+        return ans;
+
+    for (auto t : triangulation_->triangles()) {
+        for (int i = 0; i < 3; ++i)
+            if (edgeWeight(t->edge(i)->index()) != 0)
+                continue;
+
+        auto link = t->linkingSurface();
+        if (link.second /* thin */ && link.first == mult) {
+            if (! ans.first)
+                ans.first = t;
+            else {
+                // There can be at most two thin triangle links, and we
+                // have found them both.
+                ans.second = t;
+                return ans;
+            }
+        }
+    }
+
+    return ans;
+}
+
 std::pair<std::vector<const Triangle<3>*>, int>
         NormalSurface::isNormalTriangleLink() const {
     std::pair<std::vector<const Triangle<3>*>, int> ans;

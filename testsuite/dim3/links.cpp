@@ -382,31 +382,30 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                         }
                     }
                 }
-                /*
                 {
-                    auto found = link.isThinEdgeLink();
+                    auto found = link.isThinTriangleLink();
                     if (thin) {
-                        if (e != found.first && e != found.second) {
+                        if (t != found.first && t != found.second) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
-                                ", edge " << e->index() << ": linking surface "
-                                << link.vector() << " is not recognised as a "
-                                "thin edge link of the edge in question.";
+                                ", triangle " << t->index() <<
+                                ": linking surface " << link.vector()
+                                << " is not recognised as a thin link "
+                                "of the triangle in question.";
                             CPPUNIT_FAIL(msg.str());
                         }
                     } else {
-                        if (e == found.first || e == found.second) {
+                        if (t == found.first || t == found.second) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
-                                ", edge " << e->index() << ": linking surface "
-                                << link.vector() << " is incorrectly "
-                                "recognised as a thin edge link of the "
-                                "edge in question.";
+                                ", triangle " << t->index() <<
+                                ": linking surface " << link.vector()
+                                << " is incorrectly recognised as a thin link "
+                                "of the triangle in question.";
                             CPPUNIT_FAIL(msg.str());
                         }
                     }
                 }
-                */
             }
         }
 
