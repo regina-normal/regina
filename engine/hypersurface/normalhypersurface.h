@@ -874,7 +874,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   the edges where normalisation was required; within each category
          *   the edges will be ordered by their index within the triangulation.
          *
-         * - \a thin is either 0, 1 or 2, indicating how many edges this
+         * - \a thin is either 0 or 1, indicating how many edges this
          *   hypersurface is a thin link for.
          *
          * If no rational multiple of this hypersurface is the normalised link
