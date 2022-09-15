@@ -82,7 +82,7 @@ class SurfaceModel : public QAbstractItemModel {
         /**
          * Data retrieval.
          */
-        regina::NormalSurfaces* surfaces() const;
+        regina::NormalSurfaces& surfaces() const;
         const regina::NormalSurface* surface(const QModelIndex& index) const;
         size_t surfaceIndex(const QModelIndex& index) const;
         regina::NormalCoords coordSystem() const;
@@ -206,13 +206,13 @@ inline SurfaceModel::~SurfaceModel() {
     delete[] realIndex;
 }
 
-inline regina::NormalSurfaces* SurfaceModel::surfaces() const {
-    return surfaces_;
+inline regina::NormalSurfaces& SurfaceModel::surfaces() const {
+    return *surfaces_;
 }
 
 inline const regina::NormalSurface* SurfaceModel::surface(
         const QModelIndex& index) const {
-    return &surfaces_->surface(realIndex[index.row()]);
+    return std::addressof((*surfaces_)[realIndex[index.row()]]);
 }
 
 inline size_t SurfaceModel::surfaceIndex(const QModelIndex& index) const {

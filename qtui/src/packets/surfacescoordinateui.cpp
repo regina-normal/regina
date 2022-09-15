@@ -85,7 +85,7 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
     else {
         realIndex = new unsigned[surfaces_->size()];
         for (unsigned i = 0; i < surfaces_->size(); ++i)
-            if ((! filter) || filter->accept(surfaces_->surface(i)))
+            if ((! filter) || filter->accept((*surfaces_)[i]))
                 realIndex[nFiltered++] = i;
     }
 
@@ -119,7 +119,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
     unsigned surfaceIndex = realIndex[index.row()];
 
     if (role == Qt::DisplayRole) {
-        const regina::NormalSurface& s = surfaces_->surface(surfaceIndex);
+        const regina::NormalSurface& s = (*surfaces_)[surfaceIndex];
 
         if (index.column() == 0)
             return tr("%1.").arg(surfaceIndex);
@@ -302,7 +302,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
-            return surfaces_->surface(surfaceIndex).name().c_str();
+            return (*surfaces_)[surfaceIndex].name().c_str();
         else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -314,7 +314,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        const regina::NormalSurface& s = surfaces_->surface(surfaceIndex);
+        const regina::NormalSurface& s = (*surfaces_)[surfaceIndex];
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s.isCompact())
@@ -430,7 +430,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         // belongs to).  Fire it here instead.
         regina::NormalSurfaces::ChangeEventSpan span(*surfaces_);
         const_cast<regina::NormalSurface&>(
-            surfaces_->surface(realIndex[index.row()])).
+            (*surfaces_)[realIndex[index.row()]]).
             setName(value.toString().toUtf8().constData());
         return true;
     } else
@@ -703,8 +703,7 @@ void SurfacesCoordinateUI::cutAlong() {
 
     size_t whichSurface = model->surfaceIndex(
         table->selectionModel()->selectedIndexes().front());
-    const regina::NormalSurface& toCutAlong =
-        model->surfaces()->surface(whichSurface);
+    const regina::NormalSurface& toCutAlong = model->surfaces()[whichSurface];
     if (! toCutAlong.isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only cut along compact surfaces."),
@@ -731,8 +730,7 @@ void SurfacesCoordinateUI::crush() {
 
     size_t whichSurface = model->surfaceIndex(
         table->selectionModel()->selectedIndexes().front());
-    const regina::NormalSurface& toCrush =
-        model->surfaces()->surface(whichSurface);
+    const regina::NormalSurface& toCrush = model->surfaces()[whichSurface];
     if (! toCrush.isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only crush compact surfaces."),

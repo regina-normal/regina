@@ -1330,13 +1330,13 @@ bool Triangulation<3>::isHaken() const {
     unsigned i;
     for (i = 0; i < list.size(); ++i) {
         id[i].index = i;
-        id[i].euler = list.surface(i).eulerChar().longValue();
+        id[i].euler = list[i].eulerChar().longValue();
     }
     std::sort(id, id + list.size());
 
     for (i = 0; i < list.size(); ++i) {
         // std::cout << "Testing surface " << i << "..." << std::endl;
-        if (list.surface(id[i].index).isIncompressible()) {
+        if (list[id[i].index].isIncompressible()) {
             delete[] id;
             prop_.threeSphere_ = false; // Implied by Hakenness.
             return *(prop_.haken_ = true);

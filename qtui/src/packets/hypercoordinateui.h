@@ -72,7 +72,7 @@ class HyperModel : public QAbstractItemModel {
         /**
          * Data retrieval.
          */
-        regina::NormalHypersurfaces* surfaces() const;
+        regina::NormalHypersurfaces& surfaces() const;
         regina::HyperCoords coordSystem() const;
 
         /**
@@ -182,8 +182,8 @@ inline HyperModel::HyperModel(regina::NormalHypersurfaces* surfaces) :
         surfaces_(surfaces), coordSystem_(surfaces->coords()) {
 }
 
-inline regina::NormalHypersurfaces* HyperModel::surfaces() const {
-    return surfaces_;
+inline regina::NormalHypersurfaces& HyperModel::surfaces() const {
+    return *surfaces_;
 }
 
 inline regina::HyperCoords HyperModel::coordSystem() const {

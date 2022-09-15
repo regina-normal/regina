@@ -444,8 +444,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = &lhs.surface(i).vector();
-                rhsRaw[i] = &rhs.surface(i).vector();
+                lhsRaw[i] = &lhs[i].vector();
+                rhsRaw[i] = &rhs[i].vector();
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess<LargeInteger>);
@@ -546,7 +546,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             NormalSurfaces list(gieseking, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 1, "Gieseking");
-            testSurface(list.surface(0), "Gieseking",
+            testSurface(list[0], "Gieseking",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
@@ -565,7 +565,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             NormalSurfaces list(gieseking, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 1, "Gieseking");
-            testSurface(list.surface(0), "Gieseking",
+            testSurface(list[0], "Gieseking",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
@@ -578,7 +578,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             NormalSurfaces list(figure8, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 1, "Figure eight");
-            testSurface(list.surface(0), "Figure eight",
+            testSurface(list[0], "Figure eight",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
@@ -605,7 +605,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             testSize(list, "standard almost normal surfaces", 1,
                 "Figure eight");
-            testSurface(list.surface(0), "Figure eight",
+            testSurface(list[0], "Figure eight",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
@@ -1897,14 +1897,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             unsigned long edge;
 
             for (i = 0; i < n; ++i) {
-                const NormalSurface& s = list.surface(i);
+                const NormalSurface& s = list[i];
 
                 // For some types of surfaces we know exactly what it
                 // should be disjoint from.
                 if (s.isVertexLinking()) {
                     // Vertex links are disjoint from everything.
                     for (j = 0; j < n; ++j) {
-                        const NormalSurface& t = list.surface(j);
+                        const NormalSurface& t = list[j];
                         if (! s.disjoint(t)) {
                             std::ostringstream msg;
                             msg << "Surface #" << i << " for " << name
@@ -1926,7 +1926,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         if (j == i)
                             continue;
 
-                        const NormalSurface& t = list.surface(j);
+                        const NormalSurface& t = list[j];
                         if (t.isVertexLinking()) {
                             if (! s.disjoint(t)) {
                                 std::ostringstream msg;

@@ -85,8 +85,7 @@ int HyperModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant HyperModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::NormalHypersurface& s =
-            surfaces_->hypersurface(index.row());
+        const regina::NormalHypersurface& s = (*surfaces_)[index.row()];
 
         if (index.column() == 0)
             return tr("%1.").arg(index.row());
@@ -261,7 +260,7 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
-            return surfaces_->hypersurface(index.row()).name().c_str();
+            return (*surfaces_)[index.row()].name().c_str();
         else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -273,8 +272,7 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        const regina::NormalHypersurface& s =
-            surfaces_->hypersurface(index.row());
+        const regina::NormalHypersurface& s = (*surfaces_)[index.row()];
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s.isCompact())
@@ -369,8 +367,7 @@ bool HyperModel::setData(const QModelIndex& index, const QVariant& value,
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
         regina::NormalHypersurfaces::ChangeEventSpan span(*surfaces_);
-        const_cast<regina::NormalHypersurface&>(
-            surfaces_->hypersurface(index.row())).
+        const_cast<regina::NormalHypersurface&>((*surfaces_)[index.row()]).
             setName(value.toString().toUtf8().constData());
         return true;
     } else
@@ -571,8 +568,7 @@ void HyperCoordinateUI::triangulate() {
 
     size_t whichSurface =
         table->selectionModel()->selectedIndexes().front().row();
-    const regina::NormalHypersurface& use = model->surfaces()->hypersurface(
-        whichSurface);
+    const regina::NormalHypersurface& use = model->surfaces()[whichSurface];
     if (! use.isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only triangulate compact hypersurfaces."),

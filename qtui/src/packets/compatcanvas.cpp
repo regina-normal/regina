@@ -257,10 +257,10 @@ void CompatCanvas::fillLocal(const NormalSurfaces& surfaces) {
 
     unsigned i, j;
     for (i = 0; i < nSurfaces; ++i) {
-        const NormalSurface& s = surfaces.surface(i);
+        const NormalSurface& s = surfaces[i];
 
         for (j = i; j < nSurfaces; ++j) {
-            const NormalSurface& t = surfaces.surface(j);
+            const NormalSurface& t = surfaces[j];
 
             if (s.locallyCompatible(t)) {
                 box = new QGraphicsRectItem(
@@ -300,10 +300,10 @@ void CompatCanvas::fillLocal(const NormalHypersurfaces& surfaces) {
 
     unsigned i, j;
     for (i = 0; i < nSurfaces; ++i) {
-        const NormalHypersurface& s = surfaces.hypersurface(i);
+        const NormalHypersurface& s = surfaces[i];
 
         for (j = i; j < nSurfaces; ++j) {
-            const NormalHypersurface& t = surfaces.hypersurface(j);
+            const NormalHypersurface& t = surfaces[j];
 
             if (s.locallyCompatible(t)) {
                 box = new QGraphicsRectItem(
@@ -343,7 +343,7 @@ void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
 
     bool* usable = new bool[nSurfaces];
     for (i = 0; i < nSurfaces; ++i) {
-        const NormalSurface& s = surfaces.surface(i);
+        const NormalSurface& s = surfaces[i];
         usable[i] = (s.isCompact() && (! s.isEmpty()) && s.isConnected());
     }
 
@@ -373,13 +373,13 @@ void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
             continue;
         }
 
-        const NormalSurface& s = surfaces.surface(i);
+        const NormalSurface& s = surfaces[i];
 
         for (j = i; j < nSurfaces; ++j) {
             if (! usable[j])
                 continue;
 
-            const NormalSurface& t = surfaces.surface(j);
+            const NormalSurface& t = surfaces[j];
 
             if (s.disjoint(t)) {
                 box = new QGraphicsRectItem(

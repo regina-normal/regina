@@ -373,8 +373,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = &(lhs.structure(i).vector());
-                rhsRaw[i] = &(rhs.structure(i).vector());
+                lhsRaw[i] = &(lhs[i].vector());
+                rhsRaw[i] = &(rhs[i].vector());
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess);
