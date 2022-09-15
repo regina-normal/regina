@@ -390,6 +390,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
         size_t size() const;
         /**
          * Returns the hypersurface at the requested index in this list.
+         * This is identical to using the square bracket operator.
          *
          * @param index the index of the requested hypersurface in this list;
          * this must be between 0 and size()-1 inclusive.
@@ -397,6 +398,16 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * @return the normal hypersurface at the requested index in this list.
          */
         const NormalHypersurface& hypersurface(size_t index) const;
+        /**
+         * Returns the hypersurface at the requested index in this list.
+         * This is identical to calling hypersurface().
+         *
+         * @param index the index of the requested hypersurface in this list;
+         * this must be between 0 and size()-1 inclusive.
+         *
+         * @return the normal hypersurface at the requested index in this list.
+         */
+        const NormalHypersurface& operator [](size_t index) const;
         /**
          * Returns an iterator at the beginning of this list of hypersurfaces.
          *
@@ -1033,6 +1044,11 @@ inline size_t NormalHypersurfaces::size() const {
 }
 
 inline const NormalHypersurface& NormalHypersurfaces::hypersurface(
+        size_t index) const {
+    return surfaces_[index];
+}
+
+inline const NormalHypersurface& NormalHypersurfaces::operator [](
         size_t index) const {
     return surfaces_[index];
 }

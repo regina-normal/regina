@@ -62,6 +62,8 @@ void addAngleStructures(pybind11::module_& m) {
         .def("size", &AngleStructures::size)
         .def("structure", &AngleStructures::structure,
             pybind11::return_value_policy::reference_internal)
+        .def("__getitem__", &AngleStructures::operator[],
+            pybind11::return_value_policy::reference_internal)
         .def("__iter__", [](const AngleStructures& list) {
             return pybind11::make_iterator(list);
         }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive

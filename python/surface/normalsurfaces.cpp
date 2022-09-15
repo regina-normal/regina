@@ -92,6 +92,8 @@ void addNormalSurfaces(pybind11::module_& m) {
         }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive
         .def("surface", &NormalSurfaces::surface,
             pybind11::return_value_policy::reference_internal)
+        .def("__getitem__", &NormalSurfaces::operator[],
+            pybind11::return_value_policy::reference_internal)
         .def("sort", &NormalSurfaces::sort<const std::function<
             bool(const regina::NormalSurface&, const regina::NormalSurface&)>&>)
         .def("recreateMatchingEquations",

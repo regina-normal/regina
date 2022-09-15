@@ -74,6 +74,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         .def("size", &NormalHypersurfaces::size)
         .def("hypersurface", &NormalHypersurfaces::hypersurface,
             pybind11::return_value_policy::reference_internal)
+        .def("__getitem__", &NormalHypersurfaces::operator[],
+            pybind11::return_value_policy::reference_internal)
         .def("__iter__", [](const NormalHypersurfaces& list) {
             return pybind11::make_iterator(list);
         }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive

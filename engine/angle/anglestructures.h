@@ -316,12 +316,22 @@ class AngleStructures :
         size_t size() const;
         /**
          * Returns the angle structure at the requested index in this list.
+         * This is identical to using the square bracket operator.
          *
          * @param index the index of the requested angle structure in
          * this list; this must be between 0 and size()-1 inclusive.
          * @return the angle structure at the requested index.
          */
         const AngleStructure& structure(size_t index) const;
+        /**
+         * Returns the angle structure at the requested index in this list.
+         * This is identical to calling structure().
+         *
+         * @param index the index of the requested angle structure in
+         * this list; this must be between 0 and size()-1 inclusive.
+         * @return the angle structure at the requested index.
+         */
+        const AngleStructure& operator [](size_t index) const;
 
         /**
          * Returns an iterator at the beginning of this list of angle
@@ -606,6 +616,10 @@ inline size_t AngleStructures::size() const {
 }
 
 inline const AngleStructure& AngleStructures::structure(size_t index) const {
+    return structures_[index];
+}
+
+inline const AngleStructure& AngleStructures::operator [](size_t index) const {
     return structures_[index];
 }
 

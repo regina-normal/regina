@@ -551,6 +551,7 @@ class NormalSurfaces :
         size_t size() const;
         /**
          * Returns the surface at the requested index in this list.
+         * This is identical to using the square bracket operator.
          *
          * @param index the index of the requested surface in this list;
          * this must be between 0 and size()-1 inclusive.
@@ -558,6 +559,16 @@ class NormalSurfaces :
          * @return the normal surface at the requested index in this list.
          */
         const NormalSurface& surface(size_t index) const;
+        /**
+         * Returns the surface at the requested index in this list.
+         * This is identical to calling surface().
+         *
+         * @param index the index of the requested surface in this list;
+         * this must be between 0 and size()-1 inclusive.
+         *
+         * @return the normal surface at the requested index in this list.
+         */
+        const NormalSurface& operator [](size_t index) const;
         /**
          * Returns an iterator at the beginning of this list of surfaces.
          *
@@ -1418,6 +1429,10 @@ inline size_t NormalSurfaces::size() const {
 }
 
 inline const NormalSurface& NormalSurfaces::surface(size_t index) const {
+    return surfaces_[index];
+}
+
+inline const NormalSurface& NormalSurfaces::operator [](size_t index) const {
     return surfaces_[index];
 }
 
