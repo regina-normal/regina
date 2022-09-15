@@ -111,6 +111,9 @@ Version 7.1  [ 25 September, 2022 ]
             - New operators * and *= for taking integer multiples.  The old
               doubleHypersurface() is now deprecated.
             - New routine scaleDown().
+            - New routines isThinTriangleLink(), isThinTetrahedronLink(),
+              isNormalEdgeLink(), isNormalTriangleLink() and
+              isNormalTetrahedronLink().
         Class NormalSurface:
             - New operators * and *= for taking integer multiples.  The old
               doubleSurface() is now deprecated.

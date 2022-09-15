@@ -475,11 +475,11 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                     }
                 }
 
-                /*
                 {
-                    auto found = link.isNormalEdgeLink();
-                    if (std::find(found.begin(), found.end(), e) ==
-                            found.end()) {
+                    auto [ allEdges, nThin] = link.isNormalEdgeLink();
+
+                    auto found = std::find(allEdges.begin(), allEdges.end(), e);
+                    if (found == allEdges.end()) {
                         std::ostringstream msg;
                         msg << "Triangulation " << name <<
                             ", edge " << e->index() << ": linking surface "
@@ -487,8 +487,28 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                             "normalised edge link of the edge in question.";
                         CPPUNIT_FAIL(msg.str());
                     }
+                    if (thin) {
+                        if (found - allEdges.begin() >= nThin) {
+                            std::ostringstream msg;
+                            msg << "Triangulation " << name <<
+                                ", edge " << e->index() << ": linking surface "
+                                << link.vector() << " is incorrectly "
+                                "recognised as a non-thin normalised "
+                                "link of the edge in question.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } else {
+                        if (found - allEdges.begin() < nThin) {
+                            std::ostringstream msg;
+                            msg << "Triangulation " << name <<
+                                ", edge " << e->index() << ": linking surface "
+                                << link.vector() << " is incorrectly "
+                                "recognised as a thin normalised "
+                                "link of the edge in question.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
                 }
-                */
                 {
                     const Edge<4>* found = link.isThinEdgeLink();
                     if (thin) {
@@ -579,88 +599,67 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                     }
                 }
 
-                /*
                 {
-                    auto found = link.isNormalEdgeLink();
-                    if (std::find(found.begin(), found.end(), e) ==
-                            found.end()) {
+                    auto [ allTri, nThin] = link.isNormalTriangleLink();
+
+                    auto found = std::find(allTri.begin(), allTri.end(), t);
+                    if (found == allTri.end()) {
                         std::ostringstream msg;
                         msg << "Triangulation " << name <<
-                            ", edge " << e->index() << ": linking surface "
+                            ", triangle " << t->index() << ": linking surface "
                             << link.vector() << " is not recognised as a "
-                            "normalised edge link of the edge in question.";
+                            "normalised link of the triangle in question.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                }
-                {
-                    auto found = link.isThinEdgeLink();
                     if (thin) {
-                        if (e != found.first && e != found.second) {
+                        if (found - allTri.begin() >= nThin) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
-                                ", edge " << e->index() << ": linking surface "
-                                << link.vector() << " is not recognised as a "
-                                "thin edge link of the edge in question.";
+                                ", triangle " << t->index()
+                                << ": linking surface " << link.vector()
+                                << " is incorrectly "
+                                "recognised as a non-thin normalised "
+                                "link of the triangle in question.";
                             CPPUNIT_FAIL(msg.str());
                         }
                     } else {
-                        if (e == found.first || e == found.second) {
+                        if (found - allTri.begin() < nThin) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
-                                ", edge " << e->index() << ": linking surface "
-                                << link.vector() << " is incorrectly "
-                                "recognised as a thin edge link of the "
-                                "edge in question.";
+                                ", triangle " << t->index()
+                                << ": linking surface " << link.vector()
+                                << " is incorrectly "
+                                "recognised as a thin normalised "
+                                "link of the triangle in question.";
                             CPPUNIT_FAIL(msg.str());
                         }
                     }
                 }
-                */
-            }
-
-            /*
-            // Check the precise coordinates for all *thin* triangle links,
-            // which can be separately obtained via normal surface enumeration.
-
-            NormalSurfaces list(tri, regina::NS_STANDARD);
-            for (const auto& s : list) {
-                auto link = s.isThinEdgeLink();
-                if (link.first) {
-                    if (! s.isTwoSided()) {
-                        if (s + s != link.first->linkingSurface().first) {
+                {
+                    auto found = link.isThinTriangleLink();
+                    if (thin) {
+                        if (t != found.first && t != found.second) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
-                                ", edge " << link.first->index() <<
-                                ": linking surface does not match the "
-                                "enumerated one-sided thin edge link.";
+                                ", triangle " << t->index() <<
+                                ": linking surface " << link.vector()
+                                << " is not recognised as a thin link "
+                                "of the triangle in question.";
                             CPPUNIT_FAIL(msg.str());
                         }
-                    } else  {
-                        if (s != link.first->linkingSurface().first) {
+                    } else {
+                        if (t == found.first || t == found.second) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
-                                ", edge " << link.first->index() <<
-                                ": linking surface does not match the "
-                                "enumerated thin edge link.";
-                            CPPUNIT_FAIL(msg.str());
-                        }
-                    }
-
-                    if (link.second) {
-                        // If the surface is the thin link of two
-                        // distinct edges then it must be two-sided.
-                        if (s != link.second->linkingSurface().first) {
-                            std::ostringstream msg;
-                            msg << "Triangulation " << name <<
-                                ", edge " << link.second->index() <<
-                                ": linking surface does not match the "
-                                "enumerated thin edge link.";
+                                ", triangle " << t->index() <<
+                                ": linking surface " << link.vector()
+                                << " is incorrectly recognised as a thin link "
+                                "of the triangle in question.";
                             CPPUNIT_FAIL(msg.str());
                         }
                     }
                 }
             }
-            */
         }
 
         void triangleLinks4() {
@@ -711,88 +710,68 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                             }
                 }
 
-                /*
                 {
-                    auto found = link.isNormalEdgeLink();
-                    if (std::find(found.begin(), found.end(), e) ==
-                            found.end()) {
+                    auto [ allTet, nThin] = link.isNormalTetrahedronLink();
+
+                    auto found = std::find(allTet.begin(), allTet.end(), t);
+                    if (found == allTet.end()) {
                         std::ostringstream msg;
                         msg << "Triangulation " << name <<
-                            ", edge " << e->index() << ": linking surface "
+                            ", tetrahedron " << t->index() <<
+                            ": linking surface "
                             << link.vector() << " is not recognised as a "
-                            "normalised edge link of the edge in question.";
+                            "normalised link of the tetrahedron in question.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                }
-                {
-                    auto found = link.isThinEdgeLink();
                     if (thin) {
-                        if (e != found.first && e != found.second) {
+                        if (found - allTet.begin() >= nThin) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
-                                ", edge " << e->index() << ": linking surface "
-                                << link.vector() << " is not recognised as a "
-                                "thin edge link of the edge in question.";
+                                ", tetrahedron " << t->index()
+                                << ": linking surface " << link.vector()
+                                << " is incorrectly "
+                                "recognised as a non-thin normalised "
+                                "link of the tetrahedron in question.";
                             CPPUNIT_FAIL(msg.str());
                         }
                     } else {
-                        if (e == found.first || e == found.second) {
+                        if (found - allTet.begin() < nThin) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
-                                ", edge " << e->index() << ": linking surface "
-                                << link.vector() << " is incorrectly "
-                                "recognised as a thin edge link of the "
-                                "edge in question.";
+                                ", tetrahedron " << t->index()
+                                << ": linking surface " << link.vector()
+                                << " is incorrectly "
+                                "recognised as a thin normalised "
+                                "link of the tetrahedron in question.";
                             CPPUNIT_FAIL(msg.str());
                         }
                     }
                 }
-                */
-            }
-
-            /*
-            // Check the precise coordinates for all *thin* triangle links,
-            // which can be separately obtained via normal surface enumeration.
-
-            NormalSurfaces list(tri, regina::NS_STANDARD);
-            for (const auto& s : list) {
-                auto link = s.isThinEdgeLink();
-                if (link.first) {
-                    if (! s.isTwoSided()) {
-                        if (s + s != link.first->linkingSurface().first) {
+                {
+                    auto found = link.isThinTetrahedronLink();
+                    if (thin) {
+                        if (t != found.first && t != found.second) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
-                                ", edge " << link.first->index() <<
-                                ": linking surface does not match the "
-                                "enumerated one-sided thin edge link.";
+                                ", tetrahedron " << t->index() <<
+                                ": linking surface " << link.vector()
+                                << " is not recognised as a thin link "
+                                "of the tetrahedron in question.";
                             CPPUNIT_FAIL(msg.str());
                         }
-                    } else  {
-                        if (s != link.first->linkingSurface().first) {
+                    } else {
+                        if (t == found.first || t == found.second) {
                             std::ostringstream msg;
                             msg << "Triangulation " << name <<
-                                ", edge " << link.first->index() <<
-                                ": linking surface does not match the "
-                                "enumerated thin edge link.";
-                            CPPUNIT_FAIL(msg.str());
-                        }
-                    }
-
-                    if (link.second) {
-                        // If the surface is the thin link of two
-                        // distinct edges then it must be two-sided.
-                        if (s != link.second->linkingSurface().first) {
-                            std::ostringstream msg;
-                            msg << "Triangulation " << name <<
-                                ", edge " << link.second->index() <<
-                                ": linking surface does not match the "
-                                "enumerated thin edge link.";
+                                ", tetrahedron " << t->index() <<
+                                ": linking surface " << link.vector()
+                                << " is incorrectly recognised as a thin link "
+                                "of the tetrahedron in question.";
                             CPPUNIT_FAIL(msg.str());
                         }
                     }
                 }
             }
-            */
         }
 
         void tetrahedronLinks4() {

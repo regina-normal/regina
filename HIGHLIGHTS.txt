@@ -12,8 +12,8 @@ Version 7.1  [ 25 September, 2022 ]
         - Regina now supports Python 3 only (not Python 2 or 3).
     Features:
         - Computes intersection forms of closed orientable 4-manifolds.
-        - Computes and recognises all normalised edge links (not just
-          thin edge links).
+        - Computes and recognises links of faces of all dimensions as normal
+          (hyper)surfaces; this includes both thin links and normalised links.
         - Expanded 3-ball and solid torus recognition to more general
           handlebody recognition (thanks to Alex He).
         - The tricensus utility now supports multithreaded operation, and

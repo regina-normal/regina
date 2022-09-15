@@ -64,10 +64,10 @@
     <release version="7.1" date="2022-09-25">
       <description>
         <p>
-          Adds intersection forms, normalised edge links, handlebody
-          recognition, multithreaded census construction, and widespread
-          support for tight encodings, plus several other features and
-          improvements.
+          Adds intersection forms, thin and normalised links in all facial
+          dimensions, handlebody recognition, multithreaded census construction,
+          and widespread support for tight encodings, plus several other
+          features and improvements.
         </p>
       </description>
     </release>

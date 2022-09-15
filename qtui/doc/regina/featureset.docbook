@@ -375,7 +375,7 @@
      recognise standard surfaces within a triangulation such
      as splitting surfaces (described
      <link linkend="features-splitting">below</link>)
-     and vertex and edge links;
+     and thin or normalised vertex, edge and triangle links;
     </para></listitem>
     <listitem><para>
      test pairs of surfaces for local compatibility (compatible
