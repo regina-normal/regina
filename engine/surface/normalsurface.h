@@ -1157,7 +1157,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   the edges will be ordered by their index within the triangulation.
          *
          * - \a thin is either 0, 1 or 2, indicating how many edges this
-         *   surface is a thin link for.
+         *   surface is a thin link for.  This uses an unsigned type, since
+         *   it will often be compared to <tt>v.size()</tt>.
          *
          * If no rational multiple of this surface is the normalised link of
          * any edge, then \a link will be 0 and \a v will be the empty vector.
@@ -1170,7 +1171,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * multiple of this surface and an integer indicating how many
          * of these links are thin, as described above.
          */
-        std::pair<std::vector<const Edge<3>*>, int> isNormalEdgeLink() const;
+        std::pair<std::vector<const Edge<3>*>, unsigned> isNormalEdgeLink()
+            const;
         /**
          * Determines whether or not a rational multiple of this surface
          * is the thin link of a single triangle.
@@ -1237,7 +1239,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   triangulation.
          *
          * - \a thin is either 0, 1 or 2, indicating how many triangles this
-         *   surface is a thin link for.
+         *   surface is a thin link for.  This uses an unsigned type, since
+         *   it will often be compared to <tt>v.size()</tt>.
          *
          * If no rational multiple of this surface is the normalised link of
          * any triangle, then \a link will be 0 and \a v will be the empty
@@ -1251,8 +1254,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * multiple of this surface and an integer indicating how many
          * of these links are thin, as described above.
          */
-        std::pair<std::vector<const Triangle<3>*>, int> isNormalTriangleLink()
-            const;
+        std::pair<std::vector<const Triangle<3>*>, unsigned>
+            isNormalTriangleLink() const;
         /**
          * Determines whether or not this surface is a splitting surface.
          * A \a splitting surface is a compact surface containing

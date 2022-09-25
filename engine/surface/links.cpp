@@ -288,9 +288,9 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
         return { ans[1], ans[0] };
 }
 
-std::pair<std::vector<const Edge<3>*>, int> NormalSurface::isNormalEdgeLink()
-        const {
-    std::pair<std::vector<const Edge<3>*>, int> ans;
+std::pair<std::vector<const Edge<3>*>, unsigned>
+        NormalSurface::isNormalEdgeLink() const {
+    std::pair<std::vector<const Edge<3>*>, unsigned> ans;
     ans.second = 0;
 
     if (isEmpty()) {
@@ -372,9 +372,9 @@ std::pair<const Triangle<3>*, const Triangle<3>*>
     return ans;
 }
 
-std::pair<std::vector<const Triangle<3>*>, int>
+std::pair<std::vector<const Triangle<3>*>, unsigned>
         NormalSurface::isNormalTriangleLink() const {
-    std::pair<std::vector<const Triangle<3>*>, int> ans;
+    std::pair<std::vector<const Triangle<3>*>, unsigned> ans;
     ans.second = 0;
 
     if (isEmpty()) {

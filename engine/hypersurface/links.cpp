@@ -435,9 +435,9 @@ std::optional<NormalHypersurface> NormalHypersurface::couldLinkFace() const {
     return mult;
 }
 
-std::pair<std::vector<const Edge<4>*>, int>
+std::pair<std::vector<const Edge<4>*>, unsigned>
         NormalHypersurface::isNormalEdgeLink() const {
-    std::pair<std::vector<const Edge<4>*>, int> ans;
+    std::pair<std::vector<const Edge<4>*>, unsigned> ans;
     ans.second = 0;
 
     if (isEmpty()) {
@@ -474,9 +474,9 @@ std::pair<std::vector<const Edge<4>*>, int>
     return ans;
 }
 
-std::pair<std::vector<const Triangle<4>*>, int>
+std::pair<std::vector<const Triangle<4>*>, unsigned>
         NormalHypersurface::isNormalTriangleLink() const {
-    std::pair<std::vector<const Triangle<4>*>, int> ans;
+    std::pair<std::vector<const Triangle<4>*>, unsigned> ans;
     ans.second = 0;
 
     if (isEmpty()) {
@@ -522,9 +522,9 @@ std::pair<std::vector<const Triangle<4>*>, int>
     return ans;
 }
 
-std::pair<std::vector<const Tetrahedron<4>*>, int>
+std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
         NormalHypersurface::isNormalTetrahedronLink() const {
-    std::pair<std::vector<const Tetrahedron<4>*>, int> ans;
+    std::pair<std::vector<const Tetrahedron<4>*>, unsigned> ans;
     ans.second = 0;
 
     if (isEmpty()) {

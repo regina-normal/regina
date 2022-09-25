@@ -875,7 +875,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   the edges will be ordered by their index within the triangulation.
          *
          * - \a thin is either 0 or 1, indicating how many edges this
-         *   hypersurface is a thin link for.
+         *   hypersurface is a thin link for.  This uses an unsigned type,
+         *   since it will often be compared to <tt>v.size()</tt>.
          *
          * If no rational multiple of this hypersurface is the normalised link
          * of any edge, then \a link will be 0 and \a v will be the empty
@@ -889,7 +890,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * multiple of this hypersurface and an integer indicating how many
          * of these links are thin, as described above.
          */
-        std::pair<std::vector<const Edge<4>*>, int> isNormalEdgeLink() const;
+        std::pair<std::vector<const Edge<4>*>, unsigned> isNormalEdgeLink()
+            const;
         /**
          * Determines whether or not a rational multiple of this hypersurface
          * is the thin link of a single triangle.
@@ -957,7 +959,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   index within the triangulation.
          *
          * - \a thin is either 0, 1 or 2, indicating how many triangles this
-         *   surface is a thin link for.
+         *   hypersurface is a thin link for.  This uses an unsigned type,
+         *   since it will often be compared to <tt>v.size()</tt>.
          *
          * If no rational multiple of this hypersurface is the normalised link
          * of any triangle, then \a link will be 0 and \a v will be the empty
@@ -971,8 +974,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * multiple of this hypersurface and an integer indicating how many
          * of these links are thin, as described above.
          */
-        std::pair<std::vector<const Triangle<4>*>, int> isNormalTriangleLink()
-            const;
+        std::pair<std::vector<const Triangle<4>*>, unsigned>
+            isNormalTriangleLink() const;
         /**
          * Determines whether or not a rational multiple of this hypersurface
          * is the thin link of a single tetrahedron.
@@ -1040,7 +1043,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   index within the triangulation.
          *
          * - \a thin is either 0, 1 or 2, indicating how many tetrahedra this
-         *   surface is a thin link for.
+         *   hypersurface is a thin link for.  This uses an unsigned type,
+         *   since it will often be compared to <tt>v.size()</tt>.
          *
          * If no rational multiple of this hypersurface is the normalised link
          * of any tetrahedron, then \a link will be 0 and \a v will be the empty
@@ -1054,7 +1058,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * multiple of this hypersurface and an integer indicating how many
          * of these links are thin, as described above.
          */
-        std::pair<std::vector<const Tetrahedron<4>*>, int>
+        std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
             isNormalTetrahedronLink() const;
 
         /**
