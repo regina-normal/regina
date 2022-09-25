@@ -171,21 +171,21 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
                 ans += tr("Normal: ");
                 if (eLinks.size() > eThin) {
                     ans += tr("edge %1").arg((*ePos++)->index());
-                    for ( ; ePos != eLinks.end(); ++ePos)
+                    while (ePos != eLinks.end())
                         ans += tr(",%1").arg((*ePos++)->index());
                 }
                 if (fLinks.size() > fThin) {
                     if (eLinks.size() > eThin)
                         ans += tr(", ");
                     ans += tr("tri %1").arg((*fPos++)->index());
-                    for ( ; fPos != fLinks.end(); ++fPos)
+                    while (fPos != fLinks.end())
                         ans += tr(",%1").arg((*fPos++)->index());
                 }
                 if (tLinks.size() > tThin) {
                     if (eLinks.size() > eThin || fLinks.size() > fThin)
                         ans += tr(", ");
                     ans += tr("tet %1").arg((*tPos++)->index());
-                    for ( ; tPos != tLinks.end(); ++tPos)
+                    while (tPos != tLinks.end())
                         ans += tr(",%1").arg((*tPos++)->index());
                 }
             }

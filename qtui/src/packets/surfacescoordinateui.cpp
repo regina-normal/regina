@@ -208,14 +208,14 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 ans += tr("Normal: ");
                 if (eLinks.size() > eThin) {
                     ans += tr("edge %1").arg((*ePos++)->index());
-                    for ( ; ePos != eLinks.end(); ++ePos)
+                    while (ePos != eLinks.end())
                         ans += tr(",%1").arg((*ePos++)->index());
                 }
                 if (fLinks.size() > fThin) {
                     if (eLinks.size() > eThin)
                         ans += tr(", ");
                     ans += tr("tri %1").arg((*fPos++)->index());
-                    for ( ; fPos != fLinks.end(); ++fPos)
+                    while (fPos != fLinks.end())
                         ans += tr(",%1").arg((*fPos++)->index());
                 }
             }
