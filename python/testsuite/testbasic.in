@@ -138,7 +138,9 @@ case "$os" in
 		timeout=1800
 		;;
 	* )
-		timeout=30
+		# Linux builds may also be running under hardware emulation.
+		# Give each test ten minutes, which is *way* more than it should need.
+		timeout=600
 		;;
 esac
 
