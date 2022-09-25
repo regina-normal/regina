@@ -786,24 +786,76 @@
        <glossterm><guilabel>Link</guilabel></glossterm>
        <glossdef>
         <para>
-         Indicates if a surface is a vertex link or a thin edge link
-         (i.e., the boundary of a small regular neighbourhood of a
-         vertex or edge).  If this is a one-sided surface whose
-         <emphasis>double</emphasis> is a thin edge link (which can
-         happen in 3-manifolds, but not 4-manifolds), then it will be
-         reported as a thin edge link for these purposes.
+         Indicates if a (hyper)surface is the link of some face of
+         the underlying triangulation.
+         In general, the <firstterm>link</firstterm> of a face is created
+         by forming the boundary <replaceable>b</replaceable> of a small
+         regular neighbourhood of the face.  We call this link
+         <firstterm>thin</firstterm> if the (hyper)surface
+         <replaceable>b</replaceable>
+         is already normal; otherwise we refer to the
+         <firstterm>normalised</firstterm> link as the result of
+         applying the standard normalisation process to
+         <replaceable>b</replaceable> (which could change the topology,
+         and in some extreme scenarios could even reduce
+         <replaceable>b</replaceable> to the empty surface).
         </para>
         <para>
-         The relevant vertex or edge will be listed also, using the
-         vertex and edge numbers that appear in the first column of the
-         <link linkend="tri-faces">vertex and edge viewers</link>.
-         Within a 3-manifold, it is possible for a normal surface to be the
-         thin edge link for two edges at the same time;
-         in this case both edges will be reported here.
+         If this (hyper)surface is the link of a face then the relevant faces
+         will be listed here, using the vertex, edge, triangle and/or
+         tetrahedron numbers that appear in the first
+         column of the <link linkend="tri-faces">skeletal face viewers</link>.
+         Note that it is possible for a (hyper)surface to be the link of
+         several faces at the same time, possibly even of different dimensions,
+         in which case they will all be reported here.
         </para>
         <para>
-         If the (hyper)surface is not a vertex link or a thin edge link,
-         then this cell will be left empty.
+         Any thin links will be reported first (indicated by
+         <guilabel>Thin:</guilabel>), followed by any normalised links
+         (indicated by <guilabel>Normal:</guilabel>).
+         Vertices, edges, triangles and tetrahedra will be indicated by the
+         abbreviations <guilabel>vtx</guilabel>, <guilabel>edge</guilabel>,
+         <guilabel>tri</guilabel> and <guilabel>tet</guilabel>.
+         In 3-manifold triangulations, &regina; will only detect
+         vertex, edge and triangle links; in 4-manifold triangulations,
+         &regina; will detect vertex, edge, triangle and tetrahedron links.
+        </para>
+        <para>
+         Some examples of things you might see in this column:
+         <glosslist>
+          <glossentry>
+           <glossterm><guilabel>Thin: vtx 3</guilabel></glossterm>
+           <glossdef><para>
+            Indicates a (hyper)surface that is the thin link of
+            vertex&nbsp;3 (note that vertex links are always thin).
+           </para></glossdef>
+          </glossentry>
+          <glossentry>
+           <glossterm><guilabel>Thin: tri 4; Normal: edge 1</guilabel></glossterm>
+           <glossdef><para>
+            Indicates a (hyper)surface that is simultaneously the thin
+            link of triangle&nbsp;4, and also the normalised link of
+            edge&nbsp;1.
+           </para></glossdef>
+          </glossentry>
+          <glossentry>
+           <glossterm><guilabel>Thin: edge 0,2</guilabel></glossterm>
+           <glossdef><para>
+            Indicates a (hyper)surface that is simultaneously the thin
+            link of edges&nbsp;0 and 2 (note that a surface or
+            hypersurface can never be the thin link of more than two faces).
+           </para></glossdef>
+          </glossentry>
+         </glosslist>
+        </para>
+        <para>
+         A one-sided (hyper)surface whose <emphasis>double</emphasis> is
+         the link of a face will also be reported as such in this table
+         (though this can never happen with vertex links).
+        </para>
+        <para>
+         If the (hyper)surface is not the link of a face as
+         described above, then this cell will be left empty.
         </para>
        </glossdef>
       </glossentry>

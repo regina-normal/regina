@@ -1306,12 +1306,22 @@
    (hyper)surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-proptype">splitting surfaces,
    recognising</link></secondaryie>
+  <secondaryie><link linkend="surfaces-proplink">tetrahedron links,
+   recognising</link></secondaryie>
+  <secondaryie><link linkend="surfaces-proplink">triangle links,
+   recognising</link></secondaryie>
   <secondaryie><link linkend="regina7-tons">transversely oriented
    normal surfaces, removed</link></secondaryie>
   <secondaryie><link linkend="hypersurfaces-triangulate">triangulating a
    hypersurface</link></secondaryie>
   <secondaryie><link linkend="surfaces-proplink">vertex links,
    recognising</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>normalised face links</primaryie>
+  <secondaryie><link linkend="surfaces-proplink">recognising as
+   normal surfaces</link></secondaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-O'><title>&mdash; O &mdash;</title>
@@ -1901,12 +1911,24 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>tetrahedron links</primaryie>
+  <secondaryie><link linkend="surfaces-proplink">recognising as
+   normal surfaces or hypersurfaces</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>text encodings</primaryie>
   <seeie>See: character encodings</seeie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="packet-text">text packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>thin face links</primaryie>
+  <secondaryie><link linkend="surfaces-proplink">recognising as
+   normal surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1946,6 +1968,12 @@
  <indexentry>
   <primaryie>triangle arc normal coordinates</primaryie>
   <seeie>See: coordinate systems</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>triangle links</primaryie>
+  <secondaryie><link linkend="surfaces-proplink">recognising as
+   normal surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
