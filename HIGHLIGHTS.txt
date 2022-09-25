@@ -19,7 +19,7 @@ Version 7.1  [ 25 September, 2022 ]
         - The tricensus utility now supports multithreaded operation, and
           has a new output option that preserves simplex/vertex labelling.
         - Includes the standard K3 surface as a ready-made example 4-manifold
-          (thanks to Rhuaidi Burke for the relatively small triangulation).
+          (thanks to Rhuaidi Burke for the small triangulation).
         - Greater support for "tight encodings" for several types of objects;
           these use short text tokens, with no loss of information and no
           simplex/vertex/crossing relabelling.  These need Python or C++ to use.
