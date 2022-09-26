@@ -3820,6 +3820,28 @@ inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
 // that use them (this fixes DLL-related warnings in the windows port)
 
 inline Triangulation<3>::~Triangulation() {
+    // There is some difficulty over what to do with properties that
+    // hold normal surfaces and/or angle structures, since such properties
+    // will hold a snapshot reference to this triangulation.
+    //
+    // If these are the *only* snapshot references to the triangulation,
+    // then we should clear the properties now, so that takeSnapshot()
+    // does not trigger a deep copy of the triangulation which is then
+    // immediately destroyed.
+    //
+    // However, if there are *other* snapshot references to the triangulation,
+    // then clearing the properties now will mean they do not get cloned
+    // with the deep copy, losing the benefit of having cached them.
+    //
+    // For now, we take the following approach: currently the only cached
+    // properties of this type are polynomial-time to compute, and so we clear
+    // them now and let the deep copy recompute them again later if needed.
+
+    if (std::holds_alternative<AngleStructure>(strictAngleStructure_))
+        strictAngleStructure_ = false;
+    if (std::holds_alternative<AngleStructure>(generalAngleStructure_))
+        generalAngleStructure_ = false;
+
     Snapshottable<Triangulation<3>>::takeSnapshot();
     clearAllProperties();
 }
