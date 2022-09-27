@@ -34,8 +34,19 @@
 #include "triangulation/dim3.h"
 #include <set>
 
-#define NO_3D_FACE_LINK 0x15 // bits 00010101
+// When indicating that a surface is *not* a link of a k-face,
+// we use |= to set the "known" bit but ignore the "is a link" bit.
+// This is fine, since if the surface is not the link of a k-face then
+// there is no way in which the "is a link" bit could have been already set.
+#define NO_3D_VERTEX_LINK        0x01 // bits 00000001
+#define NO_3D_EDGE_LINK          0x04 // bits 00000100
+#define NO_3D_TRIANGLE_LINK      0x10 // bits 00010000
 #define NO_3D_POSITIVE_FACE_LINK 0x14 // bits 00010100
+#define NO_3D_FACE_LINK          0x15 // bits 00010101
+
+#define IS_3D_VERTEX_LINK        0x03 // bits 00000011
+#define IS_3D_EDGE_LINK          0x0c // bits 00001100
+#define IS_3D_TRIANGLE_LINK      0x30 // bits 00110000
 
 namespace regina {
 
@@ -43,7 +54,7 @@ bool NormalSurface::isVertexLinking() const {
     // The relevant bits of linkOf_ could be any of 00, 01 or 11.
 
     if (! enc_.couldBeVertexLink()) {
-        linkOf_ |= 0x01; // known to be not a vertex link.
+        linkOf_ |= NO_3D_VERTEX_LINK;
         return false;
     }
 
@@ -51,7 +62,7 @@ bool NormalSurface::isVertexLinking() const {
     for (size_t tet = 0; tet < nTets; tet++) {
         for (int type = 0; type < 3; type++)
             if (quads(tet, type) != 0) {
-                linkOf_ |= 0x01; // known to be not a vertex link.
+                linkOf_ |= NO_3D_VERTEX_LINK;
                 return false;
             }
     }
@@ -68,15 +79,14 @@ bool NormalSurface::isVertexLinking() const {
 }
 
 const Vertex<3>* NormalSurface::isVertexLink() const {
-    if (linkOf_ & 0x01)
-        if (! linkOf_ & 0x02)
-            return nullptr;
+    if ((linkOf_ & IS_3D_VERTEX_LINK) == NO_3D_VERTEX_LINK)
+        return nullptr; // already known this is not a vertex link
 
     // At this point, the relevant bits of linkOf_ are 00 (not computed),
     // or 11 (it's a vertex link, but we don't know which).
 
     if (! enc_.couldBeVertexLink()) {
-        linkOf_ |= 0x01; // known to be not a vertex link.
+        linkOf_ |= NO_3D_VERTEX_LINK;
         return nullptr;
     }
 
@@ -89,7 +99,7 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
     for (size_t tet = 0; tet < nTets; tet++) {
         for (int type = 0; type < 3; type++)
             if (quads(tet, type) != 0) {
-                linkOf_ |= 0x01; // known to be not a vertex link.
+                linkOf_ |= NO_3D_VERTEX_LINK;
                 return nullptr;
             }
     }
@@ -118,7 +128,7 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
                     ans = t->vertex(type);
                 } else if (ans != t->vertex(type)) {
                     // We seem to be linking more than one vertex.
-                    linkOf_ |= 0x01; // known to be not a vertex link.
+                    linkOf_ |= NO_3D_VERTEX_LINK;
                     return nullptr;
                 }
             }
@@ -127,14 +137,13 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
 
     // Either we are linking exactly one vertex (ans != null), or we
     // have the empty vector (ans == null).
-    linkOf_ |= (ans ? 0x03 : 0x01);
+    linkOf_ |= (ans ? IS_3D_VERTEX_LINK : NO_3D_VERTEX_LINK);
     return ans;
 }
 
 std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const {
-    if (linkOf_ & 0x04)
-        if (! linkOf_ & 0x08)
-            return { nullptr, nullptr };
+    if ((linkOf_ & IS_3D_EDGE_LINK) == NO_3D_EDGE_LINK)
+        return { nullptr, nullptr }; // already known this is not an edge link
 
     // Get a local reference to the triangulation so we do not have to
     // repeatedly bounce through the snapshot.
@@ -340,7 +349,7 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
     }
 
     // One or more candidates have survived: return them.
-    linkOf_ |= 0x0c; // known to link at least one edge.
+    linkOf_ |= IS_3D_EDGE_LINK;
     if (ans[0])
         return { ans[0], ans[1] };
     else
@@ -352,9 +361,8 @@ std::pair<std::vector<const Edge<3>*>, unsigned>
     std::pair<std::vector<const Edge<3>*>, unsigned> ans;
     ans.second = 0;
 
-    if (linkOf_ & 0x04)
-        if (! linkOf_ & 0x08)
-            return ans; /* not an edge link */
+    if ((linkOf_ & IS_3D_EDGE_LINK) == NO_3D_EDGE_LINK)
+        return ans; // already known this is not an edge link
 
     if (isEmpty()) {
         // Treat the empty surface separately.
@@ -362,7 +370,7 @@ std::pair<std::vector<const Edge<3>*>, unsigned>
         for (auto e : triangulation_->edges())
             if (e->linkingSurface().first.isEmpty())
                 ans.first.push_back(e);
-        linkOf_ |= (ans.first.empty() ? 0x04 : 0x0c);
+        linkOf_ |= (ans.first.empty() ? NO_3D_EDGE_LINK : IS_3D_EDGE_LINK);
         return ans;
     }
 
@@ -400,15 +408,14 @@ std::pair<std::vector<const Edge<3>*>, unsigned>
             }
         }
     }
-    linkOf_ |= (ans.first.empty() ? 0x04 : 0x0c);
+    linkOf_ |= (ans.first.empty() ? NO_3D_EDGE_LINK : IS_3D_EDGE_LINK);
     return ans;
 }
 
 std::pair<const Triangle<3>*, const Triangle<3>*>
         NormalSurface::isThinTriangleLink() const {
-    if (linkOf_ & 0x10)
-        if (! linkOf_ & 0x20)
-            return { nullptr, nullptr };
+    if ((linkOf_ & IS_3D_TRIANGLE_LINK) == NO_3D_TRIANGLE_LINK)
+        return { nullptr, nullptr }; // already known it's not a triangle link
 
     // This is essentially the same implementation as isNormalTriangleLink(),
     // just slimmed down slightly to account for some extra facts that
@@ -444,13 +451,13 @@ std::pair<const Triangle<3>*, const Triangle<3>*>
                 // There can be at most two thin triangle links, and we
                 // have found them both.
                 ans.second = t;
-                linkOf_ |= 0x30; // known to link a triangle.
+                linkOf_ |= IS_3D_TRIANGLE_LINK;
                 return ans;
             }
         }
     }
 
-    linkOf_ |= (ans.first ? 0x30 : 0x10);
+    linkOf_ |= (ans.first ? IS_3D_TRIANGLE_LINK : NO_3D_TRIANGLE_LINK);
     return ans;
 }
 
@@ -459,9 +466,8 @@ std::pair<std::vector<const Triangle<3>*>, unsigned>
     std::pair<std::vector<const Triangle<3>*>, unsigned> ans;
     ans.second = 0;
 
-    if (linkOf_ & 0x10)
-        if (! linkOf_ & 0x20)
-            return ans; /* not a triangle link */
+    if ((linkOf_ & IS_3D_TRIANGLE_LINK) == NO_3D_TRIANGLE_LINK)
+        return ans; // already known this is not a triangle link
 
     if (isEmpty()) {
         // Treat the empty surface separately.
@@ -469,7 +475,8 @@ std::pair<std::vector<const Triangle<3>*>, unsigned>
         for (auto t : triangulation_->triangles())
             if (t->linkingSurface().first.isEmpty())
                 ans.first.push_back(t);
-        linkOf_ |= (ans.first.empty() ? 0x10 : 0x30);
+        linkOf_ |= (ans.first.empty() ?
+            NO_3D_TRIANGLE_LINK : IS_3D_TRIANGLE_LINK);
         return ans;
     }
 
@@ -509,7 +516,7 @@ std::pair<std::vector<const Triangle<3>*>, unsigned>
         }
     }
 
-    linkOf_ |= (ans.first.empty() ? 0x10 : 0x30);
+    linkOf_ |= (ans.first.empty() ? NO_3D_TRIANGLE_LINK : IS_3D_TRIANGLE_LINK);
     return ans;
 }
 

@@ -33,8 +33,21 @@
 #include "hypersurface/normalhypersurface.h"
 #include "triangulation/dim4.h"
 
-#define NO_4D_FACE_LINK 0x55 // bits 01010101
+// When indicating that a hypersurface is *not* a link of a k-face,
+// we use |= to set the "known" bit but ignore the "is a link" bit.
+// This is fine, since if the hypersurface is not the link of a k-face then
+// there is no way in which the "is a link" bit could have been already set.
+#define NO_4D_VERTEX_LINK        0x01 // bits 00000001
+#define NO_4D_EDGE_LINK          0x04 // bits 00000100
+#define NO_4D_TRIANGLE_LINK      0x10 // bits 00010000
+#define NO_4D_TETRAHEDRON_LINK   0x40 // bits 01000000
 #define NO_4D_POSITIVE_FACE_LINK 0x54 // bits 01010100
+#define NO_4D_FACE_LINK          0x55 // bits 01010101
+
+#define IS_4D_VERTEX_LINK        0x03 // bits 00000011
+#define IS_4D_EDGE_LINK          0x0c // bits 00001100
+#define IS_4D_TRIANGLE_LINK      0x30 // bits 00110000
+#define IS_4D_TETRAHEDRON_LINK   0xc0 // bits 11000000
 
 namespace regina {
 
@@ -42,7 +55,7 @@ bool NormalHypersurface::isVertexLinking() const {
     // The relevant bits of linkOf_ could be any of 00, 01 or 11.
 
     if (! enc_.couldBeVertexLink()) {
-        linkOf_ |= 0x01; // known to be not a vertex link.
+        linkOf_ |= NO_4D_VERTEX_LINK;
         return false;
     }
 
@@ -50,7 +63,7 @@ bool NormalHypersurface::isVertexLinking() const {
     for (size_t pent = 0; pent < nPents; pent++) {
         for (int type = 0; type < 10; type++)
             if (prisms(pent, type) != 0) {
-                linkOf_ |= 0x01; // known to be not a vertex link.
+                linkOf_ |= NO_4D_VERTEX_LINK;
                 return false;
             }
     }
@@ -60,15 +73,14 @@ bool NormalHypersurface::isVertexLinking() const {
 }
 
 const Vertex<4>* NormalHypersurface::isVertexLink() const {
-    if (linkOf_ & 0x01)
-        if (! linkOf_ & 0x02)
-            return nullptr;
+    if ((linkOf_ & IS_4D_VERTEX_LINK) == NO_4D_VERTEX_LINK)
+        return nullptr; // already known this is not a vertex link
 
     // At this point, the relevant bits of linkOf_ are 00 (not computed),
     // or 11 (it's a vertex link, but we don't know which).
 
     if (! enc_.couldBeVertexLink()) {
-        linkOf_ |= 0x01; // known to be not a vertex link
+        linkOf_ |= NO_4D_VERTEX_LINK;
         return nullptr;
     }
 
@@ -81,7 +93,7 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
     for (size_t pent = 0; pent < nPents; pent++) {
         for (int type = 0; type < 10; type++)
             if (prisms(pent, type) != 0) {
-                linkOf_ |= 0x01; // known to be not a vertex link
+                linkOf_ |= NO_4D_VERTEX_LINK;
                 return nullptr;
             }
     }
@@ -103,7 +115,7 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
                     ans = p->vertex(type);
                 } else if (ans != p->vertex(type)) {
                     // We seem to be linking more than one vertex.
-                    linkOf_ |= 0x01; // known to be not a vertex link
+                    linkOf_ |= NO_4D_VERTEX_LINK;
                     return nullptr;
                 }
             }
@@ -112,14 +124,13 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
 
     // Either we are linking exactly one vertex (ans != null), or we
     // have the empty vector (ans == null).
-    linkOf_ |= (ans ? 0x03 : 0x01);
+    linkOf_ |= (ans ? IS_4D_VERTEX_LINK : NO_4D_VERTEX_LINK);
     return ans;
 }
 
 const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
-    if (linkOf_ & 0x04)
-        if (! linkOf_ & 0x08)
-            return nullptr;
+    if ((linkOf_ & IS_4D_EDGE_LINK) == NO_4D_EDGE_LINK)
+        return nullptr; // already known this is not an edge link
 
     // Get a local reference to the triangulation so we do not have to
     // repeatedly bounce through the snapshot.
@@ -215,15 +226,14 @@ const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
     }
 
     // All good!
-    linkOf_ |= 0x0c; // known to link at least one edge.
+    linkOf_ |= IS_4D_EDGE_LINK;
     return ans;
 }
 
 std::pair<const Triangle<4>*, const Triangle<4>*>
         NormalHypersurface::isThinTriangleLink() const {
-    if (linkOf_ & 0x10)
-        if (! linkOf_ & 0x20)
-            return { nullptr, nullptr };
+    if ((linkOf_ & IS_4D_TRIANGLE_LINK) == NO_4D_TRIANGLE_LINK)
+        return { nullptr, nullptr }; // already known it's not a triangle link
 
     // This is essentially the same implementation as isNormalTriangleLink(),
     // just slimmed down slightly to account for some extra facts that
@@ -259,21 +269,20 @@ std::pair<const Triangle<4>*, const Triangle<4>*>
                 // There can be at most two thin triangle links, and we
                 // have found them both.
                 ans.second = t;
-                linkOf_ |= 0x30; // known to link a triangle.
+                linkOf_ |= IS_4D_TRIANGLE_LINK;
                 return ans;
             }
         }
     }
 
-    linkOf_ |= (ans.first ? 0x30 : 0x10);
+    linkOf_ |= (ans.first ? IS_4D_TRIANGLE_LINK : NO_4D_TRIANGLE_LINK);
     return ans;
 }
 
 std::pair<const Tetrahedron<4>*, const Tetrahedron<4>*>
         NormalHypersurface::isThinTetrahedronLink() const {
-    if (linkOf_ & 0x40)
-        if (! linkOf_ & 0x80)
-            return { nullptr, nullptr };
+    if ((linkOf_ & IS_4D_TETRAHEDRON_LINK) == NO_4D_TETRAHEDRON_LINK)
+        return { nullptr, nullptr }; // already known it's not a tet. link
 
     // This is essentially the same implementation as isNormalTetrahedron(),
     // just slimmed down slightly to account for some extra facts that
@@ -310,13 +319,13 @@ std::pair<const Tetrahedron<4>*, const Tetrahedron<4>*>
                 // There can be at most two thin tetrahedron links, and we
                 // have found them both.
                 ans.second = t;
-                linkOf_ |= 0xc0; // known to link a tetrahedron.
+                linkOf_ |= IS_4D_TETRAHEDRON_LINK;
                 return ans;
             }
         }
     }
 
-    linkOf_ |= (ans.first ? 0xc0 : 0x40);
+    linkOf_ |= (ans.first ? IS_4D_TETRAHEDRON_LINK : NO_4D_TETRAHEDRON_LINK);
     return ans;
 }
 
@@ -514,9 +523,8 @@ std::pair<std::vector<const Edge<4>*>, unsigned>
     std::pair<std::vector<const Edge<4>*>, unsigned> ans;
     ans.second = 0;
 
-    if (linkOf_ & 0x04)
-        if (! linkOf_ & 0x08)
-            return ans; /* not an edge link */
+    if ((linkOf_ & IS_4D_EDGE_LINK) == NO_4D_EDGE_LINK)
+        return ans; // already known it's not an edge link
 
     if (isEmpty()) {
         // Treat the empty hypersurface separately.
@@ -524,7 +532,7 @@ std::pair<std::vector<const Edge<4>*>, unsigned>
         for (auto e : triangulation_->edges())
             if (e->linkingSurface().first.isEmpty())
                 ans.first.push_back(e);
-        linkOf_ |= (ans.first.empty() ? 0x04 : 0x0c);
+        linkOf_ |= (ans.first.empty() ? NO_4D_EDGE_LINK : IS_4D_EDGE_LINK);
         return ans;
     }
 
@@ -555,7 +563,7 @@ std::pair<std::vector<const Edge<4>*>, unsigned>
         }
     }
 
-    linkOf_ |= (ans.first.empty() ? 0x04 : 0x0c);
+    linkOf_ |= (ans.first.empty() ? NO_4D_EDGE_LINK : IS_4D_EDGE_LINK);
     return ans;
 }
 
@@ -564,9 +572,8 @@ std::pair<std::vector<const Triangle<4>*>, unsigned>
     std::pair<std::vector<const Triangle<4>*>, unsigned> ans;
     ans.second = 0;
 
-    if (linkOf_ & 0x10)
-        if (! linkOf_ & 0x20)
-            return ans; /* not a triangle link */
+    if ((linkOf_ & IS_4D_TRIANGLE_LINK) == NO_4D_TRIANGLE_LINK)
+        return ans; // already known it's not a triangle link
 
     if (isEmpty()) {
         // Treat the empty hypersurface separately.
@@ -574,7 +581,8 @@ std::pair<std::vector<const Triangle<4>*>, unsigned>
         for (auto t : triangulation_->triangles())
             if (t->linkingSurface().first.isEmpty())
                 ans.first.push_back(t);
-        linkOf_ |= (ans.first.empty() ? 0x10 : 0x30);
+        linkOf_ |= (ans.first.empty() ?
+            NO_4D_TRIANGLE_LINK : IS_4D_TRIANGLE_LINK);
         return ans;
     }
 
@@ -614,7 +622,7 @@ std::pair<std::vector<const Triangle<4>*>, unsigned>
         }
     }
 
-    linkOf_ |= (ans.first.empty() ? 0x10 : 0x30);
+    linkOf_ |= (ans.first.empty() ? NO_4D_TRIANGLE_LINK : IS_4D_TRIANGLE_LINK);
     return ans;
 }
 
@@ -623,9 +631,8 @@ std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
     std::pair<std::vector<const Tetrahedron<4>*>, unsigned> ans;
     ans.second = 0;
 
-    if (linkOf_ & 0x40)
-        if (! linkOf_ & 0x80)
-            return ans; /* not a tetrahedron link */
+    if ((linkOf_ & IS_4D_TETRAHEDRON_LINK) == NO_4D_TETRAHEDRON_LINK)
+        return ans; // already known it's not a tetrahedron link
 
     if (isEmpty()) {
         // Treat the empty hypersurface separately.
@@ -633,7 +640,8 @@ std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
         for (auto t : triangulation_->tetrahedra())
             if (t->linkingSurface().first.isEmpty())
                 ans.first.push_back(t);
-        linkOf_ |= (ans.first.empty() ? 0x40 : 0xc0);
+        linkOf_ |= (ans.first.empty() ?
+            NO_4D_TETRAHEDRON_LINK : IS_4D_TETRAHEDRON_LINK);
         return ans;
     }
 
@@ -673,7 +681,8 @@ std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
         }
     }
 
-    linkOf_ |= (ans.first.empty() ? 0x40 : 0xc0);
+    linkOf_ |= (ans.first.empty() ?
+        NO_4D_TETRAHEDRON_LINK : IS_4D_TETRAHEDRON_LINK);
     return ans;
 }
 
