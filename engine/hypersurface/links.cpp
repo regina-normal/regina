@@ -36,15 +36,21 @@
 namespace regina {
 
 bool NormalHypersurface::isVertexLinking() const {
-    if (! enc_.couldBeVertexLink())
+    if (! enc_.couldBeVertexLink()) {
+        linkOf_ |= 0x01; // known to be not a vertex link.
         return false;
+    }
 
     size_t nPents = triangulation_->size();
     for (size_t pent = 0; pent < nPents; pent++) {
         for (int type = 0; type < 10; type++)
-            if (prisms(pent, type) != 0)
+            if (prisms(pent, type) != 0) {
+                linkOf_ |= 0x01; // known to be not a vertex link.
                 return false;
+            }
     }
+
+    // Might or might not be a *single* vertex link, so leave linkOf_ untouched.
     return true;
 }
 
@@ -303,8 +309,9 @@ std::optional<NormalHypersurface> NormalHypersurface::couldLinkFace() const {
             }
         } else {
             // Both k and 2k have already been seen.
-            if (w != k && w != kk)
+            if (w != k && w != kk) {
                 return std::nullopt;
+            }
         }
     }
 
@@ -443,8 +450,9 @@ std::optional<NormalHypersurface> NormalHypersurface::couldLinkFace() const {
             // was not k.  In this case the edge weights should have been
             // scaled down to 2; otherwise we cannot have a normalised
             // edge link at all.
-            if (scale + scale != k)
+            if (scale + scale != k) {
                 return std::nullopt;
+            }
         }
     }
 

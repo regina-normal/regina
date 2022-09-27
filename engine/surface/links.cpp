@@ -37,30 +37,40 @@
 namespace regina {
 
 bool NormalSurface::isVertexLinking() const {
-    if (! enc_.couldBeVertexLink())
+    if (! enc_.couldBeVertexLink()) {
+        linkOf_ |= 0x01; // known to be not a vertex link.
         return false;
+    }
 
     size_t nTets = triangulation_->size();
     for (size_t tet = 0; tet < nTets; tet++) {
         for (int type = 0; type < 3; type++)
-            if (quads(tet, type) != 0)
+            if (quads(tet, type) != 0) {
+                linkOf_ |= 0x01; // known to be not a vertex link.
                 return false;
+            }
     }
     if (enc_.storesOctagons())
         for (size_t tet = 0; tet < nTets; tet++)
             for (int type = 0; type < 3; type++)
-                if (octs(tet, type) != 0)
+                if (octs(tet, type) != 0) {
+                    linkOf_ = 0x15; // known to be not any kind of face link.
                     return false;
+                }
+
+    // Might or might not be a *single* vertex link, so leave linkOf_ untouched.
     return true;
 }
 
 const Vertex<3>* NormalSurface::isVertexLink() const {
     if (linkOf_ & 0x01)
-        if (! linkOf_ & 0x02)
+        if (! linkOf_ & 0x02) {
             return nullptr;
+        }
 
-    if (! enc_.couldBeVertexLink())
+    if (! enc_.couldBeVertexLink()) {
         return nullptr;
+    }
 
     // Get a local reference to the triangulation so we do not have to
     // repeatedly bounce through the snapshot.
@@ -70,14 +80,16 @@ const Vertex<3>* NormalSurface::isVertexLink() const {
     // Check that there are no quad/oct discs.
     for (size_t tet = 0; tet < nTets; tet++) {
         for (int type = 0; type < 3; type++)
-            if (quads(tet, type) != 0)
+            if (quads(tet, type) != 0) {
                 return nullptr;
+            }
     }
     if (enc_.storesOctagons())
         for (size_t tet = 0; tet < nTets; tet++)
             for (int type = 0; type < 3; type++)
-                if (octs(tet, type) != 0)
+                if (octs(tet, type) != 0) {
                     return nullptr;
+                }
 
     // It follows from the matching equations that what we have is a
     // union of vertex links.  Make sure we are linking just the one vertex.
@@ -121,8 +133,9 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
     if (enc_.storesOctagons())
         for (size_t tet = 0; tet < nTets; tet++)
             for (int type = 0; type < 3; type++)
-                if (octs(tet, type) != 0)
+                if (octs(tet, type) != 0) {
                     return { nullptr, nullptr };
+                }
 
     // Run through the quadrilateral discs and work out if there are any
     // valid candidates.
@@ -181,27 +194,31 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
                         else if (e[0] == ans[1]) {
                             ans[0] = ans[1];
                             ans[1] = nullptr;
-                        } else
+                        } else {
                             return { nullptr, nullptr };
+                        }
 
                         // The only possible candidate is ans[0].
-                        if (ans[0] == nullptr || ansMultDouble != coord)
+                        if (ans[0] == nullptr || ansMultDouble != coord) {
                             return { nullptr, nullptr };
+                        }
                     } else {
                         // Different edges on both sides of the quad.
                         // Check each candidate in turn.
                         for (i = 0; i < 2; i++)
                             if (ans[i] != e[0] && ans[i] != e[1])
                                 ans[i] = nullptr;
-                        if (ansMultDouble != coord * 2)
+                        if (ansMultDouble != coord * 2) {
                             return { nullptr, nullptr };
+                        }
                     }
                 } else {
                     // We've found our first and only possible candidates.
                     if (e[0] == e[1]) {
                         // Same edge on both sides of the quad.
-                        if (notAns.find(e[0]) != notAns.end())
+                        if (notAns.find(e[0]) != notAns.end()) {
                             return { nullptr, nullptr };
+                        }
                         ans[0] = e[0];
                         ans[1] = nullptr;
                         ansMultDouble = coord;
@@ -232,16 +249,19 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
             }
 
             // Have we ruled out all the candidates we ever had?
-            if (foundQuads && (! ans[0]) && (! ans[1]))
+            if (foundQuads && (! ans[0]) && (! ans[1])) {
                 return { nullptr, nullptr };
+            }
         }
     }
 
     // So did we actually find anything?
-    if (! foundQuads)
+    if (! foundQuads) {
         return { nullptr, nullptr };
-    if ((! ans[0]) && (! ans[1]))
+    }
+    if ((! ans[0]) && (! ans[1])) {
         return { nullptr, nullptr };
+    }
 
     // Finally check the triangular discs.
     Vertex<3>* v;
@@ -284,8 +304,9 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
             }
 
             // Have we ruled out all possibilities?
-            if ((! ans[0]) && (! ans[1]))
+            if ((! ans[0]) && (! ans[1])) {
                 return { nullptr, nullptr };
+            }
         }
     }
 
@@ -315,8 +336,9 @@ std::pair<std::vector<const Edge<3>*>, unsigned>
     }
 
     std::optional<NormalSurface> mult = couldLinkFace();
-    if (! mult)
+    if (! mult) {
         return ans; // empty
+    }
 
     for (auto e : triangulation_->edges()) {
         if (edgeWeight(e->index()) != 0)
@@ -360,12 +382,14 @@ std::pair<const Triangle<3>*, const Triangle<3>*>
     std::pair<const Triangle<3>*, const Triangle<3>*> ans { nullptr, nullptr };
 
     // Thin links are never empty.
-    if (isEmpty())
+    if (isEmpty()) {
         return ans;
+    }
 
     std::optional<NormalSurface> mult = couldLinkFace();
-    if (! mult)
+    if (! mult) {
         return ans;
+    }
 
     for (auto t : triangulation_->triangles()) {
         for (int i = 0; i < 3; ++i)
@@ -407,8 +431,9 @@ std::pair<std::vector<const Triangle<3>*>, unsigned>
     }
 
     std::optional<NormalSurface> mult = couldLinkFace();
-    if (! mult)
+    if (! mult) {
         return ans; // empty
+    }
 
     for (auto t : triangulation_->triangles()) {
         for (int i = 0; i < 3; ++i)
@@ -441,8 +466,9 @@ std::pair<std::vector<const Triangle<3>*>, unsigned>
 }
 
 std::optional<NormalSurface> NormalSurface::couldLinkFace() const {
-    if (! normal())
+    if (! normal()) {
         return std::nullopt;
+    }
 
     // All edge weights should be in { 0, k, 2k } for some k.
 
@@ -478,8 +504,9 @@ std::optional<NormalSurface> NormalSurface::couldLinkFace() const {
             }
         } else {
             // Both k and 2k have already been seen.
-            if (w != k && w != kk)
+            if (w != k && w != kk) {
                 return std::nullopt;
+            }
         }
     }
 
@@ -617,8 +644,9 @@ std::optional<NormalSurface> NormalSurface::couldLinkFace() const {
             // was not k.  In this case the edge weights should have been
             // scaled down to 2; otherwise we cannot have a normalised
             // edge link at all.
-            if (scale + scale != k)
+            if (scale + scale != k) {
                 return std::nullopt;
+            }
         }
     }
 
