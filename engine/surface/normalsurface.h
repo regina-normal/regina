@@ -1079,8 +1079,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          */
         bool isVertexLinking() const;
         /**
-         * Determines whether or not a rational multiple of this surface
-         * is the link of a single vertex.
+         * Determines whether or not a positive rational multiple of this
+         * surface is the link of a single vertex.
          *
          * This behaves differently from isVertexLinking(), which will also
          * detect a union of several different vertex links.  In contrast,
@@ -1091,13 +1091,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return the vertex linked by a rational multiple of this surface,
+         * @return the vertex linked by a positive rational multiple of this
+         * surface,
          * or \c null if this surface is not a multiple of a single vertex link.
          */
         const Vertex<3>* isVertexLink() const;
         /**
-         * Determines whether or not a rational multiple of this surface
-         * is the thin link of a single edge.
+         * Determines whether or not a positive rational multiple of this
+         * surface is the thin link of a single edge.
          *
          * Here a \e thin edge link is a normal surface which appears naturally
          * as the frontier of a regular neighbourhood of an edge, with no need
@@ -1110,26 +1111,26 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Although isNormalEdgeLink() will also indicate thin edge links,
          * this test has significantly less overhead (and so should be faster).
          *
-         * A surface (or its rational multiple) can be the \e thin edge link
-         * of at most two edges.  If there are indeed two different edges
-         * \a e1 and \a e2 for which a rational multiple of this surface can
-         * be expressed as the thin edge link, then the pair (\a e1, \a e2)
-         * will be returned.  If there is only one such edge \a e, then the
-         * pair (\a e, \c null) will be returned.  If no rational multiple of
-         * this surface is the thin link of any edge, then the pair
-         * (\c null, \c null) will be returned.
+         * A surface (or its positive rational multiple) can be the \e thin edge
+         * link of at most two edges.  If there are indeed two different edges
+         * \a e1 and \a e2 for which a multiple of this surface can be expressed
+         * as the thin edge link, then the pair (\a e1, \a e2) will be returned.
+         * If there is only one such edge \a e, then the pair (\a e, \c null)
+         * will be returned.  If no positive rational multiple of this surface
+         * is the thin link of any edge, then the pair (\c null, \c null) will
+         * be returned.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a pair containing the edge(s) linked by a rational
+         * @return a pair containing the edge(s) linked by a positive rational
          * multiple of this surface, as described above.
          */
         std::pair<const Edge<3>*, const Edge<3>*> isThinEdgeLink() const;
         /**
-         * Determines whether or not a rational multiple of this surface
-         * is the normalised link of a single edge.
+         * Determines whether or not a positive rational multiple of this
+         * surface is the normalised link of a single edge.
          *
          * Here the phrase \e normalised link of an edge \a e means the
          * frontier of a regular neighbourhood of \a e, converted into a
@@ -1147,9 +1148,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * edge links, then you should call isThinEdgeLink(), which has much
          * less overhead.
          *
-         * A surface (or its rational multiple) could be the normalised link
-         * of many edges.  The return value will be a pair (\a v, \a thin),
-         * where:
+         * A surface (or its positive rational multiple) could be the
+         * normalised link of many edges.  The return value will be a pair
+         * (\a v, \a thin), where:
          *
          * - \a v is a vector containing all such edges.  This will begin
          *   with the edges for which this surface is a thin link, followed by
@@ -1160,22 +1161,23 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   surface is a thin link for.  This uses an unsigned type, since
          *   it will often be compared to <tt>v.size()</tt>.
          *
-         * If no rational multiple of this surface is the normalised link of
-         * any edge, then \a link will be 0 and \a v will be the empty vector.
+         * If no positive rational multiple of this surface is the normalised
+         * link of any edge, then \a link will be 0 and \a v will be the
+         * empty vector.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a vector containing the edge(s) linked by a rational
+         * @return a vector containing the edge(s) linked by a positive rational
          * multiple of this surface and an integer indicating how many
          * of these links are thin, as described above.
          */
         std::pair<std::vector<const Edge<3>*>, unsigned> isNormalEdgeLink()
             const;
         /**
-         * Determines whether or not a rational multiple of this surface
-         * is the thin link of a single triangle.
+         * Determines whether or not a positive rational multiple of this
+         * surface is the thin link of a single triangle.
          *
          * Here a \e thin triangle link is a normal surface which appears
          * naturally as the frontier of a regular neighbourhood of a
@@ -1189,27 +1191,27 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * isNormalTriangleLink() use essentially the same implementation (so
          * testing for only thin links may be a little faster, but not by much).
          *
-         * A surface (or its rational multiple) can be the \e thin link of
-         * at most two triangles.  If there are indeed two different triangles
-         * \a t1 and \a t2 for which a rational multiple of this surface can
+         * A surface (or its positive rational multiple) can be the \e thin link
+         * of at most two triangles.  If there are indeed two different
+         * triangles \a t1 and \a t2 for which a multiple of this surface can
          * be expressed as the thin triangle link, then the pair (\a t1, \a t2)
          * will be returned.  If there is only one such triangle \a t, then the
-         * pair (\a t, \c null) will be returned.  If no rational multiple of
-         * this surface is the thin link of any triangle, then the pair
-         * (\c null, \c null) will be returned.
+         * pair (\a t, \c null) will be returned.  If no positive rational
+         * multiple of this surface is the thin link of any triangle, then the
+         * pair (\c null, \c null) will be returned.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a pair containing the triangle(s) linked by a rational
-         * multiple of this surface, as described above.
+         * @return a pair containing the triangle(s) linked by a positive
+         * rational multiple of this surface, as described above.
          */
         std::pair<const Triangle<3>*, const Triangle<3>*> isThinTriangleLink()
             const;
         /**
-         * Determines whether or not a rational multiple of this surface
-         * is the normalised link of a single triangle.
+         * Determines whether or not a positive rational multiple of this
+         * surface is the normalised link of a single triangle.
          *
          * Here the phrase \e normalised link of a triangle \a t means the
          * frontier of a regular neighbourhood of \a t, converted into a
@@ -1228,9 +1230,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * isNormalTriangleLink() use essentially the same implementation (so
          * testing for only thin links may be a little faster, but not by much).
          *
-         * A surface (or its rational multiple) could be the normalised link
-         * of many triangles.  The return value will be a pair (\a v, \a thin),
-         * where:
+         * A surface (or its positive rational multiple) could be the
+         * normalised link of many triangles.  The return value will be a pair
+         * (\a v, \a thin), where:
          *
          * - \a v is a vector containing all such triangles.  This will begin
          *   with the triangles for which this surface is a thin link, followed
@@ -1242,16 +1244,16 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   surface is a thin link for.  This uses an unsigned type, since
          *   it will often be compared to <tt>v.size()</tt>.
          *
-         * If no rational multiple of this surface is the normalised link of
-         * any triangle, then \a link will be 0 and \a v will be the empty
-         * vector.
+         * If no positive rational multiple of this surface is the normalised
+         * link of any triangle, then \a link will be 0 and \a v will be the
+         * empty vector.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a vector containing the triangle(s) linked by a rational
-         * multiple of this surface and an integer indicating how many
+         * @return a vector containing the triangle(s) linked by a positive
+         * rational multiple of this surface and an integer indicating how many
          * of these links are thin, as described above.
          */
         std::pair<std::vector<const Triangle<3>*>, unsigned>
@@ -1849,8 +1851,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         void calculateBoundaries() const;
 
         /**
-         * Determines whether or not a rational multiple of this surface
-         * \e could be the normalised link of a face of positive dimension.
+         * Determines whether or not a positive rational multiple of this
+         * surface \e could be the normalised link of a face of positive
+         * dimension.
          *
          * A non-null return value is \e not a guarantee that this surface
          * \e is such a link; however, if this routine returns no value then

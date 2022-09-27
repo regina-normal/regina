@@ -801,8 +801,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          */
         bool isVertexLinking() const;
         /**
-         * Determines whether or not a rational multiple of this hypersurface
-         * is the link of a single vertex.
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the link of a single vertex.
          *
          * This behaves differently from isVertexLinking(), which will also
          * detect a union of several different vertex links.  In contrast,
@@ -813,14 +813,14 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return the vertex linked by a rational multiple of this
+         * @return the vertex linked by a positive rational multiple of this
          * hypersurface, or \c null if this hypersurface is not a multiple of
          * a single vertex link.
          */
         const Vertex<4>* isVertexLink() const;
         /**
-         * Determines whether or not a rational multiple of this hypersurface
-         * is the thin link of a single edge.
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the thin link of a single edge.
          *
          * Here a \e thin edge link is a normal hypersurface which appears
          * naturally as the frontier of a regular neighbourhood of an edge,
@@ -833,21 +833,21 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Although isNormalEdgeLink() will also indicate thin edge links,
          * this test has significantly less overhead (and so should be faster).
          *
-         * A hypersurface (or its rational multiple) can be the thin edge
-         * link of at most one edge.
+         * A hypersurface (or its positive rational multiple) can be the thin
+         * edge link of at most one edge.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return the edge linked by a rational multiple of this hypersurface,
-         * or \c null if this hypersurface is not a multiple of a single
-         * thin edge link.
+         * @return the edge linked by a positive rational multiple of this
+         * hypersurface, or \c null if this hypersurface is not a multiple
+         * of a single thin edge link.
          */
         const Edge<4>* isThinEdgeLink() const;
         /**
-         * Determines whether or not a rational multiple of this hypersurface
-         * is the normalised link of a single edge.
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the normalised link of a single edge.
          *
          * Here the phrase \e normalised link of an edge \a e means the
          * frontier of a regular neighbourhood of \a e, converted into a
@@ -865,9 +865,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * edge links, then you should call isThinEdgeLink(), which has much
          * less overhead.
          *
-         * A hypersurface (or its rational multiple) could be the normalised
-         * link of many edges.  The return value will be a pair (\a v, \a thin),
-         * where:
+         * A hypersurface (or its positive rational multiple) could be the
+         * normalised link of many edges.  The return value will be a pair
+         * (\a v, \a thin), where:
          *
          * - \a v is a vector containing all such edges.  This will begin with
          *   the edges for which this hypersurface is a thin link, followed by
@@ -878,23 +878,23 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   hypersurface is a thin link for.  This uses an unsigned type,
          *   since it will often be compared to <tt>v.size()</tt>.
          *
-         * If no rational multiple of this hypersurface is the normalised link
-         * of any edge, then \a link will be 0 and \a v will be the empty
-         * vector.
+         * If no positive rational multiple of this hypersurface is the
+         * normalised link of any edge, then \a link will be 0 and \a v will be
+         * the empty vector.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a vector containing the edge(s) linked by a rational
+         * @return a vector containing the edge(s) linked by a positive rational
          * multiple of this hypersurface and an integer indicating how many
          * of these links are thin, as described above.
          */
         std::pair<std::vector<const Edge<4>*>, unsigned> isNormalEdgeLink()
             const;
         /**
-         * Determines whether or not a rational multiple of this hypersurface
-         * is the thin link of a single triangle.
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the thin link of a single triangle.
          *
          * Here a \e thin triangle link is a normal hypersurface which appears
          * naturally as the frontier of a regular neighbourhood of a triangle,
@@ -909,27 +909,28 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * (so testing for only thin links may be a little faster, but not by
          * much).
          *
-         * A hypersurface (or its rational multiple) can be the thin triangle
-         * link of at most two triangles.  If there are indeed two different
-         * triangles \a t1 and \a t2 for which a rational multiple of this
+         * A hypersurface (or its positive rational multiple) can be the thin
+         * triangle link of at most two triangles.  If there are indeed two
+         * different triangles \a t1 and \a t2 for which a multiple of this
          * hypersurface can be expressed as the thin triangle link, then
          * the pair (\a t1, \a t2) will be returned.  If there is only one
          * such triangle \a t, then the pair (\a t, \c null) will be returned.
-         * If no rational multiple of this hypersurface is the thin link
-         * of any triangle, then the pair (\c null, \c null) will be returned.
+         * If no positive rational multiple of this hypersurface is the thin
+         * link of any triangle, then the pair (\c null, \c null) will be
+         * returned.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a pair containing the triangle(s) linked by a rational
-         * multiple of this hypersurface, as described above.
+         * @return a pair containing the triangle(s) linked by a positive
+         * rational multiple of this hypersurface, as described above.
          */
         std::pair<const Triangle<4>*, const Triangle<4>*> isThinTriangleLink()
             const;
         /**
-         * Determines whether or not a rational multiple of this hypersurface
-         * is the normalised link of a single triangle.
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the normalised link of a single triangle.
          *
          * Here the phrase \e normalised link of a triangle \a t means the
          * frontier of a regular neighbourhood of \a t, converted into a normal
@@ -948,8 +949,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * isNormalTriangleLink() use essentially the same implementation (so
          * testing for only thin links may be a little faster, but not by much).
          *
-         * A hypersurface (or its rational multiple) could be the normalised
-         * link of many triangles.  The return value will be a pair
+         * A hypersurface (or its positive rational multiple) could be the
+         * normalised link of many triangles.  The return value will be a pair
          * (\a v, \a thin), where:
          *
          * - \a v is a vector containing all such triangles.  This will begin
@@ -962,23 +963,23 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   hypersurface is a thin link for.  This uses an unsigned type,
          *   since it will often be compared to <tt>v.size()</tt>.
          *
-         * If no rational multiple of this hypersurface is the normalised link
-         * of any triangle, then \a link will be 0 and \a v will be the empty
-         * vector.
+         * If no positive rational multiple of this hypersurface is the
+         * normalised link of any triangle, then \a link will be 0 and \a v
+         * will be the empty vector.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a vector containing the triangle(s) linked by a rational
-         * multiple of this hypersurface and an integer indicating how many
-         * of these links are thin, as described above.
+         * @return a vector containing the triangle(s) linked by a positive
+         * rational multiple of this hypersurface and an integer indicating
+         * how many of these links are thin, as described above.
          */
         std::pair<std::vector<const Triangle<4>*>, unsigned>
             isNormalTriangleLink() const;
         /**
-         * Determines whether or not a rational multiple of this hypersurface
-         * is the thin link of a single tetrahedron.
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the thin link of a single tetrahedron.
          *
          * Here a \e thin tetrahedron link is a normal hypersurface which
          * appears naturally as the frontier of a regular neighbourhood of a
@@ -993,27 +994,28 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * (so testing for only thin links may be a little faster, but not by
          * much).
          *
-         * A hypersurface (or its rational multiple) can be the thin link of
-         * at most two tetrahedra.  If there are indeed two different
-         * tetrahedra \a t1 and \a t2 for which a rational multiple of this
+         * A hypersurface (or its positive rational multiple) can be the thin
+         * link of at most two tetrahedra.  If there are indeed two different
+         * tetrahedra \a t1 and \a t2 for which a multiple of this
          * hypersurface can be expressed as the thin tetrahedron link, then
          * the pair (\a t1, \a t2) will be returned.  If there is only one such
          * tetrahedron \a t, then the pair (\a t, \c null) will be returned.
-         * If no rational multiple of this hypersurface is the thin link of
-         * any tetrahedron, then the pair (\c null, \c null) will be returned.
+         * If no positive rational multiple of this hypersurface is the thin
+         * link of any tetrahedron, then the pair (\c null, \c null) will be
+         * returned.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a pair containing the tetrahedra linked by a rational
-         * multiple of this hypersurface, as described above.
+         * @return a pair containing the tetrahedra linked by a positive
+         * rational multiple of this hypersurface, as described above.
          */
         std::pair<const Tetrahedron<4>*, const Tetrahedron<4>*>
             isThinTetrahedronLink() const;
         /**
-         * Determines whether or not a rational multiple of this hypersurface
-         * is the normalised link of a single tetrahedron.
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface is the normalised link of a single tetrahedron.
          *
          * Here the phrase \e normalised link of a tetrahedron \a t means the
          * frontier of a regular neighbourhood of \a t, converted into a normal
@@ -1032,9 +1034,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * isNormalTetrahedronLink() use essentially the same implementation (so
          * testing for only thin links may be a little faster, but not by much).
          *
-         * A hypersurface (or its rational multiple) could be the normalised
-         * link of many tetrahedra.  The return value will be a pair
-         * (\a v, \a thin), where:
+         * A hypersurface (or its positive rational multiple) could be the
+         * normalised link of many tetrahedra.  The return value will be a
+         * pair (\a v, \a thin), where:
          *
          * - \a v is a vector containing all such tetrahedra.  This will begin
          *   with the tetrahedra for which this hypersurface is a thin link,
@@ -1046,17 +1048,17 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   hypersurface is a thin link for.  This uses an unsigned type,
          *   since it will often be compared to <tt>v.size()</tt>.
          *
-         * If no rational multiple of this hypersurface is the normalised link
-         * of any tetrahedron, then \a link will be 0 and \a v will be the empty
-         * vector.
+         * If no positive rational multiple of this hypersurface is the
+         * normalised link of any tetrahedron, then \a link will be 0 and \a v
+         * will be the empty vector.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a vector containing the tetrahedra linked by a rational
-         * multiple of this hypersurface and an integer indicating how many
-         * of these links are thin, as described above.
+         * @return a vector containing the tetrahedra linked by a positive
+         * rational multiple of this hypersurface and an integer indicating
+         * how many of these links are thin, as described above.
          */
         std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
             isNormalTetrahedronLink() const;
@@ -1301,8 +1303,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         void calculateFromTriangulation() const;
 
         /**
-         * Determines whether or not a rational multiple of this hypersurface
-         * \e could be the normalised link of a face of positive dimension.
+         * Determines whether or not a positive rational multiple of this
+         * hypersurface \e could be the normalised link of a face of positive
+         * dimension.
          *
          * A non-null return value is \e not a guarantee that this hypersurface
          * \e is such a link; however, if this routine returns no value then
