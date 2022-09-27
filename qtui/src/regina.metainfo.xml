@@ -61,7 +61,7 @@
   </provides>
 
   <releases>
-    <release version="7.1" date="2022-09-25">
+    <release version="7.1" date="2022-09-30">
       <description>
         <p>
           Adds intersection forms, thin and normalised links in all facial
