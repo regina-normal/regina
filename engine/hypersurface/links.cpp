@@ -33,9 +33,14 @@
 #include "hypersurface/normalhypersurface.h"
 #include "triangulation/dim4.h"
 
+#define NO_4D_FACE_LINK 0x55 // bits 01010101
+#define NO_4D_POSITIVE_FACE_LINK 0x54 // bits 01010100
+
 namespace regina {
 
 bool NormalHypersurface::isVertexLinking() const {
+    // The relevant bits of linkOf_ could be any of 00, 01 or 11.
+
     if (! enc_.couldBeVertexLink()) {
         linkOf_ |= 0x01; // known to be not a vertex link.
         return false;
@@ -59,8 +64,13 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
         if (! linkOf_ & 0x02)
             return nullptr;
 
-    if (! enc_.couldBeVertexLink())
+    // At this point, the relevant bits of linkOf_ are 00 (not computed),
+    // or 11 (it's a vertex link, but we don't know which).
+
+    if (! enc_.couldBeVertexLink()) {
+        linkOf_ |= 0x01; // known to be not a vertex link
         return nullptr;
+    }
 
     // Get a local reference to the triangulation so we do not have to
     // repeatedly bounce through the snapshot.
@@ -70,8 +80,10 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
     // Check that there are no prism pieces.
     for (size_t pent = 0; pent < nPents; pent++) {
         for (int type = 0; type < 10; type++)
-            if (prisms(pent, type) != 0)
+            if (prisms(pent, type) != 0) {
+                linkOf_ |= 0x01; // known to be not a vertex link
                 return nullptr;
+            }
     }
 
     // It follows from the matching equations that what we have is a
@@ -91,6 +103,7 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
                     ans = p->vertex(type);
                 } else if (ans != p->vertex(type)) {
                     // We seem to be linking more than one vertex.
+                    linkOf_ |= 0x01; // known to be not a vertex link
                     return nullptr;
                 }
             }
@@ -99,6 +112,7 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
 
     // Either we are linking exactly one vertex (ans != null), or we
     // have the empty vector (ans == null).
+    linkOf_ |= (ans ? 0x03 : 0x01);
     return ans;
 }
 
@@ -129,6 +143,8 @@ const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
                     ansMult = coord;
                 } else if (ans != p->edge(type)) {
                     // We seem to be linking more than one edge.
+                    // This might still be a *normalised* edge link, so do not
+                    // touch linkOf_.
                     return nullptr;
                 }
             }
@@ -136,8 +152,11 @@ const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
     }
 
     // Did we find any candidate edges at all?
-    if (! ans)
+    if (! ans) {
+        // This might still be a *normalised* edge link, so do not
+        // touch linkOf_.
         return nullptr;
+    }
 
     // There are no unwanted prism piece types.  However, we must still
     // run through the prism types that do appear to make sure that they
@@ -145,8 +164,11 @@ const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
     for (size_t e = 0; e < ans->degree(); ++e)
         if (ansMult != prisms(
                 ans->embedding(e).pentachoron()->index(),
-                ans->embedding(e).edge()))
+                ans->embedding(e).edge())) {
+            // This might still be a *normalised* edge link, so do not
+            // touch linkOf_.
             return nullptr;
+        }
 
     // Finally, run through the tetrahedron piece types and make sure
     // that everything checks out.
@@ -170,20 +192,30 @@ const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
                 }
 
                 if (crosses) {
-                    if (tetrahedra(pent, type) != 0)
+                    if (tetrahedra(pent, type) != 0) {
+                        // This might still be a *normalised* edge link, so
+                        // do not touch linkOf_.
                         return nullptr;
+                    }
                 } else {
-                    if (tetrahedra(pent, type) != ansMult)
+                    if (tetrahedra(pent, type) != ansMult) {
+                        // This might still be a *normalised* edge link, so
+                        // do not touch linkOf_.
                         return nullptr;
+                    }
                 }
             } else {
-                if (tetrahedra(pent, type) != 0)
+                if (tetrahedra(pent, type) != 0) {
+                    // This might still be a *normalised* edge link, so
+                    // do not touch linkOf_.
                     return nullptr;
+                }
             }
         }
     }
 
     // All good!
+    linkOf_ |= 0x0c; // known to link at least one edge.
     return ans;
 }
 
@@ -200,12 +232,19 @@ std::pair<const Triangle<4>*, const Triangle<4>*>
     std::pair<const Triangle<4>*, const Triangle<4>*> ans { nullptr, nullptr };
 
     // Thin links are never empty.
-    if (isEmpty())
+    if (isEmpty()) {
+        // This might still be a *normalised* triangle link, so
+        // do not touch linkOf_.
         return ans;
+    }
 
     std::optional<NormalHypersurface> mult = couldLinkFace();
-    if (! mult)
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
         return ans;
+    }
 
     for (auto t : triangulation_->triangles()) {
         for (int i = 0; i < 3; ++i)
@@ -220,11 +259,13 @@ std::pair<const Triangle<4>*, const Triangle<4>*>
                 // There can be at most two thin triangle links, and we
                 // have found them both.
                 ans.second = t;
+                linkOf_ |= 0x30; // known to link a triangle.
                 return ans;
             }
         }
     }
 
+    linkOf_ |= (ans.first ? 0x30 : 0x10);
     return ans;
 }
 
@@ -242,12 +283,19 @@ std::pair<const Tetrahedron<4>*, const Tetrahedron<4>*>
         { nullptr, nullptr };
 
     // Thin links are never empty.
-    if (isEmpty())
+    if (isEmpty()) {
+        // This might still be a *normalised* tetrahedron link,
+        // so do not touch linkOf_.
         return ans;
+    }
 
     std::optional<NormalHypersurface> mult = couldLinkFace();
-    if (! mult)
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
         return ans;
+    }
 
     for (auto t : triangulation_->tetrahedra()) {
         for (int i = 0; i < 6; ++i)
@@ -262,11 +310,13 @@ std::pair<const Tetrahedron<4>*, const Tetrahedron<4>*>
                 // There can be at most two thin tetrahedron links, and we
                 // have found them both.
                 ans.second = t;
+                linkOf_ |= 0xc0; // known to link a tetrahedron.
                 return ans;
             }
         }
     }
 
+    linkOf_ |= (ans.first ? 0xc0 : 0x40);
     return ans;
 }
 
@@ -474,12 +524,17 @@ std::pair<std::vector<const Edge<4>*>, unsigned>
         for (auto e : triangulation_->edges())
             if (e->linkingSurface().first.isEmpty())
                 ans.first.push_back(e);
+        linkOf_ |= (ans.first.empty() ? 0x04 : 0x0c);
         return ans;
     }
 
     std::optional<NormalHypersurface> mult = couldLinkFace();
-    if (! mult)
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
         return ans; // empty
+    }
 
     for (auto e : triangulation_->edges()) {
         if (edgeWeight(e->index()) != 0)
@@ -499,6 +554,8 @@ std::pair<std::vector<const Edge<4>*>, unsigned>
             }
         }
     }
+
+    linkOf_ |= (ans.first.empty() ? 0x04 : 0x0c);
     return ans;
 }
 
@@ -517,12 +574,17 @@ std::pair<std::vector<const Triangle<4>*>, unsigned>
         for (auto t : triangulation_->triangles())
             if (t->linkingSurface().first.isEmpty())
                 ans.first.push_back(t);
+        linkOf_ |= (ans.first.empty() ? 0x10 : 0x30);
         return ans;
     }
 
     std::optional<NormalHypersurface> mult = couldLinkFace();
-    if (! mult)
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
         return ans; // empty
+    }
 
     for (auto t : triangulation_->triangles()) {
         for (int i = 0; i < 3; ++i)
@@ -551,6 +613,8 @@ std::pair<std::vector<const Triangle<4>*>, unsigned>
             }
         }
     }
+
+    linkOf_ |= (ans.first.empty() ? 0x10 : 0x30);
     return ans;
 }
 
@@ -569,12 +633,17 @@ std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
         for (auto t : triangulation_->tetrahedra())
             if (t->linkingSurface().first.isEmpty())
                 ans.first.push_back(t);
+        linkOf_ |= (ans.first.empty() ? 0x40 : 0xc0);
         return ans;
     }
 
     std::optional<NormalHypersurface> mult = couldLinkFace();
-    if (! mult)
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
         return ans; // empty
+    }
 
     for (auto t : triangulation_->tetrahedra()) {
         for (int i = 0; i < 6; ++i)
@@ -603,6 +672,8 @@ std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
             }
         }
     }
+
+    linkOf_ |= (ans.first.empty() ? 0x40 : 0xc0);
     return ans;
 }
 
