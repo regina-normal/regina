@@ -230,6 +230,55 @@ const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
     return ans;
 }
 
+std::pair<std::vector<const Edge<4>*>, unsigned>
+        NormalHypersurface::isNormalEdgeLink() const {
+    std::pair<std::vector<const Edge<4>*>, unsigned> ans;
+    ans.second = 0;
+
+    if ((linkOf_ & IS_4D_EDGE_LINK) == NO_4D_EDGE_LINK)
+        return ans; // already known it's not an edge link
+
+    if (isEmpty()) {
+        // Treat the empty hypersurface separately.
+        // Note: none of these edge links will be thin.
+        for (auto e : triangulation_->edges())
+            if (e->linkingSurface().first.isEmpty())
+                ans.first.push_back(e);
+        linkOf_ |= (ans.first.empty() ? NO_4D_EDGE_LINK : IS_4D_EDGE_LINK);
+        return ans;
+    }
+
+    std::optional<NormalHypersurface> mult = couldLinkFace();
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
+        return ans; // empty
+    }
+
+    for (auto e : triangulation_->edges()) {
+        if (edgeWeight(e->index()) != 0)
+            continue;
+
+        auto link = e->linkingSurface();
+        if (link.first == mult) {
+            if (link.second) {
+                // Thin link.
+                // Note: this vector insertion is costly, but it only happens
+                // at most once.
+                ans.first.insert(ans.first.begin(), e);
+                ++ans.second;
+            } else {
+                // Not a thin link.
+                ans.first.push_back(e);
+            }
+        }
+    }
+
+    linkOf_ |= (ans.first.empty() ? NO_4D_EDGE_LINK : IS_4D_EDGE_LINK);
+    return ans;
+}
+
 std::pair<const Triangle<4>*, const Triangle<4>*>
         NormalHypersurface::isThinTriangleLink() const {
     if ((linkOf_ & IS_4D_TRIANGLE_LINK) == NO_4D_TRIANGLE_LINK)
@@ -276,6 +325,65 @@ std::pair<const Triangle<4>*, const Triangle<4>*>
     }
 
     linkOf_ |= (ans.first ? IS_4D_TRIANGLE_LINK : NO_4D_TRIANGLE_LINK);
+    return ans;
+}
+
+std::pair<std::vector<const Triangle<4>*>, unsigned>
+        NormalHypersurface::isNormalTriangleLink() const {
+    std::pair<std::vector<const Triangle<4>*>, unsigned> ans;
+    ans.second = 0;
+
+    if ((linkOf_ & IS_4D_TRIANGLE_LINK) == NO_4D_TRIANGLE_LINK)
+        return ans; // already known it's not a triangle link
+
+    if (isEmpty()) {
+        // Treat the empty hypersurface separately.
+        // Note: none of these triangle links will be thin.
+        for (auto t : triangulation_->triangles())
+            if (t->linkingSurface().first.isEmpty())
+                ans.first.push_back(t);
+        linkOf_ |= (ans.first.empty() ?
+            NO_4D_TRIANGLE_LINK : IS_4D_TRIANGLE_LINK);
+        return ans;
+    }
+
+    std::optional<NormalHypersurface> mult = couldLinkFace();
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
+        return ans; // empty
+    }
+
+    for (auto t : triangulation_->triangles()) {
+        for (int i = 0; i < 3; ++i)
+            if (edgeWeight(t->edge(i)->index()) != 0)
+                continue;
+
+        auto link = t->linkingSurface();
+        if (link.first == mult) {
+            if (link.second) {
+                // Thin link.
+                // Note: this vector insertion is costly, but it only happens
+                // at most twice.
+                if (ans.second == 0) {
+                    ans.first.insert(ans.first.begin(), t);
+                } else {
+                    // We only have at most two thin triangle links, so we
+                    // must be inserting at position 1.
+                    auto pos = ans.first.begin();
+                    ++pos;
+                    ans.first.insert(pos, t);
+                }
+                ++ans.second;
+            } else {
+                // Not a thin link.
+                ans.first.push_back(t);
+            }
+        }
+    }
+
+    linkOf_ |= (ans.first.empty() ? NO_4D_TRIANGLE_LINK : IS_4D_TRIANGLE_LINK);
     return ans;
 }
 
@@ -326,6 +434,66 @@ std::pair<const Tetrahedron<4>*, const Tetrahedron<4>*>
     }
 
     linkOf_ |= (ans.first ? IS_4D_TETRAHEDRON_LINK : NO_4D_TETRAHEDRON_LINK);
+    return ans;
+}
+
+std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
+        NormalHypersurface::isNormalTetrahedronLink() const {
+    std::pair<std::vector<const Tetrahedron<4>*>, unsigned> ans;
+    ans.second = 0;
+
+    if ((linkOf_ & IS_4D_TETRAHEDRON_LINK) == NO_4D_TETRAHEDRON_LINK)
+        return ans; // already known it's not a tetrahedron link
+
+    if (isEmpty()) {
+        // Treat the empty hypersurface separately.
+        // Note: none of these triangle links will be thin.
+        for (auto t : triangulation_->tetrahedra())
+            if (t->linkingSurface().first.isEmpty())
+                ans.first.push_back(t);
+        linkOf_ |= (ans.first.empty() ?
+            NO_4D_TETRAHEDRON_LINK : IS_4D_TETRAHEDRON_LINK);
+        return ans;
+    }
+
+    std::optional<NormalHypersurface> mult = couldLinkFace();
+    if (! mult) {
+        // This could still be a vertex link, but cannot be the thin or
+        // normalised link of any other type of face.
+        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
+        return ans; // empty
+    }
+
+    for (auto t : triangulation_->tetrahedra()) {
+        for (int i = 0; i < 6; ++i)
+            if (edgeWeight(t->edge(i)->index()) != 0)
+                continue;
+
+        auto link = t->linkingSurface();
+        if (link.first == mult) {
+            if (link.second) {
+                // Thin link.
+                // Note: this vector insertion is costly, but it only happens
+                // at most twice.
+                if (ans.second == 0) {
+                    ans.first.insert(ans.first.begin(), t);
+                } else {
+                    // We only have at most two thin triangle links, so we
+                    // must be inserting at position 1.
+                    auto pos = ans.first.begin();
+                    ++pos;
+                    ans.first.insert(pos, t);
+                }
+                ++ans.second;
+            } else {
+                // Not a thin link.
+                ans.first.push_back(t);
+            }
+        }
+    }
+
+    linkOf_ |= (ans.first.empty() ?
+        NO_4D_TETRAHEDRON_LINK : IS_4D_TETRAHEDRON_LINK);
     return ans;
 }
 
@@ -516,174 +684,6 @@ std::optional<NormalHypersurface> NormalHypersurface::couldLinkFace() const {
     }
 
     return mult;
-}
-
-std::pair<std::vector<const Edge<4>*>, unsigned>
-        NormalHypersurface::isNormalEdgeLink() const {
-    std::pair<std::vector<const Edge<4>*>, unsigned> ans;
-    ans.second = 0;
-
-    if ((linkOf_ & IS_4D_EDGE_LINK) == NO_4D_EDGE_LINK)
-        return ans; // already known it's not an edge link
-
-    if (isEmpty()) {
-        // Treat the empty hypersurface separately.
-        // Note: none of these edge links will be thin.
-        for (auto e : triangulation_->edges())
-            if (e->linkingSurface().first.isEmpty())
-                ans.first.push_back(e);
-        linkOf_ |= (ans.first.empty() ? NO_4D_EDGE_LINK : IS_4D_EDGE_LINK);
-        return ans;
-    }
-
-    std::optional<NormalHypersurface> mult = couldLinkFace();
-    if (! mult) {
-        // This could still be a vertex link, but cannot be the thin or
-        // normalised link of any other type of face.
-        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
-        return ans; // empty
-    }
-
-    for (auto e : triangulation_->edges()) {
-        if (edgeWeight(e->index()) != 0)
-            continue;
-
-        auto link = e->linkingSurface();
-        if (link.first == mult) {
-            if (link.second) {
-                // Thin link.
-                // Note: this vector insertion is costly, but it only happens
-                // at most once.
-                ans.first.insert(ans.first.begin(), e);
-                ++ans.second;
-            } else {
-                // Not a thin link.
-                ans.first.push_back(e);
-            }
-        }
-    }
-
-    linkOf_ |= (ans.first.empty() ? NO_4D_EDGE_LINK : IS_4D_EDGE_LINK);
-    return ans;
-}
-
-std::pair<std::vector<const Triangle<4>*>, unsigned>
-        NormalHypersurface::isNormalTriangleLink() const {
-    std::pair<std::vector<const Triangle<4>*>, unsigned> ans;
-    ans.second = 0;
-
-    if ((linkOf_ & IS_4D_TRIANGLE_LINK) == NO_4D_TRIANGLE_LINK)
-        return ans; // already known it's not a triangle link
-
-    if (isEmpty()) {
-        // Treat the empty hypersurface separately.
-        // Note: none of these triangle links will be thin.
-        for (auto t : triangulation_->triangles())
-            if (t->linkingSurface().first.isEmpty())
-                ans.first.push_back(t);
-        linkOf_ |= (ans.first.empty() ?
-            NO_4D_TRIANGLE_LINK : IS_4D_TRIANGLE_LINK);
-        return ans;
-    }
-
-    std::optional<NormalHypersurface> mult = couldLinkFace();
-    if (! mult) {
-        // This could still be a vertex link, but cannot be the thin or
-        // normalised link of any other type of face.
-        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
-        return ans; // empty
-    }
-
-    for (auto t : triangulation_->triangles()) {
-        for (int i = 0; i < 3; ++i)
-            if (edgeWeight(t->edge(i)->index()) != 0)
-                continue;
-
-        auto link = t->linkingSurface();
-        if (link.first == mult) {
-            if (link.second) {
-                // Thin link.
-                // Note: this vector insertion is costly, but it only happens
-                // at most twice.
-                if (ans.second == 0) {
-                    ans.first.insert(ans.first.begin(), t);
-                } else {
-                    // We only have at most two thin triangle links, so we
-                    // must be inserting at position 1.
-                    auto pos = ans.first.begin();
-                    ++pos;
-                    ans.first.insert(pos, t);
-                }
-                ++ans.second;
-            } else {
-                // Not a thin link.
-                ans.first.push_back(t);
-            }
-        }
-    }
-
-    linkOf_ |= (ans.first.empty() ? NO_4D_TRIANGLE_LINK : IS_4D_TRIANGLE_LINK);
-    return ans;
-}
-
-std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
-        NormalHypersurface::isNormalTetrahedronLink() const {
-    std::pair<std::vector<const Tetrahedron<4>*>, unsigned> ans;
-    ans.second = 0;
-
-    if ((linkOf_ & IS_4D_TETRAHEDRON_LINK) == NO_4D_TETRAHEDRON_LINK)
-        return ans; // already known it's not a tetrahedron link
-
-    if (isEmpty()) {
-        // Treat the empty hypersurface separately.
-        // Note: none of these triangle links will be thin.
-        for (auto t : triangulation_->tetrahedra())
-            if (t->linkingSurface().first.isEmpty())
-                ans.first.push_back(t);
-        linkOf_ |= (ans.first.empty() ?
-            NO_4D_TETRAHEDRON_LINK : IS_4D_TETRAHEDRON_LINK);
-        return ans;
-    }
-
-    std::optional<NormalHypersurface> mult = couldLinkFace();
-    if (! mult) {
-        // This could still be a vertex link, but cannot be the thin or
-        // normalised link of any other type of face.
-        linkOf_ |= NO_4D_POSITIVE_FACE_LINK;
-        return ans; // empty
-    }
-
-    for (auto t : triangulation_->tetrahedra()) {
-        for (int i = 0; i < 6; ++i)
-            if (edgeWeight(t->edge(i)->index()) != 0)
-                continue;
-
-        auto link = t->linkingSurface();
-        if (link.first == mult) {
-            if (link.second) {
-                // Thin link.
-                // Note: this vector insertion is costly, but it only happens
-                // at most twice.
-                if (ans.second == 0) {
-                    ans.first.insert(ans.first.begin(), t);
-                } else {
-                    // We only have at most two thin triangle links, so we
-                    // must be inserting at position 1.
-                    auto pos = ans.first.begin();
-                    ++pos;
-                    ans.first.insert(pos, t);
-                }
-                ++ans.second;
-            } else {
-                // Not a thin link.
-                ans.first.push_back(t);
-            }
-        }
-    }
-
-    linkOf_ |= (ans.first.empty() ?
-        NO_4D_TETRAHEDRON_LINK : IS_4D_TETRAHEDRON_LINK);
-    return ans;
 }
 
 } // namespace regina
