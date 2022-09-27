@@ -318,6 +318,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
             /**< Is this surface compact (i.e. does it only contain
                  finitely many discs)?
                  This is std::nullopt if it has not yet been computed. */
+        mutable uint8_t linkOf_ { 0 };
+            /**< Indicates which dimensions of face a positive rational multiple
+                 of this surface is a thin or normalised link of.  This is
+                 treated as a bitmask: for each i=0,1,2, the (2i+1)th bit
+                 indicates whether this surface scales to the link of an
+                 i-face, and the (2i)th bit indicates whether this information
+                 has actually been computed yet; if it has not been computed,
+                 then the (2i+1)th bit will be zero. */
 
     public:
         /**
@@ -1987,6 +1995,7 @@ inline void NormalSurface::swap(NormalSurface& other) noexcept {
     connected_.swap(other.connected_);
     realBoundary_.swap(other.realBoundary_);
     compact_.swap(other.compact_);
+    std::swap(linkOf_, other.linkOf_);
 }
 
 inline LargeInteger NormalSurface::triangles(size_t tetIndex, int vertex)

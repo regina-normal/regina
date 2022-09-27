@@ -526,6 +526,7 @@ NormalSurface NormalSurface::operator * (const LargeInteger& coeff) const {
         ans.connected_ = true;
         ans.realBoundary_ = false;
         ans.compact_ = true;
+        ans.linkOf_ = 0; /* need to recompute */
     } else {
         // Deduce some basic properties.
         ans.octPosition_ = octPosition_;
@@ -533,6 +534,7 @@ NormalSurface NormalSurface::operator * (const LargeInteger& coeff) const {
             ans.eulerChar_ = (*eulerChar_) * coeff;
         ans.realBoundary_ = realBoundary_;
         ans.compact_ = compact_;
+        ans.linkOf_ = linkOf_;
 
         // The following three properties can be used together to deduce how
         // they change in the result.  However, until we sit down and check
@@ -559,6 +561,7 @@ NormalSurface& NormalSurface::operator *= (const LargeInteger& coeff) {
         connected_ = true;
         realBoundary_ = false;
         compact_ = true;
+        linkOf_ = 0; /* need to recompute */
     } else {
         // Some properties change, and we know how:
         if (eulerChar_.has_value())
@@ -572,7 +575,7 @@ NormalSurface& NormalSurface::operator *= (const LargeInteger& coeff) {
         connected_.reset();
 
         // All other properties are preserved:
-        // - octPosition_, realBoundary_, compact_
+        // - octPosition_, realBoundary_, compact_, linkOf_
     }
 
     return *this;
@@ -593,7 +596,7 @@ LargeInteger NormalSurface::scaleDown() {
     connected_.reset();
 
     // All other properties are preserved:
-    // - octPosition_, realBoundary_, compact_
+    // - octPosition_, realBoundary_, compact_, linkOf_
 
     return ans;
 }

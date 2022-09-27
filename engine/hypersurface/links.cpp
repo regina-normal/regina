@@ -49,6 +49,10 @@ bool NormalHypersurface::isVertexLinking() const {
 }
 
 const Vertex<4>* NormalHypersurface::isVertexLink() const {
+    if (linkOf_ & 0x01)
+        if (! linkOf_ & 0x02)
+            return nullptr;
+
     if (! enc_.couldBeVertexLink())
         return nullptr;
 
@@ -93,6 +97,10 @@ const Vertex<4>* NormalHypersurface::isVertexLink() const {
 }
 
 const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
+    if (linkOf_ & 0x04)
+        if (! linkOf_ & 0x08)
+            return nullptr;
+
     // Get a local reference to the triangulation so we do not have to
     // repeatedly bounce through the snapshot.
     const Triangulation<4>& tri(*triangulation_);
@@ -175,6 +183,10 @@ const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
 
 std::pair<const Triangle<4>*, const Triangle<4>*>
         NormalHypersurface::isThinTriangleLink() const {
+    if (linkOf_ & 0x10)
+        if (! linkOf_ & 0x20)
+            return { nullptr, nullptr };
+
     // This is essentially the same implementation as isNormalTriangleLink(),
     // just slimmed down slightly to account for some extra facts that
     // we know about thin links.
@@ -212,6 +224,10 @@ std::pair<const Triangle<4>*, const Triangle<4>*>
 
 std::pair<const Tetrahedron<4>*, const Tetrahedron<4>*>
         NormalHypersurface::isThinTetrahedronLink() const {
+    if (linkOf_ & 0x40)
+        if (! linkOf_ & 0x80)
+            return { nullptr, nullptr };
+
     // This is essentially the same implementation as isNormalTetrahedron(),
     // just slimmed down slightly to account for some extra facts that
     // we know about thin links.
@@ -440,6 +456,10 @@ std::pair<std::vector<const Edge<4>*>, unsigned>
     std::pair<std::vector<const Edge<4>*>, unsigned> ans;
     ans.second = 0;
 
+    if (linkOf_ & 0x04)
+        if (! linkOf_ & 0x08)
+            return ans; /* not an edge link */
+
     if (isEmpty()) {
         // Treat the empty hypersurface separately.
         // Note: none of these edge links will be thin.
@@ -478,6 +498,10 @@ std::pair<std::vector<const Triangle<4>*>, unsigned>
         NormalHypersurface::isNormalTriangleLink() const {
     std::pair<std::vector<const Triangle<4>*>, unsigned> ans;
     ans.second = 0;
+
+    if (linkOf_ & 0x10)
+        if (! linkOf_ & 0x20)
+            return ans; /* not a triangle link */
 
     if (isEmpty()) {
         // Treat the empty hypersurface separately.
@@ -526,6 +550,10 @@ std::pair<std::vector<const Tetrahedron<4>*>, unsigned>
         NormalHypersurface::isNormalTetrahedronLink() const {
     std::pair<std::vector<const Tetrahedron<4>*>, unsigned> ans;
     ans.second = 0;
+
+    if (linkOf_ & 0x40)
+        if (! linkOf_ & 0x80)
+            return ans; /* not a tetrahedron link */
 
     if (isEmpty()) {
         // Treat the empty hypersurface separately.

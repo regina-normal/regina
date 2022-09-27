@@ -145,6 +145,14 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         mutable std::optional<AbelianGroup> H1_;
             /**< First homology group of the hypersurface.
                  This is std::nullopt if it has not yet been computed. */
+        mutable uint8_t linkOf_ { 0 };
+            /**< Indicates which dimensions of face a positive rational multiple
+                 of this hypersurface is a thin or normalised link of.  This is
+                 treated as a bitmask: for each i=0,1,2,3, the (2i+1)th bit
+                 indicates whether this hypersurface scales to the link of an
+                 i-face, and the (2i)th bit indicates whether this information
+                 has actually been computed yet; if it has not been computed,
+                 then the (2i+1)th bit will be zero. */
 
     public:
         /**
@@ -1437,6 +1445,7 @@ inline void NormalHypersurface::swap(NormalHypersurface& other) noexcept {
     realBoundary_.swap(other.realBoundary_);
     compact_.swap(other.compact_);
     H1_.swap(other.H1_);
+    std::swap(linkOf_, other.linkOf_);
 }
 
 inline LargeInteger NormalHypersurface::tetrahedra(size_t pentIndex, int vertex)
