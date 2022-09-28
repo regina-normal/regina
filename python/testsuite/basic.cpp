@@ -60,7 +60,8 @@ long timeout = 0; // measured in seconds
 bool mainThread = true;
 
 std::condition_variable cond; // used with timeout mechanism
-std::mutex mutex; // guards cond
+bool finished = false;
+std::mutex mutex; // guards finished and cond
 
 class NativeOutputStream : public regina::python::PythonOutputStream {
     private:
@@ -96,6 +97,14 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
 void watcher() {
     std::unique_lock<std::mutex> lock(mutex);
+
+    // At this point, either finished is true, or else the main thread
+    // will not be able to notify the condition variable until *after*
+    // we wait (thus ensuring we will be properly woken up).
+
+    if (finished)
+        return;
+
     if (cond.wait_for(lock, std::chrono::seconds(timeout)) ==
             std::cv_status::timeout) {
         std::cerr << "ERROR: Timed out after " << timeout  << "s." << std::endl;
@@ -183,7 +192,12 @@ int main(int argc, char* argv[]) {
         if (timeout) {
             std::thread w(watcher);
             run(py, std::cin);
+            {
+                std::unique_lock<std::mutex> lock(mutex);
+                finished = true;
+            }
             cond.notify_one();
+
             w.join();
         } else {
             run(py, std::cin);
@@ -198,7 +212,12 @@ int main(int argc, char* argv[]) {
         if (timeout) {
             std::thread w(watcher);
             run(py, in);
+            {
+                std::unique_lock<std::mutex> lock(mutex);
+                finished = true;
+            }
             cond.notify_one();
+
             w.join();
         } else {
             run(py, in);
