@@ -33,6 +33,10 @@
 #include "regina-config.h"
 #include "libnormaliz/version.h"
 
+#ifdef BUILD_PYTHON_BINDINGS
+#include "Python.h" // for PY_VERSION
+#endif
+
 #include "iconcache.h"
 #include "reginaabout.h"
 #include "reginaprefset.h"
@@ -40,6 +44,7 @@
 
 #include <cstdlib>
 
+#include <QtGlobal>
 #include <QDateTime>
 #include <QDialogButtonBox>
 #include <QFile>
@@ -289,6 +294,13 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
             "<a href=\"%1\">%1</a></p>").arg(info.website);
         bundledText += "<p style=\"margin: 0px;\">&nbsp;</p>";
     }
+#ifdef BUILD_PYTHON_BINDINGS
+    bundledText += tr("<p style=\"margin: 0px;\">"
+        "Built against Qt " QT_VERSION_STR " and Python " PY_VERSION "</p>");
+#else
+    bundledText += tr("<p style=\"margin: 0px;\">"
+        "Built against Qt " QT_VERSION_STR " without Python</p>");
+#endif
 
     auto* softwarePage = new QTextBrowser;
     softwarePage->setFrameStyle(QFrame::NoFrame);
