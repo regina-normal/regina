@@ -20,7 +20,7 @@ Copyright (c) 1999-2021, The Regina development team
 &gt;&gt;&gt; census = Container()
 &gt;&gt;&gt; for i in range(415):
 ...     mfd = SnapPeaCensusManifold(SnapPeaCensusManifold.SEC_5, i)
-...     census.insertChildLast(make_packet(mfd.construct(), mfd.name()))
+...     census.append(make_packet(mfd.construct(), mfd.name()))
 ...
 &gt;&gt;&gt; # The triangulations are now all children of the "census" container.
 &gt;&gt;&gt; # Remove all triangulations with more than two tetrahedra.
