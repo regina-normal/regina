@@ -123,7 +123,10 @@ int main() {
     SHOW_SIZE(Triangulation<5>);
     std::cout << std::endl;
 
-    std::cout << "Lists:" << std::endl;
+    std::cout << "Surfaces and Structures:" << std::endl;
+    SHOW_SIZE(AngleStructure);
+    SHOW_SIZE(NormalHypersurface);
+    SHOW_SIZE(NormalSurface);
     SHOW_SIZE(AngleStructures);
     SHOW_SIZE(NormalHypersurfaces);
     SHOW_SIZE(NormalSurfaces);
