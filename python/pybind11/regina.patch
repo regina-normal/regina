@@ -1,9 +1,9 @@
 diff --git a/python/pybind11/functional.h b/python/pybind11/functional.h
-index ad5608c25..00b97c1d8 100644
+index 4034990d8..ab423203c 100644
 --- a/python/pybind11/functional.h
 +++ b/python/pybind11/functional.h
-@@ -76,12 +76,18 @@ public:
-             func_handle(function &&f_) noexcept : f(std::move(f_)) {}
+@@ -82,12 +82,18 @@ public:
+             }
              func_handle(const func_handle &f_) { operator=(f_); }
              func_handle &operator=(const func_handle &f_) {
 -                gil_scoped_acquire acq;
@@ -23,7 +23,7 @@ index ad5608c25..00b97c1d8 100644
                  function kill_f(std::move(f));
              }
          };
-@@ -91,7 +97,10 @@ public:
+@@ -97,7 +103,10 @@ public:
              func_handle hfunc;
              explicit func_wrapper(func_handle &&hf) noexcept : hfunc(std::move(hf)) {}
              Return operator()(Args... args) const {
@@ -32,17 +32,28 @@ index ad5608c25..00b97c1d8 100644
 +                // one of Regina's own functions.  In such situations Regina's
 +                // Python bindings are responsible for ensuring the GIL is held.
 +                // gil_scoped_acquire acq;
-                 object retval(hfunc.f(std::forward<Args>(args)...));
-                 /* Visual studio 2015 parser issue: need parentheses around this expression */
-                 return (retval.template cast<Return>());
+                 // casts the returned object as a rvalue to the return type
+                 return hfunc.f(std::forward<Args>(args)...).template cast<Return>();
+             }
 diff --git a/python/pybind11/gil.h b/python/pybind11/gil.h
-index b73aaa3f5..e4b2f1de6 100644
+index a0b5de151..17c9703ab 100644
 --- a/python/pybind11/gil.h
 +++ b/python/pybind11/gil.h
-@@ -190,4 +190,16 @@ class gil_scoped_release {
+@@ -199,4 +199,27 @@ class gil_scoped_release {
  };
  #endif
  
++/**
++ * A less lightweight version of gil_scoped_acquire that actually checks
++ * whether we are already holding the GIL before trying to acquire it.
++ *
++ * This is needed in scenarios with multiple subinterpreters, where pybind11
++ * could otherwise causes deadlocks because its TLS mechanism implicitly (and
++ * incorrectly) assumes that different subinterpreters must be running
++ * from different native OS threads.
++ *
++ * - Ben Burton, 30/09/2022.
++ */
 +class safe_gil_scoped_acquire {
 +    gil_scoped_acquire* gil { nullptr };
 +public:
@@ -57,37 +68,44 @@ index b73aaa3f5..e4b2f1de6 100644
 +
  PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)
 diff --git a/python/pybind11/iostream.h b/python/pybind11/iostream.h
-index 95449a07b..6dbcf91e2 100644
+index 1878089e3..60586b9d7 100644
 --- a/python/pybind11/iostream.h
 +++ b/python/pybind11/iostream.h
-@@ -98,7 +98,7 @@ private:
+@@ -93,7 +93,7 @@ private:
      // This function must be non-virtual to be called in a destructor.
      int _sync() {
          if (pbase() != pptr()) { // If buffer is not empty
 -            gil_scoped_acquire tmp;
 +            safe_gil_scoped_acquire tmp;
              // This subtraction cannot be negative, so dropping the sign.
-             auto size        = static_cast<size_t>(pptr() - pbase());
+             auto size = static_cast<size_t>(pptr() - pbase());
              size_t remainder = utf8_remainder();
 diff --git a/python/pybind11/pybind11.h b/python/pybind11/pybind11.h
-index bfc1c368c..976a50c40 100644
+index d61dcd5c7..024bc6864 100644
 --- a/python/pybind11/pybind11.h
 +++ b/python/pybind11/pybind11.h
-@@ -2304,7 +2304,7 @@ void print(Args &&...args) {
+@@ -2627,13 +2627,13 @@ void print(Args &&...args) {
  
- error_already_set::~error_already_set() {
-     if (m_type) {
--        gil_scoped_acquire gil;
-+        safe_gil_scoped_acquire gil;
-         error_scope scope;
-         m_type.release().dec_ref();
-         m_value.release().dec_ref();
-@@ -2411,7 +2411,7 @@ template <class T> function get_override(const T *this_ptr, const char *name) {
+ inline void
+ error_already_set::m_fetched_error_deleter(detail::error_fetch_and_normalize *raw_ptr) {
+-    gil_scoped_acquire gil;
++    safe_gil_scoped_acquire gil;
+     error_scope scope;
+     delete raw_ptr;
+ }
+ 
+ inline const char *error_already_set::what() const noexcept {
+-    gil_scoped_acquire gil;
++    safe_gil_scoped_acquire gil;
+     error_scope scope;
+     return m_fetched_error->error_string().c_str();
+ }
+@@ -2748,7 +2748,7 @@ function get_override(const T *this_ptr, const char *name) {
  
  #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
      do {                                                                                          \
 -        pybind11::gil_scoped_acquire gil;                                                         \
-+        pybind11::safe_gil_scoped_acquire gil;                                                    \
++        pybind11::safe_gil_scoped_acquire gil;                                                         \
          pybind11::function override                                                               \
              = pybind11::get_override(static_cast<const cname *>(this), name);                     \
          if (override) {                                                                           \

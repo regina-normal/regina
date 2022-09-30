@@ -2627,13 +2627,13 @@ void print(Args &&...args) {
 
 inline void
 error_already_set::m_fetched_error_deleter(detail::error_fetch_and_normalize *raw_ptr) {
-    gil_scoped_acquire gil;
+    safe_gil_scoped_acquire gil;
     error_scope scope;
     delete raw_ptr;
 }
 
 inline const char *error_already_set::what() const noexcept {
-    gil_scoped_acquire gil;
+    safe_gil_scoped_acquire gil;
     error_scope scope;
     return m_fetched_error->error_string().c_str();
 }
@@ -2748,7 +2748,7 @@ function get_override(const T *this_ptr, const char *name) {
 
 #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
     do {                                                                                          \
-        pybind11::gil_scoped_acquire gil;                                                         \
+        pybind11::safe_gil_scoped_acquire gil;                                                         \
         pybind11::function override                                                               \
             = pybind11::get_override(static_cast<const cname *>(this), name);                     \
         if (override) {                                                                           \
