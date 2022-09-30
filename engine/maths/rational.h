@@ -155,14 +155,14 @@ class Rational {
          * \pre gcd(<i>newNum</i>, <i>newDen</i>) = 1 or <i>newDen</i> = 0.
          * \pre \a newDen is non-negative.
          *
+         * \pre Neither of the given integers is infinite.
+         *
          * \warning Failing to meet the preconditions above can result
          * in misleading or even undefined behaviour.  As an example,
          * Rational(4,4) (which breaks the gcd requirement) is
          * considered different from Rational(1,1) (a valid rational),
          * which is different again from Rational(-1,-1) (which breaks
          * the non-negativity requirement).
-         *
-         * \pre Neither of the given integers is infinite.
          *
          * @param newNum the new numerator.
          * @param newDen the new denominator.
