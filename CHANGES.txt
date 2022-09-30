@@ -7,6 +7,13 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 7.1.1  [ (to be determined) ]
+
+    PYTHON:
+        - Updated the included pybind11 library from 2.8.1 to 2.10.0.
+          This means we can now support Python 3.11, but no longer support
+          Python 3.4 or 3.5.
+
 Version 7.1  [ 30 September, 2022 ]
 
     GENERAL:
