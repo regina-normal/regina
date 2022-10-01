@@ -255,6 +255,9 @@ class PythonInterpreter {
 
         /**
          * Flushes the standard output and error streams.
+         *
+         * This may be called regardless of whether or not the Python
+         * global interpreter lock is currently held.
          */
         void flush();
 

@@ -77,12 +77,18 @@ class PythonOutputStream {
         /**
          * Writes data to this output stream.  Note that this data will
          * not be processed until a newline is written or flush() is called.
+         *
+         * This routine may be called with or without the Python global
+         * interpreter lock being held.
          */
         void write(const std::string& data);
 
         /**
          * Forces any data that has not yet been processed to be
          * sent to processOutput().
+         *
+         * This routine may be called with or without the Python global
+         * interpreter lock being held.
          */
         void flush();
 
@@ -94,6 +100,7 @@ class PythonOutputStream {
          * \pre \a streamName must be either "stdout" or "stderr".
          * \pre The python bindings for PythonOutputStream have already been
          * set up by calling the static routine addBindings().
+         * \pre The Python global interpreter lock is currently held.
          *
          * May throw a std::runtime_error if an error occurs.
          */
@@ -116,6 +123,8 @@ class PythonOutputStream {
          * Process a chunk of data that was sent to this output stream.
          * This routine might for instance display the data to the user
          * or write it to a log file.
+         *
+         * \pre The Python global interpreter lock is \e not held.
          */
         virtual void processOutput(const std::string& data) = 0;
 };
