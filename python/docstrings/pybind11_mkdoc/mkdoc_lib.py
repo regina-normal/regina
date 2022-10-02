@@ -137,6 +137,11 @@ def process_comment(comment):
         'sa': 'See also',
         'see': 'See also',
         'extends': 'Extends',
+        'pre': 'Precondition',
+        'ifacespython': 'Python',
+        'ifacescpp': 'C++',
+        'i18n': 'Internationalisation',
+        'exception': 'Exceptions',
         'throws': 'Throws',
         'throw': 'Throws'
     }.items():
@@ -151,6 +156,8 @@ def process_comment(comment):
                r"```\n\1\n```\n", s, flags=re.DOTALL)
     s = re.sub(r'[\\@]warning\s?(.*?)\s?\n\n',
                r'$.. warning::\n\n\1\n\n', s, flags=re.DOTALL)
+    s = re.sub(r'[\\@]note\s?(.*?)\s?\n\n',
+               r'$.. note::\n\n\1\n\n', s, flags=re.DOTALL)
     # Deprecated expects a version number for reST and not for Doxygen. Here the first word of the
     # doxygen directives is assumed to correspond to the version number
     s = re.sub(r'[\\@]deprecated\s(.*?)\s?(.*?)\s?\n\n',
