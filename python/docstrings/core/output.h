@@ -46,12 +46,6 @@ implemented in the class *T* itself.
 Precondition:
     *T* is a class or struct type.)doc";
 
-static const char *__doc_regina_OutputBase_test = R"doc()doc";
-
-static const char *__doc_regina_OutputBase_test_2 = R"doc()doc";
-
-static const char *__doc_regina_OutputBase_test_3 = R"doc()doc";
-
 static const char *__doc_regina_ShortOutput =
 R"doc(A common base class for objects that provide short text output only.
 

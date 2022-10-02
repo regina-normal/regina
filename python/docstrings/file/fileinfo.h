@@ -48,21 +48,13 @@ R"doc(Moves the contents of the given file information to this new object.
 
 The object that was passed will no longer be usable.)doc";
 
-static const char *__doc_regina_FileInfo_FileInfo_3 = R"doc(Create a new uninitialised structure.)doc";
-
-static const char *__doc_regina_FileInfo_compressed = R"doc()doc";
-
-static const char *__doc_regina_FileInfo_engine = R"doc()doc";
-
-static const char *__doc_regina_FileInfo_engine_2 =
+static const char *__doc_regina_FileInfo_engine =
 R"doc(Returns the version of the calculation engine that wrote this file.
 
 Returns:
     the engine version for this file.)doc";
 
-static const char *__doc_regina_FileInfo_format = R"doc()doc";
-
-static const char *__doc_regina_FileInfo_format_2 =
+static const char *__doc_regina_FileInfo_format =
 R"doc(Returns which of Regina's file formats the data file uses.
 
 In particular, this encodes which generation of XML the file uses, but
@@ -97,8 +89,6 @@ Parameter ``idPathname``:
 Returns:
     a FileInfo structure containing information about the given file,
     or no value if the file type could not be identified.)doc";
-
-static const char *__doc_regina_FileInfo_invalid = R"doc()doc";
 
 static const char *__doc_regina_FileInfo_isCompressed =
 R"doc(Returns whether this file is stored in compressed format. Currently
@@ -161,9 +151,7 @@ Returns:
     ``True`` if and only if this and the given file information do not
     describe the same format and version, as described above.)doc";
 
-static const char *__doc_regina_FileInfo_pathname = R"doc()doc";
-
-static const char *__doc_regina_FileInfo_pathname_2 =
+static const char *__doc_regina_FileInfo_pathname =
 R"doc(Returns the pathname of the data file being described.
 
 Internationalisation:

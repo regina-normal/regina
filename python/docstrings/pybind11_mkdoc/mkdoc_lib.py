@@ -15,7 +15,7 @@ import textwrap
 import ctypes.util
 
 from clang import cindex
-from clang.cindex import CursorKind
+from clang.cindex import CursorKind, AccessSpecifier
 from collections import OrderedDict
 from glob import glob
 from threading import Thread, Semaphore
@@ -226,14 +226,15 @@ def extract(filename, node, prefix, output):
         for i in node.get_children():
             extract(filename, i, sub_prefix, output)
     if node.kind in PRINT_LIST:
-        comment = d(node.raw_comment) if node.raw_comment is not None else ''
-        comment = process_comment(comment)
-        sub_prefix = prefix
-        if len(sub_prefix) > 0:
-            sub_prefix += '_'
-        if len(node.spelling) > 0:
-            name = sanitize_name(sub_prefix + d(node.spelling))
-            output.append((name, filename, comment))
+        if node.access_specifier != AccessSpecifier.PRIVATE:
+            comment = d(node.raw_comment) if node.raw_comment is not None else ''
+            comment = process_comment(comment)
+            sub_prefix = prefix
+            if len(sub_prefix) > 0:
+                sub_prefix += '_'
+            if len(node.spelling) > 0:
+                name = sanitize_name(sub_prefix + d(node.spelling))
+                output.append((name, filename, comment))
 
 
 class ExtractionThread(Thread):
