@@ -33,24 +33,34 @@
 #include "../pybind11/pybind11.h"
 #include "file/globaldirs.h"
 #include "../helpers.h"
+#include "../docstrings/file/globaldirs.h"
 
 using pybind11::overload_cast;
 using regina::GlobalDirs;
 
 void addGlobalDirs(pybind11::module_& m) {
-    auto c = pybind11::class_<GlobalDirs>(m, "GlobalDirs")
-        .def_static("home", &GlobalDirs::home)
-        .def_static("pythonModule", &GlobalDirs::pythonModule)
-        .def_static("census", &GlobalDirs::census)
-        .def_static("examples", &GlobalDirs::examples)
-        .def_static("engineDocs", &GlobalDirs::engineDocs)
-        .def_static("data", &GlobalDirs::data)
+    auto c = pybind11::class_<GlobalDirs>(m, "GlobalDirs",
+            DOC(regina, GlobalDirs))
+        .def_static("home", &GlobalDirs::home,
+            DOC(regina, GlobalDirs, home))
+        .def_static("pythonModule", &GlobalDirs::pythonModule,
+            DOC(regina, GlobalDirs, pythonModule))
+        .def_static("census", &GlobalDirs::census,
+            DOC(regina, GlobalDirs, census))
+        .def_static("examples", &GlobalDirs::examples,
+            DOC(regina, GlobalDirs, examples))
+        .def_static("engineDocs", &GlobalDirs::engineDocs,
+            DOC(regina, GlobalDirs, engineDocs))
+        .def_static("data", &GlobalDirs::data,
+            DOC(regina, GlobalDirs, data))
         .def_static("setDirs", overload_cast<const std::string&,
                 const std::string&, const std::string&>(
             &GlobalDirs::setDirs),
             pybind11::arg(), pybind11::arg(),
-            pybind11::arg("censusDir") = std::string())
-        .def_static("deduceDirs", &GlobalDirs::deduceDirs)
+            pybind11::arg("censusDir") = std::string(),
+            DOC(regina, GlobalDirs, setDirs))
+        .def_static("deduceDirs", &GlobalDirs::deduceDirs,
+            DOC(regina, GlobalDirs, deduceDirs))
     ;
     regina::python::no_eq_operators(c);
 }

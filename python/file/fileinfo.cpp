@@ -34,20 +34,29 @@
 #include "../pybind11/stl.h"
 #include "file/fileinfo.h"
 #include "../helpers.h"
+#include "../docstrings/file/fileinfo.h"
 
 using regina::FileInfo;
 
 void addFileInfo(pybind11::module_& m) {
-    auto c = pybind11::class_<FileInfo>(m, "FileInfo")
+    auto c = pybind11::class_<FileInfo>(m, "FileInfo", DOC(regina, FileInfo))
         .def(pybind11::init<const FileInfo&>())
-        .def("pathname", &FileInfo::pathname)
-        .def("format", &FileInfo::format)
-        .def("formatDescription", &FileInfo::formatDescription)
-        .def("engine", &FileInfo::engine)
-        .def("isCompressed", &FileInfo::isCompressed)
-        .def("isInvalid", &FileInfo::isInvalid)
-        .def("swap", &FileInfo::swap)
-        .def_static("identify", &FileInfo::identify)
+        .def("pathname", &FileInfo::pathname,
+            DOC(regina, FileInfo, pathname))
+        .def("format", &FileInfo::format,
+            DOC(regina, FileInfo, format))
+        .def("formatDescription", &FileInfo::formatDescription,
+            DOC(regina, FileInfo, formatDescription))
+        .def("engine", &FileInfo::engine,
+            DOC(regina, FileInfo, engine))
+        .def("isCompressed", &FileInfo::isCompressed,
+            DOC(regina, FileInfo, isCompressed))
+        .def("isInvalid", &FileInfo::isInvalid,
+            DOC(regina, FileInfo, isInvalid))
+        .def("swap", &FileInfo::swap,
+            DOC(regina, FileInfo, swap))
+        .def_static("identify", &FileInfo::identify,
+            DOC(regina, FileInfo, identify))
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

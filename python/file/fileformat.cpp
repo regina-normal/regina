@@ -33,13 +33,19 @@
 #include "../pybind11/pybind11.h"
 #include "file/fileformat.h"
 #include "../helpers.h"
+#include "../docstrings/file/fileformat.h"
 
 void addFileFormat(pybind11::module_& m) {
-    pybind11::enum_<regina::FileFormat>(m, "FileFormat")
-        .value("REGINA_BINARY_GEN_1", regina::REGINA_BINARY_GEN_1)
-        .value("REGINA_XML_GEN_2", regina::REGINA_XML_GEN_2)
-        .value("REGINA_XML_GEN_3", regina::REGINA_XML_GEN_3)
-        .value("REGINA_CURRENT_FILE_FORMAT", regina::REGINA_CURRENT_FILE_FORMAT)
+    pybind11::enum_<regina::FileFormat>(m, "FileFormat",
+            DOC(regina, FileFormat))
+        .value("REGINA_BINARY_GEN_1", regina::REGINA_BINARY_GEN_1,
+            DOC(regina, FileFormat, REGINA_BINARY_GEN_1))
+        .value("REGINA_XML_GEN_2", regina::REGINA_XML_GEN_2,
+            DOC(regina, FileFormat, REGINA_XML_GEN_2))
+        .value("REGINA_XML_GEN_3", regina::REGINA_XML_GEN_3,
+            DOC(regina, FileFormat, REGINA_XML_GEN_3))
+        .value("REGINA_CURRENT_FILE_FORMAT", regina::REGINA_CURRENT_FILE_FORMAT,
+            DOC(regina, FileFormat, REGINA_CURRENT_FILE_FORMAT))
         .export_values()
         ;
 }
