@@ -6,7 +6,7 @@ set -e
 export PYTHONPATH=".:$PYTHONPATH"
 export CPP_INCLUDE_DIRS="../../engine ../../preconfig/osx-xcode5"
 
-dirs="file"
+dirs="core file"
 
 for dir in $dirs; do
   for i in ../../engine/"$dir"/*.h; do
