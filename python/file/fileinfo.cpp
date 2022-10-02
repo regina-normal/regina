@@ -59,8 +59,11 @@ void addFileInfo(pybind11::module_& m) {
             DOC(regina, FileInfo, identify))
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c,
+        DOC(regina, FileInfo, operator_eq),
+        DOC(regina, FileInfo, operator_ne));
 
-    m.def("swap", (void(*)(FileInfo&, FileInfo&))(regina::swap));
+    m.def("swap", (void(*)(FileInfo&, FileInfo&))(regina::swap),
+        DOC(regina, swap));
 }
 

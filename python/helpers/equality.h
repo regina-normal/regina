@@ -89,10 +89,12 @@ enum EqualityType {
  *
  * - If \a T provides both == and != operators (either as member
  *   functions or as global functions), then the python operators == and !=
- *   will compare by value.
+ *   will compare by value.  In this case, the optional \a docEq and \a docNeq
+ *   arguments will (if they are non-null) be used as Python docstrings.
  *
  * - If \a T provides neither == nor != operators, then the python
- *   operators == and != will compare by reference.
+ *   operators == and != will compare by reference.  In this case, the
+ *   \a docEq and \a docNeq arguments will be ignored.
  *
  * - If \a T provides one of == or != but not the other, then this will
  *   generate a compile error.
@@ -106,7 +108,8 @@ enum EqualityType {
  * instead.
  */
 template <class C, typename... options>
-void add_eq_operators(pybind11::class_<C, options...>& c);
+void add_eq_operators(pybind11::class_<C, options...>& c,
+    const char* docEq = nullptr, const char* docNeq = nullptr);
 
 /**
  * Adds appropriate == and != operators to the python bindings for a C++ class
@@ -305,13 +308,27 @@ namespace add_eq_operators_detail {
 // See the top of this header for their documentation.
 
 template <class C, typename... options>
-inline void add_eq_operators(pybind11::class_<C, options...>& c) {
-    c.def("__eq__",
-        &add_eq_operators_detail::EqualityOperators<C>::are_equal);
-    c.def("__eq__", [](const C&, std::nullptr_t) { return false; });
-    c.def("__ne__",
-        &add_eq_operators_detail::EqualityOperators<C>::are_not_equal);
-    c.def("__ne__", [](const C&, std::nullptr_t) { return true; });
+inline void add_eq_operators(pybind11::class_<C, options...>& c,
+        const char* docEq, const char* docNeq) {
+    if (docEq) {
+        c.def("__eq__",
+            &add_eq_operators_detail::EqualityOperators<C>::are_equal, docEq);
+        c.def("__eq__", [](const C&, std::nullptr_t) { return false; }, docEq);
+    } else {
+        c.def("__eq__",
+            &add_eq_operators_detail::EqualityOperators<C>::are_equal);
+        c.def("__eq__", [](const C&, std::nullptr_t) { return false; });
+    }
+    if (docNeq) {
+        c.def("__ne__",
+            &add_eq_operators_detail::EqualityOperators<C>::are_not_equal,
+            docNeq);
+        c.def("__ne__", [](const C&, std::nullptr_t) { return true; }, docNeq);
+    } else {
+        c.def("__ne__",
+            &add_eq_operators_detail::EqualityOperators<C>::are_not_equal);
+        c.def("__ne__", [](const C&, std::nullptr_t) { return true; });
+    }
     c.attr("equalityType") =
         add_eq_operators_detail::EqualityOperators<C>::equalityType();
 }
