@@ -36,10 +36,10 @@ index 4034990d8..ab423203c 100644
                  return hfunc.f(std::forward<Args>(args)...).template cast<Return>();
              }
 diff --git a/python/pybind11/gil.h b/python/pybind11/gil.h
-index a0b5de151..17c9703ab 100644
+index a0b5de151..5fa4df1ae 100644
 --- a/python/pybind11/gil.h
 +++ b/python/pybind11/gil.h
-@@ -199,4 +199,27 @@ class gil_scoped_release {
+@@ -199,4 +199,30 @@ class gil_scoped_release {
  };
  #endif
  
@@ -64,6 +64,9 @@ index a0b5de151..17c9703ab 100644
 +    ~safe_gil_scoped_acquire() {
 +        delete gil;
 +    }
++    safe_gil_scoped_acquire(const safe_gil_scoped_acquire&) = delete;
++    safe_gil_scoped_acquire& operator = (const safe_gil_scoped_acquire&) =
++        delete;
 +};
 +
  PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)

@@ -220,6 +220,9 @@ public:
     ~safe_gil_scoped_acquire() {
         delete gil;
     }
+    safe_gil_scoped_acquire(const safe_gil_scoped_acquire&) = delete;
+    safe_gil_scoped_acquire& operator = (const safe_gil_scoped_acquire&) =
+        delete;
 };
 
 PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)
