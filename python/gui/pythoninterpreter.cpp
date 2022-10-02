@@ -47,7 +47,6 @@
 #include "../python/pybind11/pybind11.h"
 #include "../python/pybind11/embed.h"
 #include <compile.h>
-#include <eval.h>
 #include <sysmodule.h>
 
 #ifdef PYTHON_STATIC_LINK
