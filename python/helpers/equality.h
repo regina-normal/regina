@@ -37,6 +37,9 @@
 #include <sstream>
 #include <type_traits>
 
+#define docEqNone R"doc(Always returns ``False``, since an object of this type is never equal to ``None``.)doc"
+#define docNeqNone R"doc(Always returns ``True``, since an object of this type is never equal to ``None``.)doc"
+
 namespace regina {
 
 class Packet;
@@ -313,7 +316,8 @@ inline void add_eq_operators(pybind11::class_<C, options...>& c,
     if (docEq) {
         c.def("__eq__",
             &add_eq_operators_detail::EqualityOperators<C>::are_equal, docEq);
-        c.def("__eq__", [](const C&, std::nullptr_t) { return false; }, docEq);
+        c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
+            docEqNone);
     } else {
         c.def("__eq__",
             &add_eq_operators_detail::EqualityOperators<C>::are_equal);
@@ -323,7 +327,8 @@ inline void add_eq_operators(pybind11::class_<C, options...>& c,
         c.def("__ne__",
             &add_eq_operators_detail::EqualityOperators<C>::are_not_equal,
             docNeq);
-        c.def("__ne__", [](const C&, std::nullptr_t) { return true; }, docNeq);
+        c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
+            docNeqNone);
     } else {
         c.def("__ne__",
             &add_eq_operators_detail::EqualityOperators<C>::are_not_equal);
