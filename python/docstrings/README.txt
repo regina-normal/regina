@@ -5,6 +5,9 @@ The pybind11_mkdoc directory contains a checkout of pybind11_mkdoc:
 There are additional local modifications to reflect the way that Regina
 uses its own custom doxygen tags.
 
+This tool also requires the python clang bindings (on debian/ubuntu,
+install the python3-clang package).
+
 This tool is designed to be used by the Regina developers only; it is not
 meant to form part of Regina's usual build process, and it may be tailored to
 a setup specific to the developers' machine(s).
