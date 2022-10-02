@@ -40,7 +40,8 @@ using regina::FileInfo;
 
 void addFileInfo(pybind11::module_& m) {
     auto c = pybind11::class_<FileInfo>(m, "FileInfo", DOC(regina, FileInfo))
-        .def(pybind11::init<const FileInfo&>())
+        .def(pybind11::init<const FileInfo&>(),
+            DOC(regina, FileInfo, FileInfo))
         .def("pathname", &FileInfo::pathname,
             DOC(regina, FileInfo, pathname))
         .def("format", &FileInfo::format,
