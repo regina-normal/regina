@@ -39,32 +39,22 @@
 using regina::FileInfo;
 
 void addFileInfo(pybind11::module_& m) {
-    auto c = pybind11::class_<FileInfo>(m, "FileInfo", DOC(regina, FileInfo))
-        .def(pybind11::init<const FileInfo&>(),
-            DOC(regina, FileInfo, FileInfo))
-        .def("pathname", &FileInfo::pathname,
-            DOC(regina, FileInfo, pathname))
-        .def("format", &FileInfo::format,
-            DOC(regina, FileInfo, format))
+    auto c = pybind11::class_<FileInfo>(m, "FileInfo", RDOC(FileInfo))
+        .def(pybind11::init<const FileInfo&>(), RDOC(FileInfo, FileInfo))
+        .def("pathname", &FileInfo::pathname, RDOC(FileInfo, pathname))
+        .def("format", &FileInfo::format, RDOC(FileInfo, format))
         .def("formatDescription", &FileInfo::formatDescription,
-            DOC(regina, FileInfo, formatDescription))
-        .def("engine", &FileInfo::engine,
-            DOC(regina, FileInfo, engine))
+            RDOC(FileInfo, formatDescription))
+        .def("engine", &FileInfo::engine, RDOC(FileInfo, engine))
         .def("isCompressed", &FileInfo::isCompressed,
-            DOC(regina, FileInfo, isCompressed))
-        .def("isInvalid", &FileInfo::isInvalid,
-            DOC(regina, FileInfo, isInvalid))
-        .def("swap", &FileInfo::swap,
-            DOC(regina, FileInfo, swap))
-        .def_static("identify", &FileInfo::identify,
-            DOC(regina, FileInfo, identify))
+            RDOC(FileInfo, isCompressed))
+        .def("isInvalid", &FileInfo::isInvalid, RDOC(FileInfo, isInvalid))
+        .def("swap", &FileInfo::swap, RDOC(FileInfo, swap))
+        .def_static("identify", &FileInfo::identify, RDOC(FileInfo, identify))
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c,
-        DOC(regina, FileInfo, operator_eq),
-        DOC(regina, FileInfo, operator_ne));
+    regina::python::add_eq_operators(c, RDOC_EQ_NE(FileInfo));
 
-    m.def("swap", (void(*)(FileInfo&, FileInfo&))(regina::swap),
-        DOC(regina, swap));
+    m.def("swap", (void(*)(FileInfo&, FileInfo&))(regina::swap), RDOC(swap));
 }
 

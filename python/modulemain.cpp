@@ -111,24 +111,15 @@ PYBIND11_MODULE(regina, m) {
 
     // Core engine routines:
 
-    m.def("versionString", regina::versionString,
-        DOC(regina, versionString));
-    m.def("versionMajor", regina::versionMajor,
-        DOC(regina, versionMajor));
-    m.def("versionMinor", regina::versionMinor,
-        DOC(regina, versionMinor));
-    m.def("versionUsesUTF8", regina::versionUsesUTF8,
-        DOC(regina, versionUsesUTF8));
-    m.def("versionSnapPy", regina::versionSnapPy,
-        DOC(regina, versionSnapPy));
-    m.def("versionSnapPea", regina::versionSnapPea,
-        DOC(regina, versionSnapPea));
-    m.def("hasInt128", regina::hasInt128,
-        DOC(regina, hasInt128));
-    m.def("politeThreads", regina::politeThreads,
-        DOC(regina, politeThreads));
-    m.def("testEngine", regina::testEngine,
-        DOC(regina, testEngine));
+    m.def("versionString", regina::versionString, RDOC(versionString));
+    m.def("versionMajor", regina::versionMajor, RDOC(versionMajor));
+    m.def("versionMinor", regina::versionMinor, RDOC(versionMinor));
+    m.def("versionUsesUTF8", regina::versionUsesUTF8, RDOC(versionUsesUTF8));
+    m.def("versionSnapPy", regina::versionSnapPy, RDOC(versionSnapPy));
+    m.def("versionSnapPea", regina::versionSnapPea, RDOC(versionSnapPea));
+    m.def("hasInt128", regina::hasInt128, RDOC(hasInt128));
+    m.def("politeThreads", regina::politeThreads, RDOC(politeThreads));
+    m.def("testEngine", regina::testEngine, RDOC(testEngine));
 
     pybind11::enum_<regina::Algorithm>(m, "Algorithm")
         .value("ALG_DEFAULT", regina::ALG_DEFAULT)
