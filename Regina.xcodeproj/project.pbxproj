@@ -2502,6 +2502,7 @@
 		0506EC1C19F65B43003E455B /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog4.cpp; sourceTree = "<group>"; };
 		0507C5A41C54494E00D1C86C /* eltmovedialog4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eltmovedialog4.h; sourceTree = "<group>"; };
+		05098A6428EA891E005E4716 /* docstrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = docstrings.h; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -6710,6 +6711,7 @@
 		05431FC71C40F5EE009BC072 /* helpers */ = {
 			isa = PBXGroup;
 			children = (
+				05098A6428EA891E005E4716 /* docstrings.h */,
 				05431FC81C40F607009BC072 /* equality.h */,
 				055CF2B728C817E000CA9034 /* gil.h */,
 				05199A2C25C63AED0006B8FA /* listview.h */,
