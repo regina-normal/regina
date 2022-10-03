@@ -1,21 +1,24 @@
-The pybind11_mkdoc directory contains a checkout of pybind11_mkdoc:
+The pybind11_mkdoc directory contains a heavily modified version of
+pybind11_mkdoc.  The original was taken from:
 
   https://github.com/pybind/pybind11_mkdoc (commit eec43da56)
 
-There are additional local modifications to reflect the way that Regina
-uses its own custom doxygen tags, and to reduce the amount of unwanted noise
-in the output.
+The local modifications reorganise the way docstrings are stored and accessed,
+strip out a significant amount of unwanted noise (duplicates and/or methods
+that Regina does not bind in python), and better reflect Regina's use of
+doxygen tags.
 
-This tool also requires the python clang bindings (on debian/ubuntu,
-install the python3-clang package).
+This tool requires the python clang bindings (on debian/ubuntu, install the
+package python3-clang).
 
 This tool is designed to be used by the Regina developers only; it is not
-meant to form part of Regina's usual build process, and it may be tailored to
-a setup specific to the developers' machine(s).
+meant to form part of Regina's usual build process.  To regenerate all
+docstrings, run ./gendoc.sh.  To regenerate only some of the docstrings,
+you can pass ./gendoc.sh an optional list of engine subdirectories.
 
 ----------------------------------------------------------------------------
 
-The pybind11_mkdoc tool is distributed under the following license:
+The upstream pybind11_mkdoc tool is distributed under the following license:
 
   The MIT License (MIT)
 
@@ -38,3 +41,6 @@ The pybind11_mkdoc tool is distributed under the following license:
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
+
+All modifications are Copyright (c) 2022 Ben Burton, and released under the
+same license as above.
