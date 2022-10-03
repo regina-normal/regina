@@ -87,10 +87,10 @@ def d(s):
 def sanitize_name(name):
     name = re.sub(r'type-parameter-0-([0-9]+)', r'T\1', name)
     for k, v in CPP_OPERATORS.items():
-        name = name.replace('operator%s' % k, 'operator_%s' % v)
+        name = name.replace('operator%s' % k, '__%s' % v)
     name = re.sub('<.*>', '', name)
     name = ''.join([ch if ch.isalnum() else '_' for ch in name])
-    name = re.sub('_$', '', re.sub('_+', '_', name))
+    # name = re.sub('_$', '', re.sub('_+', '_', name))
     return name
 
 
@@ -251,6 +251,9 @@ def extract(filename, node, namespace, output):
             skip = False
             if node.raw_comment is None:
                 print('Undocumented:', name, '-- skipping')
+                skip = True
+            elif node.spelling == 'operator=':
+                # We do not bind assignment operators at all.
                 skip = True
             elif node.spelling == 'operator<<':
                 # We do not want docs for std::ostream output operators.

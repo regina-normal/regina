@@ -30,6 +30,46 @@ Swappable requirement, though it does not implement (or need) its own
 custom swap() function. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
+// Docstring regina::python::doc::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given file information describe the
+same format and version.
+
+For two FileInfo objects to compare as equal, they must have the same
+file formats, use the same version of the calculation engine, and use
+the same compression type. The pathnames of the files being described
+are ignored.
+
+It is safe to compare FileInfo objects even if one or both is invalid.
+Two invalid FileInfo objects will compare as equal.
+
+Parameter ``other``:
+    the file information to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given file information
+    describe the same format and version, as described above.)doc";
+
+// Docstring regina::python::doc::__ne
+static const char *__ne =
+R"doc(Determines whether this and the given file information do not describe
+the same format and version.
+
+For two FileInfo objects to compare as equal, they must have the same
+file formats, use the same version of the calculation engine, and use
+the same compression type. The pathnames of the files being described
+are ignored.
+
+It is safe to compare FileInfo objects even if one or both is invalid.
+Two invalid FileInfo objects will compare as equal.
+
+Parameter ``other``:
+    the file information to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given file information do not
+    describe the same format and version, as described above.)doc";
+
 // Docstring regina::python::doc::engine
 static const char *engine =
 R"doc(Returns the version of the calculation engine that wrote this file.
@@ -72,46 +112,6 @@ R"doc(Returns whether the file metadata could not be read.
 
 Returns:
     ``True`` if the metadata could not be read, ``False`` otherwise.)doc";
-
-// Docstring regina::python::doc::operator_eq
-static const char *operator_eq =
-R"doc(Determines whether this and the given file information describe the
-same format and version.
-
-For two FileInfo objects to compare as equal, they must have the same
-file formats, use the same version of the calculation engine, and use
-the same compression type. The pathnames of the files being described
-are ignored.
-
-It is safe to compare FileInfo objects even if one or both is invalid.
-Two invalid FileInfo objects will compare as equal.
-
-Parameter ``other``:
-    the file information to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given file information
-    describe the same format and version, as described above.)doc";
-
-// Docstring regina::python::doc::operator_ne
-static const char *operator_ne =
-R"doc(Determines whether this and the given file information do not describe
-the same format and version.
-
-For two FileInfo objects to compare as equal, they must have the same
-file formats, use the same version of the calculation engine, and use
-the same compression type. The pathnames of the files being described
-are ignored.
-
-It is safe to compare FileInfo objects even if one or both is invalid.
-Two invalid FileInfo objects will compare as equal.
-
-Parameter ``other``:
-    the file information to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given file information do not
-    describe the same format and version, as described above.)doc";
 
 // Docstring regina::python::doc::pathname
 static const char *pathname =
@@ -169,6 +169,46 @@ static const char *FileInfo_2 =
 R"doc(Moves the contents of the given file information to this new object.
 
 The object that was passed will no longer be usable.)doc";
+
+// Docstring regina::python::doc::FileInfo_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given file information describe the
+same format and version.
+
+For two FileInfo objects to compare as equal, they must have the same
+file formats, use the same version of the calculation engine, and use
+the same compression type. The pathnames of the files being described
+are ignored.
+
+It is safe to compare FileInfo objects even if one or both is invalid.
+Two invalid FileInfo objects will compare as equal.
+
+Parameter ``other``:
+    the file information to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given file information
+    describe the same format and version, as described above.)doc";
+
+// Docstring regina::python::doc::FileInfo_::__ne
+static const char *__ne =
+R"doc(Determines whether this and the given file information do not describe
+the same format and version.
+
+For two FileInfo objects to compare as equal, they must have the same
+file formats, use the same version of the calculation engine, and use
+the same compression type. The pathnames of the files being described
+are ignored.
+
+It is safe to compare FileInfo objects even if one or both is invalid.
+Two invalid FileInfo objects will compare as equal.
+
+Parameter ``other``:
+    the file information to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given file information do not
+    describe the same format and version, as described above.)doc";
 
 // Docstring regina::python::doc::FileInfo_::engine
 static const char *engine =
@@ -230,58 +270,6 @@ R"doc(Returns whether the file metadata could not be read.
 
 Returns:
     ``True`` if the metadata could not be read, ``False`` otherwise.)doc";
-
-// Docstring regina::python::doc::FileInfo_::operator_assign
-static const char *operator_assign = R"doc(Sets this to be a copy of the given file information.)doc";
-
-// Docstring regina::python::doc::FileInfo_::operator_assign_2
-static const char *operator_assign_2 =
-R"doc(Moves the contents of the given file information to this new object.
-
-The object that was passed will no longer be usable.
-
-Returns:
-    a reference to this object.)doc";
-
-// Docstring regina::python::doc::FileInfo_::operator_eq
-static const char *operator_eq =
-R"doc(Determines whether this and the given file information describe the
-same format and version.
-
-For two FileInfo objects to compare as equal, they must have the same
-file formats, use the same version of the calculation engine, and use
-the same compression type. The pathnames of the files being described
-are ignored.
-
-It is safe to compare FileInfo objects even if one or both is invalid.
-Two invalid FileInfo objects will compare as equal.
-
-Parameter ``other``:
-    the file information to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given file information
-    describe the same format and version, as described above.)doc";
-
-// Docstring regina::python::doc::FileInfo_::operator_ne
-static const char *operator_ne =
-R"doc(Determines whether this and the given file information do not describe
-the same format and version.
-
-For two FileInfo objects to compare as equal, they must have the same
-file formats, use the same version of the calculation engine, and use
-the same compression type. The pathnames of the files being described
-are ignored.
-
-It is safe to compare FileInfo objects even if one or both is invalid.
-Two invalid FileInfo objects will compare as equal.
-
-Parameter ``other``:
-    the file information to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given file information do not
-    describe the same format and version, as described above.)doc";
 
 // Docstring regina::python::doc::FileInfo_::pathname
 static const char *pathname =

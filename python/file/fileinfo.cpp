@@ -54,7 +54,7 @@ void addFileInfo(pybind11::module_& m) {
         .def_static("identify", &FileInfo::identify, rdoc::identify)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, rdoc::operator_eq, rdoc::operator_ne);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_SWITCH_MAIN
 
