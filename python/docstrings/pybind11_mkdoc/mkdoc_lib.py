@@ -243,7 +243,8 @@ def extract(filename, node, namespace, output):
             extract(filename, i, sub_namespace, output)
     if node.kind in PRINT_LIST and \
             node.access_specifier not in ACCESS_BLACKLIST and \
-            node.availability not in AVAILABILITY_BLACKLIST:
+            node.availability not in AVAILABILITY_BLACKLIST and \
+            (not node.is_move_constructor()):
         sub_namespace = namespace
         if len(node.spelling) > 0:
             name = sanitize_name(d(node.spelling))

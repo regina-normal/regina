@@ -164,12 +164,6 @@ namespace FileInfo_ {
 // Docstring regina::python::doc::FileInfo_::FileInfo
 static const char *FileInfo = R"doc(Creates a new copy of the given file information.)doc";
 
-// Docstring regina::python::doc::FileInfo_::FileInfo_2
-static const char *FileInfo_2 =
-R"doc(Moves the contents of the given file information to this new object.
-
-The object that was passed will no longer be usable.)doc";
-
 // Docstring regina::python::doc::FileInfo_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given file information describe the
