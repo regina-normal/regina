@@ -3,7 +3,8 @@ The pybind11_mkdoc directory contains a checkout of pybind11_mkdoc:
   https://github.com/pybind/pybind11_mkdoc (commit eec43da56)
 
 There are additional local modifications to reflect the way that Regina
-uses its own custom doxygen tags.
+uses its own custom doxygen tags, and to reduce the amount of unwanted noise
+in the output.
 
 This tool also requires the python clang bindings (on debian/ubuntu,
 install the python3-clang package).
