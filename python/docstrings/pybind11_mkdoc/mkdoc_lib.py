@@ -260,6 +260,12 @@ def extract(filename, node, namespace, output):
             fullname += name
 
             skip = False
+            if node.lexical_parent != node.semantic_parent:
+                # We are seeing functions with inline definitions appear twice
+                # in the output: once where they are declared and again where
+                # they are defined.  I hope this is the right way to ignore
+                # the second occurrences (i.e., the inline implementations).
+                skip = True
             if node.raw_comment is None:
                 print('Undocumented:', fullname, '-- skipping')
                 skip = True
