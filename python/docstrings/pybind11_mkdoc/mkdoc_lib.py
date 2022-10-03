@@ -91,10 +91,6 @@ def sanitize_name(name):
     name = re.sub('<.*>', '', name)
     name = ''.join([ch if ch.isalnum() else '_' for ch in name])
     name = re.sub('_$', '', re.sub('_+', '_', name))
-    # Remove the regina_ prefix, which everything will have.
-    # We are using the regina:python::doc namespace to isolate these
-    # symbols instead.
-    name = re.sub('^regina_', '', name)
     return name
 
 
@@ -226,39 +222,46 @@ def process_comment(comment):
     return result.rstrip().lstrip('\n')
 
 
-def extract(filename, node, prefix, output):
+def extract(filename, node, namespace, output):
     if not (node.location.file is None or
             os.path.samefile(d(node.location.file.name), filename)):
         return 0
     if node.kind in RECURSE_LIST:
-        sub_prefix = prefix
+        sub_namespace = namespace
         if node.kind not in PREFIX_BLACKLIST:
-            if len(sub_prefix) > 0:
-                sub_prefix += '_'
-            sub_prefix += d(node.spelling)
+            # Ignore the leading regina:: namespace, which everything has.
+            if not (node.kind == CursorKind.NAMESPACE and \
+                    node.spelling == 'regina' and namespace == ''):
+                if len(namespace) > 0:
+                    sub_namespace += '::'
+                sub_namespace += sanitize_name(d(node.spelling))
+                # When delving into the class/struct/enum X, use the
+                # namespace X_ for the members of X.
+                if node.kind != CursorKind.NAMESPACE:
+                    sub_namespace += '_'
         for i in node.get_children():
-            extract(filename, i, sub_prefix, output)
-    if node.kind in PRINT_LIST and node.access_specifier not in ACCESS_BLACKLIST and node.availability not in AVAILABILITY_BLACKLIST:
-        sub_prefix = prefix
-        if len(sub_prefix) > 0:
-            sub_prefix += '_'
+            extract(filename, i, sub_namespace, output)
+    if node.kind in PRINT_LIST and \
+            node.access_specifier not in ACCESS_BLACKLIST and \
+            node.availability not in AVAILABILITY_BLACKLIST:
+        sub_namespace = namespace
         if len(node.spelling) > 0:
-            name = sanitize_name(sub_prefix + d(node.spelling))
+            name = sanitize_name(d(node.spelling))
 
             skip = False
             if node.raw_comment is None:
                 print('Undocumented:', name, '-- skipping')
                 skip = True
             elif node.spelling == 'operator<<':
-                # We do not want to produce docs for std::ostream output operators.
-                # For now we skip *all* left shift operators; probably this will need to
-                # become more nuanced as we work our way through the full Regina API.
+                # We do not want docs for std::ostream output operators.
+                # For now we skip *all* left shift operators; this may need to
+                # become more nuanced at a later date.
                 print('Left shift:', name, '-- skipping')
                 skip = True
             if not skip:
                 comment = d(node.raw_comment)
                 comment = process_comment(comment)
-                output.append((name, filename, comment))
+                output.append((sub_namespace, name, filename, comment))
 
 
 class ExtractionThread(Thread):
@@ -430,15 +433,31 @@ namespace regina::python::doc {
 
     name_ctr = 1
     name_prev = None
-    for name, _, comment in list(sorted(comments, key=lambda x: (x[0], x[1]))):
-        if name == name_prev:
+    namespace_prev = None
+    for namespace, name, _, comment in list(sorted(comments, key=lambda x: (x[0], x[1], x[2]))):
+        if (namespace, name) == name_prev:
             name_ctr += 1
             name = name + "_%i" % name_ctr
         else:
-            name_prev = name
+            name_prev = (namespace, name)
             name_ctr = 1
-        print('\nstatic const char *%s =%sR"doc(%s)doc";' %
+
+        if namespace != namespace_prev:
+            if namespace_prev:
+                print('\n}', file=out_file)
+            if namespace:
+                print('\nnamespace %s {' % namespace, file=out_file)
+            namespace_prev = namespace
+
+        full_namespace = 'regina::python::doc'
+        if namespace:
+            full_namespace = full_namespace + '::' + namespace
+        print('\n// Docstring %s::%s' % (full_namespace, name), file=out_file)
+        print('static const char *%s =%sR"doc(%s)doc";' %
               (name, '\n' if '\n' in comment else ' ', comment), file=out_file)
+
+    if namespace_prev:
+        print('\n}', file=out_file)
 
     print('''
 } // namespace regina::python::doc

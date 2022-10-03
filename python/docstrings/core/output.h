@@ -11,6 +11,7 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::Output
 static const char *Output =
 R"doc(A common base class for objects that write human-readable text output.
 This class ensures that text output routines have consistent names and
@@ -81,6 +82,7 @@ Python:
     Not present, but the output routines str(), utf8() and detail()
     will be provided directly through the various subclasses.)doc";
 
+// Docstring regina::python::doc::OutputBase
 static const char *OutputBase =
 R"doc(Provides a type alias to help identify where in the class hierarchy
 the output functions T::str() and T::detail() are implemented.
@@ -102,47 +104,7 @@ implemented in the class *T* itself.
 Precondition:
     *T* is a class or struct type.)doc";
 
-static const char *Output_detail =
-R"doc(Returns a detailed text representation of this object. This text may
-span many lines, and should provide the user with all the information
-they could want. It should be human-readable, should not contain
-extremely long lines (which cause problems for users reading the
-output in a terminal), and should end with a final newline. There are
-no restrictions on the underlying character set.
-
-Returns:
-    a detailed text representation of this object.)doc";
-
-static const char *Output_str =
-R"doc(Returns a short text representation of this object. This text should
-be human-readable, should use plain ASCII characters where possible,
-and should not contain any newlines.
-
-Within these limits, this short text ouptut should be as information-
-rich as possible, since in most cases this forms the basis for the
-Python ``__str__()`` and ``__repr__()`` functions.
-
-Python:
-    The Python "stringification" function ``__str__()`` will use
-    precisely this function, and for most classes the Python
-    ``__repr__()`` function will incorporate this into its output.
-
-Returns:
-    a short text representation of this object.)doc";
-
-static const char *Output_utf8 =
-R"doc(Returns a short text representation of this object using unicode
-characters. Like str(), this text should be human-readable, should not
-contain any newlines, and (within these constraints) should be as
-information-rich as is reasonable.
-
-Unlike str(), this function may use unicode characters to make the
-output more pleasant to read. The string that is returned will be
-encoded in UTF-8.
-
-Returns:
-    a short text representation of this object.)doc";
-
+// Docstring regina::python::doc::ShortOutput
 static const char *ShortOutput =
 R"doc(A common base class for objects that provide short text output only.
 
@@ -180,17 +142,7 @@ Python:
     Not present, but the output routines str(), utf8() and detail()
     will be provided directly through the various subclasses.)doc";
 
-static const char *ShortOutput_writeTextLong =
-R"doc(A default implementation for detailed output. This routine simply
-calls *T::writeTextShort*() and appends a final newline.
-
-Python:
-    Not present; instead you can call detail() from the subclass *T*,
-    which returns this output as a string.
-
-Parameter ``out``:
-    the output stream to which to write.)doc";
-
+// Docstring regina::python::doc::writeTextLong
 static const char *writeTextLong =
 R"doc(A default implementation for detailed output. This routine simply
 calls *T::writeTextShort*() and appends a final newline.
@@ -201,6 +153,70 @@ Python:
 
 Parameter ``out``:
     the output stream to which to write.)doc";
+
+namespace Output_ {
+
+// Docstring regina::python::doc::Output_::detail
+static const char *detail =
+R"doc(Returns a detailed text representation of this object. This text may
+span many lines, and should provide the user with all the information
+they could want. It should be human-readable, should not contain
+extremely long lines (which cause problems for users reading the
+output in a terminal), and should end with a final newline. There are
+no restrictions on the underlying character set.
+
+Returns:
+    a detailed text representation of this object.)doc";
+
+// Docstring regina::python::doc::Output_::str
+static const char *str =
+R"doc(Returns a short text representation of this object. This text should
+be human-readable, should use plain ASCII characters where possible,
+and should not contain any newlines.
+
+Within these limits, this short text ouptut should be as information-
+rich as possible, since in most cases this forms the basis for the
+Python ``__str__()`` and ``__repr__()`` functions.
+
+Python:
+    The Python "stringification" function ``__str__()`` will use
+    precisely this function, and for most classes the Python
+    ``__repr__()`` function will incorporate this into its output.
+
+Returns:
+    a short text representation of this object.)doc";
+
+// Docstring regina::python::doc::Output_::utf8
+static const char *utf8 =
+R"doc(Returns a short text representation of this object using unicode
+characters. Like str(), this text should be human-readable, should not
+contain any newlines, and (within these constraints) should be as
+information-rich as is reasonable.
+
+Unlike str(), this function may use unicode characters to make the
+output more pleasant to read. The string that is returned will be
+encoded in UTF-8.
+
+Returns:
+    a short text representation of this object.)doc";
+
+}
+
+namespace ShortOutput_ {
+
+// Docstring regina::python::doc::ShortOutput_::writeTextLong
+static const char *writeTextLong =
+R"doc(A default implementation for detailed output. This routine simply
+calls *T::writeTextShort*() and appends a final newline.
+
+Python:
+    Not present; instead you can call detail() from the subclass *T*,
+    which returns this output as a string.
+
+Parameter ``out``:
+    the output stream to which to write.)doc";
+
+}
 
 } // namespace regina::python::doc
 

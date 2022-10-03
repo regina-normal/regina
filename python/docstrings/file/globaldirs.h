@@ -11,6 +11,7 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::GlobalDirs
 static const char *GlobalDirs =
 R"doc(Provides global routines that return directories in which various
 components of Regina are installed on the system.
@@ -27,7 +28,8 @@ or deduceDirs() when your application starts. Otherwise the
 directories that GlobalDirs returns might be incorrect, and might not
 even exist.)doc";
 
-static const char *GlobalDirs_census =
+// Docstring regina::python::doc::census
+static const char *census =
 R"doc(Returns the directory containing the large machine-encoded census data
 files. These data files are not human-browsable: instead they are
 built for fast performance and small size. Users can access them by
@@ -45,7 +47,8 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's calculation engine data directory.)doc";
 
-static const char *GlobalDirs_data =
+// Docstring regina::python::doc::data
+static const char *data =
 R"doc(Returns the directory containing miscellaneous data files for internal
 use Regina's calculation engine.
 
@@ -64,7 +67,128 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's calculation engine data directory.)doc";
 
-static const char *GlobalDirs_deduceDirs =
+// Docstring regina::python::doc::engineDocs
+static const char *engineDocs =
+R"doc(Returns the directory in which API documentation for Regina's
+calculation engine is installed.
+
+This is computed automatically:
+
+- in most cases it will be the ``engine-docs/`` subdirectory of
+home();
+
+- in the special case where deduceDirs() was called and we are running
+from the build tree, it will be the location in the build tree where
+the API docs are built.
+
+On a typical GNU/Linux system, this directory might (for example) be
+``/usr/local/share/regina/engine-docs`` .
+
+.. warning::
+    If Regina is not installed in the exact location configured at
+    compile time (e.g., if you are running a macOS app bundle or you
+    are running directly out of the source tre), you *must* call
+    either setDirs() or deduceDirs() before calling this routine.
+
+Returns:
+    Regina's calculation engine documentation directory.)doc";
+
+// Docstring regina::python::doc::examples
+static const char *examples =
+R"doc(Returns the directory in which example data files (including the
+smaller but human-browsable census data files) are installed.
+
+This is computed automatically as the ``examples/`` subdirectory of
+home().
+
+On a typical GNU/Linux system, this directory might (for example) be
+``/usr/local/share/regina/examples`` .
+
+.. warning::
+    If Regina is not installed in the exact location configured at
+    compile time (e.g., if you are running a macOS app bundle or you
+    are running directly out of the source tre), you *must* call
+    either setDirs() or deduceDirs() before calling this routine.
+
+Returns:
+    Regina's example and census data directory.)doc";
+
+// Docstring regina::python::doc::home
+static const char *home =
+R"doc(Returns Regina's primary home directory on the system. This directory
+should contains subdirectories *data*, *icons*/, *examples*/ and so
+on.
+
+On a typical GNU/Linux system, this directory might (for example) be
+``/usr/local/share/regina`` .
+
+.. warning::
+    If Regina is not installed in the exact location configured at
+    compile time (e.g., if you are running a macOS app bundle or you
+    are running directly out of the source tre), you *must* call
+    either setDirs() or deduceDirs() before calling this routine.
+
+Returns:
+    Regina's primary home directory.)doc";
+
+// Docstring regina::python::doc::pythonModule
+static const char *pythonModule =
+R"doc(Returns the directory in which Regina's python module is installed, or
+the empty string if the module is installed in python's standard site-
+packages directory.
+
+.. warning::
+    If Regina is not installed in the exact location configured at
+    compile time (e.g., if you are running a macOS app bundle or you
+    are running directly out of the source tre), you *must* call
+    either setDirs() or deduceDirs() before calling this routine.
+
+Returns:
+    Regina's python module directory.)doc";
+
+namespace GlobalDirs_ {
+
+// Docstring regina::python::doc::GlobalDirs_::census
+static const char *census =
+R"doc(Returns the directory containing the large machine-encoded census data
+files. These data files are not human-browsable: instead they are
+built for fast performance and small size. Users can access them by
+calling Census::lookup().
+
+On a typical GNU/Linux system, this directory might (for example) be
+``/usr/local/share/regina/data/census``.
+
+.. warning::
+    If Regina is not installed in the exact location configured at
+    compile time (e.g., if you are running a macOS app bundle or you
+    are running directly out of the source tre), you *must* call
+    either setDirs() or deduceDirs() before calling this routine.
+
+Returns:
+    Regina's calculation engine data directory.)doc";
+
+// Docstring regina::python::doc::GlobalDirs_::data
+static const char *data =
+R"doc(Returns the directory containing miscellaneous data files for internal
+use Regina's calculation engine.
+
+This is computed automatically as the ``data/`` subdirectory of
+home().
+
+On a typical GNU/Linux system, this directory might (for example) be
+``/usr/local/share/regina/data`` .
+
+.. warning::
+    If Regina is not installed in the exact location configured at
+    compile time (e.g., if you are running a macOS app bundle or you
+    are running directly out of the source tre), you *must* call
+    either setDirs() or deduceDirs() before calling this routine.
+
+Returns:
+    Regina's calculation engine data directory.)doc";
+
+// Docstring regina::python::doc::GlobalDirs_::deduceDirs
+static const char *deduceDirs =
 R"doc(Ask Regina to deduce where its supporting files are installed.
 
 You should call either setDirs() or deduceDirs() at runtime if Regina
@@ -108,7 +232,8 @@ Parameter ``executable``:
     the path to an executable, which would typically be the executable
     currently being run.)doc";
 
-static const char *GlobalDirs_engineDocs =
+// Docstring regina::python::doc::GlobalDirs_::engineDocs
+static const char *engineDocs =
 R"doc(Returns the directory in which API documentation for Regina's
 calculation engine is installed.
 
@@ -133,7 +258,8 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's calculation engine documentation directory.)doc";
 
-static const char *GlobalDirs_examples =
+// Docstring regina::python::doc::GlobalDirs_::examples
+static const char *examples =
 R"doc(Returns the directory in which example data files (including the
 smaller but human-browsable census data files) are installed.
 
@@ -152,7 +278,8 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's example and census data directory.)doc";
 
-static const char *GlobalDirs_home =
+// Docstring regina::python::doc::GlobalDirs_::home
+static const char *home =
 R"doc(Returns Regina's primary home directory on the system. This directory
 should contains subdirectories *data*, *icons*/, *examples*/ and so
 on.
@@ -169,7 +296,8 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's primary home directory.)doc";
 
-static const char *GlobalDirs_pythonModule =
+// Docstring regina::python::doc::GlobalDirs_::pythonModule
+static const char *pythonModule =
 R"doc(Returns the directory in which Regina's python module is installed, or
 the empty string if the module is installed in python's standard site-
 packages directory.
@@ -183,7 +311,8 @@ packages directory.
 Returns:
     Regina's python module directory.)doc";
 
-static const char *GlobalDirs_setDirs =
+// Docstring regina::python::doc::GlobalDirs_::setDirs
+static const char *setDirs =
 R"doc(Tells Regina explicitly where its supporting files are installed.
 
 You should call either setDirs() or deduceDirs() at runtime if Regina
@@ -220,117 +349,7 @@ Parameter ``censusDir``:
     The directory containing the large machine-encoded census data
     files; this will be returned by census().)doc";
 
-static const char *census =
-R"doc(Returns the directory containing the large machine-encoded census data
-files. These data files are not human-browsable: instead they are
-built for fast performance and small size. Users can access them by
-calling Census::lookup().
-
-On a typical GNU/Linux system, this directory might (for example) be
-``/usr/local/share/regina/data/census``.
-
-.. warning::
-    If Regina is not installed in the exact location configured at
-    compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
-    either setDirs() or deduceDirs() before calling this routine.
-
-Returns:
-    Regina's calculation engine data directory.)doc";
-
-static const char *data =
-R"doc(Returns the directory containing miscellaneous data files for internal
-use Regina's calculation engine.
-
-This is computed automatically as the ``data/`` subdirectory of
-home().
-
-On a typical GNU/Linux system, this directory might (for example) be
-``/usr/local/share/regina/data`` .
-
-.. warning::
-    If Regina is not installed in the exact location configured at
-    compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
-    either setDirs() or deduceDirs() before calling this routine.
-
-Returns:
-    Regina's calculation engine data directory.)doc";
-
-static const char *engineDocs =
-R"doc(Returns the directory in which API documentation for Regina's
-calculation engine is installed.
-
-This is computed automatically:
-
-- in most cases it will be the ``engine-docs/`` subdirectory of
-home();
-
-- in the special case where deduceDirs() was called and we are running
-from the build tree, it will be the location in the build tree where
-the API docs are built.
-
-On a typical GNU/Linux system, this directory might (for example) be
-``/usr/local/share/regina/engine-docs`` .
-
-.. warning::
-    If Regina is not installed in the exact location configured at
-    compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
-    either setDirs() or deduceDirs() before calling this routine.
-
-Returns:
-    Regina's calculation engine documentation directory.)doc";
-
-static const char *examples =
-R"doc(Returns the directory in which example data files (including the
-smaller but human-browsable census data files) are installed.
-
-This is computed automatically as the ``examples/`` subdirectory of
-home().
-
-On a typical GNU/Linux system, this directory might (for example) be
-``/usr/local/share/regina/examples`` .
-
-.. warning::
-    If Regina is not installed in the exact location configured at
-    compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
-    either setDirs() or deduceDirs() before calling this routine.
-
-Returns:
-    Regina's example and census data directory.)doc";
-
-static const char *home =
-R"doc(Returns Regina's primary home directory on the system. This directory
-should contains subdirectories *data*, *icons*/, *examples*/ and so
-on.
-
-On a typical GNU/Linux system, this directory might (for example) be
-``/usr/local/share/regina`` .
-
-.. warning::
-    If Regina is not installed in the exact location configured at
-    compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
-    either setDirs() or deduceDirs() before calling this routine.
-
-Returns:
-    Regina's primary home directory.)doc";
-
-static const char *pythonModule =
-R"doc(Returns the directory in which Regina's python module is installed, or
-the empty string if the module is installed in python's standard site-
-packages directory.
-
-.. warning::
-    If Regina is not installed in the exact location configured at
-    compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
-    either setDirs() or deduceDirs() before calling this routine.
-
-Returns:
-    Regina's python module directory.)doc";
+}
 
 } // namespace regina::python::doc
 

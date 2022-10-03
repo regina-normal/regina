@@ -11,6 +11,7 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::hasInt128
 static const char *hasInt128 =
 R"doc(Does this particular build of Regina support native 128-bit
 arithmetic?
@@ -23,6 +24,7 @@ Returns:
     ``True`` if and only if this build supports native 128-bit
     arithmetic.)doc";
 
+// Docstring regina::python::doc::politeThreads
 static const char *politeThreads =
 R"doc(A suggestion for user interfaces as to how many threads should be used
 for parallel computations.
@@ -33,6 +35,7 @@ cores available on the machine.
 Returns:
     the suggested number of threads to use.)doc";
 
+// Docstring regina::python::doc::testEngine
 static const char *testEngine =
 R"doc(Tests to see if an interface can successfully communicate with the
 underlying C++ calculation engine.
@@ -47,6 +50,7 @@ Parameter ``value``:
 Returns:
     the same integer that was passed as *value*.)doc";
 
+// Docstring regina::python::doc::versionMajor
 static const char *versionMajor =
 R"doc(Returns the major version number of this calculation engine. For
 instance, version 2.3.1 would have major version 2.
@@ -54,6 +58,7 @@ instance, version 2.3.1 would have major version 2.
 Returns:
     the major version number of this calculation engine.)doc";
 
+// Docstring regina::python::doc::versionMinor
 static const char *versionMinor =
 R"doc(Returns the minor version number of this calculation engine. For
 instance, version 2.3.1 would have minor version 3.
@@ -61,6 +66,7 @@ instance, version 2.3.1 would have minor version 3.
 Returns:
     the minor version number of this calculation engine.)doc";
 
+// Docstring regina::python::doc::versionSnapPea
 static const char *versionSnapPea =
 R"doc(An alias for versionSnapPy(), which returns the version of SnapPy
 whose underlying SnapPea kernel is built into Regina.
@@ -71,6 +77,7 @@ Returns:
     the version of SnapPy whose underlying SnapPea kernel is built
     into Regina.)doc";
 
+// Docstring regina::python::doc::versionSnapPy
 static const char *versionSnapPy =
 R"doc(Returns the version of SnapPy whose underlying SnapPea kernel is built
 into Regina.
@@ -86,6 +93,7 @@ Returns:
     the version of SnapPy whose underlying SnapPea kernel is built
     into Regina.)doc";
 
+// Docstring regina::python::doc::versionString
 static const char *versionString =
 R"doc(Returns the full version number of this calculation engine. For
 instance, version 2.3.1 would have full version ``"2.3.1"``.
@@ -93,6 +101,7 @@ instance, version 2.3.1 would have full version ``"2.3.1"``.
 Returns:
     the version of this calculation engine.)doc";
 
+// Docstring regina::python::doc::versionUsesUTF8
 static const char *versionUsesUTF8 =
 R"doc(Did the given version of Regina consistently use UTF-8 in its data
 files?

@@ -36,16 +36,20 @@
 #include "../docstrings/file/fileformat.h"
 
 void addFileFormat(pybind11::module_& m) {
-    pybind11::enum_<regina::FileFormat>(m, "FileFormat", RDOC(FileFormat))
+    RDOC_SCOPE_BEGIN(FileFormat)
+
+    pybind11::enum_<regina::FileFormat>(m, "FileFormat", rdoc_scope)
         .value("REGINA_BINARY_GEN_1", regina::REGINA_BINARY_GEN_1,
-            RDOC(FileFormat, REGINA_BINARY_GEN_1))
+            rdoc::REGINA_BINARY_GEN_1)
         .value("REGINA_XML_GEN_2", regina::REGINA_XML_GEN_2,
-            RDOC(FileFormat, REGINA_XML_GEN_2))
+            rdoc::REGINA_XML_GEN_2)
         .value("REGINA_XML_GEN_3", regina::REGINA_XML_GEN_3,
-            RDOC(FileFormat, REGINA_XML_GEN_3))
+            rdoc::REGINA_XML_GEN_3)
         .value("REGINA_CURRENT_FILE_FORMAT", regina::REGINA_CURRENT_FILE_FORMAT,
-            RDOC(FileFormat, REGINA_CURRENT_FILE_FORMAT))
+            rdoc::REGINA_CURRENT_FILE_FORMAT)
         .export_values()
         ;
+
+    RDOC_SCOPE_END
 }
 

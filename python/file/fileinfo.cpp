@@ -39,22 +39,27 @@
 using regina::FileInfo;
 
 void addFileInfo(pybind11::module_& m) {
-    auto c = pybind11::class_<FileInfo>(m, "FileInfo", RDOC(FileInfo))
-        .def(pybind11::init<const FileInfo&>(), RDOC(FileInfo, FileInfo))
-        .def("pathname", &FileInfo::pathname, RDOC(FileInfo, pathname))
-        .def("format", &FileInfo::format, RDOC(FileInfo, format))
+    RDOC_SCOPE_BEGIN(FileInfo)
+
+    auto c = pybind11::class_<FileInfo>(m, "FileInfo", rdoc_scope)
+        .def(pybind11::init<const FileInfo&>(), rdoc::FileInfo)
+        .def("pathname", &FileInfo::pathname, rdoc::pathname)
+        .def("format", &FileInfo::format, rdoc::format)
         .def("formatDescription", &FileInfo::formatDescription,
-            RDOC(FileInfo, formatDescription))
-        .def("engine", &FileInfo::engine, RDOC(FileInfo, engine))
-        .def("isCompressed", &FileInfo::isCompressed,
-            RDOC(FileInfo, isCompressed))
-        .def("isInvalid", &FileInfo::isInvalid, RDOC(FileInfo, isInvalid))
-        .def("swap", &FileInfo::swap, RDOC(FileInfo, swap))
-        .def_static("identify", &FileInfo::identify, RDOC(FileInfo, identify))
+            rdoc::formatDescription)
+        .def("engine", &FileInfo::engine, rdoc::engine)
+        .def("isCompressed", &FileInfo::isCompressed, rdoc::isCompressed)
+        .def("isInvalid", &FileInfo::isInvalid, rdoc::isInvalid)
+        .def("swap", &FileInfo::swap, rdoc::swap)
+        .def_static("identify", &FileInfo::identify, rdoc::identify)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, RDOC_EQ_NE(FileInfo));
+    regina::python::add_eq_operators(c, rdoc::operator_eq, rdoc::operator_ne);
 
-    m.def("swap", (void(*)(FileInfo&, FileInfo&))(regina::swap), RDOC(swap));
+    RDOC_SCOPE_SWITCH_MAIN
+
+    m.def("swap", (void(*)(FileInfo&, FileInfo&))(regina::swap), rdoc::swap);
+
+    RDOC_SCOPE_END
 }
 

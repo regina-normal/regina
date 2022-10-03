@@ -40,10 +40,10 @@
 
 // Docstrings that are generated once but need to be reused across many
 // source files:
-namespace regina::python::doc {
-    const char* Output_detail = ::__doc_regina_Output_detail;
-    const char* Output_str = ::__doc_regina_Output_str;
-    const char* Output_utf8 = ::__doc_regina_Output_utf8;
+namespace regina::python::doc::common {
+    const char* Output_detail = Output_::detail;
+    const char* Output_str = Output_::str;
+    const char* Output_utf8 = Output_::utf8;
 }
 
 void addGlobalArray(pybind11::module_& m);
@@ -111,15 +111,19 @@ PYBIND11_MODULE(regina, m) {
 
     // Core engine routines:
 
-    m.def("versionString", regina::versionString, RDOC(versionString));
-    m.def("versionMajor", regina::versionMajor, RDOC(versionMajor));
-    m.def("versionMinor", regina::versionMinor, RDOC(versionMinor));
-    m.def("versionUsesUTF8", regina::versionUsesUTF8, RDOC(versionUsesUTF8));
-    m.def("versionSnapPy", regina::versionSnapPy, RDOC(versionSnapPy));
-    m.def("versionSnapPea", regina::versionSnapPea, RDOC(versionSnapPea));
-    m.def("hasInt128", regina::hasInt128, RDOC(hasInt128));
-    m.def("politeThreads", regina::politeThreads, RDOC(politeThreads));
-    m.def("testEngine", regina::testEngine, RDOC(testEngine));
+    RDOC_SCOPE_BEGIN_MAIN
+
+    m.def("versionString", regina::versionString, rdoc::versionString);
+    m.def("versionMajor", regina::versionMajor, rdoc::versionMajor);
+    m.def("versionMinor", regina::versionMinor, rdoc::versionMinor);
+    m.def("versionUsesUTF8", regina::versionUsesUTF8, rdoc::versionUsesUTF8);
+    m.def("versionSnapPy", regina::versionSnapPy, rdoc::versionSnapPy);
+    m.def("versionSnapPea", regina::versionSnapPea, rdoc::versionSnapPea);
+    m.def("hasInt128", regina::hasInt128, rdoc::hasInt128);
+    m.def("politeThreads", regina::politeThreads, rdoc::politeThreads);
+    m.def("testEngine", regina::testEngine, rdoc::testEngine);
+
+    RDOC_SCOPE_END
 
     pybind11::enum_<regina::Algorithm>(m, "Algorithm")
         .value("ALG_DEFAULT", regina::ALG_DEFAULT)

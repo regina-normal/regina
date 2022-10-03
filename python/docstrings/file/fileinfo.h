@@ -11,6 +11,7 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::FileInfo
 static const char *FileInfo =
 R"doc(Stores information about a Regina data file, including file format and
 version.
@@ -29,160 +30,14 @@ Swappable requirement, though it does not implement (or need) its own
 custom swap() function. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-static const char *FileInfo_FileInfo = R"doc(Creates a new copy of the given file information.)doc";
-
-static const char *FileInfo_FileInfo_2 =
-R"doc(Moves the contents of the given file information to this new object.
-
-The object that was passed will no longer be usable.)doc";
-
-static const char *FileInfo_engine =
-R"doc(Returns the version of the calculation engine that wrote this file.
-
-Returns:
-    the engine version for this file.)doc";
-
-static const char *FileInfo_format =
-R"doc(Returns which of Regina's file formats the data file uses.
-
-In particular, this encodes which generation of XML the file uses, but
-does not encode whether the XML is compressed.
-
-Returns:
-    the file format.)doc";
-
-static const char *FileInfo_formatDescription =
-R"doc(Returns a human-readable description of the file format used by the
-data file.
-
-Like format(), this indicates which generation of XML the file uses,
-but not whether the XML is compressed.
-
-Returns:
-    a description of the file format.)doc";
-
-static const char *FileInfo_identify =
-R"doc(Return information about the given Regina data file.
-
-Internationalisation:
-    This routine makes no assumptions about the i18n "character
-    encoding" used in the given path *name*, and simply passes it
-    through unchanged to low-level C/C++ file I/O routines. If a
-    FileInfo structure is returned, its pathname() routine will use
-    the same encoding that is passed here.
-
-Parameter ``idPathname``:
-    the pathname of the data file to be examined.
-
-Returns:
-    a FileInfo structure containing information about the given file,
-    or no value if the file type could not be identified.)doc";
-
-static const char *FileInfo_isCompressed =
-R"doc(Returns whether this file is stored in compressed format. Currently
-this option only applies to XML data files.
-
-Returns:
-    ``True`` if this file is compressed or ``False`` otherwise.)doc";
-
-static const char *FileInfo_isInvalid =
-R"doc(Returns whether the file metadata could not be read.
-
-Returns:
-    ``True`` if the metadata could not be read, ``False`` otherwise.)doc";
-
-static const char *FileInfo_operator_assign = R"doc(Sets this to be a copy of the given file information.)doc";
-
-static const char *FileInfo_operator_assign_2 =
-R"doc(Moves the contents of the given file information to this new object.
-
-The object that was passed will no longer be usable.
-
-Returns:
-    a reference to this object.)doc";
-
-static const char *FileInfo_operator_eq =
-R"doc(Determines whether this and the given file information describe the
-same format and version.
-
-For two FileInfo objects to compare as equal, they must have the same
-file formats, use the same version of the calculation engine, and use
-the same compression type. The pathnames of the files being described
-are ignored.
-
-It is safe to compare FileInfo objects even if one or both is invalid.
-Two invalid FileInfo objects will compare as equal.
-
-Parameter ``other``:
-    the file information to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given file information
-    describe the same format and version, as described above.)doc";
-
-static const char *FileInfo_operator_ne =
-R"doc(Determines whether this and the given file information do not describe
-the same format and version.
-
-For two FileInfo objects to compare as equal, they must have the same
-file formats, use the same version of the calculation engine, and use
-the same compression type. The pathnames of the files being described
-are ignored.
-
-It is safe to compare FileInfo objects even if one or both is invalid.
-Two invalid FileInfo objects will compare as equal.
-
-Parameter ``other``:
-    the file information to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given file information do not
-    describe the same format and version, as described above.)doc";
-
-static const char *FileInfo_pathname =
-R"doc(Returns the pathname of the data file being described.
-
-Internationalisation:
-    The i18n "character encoding" used in the pathname will be
-    whatever was originally passed to identify(). This might or might
-    not be UTF-8, since it needs to be understood by the low-level
-    C/C++ file I/O routines.
-
-Returns:
-    the pathname.)doc";
-
-static const char *FileInfo_swap =
-R"doc(Swaps the contents of this and the given file information.
-
-Parameter ``other``:
-    the object whose contents should be swapped with this.)doc";
-
-static const char *FileInfo_writeTextLong =
-R"doc(Writes a detailed text representation of this object to the given
-output stream.
-
-Python:
-    Not present; use detail() instead.
-
-Parameter ``out``:
-    the output stream to which to write.)doc";
-
-static const char *FileInfo_writeTextShort =
-R"doc(Writes a short text representation of this object to the given output
-stream.
-
-Python:
-    Not present; use str() instead.
-
-Parameter ``out``:
-    the output stream to which to write.)doc";
-
+// Docstring regina::python::doc::engine
 static const char *engine =
 R"doc(Returns the version of the calculation engine that wrote this file.
 
 Returns:
     the engine version for this file.)doc";
 
+// Docstring regina::python::doc::format
 static const char *format =
 R"doc(Returns which of Regina's file formats the data file uses.
 
@@ -192,6 +47,7 @@ does not encode whether the XML is compressed.
 Returns:
     the file format.)doc";
 
+// Docstring regina::python::doc::formatDescription
 static const char *formatDescription =
 R"doc(Returns a human-readable description of the file format used by the
 data file.
@@ -202,6 +58,7 @@ but not whether the XML is compressed.
 Returns:
     a description of the file format.)doc";
 
+// Docstring regina::python::doc::isCompressed
 static const char *isCompressed =
 R"doc(Returns whether this file is stored in compressed format. Currently
 this option only applies to XML data files.
@@ -209,12 +66,14 @@ this option only applies to XML data files.
 Returns:
     ``True`` if this file is compressed or ``False`` otherwise.)doc";
 
+// Docstring regina::python::doc::isInvalid
 static const char *isInvalid =
 R"doc(Returns whether the file metadata could not be read.
 
 Returns:
     ``True`` if the metadata could not be read, ``False`` otherwise.)doc";
 
+// Docstring regina::python::doc::operator_eq
 static const char *operator_eq =
 R"doc(Determines whether this and the given file information describe the
 same format and version.
@@ -234,6 +93,7 @@ Returns:
     ``True`` if and only if this and the given file information
     describe the same format and version, as described above.)doc";
 
+// Docstring regina::python::doc::operator_ne
 static const char *operator_ne =
 R"doc(Determines whether this and the given file information do not describe
 the same format and version.
@@ -253,6 +113,7 @@ Returns:
     ``True`` if and only if this and the given file information do not
     describe the same format and version, as described above.)doc";
 
+// Docstring regina::python::doc::pathname
 static const char *pathname =
 R"doc(Returns the pathname of the data file being described.
 
@@ -265,6 +126,7 @@ Internationalisation:
 Returns:
     the pathname.)doc";
 
+// Docstring regina::python::doc::swap
 static const char *swap =
 R"doc(Swaps the contents of the two given file information objects.
 
@@ -277,12 +139,14 @@ Parameter ``a``:
 Parameter ``b``:
     the object whose contents should be swapped with *a*.)doc";
 
+// Docstring regina::python::doc::swap_2
 static const char *swap_2 =
 R"doc(Swaps the contents of this and the given file information.
 
 Parameter ``other``:
     the object whose contents should be swapped with this.)doc";
 
+// Docstring regina::python::doc::swap_3
 static const char *swap_3 =
 R"doc(Swaps the contents of the two given file information objects.
 
@@ -294,6 +158,174 @@ Parameter ``a``:
 
 Parameter ``b``:
     the object whose contents should be swapped with *a*.)doc";
+
+namespace FileInfo_ {
+
+// Docstring regina::python::doc::FileInfo_::FileInfo
+static const char *FileInfo = R"doc(Creates a new copy of the given file information.)doc";
+
+// Docstring regina::python::doc::FileInfo_::FileInfo_2
+static const char *FileInfo_2 =
+R"doc(Moves the contents of the given file information to this new object.
+
+The object that was passed will no longer be usable.)doc";
+
+// Docstring regina::python::doc::FileInfo_::engine
+static const char *engine =
+R"doc(Returns the version of the calculation engine that wrote this file.
+
+Returns:
+    the engine version for this file.)doc";
+
+// Docstring regina::python::doc::FileInfo_::format
+static const char *format =
+R"doc(Returns which of Regina's file formats the data file uses.
+
+In particular, this encodes which generation of XML the file uses, but
+does not encode whether the XML is compressed.
+
+Returns:
+    the file format.)doc";
+
+// Docstring regina::python::doc::FileInfo_::formatDescription
+static const char *formatDescription =
+R"doc(Returns a human-readable description of the file format used by the
+data file.
+
+Like format(), this indicates which generation of XML the file uses,
+but not whether the XML is compressed.
+
+Returns:
+    a description of the file format.)doc";
+
+// Docstring regina::python::doc::FileInfo_::identify
+static const char *identify =
+R"doc(Return information about the given Regina data file.
+
+Internationalisation:
+    This routine makes no assumptions about the i18n "character
+    encoding" used in the given path *name*, and simply passes it
+    through unchanged to low-level C/C++ file I/O routines. If a
+    FileInfo structure is returned, its pathname() routine will use
+    the same encoding that is passed here.
+
+Parameter ``idPathname``:
+    the pathname of the data file to be examined.
+
+Returns:
+    a FileInfo structure containing information about the given file,
+    or no value if the file type could not be identified.)doc";
+
+// Docstring regina::python::doc::FileInfo_::isCompressed
+static const char *isCompressed =
+R"doc(Returns whether this file is stored in compressed format. Currently
+this option only applies to XML data files.
+
+Returns:
+    ``True`` if this file is compressed or ``False`` otherwise.)doc";
+
+// Docstring regina::python::doc::FileInfo_::isInvalid
+static const char *isInvalid =
+R"doc(Returns whether the file metadata could not be read.
+
+Returns:
+    ``True`` if the metadata could not be read, ``False`` otherwise.)doc";
+
+// Docstring regina::python::doc::FileInfo_::operator_assign
+static const char *operator_assign = R"doc(Sets this to be a copy of the given file information.)doc";
+
+// Docstring regina::python::doc::FileInfo_::operator_assign_2
+static const char *operator_assign_2 =
+R"doc(Moves the contents of the given file information to this new object.
+
+The object that was passed will no longer be usable.
+
+Returns:
+    a reference to this object.)doc";
+
+// Docstring regina::python::doc::FileInfo_::operator_eq
+static const char *operator_eq =
+R"doc(Determines whether this and the given file information describe the
+same format and version.
+
+For two FileInfo objects to compare as equal, they must have the same
+file formats, use the same version of the calculation engine, and use
+the same compression type. The pathnames of the files being described
+are ignored.
+
+It is safe to compare FileInfo objects even if one or both is invalid.
+Two invalid FileInfo objects will compare as equal.
+
+Parameter ``other``:
+    the file information to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given file information
+    describe the same format and version, as described above.)doc";
+
+// Docstring regina::python::doc::FileInfo_::operator_ne
+static const char *operator_ne =
+R"doc(Determines whether this and the given file information do not describe
+the same format and version.
+
+For two FileInfo objects to compare as equal, they must have the same
+file formats, use the same version of the calculation engine, and use
+the same compression type. The pathnames of the files being described
+are ignored.
+
+It is safe to compare FileInfo objects even if one or both is invalid.
+Two invalid FileInfo objects will compare as equal.
+
+Parameter ``other``:
+    the file information to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given file information do not
+    describe the same format and version, as described above.)doc";
+
+// Docstring regina::python::doc::FileInfo_::pathname
+static const char *pathname =
+R"doc(Returns the pathname of the data file being described.
+
+Internationalisation:
+    The i18n "character encoding" used in the pathname will be
+    whatever was originally passed to identify(). This might or might
+    not be UTF-8, since it needs to be understood by the low-level
+    C/C++ file I/O routines.
+
+Returns:
+    the pathname.)doc";
+
+// Docstring regina::python::doc::FileInfo_::swap
+static const char *swap =
+R"doc(Swaps the contents of this and the given file information.
+
+Parameter ``other``:
+    the object whose contents should be swapped with this.)doc";
+
+// Docstring regina::python::doc::FileInfo_::writeTextLong
+static const char *writeTextLong =
+R"doc(Writes a detailed text representation of this object to the given
+output stream.
+
+Python:
+    Not present; use detail() instead.
+
+Parameter ``out``:
+    the output stream to which to write.)doc";
+
+// Docstring regina::python::doc::FileInfo_::writeTextShort
+static const char *writeTextShort =
+R"doc(Writes a short text representation of this object to the given output
+stream.
+
+Python:
+    Not present; use str() instead.
+
+Parameter ``out``:
+    the output stream to which to write.)doc";
+
+}
 
 } // namespace regina::python::doc
 

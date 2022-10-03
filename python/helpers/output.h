@@ -106,9 +106,12 @@ void add_output(pybind11::class_<C, options...>& c,
         typename regina::OutputBase<C>::type>;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
-    c.def("str", OutputFunctionType(&BaseType::str), doc::Output_str);
-    c.def("utf8", OutputFunctionType(&BaseType::utf8), doc::Output_utf8);
-    c.def("detail", OutputFunctionType(&BaseType::detail), doc::Output_detail);
+    c.def("str", OutputFunctionType(&BaseType::str),
+        doc::common::Output_str);
+    c.def("utf8", OutputFunctionType(&BaseType::utf8),
+        doc::common::Output_utf8);
+    c.def("detail", OutputFunctionType(&BaseType::detail),
+        doc::common::Output_detail);
 
     c.def("__str__", OutputFunctionType(&BaseType::str));
 

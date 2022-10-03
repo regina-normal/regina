@@ -34,30 +34,43 @@
  *  \brief Assists with Python docstrings that are generated from the C++ docs.
  */
 
-namespace regina::python::doc {
-
 // Docstrings that are generated once but used across many source files:
-extern const char* Output_detail;
-extern const char* Output_str;
-extern const char* Output_utf8;
+namespace regina::python::doc::common {
+    extern const char* Output_detail;
+    extern const char* Output_str;
+    extern const char* Output_utf8;
+}
 
-// Macros provided from pybind11_mkdoc to access static docstring symbols:
-#define __EXPAND(x)                                      x
-#define __COUNT(_1, _2, _3, _4, _5, _6, _7, COUNT, ...)  COUNT
-#define __VA_SIZE(...)                                   __EXPAND(__COUNT(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1))
-#define __CAT1(a, b)                                     a ## b
-#define __CAT2(a, b)                                     __CAT1(a, b)
-#define __DOC1(n1)                                       __doc_##n1
-#define __DOC2(n1, n2)                                   __doc_##n1##_##n2
-#define __DOC3(n1, n2, n3)                               __doc_##n1##_##n2##_##n3
-#define __DOC4(n1, n2, n3, n4)                           __doc_##n1##_##n2##_##n3##_##n4
-#define __DOC5(n1, n2, n3, n4, n5)                       __doc_##n1##_##n2##_##n3##_##n4##_##n5
-#define __DOC6(n1, n2, n3, n4, n5, n6)                   __doc_##n1##_##n2##_##n3##_##n4##_##n5##_##n6
-#define __DOC7(n1, n2, n3, n4, n5, n6, n7)               __doc_##n1##_##n2##_##n3##_##n4##_##n5##_##n6##_##n7
-#define DOC(...)                                         __EXPAND(__EXPAND(__CAT2(__DOC, __VA_SIZE(__VA_ARGS__)))(__VA_ARGS__))
+/**
+ * To access docstrings, python binding code should be structured as:
+ *
+ * RDOC_SCOPE_BEGIN...
+ * ...
+ * RDOC_SCOPE_SWITCH...
+ * ...
+ * RDOC_SCOPE_SWITCH... (etc.)
+ * ...
+ * RDOC_SCOPE_END
+ *
+ * Each begin/switch will set the namespace alias rdoc, either to
+ * regina::python::doc if you are using ..._MAIN, or to
+ * regina::python::doc::s_ if you are using ..._SCOPE(s).
+ *
+ * You can then access each individual docstring as rdoc::name.
+ *
+ * If you are within a ..._SCOPE(s) block and s is the name of a
+ * class/struct/etc., then rdoc refers to the namespace containing the
+ * \e members of s (which uses a trailing underscore, as noted above),
+ * and rdoc_scope is an alias for the docstring for s itself (which has
+ * no trailing underscore).
+ *
+ * Each BEGIN ... SWITCH or BEGIN ... END block will be contained within
+ * curly braces (in particular, local variables will go out of scope at the
+ * end of the block).
+ */
+#define RDOC_SCOPE_BEGIN(scope)  { const char* rdoc_scope = regina::python::doc::scope; namespace rdoc = regina::python::doc::scope ## _;
+#define RDOC_SCOPE_BEGIN_MAIN    { namespace rdoc = regina::python::doc;
+#define RDOC_SCOPE_SWITCH(scope) } RDOC_SCOPE_BEGIN(scope)
+#define RDOC_SCOPE_SWITCH_MAIN   } RDOC_SCOPE_BEGIN_MAIN
+#define RDOC_SCOPE_END           }
 
-// Macros specific to regina that help keep the source files cleaner:
-#define RDOC(...) DOC(regina, __VA_ARGS__)
-#define RDOC_EQ_NE(...) RDOC(__VA_ARGS__, operator_eq), RDOC(__VA_ARGS__, operator_ne)
-
-} // namespace regina::python::doc
