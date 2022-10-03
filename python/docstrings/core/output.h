@@ -23,7 +23,75 @@
 #endif
 
 
-static const char *__doc_regina_Output = R"doc()doc";
+static const char *__doc_regina_Output =
+R"doc(A common base class for objects that write human-readable text output.
+This class ensures that text output routines have consistent names and
+behaviours across Regina's entire API.
+
+Three types of output are supported:
+
+- *short* output, which fits on a single line and uses plain ASCII
+characters wherever possible; - *utf8* output, which is like short
+output but supports the much richer unicode character set; and -
+*detailed* output, which may be arbitrarily long.
+
+Any class that provides text output should ultimately inherit from
+this base class. Your derived class must provide two functions:
+
+- ``writeTextShort(std::ostream& out, bool utf8 = false)``, which
+writes either the short output or the utf8 output to the given output
+stream, according to whether *utf8* is ``False`` or ``True``
+respectively;
+
+- ``writeTextLong(std::ostream& out)``, which writes the detailed
+output to the given output stream.
+
+The boolean *utf8* argument to writeTextShort() must be optional.
+Moreover, if your class does not benefit from unicode characters
+(i.e., the short and utf8 outputs are identical), then you may omit
+the *utf8* argument entirely; in this case, you must set the template
+argument *supportsUtf8* as ``False``. Both *writeTextShort*() and
+*writeTextLong*() may take additional arguments, as long as they are
+optional.
+
+The documentation for str(), utf8() and detail() gives guidelines as
+to how the various types of output should be formatted.
+
+In return, this class will provide the functions str(), utf8() and
+detail(), which return the short, utf8 and detailed outputs
+respectively in std::string format. It will also provide a global
+operator << that allows you to write objects of type *T* to an
+arbitrary output stream.
+
+If your class is simple and has no need for detailed output then it
+may derive from ShortOutput instead, which provides a default
+implementation for *writeTextLong*().
+
+Template parameter ``T``:
+    the class that provides the implementations of *writeTextShort*()
+    and *writeTextLong*(). Typically this will be your own class
+    (i.e., your class *C* derives from Output<C>). However, this may
+    be deeper in the class hierarchy.
+
+Template parameter ``supportsUtf8``:
+    ``True`` if the class *T* can make use of the richer unicode
+    character set, or ``False`` if the short and utf8 outputs are
+    identical. If this is ``False`` then T::writeTextShort() will only
+    ever be called in the form ``writeTextShort(std::ostream&)``, and
+    you may for simplicity omit the second boolean *utf8* argument.
+    This Output base class will still provide a utf8() function, but
+    it will return the same output as short().
+
+.. note::
+    Every object of this class that is ever instantiated *must* be
+    derived from the class *T*. In other words, end users can
+    construct objects of type *T* (which derives from Output<T>), but
+    they cannot construct objects of the parent class Output<T>
+    itself.
+
+Python:
+    Not present, but the output routines str(), utf8() and detail()
+    will be provided directly through the various subclasses.)doc";
 
 static const char *__doc_regina_OutputBase =
 R"doc(Provides a type alias to help identify where in the class hierarchy
@@ -45,6 +113,47 @@ implemented in the class *T* itself.
 
 Precondition:
     *T* is a class or struct type.)doc";
+
+static const char *__doc_regina_Output_detail =
+R"doc(Returns a detailed text representation of this object. This text may
+span many lines, and should provide the user with all the information
+they could want. It should be human-readable, should not contain
+extremely long lines (which cause problems for users reading the
+output in a terminal), and should end with a final newline. There are
+no restrictions on the underlying character set.
+
+Returns:
+    a detailed text representation of this object.)doc";
+
+static const char *__doc_regina_Output_str =
+R"doc(Returns a short text representation of this object. This text should
+be human-readable, should use plain ASCII characters where possible,
+and should not contain any newlines.
+
+Within these limits, this short text ouptut should be as information-
+rich as possible, since in most cases this forms the basis for the
+Python ``__str__()`` and ``__repr__()`` functions.
+
+Python:
+    The Python "stringification" function ``__str__()`` will use
+    precisely this function, and for most classes the Python
+    ``__repr__()`` function will incorporate this into its output.
+
+Returns:
+    a short text representation of this object.)doc";
+
+static const char *__doc_regina_Output_utf8 =
+R"doc(Returns a short text representation of this object using unicode
+characters. Like str(), this text should be human-readable, should not
+contain any newlines, and (within these constraints) should be as
+information-rich as is reasonable.
+
+Unlike str(), this function may use unicode characters to make the
+output more pleasant to read. The string that is returned will be
+encoded in UTF-8.
+
+Returns:
+    a short text representation of this object.)doc";
 
 static const char *__doc_regina_ShortOutput =
 R"doc(A common base class for objects that provide short text output only.
@@ -94,9 +203,24 @@ Python:
 Parameter ``out``:
     the output stream to which to write.)doc";
 
-static const char *__doc_regina_operator_lshift = R"doc()doc";
+static const char *__doc_regina_operator_lshift =
+R"doc(Writes the short text representation of the given object to the given
+output stream.
+
+This is equivalent to calling ``out << object.str()``.
+
+Parameter ``out``:
+    the output stream to which to write.
+
+Parameter ``object``:
+    the object to write.
+
+Returns:
+    a reference to the given output stream.)doc";
 
 static const char *__doc_regina_operator_lshift_2 = R"doc()doc";
+
+static const char *__doc_regina_operator_lshift_3 = R"doc()doc";
 
 static const char *__doc_regina_writeTextLong =
 R"doc(A default implementation for detailed output. This routine simply
