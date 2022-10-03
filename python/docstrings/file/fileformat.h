@@ -8,8 +8,10 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
+namespace regina::python::doc {
 
-static const char *__doc_regina_FileFormat =
+
+static const char *FileFormat =
 R"doc(Represents each generation of Regina's file formats.
 
 These constants are intended to capture "generational changes" to the
@@ -30,7 +32,7 @@ some form of explicit conversion.
 Of course, Regina can still read and write some older generation
 formats; these abilities are indicated alongside the constants below.)doc";
 
-static const char *__doc_regina_FileFormat_REGINA_BINARY_GEN_1 =
+static const char *FileFormat_REGINA_BINARY_GEN_1 =
 R"doc(Indicates the old first-generation binary format used by Regina 2.4
 and earlier. This format was discontinued in mid-2002, when Regina
 adopted an XML-based format instead.
@@ -38,12 +40,12 @@ adopted an XML-based format instead.
 Regina no longer supports this (ancient) binary format at all: since
 version 4.94 in late 2013, Regina cannot read or write this format.)doc";
 
-static const char *__doc_regina_FileFormat_REGINA_CURRENT_FILE_FORMAT =
+static const char *FileFormat_REGINA_CURRENT_FILE_FORMAT =
 R"doc(An alias for whichever file format is current. The numerical value of
 this constant may change in future releases of Regina, if/when new
 generational changes to the file format occur.)doc";
 
-static const char *__doc_regina_FileFormat_REGINA_XML_GEN_2 =
+static const char *FileFormat_REGINA_XML_GEN_2 =
 R"doc(Indicates the second-generation file format used from Regina 3.0
 through to Regina 6.0.1 inclusive. This was the first file format
 based on XML. The root XML element is ``reginadata``.
@@ -51,13 +53,15 @@ based on XML. The root XML element is ``reginadata``.
 Regina can still transparently read second-generation data files, and
 can write them when explicitly asked.)doc";
 
-static const char *__doc_regina_FileFormat_REGINA_XML_GEN_3 =
+static const char *FileFormat_REGINA_XML_GEN_3 =
 R"doc(Indicates the third-generation file format used from Regina 7.0
 onwards. This format is both more streamlined and more human-readable.
 The root XML element is ``regina``.
 
 This is the current file format, and is used by default when saving
 data files.)doc";
+
+} // namespace regina::python::doc
 
 #if defined(__GNUG__)
 #pragma GCC diagnostic pop

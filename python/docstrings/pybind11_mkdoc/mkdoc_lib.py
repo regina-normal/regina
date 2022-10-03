@@ -91,7 +91,11 @@ def sanitize_name(name):
     name = re.sub('<.*>', '', name)
     name = ''.join([ch if ch.isalnum() else '_' for ch in name])
     name = re.sub('_$', '', re.sub('_+', '_', name))
-    return '__doc_' + name
+    # Remove the regina_ prefix, which everything will have.
+    # We are using the regina:python::doc namespace to isolate these
+    # symbols instead.
+    name = re.sub('^regina_', '', name)
+    return name
 
 
 def process_comment(comment):
@@ -419,6 +423,8 @@ def write_header(comments, out_file=sys.stdout):
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
+
+namespace regina::python::doc {
 ''', file=out_file)
 
 
@@ -435,6 +441,8 @@ def write_header(comments, out_file=sys.stdout):
               (name, '\n' if '\n' in comment else ' ', comment), file=out_file)
 
     print('''
+} // namespace regina::python::doc
+
 #if defined(__GNUG__)
 #pragma GCC diagnostic pop
 #endif

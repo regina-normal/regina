@@ -8,8 +8,10 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
+namespace regina::python::doc {
 
-static const char *__doc_regina_Output =
+
+static const char *Output =
 R"doc(A common base class for objects that write human-readable text output.
 This class ensures that text output routines have consistent names and
 behaviours across Regina's entire API.
@@ -79,7 +81,7 @@ Python:
     Not present, but the output routines str(), utf8() and detail()
     will be provided directly through the various subclasses.)doc";
 
-static const char *__doc_regina_OutputBase =
+static const char *OutputBase =
 R"doc(Provides a type alias to help identify where in the class hierarchy
 the output functions T::str() and T::detail() are implemented.
 
@@ -100,7 +102,7 @@ implemented in the class *T* itself.
 Precondition:
     *T* is a class or struct type.)doc";
 
-static const char *__doc_regina_Output_detail =
+static const char *Output_detail =
 R"doc(Returns a detailed text representation of this object. This text may
 span many lines, and should provide the user with all the information
 they could want. It should be human-readable, should not contain
@@ -111,7 +113,7 @@ no restrictions on the underlying character set.
 Returns:
     a detailed text representation of this object.)doc";
 
-static const char *__doc_regina_Output_str =
+static const char *Output_str =
 R"doc(Returns a short text representation of this object. This text should
 be human-readable, should use plain ASCII characters where possible,
 and should not contain any newlines.
@@ -128,7 +130,7 @@ Python:
 Returns:
     a short text representation of this object.)doc";
 
-static const char *__doc_regina_Output_utf8 =
+static const char *Output_utf8 =
 R"doc(Returns a short text representation of this object using unicode
 characters. Like str(), this text should be human-readable, should not
 contain any newlines, and (within these constraints) should be as
@@ -141,7 +143,7 @@ encoded in UTF-8.
 Returns:
     a short text representation of this object.)doc";
 
-static const char *__doc_regina_ShortOutput =
+static const char *ShortOutput =
 R"doc(A common base class for objects that provide short text output only.
 
 All classes that provide human-readable text output should ultimately
@@ -178,7 +180,7 @@ Python:
     Not present, but the output routines str(), utf8() and detail()
     will be provided directly through the various subclasses.)doc";
 
-static const char *__doc_regina_ShortOutput_writeTextLong =
+static const char *ShortOutput_writeTextLong =
 R"doc(A default implementation for detailed output. This routine simply
 calls *T::writeTextShort*() and appends a final newline.
 
@@ -189,7 +191,7 @@ Python:
 Parameter ``out``:
     the output stream to which to write.)doc";
 
-static const char *__doc_regina_writeTextLong =
+static const char *writeTextLong =
 R"doc(A default implementation for detailed output. This routine simply
 calls *T::writeTextShort*() and appends a final newline.
 
@@ -199,6 +201,8 @@ Python:
 
 Parameter ``out``:
     the output stream to which to write.)doc";
+
+} // namespace regina::python::doc
 
 #if defined(__GNUG__)
 #pragma GCC diagnostic pop

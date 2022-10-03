@@ -8,8 +8,10 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
+namespace regina::python::doc {
 
-static const char *__doc_regina_FileInfo =
+
+static const char *FileInfo =
 R"doc(Stores information about a Regina data file, including file format and
 version.
 
@@ -27,20 +29,20 @@ Swappable requirement, though it does not implement (or need) its own
 custom swap() function. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-static const char *__doc_regina_FileInfo_FileInfo = R"doc(Creates a new copy of the given file information.)doc";
+static const char *FileInfo_FileInfo = R"doc(Creates a new copy of the given file information.)doc";
 
-static const char *__doc_regina_FileInfo_FileInfo_2 =
+static const char *FileInfo_FileInfo_2 =
 R"doc(Moves the contents of the given file information to this new object.
 
 The object that was passed will no longer be usable.)doc";
 
-static const char *__doc_regina_FileInfo_engine =
+static const char *FileInfo_engine =
 R"doc(Returns the version of the calculation engine that wrote this file.
 
 Returns:
     the engine version for this file.)doc";
 
-static const char *__doc_regina_FileInfo_format =
+static const char *FileInfo_format =
 R"doc(Returns which of Regina's file formats the data file uses.
 
 In particular, this encodes which generation of XML the file uses, but
@@ -49,7 +51,7 @@ does not encode whether the XML is compressed.
 Returns:
     the file format.)doc";
 
-static const char *__doc_regina_FileInfo_formatDescription =
+static const char *FileInfo_formatDescription =
 R"doc(Returns a human-readable description of the file format used by the
 data file.
 
@@ -59,7 +61,7 @@ but not whether the XML is compressed.
 Returns:
     a description of the file format.)doc";
 
-static const char *__doc_regina_FileInfo_identify =
+static const char *FileInfo_identify =
 R"doc(Return information about the given Regina data file.
 
 Internationalisation:
@@ -76,22 +78,22 @@ Returns:
     a FileInfo structure containing information about the given file,
     or no value if the file type could not be identified.)doc";
 
-static const char *__doc_regina_FileInfo_isCompressed =
+static const char *FileInfo_isCompressed =
 R"doc(Returns whether this file is stored in compressed format. Currently
 this option only applies to XML data files.
 
 Returns:
     ``True`` if this file is compressed or ``False`` otherwise.)doc";
 
-static const char *__doc_regina_FileInfo_isInvalid =
+static const char *FileInfo_isInvalid =
 R"doc(Returns whether the file metadata could not be read.
 
 Returns:
     ``True`` if the metadata could not be read, ``False`` otherwise.)doc";
 
-static const char *__doc_regina_FileInfo_operator_assign = R"doc(Sets this to be a copy of the given file information.)doc";
+static const char *FileInfo_operator_assign = R"doc(Sets this to be a copy of the given file information.)doc";
 
-static const char *__doc_regina_FileInfo_operator_assign_2 =
+static const char *FileInfo_operator_assign_2 =
 R"doc(Moves the contents of the given file information to this new object.
 
 The object that was passed will no longer be usable.
@@ -99,7 +101,7 @@ The object that was passed will no longer be usable.
 Returns:
     a reference to this object.)doc";
 
-static const char *__doc_regina_FileInfo_operator_eq =
+static const char *FileInfo_operator_eq =
 R"doc(Determines whether this and the given file information describe the
 same format and version.
 
@@ -118,7 +120,7 @@ Returns:
     ``True`` if and only if this and the given file information
     describe the same format and version, as described above.)doc";
 
-static const char *__doc_regina_FileInfo_operator_ne =
+static const char *FileInfo_operator_ne =
 R"doc(Determines whether this and the given file information do not describe
 the same format and version.
 
@@ -137,7 +139,7 @@ Returns:
     ``True`` if and only if this and the given file information do not
     describe the same format and version, as described above.)doc";
 
-static const char *__doc_regina_FileInfo_pathname =
+static const char *FileInfo_pathname =
 R"doc(Returns the pathname of the data file being described.
 
 Internationalisation:
@@ -149,13 +151,13 @@ Internationalisation:
 Returns:
     the pathname.)doc";
 
-static const char *__doc_regina_FileInfo_swap =
+static const char *FileInfo_swap =
 R"doc(Swaps the contents of this and the given file information.
 
 Parameter ``other``:
     the object whose contents should be swapped with this.)doc";
 
-static const char *__doc_regina_FileInfo_writeTextLong =
+static const char *FileInfo_writeTextLong =
 R"doc(Writes a detailed text representation of this object to the given
 output stream.
 
@@ -165,7 +167,7 @@ Python:
 Parameter ``out``:
     the output stream to which to write.)doc";
 
-static const char *__doc_regina_FileInfo_writeTextShort =
+static const char *FileInfo_writeTextShort =
 R"doc(Writes a short text representation of this object to the given output
 stream.
 
@@ -175,13 +177,13 @@ Python:
 Parameter ``out``:
     the output stream to which to write.)doc";
 
-static const char *__doc_regina_engine =
+static const char *engine =
 R"doc(Returns the version of the calculation engine that wrote this file.
 
 Returns:
     the engine version for this file.)doc";
 
-static const char *__doc_regina_format =
+static const char *format =
 R"doc(Returns which of Regina's file formats the data file uses.
 
 In particular, this encodes which generation of XML the file uses, but
@@ -190,7 +192,7 @@ does not encode whether the XML is compressed.
 Returns:
     the file format.)doc";
 
-static const char *__doc_regina_formatDescription =
+static const char *formatDescription =
 R"doc(Returns a human-readable description of the file format used by the
 data file.
 
@@ -200,20 +202,20 @@ but not whether the XML is compressed.
 Returns:
     a description of the file format.)doc";
 
-static const char *__doc_regina_isCompressed =
+static const char *isCompressed =
 R"doc(Returns whether this file is stored in compressed format. Currently
 this option only applies to XML data files.
 
 Returns:
     ``True`` if this file is compressed or ``False`` otherwise.)doc";
 
-static const char *__doc_regina_isInvalid =
+static const char *isInvalid =
 R"doc(Returns whether the file metadata could not be read.
 
 Returns:
     ``True`` if the metadata could not be read, ``False`` otherwise.)doc";
 
-static const char *__doc_regina_operator_eq =
+static const char *operator_eq =
 R"doc(Determines whether this and the given file information describe the
 same format and version.
 
@@ -232,7 +234,7 @@ Returns:
     ``True`` if and only if this and the given file information
     describe the same format and version, as described above.)doc";
 
-static const char *__doc_regina_operator_ne =
+static const char *operator_ne =
 R"doc(Determines whether this and the given file information do not describe
 the same format and version.
 
@@ -251,7 +253,7 @@ Returns:
     ``True`` if and only if this and the given file information do not
     describe the same format and version, as described above.)doc";
 
-static const char *__doc_regina_pathname =
+static const char *pathname =
 R"doc(Returns the pathname of the data file being described.
 
 Internationalisation:
@@ -263,7 +265,7 @@ Internationalisation:
 Returns:
     the pathname.)doc";
 
-static const char *__doc_regina_swap =
+static const char *swap =
 R"doc(Swaps the contents of the two given file information objects.
 
 This global routine simply calls FileInfo::swap(); it is provided so
@@ -275,13 +277,13 @@ Parameter ``a``:
 Parameter ``b``:
     the object whose contents should be swapped with *a*.)doc";
 
-static const char *__doc_regina_swap_2 =
+static const char *swap_2 =
 R"doc(Swaps the contents of this and the given file information.
 
 Parameter ``other``:
     the object whose contents should be swapped with this.)doc";
 
-static const char *__doc_regina_swap_3 =
+static const char *swap_3 =
 R"doc(Swaps the contents of the two given file information objects.
 
 This global routine simply calls FileInfo::swap(); it is provided so
@@ -292,6 +294,8 @@ Parameter ``a``:
 
 Parameter ``b``:
     the object whose contents should be swapped with *a*.)doc";
+
+} // namespace regina::python::doc
 
 #if defined(__GNUG__)
 #pragma GCC diagnostic pop

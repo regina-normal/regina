@@ -8,8 +8,10 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 
+namespace regina::python::doc {
 
-static const char *__doc_regina_GlobalDirs =
+
+static const char *GlobalDirs =
 R"doc(Provides global routines that return directories in which various
 components of Regina are installed on the system.
 
@@ -25,7 +27,7 @@ or deduceDirs() when your application starts. Otherwise the
 directories that GlobalDirs returns might be incorrect, and might not
 even exist.)doc";
 
-static const char *__doc_regina_GlobalDirs_census =
+static const char *GlobalDirs_census =
 R"doc(Returns the directory containing the large machine-encoded census data
 files. These data files are not human-browsable: instead they are
 built for fast performance and small size. Users can access them by
@@ -43,7 +45,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's calculation engine data directory.)doc";
 
-static const char *__doc_regina_GlobalDirs_data =
+static const char *GlobalDirs_data =
 R"doc(Returns the directory containing miscellaneous data files for internal
 use Regina's calculation engine.
 
@@ -62,7 +64,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's calculation engine data directory.)doc";
 
-static const char *__doc_regina_GlobalDirs_deduceDirs =
+static const char *GlobalDirs_deduceDirs =
 R"doc(Ask Regina to deduce where its supporting files are installed.
 
 You should call either setDirs() or deduceDirs() at runtime if Regina
@@ -106,7 +108,7 @@ Parameter ``executable``:
     the path to an executable, which would typically be the executable
     currently being run.)doc";
 
-static const char *__doc_regina_GlobalDirs_engineDocs =
+static const char *GlobalDirs_engineDocs =
 R"doc(Returns the directory in which API documentation for Regina's
 calculation engine is installed.
 
@@ -131,7 +133,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's calculation engine documentation directory.)doc";
 
-static const char *__doc_regina_GlobalDirs_examples =
+static const char *GlobalDirs_examples =
 R"doc(Returns the directory in which example data files (including the
 smaller but human-browsable census data files) are installed.
 
@@ -150,7 +152,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's example and census data directory.)doc";
 
-static const char *__doc_regina_GlobalDirs_home =
+static const char *GlobalDirs_home =
 R"doc(Returns Regina's primary home directory on the system. This directory
 should contains subdirectories *data*, *icons*/, *examples*/ and so
 on.
@@ -167,7 +169,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's primary home directory.)doc";
 
-static const char *__doc_regina_GlobalDirs_pythonModule =
+static const char *GlobalDirs_pythonModule =
 R"doc(Returns the directory in which Regina's python module is installed, or
 the empty string if the module is installed in python's standard site-
 packages directory.
@@ -181,7 +183,7 @@ packages directory.
 Returns:
     Regina's python module directory.)doc";
 
-static const char *__doc_regina_GlobalDirs_setDirs =
+static const char *GlobalDirs_setDirs =
 R"doc(Tells Regina explicitly where its supporting files are installed.
 
 You should call either setDirs() or deduceDirs() at runtime if Regina
@@ -218,7 +220,7 @@ Parameter ``censusDir``:
     The directory containing the large machine-encoded census data
     files; this will be returned by census().)doc";
 
-static const char *__doc_regina_census =
+static const char *census =
 R"doc(Returns the directory containing the large machine-encoded census data
 files. These data files are not human-browsable: instead they are
 built for fast performance and small size. Users can access them by
@@ -236,7 +238,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's calculation engine data directory.)doc";
 
-static const char *__doc_regina_data =
+static const char *data =
 R"doc(Returns the directory containing miscellaneous data files for internal
 use Regina's calculation engine.
 
@@ -255,7 +257,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's calculation engine data directory.)doc";
 
-static const char *__doc_regina_engineDocs =
+static const char *engineDocs =
 R"doc(Returns the directory in which API documentation for Regina's
 calculation engine is installed.
 
@@ -280,7 +282,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's calculation engine documentation directory.)doc";
 
-static const char *__doc_regina_examples =
+static const char *examples =
 R"doc(Returns the directory in which example data files (including the
 smaller but human-browsable census data files) are installed.
 
@@ -299,7 +301,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's example and census data directory.)doc";
 
-static const char *__doc_regina_home =
+static const char *home =
 R"doc(Returns Regina's primary home directory on the system. This directory
 should contains subdirectories *data*, *icons*/, *examples*/ and so
 on.
@@ -316,7 +318,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 Returns:
     Regina's primary home directory.)doc";
 
-static const char *__doc_regina_pythonModule =
+static const char *pythonModule =
 R"doc(Returns the directory in which Regina's python module is installed, or
 the empty string if the module is installed in python's standard site-
 packages directory.
@@ -329,6 +331,8 @@ packages directory.
 
 Returns:
     Regina's python module directory.)doc";
+
+} // namespace regina::python::doc
 
 #if defined(__GNUG__)
 #pragma GCC diagnostic pop
