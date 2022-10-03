@@ -38,6 +38,10 @@
 #include <sstream>
 #include "core/output.h"
 
+extern const char* doc_common_Output_detail;
+extern const char* doc_common_Output_str;
+extern const char* doc_common_Output_utf8;
+
 namespace regina::python {
 
 /**
@@ -106,9 +110,10 @@ void add_output(pybind11::class_<C, options...>& c,
         typename regina::OutputBase<C>::type>;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
-    c.def("str", OutputFunctionType(&BaseType::str));
-    c.def("utf8", OutputFunctionType(&BaseType::utf8));
-    c.def("detail", OutputFunctionType(&BaseType::detail));
+    c.def("str", OutputFunctionType(&BaseType::str), doc_common_Output_str);
+    c.def("utf8", OutputFunctionType(&BaseType::utf8), doc_common_Output_utf8);
+    c.def("detail", OutputFunctionType(&BaseType::detail),
+        doc_common_Output_detail);
 
     c.def("__str__", OutputFunctionType(&BaseType::str));
 
