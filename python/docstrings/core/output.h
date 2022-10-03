@@ -142,18 +142,6 @@ Python:
     Not present, but the output routines str(), utf8() and detail()
     will be provided directly through the various subclasses.)doc";
 
-// Docstring regina::python::doc::writeTextLong
-static const char *writeTextLong =
-R"doc(A default implementation for detailed output. This routine simply
-calls *T::writeTextShort*() and appends a final newline.
-
-Python:
-    Not present; instead you can call detail() from the subclass *T*,
-    which returns this output as a string.
-
-Parameter ``out``:
-    the output stream to which to write.)doc";
-
 namespace Output_ {
 
 // Docstring regina::python::doc::Output_::detail
@@ -199,22 +187,6 @@ encoded in UTF-8.
 
 Returns:
     a short text representation of this object.)doc";
-
-}
-
-namespace ShortOutput_ {
-
-// Docstring regina::python::doc::ShortOutput_::writeTextLong
-static const char *writeTextLong =
-R"doc(A default implementation for detailed output. This routine simply
-calls *T::writeTextShort*() and appends a final newline.
-
-Python:
-    Not present; instead you can call detail() from the subclass *T*,
-    which returns this output as a string.
-
-Parameter ``out``:
-    the output stream to which to write.)doc";
 
 }
 

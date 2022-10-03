@@ -285,28 +285,6 @@ R"doc(Swaps the contents of this and the given file information.
 Parameter ``other``:
     the object whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::FileInfo_::writeTextLong
-static const char *writeTextLong =
-R"doc(Writes a detailed text representation of this object to the given
-output stream.
-
-Python:
-    Not present; use detail() instead.
-
-Parameter ``out``:
-    the output stream to which to write.)doc";
-
-// Docstring regina::python::doc::FileInfo_::writeTextShort
-static const char *writeTextShort =
-R"doc(Writes a short text representation of this object to the given output
-stream.
-
-Python:
-    Not present; use str() instead.
-
-Parameter ``out``:
-    the output stream to which to write.)doc";
-
 }
 
 } // namespace regina::python::doc

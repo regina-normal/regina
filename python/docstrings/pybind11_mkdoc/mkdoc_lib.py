@@ -57,6 +57,10 @@ AVAILABILITY_BLACKLIST = [
     AvailabilityKind.NOT_AVAILABLE
 ]
 
+MEMBER_BLACKLIST = [
+    'operator=', 'writeTextShort', 'writeTextLong'
+]
+
 CPP_OPERATORS = {
     '<=': 'le', '>=': 'ge', '==': 'eq', '!=': 'ne', '[]': 'array',
     '+=': 'iadd', '-=': 'isub', '*=': 'imul', '/=': 'idiv', '%=':
@@ -244,6 +248,7 @@ def extract(filename, node, namespace, output):
     if node.kind in PRINT_LIST and \
             node.access_specifier not in ACCESS_BLACKLIST and \
             node.availability not in AVAILABILITY_BLACKLIST and \
+            node.spelling not in MEMBER_BLACKLIST and \
             (not node.is_move_constructor()):
         sub_namespace = namespace
         if len(node.spelling) > 0:
@@ -257,9 +262,6 @@ def extract(filename, node, namespace, output):
             skip = False
             if node.raw_comment is None:
                 print('Undocumented:', fullname, '-- skipping')
-                skip = True
-            elif node.spelling == 'operator=':
-                # We do not bind assignment operators at all.
                 skip = True
             elif node.spelling == 'operator<<':
                 # We do not want docs for std::ostream output operators.
