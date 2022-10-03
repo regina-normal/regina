@@ -48,6 +48,11 @@ PREFIX_BLACKLIST = [
     CursorKind.TRANSLATION_UNIT
 ]
 
+ACCESS_BLACKLIST = [
+    AccessSpecifier.PRIVATE,
+    AccessSpecifier.PROTECTED
+]
+
 CPP_OPERATORS = {
     '<=': 'le', '>=': 'ge', '==': 'eq', '!=': 'ne', '[]': 'array',
     '+=': 'iadd', '-=': 'isub', '*=': 'imul', '/=': 'idiv', '%=':
@@ -226,7 +231,7 @@ def extract(filename, node, prefix, output):
         for i in node.get_children():
             extract(filename, i, sub_prefix, output)
     if node.kind in PRINT_LIST:
-        if node.access_specifier != AccessSpecifier.PRIVATE:
+        if node.access_specifier not in ACCESS_BLACKLIST:
             comment = d(node.raw_comment) if node.raw_comment is not None else ''
             comment = process_comment(comment)
             sub_prefix = prefix
