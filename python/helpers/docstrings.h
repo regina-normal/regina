@@ -30,34 +30,15 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file python/helpers.h
- *  \brief Various tools to assist with Python bindings for Regina.
+/*! \file python/helpers/docstrings.h
+ *  \brief Assists with Python docstrings that are generated from the C++ docs.
  */
 
-#ifndef __HELPERS_H
-#ifndef __DOXYGEN
-#define __HELPERS_H
-#endif
+namespace regina::python::doc {
 
-/**
- * On some systems we get warnings about Regina's helper classes having
- * greater visibility than the pybind11 code that they use.  The macro
- * MATCH_PYBIND11_VISIBILITY allows us to fix this by setting the same
- * visibility attributes on our classes also.
- */
-#ifdef __GNUG__
-  #define MATCH_PYBIND11_VISIBILITY __attribute__((visibility("hidden")))
-#else
-  #define MATCH_PYBIND11_VISIBILITY
-#endif
+// Docstrings that are generated once but used across many source files:
+extern const char* Output_detail;
+extern const char* Output_str;
+extern const char* Output_utf8;
 
-#include "pybind11/pybind11.h"
-#include "helpers/docstrings.h"
-#include "helpers/equality.h"
-#include "helpers/gil.h"
-#include "helpers/output.h"
-#include "helpers/listview.h"
-#include "helpers/packet.h"
-#include "helpers/tightencoding.h"
-
-#endif
+} // namespace regina::python::doc

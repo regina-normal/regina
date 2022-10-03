@@ -38,10 +38,13 @@
 #include "docstrings/core/engine.h"
 #include "docstrings/core/output.h"
 
-// The docstrings from output.h need to be reused across many source files.
-const char* doc_common_Output_detail = __doc_regina_Output_detail;
-const char* doc_common_Output_str = __doc_regina_Output_str;
-const char* doc_common_Output_utf8 = __doc_regina_Output_utf8;
+// Docstrings that are generated once but need to be reused across many
+// source files:
+namespace regina::python::doc {
+    const char* Output_detail = ::__doc_regina_Output_detail;
+    const char* Output_str = ::__doc_regina_Output_str;
+    const char* Output_utf8 = ::__doc_regina_Output_utf8;
+}
 
 void addGlobalArray(pybind11::module_& m);
 
