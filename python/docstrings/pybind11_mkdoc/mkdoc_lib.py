@@ -249,9 +249,14 @@ def extract(filename, node, namespace, output):
         if len(node.spelling) > 0:
             name = sanitize_name(d(node.spelling))
 
+            fullname = 'regina::'
+            if namespace:
+                fullname = fullname + namespace + '::'
+            fullname += name
+
             skip = False
             if node.raw_comment is None:
-                print('Undocumented:', name, '-- skipping')
+                print('Undocumented:', fullname, '-- skipping')
                 skip = True
             elif node.spelling == 'operator=':
                 # We do not bind assignment operators at all.
@@ -260,8 +265,9 @@ def extract(filename, node, namespace, output):
                 # We do not want docs for std::ostream output operators.
                 # For now we skip *all* left shift operators; this may need to
                 # become more nuanced at a later date.
-                print('Left shift:', name, '-- skipping')
+                print('Left shift:', fullname, '-- skipping')
                 skip = True
+
             if not skip:
                 comment = d(node.raw_comment)
                 comment = process_comment(comment)
