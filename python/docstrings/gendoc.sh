@@ -14,6 +14,10 @@ usage() {
   exit 1
 }
 
+if [ ! -e gendoc.sh ]; then
+  usage "This script must be run from python/docstrings/ in Regina's source tree."
+fi
+
 # For the include path, we grab the pre-rolled macOS config file.
 # The choice of config file shouldn't actually affect the docstrings.
 export PYTHONPATH=".:$PYTHONPATH"
