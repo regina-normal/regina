@@ -39,8 +39,6 @@ or deduceDirs() when your application starts. Otherwise the
 directories that GlobalDirs returns might be incorrect, and might not
 even exist.)doc";
 
-static const char *__doc_regina_GlobalDirs_GlobalDirs = R"doc()doc";
-
 static const char *__doc_regina_GlobalDirs_census =
 R"doc(Returns the directory containing the large machine-encoded census data
 files. These data files are not human-browsable: instead they are

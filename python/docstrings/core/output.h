@@ -203,25 +203,6 @@ Python:
 Parameter ``out``:
     the output stream to which to write.)doc";
 
-static const char *__doc_regina_operator_lshift =
-R"doc(Writes the short text representation of the given object to the given
-output stream.
-
-This is equivalent to calling ``out << object.str()``.
-
-Parameter ``out``:
-    the output stream to which to write.
-
-Parameter ``object``:
-    the object to write.
-
-Returns:
-    a reference to the given output stream.)doc";
-
-static const char *__doc_regina_operator_lshift_2 = R"doc()doc";
-
-static const char *__doc_regina_operator_lshift_3 = R"doc()doc";
-
 static const char *__doc_regina_writeTextLong =
 R"doc(A default implementation for detailed output. This routine simply
 calls *T::writeTextShort*() and appends a final newline.

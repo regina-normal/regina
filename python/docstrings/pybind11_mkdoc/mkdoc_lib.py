@@ -15,7 +15,7 @@ import textwrap
 import ctypes.util
 
 from clang import cindex
-from clang.cindex import CursorKind, AccessSpecifier
+from clang.cindex import CursorKind, AccessSpecifier, AvailabilityKind
 from collections import OrderedDict
 from glob import glob
 from threading import Thread, Semaphore
@@ -51,6 +51,10 @@ PREFIX_BLACKLIST = [
 ACCESS_BLACKLIST = [
     AccessSpecifier.PRIVATE,
     AccessSpecifier.PROTECTED
+]
+
+AVAILABILITY_BLACKLIST = [
+    AvailabilityKind.NOT_AVAILABLE
 ]
 
 CPP_OPERATORS = {
@@ -230,15 +234,26 @@ def extract(filename, node, prefix, output):
             sub_prefix += d(node.spelling)
         for i in node.get_children():
             extract(filename, i, sub_prefix, output)
-    if node.kind in PRINT_LIST:
-        if node.access_specifier not in ACCESS_BLACKLIST:
-            comment = d(node.raw_comment) if node.raw_comment is not None else ''
-            comment = process_comment(comment)
-            sub_prefix = prefix
-            if len(sub_prefix) > 0:
-                sub_prefix += '_'
-            if len(node.spelling) > 0:
-                name = sanitize_name(sub_prefix + d(node.spelling))
+    if node.kind in PRINT_LIST and node.access_specifier not in ACCESS_BLACKLIST and node.availability not in AVAILABILITY_BLACKLIST:
+        sub_prefix = prefix
+        if len(sub_prefix) > 0:
+            sub_prefix += '_'
+        if len(node.spelling) > 0:
+            name = sanitize_name(sub_prefix + d(node.spelling))
+
+            skip = False
+            if node.raw_comment is None:
+                print('Undocumented:', name, '-- skipping')
+                skip = True
+            elif node.spelling == 'operator<<':
+                # We do not want to produce docs for std::ostream output operators.
+                # For now we skip *all* left shift operators; probably this will need to
+                # become more nuanced as we work our way through the full Regina API.
+                print('Left shift:', name, '-- skipping')
+                skip = True
+            if not skip:
+                comment = d(node.raw_comment)
+                comment = process_comment(comment)
                 output.append((name, filename, comment))
 
 
