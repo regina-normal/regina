@@ -39,6 +39,15 @@ namespace regina::python::doc::common {
     extern const char* Output_detail;
     extern const char* Output_str;
     extern const char* Output_utf8;
+
+    extern const char* eq_reference;
+    extern const char* neq_reference;
+    extern const char* eq_None;
+    extern const char* neq_None;
+    extern const char* eq_disabled;
+    extern const char* eq_packet_disabled;
+    extern const char* eq_packet_invalid;
+    extern const char* eq_never_instantiated;
 }
 
 /**

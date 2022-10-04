@@ -37,9 +37,6 @@
 #include <sstream>
 #include <type_traits>
 
-#define docEqNone R"doc(Always returns ``False``, since an object of this type is never equal to ``None``.)doc"
-#define docNeqNone R"doc(Always returns ``True``, since an object of this type is never equal to ``None``.)doc"
-
 namespace regina {
 
 class Packet;
@@ -313,44 +310,60 @@ namespace add_eq_operators_detail {
 template <class C, typename... options>
 inline void add_eq_operators(pybind11::class_<C, options...>& c,
         const char* docEq, const char* docNeq) {
+    constexpr EqualityType equalityType =
+        add_eq_operators_detail::EqualityOperators<C>::equalityType();
+
     if (docEq) {
         c.def("__eq__",
             &add_eq_operators_detail::EqualityOperators<C>::are_equal, docEq);
-        c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
-            docEqNone);
+    } else if constexpr (equalityType == BY_REFERENCE) {
+        c.def("__eq__",
+            &add_eq_operators_detail::EqualityOperators<C>::are_equal,
+            python::doc::common::eq_reference);
     } else {
         c.def("__eq__",
             &add_eq_operators_detail::EqualityOperators<C>::are_equal);
-        c.def("__eq__", [](const C&, std::nullptr_t) { return false; });
     }
     if (docNeq) {
         c.def("__ne__",
             &add_eq_operators_detail::EqualityOperators<C>::are_not_equal,
             docNeq);
-        c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
-            docNeqNone);
+    } else if constexpr (equalityType == BY_REFERENCE) {
+        c.def("__ne__",
+            &add_eq_operators_detail::EqualityOperators<C>::are_not_equal,
+            python::doc::common::neq_reference);
     } else {
         c.def("__ne__",
             &add_eq_operators_detail::EqualityOperators<C>::are_not_equal);
-        c.def("__ne__", [](const C&, std::nullptr_t) { return true; });
     }
-    c.attr("equalityType") =
-        add_eq_operators_detail::EqualityOperators<C>::equalityType();
+
+    c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
+        doc::common::eq_None);
+    c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
+        doc::common::neq_None);
+
+    c.attr("equalityType") = equalityType;
 }
 
 template <class C, typename... options>
 inline void no_eq_operators(pybind11::class_<C, options...>& c) {
-    c.def("__eq__", &add_eq_operators_detail::no_equality_operators<C>);
-    c.def("__ne__", &add_eq_operators_detail::no_equality_operators<C>);
+    c.def("__eq__", &add_eq_operators_detail::no_equality_operators<C>,
+        doc::common::eq_never_instantiated);
+    c.def("__ne__", &add_eq_operators_detail::no_equality_operators<C>,
+        doc::common::eq_never_instantiated);
     c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
 }
 
 template <class C, typename... options>
 inline void disable_eq_operators(pybind11::class_<C, options...>& c) {
-    c.def("__eq__", &add_eq_operators_detail::disable_equality_operators<C>);
-    c.def("__eq__", [](const C&, std::nullptr_t) { return false; });
-    c.def("__ne__", &add_eq_operators_detail::disable_equality_operators<C>);
-    c.def("__ne__", [](const C&, std::nullptr_t) { return true; });
+    c.def("__eq__", &add_eq_operators_detail::disable_equality_operators<C>,
+        doc::common::eq_disabled);
+    c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
+        doc::common::eq_None);
+    c.def("__ne__", &add_eq_operators_detail::disable_equality_operators<C>,
+        doc::common::eq_disabled);
+    c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
+        doc::common::neq_None);
     c.attr("equalityType") = EqualityType::DISABLED;
 }
 
@@ -365,8 +378,8 @@ inline bool invalidPacketComparison(const regina::Packet&,
 template <class C, typename... options>
 inline void packet_eq_operators(pybind11::class_<C, options...>& c) {
     add_eq_operators(c);
-    c.def("__eq__", &invalidPacketComparison);
-    c.def("__ne__", &invalidPacketComparison);
+    c.def("__eq__", &invalidPacketComparison, doc::common::eq_packet_invalid);
+    c.def("__ne__", &invalidPacketComparison, doc::common::eq_packet_invalid);
 }
 
 template <class C, typename... options>
@@ -382,10 +395,12 @@ inline void packet_disable_eq_operators(pybind11::class_<C, options...>& c) {
         throw std::runtime_error(s.str());
     };
 
-    c.def("__eq__", func);
-    c.def("__eq__", [](const C&, std::nullptr_t) { return false; });
-    c.def("__ne__", func);
-    c.def("__ne__", [](const C&, std::nullptr_t) { return true; });
+    c.def("__eq__", func, doc::common::eq_packet_disabled);
+    c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
+        doc::common::eq_None);
+    c.def("__ne__", func, doc::common::eq_packet_disabled);
+    c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
+        doc::common::neq_None);
     c.attr("equalityType") = EqualityType::DISABLED;
 }
 

@@ -160,7 +160,7 @@ void add_output_basic(pybind11::class_<C, options...>& c,
     using BaseType = typename regina::OutputBase<C>::type;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
-    c.def("str", OutputFunctionType(&BaseType::str));
+    c.def("str", OutputFunctionType(&BaseType::str), doc::common::Output_str);
     c.def("__str__", OutputFunctionType(&BaseType::str));
 
     switch (style) {

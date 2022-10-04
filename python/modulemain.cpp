@@ -44,6 +44,93 @@ namespace regina::python::doc::common {
     const char* Output_detail = Output_::detail;
     const char* Output_str = Output_::str;
     const char* Output_utf8 = Output_::utf8;
+
+    // Note: docstrings should be wrapped at 70 characters per line;
+    // the hard maximum is 72.
+
+    const char* eq_reference =
+R"doc(Determines whether this and the given Python wrapper refer to the same
+underlying object in Regina's calculation engine.
+
+Note that most of Regina's classes do **not** test equality in this
+way; instead they use value semantics (i.e., the == and != operators
+compare the *contents* of the two objects). This class is one of the
+few exceptions that uses reference semantics, as explained below.
+
+Regina's calculation engine is written in C++, not Python. It is
+therefore possible to have several different Python objects that are
+all thin wrappers around the same underlying C++ object (so changes to
+any one of these objects will be reflected in all of them). The
+operators == and != for this class will test for exactly this scenario.
+
+Essentially, these tests are similar in spirit to the Python test
+``x is y``, but instead of looking at the Python wrappers they look at
+the underlying C++ objects in the calculation engine.  In particular,
+as noted above, it is possible to have two different Python wrappers
+(so ``x is y`` is false) that refer to the same underlying C++ object
+(so ``x == y`` is true).)doc";
+
+    const char* neq_reference =
+R"doc(Determines whether this and the given Python wrapper refer to different
+underlying objects in Regina's calculation engine.
+
+Note that most of Regina's classes do **not** test equality in this
+way; instead they use value semantics (i.e., the == and != operators
+compare the *contents* of the two objects). This class is one of the
+few exceptions that uses reference semantics, as explained below.
+
+Regina's calculation engine is written in C++, not Python. It is
+therefore possible to have several different Python objects that are
+all thin wrappers around the same underlying C++ object (so changes to
+any one of these objects will be reflected in all of them). The
+operators == and != for this class will test for exactly this scenario.
+
+Essentially, these tests are similar in spirit to the Python test
+``x is y``, but instead of looking at the Python wrappers they look at
+the underlying C++ objects in the calculation engine.  In particular,
+as noted above, it is possible to have two different Python wrappers
+(so ``x is y`` is false) that refer to the same underlying C++ object
+(so ``x == y`` is true).)doc";
+
+    const char* eq_None =
+R"doc(Always returns ``False``, since an object of this type is never equal
+to ``None``.)doc";
+
+    const char* neq_None =
+R"doc(Always returns ``True``, since an object of this type is never equal
+to ``None``.)doc";
+
+    const char* eq_disabled =
+R"doc(Disabled for objects of this type.
+
+Objects of this type use value semantics, which means that the
+operators == and != should compare by value (i.e., they test whether
+two objects have the same contents). However, Regina does not
+currently implement such a test for objects of this type.)doc";
+
+    const char* eq_packet_disabled =
+R"doc(Disabled for packets of this type.
+
+The operators == and != compare packet contents by value (i.e., they
+test whether two packets have the same contents). However, Regina does
+not currently implement such a test for packets of this type.
+
+To test whether two Python objects refer to the same underlying packet,
+use Packet.samePacket() instead.)doc";
+
+    const char* eq_packet_invalid =
+R"doc(Disabled for packets of different types.
+
+The operators == and != compare packet contents by value, and therefore
+can only be used to compare two packets of the same type.
+
+To test whether two Python objects refer to the same underlying packet,
+use Packet.samePacket() instead.)doc";
+
+    const char* eq_never_instantiated =
+R"doc(Disabled in Regina.
+
+Objects of this type cannot be created, and so cannot be compared.)doc";
 }
 
 void addGlobalArray(pybind11::module_& m);
