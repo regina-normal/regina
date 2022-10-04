@@ -56,6 +56,10 @@ AVAILABILITY_BLACKLIST = [
     AvailabilityKind.NOT_AVAILABLE
 ]
 
+CLASS_BLACKLIST = [
+    'Snapshot', 'SnapshotRef', 'Snapshottable'
+]
+
 MEMBER_BLACKLIST = [
     'operator=', 'writeTextShort', 'writeTextLong'
 ]
@@ -269,7 +273,7 @@ def extract(filename, node, namespace, output):
     if not (node.location.file is None or
             os.path.samefile(d(node.location.file.name), filename)):
         return 0
-    if node.kind in RECURSE_LIST:
+    if node.kind in RECURSE_LIST and node.spelling not in CLASS_BLACKLIST:
         sub_namespace = namespace
         if node.kind not in PREFIX_BLACKLIST:
             # Ignore the leading regina:: namespace, which everything has.
@@ -288,6 +292,7 @@ def extract(filename, node, namespace, output):
             node.access_specifier not in ACCESS_BLACKLIST and \
             node.availability not in AVAILABILITY_BLACKLIST and \
             node.spelling not in MEMBER_BLACKLIST and \
+            node.spelling not in CLASS_BLACKLIST and \
             (not node.is_move_constructor()):
         sub_namespace = namespace
         if len(node.spelling) > 0:
@@ -299,11 +304,11 @@ def extract(filename, node, namespace, output):
             fullname += name
 
             skip = False
-            if node.lexical_parent != node.semantic_parent:
-                # We are seeing functions with inline definitions appear twice
-                # in the output: once where they are declared and again where
-                # they are defined.  I hope this is the right way to ignore
-                # the second occurrences (i.e., the inline implementations).
+            # if node.lexical_parent != node.semantic_parent:
+            if node != node.canonical:
+                # We are seeing functions with inline definitions and/or
+                # forward declarations appear multiple times in the output.
+                # Try to ensure that their docstrings are listed only once.
                 skip = True
             if node.raw_comment is None:
                 print('    Undocumented:', fullname, '-- skipping')

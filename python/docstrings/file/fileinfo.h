@@ -43,19 +43,6 @@ Parameter ``a``:
 Parameter ``b``:
     the object whose contents should be swapped with *a*.)doc";
 
-// Docstring regina::python::doc::swap_2
-static const char *swap_2 =
-R"doc(Swaps the contents of the two given file information objects.
-
-This global routine simply calls FileInfo::swap(); it is provided so
-that FileInfo meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the object whose contents should be swapped with *b*.
-
-Parameter ``b``:
-    the object whose contents should be swapped with *a*.)doc";
-
 namespace FileInfo_ {
 
 // Docstring regina::python::doc::FileInfo_::FileInfo

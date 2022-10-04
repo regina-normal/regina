@@ -2,7 +2,7 @@
 set -e
 
 if [ "$#" = 0 ]; then
-  dirs="core file progress"
+  dirs="core file progress utilities"
 else
   dirs="$@"
 fi
@@ -42,10 +42,16 @@ for dir in $dirs; do
   fi
   for i in ../../engine/"$dir"/*.h; do
     header=`basename "$i"`
-    case "$header" in
-      *-impl.h )
-        # Skip these.
-        ;;
+    case "$dir/$header" in
+      *-impl.h ) ;;
+      utilities/flags.h ) ;;
+      utilities/listview.h ) ;;
+      utilities/markedvector.h ) ;;
+      utilities/memstream.h ) ;;
+      utilities/sequence.h ) ;;
+      utilities/shortarray.h ) ;;
+      utilities/typeutils.h ) ;;
+      utilities/zstr.h ) ;;
       * )
         python3 -m pybind11_mkdoc -std=c++17 \
           -o "$dir/$header" ../../engine/"$dir/$header"
