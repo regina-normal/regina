@@ -2,7 +2,7 @@
 set -e
 
 if [ "$#" = 0 ]; then
-  dirs="core file"
+  dirs="core file progress"
 else
   dirs="$@"
 fi
