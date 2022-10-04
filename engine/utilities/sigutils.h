@@ -41,6 +41,8 @@
 #endif
 
 #include <array>
+#include <cstdint>
+#include <string>
 #include "regina-core.h"
 
 namespace regina {
