@@ -72,20 +72,19 @@ namespace regina {
  * simplex \a S of \a T, a permutation \a f<sub>S</sub> of the facets
  * (0,...,\a dim) of \a S, for which the following condition holds:
  *
- *   - If facet \a k of simplex \a S and facet \a k' of simplex \a S'
- *     are identified in \a T, then facet \a f<sub>S</sub>(\a k) of \a f(S)
- *     and facet \a f<sub>S'</sub>(\a k') of \a f(S') are identified in \a U.
- *     Moreover, their gluing is consistent with the facet/vertex permutations;
- *     that is, there is a commutative square involving the gluing maps in
- *     \a T and \a U and the permutations \a f<sub>S</sub> and
- *     \a f<sub>S'</sub>.
+ * - If facet \a k of simplex \a S and facet \a k' of simplex \a S'
+ *   are identified in \a T, then facet \a f<sub>S</sub>(\a k) of \a f(S)
+ *   and facet \a f<sub>S'</sub>(\a k') of \a f(S') are identified in \a U.
+ *   Moreover, their gluing is consistent with the facet/vertex permutations;
+ *   that is, there is a commutative square involving the gluing maps in
+ *   \a T and \a U and the permutations \a f<sub>S</sub> and \a f<sub>S'</sub>.
  *
  * Isomorphisms can be <i>boundary complete</i> or
  * <i>boundary incomplete</i>.  A boundary complete isomorphism
  * satisfies the additional condition:
  *
- *   - If facet \a x is a boundary facet of \a T then facet \a f(x) is a
- *     boundary facet of \a U.
+ * - If facet \a x is a boundary facet of \a T then facet \a f(x) is a
+ *   boundary facet of \a U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
  * triangulation \a T is present as an entire component (or components) of \a U,

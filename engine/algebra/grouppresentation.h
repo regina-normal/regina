@@ -220,10 +220,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
          *
-         *  - \c a^7b^-2
-         *  - \c aaaaaaaBB
-         *  - \c a^7B^2
-         *  - \c g0^7g1^-2
+         * - \c a^7b^-2
+         * - \c aaaaaaaBB
+         * - \c a^7B^2
+         * - \c g0^7g1^-2
          *
          * The string may contain whitespace, which will simply be ignored.
          *
@@ -237,10 +237,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
          *
-         *  - \c a^7b^-2
-         *  - \c aaaaaaaBB
-         *  - \c a^7B^2
-         *  - \c g0^7g1^-2
+         * - \c a^7b^-2
+         * - \c aaaaaaaBB
+         * - \c a^7B^2
+         * - \c g0^7g1^-2
          *
          * The string may contain whitespace, which will simply be ignored.
          *
