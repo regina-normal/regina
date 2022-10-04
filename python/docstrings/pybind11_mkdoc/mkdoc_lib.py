@@ -18,7 +18,6 @@ from clang import cindex
 from clang.cindex import CursorKind, AccessSpecifier, AvailabilityKind
 from collections import OrderedDict
 from glob import glob
-from threading import Thread, Semaphore
 from multiprocessing import cpu_count
 
 RECURSE_LIST = [
@@ -74,8 +73,6 @@ CPP_OPERATORS = {
 CPP_OPERATORS = OrderedDict(
     sorted(CPP_OPERATORS.items(), key=lambda t: -len(t[0])))
 
-job_count = cpu_count()
-job_semaphore = Semaphore(job_count)
 errors_detected = False
 docstring_width = int(70)
 
@@ -267,42 +264,19 @@ def extract(filename, node, namespace, output):
                 # the second occurrences (i.e., the inline implementations).
                 skip = True
             if node.raw_comment is None:
-                print('Undocumented:', fullname, '-- skipping')
+                print('    Undocumented:', fullname, '-- skipping')
                 skip = True
             elif node.spelling == 'operator<<':
                 # We do not want docs for std::ostream output operators.
                 # For now we skip *all* left shift operators; this may need to
                 # become more nuanced at a later date.
-                print('Left shift:', fullname, '-- skipping')
+                print('    Left shift:', fullname, '-- skipping')
                 skip = True
 
             if not skip:
                 comment = d(node.raw_comment)
                 comment = process_comment(comment)
                 output.append((sub_namespace, name, filename, comment))
-
-
-class ExtractionThread(Thread):
-    def __init__(self, filename, parameters, output):
-        Thread.__init__(self)
-        self.filename = filename
-        self.parameters = parameters
-        self.output = output
-        job_semaphore.acquire()
-
-    def run(self):
-        global errors_detected
-        print('Processing "%s" ..' % self.filename, file=sys.stderr)
-        try:
-            index = cindex.Index(
-                cindex.conf.lib.clang_createIndex(False, True))
-            tu = index.parse(self.filename, self.parameters)
-            extract(self.filename, tu.cursor, '', self.output)
-        except BaseException:
-            errors_detected = True
-            raise
-        finally:
-            job_semaphore.release()
 
 
 def read_args(args):
@@ -423,13 +397,18 @@ def read_args(args):
 def extract_all(args):
     parameters, filenames = read_args(args)
     output = []
-    for filename in filenames:
-        thr = ExtractionThread(filename, parameters, output)
-        thr.start()
 
-    print('Waiting for jobs to finish ..', file=sys.stderr)
-    for i in range(job_count):
-        job_semaphore.acquire()
+    global errors_detected
+    for filename in filenames:
+        print('Processing "%s" ..' % filename, file=sys.stderr)
+        try:
+            index = cindex.Index(
+                cindex.conf.lib.clang_createIndex(False, True))
+            tu = index.parse(filename, parameters)
+            extract(filename, tu.cursor, '', output)
+        except BaseException:
+            errors_detected = True
+            raise
 
     return output
 
