@@ -359,7 +359,7 @@ private:
     SortedArray sBNIF;
 
     /** True if the chain complexes A0,A1,A2,A3,A4, B0,B1,B2,B3,B4,
-     ** Bd0,Bd1,Bd2,Bd3, B0Incl,B1Incl,B2Incl are computed */
+        Bd0,Bd1,Bd2,Bd3, B0Incl,B1Incl,B2Incl are computed */
     bool chainComplexesComputed;
 
     /** 0th term in chain complex for cellular homology, using standard
@@ -432,8 +432,8 @@ private:
         cells. */
     void computeBHomology();
     /** Computes all the homology groups of the manifold using dual cells. This
-     ** routine is the faster than computeHomology() but it's likely a bit
-     ** slower than Triangulation<3>'s homology routines. */
+        routine is the faster than computeHomology() but it's likely a bit
+        slower than Triangulation<3>'s homology routines. */
     void computeDHomology();
     /** The induced map on homology corresponding to inclusion of the
         boundary. */
@@ -479,12 +479,12 @@ private:
     void computeEmbeddabilityString();
 
     /** the prime power decomposition of the torsion subgroup of H1
-     ** So if the invariant factors were 2,2,4,3,9,9,27,5,5, this would
-     ** be the list: (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1)) */
+        So if the invariant factors were 2,2,4,3,9,9,27,5,5, this would
+        be the list: (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1)) */
     std::vector< std::pair< Integer, std::vector<unsigned long> > >
         h1PrimePowerDecomp;
     /** p-primary decomposition of the torsion linking form as needed to
-     ** construct the Kawauchi-Kojima invariants. */
+        construct the Kawauchi-Kojima invariants. */
     std::vector<Matrix<Rational>> linkingFormPD;
 
     /** True if torsion linking form is `hyperbolic'.   */
@@ -492,17 +492,17 @@ private:
     /** True if torsion linking form is `split' */
     bool torsionLinkingFormIsSplit;
     /** True if torsion linking form satisfies the Kawauchi-Kojima 2-torsion
-     ** condition */
+        condition */
     bool torsionLinkingFormSatisfiesKKtwoTorCondition;
 
     /** 1 of 3 Kawauchi-Kojima invariants: this describes the rank of the
-     ** torsion subgroup of H1 */
+        torsion subgroup of H1 */
     std::vector< std::pair< Integer, std::vector< unsigned long > > > torRankV;
     /** 2 of 3 Kawauchi-Kojima invariants: this is the sigma-invariant
-     ** of 2-torsion. */
+        of 2-torsion. */
     std::vector< LargeInteger > twoTorSigmaV;
     /** 3 of 3 Kawauchi-Kojima invariants: this is the Legendre symbol
-     ** invariant of odd torsion. */
+        invariant of odd torsion. */
     std::vector< std::pair< Integer, std::vector< int > > > oddTorLegSymV;
 
     /** string representing torRankV */
@@ -512,7 +512,7 @@ private:
     /** string representing oddTorLegSymV */
     std::string torsionLegendreString;
     /** comment on what kind of homology spheres the manifold may or may
-     ** not embed in. */
+        not embed in. */
     std::string embeddabilityString;
 
 public:
