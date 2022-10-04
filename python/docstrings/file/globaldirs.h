@@ -97,14 +97,14 @@ itself. So, for example, an executable path of
 This routine respects the following environment variables, and these
 will take precedence over any automatic deductions:
 
-- REGINA_HOME, if present and non-empty, will determine Regina's
-primary home directory as returned by homeDir(). It will also fix the
-census data directory as returned by censusDir() to be
-``$REGINA_HOME/data/census``.
+* REGINA_HOME, if present and non-empty, will determine Regina's
+  primary home directory as returned by homeDir(). It will also fix
+  the census data directory as returned by censusDir() to be
+  ``$REGINA_HOME/data/census``.
 
-- REGINA_PYLIBDIR, if present and non-empty, will determine the
-directory containing Regina's python module as returned by
-pythonModule().
+* REGINA_PYLIBDIR, if present and non-empty, will determine the
+  directory containing Regina's python module as returned by
+  pythonModule().
 
 If you have an unusual setup where Regina cannot deduce the paths
 correctly, you can always call setDirs() to set the paths explicitly
@@ -121,12 +121,12 @@ calculation engine is installed.
 
 This is computed automatically:
 
-- in most cases it will be the ``engine-docs/`` subdirectory of
-home();
+* in most cases it will be the ``engine-docs/`` subdirectory of
+  home();
 
-- in the special case where deduceDirs() was called and we are running
-from the build tree, it will be the location in the build tree where
-the API docs are built.
+* in the special case where deduceDirs() was called and we are running
+  from the build tree, it will be the location in the build tree where
+  the API docs are built.
 
 On a typical GNU/Linux system, this directory might (for example) be
 ``/usr/local/share/regina/engine-docs`` .
@@ -208,15 +208,15 @@ possible platforms and runtime environments.
 
 Empty strings are treated as follows:
 
-- If *homeDir* or *censusDir* is an empty string, then the
-corresponding directory will not be changed. Instead it will left at
-its previous value from the last call to setDirs() or deduceDirs(), or
-at the build-time configured default if neither setDirs() nor
-deduceDirs() has been called before.
+* If *homeDir* or *censusDir* is an empty string, then the
+  corresponding directory will not be changed. Instead it will left at
+  its previous value from the last call to setDirs() or deduceDirs(),
+  or at the build-time configured default if neither setDirs() nor
+  deduceDirs() has been called before.
 
-- If *pythonDir* is an empty string then this has an explicit meaning,
-namely that the python module has been installed in python's standard
-site-packages directory.
+* If *pythonDir* is an empty string then this has an explicit meaning,
+  namely that the python module has been installed in python's
+  standard site-packages directory.
 
 Parameter ``homeDir``:
     Regina's primary home directory; this will be returned by

@@ -45,35 +45,52 @@ starts at 0 and rises (with no particular upper bound).
 
 The life cycle of a progress tracker is as follows.
 
-- The reading thread creates a progress tracker (of type
-ProgressTracker or ProgressTrackerOpen), and passes it to the writing
-thread when the calculation begins.
+* The reading thread creates a progress tracker (of type
+  ProgressTracker or ProgressTrackerOpen), and passes it to the
+  writing thread when the calculation begins.
 
-- The writing thread: - creates the first stage by calling newStage();
-- as the stage progresses, repeatedly updates the progress of this
-stage by calling routines such as ProgressTracker::setPercent() or
-ProgressTrackerOpen::incSteps(), and also polls for cancellation by
-calling isCancelled(); - moves through any additional stages in a
-similar fashion, by calling newStage() and then repeatedly calling
-routines such as ProgressTracker::setPercent(),
-ProgressTrackerOpen::incSteps(), and isCancelled(); - calls
-setFinished() once all processing is complete (regardless of whether
-the operation finished naturally or was cancelled by the user); -
-never touches the progress tracker again.
+* The writing thread:
 
-- The reading thread: - passes the progress tracker to the writing
-thread; - repeatedly polls the state of the tracker by calling
-routines such as ProgressTracker::percentChanged(),
-ProgressTrackerOpen::stepsChanged(), descriptionChanged() and/or
-isFinished(); - if percentChanged() or stepsChanged() returns
-``True``, collects the total progress by calling percent() or steps()
-respectively and displays this to the user; - if descriptionChanged()
-returns ``True``, collects the description of the current stage by
-calling description() and displays this to the user; - if the user
-ever chooses to cancel the operation, calls cancel() but continues
-polling the state of the tracker as above; - once isFinished() returns
-``True``, displays any final information to the user and destroys the
-progress tracker.
+  * creates the first stage by calling newStage();
+
+  * as the stage progresses, repeatedly updates the progress of this
+    stage by calling routines such as ProgressTracker::setPercent() or
+    ProgressTrackerOpen::incSteps(), and also polls for cancellation
+    by calling isCancelled();
+
+  * moves through any additional stages in a similar fashion, by
+    calling newStage() and then repeatedly calling routines such as
+    ProgressTracker::setPercent(), ProgressTrackerOpen::incSteps(),
+    and isCancelled();
+
+  * calls setFinished() once all processing is complete (regardless of
+    whether the operation finished naturally or was cancelled by the
+    user);
+
+  * never touches the progress tracker again.
+
+* The reading thread:
+
+  * passes the progress tracker to the writing thread;
+
+  * repeatedly polls the state of the tracker by calling routines such
+    as ProgressTracker::percentChanged(),
+    ProgressTrackerOpen::stepsChanged(), descriptionChanged() and/or
+    isFinished();
+
+  * if percentChanged() or stepsChanged() returns ``True``, collects
+    the total progress by calling percent() or steps() respectively
+    and displays this to the user;
+
+  * if descriptionChanged() returns ``True``, collects the description
+    of the current stage by calling description() and displays this to
+    the user;
+
+  * if the user ever chooses to cancel the operation, calls cancel()
+    but continues polling the state of the tracker as above;
+
+  * once isFinished() returns ``True``, displays any final information
+    to the user and destroys the progress tracker.
 
 It is imperative that the writing thread does not access the tracker
 after calling setFinished(), and it is imperative that the reading

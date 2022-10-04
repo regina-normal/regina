@@ -210,16 +210,58 @@ def process_comment(comment):
         elif in_code_segment:
             result += x.strip()
         else:
+            # Split into paragraphs.
             for y in re.split(r'(?: *\n *){2,}', x):
-                wrapped = wrapper.fill(re.sub(r'\s+', ' ', y).strip())
-                if len(wrapped) > 0 and wrapped[0] == '$':
-                    result += wrapped[1:] + '\n'
-                    wrapper.initial_indent = \
-                        wrapper.subsequent_indent = ' ' * 4
-                else:
-                    if len(wrapped) > 0:
-                        result += wrapped + '\n\n'
-                    wrapper.initial_indent = wrapper.subsequent_indent = ''
+                # Split out any list items in this paragraph.
+                # A paragraph has optional plain text, followed by one or more
+                # optional list items.  (In particular, the list items can
+                # never be followed by additional plain text.)
+                #
+                # Note for later: when we get to detecting ordered lists,
+                # these should be rendered in the docstring as: #. <text>
+                list_indents = []
+                for z in re.split(r'(?:^|\n)(\s*[-+*]\s+)', y):
+                    # The list bullets, including their initial indents, will
+                    # appear as separate pieces of the split we just performed.
+                    if len(z) == 0:
+                        continue
+                    zstrip = z.lstrip()
+                    if len(zstrip) >= 2 and zstrip[:2] in [ '- ', '+ ', '* ' ]:
+                        # This piece of the split is a bullet.
+                        # Work out its indent and loop again to fetch
+                        # the actual list item text.
+                        indent = len(z) - len(zstrip)
+                        if not list_indents:
+                            list_indents = [ indent ]
+                        elif list_indents[-1] < indent:
+                            list_indents.append(indent)
+                        else:
+                            while list_indents and list_indents[-1] > indent:
+                                list_indents.pop()
+                            # TODO: Maybe it would be polite to check here
+                            # whether our reduced indent matches a
+                            # previously-seen indent level.
+                        continue
+
+                    if list_indents:
+                        wrapper.initial_indent = '  ' * (len(list_indents) - 1)
+                        wrapper.subsequent_indent = '  ' * len(list_indents)
+                        z = '* ' + z
+
+                    wrapped = wrapper.fill(re.sub(r'\s+', ' ', z).strip())
+
+                    if len(wrapped) > 0 and wrapped[0] == '$':
+                        # TODO: Maybe it would be nice to verify that
+                        # we do not also have a list indent at this point,
+                        # since special paragraphs and list items do not
+                        # play well together.
+                        result += wrapped[1:] + '\n'
+                        wrapper.initial_indent = \
+                            wrapper.subsequent_indent = ' ' * 4
+                    else:
+                        if len(wrapped) > 0:
+                            result += wrapped + '\n\n'
+                        wrapper.initial_indent = wrapper.subsequent_indent = ''
     return result.rstrip().lstrip('\n')
 
 

@@ -19,21 +19,24 @@ behaviours across Regina's entire API.
 
 Three types of output are supported:
 
-- *short* output, which fits on a single line and uses plain ASCII
-characters wherever possible; - *utf8* output, which is like short
-output but supports the much richer unicode character set; and -
-*detailed* output, which may be arbitrarily long.
+* *short* output, which fits on a single line and uses plain ASCII
+  characters wherever possible;
+
+* *utf8* output, which is like short output but supports the much
+  richer unicode character set; and
+
+* *detailed* output, which may be arbitrarily long.
 
 Any class that provides text output should ultimately inherit from
 this base class. Your derived class must provide two functions:
 
-- ``writeTextShort(std::ostream& out, bool utf8 = false)``, which
-writes either the short output or the utf8 output to the given output
-stream, according to whether *utf8* is ``False`` or ``True``
-respectively;
+* ``writeTextShort(std::ostream& out, bool utf8 = false)``, which
+  writes either the short output or the utf8 output to the given
+  output stream, according to whether *utf8* is ``False`` or ``True``
+  respectively;
 
-- ``writeTextLong(std::ostream& out)``, which writes the detailed
-output to the given output stream.
+* ``writeTextLong(std::ostream& out)``, which writes the detailed
+  output to the given output stream.
 
 The boolean *utf8* argument to writeTextShort() must be optional.
 Moreover, if your class does not benefit from unicode characters
