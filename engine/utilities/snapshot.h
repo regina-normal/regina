@@ -45,8 +45,6 @@
 
 namespace regina {
 
-class SnapshotWriteError;
-
 template <class T> class SnapshotRef;
 template <class T> class Snapshottable;
 
