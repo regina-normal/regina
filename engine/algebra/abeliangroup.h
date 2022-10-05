@@ -116,9 +116,10 @@ class AbelianGroup :
         /**
          * Creates a new group with the given rank and invariant factors.
          *
-         * \exception The invariant factors were not all greater than 1,
-         * and/or they did not satisfy the divisibily requirement (where
-         * each invariant factor must divide the one after it).
+         * \exception InvalidArgument The invariant factors were not all
+         * greater than 1, and/or they did not satisfy the divisibily
+         * requirement (where each invariant factor must divide the one
+         * after it).
          *
          * \ifacespython Not available, but there is a constructor that
          * takes the invariant factors as a Python list.
@@ -137,9 +138,10 @@ class AbelianGroup :
         /**
          * Creates a new group with the given rank and invariant factors.
          *
-         * \exception The invariant factors were not all greater than 1,
-         * and/or they did not satisfy the divisibily requirement (where
-         * each invariant factor must divide the one after it).
+         * \exception InvalidArgument The invariant factors were not all
+         * greater than 1, and/or they did not satisfy the divisibily
+         * requirement (where each invariant factor must divide the one
+         * after it).
          *
          * \tparam Container a container or view that supports reverse
          * iteration via rbegin(), rend(), that has an empty() function,
