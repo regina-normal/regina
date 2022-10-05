@@ -789,7 +789,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Each entry \a graph[i][j] will be treated as a boolean, indicating
          * whether the graph contains an arc from node \a i to node \a j.
          *
-         * \exception InvalidArgument the adjacency matrix does not have
+         * \exception InvalidArgument The adjacency matrix does not have
          * the same number of rows as columns.
          *
          * \ifacespython The argument \a graph must be of type \c MatrixBool
@@ -825,7 +825,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * An example of a suitable type for the adjacency matrix could be
          * std::vector<std::vector<bool>>.
          *
-         * \exception InvalidArgument the adjacency matrix does not have
+         * \exception InvalidArgument The adjacency matrix does not have
          * the same number of rows as columns.
          *
          * \ifacespython The adjacency matrix should be given as a list of
@@ -1368,7 +1368,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * the input, this checking is not exhaustive; in particular, it does
          * not verify that the connections between bags actually form a tree.
          *
-         * \exception InvalidArgument the input was not a valid representation
+         * \exception InvalidArgument The input was not a valid representation
          * of a tree decomposition using the PACE text format.
          * As noted above, the checks performed here are not exhaustive.
          *
@@ -1396,7 +1396,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * (i.e., it should contain no additional text after this text
          * representation).
          *
-         * \exception InvalidArgument the input was not a valid representation
+         * \exception InvalidArgument The input was not a valid representation
          * of a tree decomposition using the PACE text format.
          * As documented more thoroughly in the string variant of this
          * routine, the checks performed here are not exhaustive.

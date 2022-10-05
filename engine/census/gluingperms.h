@@ -192,7 +192,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * Regina releases.  Data in this format should be used on a
          * short-term temporary basis only.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present; instead you should call fromData(),
@@ -619,7 +619,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * Regina releases.  Data in this format should be used on a
          * short-term temporary basis only.
          *
-         * \exception InvalidArgument the data found in the given string is
+         * \exception InvalidArgument The data found in the given string is
          * invalid, incomplete, or incorrectly formatted.
          *
          * @param data the data from which to reconstruct a gluing

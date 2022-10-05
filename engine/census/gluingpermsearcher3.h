@@ -248,7 +248,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present, since this constructor is fundamentally
@@ -562,7 +562,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the given input stream
+         * \exception InvalidInput The data found in the given input stream
          * is invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present; instead you can use the variant of
@@ -591,7 +591,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidArgument the data found in the given string
+         * \exception InvalidArgument The data found in the given string
          * is invalid, incomplete, or incorrectly formatted.
          *
          * @param data the tagged data from which to reconstruct a
@@ -1230,7 +1230,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present, since this constructor is fundamentally
@@ -2026,7 +2026,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present, since this constructor is fundamentally
@@ -2547,7 +2547,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present, since this constructor is fundamentally
@@ -2691,7 +2691,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present, since this constructor is fundamentally

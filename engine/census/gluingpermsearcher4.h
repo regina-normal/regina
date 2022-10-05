@@ -558,7 +558,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present, since this constructor is fundamentally
@@ -871,7 +871,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidInput the data found in the given input stream
+         * \exception InvalidInput The data found in the given input stream
          * is invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present; instead you can use the variant of
@@ -900,7 +900,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \exception InvalidArgument the data found in the given string
+         * \exception InvalidArgument The data found in the given string
          * is invalid, incomplete, or incorrectly formatted.
          *
          * @param data the tagged data from which to reconstruct a

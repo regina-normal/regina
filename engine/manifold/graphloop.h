@@ -115,7 +115,7 @@ class GraphLoop : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument the given Seifert fibred space
+         * \exception InvalidArgument The given Seifert fibred space
          * does not have precisely two torus boundaries, corresponding to
          * two untwisted punctures in its base orbifold.
          *
@@ -137,7 +137,7 @@ class GraphLoop : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument the given Seifert fibred space
+         * \exception InvalidArgument The given Seifert fibred space
          * does not have precisely two torus boundaries, corresponding to
          * two untwisted punctures in its base orbifold.
          *
@@ -156,7 +156,7 @@ class GraphLoop : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument the given Seifert fibred space
+         * \exception InvalidArgument The given Seifert fibred space
          * does not have precisely two torus boundaries, corresponding to
          * two untwisted punctures in its base orbifold.
          *
@@ -174,7 +174,7 @@ class GraphLoop : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument the given Seifert fibred space
+         * \exception InvalidArgument The given Seifert fibred space
          * does not have precisely two torus boundaries, corresponding to
          * two untwisted punctures in its base orbifold.
          *
@@ -301,7 +301,7 @@ class GraphLoop : public Manifold {
          *
          * This should be called from every class constructor.
          *
-         * \exception InvalidArgument the preconditions were not met.
+         * \exception InvalidArgument The preconditions were not met.
          */
         void verifySFS();
 

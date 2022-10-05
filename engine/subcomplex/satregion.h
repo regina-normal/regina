@@ -454,7 +454,7 @@ class SatRegion : public Output<SatRegion> {
          * through every annulus of every saturated block.  Use it
          * sparingly!
          *
-         * \exception InvalidArgument the argument \a which was not
+         * \exception InvalidArgument The argument \a which was not
          * between 0 and countBoundaryAnnuli()-1 inclusive.
          *
          * @param which specifies which boundary annulus of this region to

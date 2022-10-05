@@ -708,7 +708,7 @@ class Perm<3> {
          * (\a n &le; 7), but slower for larger permutation classes
          * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
          *
-         * \exception InvalidArgument the given string is not a tight encoding
+         * \exception InvalidArgument The given string is not a tight encoding
          * of a 3-element permutation.
          *
          * @param enc the tight encoding for a 3-element permutation.
@@ -732,7 +732,7 @@ class Perm<3> {
          * (\a n &le; 7), but slower for larger permutation classes
          * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a 3-element permutation.
          *
          * \ifacespython Not present; use tightDecoding() instead, which takes
@@ -955,7 +955,7 @@ class Perm<3> {
          * invalid also; if \a noTrailingData is \c false then there is no
          * constraint on the final state of the iterator.
          *
-         * \exception InvalidInput the given iterator does not point to
+         * \exception InvalidInput The given iterator does not point to
          * a tight encoding of a 3-element permutation.
          *
          * \tparam iterator an input iterator type.

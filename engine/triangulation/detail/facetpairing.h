@@ -148,7 +148,7 @@ class FacetPairingBase :
          * it will read the \e entire line from the input stream and expect
          * that line to containin the text representation of a facet pairing.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
          * @param in the input stream from which to read.
@@ -591,7 +591,7 @@ class FacetPairingBase :
          * This text-based representation must be in the format produced
          * by routine textRep().
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * text-based representation of a facet pairing on a positive
          * number of simplices.
          *
@@ -613,7 +613,7 @@ class FacetPairingBase :
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a <i>dim</i>-dimensional facet pairing on
          * a positive number of simplices.
          *

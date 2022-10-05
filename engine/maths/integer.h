@@ -359,7 +359,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in the given base, with optional whitespace beforehand.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
@@ -393,7 +393,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in the given base, with optional whitespace beforehand.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
@@ -618,7 +618,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
@@ -640,7 +640,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
@@ -1612,7 +1612,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This routine is identical to calling the global template routine
          * regina::tightDecoding() with this type as the template argument.
          *
-         * \exception InvalidArgument the given string is not a tight encoding
+         * \exception InvalidArgument The given string is not a tight encoding
          * of an integer of this type.
          *
          * @param enc the tight encoding for an integer.
@@ -1637,7 +1637,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This routine is identical to calling the global template routine
          * regina::tightDecode() with this type as the template argument.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an integer of this type.
          *
          * \ifacespython Not present; use tightDecoding() instead, which takes

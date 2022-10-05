@@ -1121,7 +1121,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre This is a square matrix.
          *
-         * \exception FailedPrecondition this matrix is not square.
+         * \exception FailedPrecondition This matrix is not square.
          *
          * @return the determinant of this matrix.
          */

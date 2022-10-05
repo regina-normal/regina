@@ -704,7 +704,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         /**
          * TODO: Document.
          *
-         * \exception InvalidArgument there is no flype available from
+         * \exception InvalidArgument There is no flype available from
          * the given starting arc.
          */
         ModelLinkGraph flype(const ModelLinkGraphArc& from) const;
@@ -937,7 +937,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * edges.  Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
          *
-         * \exception InvalidArgument the input was not a valid
+         * \exception InvalidArgument The input was not a valid
          * representation of a graph using the \e plantri output format.
          * As noted above, the checks performed here are not exhaustive.
          *

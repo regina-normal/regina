@@ -220,13 +220,13 @@ class LPConstraintBase {
          * \pre For all columns in the array \a col, the members
          * LPCol::extra have all been initialised to zero.
          *
-         * \exception InvalidArgument it was not possible to create the
+         * \exception InvalidArgument It was not possible to create the
          * linear functions for these constraints, due to an error which
          * should have been preventable with the right checks in advance.
          * Any constraint class that could throw exceptions in this way
          * \e must describe this behaviour in its own class documentation.
          *
-         * \exception UnsolvedCase it was not possible to create the linear
+         * \exception UnsolvedCase It was not possible to create the linear
          * functions for these constraints, due to an error that was
          * "genuinely" unforseeable.  Again, any constraint class that could
          * throw exceptions in this way \e must describe this behaviour in its
@@ -548,11 +548,11 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * does not include triangle coordinates (i.e., the encoding for quad or
  * quad-oct normal coordinates).
  *
- * \exception InvalidArgument thrown by addRows() if the underlying
+ * \exception InvalidArgument Thrown by addRows() if the underlying
  * triangulation is not oriented with precisely one vertex, which must have a
  * torus link.
  *
- * \exception UnsolvedCase thrown by addRows() if SnapPea retriangulates the
+ * \exception UnsolvedCase Thrown by addRows() if SnapPea retriangulates the
  * underlying triangulation or produces a null triangulation, or if the
  * coefficients of the slope equations are too large to store in a native
  * C++ long integer.

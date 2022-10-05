@@ -1716,9 +1716,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * These conditions will likewise be checked, and this routine
          * will throw an exception if they are not met.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * \exception FailedPrecondition one or more of the preconditions
+         * \exception FailedPrecondition One or more of the preconditions
          * listed above was not met.
          *
          * @author William Pettersson and Stephan Tillmann

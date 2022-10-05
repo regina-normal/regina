@@ -191,14 +191,14 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * progress tracker (if passed) will be marked as finished.
          * See the exception specifications below for details.
          *
-         * \exception InvalidArgument the matching equations could not
+         * \exception InvalidArgument The matching equations could not
          * be created for the given triangulation in the given coordinate
          * system, due to an error that should have been preventable
          * with the right checks in advance.  This can only happen in certain
          * coordinate systems, and for all such coordinate systems this is
          * explicitly described in the HyperCoords enum documentation.
          *
-         * \exception UnsolvedCase the list of hypersurfaces could not be
+         * \exception UnsolvedCase The list of hypersurfaces could not be
          * be created for the given triangulation in the given coordinate
          * system, due to an error that was "genuinely" unforseeable.
          * Currently there are two scenarios in which this could happen:
@@ -929,13 +929,13 @@ void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs);
  * Each column of the matrix represents a coordinate in the given
  * coordinate system.
  *
- * \exception InvalidArgument the matching equations could not be created for
+ * \exception InvalidArgument The matching equations could not be created for
  * the given triangulation in the given coordinate system, due to an error
  * that should have been preventable with the right checks in advance.  This
  * can only happen in certain coordinate systems, and for all such coordinate
  * systems this is explicitly described in the HyperCoords enum documentation.
  *
- * \exception UnsolvedCase the matching equations could not be created for the
+ * \exception UnsolvedCase The matching equations could not be created for the
  * given triangulation in the given coordinate system, due to an error that was
  * "genuinely" unforseeable.  Again this can only happen in certain coordinate
  * systems, where this is explicitly described in the HyperCoords enum

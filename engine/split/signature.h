@@ -135,7 +135,7 @@ class Signature : public ShortOutput<Signature> {
          * <tt>"AAb-bc-C"</tt>.  See the class notes for further details
          * on what constitutes a valid signature.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * signature with a positive number of letters.
          *
          * @param str a string representation of a splitting surface signature.

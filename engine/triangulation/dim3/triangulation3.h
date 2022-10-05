@@ -1298,7 +1298,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * structure will be deleted, and any reference that was returned
          * before will become invalid.
          *
-         * \exception NoSolution no strict angle structure exists on
+         * \exception NoSolution No strict angle structure exists on
          * this triangulation.
          *
          * @return a strict angle structure on this triangulation, if
@@ -1390,7 +1390,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * "Angle structures and normal surfaces", Feng Luo and Stephan
          * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866).
          *
-         * \exception NoSolution no generalised angle structure exists on
+         * \exception NoSolution No generalised angle structure exists on
          * this triangulation.
          *
          * @return a generalised angle structure on this triangulation, if
@@ -1593,7 +1593,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is connected.
          *
-         * \exception FailedPrecondition this triangulation has more
+         * \exception FailedPrecondition This triangulation has more
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
          *
@@ -1693,7 +1693,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is connected.
          *
-         * \exception FailedPrecondition this triangulation has more
+         * \exception FailedPrecondition This triangulation has more
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
          *
@@ -1760,7 +1760,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
-         * \exception FailedPrecondition this triangulation is not valid.
+         * \exception FailedPrecondition This triangulation is not valid.
          *
          * @return \c true if the triangulation was changed, or \c false if
          * every boundary component was already minimal to begin with.
@@ -1817,7 +1817,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
-         * \exception FailedPrecondition this triangulation is not valid.
+         * \exception FailedPrecondition This triangulation is not valid.
          *
          * @return \c true if the triangulation was changed, or \c false if
          * the number of vertices was already minimal to begin with.
@@ -2535,7 +2535,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed and connected.
          *
-         * \exception UnsolvedCase the original manifold is non-orientable
+         * \exception UnsolvedCase The original manifold is non-orientable
          * and contains one or more embedded two-sided projective planes,
          * and this routine was not able to recover from this situation.
          *
@@ -3592,7 +3592,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * to the original, but it is guaranteed to produce an isomorphic
          * copy.  See dehydrate() for the reasons behind this.
          *
-         * \exception InvalidArgument the given string could not be rehydrated.
+         * \exception InvalidArgument The given string could not be rehydrated.
          *
          * @param dehydration a dehydrated representation of the
          * triangulation to construct.  Case is irrelevant; all letters
@@ -3627,7 +3627,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * contents instead.  See the string-based SnapPeaTriangulation
          * constructor for how to do this.
          *
-         * \exception InvalidArgument the given SnapPea data was not in
+         * \exception InvalidArgument The given SnapPea data was not in
          * the correct format.
          *
          * @param snapPeaData a string containing the full contents of a
