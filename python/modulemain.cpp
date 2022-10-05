@@ -233,14 +233,24 @@ a new Python session.)doc");
 
     RDOC_SCOPE_END
 
-    // Components from subdirectories - these appear in order of
-    // dependency, in some cases because the bindings require it,
-    // and in some cases so that docstrings can pick up abbreviated
-    // class names (e.g., Integer, VectorInt, etc.).
+    // Components from subdirectories, which appear in order of dependency:
+    //
+    // - In some cases the bindings require this; in particular, when a value
+    //   has to be converted to Python immediately.  This can happen (for
+    //   instance) when setting default arguments or class constants, in
+    //   which case the type of the value being set must already be available.
+    //   A failure here will mean the Python module cannot load (and so will
+    //   be picked up by the test suite).
+    //
+    // - For docstrings with abbreviated type names (e.g., Integer instead of
+    //   IntegerBase<false>), the type should be already available in order
+    //   for the docstrings to use them in the function signatures.
+    //   A failure here will simply lead to less-readable docstrints (and so
+    //   will not be picked up automatically by our tests).
 
+    addFileClasses(m); // Provides FileFormat, which is used later
     addMathsClasses(m);
     addUtilitiesClasses(m);
-    addFileClasses(m);
     addProgressClasses(m);
     addAlgebraClasses(m);
     addPacketClasses(m);
