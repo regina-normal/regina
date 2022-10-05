@@ -185,6 +185,7 @@ def process_comment(comment):
     s = re.sub(r'<tt>(.*?)</tt>', r'``\1``', s, flags=re.DOTALL)
     s = re.sub(r'<pre>(.*?)</pre>', r"```\n\1\n```\n", s, flags=re.DOTALL)
     s = re.sub(r'<em>(.*?)</em>', r'*\1*', s, flags=re.DOTALL)
+    s = re.sub(r'<i>(.*?)</i>', r'*\1*', s, flags=re.DOTALL)
     s = re.sub(r'<b>(.*?)</b>', r'**\1**', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]f\$(.*?)[\\@]f\$', r':math:`\1`', s, flags=re.DOTALL)
     s = re.sub(r'<li>', r'\n\n* ', s)
@@ -308,27 +309,31 @@ def extract(filename, node, namespace, output):
                 fullname = fullname + namespace + '::'
             fullname += name
 
-            skip = False
             # if node.lexical_parent != node.semantic_parent:
             if node != node.canonical:
                 # We are seeing functions with inline definitions and/or
                 # forward declarations appear multiple times in the output.
                 # Try to ensure that their docstrings are listed only once.
-                skip = True
+                return
+
             if node.raw_comment is None:
                 print('    Undocumented:', fullname, '-- skipping')
-                skip = True
-            elif node.spelling == 'operator<<':
+                return
+
+            if '\\ifacespython Not present.\n' in node.raw_comment:
+                # It is clear in the C++ docs that this has no Python binding.
+                return
+
+            if node.spelling == 'operator<<':
                 # We do not want docs for std::ostream output operators.
                 # For now we skip *all* left shift operators; this may need to
                 # become more nuanced at a later date.
                 print('    Left shift:', fullname, '-- skipping')
-                skip = True
+                return
 
-            if not skip:
-                comment = d(node.raw_comment)
-                comment = process_comment(comment)
-                output.append((sub_namespace, name, filename, comment))
+            comment = d(node.raw_comment)
+            comment = process_comment(comment)
+            output.append((sub_namespace, name, filename, comment))
 
 
 def read_args(args):

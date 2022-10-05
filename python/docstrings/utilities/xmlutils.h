@@ -39,31 +39,6 @@ Returns:
     the converted string with special characters replaced by XML
     entities.)doc";
 
-// Docstring regina::python::doc::xml::xmlValueTag
-static const char *xmlValueTag =
-R"doc(Returns an XML tag with a single property containing the given value.
-The tag will be of the form ``<tagName value="..."/>``.
-
-The value itself will be written to the tag string using the standard
-output stream operator <<.
-
-Precondition:
-    The property value when written to an output stream does not
-    contain any special characters (such as ``<`` or ``&``) that need
-    to be encoded as XML entities.
-
-Python:
-    Not present.
-
-Parameter ``tagName``:
-    the name of the XML tag to create.
-
-Parameter ``value``:
-    the value to assign to the <i>value</i> property of the tag.
-
-Returns:
-    the corresponding XML tag.)doc";
-
 }
 
 } // namespace regina::python::doc
