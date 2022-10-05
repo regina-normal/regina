@@ -80,6 +80,8 @@ enum EqualityType {
     DISABLED = 4
 };
 
+#ifndef __DOCSTRINGS
+
 /**
  * Adds appropriate == and != operators to the python bindings for a C++ class.
  *
@@ -405,5 +407,6 @@ inline void packet_disable_eq_operators(pybind11::class_<C, options...>& c) {
 }
 
 #endif // __DOXYGEN
+#endif // __DOCSTRINGS
 
 } } // namespace regina::python

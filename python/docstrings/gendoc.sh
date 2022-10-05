@@ -2,7 +2,7 @@
 set -e
 
 if [ "$#" = 0 ]; then
-  dirs="core file progress utilities"
+  dirs="core file progress python utilities"
 else
   dirs="$@"
 fi
@@ -32,7 +32,7 @@ for dir in $dirs; do
     * )
       ;;
   esac
-  if [ ! -d ../../engine/"$dir" ]; then
+  if [ "$dir" != python -a ! -d ../../engine/"$dir" ]; then
     usage "Argument $dir should be a subdirectory of ../../engine"
     exit 1
   fi
@@ -40,23 +40,33 @@ for dir in $dirs; do
     usage "Argument $dir does not have a docstring output directory"
     exit 1
   fi
-  for i in ../../engine/"$dir"/*.h; do
-    header=`basename "$i"`
-    case "$dir/$header" in
-      *-impl.h ) ;;
-      utilities/flags.h ) ;;
-      utilities/listview.h ) ;;
-      utilities/markedvector.h ) ;;
-      utilities/memstream.h ) ;;
-      utilities/sequence.h ) ;;
-      utilities/shortarray.h ) ;;
-      utilities/typeutils.h ) ;;
-      utilities/zstr.h ) ;;
-      * )
-        python3 -m pybind11_mkdoc -std=c++17 \
-          -o "$dir/$header" ../../engine/"$dir/$header"
-        ;;
-    esac
-  done
+
+  if [ "$dir" = python ]; then
+    python3 -m pybind11_mkdoc -std=c++17 \
+      -o python/equality.h "../helpers/equality.h"
+  else
+    if [ "$dir" = core ]; then
+      python3 -m pybind11_mkdoc -std=c++17 \
+        -o core/regina-core.h "../../engine/regina-core.h"
+    fi
+    for i in ../../engine/"$dir"/*.h; do
+      header=`basename "$i"`
+      case "$dir/$header" in
+        *-impl.h ) ;;
+        utilities/flags.h ) ;;
+        utilities/listview.h ) ;;
+        utilities/markedvector.h ) ;;
+        utilities/memstream.h ) ;;
+        utilities/sequence.h ) ;;
+        utilities/shortarray.h ) ;;
+        utilities/typeutils.h ) ;;
+        utilities/zstr.h ) ;;
+        * )
+          python3 -m pybind11_mkdoc -std=c++17 \
+            -o "$dir/$header" ../../engine/"$dir/$header"
+          ;;
+      esac
+    done
+  fi
 done
 

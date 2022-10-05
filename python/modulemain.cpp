@@ -37,6 +37,8 @@
 #include "helpers.h"
 #include "docstrings/core/engine.h"
 #include "docstrings/core/output.h"
+#include "docstrings/core/regina-core.h"
+#include "docstrings/python/equality.h"
 
 // Docstrings that are generated once but need to be reused across many
 // source files:
@@ -189,19 +191,26 @@ a new Python session.)doc");
 
     // Wrappers for regina::python helpers:
 
-    pybind11::enum_<regina::python::EqualityType>(m, "EqualityType")
-        .value("BY_VALUE", regina::python::BY_VALUE)
-        .value("BY_REFERENCE", regina::python::BY_REFERENCE)
-        .value("NEVER_INSTANTIATED", regina::python::NEVER_INSTANTIATED)
-        .value("DISABLED", regina::python::DISABLED)
+    RDOC_SCOPE_BEGIN(python::EqualityType)
+
+    pybind11::enum_<regina::python::EqualityType>(m, "EqualityType", rdoc_scope)
+        .value("BY_VALUE", regina::python::BY_VALUE, rdoc::BY_VALUE)
+        .value("BY_REFERENCE", regina::python::BY_REFERENCE, rdoc::BY_REFERENCE)
+        .value("NEVER_INSTANTIATED", regina::python::NEVER_INSTANTIATED,
+            rdoc::NEVER_INSTANTIATED)
+        .value("DISABLED", regina::python::DISABLED, rdoc::DISABLED)
         ;
 
     addGlobalArray(m);
 
     // Core engine routines:
 
-    RDOC_SCOPE_BEGIN_MAIN
+    RDOC_SCOPE_SWITCH_MAIN
 
+    // From regina-core.h:
+    m.def("standardDim", regina::standardDim, rdoc::standardDim);
+
+    // From core/engine.h:
     m.def("versionString", regina::versionString, rdoc::versionString);
     m.def("versionMajor", regina::versionMajor, rdoc::versionMajor);
     m.def("versionMinor", regina::versionMinor, rdoc::versionMinor);
@@ -212,15 +221,17 @@ a new Python session.)doc");
     m.def("politeThreads", regina::politeThreads, rdoc::politeThreads);
     m.def("testEngine", regina::testEngine, rdoc::testEngine);
 
-    RDOC_SCOPE_END
+    RDOC_SCOPE_SWITCH(Algorithm)
 
-    pybind11::enum_<regina::Algorithm>(m, "Algorithm")
-        .value("ALG_DEFAULT", regina::ALG_DEFAULT)
-        .value("ALG_BACKTRACK", regina::ALG_BACKTRACK)
-        .value("ALG_TREEWIDTH", regina::ALG_TREEWIDTH)
-        .value("ALG_NAIVE", regina::ALG_NAIVE)
+    pybind11::enum_<regina::Algorithm>(m, "Algorithm", rdoc_scope)
+        .value("ALG_DEFAULT", regina::ALG_DEFAULT, rdoc::ALG_DEFAULT)
+        .value("ALG_BACKTRACK", regina::ALG_BACKTRACK, rdoc::ALG_BACKTRACK)
+        .value("ALG_TREEWIDTH", regina::ALG_TREEWIDTH, rdoc::ALG_TREEWIDTH)
+        .value("ALG_NAIVE", regina::ALG_NAIVE, rdoc::ALG_NAIVE)
         .export_values();
         ;
+
+    RDOC_SCOPE_END
 
     // Components from subdirectories (in approximate dependency order):
 
