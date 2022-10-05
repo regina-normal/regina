@@ -316,7 +316,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * be lost.  See fromSnapPea() for details, and for other
          * alternatives that preserve SnapPy-specific data.
          *
-         * \ifacescpp Not present.
+         * \nocpp
          *
          * @param m a SnapPy object of type snappy.Manifold.
          */
@@ -329,7 +329,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * be lost.  See fromSnapPea() for details, and for other
          * alternatives that preserve SnapPy-specific data.
          *
-         * \ifacescpp Not present.
+         * \nocpp
          *
          * @param t a SnapPy object of type snappy.Triangulation.
          */

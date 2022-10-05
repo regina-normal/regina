@@ -33,9 +33,9 @@ VERBATIM_HEADERS     = NO
 
 # Aliases:
 ALIASES = \
-    "ifaces=\par Interfaces^^" \
-    "ifacescpp=\par C++^^" \
+    "cpp=\par C++^^" \
     "ifacespython=\par Python^^" \
+    "nocpp=\par C++^^Not present. This is for Python users only." \
     "nopython=\par Python^^Not present." \
     "snappy=\par SnapPy^^" \
     "i18n=\par Internationalisation^^" \

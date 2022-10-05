@@ -294,8 +294,8 @@ class Laurent :
          * by value (to enforce constness), which means for example you
          * cannot write something like <tt>poly[exp].negate()</tt>.
          *
-         * \ifacescpp C++ users must always set coefficients using the
-         * separate routine set(), since this square bracket operator is const.
+         * \cpp For C++ users, this operator is read-only.  To \e set
+         * coefficients, you must use the separate routine set().
          *
          * @param exp the exponent of the term whose coefficient should
          * be returned.

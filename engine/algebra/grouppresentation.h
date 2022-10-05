@@ -1529,7 +1529,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * A SageMath-only routine that returns a copy of this group
          * presentation in a format native to SageMath.
          *
-         * \ifacescpp Not present.
+         * \nocpp
          * \ifacespython Only present when run within SageMath.
          *
          * @return a copy of this group as a mathematical object native to

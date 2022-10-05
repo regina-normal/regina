@@ -318,7 +318,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * to store integers of arbitrary magnitude (much like Regina does
          * with its Integer and LargeInteger classes).
          *
-         * \ifacescpp Not available: this constructor is for Python only.
+         * \nocpp
          *
          * @param value the new value of this integer.
          */
