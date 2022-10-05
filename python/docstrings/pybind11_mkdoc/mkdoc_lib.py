@@ -68,8 +68,8 @@ CPP_OPERATORS = {
     '+=': 'iadd', '-=': 'isub', '*=': 'imul', '/=': 'idiv', '%=':
     'imod', '&=': 'iand', '|=': 'ior', '^=': 'ixor', '<<=': 'ilshift',
     '>>=': 'irshift', '++': 'inc', '--': 'dec', '<<': 'lshift', '>>':
-    'rshift', '&&': 'land', '||': 'lor', '!': 'lnot', '~': 'bnot',
-    '&': 'band', '|': 'bor', '+': 'add', '-': 'sub', '*': 'mul', '/':
+    'rshift', '&&': 'land', '||': 'lor', '!': 'lnot', '~': 'bnot', '&': 'band',
+    '|': 'bor', '^': 'bxor', '+': 'add', '-': 'sub', '*': 'mul', '/':
     'div', '%': 'mod', '<': 'lt', '>': 'gt', '=': 'assign', '()': 'call'
 }
 
