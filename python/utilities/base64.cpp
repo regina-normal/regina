@@ -66,7 +66,7 @@ void addBase64(pybind11::module_& m) {
         pybind11::str ans(out, outlen);
         delete[] out;
         return ans;
-    }, rdoc::base64Encode_2);
+    }, pybind11::arg("input_bytes"), rdoc::base64Encode_2);
 
     m.def("base64Decode", [](const std::string& s) -> pybind11::object {
         char* out;
@@ -79,7 +79,7 @@ void addBase64(pybind11::module_& m) {
         } else {
             return pybind11::none();
         }
-    }, rdoc::base64Decode_2);
+    }, pybind11::arg("input_string"), rdoc::base64Decode_2);
 
     RDOC_SCOPE_END
 }
