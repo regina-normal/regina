@@ -113,6 +113,7 @@ MACRO_EXPANSION      = YES
 EXPAND_ONLY_PREDEF   = YES
 PREDEFINED           = \
     __DOXYGEN \
+    __APIDOCS \
     REGINA_ENABLE_FOR_RING(returnType)=returnType \
     REGINA_ENABLE_FOR_REGINA_INTEGER(returnType)=returnType \
     ENABLE_MEMBER_FOR_REGINA_INTEGER(T,returnType)=returnType \

@@ -345,6 +345,7 @@ def read_args(args):
         parameters.append('-std=c++11')
     parameters.append('-Wno-pragma-once-outside-header')
     parameters.append('-D__DOCSTRINGS')
+    parameters.append('-D__APIDOCS')
 
     if platform.system() == 'Darwin':
         dev_path = '/Applications/Xcode.app/Contents/Developer/'

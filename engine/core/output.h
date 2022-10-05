@@ -47,7 +47,7 @@
 
 namespace regina {
 
-#if ! (defined(__DOXYGEN) || defined(__DOCSTRINGS))
+#ifndef __APIDOCS
 template <class T, bool supportsUtf8 = false> struct Output;
 #else
 /**
