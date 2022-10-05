@@ -123,7 +123,7 @@ class Locale {
  * machine, though in this case it will simply pass data through without
  * performing any translations.
  *
- * \ifacespython Not included.
+ * \ifacespython Not present.
  *
  * @author Parts of this code are modified from the cxxtools library
  * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is

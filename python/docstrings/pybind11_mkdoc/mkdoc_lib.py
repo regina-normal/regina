@@ -57,7 +57,6 @@ AVAILABILITY_BLACKLIST = [
 ]
 
 CLASS_BLACKLIST = [
-    'IConvStream', 'Snapshot', 'SnapshotRef', 'Snapshottable'
 ]
 
 MEMBER_BLACKLIST = [
@@ -279,6 +278,11 @@ def extract(filename, node, namespace, output):
     if not (node.location.file is None or
             os.path.samefile(d(node.location.file.name), filename)):
         return 0
+
+    if node.raw_comment and '\\ifacespython Not present.\n' in node.raw_comment:
+        # It is clear in the C++ docs that this entity has no Python binding.
+        return
+
     if node.kind in RECURSE_LIST and node.spelling not in CLASS_BLACKLIST:
         sub_namespace = namespace
         if node.kind not in PREFIX_BLACKLIST:
@@ -318,10 +322,6 @@ def extract(filename, node, namespace, output):
 
             if node.raw_comment is None:
                 print('    Undocumented:', fullname, '-- skipping')
-                return
-
-            if '\\ifacespython Not present.\n' in node.raw_comment:
-                # It is clear in the C++ docs that this has no Python binding.
                 return
 
             if node.spelling == 'operator<<':
