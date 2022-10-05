@@ -118,7 +118,7 @@ constexpr void for_constexpr(Action&& action) {
  * which means that the value of \a i will be accessible to \a action as a
  * compile-time constant.
  *
- * \exception std::runtime_error the given runtime value is not within the
+ * \exception std::runtime_error The given runtime value is not within the
  * range <i>from</i>, ..., (<i>to</i>-1).
  *
  * \tparam Return the type to be returned from this function.
@@ -194,7 +194,7 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  * \pre All of the possible return types <tt>R(from)</tt>,
  * <tt>R(from+1)</tt>, ..., <tt>R(to-1)</tt> are different.
  *
- * \exception std::runtime_error the given runtime value is not within the
+ * \exception std::runtime_error The given runtime value is not within the
  * range <i>from</i>, ..., (<i>to</i>-1).
  *
  * @param value the runtime value that determines the selection; that is, the

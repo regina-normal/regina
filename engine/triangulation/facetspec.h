@@ -296,7 +296,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Before-the-start, past-the-end and boundary specifiers can all be
      * safely reconstructed.
      *
-     * \exception InvalidInput the given input stream does not begin with
+     * \exception InvalidInput The given input stream does not begin with
      * a tight encoding of a <i>dim</i>-dimensional facet specifier.
      *
      * \ifacespython Not present; use tightDecoding() instead, which takes

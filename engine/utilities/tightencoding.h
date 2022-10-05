@@ -194,7 +194,7 @@ struct TightEncodable {
      * (including trailing whitespace), then it will be treated as
      * an invalid encoding (i.e., this routine will throw an exception).
      *
-     * \exception InvalidArgument the given string is not a tight encoding
+     * \exception InvalidArgument The given string is not a tight encoding
      * of an object of type \a T.
      *
      * @param enc the tight encoding for an object of type \a T.
@@ -420,7 +420,7 @@ std::string tightEncoding(bool value);
  * (i.e., \c bool; signed and unsigned \c int, \c long, and \c long \c long;
  * and regina::Integer and regina::LargeInteger).
  *
- * \exception InvalidArgument the given string is not a tight encoding of an
+ * \exception InvalidArgument The given string is not a tight encoding of an
  * integer/boolean of type \a Int.  This includes the case where the encoding
  * \e is a valid integer encoding but the integer itself is outside the
  * allowed range for the \a Int type.
@@ -471,7 +471,7 @@ Int tightDecoding(const std::string& enc);
  * (i.e., \c bool; signed and unsigned \c int, \c long, and \c long \c long;
  * and regina::Integer and regina::LargeInteger).
  *
- * \exception InvalidInput the given input stream does not begin with a tight
+ * \exception InvalidInput The given input stream does not begin with a tight
  * encoding of an integer/boolean of type \a Int.  This includes the case
  * where the encoding \e is a valid integer encoding but the integer itself
  * is outside the allowed range for the \a Int type.
@@ -532,7 +532,7 @@ namespace detail {
      * invalid also; if \a noTrailingData is \c false then there is no
      * constraint on the final state of the iterator.
      *
-     * \exception InvalidInput the given iterator does not point to
+     * \exception InvalidInput The given iterator does not point to
      * a tight encoding of an integer of type \a Int.  This includes the
      * case where the encoding \e is a valid integer encoding but the integer
      * itself is outside the allowed range for the \a Int type.
@@ -572,7 +572,7 @@ namespace detail {
      * integer encodings.  Instead, it is intended to be used as part of the
      * encoding for larger objects (e.g., triangulations or isomorphisms).
      *
-     * \exception InvalidArgument the given integer is less than -1.
+     * \exception InvalidArgument The given integer is less than -1.
      *
      * \ifacespython Not present.
      *
@@ -617,7 +617,7 @@ namespace detail {
      * then the input stream will be left positioned immediately after the
      * encoding, without skipping any trailing whitespace.
      *
-     * \exception InvalidInput the given input stream does not begin with a
+     * \exception InvalidInput The given input stream does not begin with a
      * tight encoding of an integer of type \a Int using the encoding scheme
      * defined by tightEncodeIndex().  This includes the case where the
      * encoding \e is a valid non-negative integer encoding but the integer

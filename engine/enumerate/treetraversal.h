@@ -379,7 +379,7 @@ class TreeTraversal : public ShortOutput<
          * \pre We are working with normal or almost normal surfaces.
          * This will be checked (see the exception details below).
          *
-         * \throw FailedPrecondition we are not working with normal or
+         * \exception FailedPrecondition We are not working with normal or
          * almost normal surfaces (i.e., the coordinate system passed to the
          * TreeTraversal constructor was NS_ANGLE).
          *
@@ -406,9 +406,9 @@ class TreeTraversal : public ShortOutput<
          * \pre We are working with angle structure coordinates.
          * This will be checked (see the exception details below).
          *
-         * \throw FailedPrecondition we are not working with angle structure
-         * coordinates (i.e., the coordinate system passed to the TreeTraversal
-         * constructor was not NS_ANGLE).
+         * \exception FailedPrecondition We are not working with angle
+         * structure coordinates (i.e., the coordinate system passed to the
+         * TreeTraversal constructor was not NS_ANGLE).
          *
          * @return the taut angle structure that has been found at the
          * current stage of the search.
