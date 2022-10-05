@@ -48,6 +48,12 @@ for dir in $dirs; do
     if [ "$dir" = core ]; then
       python3 -m pybind11_mkdoc -std=c++17 \
         -o core/regina-core.h "../../engine/regina-core.h"
+    elif [ "$dir" = maths ]; then
+      for i in ../../engine/"$dir"/spec/*.h; do
+        header=`basename "$i"`
+        python3 -m pybind11_mkdoc -std=c++17 \
+          -o "$dir/$header" ../../engine/"$dir/spec/$header"
+      done
     fi
     for i in ../../engine/"$dir"/*.h; do
       header=`basename "$i"`
