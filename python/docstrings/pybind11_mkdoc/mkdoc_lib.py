@@ -138,6 +138,8 @@ def process_comment(comment):
                r'\n\n$Parameter ``\2``:\n\n', s)
     s = re.sub(r'[\\@]tparam%s?\s+%s' % (param_group, cpp_group),
                r'\n\n$Template parameter ``\2``:\n\n', s)
+    s = re.sub(r'[\\@]exception\s+%s' % cpp_group,
+               r'\n\n$Exception ``\1``:\n\n', s)
 
     for in_, out_ in {
         'returns': 'Returns',
@@ -153,10 +155,7 @@ def process_comment(comment):
         'pre': 'Precondition',
         'ifacespython': 'Python',
         'ifacescpp': 'C++',
-        'i18n': 'Internationalisation',
-        'exception': 'Exceptions',
-        'throws': 'Throws',
-        'throw': 'Throws'
+        'i18n': 'Internationalisation'
     }.items():
         s = re.sub(r'[\\@]%s\s*' % in_, r'\n\n$%s:\n\n' % out_, s)
 
@@ -171,14 +170,19 @@ def process_comment(comment):
                r'$.. warning::\n\n\1\n\n', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]note\s?(.*?)\s?\n\n',
                r'$.. note::\n\n\1\n\n', s, flags=re.DOTALL)
+
+    # Regina-specific paragraphs that we can ignore in Python:
+    s = re.sub(r'\\headers\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
+
+    # Doxygen paragraphs that we will likewise ignore in Python:
+    s = re.sub(r'[\\@]todo\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
+
     # Deprecated expects a version number for reST and not for Doxygen. Here the first word of the
     # doxygen directives is assumed to correspond to the version number
     s = re.sub(r'[\\@]deprecated\s(.*?)\s?(.*?)\s?\n\n',
                r'$.. deprecated:: \1\n\n\2\n\n', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]since\s?(.*?)\s?\n\n',
                r'.. versionadded:: \1\n\n', s, flags=re.DOTALL)
-    s = re.sub(r'[\\@]todo\s?(.*?)\s?\n\n',
-               r'$.. todo::\n\n\1\n\n', s, flags=re.DOTALL)
 
     # HTML/TeX tags
     s = re.sub(r'<tt>(.*?)</tt>', r'``\1``', s, flags=re.DOTALL)
@@ -192,6 +196,9 @@ def process_comment(comment):
     s = re.sub(r'</li>', r'\n\n', s)
 
     # Special characters
+    s = re.sub(r'(^|[^\\])&lt;', r'\1<', s)
+    s = re.sub(r'(^|[^\\])&gt;', r'\1>', s)
+    s = re.sub(r'(^|[^\\])&amp;', r'\1&', s)
     s = re.sub(r'\\<', r'<', s)
     s = re.sub(r'\\>', r'>', s)
     s = re.sub(r'\\&', r'&', s)

@@ -33,15 +33,22 @@
 #include "../pybind11/pybind11.h"
 #include "maths/integer.h"
 #include "utilities/tightencoding.h"
+#include "../helpers/docstrings.h"
+#include "../docstrings/utilities/tightencoding.h"
 
 using pybind11::overload_cast;
 
 void addTightEncoding(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN_MAIN
+
     // We cannot use overload_cast here because there is a templated
     // global tightEncoding() function.
-    m.def("tightEncoding", (std::string (*)(long))(&regina::tightEncoding));
-    m.def("tightEncoding", (std::string (*)(long long))(&regina::tightEncoding));
-    m.def("tightEncoding", (std::string (*)(bool))(&regina::tightEncoding));
+    m.def("tightEncoding", (std::string (*)(long))(&regina::tightEncoding),
+        rdoc::tightEncoding_2);
+    m.def("tightEncoding", (std::string (*)(long long))(&regina::tightEncoding),
+        rdoc::tightEncoding_3);
+    m.def("tightEncoding", (std::string (*)(bool))(&regina::tightEncoding),
+        rdoc::tightEncoding_7);
     m.def("tightDecoding", [](const std::string& enc) {
         // Try a native integer conversion first.
         try {
@@ -56,6 +63,8 @@ void addTightEncoding(pybind11::module_& m) {
             return pybind11::reinterpret_steal<pybind11::object>(
                 PyLong_FromString(ans.stringValue().c_str(), nullptr, 10));
         }
-    });
+    }, rdoc::tightDecoding);
+
+    RDOC_SCOPE_END
 }
 

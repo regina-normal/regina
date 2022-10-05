@@ -34,9 +34,9 @@ The description of these three fields is taken directly from the
 ``proc``(5) manpage. Note that the length of a jiffy can differ from
 system to system; see the ``time``(7) manpage for details.
 
-Exceptions:
-    FileError Either ``/proc/self/stat`` cannot be read, or it
-    contains unexpected information.
+Exception ``FileError``:
+    Either ``/proc/self/stat`` cannot be read, or it contains
+    unexpected information.
 
 .. warning::
     Currently this routine allows at most 255 characters for the

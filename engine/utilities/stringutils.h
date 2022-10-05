@@ -87,7 +87,7 @@ std::string stripWhitespace(const std::string& str);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -108,7 +108,7 @@ bool valueOf(const std::string& str, int8_t& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -130,7 +130,7 @@ bool valueOf(const std::string& str, uint8_t& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -151,7 +151,7 @@ bool valueOf(const std::string& str, short& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -173,7 +173,7 @@ bool valueOf(const std::string& str, unsigned short& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -194,7 +194,7 @@ bool valueOf(const std::string& str, int& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -215,7 +215,7 @@ bool valueOf(const std::string& str, unsigned& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -236,7 +236,7 @@ bool valueOf(const std::string& str, long& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -258,7 +258,7 @@ bool valueOf(const std::string& str, unsigned long& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -279,7 +279,7 @@ bool valueOf(const std::string& str, long long& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -301,7 +301,7 @@ bool valueOf(const std::string& str, unsigned long long& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -324,7 +324,7 @@ bool valueOf(const std::string& str, double& dest);
  * Otherwise the conversion will be unsuccessful and argument \a dest will
  * be set to \c false.
  *
- * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -345,8 +345,8 @@ bool valueOf(const std::string& str, bool& dest);
  * BoolSet::stringCode().  If the conversion is unsuccessful, argument
  * \a dest will be set to the empty set and \c false will be returned.
  *
- * \ifacespython Not present, since none of Regina's valueOf() functions are
- * available to Python.  Instead you can use BoolSet::setStringCode(), which
+ * \nopython None of Regina's valueOf() functions are wrapped in Python.
+ * For this variant, you can instead use BoolSet::setStringCode(), which
  * performs the same task (with the minor difference that it does not change
  * \a dest if the conversion is unsuccessful).
  *

@@ -328,8 +328,8 @@ class BoolSet {
          *
          * Every string code contains precisely two characters (plus a
          * terminating null).
-         * Sets {}, {true}, {false} and {true, false} have
-         * string codes \c "--", \c "T-", \c "-F" and \c "TF" respectively.
+         * Sets {}, {true}, {false} and {true, false} have string codes
+         * <tt>--</tt>, <tt>T-</tt>, <tt>-F</tt> and <tt>TF</tt> respectively.
          *
          * @return the two-character string code representing this set.
          */

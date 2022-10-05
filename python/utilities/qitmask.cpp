@@ -35,27 +35,34 @@
 #include "utilities/qitmask.h"
 #include "utilities/intutils.h"
 #include "../helpers.h"
+#include "../docstrings/utilities/qitmask.h"
 
 using regina::Qitmask1;
 using regina::Qitmask2;
 
 template <class Q>
 void addQitmaskOpt(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<Q>(m, name)
-        .def(pybind11::init<>())
-        .def(pybind11::init<const Q&>())
-        .def("reset", &Q::reset)
-        .def("get", &Q::get)
-        .def("set", &Q::set)
-        .def("empty", &Q::empty)
-        .def("nonEmpty", &Q::nonEmpty)
-        .def("has3", &Q::has3)
-        .def(pybind11::self += pybind11::self)
-        .def(pybind11::self -= pybind11::self)
-        .def("hasNonZeroMatch", &Q::hasNonZeroMatch)
+    // Q could be an instance of either Qitmask1 or Qitmask2, but since the
+    // Python docs are essentially the same we will just use Qitmask1 here.
+    RDOC_SCOPE_BEGIN(Qitmask1)
+
+    auto c = pybind11::class_<Q>(m, name, rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Qitmask1)
+        .def(pybind11::init<const Q&>(), rdoc::Qitmask1_2)
+        .def("reset", &Q::reset, rdoc::reset)
+        .def("get", &Q::get, rdoc::get)
+        .def("set", &Q::set, rdoc::set)
+        .def("empty", &Q::empty, rdoc::empty)
+        .def("nonEmpty", &Q::nonEmpty, rdoc::nonEmpty)
+        .def("has3", &Q::has3, rdoc::has3)
+        .def(pybind11::self += pybind11::self, rdoc::__iadd)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def("hasNonZeroMatch", &Q::hasNonZeroMatch, rdoc::hasNonZeroMatch)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 
 void addQitmask(pybind11::module_& m) {
