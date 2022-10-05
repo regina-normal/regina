@@ -160,8 +160,8 @@ class IntegerBase;
  * derived from the class \a T.  In other words, end users cannot
  * construct objects of the parent class TightEncodable<T>.
  *
- * \ifacespython Not present, but the routines tightEncoding() and
- * tightDecoding() will be provided directly through the various subclasses.
+ * \nopython However, the routines tightEncoding() and tightDecoding() will be
+ * provided directly through the various subclasses.
  *
  * \ingroup utilities
  */
@@ -219,8 +219,7 @@ struct TightEncodable {
  * Writes the tight encoding of the given signed integer to the given
  * output stream.  See the page on \ref tight "tight encodings" for details.
  *
- * \ifacespython Not present; use regina::tightEncoding(int) instead,
- * which returns a string.
+ * \nopython Use regina::tightEncoding(int) instead, which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -244,8 +243,7 @@ std::string tightEncoding(int value);
  * Writes the tight encoding of the given signed long integer to the given
  * output stream.  See the page on \ref tight "tight encodings" for details.
  *
- * \ifacespython Not present; use regina::tightEncoding(long) instead,
- * which returns a string.
+ * \nopython Use regina::tightEncoding(long) instead, which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -269,8 +267,8 @@ std::string tightEncoding(long value);
  * Writes the tight encoding of the given signed long long integer to the given
  * output stream.  See the page on \ref tight "tight encodings" for details.
  *
- * \ifacespython Not present; use regina::tightEncoding(long long) instead,
- * which returns a string.
+ * \nopython Use regina::tightEncoding(long long) instead, which returns a
+ * string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -294,8 +292,7 @@ std::string tightEncoding(long long value);
  * Writes the tight encoding of the given unsigned integer to the given
  * output stream.  See the page on \ref tight "tight encodings" for details.
  *
- * \ifacespython Not present; use regina::tightEncoding(int) instead,
- * which returns a string.
+ * \nopython Use regina::tightEncoding(int) instead, which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -319,8 +316,7 @@ std::string tightEncoding(unsigned value);
  * Writes the tight encoding of the given unsigned long integer to the given
  * output stream.  See the page on \ref tight "tight encodings" for details.
  *
- * \ifacespython Not present; use regina::tightEncoding(long) instead,
- * which returns a string.
+ * \nopython Use regina::tightEncoding(long) instead, which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -345,8 +341,8 @@ std::string tightEncoding(unsigned long value);
  * given output stream.  See the page on \ref tight "tight encodings" for
  * details.
  *
- * \ifacespython Not present; use regina::tightEncoding(long long) instead,
- * which returns a string.
+ * \nopython Use regina::tightEncoding(long long) instead, which returns a
+ * string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -373,8 +369,7 @@ std::string tightEncoding(unsigned long long value);
  * The booleans \c true and \c false are guaranteed to have the same
  * tight encodings as the integers 1 and 0 respectively.
  *
- * \ifacespython Not present; use regina::tightEncoding(bool) instead,
- * which returns a string.
+ * \nopython Use regina::tightEncoding(bool) instead, which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the boolean to encode.
@@ -476,8 +471,8 @@ Int tightDecoding(const std::string& enc);
  * where the encoding \e is a valid integer encoding but the integer itself
  * is outside the allowed range for the \a Int type.
  *
- * \ifacespython Not present; use regina::tightDecoding() instead, which
- * takes a string as its argument.
+ * \nopython Use regina::tightDecoding() instead, which takes a string as its
+ * argument.
  *
  * \tparam Int The type of integer/boolean to reconstruct; this must be either
  * (i) a native C++ integer type or \c bool, or (ii) one of Regina's arbitrary
@@ -500,7 +495,7 @@ namespace detail {
      * This routine does support passing infinity as the given value (which is
      * only relevant when the integer type \a Int is regina::LargeInteger).
      *
-     * \ifacespython Not present; use regina::tightEncoding(...) instead.
+     * \nopython Use regina::tightEncoding(...) instead.
      *
      * \tparam Int The type of integer to encode; this must be either
      * (i) a native C++ integer type, or (ii) one of Regina's arbitrary
@@ -540,7 +535,7 @@ namespace detail {
      * This routine does recognise infinity in the case where \a Int is
      * the type regina::LargeInteger.
      *
-     * \ifacespython Not present; use regina::tightDecoding() instead.
+     * \nopython Use regina::tightDecoding() instead.
      *
      * \tparam Int The type of integer to reconstruct; this must be either
      * (i) a native C++ integer type, or (ii) one of Regina's arbitrary
@@ -574,7 +569,7 @@ namespace detail {
      *
      * \exception InvalidArgument the given integer is less than -1.
      *
-     * \ifacespython Not present.
+     * \nopython
      *
      * \tparam Int The type of integer to encode.  Currently this must be
      * either \c ssize_t (the only allowed signed type), or one of the
@@ -596,7 +591,7 @@ namespace detail {
      *
      * This is identical to calling <tt>tightEncodeIndex<ssize_t>(out, -1)</tt>.
      *
-     * \ifacespython Not present.
+     * \nopython
      *
      * @param out the output stream to which the encoded string will be written.
      *
@@ -623,7 +618,7 @@ namespace detail {
      * encoding \e is a valid non-negative integer encoding but the integer
      * itself is outside the allowed range for the \a Int type.
      *
-     * \ifacespython Not present.
+     * \nopython
      *
      * \tparam Int The type of integer to reconstruct.  Currently this must be
      * either \c ssize_t (the only allowed signed type), or one of the

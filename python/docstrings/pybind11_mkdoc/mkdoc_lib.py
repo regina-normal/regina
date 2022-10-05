@@ -60,7 +60,7 @@ CLASS_BLACKLIST = [
 ]
 
 MEMBER_BLACKLIST = [
-    'operator=', 'writeTextShort', 'writeTextLong'
+    'operator='
 ]
 
 CPP_OPERATORS = {
@@ -279,8 +279,8 @@ def extract(filename, node, namespace, output):
             os.path.samefile(d(node.location.file.name), filename)):
         return 0
 
-    if node.raw_comment and '\\ifacespython Not present.\n' in node.raw_comment:
-        # It is clear in the C++ docs that this entity has no Python binding.
+    if node.raw_comment and '\\nopython' in node.raw_comment:
+        # It is noted in the C++ docs that this entity has no Python binding.
         return
 
     if node.kind in RECURSE_LIST and node.spelling not in CLASS_BLACKLIST:

@@ -73,7 +73,7 @@ namespace regina {
  * since this cannot be done any faster than a linear-time copy operation.
  * For the same reason, it does not implement its own custom swap functions.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */

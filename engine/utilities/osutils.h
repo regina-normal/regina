@@ -100,8 +100,8 @@ std::tuple<unsigned long, unsigned long, unsigned long> resUsage();
  * exception.  Instead it will write an appropriate message to the output
  * stream.
  *
- * \ifacespython Not present; instead use the variant resUsage() that
- * takes no arguments and returns a tuple.
+ * \nopython Instead use the variant resUsage() that takes no arguments and
+ * returns a tuple.
  *
  * @param out the output stream to which to write.
  */

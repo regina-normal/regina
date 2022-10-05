@@ -202,7 +202,7 @@ class SnapshotWriteError : public std::exception {
  * Images should always work through their base class Snapshottable<T>,
  * and viewers shoudl always work through SnapshotRef<T>.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -298,7 +298,7 @@ class Snapshot {
  * - modifications of objects that are freshly constructed, and cannot
  *   possibly have snapshots that refer to them yet.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -529,7 +529,7 @@ class Snapshottable {
  * value.  They do also offer move and swap operations that in some cases
  * are more efficient (though all copy, move and swap operations are fast).
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */

@@ -64,7 +64,7 @@ class NativeInteger;
  * The result will be available through the compile-time boolean constant
  * IsReginaInteger<T>::value.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -88,7 +88,7 @@ struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
  * The result will be available through the compile-time boolean constant
  * IsReginaArbitraryPrecisionInteger<T>::value.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -188,7 +188,7 @@ constexpr IntType nextPowerOfTwo(IntType n) {
  *
  * The template parameter \a coeff can be any positive integer.
  *
- * \ifacespython Not present, since Python does not support templates.
+ * \nopython This is because Python does not support templates.
  *
  * \ingroup utilities
  */
@@ -206,7 +206,7 @@ inline constexpr IntType maxSafeFactor =
  *
  * The template parameter \a coeff can be any positive integer.
  *
- * \ifacespython Not present, since Python does not support templates.
+ * \nopython This is because Python does not support templates.
  *
  * \ingroup utilities
  */
@@ -221,7 +221,7 @@ inline constexpr IntType minSafeFactor =
  * \tparam bytes the exact number of bytes in the native integer types
  * (i.e., the integer \a k described above).
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * @see IntOfMinSize
  *
@@ -255,7 +255,7 @@ struct IntOfSize {
  * \tparam bytes the minimum number of bytes in the native integer types
  * (i.e., the integer \a k described above).
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * @see IntOfSize
  *
@@ -363,7 +363,7 @@ struct IntOfSize<8> {
  * (Integer, LargeInteger and NativeInteger).  If you attempt to use this
  * with other types (e.g., int or long), this struct will be undefined.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */

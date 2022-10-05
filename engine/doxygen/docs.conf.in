@@ -36,6 +36,7 @@ ALIASES = \
     "ifaces=\par Interfaces^^" \
     "ifacescpp=\par C++^^" \
     "ifacespython=\par Python^^" \
+    "nopython=\par Python^^Not present." \
     "snappy=\par SnapPy^^" \
     "i18n=\par Internationalisation^^" \
     "proburgent=<i><b>Bug (urgent):</b></i>" \
