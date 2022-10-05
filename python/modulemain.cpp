@@ -183,7 +183,9 @@ PYBIND11_MODULE(regina, m) {
 #endif
     // Welcome string:
 
-    m.def("welcome", welcome);
+    m.def("welcome", welcome,
+R"doc(Returns a multi-line welcome string that can be used as a banner for
+a new Python session.)doc");
 
     // Wrappers for regina::python helpers:
 
@@ -247,6 +249,11 @@ PYBIND11_MODULE(regina, m) {
 
     // This routine allows the user to import sage-related hacks, which
     // are not included by default in regina's python module.
-    m.def("_addSageHacks", &addSageHacks);
+    m.def("_addSageHacks", &addSageHacks,
+R"doc(Modifies Regina's Python module to be suitable for use within SageMath.
+
+Since Regina 5.96, this routine does nothing at all. The future of
+this function is uncertain: it may be given a purpose again in some
+future release of Regina, or it may eventually be removed completely.)doc");
 }
 
