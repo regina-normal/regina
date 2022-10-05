@@ -54,7 +54,7 @@ Parameter ``n``:
     any integer.
 
 Returns:
-    the smallest integer power of two that is &ge; *n*.
+    the smallest integer power of two that is ≥ *n*.
 
 Template parameter ``IntType``:
     any integer type, such as ``int``, ``long``, and so on.)doc";

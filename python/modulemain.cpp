@@ -233,12 +233,15 @@ a new Python session.)doc");
 
     RDOC_SCOPE_END
 
-    // Components from subdirectories (in approximate dependency order):
+    // Components from subdirectories - these appear in order of
+    // dependency, in some cases because the bindings require it,
+    // and in some cases so that docstrings can pick up abbreviated
+    // class names (e.g., Integer, VectorInt, etc.).
 
-    addUtilitiesClasses(m);
-    addFileClasses(m); // needs to come before Packet
-    addProgressClasses(m);
     addMathsClasses(m);
+    addUtilitiesClasses(m);
+    addFileClasses(m);
+    addProgressClasses(m);
     addAlgebraClasses(m);
     addPacketClasses(m);
     addTriangulationClasses(m);

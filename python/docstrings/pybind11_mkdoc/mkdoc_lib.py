@@ -198,6 +198,8 @@ def process_comment(comment):
     # Special characters
     s = re.sub(r'(^|[^\\])&lt;', r'\1<', s)
     s = re.sub(r'(^|[^\\])&gt;', r'\1>', s)
+    s = re.sub(r'(^|[^\\])&le;', r'\1≤', s)
+    s = re.sub(r'(^|[^\\])&ge;', r'\1≥', s)
     s = re.sub(r'(^|[^\\])&amp;', r'\1&', s)
     s = re.sub(r'\\<', r'<', s)
     s = re.sub(r'\\>', r'>', s)

@@ -34,24 +34,30 @@
 #include "../pybind11/stl.h"
 #include "maths/primes.h"
 #include "../helpers.h"
+#include "../docstrings/maths/primes.h"
 
 using regina::Integer;
 using regina::Primes;
 
 void addPrimes(pybind11::module_& m) {
-    auto c = pybind11::class_<Primes>(m, "Primes")
-        .def_static("size", &Primes::size)
+    RDOC_SCOPE_BEGIN(Primes)
+
+    auto c = pybind11::class_<Primes>(m, "Primes", rdoc_scope)
+        .def_static("size", &Primes::size, rdoc::size)
         .def_static("prime", &Primes::prime,
-            pybind11::arg(), pybind11::arg("autoGrow") = true)
-        .def_static("primeDecomp", &Primes::primeDecomp)
+            pybind11::arg(), pybind11::arg("autoGrow") = true,
+            rdoc::prime)
+        .def_static("primeDecomp", &Primes::primeDecomp,
+            rdoc::primeDecomp)
         .def_static("primeDecompInt", [](const Integer& n) {
             std::vector<Integer> factors = Primes::primeDecomp(n);
             pybind11::list ans;
             for (auto& f : factors)
                 ans.append(f.longValue());
             return ans;
-        })
-        .def_static("primePowerDecomp", &Primes::primePowerDecomp)
+        }, rdoc::primeDecomp)
+        .def_static("primePowerDecomp", &Primes::primePowerDecomp,
+            rdoc::primePowerDecomp)
         .def_static("primePowerDecompInt", [](const Integer& n) {
             std::vector<std::pair<Integer, unsigned long>>
                 factors = Primes::primePowerDecomp(n);
@@ -59,8 +65,10 @@ void addPrimes(pybind11::module_& m) {
             for (auto& f : factors)
                 ans.append(pybind11::make_tuple(f.first.longValue(), f.second));
             return ans;
-        })
+        }, rdoc::primePowerDecomp)
     ;
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

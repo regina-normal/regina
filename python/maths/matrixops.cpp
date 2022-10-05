@@ -33,21 +33,33 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
 #include "maths/matrixops.h"
+#include "../helpers/docstrings.h"
+#include "../docstrings/maths/matrixops.h"
 
 using pybind11::overload_cast;
 using regina::MatrixInt;
 
 void addMatrixOps(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN_MAIN
+
     m.def("smithNormalForm", overload_cast<MatrixInt&>(
-        &regina::smithNormalForm));
+        &regina::smithNormalForm),
+        rdoc::smithNormalForm);
     m.def("smithNormalForm", overload_cast<MatrixInt&, MatrixInt&,
-            MatrixInt&, MatrixInt&, MatrixInt&>(
-        &regina::smithNormalForm));
-    m.def("metricalSmithNormalForm", &regina::metricalSmithNormalForm);
-    m.def("rowBasis", &regina::rowBasis);
-    m.def("rowBasisAndOrthComp", &regina::rowBasisAndOrthComp);
-    m.def("columnEchelonForm", &regina::columnEchelonForm);
-    m.def("preImageOfLattice", &regina::preImageOfLattice);
-    m.def("torsionAutInverse", &regina::torsionAutInverse);
+            MatrixInt&, MatrixInt&, MatrixInt&>(&regina::smithNormalForm),
+        rdoc::smithNormalForm_2);
+    m.def("metricalSmithNormalForm", &regina::metricalSmithNormalForm,
+        rdoc::metricalSmithNormalForm);
+    m.def("rowBasis", &regina::rowBasis, rdoc::rowBasis);
+    m.def("rowBasisAndOrthComp", &regina::rowBasisAndOrthComp,
+        rdoc::rowBasisAndOrthComp);
+    m.def("columnEchelonForm", &regina::columnEchelonForm,
+        rdoc::columnEchelonForm);
+    m.def("preImageOfLattice", &regina::preImageOfLattice,
+        rdoc::preImageOfLattice);
+    m.def("torsionAutInverse", &regina::torsionAutInverse,
+        rdoc::torsionAutInverse);
+
+    RDOC_SCOPE_END
 }
 
