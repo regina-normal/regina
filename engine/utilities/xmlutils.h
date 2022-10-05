@@ -112,7 +112,7 @@ inline std::string xmlValueTag(const std::string& tagName, const T& value) {
     return out.str();
 }
 
-#ifndef __DOXYGEN
+#if ! (defined(__DOXYGEN) || defined(__DOCSTRINGS))
     /**
      * Specialisations of xmlValueTag():
      */

@@ -57,7 +57,7 @@ AVAILABILITY_BLACKLIST = [
 ]
 
 CLASS_BLACKLIST = [
-    'Snapshot', 'SnapshotRef', 'Snapshottable'
+    'IConvStream', 'Snapshot', 'SnapshotRef', 'Snapshottable'
 ]
 
 MEMBER_BLACKLIST = [
@@ -190,6 +190,11 @@ def process_comment(comment):
     s = re.sub(r'<li>', r'\n\n* ', s)
     s = re.sub(r'</?ul>', r'', s)
     s = re.sub(r'</li>', r'\n\n', s)
+
+    # Special characters
+    s = re.sub(r'\\<', r'<', s)
+    s = re.sub(r'\\>', r'>', s)
+    s = re.sub(r'\\&', r'&', s)
 
     s = s.replace('``true``', '``True``')
     s = s.replace('``false``', '``False``')
