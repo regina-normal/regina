@@ -190,7 +190,7 @@ class Cut : public ShortOutput<Cut> {
          * the overall total size(), which \e is cached, and which runs
          * in constant time.
          *
-         * \exception InvalidArgument the given side is not 0 or 1.
+         * \exception InvalidArgument The given side is not 0 or 1.
          *
          * @param whichSide the side of the partition to query; this
          * must be either 0 or 1.
@@ -212,7 +212,7 @@ class Cut : public ShortOutput<Cut> {
          * Allows you to set which side of the partition the given simplex
          * lies on.
          *
-         * \exception InvalidArgument the given side is not 0 or 1.
+         * \exception InvalidArgument The given side is not 0 or 1.
          *
          * @param simplex the simplex being changed; this must be
          * between 0 and size()-1 inclusive.

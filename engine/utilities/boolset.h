@@ -72,17 +72,18 @@ class BoolSet {
          */
         constexpr BoolSet();
         /**
-         * Creates a set containing a single member as given.
+         * Creates a set containing a single boolean, which is passed as
+         * an argument.
          *
          * @param member the single element to include in this set.
          */
         constexpr BoolSet(bool member);
         /**
-         * Creates a set equal to the given set.
+         * Creates a clone of the given set.
          *
-         * @param cloneMe the set upon which we will base the new set.
+         * @param src the set to clone.
          */
-        constexpr BoolSet(const BoolSet& cloneMe) = default;
+        constexpr BoolSet(const BoolSet& src) = default;
         /**
          * Creates a set specifying whether \c true and/or \c false
          * should be a member.
