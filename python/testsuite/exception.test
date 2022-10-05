@@ -79,5 +79,22 @@ try:
 except NotImplemented:
     pass
 
+t = Example3.poincare()
+s = NormalSurfaces(t, NS_STANDARD)
+t = None
+print(s)
+try:
+    t = s.triangulation()
+    print(t.isReadOnlySnapshot())
+    # TODO: barycentricSubdivision(), due to a swap() in its internal
+    # implementation, actually throws a SnapshotWriteError from a
+    # triangulation destructor.  This is *bad*, and moreover results in
+    # an exception that Python cannot catch.
+    # t.barycentricSubdivision()
+    t.pachner(t.triangle(0))
+    print('ERROR: Did not throw exception')
+except SnapshotWriteError:
+    pass
+
 print('All done!')
 
