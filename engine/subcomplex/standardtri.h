@@ -160,10 +160,10 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * should be identical to the homology group obtained by calling
          * Triangulation<3>::homology() upon the associated real triangulation.
          *
-         * \exception NotImplemented homology calculation has not yet
+         * \exception NotImplemented Homology calculation has not yet
          * been implemented for this particular type of standard triangulation.
          *
-         * \exception FileError the homology needs to be read from file (as
+         * \exception FileError The homology needs to be read from file (as
          * opposed to computed), but the file is inaccessible or its contents
          * cannot be read and parsed correctly.  Currently this can only happen
          * for the subclass SnapPeaCensusTri, which reads its results from

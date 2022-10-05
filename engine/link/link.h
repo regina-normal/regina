@@ -1853,7 +1853,7 @@ class Link :
          * \pre This link has at most one component (i.e., it is empty
          * or it is a knot).
          *
-         * \exception FailedPrecondition this link has more than one component.
+         * \exception FailedPrecondition This link has more than one component.
          * If a progress tracker was passed, it will be marked as finished
          * before the exception is thrown.
          *
@@ -1959,7 +1959,7 @@ class Link :
          *
          * \pre This link has precisely one component (i.e., it is a knot).
          *
-         * \exception FailedPrecondition this link is empty or has more than
+         * \exception FailedPrecondition This link is empty or has more than
          * one component.  If a progress tracker was passed, it will be marked
          * as finished before the exception is thrown.
          *
@@ -3501,7 +3501,7 @@ class Link :
          * hard-code, the routine dumpConstruction() will output C++ code
          * that can reconstruct the link by calling this routine.
          *
-         * \exception InvalidArgument a link could not be reconstructed from
+         * \exception InvalidArgument A link could not be reconstructed from
          * the given data.
          *
          * \ifacespython Not available, but there is a variant of fromData()
@@ -3571,7 +3571,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument a link could not be reconstructed from
+         * \exception InvalidArgument A link could not be reconstructed from
          * the given data.
          *
          * \ifacespython The signs should be passed as a single Python list of
@@ -3604,7 +3604,7 @@ class Link :
          * rotation, and optionally (according to the arguments that
          * were passed to knotSig()) reflection and/or reversal.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * knot signature.
          *
          * @param sig the signature of the knot diagram to construct.
@@ -3622,7 +3622,7 @@ class Link :
          *
          * See fromKnotSig() for further details.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * knot signature.
          *
          * @param sig the signature of the knot diagram to construct.
@@ -3643,7 +3643,7 @@ class Link :
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a link.
          *
          * \ifacespython Not present; use tightDecoding() instead, which takes
@@ -3715,7 +3715,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * classical Gauss code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
@@ -3761,7 +3761,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given sequence was not a valid
+         * \exception InvalidArgument The given sequence was not a valid
          * classical Gauss code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
@@ -3830,7 +3830,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * oriented Gauss code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
@@ -3882,7 +3882,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given sequence was not a valid
+         * \exception InvalidArgument The given sequence was not a valid
          * oriented Gauss code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
@@ -3936,7 +3936,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * encoding of a link in Jenkins' format.  As noted above, the
          * checks performed here are not exhaustive.
          *
@@ -3973,7 +3973,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given input was not a valid
+         * \exception InvalidArgument The given input was not a valid
          * encoding of a link in Jenkins' format.  As noted above, the
          * checks performed here are not exhaustive.
          *
@@ -4014,7 +4014,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given sequence was not a valid
+         * \exception InvalidArgument The given sequence was not a valid
          * encoding of a link in Jenkins' format.  As noted above, the
          * checks performed here are not exhaustive.
          *
@@ -4084,7 +4084,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
@@ -4137,7 +4137,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given sequence was not a valid
+         * \exception InvalidArgument The given sequence was not a valid
          * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
@@ -4251,7 +4251,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * planar diagram code.  As noted above, the checks performed here
          * are not exhaustive.
          *
@@ -4298,7 +4298,7 @@ class Link :
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the given sequence was not a valid
+         * \exception InvalidArgument The given sequence was not a valid
          * planar diagram code.  As noted above, the checks performed here
          * are not exhaustive.
          *
@@ -4405,7 +4405,7 @@ class Link :
          * This routine processes one link component, and then recursively
          * calls itself to process the remaining components.
          *
-         * \exception InvalidArgument an error or inconsistency is found in
+         * \exception InvalidArgument An error or inconsistency is found in
          * the given data.
          *
          * @param strandsRemaining the expected sum of the lengths of
@@ -4432,7 +4432,7 @@ class Link :
          * It is called when there are no more components remaining to
          * be processed.
          *
-         * \exception InvalidArgument an error or inconsistency was found in
+         * \exception InvalidArgument An error or inconsistency was found in
          * the given data (which for this terminating call simply means
          * \a strandsRemaining != 0).
          *

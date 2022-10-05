@@ -561,7 +561,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre This triangulation is connected.
          *
-         * \exception FailedPrecondition this triangulation has more
+         * \exception FailedPrecondition This triangulation has more
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
          *
@@ -667,7 +667,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre This triangulation is connected.
          *
-         * \exception FailedPrecondition this triangulation has more
+         * \exception FailedPrecondition This triangulation has more
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
          *

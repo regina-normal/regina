@@ -164,7 +164,7 @@ class GraphTriple : public Manifold {
          *
          * \pre Each of the given matrices has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the spaces \a end0 and \a end1
+         * \exception InvalidArgument One of the spaces \a end0 and \a end1
          * does not have precisely one torus boundary corresponding to a
          * single untwisted puncture in its base orbifold, and/or the space
          * \a centre does not have precisely two disjoint torus boundaries
@@ -191,7 +191,7 @@ class GraphTriple : public Manifold {
          *
          * \pre Each of the given matrices has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the spaces \a end0 and \a end1
+         * \exception InvalidArgument One of the spaces \a end0 and \a end1
          * does not have precisely one torus boundary corresponding to a
          * single untwisted puncture in its base orbifold, and/or the space
          * \a centre does not have precisely two disjoint torus boundaries
@@ -348,7 +348,7 @@ class GraphTriple : public Manifold {
          *
          * This should be called from every class constructor.
          *
-         * \exception InvalidArgument the preconditions were not met.
+         * \exception InvalidArgument The preconditions were not met.
          */
         void verifySFS();
 

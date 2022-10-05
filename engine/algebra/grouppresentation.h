@@ -227,7 +227,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * The string may contain whitespace, which will simply be ignored.
          *
-         * \exception InvalidArgument the given string could not be
+         * \exception InvalidArgument The given string could not be
          * interpreted as a group expression.
          *
          * @param input the input string that is to be interpreted.
@@ -244,7 +244,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * The string may contain whitespace, which will simply be ignored.
          *
-         * \exception InvalidArgument the given string could not be
+         * \exception InvalidArgument The given string could not be
          * interpreted as a group expression.
          *
          * @param input the input string that is to be interpreted.
@@ -799,7 +799,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * via syntax of the form
          * <tt>GroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
          *
-         * \exception InvalidArgument one or more of the given strings
+         * \exception InvalidArgument One or more of the given strings
          * could not be interpreted as a group expression.
          *
          * @param nGens the number of generators.

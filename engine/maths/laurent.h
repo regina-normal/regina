@@ -661,7 +661,7 @@ class Laurent :
          * tightDecode() function.  This is true for Regina's arbitrary
          * precision integer types (Integer and LargeInteger).
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a single-variable Laurent polynomial.
          *
          * \ifacespython Not present; use tightDecoding() instead, which takes

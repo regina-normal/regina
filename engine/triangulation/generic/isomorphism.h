@@ -339,7 +339,7 @@ class Isomorphism :
          * \todo Lock the topological properties of the underlying manifold,
          * to avoid recomputing them after the isomorphism is applied.
          *
-         * \exception InvalidArgument the number of top-dimensional simplices
+         * \exception InvalidArgument The number of top-dimensional simplices
          * in the given triangulation is not equal to size() for this
          * isomorphism.
          *
@@ -405,7 +405,7 @@ class Isomorphism :
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
-         * \exception InvalidArgument the number of top-dimensional simplices
+         * \exception InvalidArgument The number of top-dimensional simplices
          * described by the given facet pairing is not equal to size() for
          * this isomorphism.
          *
@@ -427,7 +427,7 @@ class Isomorphism :
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
-         * \exception InvalidArgument the number of top-dimensional simplices
+         * \exception InvalidArgument The number of top-dimensional simplices
          * in the given triangulation is not equal to size() for this
          * isomorphism.
          *
@@ -450,7 +450,7 @@ class Isomorphism :
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
-         * \exception InvalidArgument the number of top-dimensional simplices
+         * \exception InvalidArgument The number of top-dimensional simplices
          * in the given triangulation is not equal to size() for this
          * isomorphism.
          *
@@ -592,7 +592,7 @@ class Isomorphism :
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an isomorphism on <i>dim</i>-dimensional
          * triangulations.
          *

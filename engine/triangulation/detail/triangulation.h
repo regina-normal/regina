@@ -586,7 +586,7 @@ class TriangulationBase :
          * reason relates to the fact that top-dimensional simplices are built
          * manually, whereas lower-dimensional faces are deduced properties).
          *
-         * \exception InvalidArgument the face dimension \a subdim is outside
+         * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., negative or greater than \a dim).
          *
          * @param subdim the face dimension; this must be between 0 and \a dim
@@ -774,7 +774,7 @@ class TriangulationBase :
          * of Face<dim, subdim> objects (holding all the <i>subdim</i>-faces
          * of the triangulation), which you can use immediately.
          *
-         * \exception InvalidArgument the face dimension \a subdim is outside
+         * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., negative, or greater than or equal to
          * \a dim).
          *
@@ -897,7 +897,7 @@ class TriangulationBase :
          * The specific return type for C++ programmers will be
          * std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>.
          *
-         * \exception InvalidArgument the face dimension \a subdim is outside
+         * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., negative, or greater than or equal to
          * \a dim).
          *
@@ -1163,7 +1163,7 @@ class TriangulationBase :
          * unexpected results in non-standard scenarios; see the documentation
          * for the templated countBoundaryFaces<subdim>() for details.
          *
-         * \exception InvalidArgument the face dimension \a subdim is outside
+         * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., negative or greater than <i>dim</i>-1).
          *
          * @param subdim the face dimension; this must be between 0 and
@@ -1384,7 +1384,7 @@ class TriangulationBase :
          * \exception FailedPrecondition This triangulation is invalid, and
          * the homology dimension \a k is not 1.
          *
-         * \exception InvalidArgument the homology dimension \a k is outside
+         * \exception InvalidArgument The homology dimension \a k is outside
          * the supported range.  This range depends upon the triangulation
          * dimension \a dim; for details see the documentation below for the
          * argument \a k.
@@ -1465,7 +1465,7 @@ class TriangulationBase :
          *
          * \exception FailedPrecondition This triangulation is empty or invalid.
          *
-         * \exception InvalidArgument the homology dimension \a k is outside
+         * \exception InvalidArgument The homology dimension \a k is outside
          * the supported range (i.e., less than 1 or greater than or
          * equal to \a dim).
          *
@@ -1551,7 +1551,7 @@ class TriangulationBase :
          *
          * \pre This triangulation is valid and non-empty.
          *
-         * \exception InvalidArgument the face dimension \a subdim is outside
+         * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., less than 1 or greater than \a dim).
          *
          * @param subdim the face dimension; this must be between 1 and \a dim
@@ -1665,7 +1665,7 @@ class TriangulationBase :
          *
          * \pre This triangulation is valid and non-empty.
          *
-         * \exception InvalidArgument the face dimension \a subdim is outside
+         * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (as documented for the \a subdim argument below).
          *
          * @param subdim the dual face dimension; this must be between
@@ -1739,7 +1739,7 @@ class TriangulationBase :
          * \ref stddim "standard dimensions"; for higher dimensions it is
          * the user's reponsibility to confirm this some other way.
          *
-         * \exception InvalidArgument the chain dimension \a subdim is outside
+         * \exception InvalidArgument The chain dimension \a subdim is outside
          * the supported range (as documented for the \a subdim argument below).
          *
          * @param subdim the chain dimension; this must be between
@@ -2550,7 +2550,7 @@ class TriangulationBase :
          * hard-code in this way, you can call dumpConstruction() to generate
          * the corresponding C++ source code.
          *
-         * \exception InvalidArgument the given list of gluings does not
+         * \exception InvalidArgument The given list of gluings does not
          * correctly describe a triangulation with \a size top-dimensional
          * simplices.
          *
@@ -2618,7 +2618,7 @@ class TriangulationBase :
          * supports std::get (and for which std::get<0..3>() yields suitable
          * integer/permutation types).
          *
-         * \exception InvalidArgument the given list of gluings does not
+         * \exception InvalidArgument The given list of gluings does not
          * correctly describe a triangulation with \a size top-dimensional
          * simplices.
          *
@@ -2668,7 +2668,7 @@ class TriangulationBase :
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different dimensions \a p and \a q.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * <i>dim</i>-dimensional isomorphism signature created using
          * the default encoding.
          *
@@ -2688,7 +2688,7 @@ class TriangulationBase :
          *
          * See fromIsoSig() for further details.
          *
-         * \exception InvalidArgument the given string was not a valid
+         * \exception InvalidArgument The given string was not a valid
          * <i>dim</i>-dimensional isomorphism signature created using
          * the default encoding.
          *
@@ -2756,7 +2756,7 @@ class TriangulationBase :
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a <i>dim</i>-dimensional triangulation.
          *
          * \ifacespython Not present; use tightDecoding() instead, which takes

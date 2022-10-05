@@ -461,11 +461,11 @@ class Cusp : public ShortOutput<Cusp> {
  * See http://snappy.computop.org/ for further information on
  * SnapPea and its successor SnapPy.
  *
- * \exception SnapPeaFatalError the SnapPea kernel detected a fatal error
+ * \exception SnapPeaFatalError The SnapPea kernel detected a fatal error
  * from which it could not recover.  This could be thrown by any member
  * function that uses the SnapPea kernel.
  *
- * \exception SnapPeaMemoryFull the SnapPea kernel ran out of memory.
+ * \exception SnapPeaMemoryFull The SnapPea kernel ran out of memory.
  * This could be thrown by any member function that uses the SnapPea kernel.
  *
  * \ingroup snappea
@@ -652,7 +652,7 @@ class SnapPeaTriangulation :
          * file I/O routines.  This routine assumes that the file \e contents,
          * however, are in UTF-8 (the standard encoding used throughout Regina).
          *
-         * \exception FileError the SnapPea kernel could not read the
+         * \exception FileError The SnapPea kernel could not read the
          * given file, or could not parse the file contents (which could
          * have been passed explicitly or could have been read from file).
          *
@@ -785,7 +785,7 @@ class SnapPeaTriangulation :
          * not by Regina.  As a result, the peripheral curves installed by
          * SnapPea will be precisely the curves from the link diagram.
          *
-         * \exception InvalidArgument the given link is empty, or it has
+         * \exception InvalidArgument The given link is empty, or it has
          * so many crossings and/or components that SnapPea cannot handle it.
          * (The latter problem will only occur if the number of crossings
          * and/or components does not fit into a native C++ \c int.)
@@ -982,7 +982,7 @@ class SnapPeaTriangulation :
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume()</tt>.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
          * @return the estimated volume of the underlying 3-manifold.
          */
@@ -996,7 +996,7 @@ class SnapPeaTriangulation :
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume(accuracy=True)</tt>.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
          * @return a pair whose first element is the estimated volume of the
          * underlying 3-manifold, and whose second element is an estimate
@@ -1424,9 +1424,9 @@ class SnapPeaTriangulation :
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * \exception FailedPrecondition the given cusp is complete,
+         * \exception FailedPrecondition The given cusp is complete,
          * and/or it is the only cusp.
          *
          * @param whichCusp the index of the cusp to permanently fill according
@@ -1470,9 +1470,9 @@ class SnapPeaTriangulation :
          * filling coefficients assigned).  This will be checked, and an
          * exception will be thrown if this requirement is not met.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * \exception FailedPrecondition all cusps of this manifold are
+         * \exception FailedPrecondition All cusps of this manifold are
          * non-complete.
          *
          * @return the filled triangulation.
@@ -1499,9 +1499,9 @@ class SnapPeaTriangulation :
          * filling coefficients assigned).  This will be checked, and an
          * exception will be thrown if this requirement is not met.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * \exception FailedPrecondition some cusp of this manifold
+         * \exception FailedPrecondition Some cusp of this manifold
          * is complete.
          *
          * @return the filled triangulation.
@@ -1554,7 +1554,7 @@ class SnapPeaTriangulation :
          * constructor SnapPeaTriangulation(const Triangulation<3>&, bool).
          * This might not be what the user expects.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
          * @author William Pettersson and Stephan Tillmann
          *
@@ -1610,7 +1610,7 @@ class SnapPeaTriangulation :
          * homologyFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
          * \exception SnapPeaUnsolvedCase SnapPea detected an overflow
          * when attempting to create the filled relation matrix.
@@ -1642,7 +1642,7 @@ class SnapPeaTriangulation :
          * fundamentalGroupFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
          * @param simplifyPresentation \c true if SnapPea should attempt
          * to simplify the group presentation, or \c false if it should
@@ -1823,9 +1823,9 @@ class SnapPeaTriangulation :
          * gives no answer at all, in which case this routine will throw
          * an exception (see below).
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * \exception UnsolvedCase The SnapPea kernel was unable to
          * triangulate the canonical cell decomposition.
          *
          * @return a triangulation of the canonical cell decomposition.
@@ -1841,9 +1841,9 @@ class SnapPeaTriangulation :
          * used throughout Regina and the American spelling used
          * throughout the SnapPea kernel.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * \exception UnsolvedCase The SnapPea kernel was unable to
          * triangulate the canonical cell decomposition.
          *
          * @return a triangulation of the canonical cell decomposition.
@@ -1905,9 +1905,9 @@ class SnapPeaTriangulation :
          * gives no answer at all, in which case this routine will throw
          * an exception (see below).
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * \exception UnsolvedCase The SnapPea kernel was unable to
          * compute the canonical cell decomposition.
          *
          * @return the canonical triangulation of the canonical cell
@@ -1924,9 +1924,9 @@ class SnapPeaTriangulation :
          * used throughout Regina and the American spelling used
          * throughout the SnapPea kernel.
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * \exception UnsolvedCase The SnapPea kernel was unable to
          * compute the canonical cell decomposition.
          *
          * @return the canonical triangulation of the canonical cell
@@ -2028,7 +2028,7 @@ class SnapPeaTriangulation :
          * should call saveSnapPea() instead (which has better performance, and
          * does not require you to construct an enormous intermediate string).
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
          * @return a string containing the contents of the corresponding
          * SnapPea data file.
@@ -2050,7 +2050,7 @@ class SnapPeaTriangulation :
          * write to a real SnapPea data file on the filesystem, you should call
          * saveSnapPea() (which is also available in Python).
          *
-         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
          * \ifacespython Not present; instead you can use the variant of
          * snapPea() that takes no arguments and returns a string.

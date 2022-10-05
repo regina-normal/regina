@@ -866,7 +866,7 @@ class Tangle : public Output<Tangle> {
          * with the correct endpoints).  Of course non-viable inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the input was not a valid oriented
+         * \exception InvalidArgument The input was not a valid oriented
          * Gauss code.  As noted above, the checks performed here are
          * not exhaustive.
          *
@@ -908,7 +908,7 @@ class Tangle : public Output<Tangle> {
          * with the correct endpoints).  Of course non-viable inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \exception InvalidArgument the input did not describe a valid
+         * \exception InvalidArgument The input did not describe a valid
          * oriented Gauss code.  As noted above, the checks performed here
          * are not exhaustive.
          *

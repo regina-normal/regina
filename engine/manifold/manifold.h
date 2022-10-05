@@ -125,10 +125,10 @@ class Manifold : public Output<Manifold> {
          * The default implemention of this routine just throws a
          * NotImplemented exception.
          *
-         * \exception NotImplemented explicit construction has not yet been
+         * \exception NotImplemented Explicit construction has not yet been
          * implemented for this particular 3-manifold.
          *
-         * \exception FileError the construction needs to be read from file (as
+         * \exception FileError The construction needs to be read from file (as
          * opposed to computed on the fly), but the file is inaccessible or its
          * contents cannot be read and parsed correctly.  Currently this can
          * only happen for the subclass SnapPeaCensusManifold, which reads its
@@ -148,10 +148,10 @@ class Manifold : public Output<Manifold> {
          * The default implemention of this routine just throws a
          * NotImplemented exception.
          *
-         * \exception NotImplemented homology calculation has not yet been
+         * \exception NotImplemented Homology calculation has not yet been
          * implemented for this particular 3-manifold.
          *
-         * \exception FileError the homology needs to be read from file (as
+         * \exception FileError The homology needs to be read from file (as
          * opposed to computed), but the file is inaccessible or its contents
          * cannot be read and parsed correctly.  Currently this can only happen
          * for the subclass SnapPeaCensusManifold, which reads its results from

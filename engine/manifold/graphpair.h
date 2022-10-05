@@ -116,7 +116,7 @@ class GraphPair : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * \exception InvalidArgument One of the given Seifert fibred spaces
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
@@ -139,7 +139,7 @@ class GraphPair : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * \exception InvalidArgument One of the given Seifert fibred spaces
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
@@ -159,7 +159,7 @@ class GraphPair : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * \exception InvalidArgument One of the given Seifert fibred spaces
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
@@ -179,7 +179,7 @@ class GraphPair : public Manifold {
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \exception InvalidArgument one of the given Seifert fibred spaces
+         * \exception InvalidArgument One of the given Seifert fibred spaces
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
@@ -308,7 +308,7 @@ class GraphPair : public Manifold {
          *
          * This should be called from every class constructor.
          *
-         * \exception InvalidArgument the preconditions were not met.
+         * \exception InvalidArgument The preconditions were not met.
          */
         void verifySFS();
 

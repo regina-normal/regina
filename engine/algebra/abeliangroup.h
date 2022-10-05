@@ -452,7 +452,7 @@ class AbelianGroup :
          * immediately after the encoding, without skipping any trailing
          * whitespace.
          *
-         * \exception InvalidInput the given input stream does not begin with
+         * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an abelian group.
          *
          * \ifacespython Not present; use tightDecoding() instead, which takes

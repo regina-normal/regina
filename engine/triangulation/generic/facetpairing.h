@@ -155,7 +155,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * it will read the \e entire line from the input stream and expect
          * that line to containin the text representation of a facet pairing.
          *
-         * \exception InvalidInput the data found in the input stream is
+         * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
          * \ifacespython Not present; instead you can use fromTextRep(), which

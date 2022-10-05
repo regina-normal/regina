@@ -84,7 +84,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          *
          * \pre The given matrix is square and symmetric.
          *
-         * \exception InvalidArgument the given matrix is not both symmetric
+         * \exception InvalidArgument The given matrix is not both symmetric
          * and square.
          *
          * @param form a symmetric square integer matrix that describes
