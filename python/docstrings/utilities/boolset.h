@@ -26,17 +26,18 @@ static const char *BoolSet = R"doc(Creates a new empty set.)doc";
 
 // Docstring regina::python::doc::BoolSet_::BoolSet_2
 static const char *BoolSet_2 =
-R"doc(Creates a set containing a single member as given.
+R"doc(Creates a set containing a single boolean, which is passed as an
+argument.
 
 Parameter ``member``:
     the single element to include in this set.)doc";
 
 // Docstring regina::python::doc::BoolSet_::BoolSet_3
 static const char *BoolSet_3 =
-R"doc(Creates a set equal to the given set.
+R"doc(Creates a clone of the given set.
 
-Parameter ``cloneMe``:
-    the set upon which we will base the new set.)doc";
+Parameter ``src``:
+    the set to clone.)doc";
 
 // Docstring regina::python::doc::BoolSet_::BoolSet_4
 static const char *BoolSet_4 =
