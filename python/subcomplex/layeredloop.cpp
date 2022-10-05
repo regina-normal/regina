@@ -51,5 +51,7 @@ void addLayeredLoop(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c);
     regina::python::add_output(c);
+
+    m.def("swap", (void(*)(LayeredLoop&, LayeredLoop&))(regina::swap));
 }
 

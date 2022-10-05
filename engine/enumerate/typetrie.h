@@ -533,7 +533,7 @@ void TypeTrie<nTypes>::writeTextLong(std::ostream& out) const {
 }
 
 template <int nTypes>
-void swap(TypeTrie<nTypes>& a, TypeTrie<nTypes>& b) noexcept {
+inline void swap(TypeTrie<nTypes>& a, TypeTrie<nTypes>& b) noexcept {
     a.swap(b);
 }
 
