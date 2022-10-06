@@ -234,7 +234,7 @@ class Face : public detail::FaceBase<dim, subdim> {
     friend class detail::TriangulationBase<dim>;
 };
 
-#ifdef __DOXYGEN
+#ifdef __APIDOCS
 // This type alias is already defined in trianguation/forward.h.
 /**
  * Details how a vertex of a <i>dim</i>-dimensional triangulation

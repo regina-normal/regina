@@ -107,7 +107,7 @@ class FaceNumberingAPI {
             /**< The total number of <i>subdim</i>-dimensional faces in each
                  <i>dim</i>-dimensional simplex. */
 
-#ifdef __DOXYGEN
+#ifdef __APIDOCS
     public:
         /**
          * Given a <i>subdim</i>-face number within a <i>dim</i>-dimensional

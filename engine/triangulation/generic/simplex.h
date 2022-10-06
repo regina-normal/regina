@@ -123,7 +123,7 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
     friend class detail::TriangulationBase<dim>;
 };
 
-#ifdef __DOXYGEN
+#ifdef __APIDOCS
 // This type alias is already defined in trianguation/forward.h.
 /**
  * Refers to a top-dimensional simplex in a <i>dim</i>-dimensional

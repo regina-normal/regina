@@ -307,7 +307,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * triangulation.
          */
         Triangulation(const std::string& description);
-#ifdef __DOXYGEN
+#ifdef __APIDOCS
         /**
          * Python-only constructor that copies the given SnapPy manifold.
          *

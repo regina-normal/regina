@@ -109,7 +109,7 @@ class LPConstraintNone;
  * \ingroup enumerate
  */
 class LPConstraintBase {
-#ifdef __DOXYGEN
+#ifdef __APIDOCS
     public:
         /**
          * The number of additional linear constraints that we impose.
@@ -779,7 +779,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          */
         void writeTextShort(std::ostream& out) const;
 
-#ifdef __DOXYGEN
+#ifdef __APIDOCS
         /**
          * Indicates whether the given coordinate system is supported by
          * this constraint class.
