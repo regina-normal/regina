@@ -124,6 +124,10 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \pre Objects of type \a T can be assigned values of type \a U.
          *
+         * \nopython Python only supports polynomials with one type of
+         * coefficient (the case where \a T is Rational).  Therefore
+         * Python users can use the non-templated copy constructor.
+         *
          * @param value the polynomial to clone.
          */
         template <typename U>

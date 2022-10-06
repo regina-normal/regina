@@ -328,18 +328,6 @@ Parameter ``value``:
 
 // Docstring regina::python::doc::Polynomial_::Polynomial_4
 static const char *Polynomial_4 =
-R"doc(Creates a new copy of the given polynomial.
-
-This constructor induces a deep copy of *value*.
-
-Precondition:
-    Objects of type *T* can be assigned values of type *U*.
-
-Parameter ``value``:
-    the polynomial to clone.)doc";
-
-// Docstring regina::python::doc::Polynomial_::Polynomial_5
-static const char *Polynomial_5 =
 R"doc(Creates a new polynomial from the given sequence of coefficients. The
 coefficients should be given in order from the constant coefficient to
 the leading coefficient.
@@ -364,23 +352,6 @@ Parameter ``begin``:
 Parameter ``end``:
     a past-the-end iterator indicating the end of the sequence of
     coefficients.)doc";
-
-// Docstring regina::python::doc::Polynomial_::Polynomial_6
-static const char *Polynomial_6 =
-R"doc(Creates a new polynomial from a hard-coded sequence of coefficients.
-The coefficients should be given in order from the constant
-coefficient to the leading coefficient.
-
-There is no problem if the leading coefficient (i.e., the last
-coefficient in the sequence) is zero. An empty sequence will be
-treated as the zero polynomial.
-
-Python:
-    Not available, but there is a Python constructor that takes a list
-    of coefficients (which need not be constant).
-
-Parameter ``coefficients``:
-    the full sequence of coefficients.)doc";
 
 // Docstring regina::python::doc::Polynomial_::__array
 static const char *__array =
@@ -741,29 +712,6 @@ Parameter ``variable``:
 
 Returns:
     this polynomial as a unicode-enabled human-readable string.)doc";
-
-// Docstring regina::python::doc::Polynomial_::writeTextShort
-static const char *writeTextShort =
-R"doc(Writes this polynomial to the given output stream, using the given
-variable name instead of ``x``.
-
-If *utf8* is passed as ``True`` then unicode superscript characters
-will be used for exponents; these will be encoded using UTF-8. This
-will make the output nicer, but will require more complex fonts to be
-available on the user's machine.
-
-Python:
-    Not present; use str() or utf8() instead.
-
-Parameter ``out``:
-    the output stream to which to write.
-
-Parameter ``utf8``:
-    ``True`` if unicode superscript characters may be used.
-
-Parameter ``variable``:
-    the symbol to use for the variable in this polynomial. This may be
-    ``null``, in which case the default variable ``x`` will be used.)doc";
 
 }
 

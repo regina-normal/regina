@@ -86,26 +86,6 @@ Parameter ``a``:
 Parameter ``b``:
     the second integer whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::tightEncode
-static const char *tightEncode =
-R"doc(Writes the tight encoding of the given arbitrary precision integer to
-the given output stream. See the page on tight "tight encodings" for
-details.
-
-This global function does the same thing as the member function
-IntegerBase::tightEncode(). However, this global function is more
-efficient if the integer argument is an rvalue reference (since the
-const member function induces an extra deep copy).
-
-Python:
-    Not present; use tightEncoding() instead.
-
-Parameter ``out``:
-    the output stream to which the encoded string will be written.
-
-Parameter ``value``:
-    the integer to encode.)doc";
-
 // Docstring regina::python::doc::tightEncoding
 static const char *tightEncoding =
 R"doc(Returns the tight encoding of the given arbitrary precision integer.
@@ -132,8 +112,7 @@ static const char *IntegerBase_2 =
 R"doc(Initialises this integer to the given value.
 
 Python:
-    In Python, the only native-integer constructor is
-    IntegerBase(long).
+    In Python, this is the only native-integer constructor available.
 
 Parameter ``value``:
     the new value of this integer.)doc";
@@ -142,65 +121,11 @@ Parameter ``value``:
 static const char *IntegerBase_3 =
 R"doc(Initialises this integer to the given value.
 
-Python:
-    In Python, the only native-integer constructor is
-    IntegerBase(long).
-
 Parameter ``value``:
     the new value of this integer.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::IntegerBase_4
 static const char *IntegerBase_4 =
-R"doc(Initialises this integer to the given value.
-
-Python:
-    In Python, this is the only native-integer constructor available.
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_5
-static const char *IntegerBase_5 =
-R"doc(Initialises this integer to the given value.
-
-Python:
-    In Python, the only native-integer constructor is
-    IntegerBase(long).
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_6
-static const char *IntegerBase_6 =
-R"doc(Initialises this integer to the given value.
-
-Python:
-    In Python, the only native-integer constructor is
-    IntegerBase(long).
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_7
-static const char *IntegerBase_7 =
-R"doc(Initialises this integer to the given value.
-
-Python:
-    In Python, the only native-integer constructor is
-    IntegerBase(long).
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_8
-static const char *IntegerBase_8 =
-R"doc(Initialises this integer to the given value.
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_9
-static const char *IntegerBase_9 =
 R"doc(Initialises this integer to the given value.
 
 Precondition:
@@ -209,8 +134,8 @@ Precondition:
 Parameter ``value``:
     the new value of this integer.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_10
-static const char *IntegerBase_10 =
+// Docstring regina::python::doc::IntegerBase_::IntegerBase_5
+static const char *IntegerBase_5 =
 R"doc(Moves the given integer into this new integer. This is a fast
 (constant time) operation.
 
@@ -222,32 +147,15 @@ Precondition:
 Parameter ``src``:
     the integer to move.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_11
-static const char *IntegerBase_11 =
-R"doc(Initialises this integer to the given value.
-
-Precondition:
-    If *bytes* is larger than sizeof(long), then *bytes* is a strict
-    *multiple* of sizeof(long). For instance, if longs are 8 bytes
-    then you can use *bytes*=16 but not *bytes*=12. This restriction
-    is enforced through a compile-time assertion, but may be lifted in
-    future versions of Regina.
-
-Python:
-    Not present, since NativeInteger is not available to Python users.
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_12
-static const char *IntegerBase_12 =
+// Docstring regina::python::doc::IntegerBase_::IntegerBase_6
+static const char *IntegerBase_6 =
 R"doc(Initialises this integer to the truncation of the given real number.
 
 Parameter ``value``:
     the real number to be truncated.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_13
-static const char *IntegerBase_13 =
+// Docstring regina::python::doc::IntegerBase_::IntegerBase_7
+static const char *IntegerBase_7 =
 R"doc(Initialises this integer to the given value which is represented as a
 string of digits in a given base.
 
@@ -284,8 +192,8 @@ Parameter ``value``:
 Parameter ``base``:
     the base in which *value* is given.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_14
-static const char *IntegerBase_14 =
+// Docstring regina::python::doc::IntegerBase_::IntegerBase_8
+static const char *IntegerBase_8 =
 R"doc(Initialises this integer to the given value which is represented as a
 string of digits in a given base.
 
@@ -350,18 +258,6 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__dec
 static const char *__dec =
-R"doc(The predecrement operator. This operator decrements this integer by
-one, and returns a reference to the integer *after* the decrement.
-
-Python:
-    Not present, although the postdecrement operator is present in
-    python as the member function dec().
-
-Returns:
-    a reference to this integer after the decrement.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__dec_2
-static const char *__dec_2 =
 R"doc(The postdecrement operator. This operator decrements this integer by
 one, and returns a copy of the integer *before* the decrement.
 
@@ -682,18 +578,6 @@ Returns:
 
 // Docstring regina::python::doc::IntegerBase_::__inc
 static const char *__inc =
-R"doc(The preincrement operator. This operator increments this integer by
-one, and returns a reference to the integer *after* the increment.
-
-Python:
-    Not present, although the postincrement operator is present in
-    python as the member function inc().
-
-Returns:
-    a reference to this integer after the increment.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__inc_2
-static const char *__inc_2 =
 R"doc(The postincrement operator. This operator increments this integer by
 one, and returns a copy of the integer *before* the increment.
 
@@ -1293,36 +1177,6 @@ currently using.
 Precondition:
     This integer is not infinite.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::nativeValue
-static const char *nativeValue =
-R"doc(Returns the value of this integer as a native integer of some fixed
-byte length.
-
-It is the programmer's reponsibility to ensure that this integer is
-within the required range. If this integer is too large or small to
-fit into the return type, then the result will be undefined.
-
-Note that, assuming the value is within the required range, this
-routine will give correct results regardless of whether the underlying
-representation is a native or large integer.
-
-Precondition:
-    If *bytes* is larger than sizeof(long), then *bytes* is a strict
-    *multiple* of sizeof(long). For instance, if longs are 8 bytes
-    then you can use this routine with *bytes*=4 or *bytes*=16 but not
-    *bytes*=12. This restriction is enforced through a compile-time
-    assertion, but may be lifted in future versions of Regina.
-
-Precondition:
-    This integer is not infinity.
-
-Python:
-    Not present, but you can use the non-templated longValue()
-    instead.
-
-Returns:
-    the value of this integer.)doc";
-
 // Docstring regina::python::doc::IntegerBase_::negate
 static const char *negate =
 R"doc(Negates this integer. This integer is changed to reflect the result.
@@ -1397,54 +1251,6 @@ Parameter ``n``:
 Returns:
     a pseudo-random integer.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::rawData
-static const char *rawData =
-R"doc(Returns the raw GMP data that describes this integer.
-
-This routine allows IntegerBase to interact directly with libgmp and
-libgmpxx if necessary.
-
-.. warning::
-    This routine will have the side-effect of converting this integer
-    to a (bulkier and slower) GMP representation, regardless of
-    whether it is small enough to fit within a native integer.
-    Excessive use of this routine could lead to a significant
-    performance loss. It is best to use this only when isNative() is
-    already known to return ``False``.
-
-Precondition:
-    This integer is not infinite.
-
-Python:
-    Not available.
-
-Returns:
-    the raw GMP data.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::rawData_2
-static const char *rawData_2 =
-R"doc(Returns the raw GMP data that describes this integer.
-
-This routine allows IntegerBase to interact directly with libgmp and
-libgmpxx if necessary.
-
-.. warning::
-    This routine will have the side-effect of converting this integer
-    to a (bulkier and slower) GMP representation, regardless of
-    whether it is small enough to fit within a native integer.
-    Excessive use of this routine could lead to a significant
-    performance loss. It is best to use this only when isNative() is
-    already known to return ``False``.
-
-Precondition:
-    This integer is not infinite.
-
-Python:
-    Not available.
-
-Returns:
-    the raw GMP data.)doc";
-
 // Docstring regina::python::doc::IntegerBase_::safeLongValue
 static const char *safeLongValue =
 R"doc(Returns the value of this integer as a long, or throws an exception if
@@ -1459,19 +1265,6 @@ Exception ``NoSolution``:
 
 Returns:
     the value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::setRaw
-static const char *setRaw =
-R"doc(Set this to a copy of the given raw GMP integer.
-
-This routine allows IntegerBase to interact directly with libgmp and
-libgmpxx if necessary.
-
-Python:
-    Not available.
-
-Parameter ``fromData``:
-    the raw GMP integer to clone.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::sign
 static const char *sign =
@@ -1503,39 +1296,6 @@ R"doc(Swaps the values of this and the given integer.
 Parameter ``other``:
     the integer whose value will be swapped with this.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::tightDecode
-static const char *tightDecode =
-R"doc(Reconstructs an integer from its given tight encoding. See the page on
-tight "tight encodings" for details.
-
-The tight encoding will be read from the given input stream. If the
-input stream contains leading whitespace then it will be treated as an
-invalid encoding (i.e., this routine will throw an exception). The
-input routine *may* contain further data: if this routine is
-successful then the input stream will be left positioned immediately
-after the encoding, without skipping any trailing whitespace.
-
-This routine does recognise infinity in the case where
-*supportInfinity* is ``True``.
-
-This routine is identical to calling the global template routine
-regina::tightDecode() with this type as the template argument.
-
-Exception ``InvalidInput``:
-    The given input stream does not begin with a tight encoding of an
-    integer of this type.
-
-Python:
-    Not present; use tightDecoding() instead, which takes a string as
-    its argument.
-
-Parameter ``input``:
-    an input stream that begins with the tight encoding for an
-    integer.
-
-Returns:
-    the integer represented by the given tight encoding.)doc";
-
 // Docstring regina::python::doc::IntegerBase_::tightDecoding
 static const char *tightDecoding =
 R"doc(Reconstructs an integer from its given tight encoding. See the page on
@@ -1561,23 +1321,6 @@ Parameter ``enc``:
 
 Returns:
     the integer represented by the given tight encoding.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::tightEncode
-static const char *tightEncode =
-R"doc(Writes the tight encoding of this integer to the given output stream.
-See the page on tight "tight encodings" for details.
-
-There is also a corresponding global regina::tightEncode() function,
-for better compatibility with native C++ integer types. The global
-function is more efficient if the integer argument is an rvalue
-reference (since this const member function induces an extra deep
-copy).
-
-Python:
-    Not present; use tightEncoding() instead, which returns a string.
-
-Parameter ``out``:
-    the output stream to which the encoded string will be written.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::tightEncoding
 static const char *tightEncoding =
@@ -1606,707 +1349,6 @@ currently using.
 
 Precondition:
     This integer is not infinite.)doc";
-
-}
-
-namespace NativeInteger_ {
-
-// Docstring regina::python::doc::NativeInteger_::NativeInteger
-static const char *NativeInteger = R"doc(Initialises this integer to zero.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::NativeInteger_2
-static const char *NativeInteger_2 =
-R"doc(Initialises this integer to the given value.
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::NativeInteger_3
-static const char *NativeInteger_3 =
-R"doc(Initialises this integer to the given value.
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::NativeInteger_4
-static const char *NativeInteger_4 =
-R"doc(Initialises this integer to the given value.
-
-This constructor is marked as explicit in the hope of avoiding
-accidental (and unintentional) mixing of integer classes.
-
-It is the programmer's reponsibility to ensure that the given value
-fits within the required range. If the given value is too large or
-small to fit into this native type, then this new NativeInteger will
-have an undefined initial value.
-
-Precondition:
-    If *bytes* is larger than sizeof(long), then *bytes* is a strict
-    *multiple* of sizeof(long). For instance, if longs are 8 bytes
-    then you can use this routine with *bytes*=16 but not *bytes*=12.
-    This restriction is enforced through a compile-time assertion, but
-    may be lifted in future versions of Regina.
-
-Precondition:
-    The given integer is not infinity.
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__add
-static const char *__add =
-R"doc(Adds this to the given integer and returns the result. This integer is
-not changed.
-
-Parameter ``other``:
-    the integer to add to this integer.
-
-Returns:
-    the sum *this* plus *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__add_2
-static const char *__add_2 =
-R"doc(Adds this to the given integer and returns the result. This integer is
-not changed.
-
-Parameter ``other``:
-    the integer to add to this integer.
-
-Returns:
-    the sum *this* plus *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__dec
-static const char *__dec =
-R"doc(The predecrement operator. This operator decrements this integer by
-one, and returns a reference to the integer *after* the decrement.
-
-Returns:
-    a reference to this integer after the decrement.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__dec_2
-static const char *__dec_2 =
-R"doc(The postdecrement operator. This operator decrements this integer by
-one, and returns a copy of the integer *before* the decrement.
-
-Returns:
-    a copy of this integer before the decrement took place.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__div
-static const char *__div =
-R"doc(Divides this by the given integer and returns the result. The result
-will be truncated to an integer, i.e. rounded towards zero. This
-integer is not changed.
-
-For a division routine that always rounds down, see divisionAlg().
-
-Precondition:
-    *other* must be non-zero.
-
-.. warning::
-    As I understand it, the direction of rounding for native C/C++
-    integer division was fixed in the C++11 specification, but left to
-    the compiler implementation in earlier versions of the
-    specification; however, any modern hardware should satisfy the
-    C++11 rounding rule as described above.
-
-Parameter ``other``:
-    the integer to divide this by.
-
-Returns:
-    the quotient *this* divided by *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__div_2
-static const char *__div_2 =
-R"doc(Divides this by the given integer and returns the result. The result
-will be truncated to an integer, i.e. rounded towards zero. This
-integer is not changed.
-
-For a division routine that always rounds down, see divisionAlg().
-
-Precondition:
-    *other* must be non-zero.
-
-.. warning::
-    As I understand it, the direction of rounding for native C/C++
-    integer division was fixed in the C++11 specification, but left to
-    the compiler implementation in earlier versions of the
-    specification; however, any modern hardware should satisfy the
-    C++11 rounding rule as described above.
-
-Parameter ``other``:
-    the integer to divide this by.
-
-Returns:
-    the quotient *this* divided by *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__eq
-static const char *__eq =
-R"doc(Determines if this is equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are equal.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__eq_2
-static const char *__eq_2 =
-R"doc(Determines if this is equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are equal.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__ge
-static const char *__ge =
-R"doc(Determines if this is greater than or equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is greater than or equal to the given
-    integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__ge_2
-static const char *__ge_2 =
-R"doc(Determines if this is greater than or equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is greater than or equal to the given
-    integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__gt
-static const char *__gt =
-R"doc(Determines if this is greater than the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is greater than the given integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__gt_2
-static const char *__gt_2 =
-R"doc(Determines if this is greater than the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is greater than the given integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__iadd
-static const char *__iadd =
-R"doc(Adds the given integer to this. This integer is changed to reflect the
-result.
-
-Parameter ``other``:
-    the integer to add to this integer.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__iadd_2
-static const char *__iadd_2 =
-R"doc(Adds the given integer to this. This integer is changed to reflect the
-result.
-
-Parameter ``other``:
-    the integer to add to this integer.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__idiv
-static const char *__idiv =
-R"doc(Divides this by the given integer. The result will be truncated to an
-integer, i.e. rounded towards zero. This integer is changed to reflect
-the result.
-
-For a division routine that always rounds down, see divisionAlg().
-
-Precondition:
-    *other* must be non-zero.
-
-.. warning::
-    As I understand it, the direction of rounding for native C/C++
-    integer division was fixed in the C++11 specification, but left to
-    the compiler implementation in earlier versions of the
-    specification; however, any modern hardware should satisfy the
-    C++11 rounding rule as described above.
-
-Parameter ``other``:
-    the integer to divide this by.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__idiv_2
-static const char *__idiv_2 =
-R"doc(Divides this by the given integer. The result will be truncated to an
-integer, i.e. rounded towards zero. This integer is changed to reflect
-the result.
-
-For a division routine that always rounds down, see divisionAlg().
-
-Precondition:
-    *other* must be non-zero.
-
-.. warning::
-    As I understand it, the direction of rounding for native C/C++
-    integer division was fixed in the C++11 specification, but left to
-    the compiler implementation in earlier versions of the
-    specification; however, any modern hardware should satisfy the
-    C++11 rounding rule as described above.
-
-Parameter ``other``:
-    the integer to divide this by.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__imod
-static const char *__imod =
-R"doc(Reduces this integer modulo the given integer. If non-zero, the result
-will have the same sign as the original value of this integer. This
-integer is changed to reflect the result.
-
-For a mod routine that always returns a non-negative remainder, see
-divisionAlg().
-
-Precondition:
-    *other* is not zero.
-
-.. warning::
-    As I understand it, the sign of the result under native C/C++
-    integer division when the second operand is negative was fixed in
-    the C++11 specification, but left to the compiler implementation
-    in earlier versions of the specification; however, any modern
-    hardware should satisfy the C++11 sign rule as described above.
-
-Parameter ``other``:
-    the integer modulo which this integer will be reduced.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__imod_2
-static const char *__imod_2 =
-R"doc(Reduces this integer modulo the given integer. If non-zero, the result
-will have the same sign as the original value of this integer. This
-integer is changed to reflect the result.
-
-For a mod routine that always returns a non-negative remainder, see
-divisionAlg().
-
-Precondition:
-    *other* is not zero.
-
-.. warning::
-    As I understand it, the sign of the result under native C/C++
-    integer division when the second operand is negative was fixed in
-    the C++11 specification, but left to the compiler implementation
-    in earlier versions of the specification; however, any modern
-    hardware should satisfy the C++11 sign rule as described above.
-
-Parameter ``other``:
-    the integer modulo which this integer will be reduced.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__imul
-static const char *__imul =
-R"doc(Multiplies the given integer by this. This integer is changed to
-reflect the result.
-
-Parameter ``other``:
-    the integer to multiply with this integer.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__imul_2
-static const char *__imul_2 =
-R"doc(Multiplies the given integer by this. This integer is changed to
-reflect the result.
-
-Parameter ``other``:
-    the integer to multiply with this integer.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__inc
-static const char *__inc =
-R"doc(The preincrement operator. This operator increments this integer by
-one, and returns a reference to the integer *after* the increment.
-
-Returns:
-    a reference to this integer after the increment.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__inc_2
-static const char *__inc_2 =
-R"doc(The postincrement operator. This operator increments this integer by
-one, and returns a copy of the integer *before* the increment.
-
-Returns:
-    a copy of this integer before the increment took place.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__isub
-static const char *__isub =
-R"doc(Subtracts the given integer from this. This integer is changed to
-reflect the result.
-
-Parameter ``other``:
-    the integer to subtract from this integer.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__isub_2
-static const char *__isub_2 =
-R"doc(Subtracts the given integer from this. This integer is changed to
-reflect the result.
-
-Parameter ``other``:
-    the integer to subtract from this integer.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__le
-static const char *__le =
-R"doc(Determines if this is less than or equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is less than or equal to the given
-    integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__le_2
-static const char *__le_2 =
-R"doc(Determines if this is less than or equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is less than or equal to the given
-    integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__lt
-static const char *__lt =
-R"doc(Determines if this is less than the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is less than the given integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__lt_2
-static const char *__lt_2 =
-R"doc(Determines if this is less than the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this is less than the given integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__mod
-static const char *__mod =
-R"doc(Determines the remainder when this integer is divided by the given
-integer. If non-zero, the result will have the same sign as this
-integer. This integer is not changed.
-
-For a division routine that always returns a non-negative remainder,
-see divisionAlg().
-
-Precondition:
-    *other* is not zero.
-
-.. warning::
-    As I understand it, the sign of the result under native C/C++
-    integer division when the second operand is negative was fixed in
-    the C++11 specification, but left to the compiler implementation
-    in earlier versions of the specification; however, any modern
-    hardware should satisfy the C++11 sign rule as described above.
-
-Parameter ``other``:
-    the integer to divide this by.
-
-Returns:
-    the remainder *this* modulo *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__mod_2
-static const char *__mod_2 =
-R"doc(Determines the remainder when this integer is divided by the given
-integer. If non-zero, the result will have the same sign as this
-integer. This integer is not changed.
-
-For a division routine that always returns a non-negative remainder,
-see divisionAlg().
-
-Precondition:
-    *other* is not zero.
-
-.. warning::
-    As I understand it, the sign of the result under native C/C++
-    integer division when the second operand is negative was fixed in
-    the C++11 specification, but left to the compiler implementation
-    in earlier versions of the specification; however, any modern
-    hardware should satisfy the C++11 sign rule as described above.
-
-Parameter ``other``:
-    the integer to divide this by.
-
-Returns:
-    the remainder *this* modulo *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__mul
-static const char *__mul =
-R"doc(Multiplies this by the given integer and returns the result. This
-integer is not changed.
-
-Parameter ``other``:
-    the integer to multiply by this integer.
-
-Returns:
-    the product *this* times *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__mul_2
-static const char *__mul_2 =
-R"doc(Multiplies this by the given integer and returns the result. This
-integer is not changed.
-
-Parameter ``other``:
-    the integer to multiply by this integer.
-
-Returns:
-    the product *this* times *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__ne
-static const char *__ne =
-R"doc(Determines if this is not equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are not equal.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__ne_2
-static const char *__ne_2 =
-R"doc(Determines if this is not equal to the given integer.
-
-Parameter ``rhs``:
-    the integer with which this will be compared.
-
-Returns:
-    ``True`` if and only if this and the given integer are not equal.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__sub
-static const char *__sub =
-R"doc(Subtracts the given integer from this and returns the result. This
-integer is not changed.
-
-Parameter ``other``:
-    the integer to subtract from this integer.
-
-Returns:
-    the difference *this* minus *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__sub_2
-static const char *__sub_2 =
-R"doc(Subtracts the given integer from this and returns the result. This
-integer is not changed.
-
-Parameter ``other``:
-    the integer to subtract from this integer.
-
-Returns:
-    the difference *this* minus *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::__sub_3
-static const char *__sub_3 =
-R"doc(Determines the negative of this integer. This integer is not changed.
-
-Returns:
-    the negative of this integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::divByExact
-static const char *divByExact =
-R"doc(Divides this by the given integer. For native integers, this routine
-is identical to operator /=.
-
-Precondition:
-    *other* is not zero.
-
-Parameter ``other``:
-    the integer to divide this by.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::divByExact_2
-static const char *divByExact_2 =
-R"doc(Divides this by the given integer. For native integers, this routine
-is identical to operator /=.
-
-Precondition:
-    *other* is not zero.
-
-Parameter ``other``:
-    the integer to divide this by.
-
-Returns:
-    a reference to this integer with its new value.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::divExact
-static const char *divExact =
-R"doc(Divides this by the given integer and returns the result. For native
-integers, this is identical to operator /.
-
-Precondition:
-    *other* is not zero.
-
-Parameter ``other``:
-    the integer to divide this by.
-
-Returns:
-    the quotient *this* divided by *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::divExact_2
-static const char *divExact_2 =
-R"doc(Divides this by the given integer and returns the result. For native
-integers, this is identical to operator /.
-
-Precondition:
-    *other* is not zero.
-
-Parameter ``other``:
-    the integer to divide this by.
-
-Returns:
-    the quotient *this* divided by *other*.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::divisionAlg
-static const char *divisionAlg =
-R"doc(Uses the division algorithm to obtain a quotient and remainder when
-dividing by the given integer.
-
-Suppose this integer is *n* and we pass the divisor *d*. The *division
-algorithm* describes the result of dividing *n* by *d*; in particular,
-it expresses ``n = qd + r``, where *q* is the quotient and *r* is the
-remainder.
-
-The division algorithm is precise about which values of *q* and *r*
-are chosen; in particular it chooses the unique *r* in the range ``0
-<= r < |d|``.
-
-Note that this differs from other division routines in this class, in
-that it always rounds to give a non-negative remainder. Thus
-(-7).divisionAlg(3) gives quotient -3 and remainder 2, whereas (-7)/3
-gives quotient -2 and (-7)\%3 gives remainder -1.
-
-In the special case where the given divisor is 0 (not allowed by the
-usual division algorithm), this routine selects quotient 0 and
-remainder *n*.
-
-Parameter ``divisor``:
-    the divisor *d*.
-
-Returns:
-    the pair (*q*, *r*), where *q* is the quotient and *r* is the
-    remainder, as described above.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::gcd
-static const char *gcd =
-R"doc(Determines the greatest common divisor of this and the given integer.
-This integer is not changed.
-
-The result is guaranteed to be non-negative. As a special case,
-gcd(0,0) is considered to be zero.
-
-Parameter ``other``:
-    the integer whose greatest common divisor with this will be found.
-
-Returns:
-    the greatest common divisor of this and the given integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::gcdWith
-static const char *gcdWith =
-R"doc(Sets this integer to be the greatest common divisor of this and the
-given integer.
-
-The result is guaranteed to be non-negative. As a special case,
-gcd(0,0) is considered to be zero.
-
-Parameter ``other``:
-    the integer whose greatest common divisor with this will be found.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::isInfinite
-static const char *isInfinite =
-R"doc(Returns whether this integer is infinity.
-
-Since NativeInteger cannot represent infinity, this routine will
-always return ``False``. This routine is simply provided for
-compatibility with LargeInteger (where infinity is allowed).
-
-Returns:
-    ``False``, since a NativeInteger can never be infinity.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::isZero
-static const char *isZero =
-R"doc(Returns whether or not this integer is zero.
-
-Returns:
-    ``True`` if and only if this integer is zero.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::nativeValue
-static const char *nativeValue =
-R"doc(Returns the value of this integer in its native type.
-
-Returns:
-    the value of this integer.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::negate
-static const char *negate = R"doc(Negates this integer. This integer is changed to reflect the result.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::sign
-static const char *sign =
-R"doc(Returns the sign of this integer.
-
-Returns:
-    +1, -1 or 0 according to whether this integer is positive,
-    negative or zero.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::swap
-static const char *swap =
-R"doc(Swaps the values of this and the given integer.
-
-Parameter ``other``:
-    the integer whose value will be swapped with this.)doc";
-
-// Docstring regina::python::doc::NativeInteger_::tryReduce
-static const char *tryReduce =
-R"doc(A do-nothing routine that ensures that this integer is using a native
-C/C++ integer representation.
-
-Since the NativeInteger class always uses a native representation,
-this routine does nothing at all. This routine is simply provided for
-compatibility with Regina's arbitrary-precision Integer and
-LargeInteger classes.)doc";
 
 }
 
