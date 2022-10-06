@@ -651,8 +651,8 @@ class Perm {
          * \tparam URBG A type which, once any references are removed, must
          * adhere to the C++ \a UniformRandomBitGenerator concept.
          *
-         * \ifacespython Not present, though the non-thread-safe variant
-         * without the \a gen argument is available.
+         * \nopython Python users are still able to use the non-thread-safe
+         * variant without the \a gen argument.
          *
          * @param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
@@ -698,8 +698,7 @@ class Perm {
          * code.  For larger permutation classes however (8 &le; \a n &le; 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -761,8 +760,8 @@ class Perm {
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an <i>n</i>-element permutation.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for an <i>n</i>-element permutation.

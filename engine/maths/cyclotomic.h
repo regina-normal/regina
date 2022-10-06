@@ -200,8 +200,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * any missing coefficients are assumed to be zero.  In particular,
          * an empty sequence is allowed (and represents the zero field element).
          *
-         * \ifacespython Not available, but there is a Python constructor
-         * that takes a list of coefficients (which need not be constant).
+         * \nopython Instead, use the Python constructor that takes a list
+         * of coefficients (which need not be constant).
          *
          * @param field the order of the underlying cyclotomic field;
          * this must be strictly positive.
@@ -591,7 +591,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * This will make the output nicer, but will require more complex
          * fonts to be available on the user's machine.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
          * @param utf8 \c true if unicode superscript characters may be used.

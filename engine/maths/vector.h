@@ -93,9 +93,9 @@ class Rational;
  * \pre An element \c t of type T can be written to an output stream
  * \c out using the standard expression <tt>out << t</tt>.
  *
- * \ifacespython Not present in general, although the specific types
- * Vector<Integer> and Vector<LargeInteger> are available under the names
- * VectorInt and VectorLarge respectively.
+ * \ifacespython Only the specific types Vector<Integer> and
+ * Vector<LargeInteger> are available, under the names VectorInt and
+ * VectorLarge respectively.
  *
  * \ingroup maths
  */
@@ -199,8 +199,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * This constructor can be used (for example) to create
          * hard-coded examples directly in C++ code.
          *
-         * \ifacespython Not available, but there is a Python constructor
-         * that takes a list of coefficients (which need not be constant).
+         * \nopython Instead, use the Python constructor that takes a list
+         * of coefficients (which need not be constant).
          *
          * @param data the elements of the vector.
          */
@@ -641,7 +641,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */

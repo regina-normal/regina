@@ -172,8 +172,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * last coefficient in the sequence) is zero.
          * An empty sequence will be treated as the zero polynomial.
          *
-         * \ifacespython Not available, but there is a Python constructor
-         * that takes a list of coefficients (which need not be constant).
+         * \nopython Instead, use the Python constructor that takes a
+         * list of coefficients (which need not be constant).
          *
          * @param coefficients the full sequence of coefficients.
          */
@@ -545,7 +545,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * This will make the output nicer, but will require more complex
          * fonts to be available on the user's machine.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
          * @param utf8 \c true if unicode superscript characters may be used.

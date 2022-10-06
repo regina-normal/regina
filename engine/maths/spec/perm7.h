@@ -824,8 +824,8 @@ class Perm<7> {
          * then this will wrap around to become the first permutation in
          * Perm<7>::Sn, which is the identity.
          *
-         * \ifacespython Not present, although the postincrement operator is
-         * present in python as the member function inc().
+         * \nopython The postincrement operator is present in Python as the
+         * member function inc().
          *
          * @return a reference to this permutation after the increment.
          */
@@ -899,8 +899,8 @@ class Perm<7> {
          * \tparam URBG A type which, once any references are removed, must
          * adhere to the C++ \a UniformRandomBitGenerator concept.
          *
-         * \ifacespython Not present, though the non-thread-safe variant
-         * without the \a gen argument is available.
+         * \nopython Python users are still able to use the non-thread-safe
+         * variant without the \a gen argument.
          *
          * @param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
@@ -944,8 +944,7 @@ class Perm<7> {
          * code.  For larger permutation classes however (8 &le; \a n &le; 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -1007,8 +1006,8 @@ class Perm<7> {
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a 7-element permutation.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for a 7-element permutation.

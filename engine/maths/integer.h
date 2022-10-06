@@ -209,7 +209,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
          * @param value the new value of this integer.
@@ -218,7 +218,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
          * @param value the new value of this integer.
@@ -236,7 +236,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
          * @param value the new value of this integer.
@@ -245,7 +245,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
          * @param value the new value of this integer.
@@ -254,7 +254,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
          * @param value the new value of this integer.
@@ -304,8 +304,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * compile-time assertion, but may be lifted in future versions
          * of Regina.
          *
-         * \ifacespython Not present, since NativeInteger is not available to
-         * Python users.
+         * \nopython This is because the NativeInteger classes are not
+         * available to Python users.
          *
          * @param value the new value of this integer.
          */
@@ -504,8 +504,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinity.
          *
-         * \ifacespython Not present, but you can use the non-templated
-         * longValue() instead.
+         * \nopython Python users can use the non-templated longValue()
+         * function instead.
          *
          * @return the value of this integer.
          */
@@ -773,8 +773,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator increments this integer by one, and returns a
          * reference to the integer \e after the increment.
          *
-         * \ifacespython Not present, although the postincrement operator is
-         * present in python as the member function inc().
+         * \nopython The postincrement operator is present in Python as the
+         * member function inc().
          *
          * @return a reference to this integer after the increment.
          */
@@ -797,8 +797,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator decrements this integer by one, and returns a
          * reference to the integer \e after the decrement.
          *
-         * \ifacespython Not present, although the postdecrement operator is
-         * present in python as the member function dec().
+         * \nopython The postdecrement operator is present in python as the
+         * member function dec().
          *
          * @return a reference to this integer after the decrement.
          */
@@ -1491,7 +1491,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This routine allows IntegerBase to interact directly with
          * libgmp and libgmpxx if necessary.
          *
-         * \ifacespython Not available.
+         * \nopython
          *
          * @param fromData the raw GMP integer to clone.
          */
@@ -1512,7 +1512,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinite.
          *
-         * \ifacespython Not available.
+         * \nopython
          *
          * @return the raw GMP data.
          */
@@ -1533,7 +1533,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinite.
          *
-         * \ifacespython Not available.
+         * \nopython
          *
          * @return the raw GMP data.
          */
@@ -1575,8 +1575,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * rvalue reference (since this const member function induces an extra
          * deep copy).
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -1640,8 +1639,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an integer of this type.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for an integer.
@@ -1801,7 +1800,7 @@ IntegerBase<supportInfinity> operator * (long lhs,
  * if the integer argument is an rvalue reference (since the const member
  * function induces an extra deep copy).
  *
- * \ifacespython Not present; use tightEncoding() instead.
+ * \nopython Use tightEncoding() instead.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -1856,8 +1855,8 @@ std::string tightEncoding(IntegerBase<supportInfinity> value);
  * \pre The system must support integers of the given size; in particular,
  * there must be an appropriate specialisation IntOfSize<bytes>.
  *
- * \ifacespython Not present, since the purpose of NativeInteger is to be a
- * highly optimised drop-in replacement for Integer as a C++ template parameter.
+ * \nopython The purpose of NativeInteger is to be a highly optimised
+ * drop-in replacement for Integer as a C++ template parameter.
  * Python users should just use regina.Integer if you need Regina's integer
  * interface, or Python's own integer type if you do not.
  *
@@ -2525,8 +2524,7 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  * NativeLong is a type alias for the NativeInteger template class whose
  * underlying integer type is a native long.
  *
- * \ifacespython Not present, since NativeInteger is not available to
- * Python users.
+ * \nopython The NativeInteger classes are not available to Python users.
  *
  * \ingroup maths
  */

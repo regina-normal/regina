@@ -152,9 +152,8 @@ template <class> class Vector;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython Not present in general, although the specific types
- * Matrix<Integer> and Matrix<bool> are available under the names
- * MatrixInt and MatrixBool respectively.
+ * \ifacespython Only the specific types Matrix<Integer> and Matrix<bool>
+ * are available, under the names MatrixInt and MatrixBool respectively.
  *
  * \tparam T the type of each individual matrix element.
  * \tparam ring \c true if we should enable member functions that only
@@ -200,8 +199,8 @@ class Matrix : public Output<Matrix<T>> {
          *   case the other matrix will become uninitialised also and subject
          *   to similar constraints.
          *
-         * \ifacespython Not present, since the C++ assignment operators
-         * are not accessible to Python.
+         * \nopython This is because the C++ assignment operators are
+         * not accessible to Python.
          */
         Matrix() : rows_(0), cols_(0), data_(nullptr) {
         }
@@ -609,7 +608,7 @@ class Matrix : public Output<Matrix<T>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -630,7 +629,7 @@ class Matrix : public Output<Matrix<T>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
