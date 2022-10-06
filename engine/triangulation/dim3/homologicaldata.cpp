@@ -1808,7 +1808,7 @@ void HomologicalData::computeEmbeddabilityString() {
                 // so far for checking if it embeds in a homology 4-sphere
                 // unless we implement the Kojima alexander polynomials.
                 // H1 map check... boundary map has full rank iff embeds in
-                // rational homology 3-sph
+                // rational homology 3-sphere,
                 // boundary map epic iff embeds in homology 3-sphere
                  if (bdryHomologyMap(1).isEpic())
                     {
