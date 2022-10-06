@@ -76,6 +76,10 @@ namespace regina {
 template <int bytes>
 class NativeInteger;
 
+#ifdef __DOCSTRINGS
+class Long; // Represents a Python arbitrary-precision integer.
+#endif
+
 /**
  * Internal base classes for use with IntegerBase, templated on whether we
  * should support infinity as an allowed value.
