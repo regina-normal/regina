@@ -41,109 +41,120 @@ using pybind11::overload_cast;
 using regina::Integer;
 
 void addInteger(pybind11::module_& m) {
+    namespace global = regina::python::doc;
+
     RDOC_SCOPE_BEGIN(IntegerBase)
 
     auto c = pybind11::class_<Integer>(m, "Integer", rdoc_scope)
-        .def(pybind11::init<>())
-        .def(pybind11::init<long>())
-        .def(pybind11::init<const Integer&>())
-        .def(pybind11::init<const regina::LargeInteger&>())
-        .def(pybind11::init<double>())
+        .def(pybind11::init<>(), rdoc::IntegerBase)
+        .def(pybind11::init<long>(), rdoc::IntegerBase_2)
+        .def(pybind11::init<const Integer&>(), rdoc::IntegerBase_3)
+        .def(pybind11::init<const regina::LargeInteger&>(), rdoc::IntegerBase_4)
+        .def(pybind11::init<double>(), rdoc::IntegerBase_6)
         .def(pybind11::init<const char*, int>(),
-            pybind11::arg(), pybind11::arg("base") = 10)
+            pybind11::arg(), pybind11::arg("base") = 10,
+            rdoc::IntegerBase_7)
         .def(pybind11::init([](pybind11::int_ l){
             return new Integer(pybind11::cast<std::string>(pybind11::str(l)));
         }))
-        .def("isNative", &Integer::isNative)
-        .def("isZero", &Integer::isZero)
-        .def("sign", &Integer::sign)
-        .def("isInfinite", &Integer::isInfinite)
-        .def("makeInfinite", &Integer::makeInfinite)
-        .def("longValue", &Integer::longValue)
-        .def("safeLongValue", &Integer::safeLongValue)
+        .def("isNative", &Integer::isNative, rdoc::isNative)
+        .def("isZero", &Integer::isZero, rdoc::isZero)
+        .def("sign", &Integer::sign, rdoc::sign)
+        .def("isInfinite", &Integer::isInfinite, rdoc::isInfinite)
+        .def("makeInfinite", &Integer::makeInfinite, rdoc::makeInfinite)
+        .def("longValue", &Integer::longValue, rdoc::longValue)
+        .def("safeLongValue", &Integer::safeLongValue, rdoc::safeLongValue)
         .def("stringValue", &Integer::stringValue,
-            pybind11::arg("base") = 10)
-        .def("swap", &Integer::swap)
-        .def(pybind11::self == long())
-        .def(pybind11::self == regina::LargeInteger())
-        .def(pybind11::self != long())
-        .def(pybind11::self != regina::LargeInteger())
-        .def(pybind11::self < pybind11::self)
-        .def(pybind11::self < long())
-        .def(pybind11::self > pybind11::self)
-        .def(pybind11::self > long())
-        .def(pybind11::self <= pybind11::self)
-        .def(pybind11::self <= long())
-        .def(pybind11::self >= pybind11::self)
-        .def(pybind11::self >= long())
+            pybind11::arg("base") = 10,
+            rdoc::stringValue)
+        .def("swap", &Integer::swap, rdoc::swap)
+        .def(pybind11::self == regina::LargeInteger(), rdoc::__eq_2)
+        .def(pybind11::self == long(), rdoc::__eq_3)
+        .def(pybind11::self != regina::LargeInteger(), rdoc::__ne_2)
+        .def(pybind11::self != long(), rdoc::__ne_3)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
+        .def(pybind11::self < long(), rdoc::__lt_2)
+        .def(pybind11::self > pybind11::self, rdoc::__gt)
+        .def(pybind11::self > long(), rdoc::__gt_2)
+        .def(pybind11::self <= pybind11::self, rdoc::__le)
+        .def(pybind11::self <= long(), rdoc::__le_2)
+        .def(pybind11::self >= pybind11::self, rdoc::__ge)
+        .def(pybind11::self >= long(), rdoc::__ge_2)
         .def("inc", [](Integer& i) {
             return i++;
-        })
+        }, rdoc::__inc)
         .def("dec", [](Integer& i) {
             return i--;
-        })
-        .def(pybind11::self + pybind11::self)
-        .def(pybind11::self + long())
-        .def(pybind11::self - pybind11::self)
-        .def(pybind11::self - long())
-        .def(pybind11::self * pybind11::self)
-        .def(pybind11::self * long())
-        .def(pybind11::self / pybind11::self)
-        .def(pybind11::self / long())
+        }, rdoc::__dec)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self + long(), rdoc::__add_2)
+        .def(pybind11::self - pybind11::self, rdoc::__sub)
+        .def(pybind11::self - long(), rdoc::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc::__mul)
+        .def(pybind11::self * long(), rdoc::__mul_2)
+        .def(pybind11::self / pybind11::self, rdoc::__div)
+        .def(pybind11::self / long(), rdoc::__div_2)
         .def("divExact", overload_cast<const Integer&>(
-            &Integer::divExact, pybind11::const_))
+            &Integer::divExact, pybind11::const_), rdoc::divExact)
         .def("divExact", overload_cast<long>(
-            &Integer::divExact, pybind11::const_))
-        .def(pybind11::self % pybind11::self)
-        .def(pybind11::self % long())
+            &Integer::divExact, pybind11::const_), rdoc::divExact_2)
+        .def(pybind11::self % pybind11::self, rdoc::__mod)
+        .def(pybind11::self % long(), rdoc::__mod_2)
         .def("divisionAlg", overload_cast<const Integer&>(
-            &Integer::divisionAlg, pybind11::const_))
-        .def(- pybind11::self)
-        .def(pybind11::self += pybind11::self)
-        .def(pybind11::self += long())
-        .def(pybind11::self -= pybind11::self)
-        .def(pybind11::self -= long())
-        .def(pybind11::self *= pybind11::self)
-        .def(pybind11::self *= long())
-        .def(pybind11::self /= pybind11::self)
-        .def(pybind11::self /= long())
+            &Integer::divisionAlg, pybind11::const_), rdoc::divisionAlg)
+        .def(- pybind11::self, rdoc::__sub_3)
+        .def(pybind11::self += pybind11::self, rdoc::__iadd)
+        .def(pybind11::self += long(), rdoc::__iadd_2)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def(pybind11::self -= long(), rdoc::__isub_2)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul)
+        .def(pybind11::self *= long(), rdoc::__imul_2)
+        .def(pybind11::self /= pybind11::self, rdoc::__idiv)
+        .def(pybind11::self /= long(), rdoc::__idiv_2)
         .def("divByExact", overload_cast<const Integer&>(&Integer::divByExact),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::divByExact)
         .def("divByExact", overload_cast<long>(&Integer::divByExact),
-            pybind11::return_value_policy::reference_internal)
-        .def(pybind11::self %= pybind11::self)
-        .def(pybind11::self %= long())
-        .def("negate", &Integer::negate)
-        .def("raiseToPower", &Integer::raiseToPower)
-        .def("abs", &Integer::abs)
-        .def("gcdWith", &Integer::gcdWith)
-        .def("gcd", &Integer::gcd)
-        .def("lcmWith", &Integer::lcmWith)
-        .def("lcm", &Integer::lcm)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::divByExact_2)
+        .def(pybind11::self %= pybind11::self, rdoc::__imod)
+        .def(pybind11::self %= long(), rdoc::__imod_2)
+        .def("negate", &Integer::negate, rdoc::negate)
+        .def("raiseToPower", &Integer::raiseToPower, rdoc::raiseToPower)
+        .def("abs", &Integer::abs, rdoc::abs)
+        .def("gcdWith", &Integer::gcdWith, rdoc::gcdWith)
+        .def("gcd", &Integer::gcd, rdoc::gcd)
+        .def("lcmWith", &Integer::lcmWith, rdoc::lcmWith)
+        .def("lcm", &Integer::lcm, rdoc::lcm)
         .def("gcdWithCoeffs", overload_cast<const Integer&>(
-            &Integer::gcdWithCoeffs, pybind11::const_))
+            &Integer::gcdWithCoeffs, pybind11::const_),
+            rdoc::gcdWithCoeffs)
         .def("gcdWithCoeffs", overload_cast<const Integer&, Integer&, Integer&>(
-            &Integer::gcdWithCoeffs, pybind11::const_))
-        .def("legendre", &Integer::legendre)
-        .def("randomBoundedByThis", &Integer::randomBoundedByThis)
-        .def_static("randomBinary", &Integer::randomBinary)
-        .def_static("randomCornerBinary", &Integer::randomCornerBinary)
-        .def("makeLarge", &Integer::makeLarge)
-        .def("tryReduce", &Integer::tryReduce)
-        .def(long() + pybind11::self)
-        .def(long() * pybind11::self)
+            &Integer::gcdWithCoeffs, pybind11::const_),
+            rdoc::gcdWithCoeffs_2)
+        .def("legendre", &Integer::legendre, rdoc::legendre)
+        .def("randomBoundedByThis", &Integer::randomBoundedByThis,
+            rdoc::randomBoundedByThis)
+        .def_static("randomBinary", &Integer::randomBinary, rdoc::randomBinary)
+        .def_static("randomCornerBinary", &Integer::randomCornerBinary,
+            rdoc::randomCornerBinary)
+        .def("makeLarge", &Integer::makeLarge, rdoc::makeLarge)
+        .def("tryReduce", &Integer::tryReduce, rdoc::tryReduce)
+        .def(long() + pybind11::self, global::__add)
+        .def(long() * pybind11::self, global::__mul)
         .def_readonly_static("zero", &Integer::zero)
         .def_readonly_static("one", &Integer::one)
     ;
-    regina::python::add_tight_encoding(c, rdoc::tightEncoding);
+    regina::python::add_tight_encoding(c, rdoc::tightEncoding,
+        rdoc::tightDecoding);
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
     RDOC_SCOPE_SWITCH_MAIN
 
     m.def("tightEncoding", static_cast<std::string(&)(Integer)>(
-        regina::tightEncoding), rdoc::tightEncoding, rdoc::tightDecoding);
-    regina::python::add_global_swap<Integer>(m, rdoc::scope);
+        regina::tightEncoding), rdoc::tightEncoding);
+    regina::python::add_global_swap<Integer>(m, rdoc::swap);
 
     RDOC_SCOPE_END
 

@@ -315,6 +315,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          */
         template <int bytes>
         IntegerBase(const NativeInteger<bytes>& value);
+#ifdef __APIDOCS
         /**
          * Initialises this to the given Python arbitrary-precision integer.
          *
@@ -326,9 +327,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * @param value the new value of this integer.
          */
-        #ifdef __APIDOCS
         IntegerBase(Long value);
-        #endif
+#endif
 
         /**
          * Initialises this integer to the truncation of the given
