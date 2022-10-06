@@ -59,7 +59,7 @@ void addCensus(pybind11::module_& m) {
     });
     regina::python::add_eq_operators(db);
 
-    m.def("swap", (void(*)(CensusDB&, CensusDB&))(regina::swap));
+    regina::python::add_global_swap<CensusDB>(m);
 
     auto h = pybind11::class_<CensusHit>(m, "CensusHit")
         .def(pybind11::init<const CensusHit&>())
@@ -74,7 +74,7 @@ void addCensus(pybind11::module_& m) {
     });
     regina::python::add_eq_operators(h);
 
-    m.def("swap", (void(*)(CensusHit&, CensusHit&))(regina::swap));
+    regina::python::add_global_swap<CensusHit>(m);
 
     auto c = pybind11::class_<Census>(m, "Census")
         .def_static("lookup",

@@ -346,8 +346,10 @@ void addTriangulation4(pybind11::module_& m) {
     regina::python::add_packet_constructor<const Triangulation<4>&, bool>(wrap);
     regina::python::add_packet_constructor<const std::string&>(wrap);
 
-    m.def("swap",
-        (void(*)(Triangulation<4>&, Triangulation<4>&))(regina::swap));
+    // We cannot use add_global_swap() here, since add_global_swap() cannot
+    // resolve regina::swap to the templated triangulation swap function.
+    m.def("swap", static_cast<void(&)(Triangulation<4>&, Triangulation<4>&)>(
+        regina::swap));
 
     addIsoSigClassic<4>(m, "IsoSigClassic4");
     addIsoSigEdgeDegrees<4>(m, "IsoSigEdgeDegrees4");

@@ -341,5 +341,5 @@ void addLink(pybind11::module_& m) {
     regina::python::add_packet_constructor<const Link&, bool>(wrap);
     regina::python::add_packet_constructor<const std::string&>(wrap);
 
-    m.def("swap", (void(*)(Link&, Link&))(regina::swap));
+    regina::python::add_global_swap<Link>(m);
 }

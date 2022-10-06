@@ -84,7 +84,7 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
     // test.  In the meantime, don't make a decision we might regret later.
     regina::python::disable_eq_operators(c);
 
-    m.def("swap", (void(*)(Tableaux&, Tableaux&))(regina::swap));
+    regina::python::add_global_swap<Tableaux>(m);
 }
 
 template <class LPConstraint>
@@ -123,7 +123,7 @@ void addLPData(pybind11::module_& m, const char* name) {
     // all the internal data?  Let's not force a decision right now.
     regina::python::disable_eq_operators(c);
 
-    m.def("swap", (void(*)(Data&, Data&))(regina::swap));
+    regina::python::add_global_swap<Data>(m);
 }
 
 void addTreeLP(pybind11::module_& m) {
@@ -150,8 +150,7 @@ void addTreeLP(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.def("swap",
-        (void(*)(LPMatrix<Integer>&, LPMatrix<Integer>&))(regina::swap));
+    regina::python::add_global_swap<LPMatrix<Integer>>(m);
 
     auto s = pybind11::class_<LPSystem>(m, "LPSystem")
         .def(pybind11::init<regina::NormalEncoding>())

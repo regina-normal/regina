@@ -58,7 +58,7 @@ void addFileInfo(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH_MAIN
 
-    m.def("swap", (void(*)(FileInfo&, FileInfo&))(regina::swap), rdoc::swap);
+    regina::python::add_global_swap<FileInfo>(m, rdoc::swap);
 
     RDOC_SCOPE_END
 }

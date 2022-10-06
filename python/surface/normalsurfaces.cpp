@@ -126,6 +126,6 @@ void addNormalSurfaces(pybind11::module_& m) {
     regina::python::add_packet_constructor<const NormalSurfaces&,
         regina::NormalTransform>(wrap);
 
-    m.def("swap", (void(*)(NormalSurfaces&, NormalSurfaces&))(regina::swap));
+    regina::python::add_global_swap<NormalSurfaces>(m);
 }
 

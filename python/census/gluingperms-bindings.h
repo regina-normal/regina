@@ -89,7 +89,6 @@ void addGluingPerms(pybind11::module_& m, const char* name) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.def("swap",
-        (void(*)(GluingPerms<dim>&, GluingPerms<dim>&))(regina::swap));
+    regina::python::add_global_swap<GluingPerms<dim>>(m);
 }
 

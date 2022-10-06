@@ -54,6 +54,6 @@ void addTriSolidTorus(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 
-    m.def("swap", (void(*)(TriSolidTorus&, TriSolidTorus&))(regina::swap));
+    regina::python::add_global_swap<TriSolidTorus>(m);
 }
 

@@ -117,7 +117,7 @@ void addGroupPresentation(pybind11::module_& m) {
     regina::python::add_output(c2);
     regina::python::add_eq_operators(c2);
 
-    m.def("swap", (void(*)(GroupExpression&, GroupExpression&))(regina::swap));
+    regina::python::add_global_swap<GroupExpression>(m);
 
     auto c3 = pybind11::class_<GroupPresentation>(m, "GroupPresentation")
         .def(pybind11::init<>())
@@ -203,7 +203,6 @@ void addGroupPresentation(pybind11::module_& m) {
     regina::python::add_output(c3);
     regina::python::add_eq_operators(c3);
 
-    m.def("swap",
-        (void(*)(GroupPresentation&, GroupPresentation&))(regina::swap));
+    regina::python::add_global_swap<GroupPresentation>(m);
 }
 

@@ -181,6 +181,6 @@ void addNormalSurface(pybind11::module_& m) {
     m.attr("quadDiscArcs") = &quadDiscArcs_arr;
     m.attr("octDiscArcs") = &octDiscArcs_arr;
 
-    m.def("swap", (void(*)(NormalSurface&, NormalSurface&))(regina::swap));
+    regina::python::add_global_swap<NormalSurface>(m);
 }
 

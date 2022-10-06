@@ -76,6 +76,6 @@ void addHomologicalData(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::disable_eq_operators(c);
 
-    m.def("swap", (void(*)(HomologicalData&, HomologicalData&))(regina::swap));
+    regina::python::add_global_swap<HomologicalData>(m);
 }
 

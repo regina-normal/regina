@@ -102,5 +102,5 @@ void addTangle(pybind11::module_& m) {
     // No need to register the ListView class for crossings(), since
     // this is the same class used by Link.
 
-    m.def("swap", (void(*)(Tangle&, Tangle&))(regina::swap));
+    regina::python::add_global_swap<Tangle>(m);
 }

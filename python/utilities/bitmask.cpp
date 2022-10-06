@@ -136,7 +136,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH_MAIN
 
-    m.def("swap", (void(*)(Bitmask&, Bitmask&))(regina::swap), rdoc::swap);
+    regina::python::add_global_swap<Bitmask>(m, rdoc::swap);
 
     RDOC_SCOPE_END
 }

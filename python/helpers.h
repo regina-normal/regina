@@ -55,6 +55,7 @@
 #include "helpers/docstrings.h"
 #include "helpers/equality.h"
 #include "helpers/gil.h"
+#include "helpers/globals.h"
 #include "helpers/output.h"
 #include "helpers/listview.h"
 #include "helpers/packet.h"

@@ -246,7 +246,9 @@ void addTriangulation(pybind11::module_& m, const char* name) {
     regina::python::add_packet_constructor<
         const Triangulation<dim>&, bool>(wrap);
 
-    m.def("swap",
-        (void(*)(Triangulation<dim>&, Triangulation<dim>&))(regina::swap));
+    // We cannot use add_global_swap() here, since add_global_swap() cannot
+    // resolve regina::swap to the templated triangulation swap function.
+    m.def("swap", static_cast<void(&)(Triangulation<dim>&,
+        Triangulation<dim>&)>(regina::swap));
 }
 

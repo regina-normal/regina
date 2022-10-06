@@ -64,8 +64,7 @@ void addSurfaceFilter(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::packet_eq_operators(c);
 
-    m.def("swap", (void(*)(SurfaceFilterCombination&,
-        SurfaceFilterCombination&))(regina::swap));
+    regina::python::add_global_swap<SurfaceFilterCombination>(m);
 
     auto p = pybind11::class_<SurfaceFilterProperties, regina::SurfaceFilter,
             std::shared_ptr<SurfaceFilterProperties>>
@@ -96,7 +95,6 @@ void addSurfaceFilter(pybind11::module_& m) {
     regina::python::add_output(p);
     regina::python::packet_eq_operators(p);
 
-    m.def("swap", (void(*)(SurfaceFilterProperties&,
-        SurfaceFilterProperties&))(regina::swap));
+    regina::python::add_global_swap<SurfaceFilterProperties>(m);
 }
 

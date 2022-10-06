@@ -98,7 +98,7 @@ void addDisc(pybind11::module_& m) {
     });
     regina::python::add_eq_operators(s);
 
-    m.def("swap", (void(*)(DiscSetSurface&, DiscSetSurface&))(regina::swap));
+    regina::python::add_global_swap<DiscSetSurface>(m);
 
     auto it = pybind11::class_<DiscSpecIterator<DiscSetTet>>(
             m, "DiscSpecIterator")
