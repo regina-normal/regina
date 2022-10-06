@@ -83,7 +83,8 @@ enum EqualityType {
 #ifndef __DOCSTRINGS
 
 /**
- * Adds appropriate == and != operators to the python bindings for a C++ class.
+ * Adds appropriate == and != operators to the python bindings for a C++ class,
+ * with docstrings.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * <t>regina::python::add_eq_operators(c)</t>, where \a c is the
@@ -91,15 +92,49 @@ enum EqualityType {
  *
  * - If \a T provides both == and != operators (either as member
  *   functions or as global functions), then the python operators == and !=
- *   will compare by value.  In this case, the optional \a docEq and \a docNeq
- *   arguments will (if they are non-null) be used as Python docstrings.
+ *   will compare by value.  The \a docEq and \a docNeq arguments will be
+ *   used as the respective Python docstrings.
  *
- * - If \a T provides neither == nor != operators, then the python
- *   operators == and != will compare by reference.  In this case, the
- *   \a docEq and \a docNeq arguments will be ignored.
+ * - If \a T provides neither == nor != operators, then this will generate
+ *   a compile error.  Instead you should be calling the variant of
+ *   add_eq_operators() \e without docstrings.
  *
  * - If \a T provides one of == or != but not the other, then this will
- *   generate a compile error.
+ *   generate a compile error.  You should fix the C++ class \a T to make its
+ *   comparison operators consistent.
+ *
+ * Furthermore, this will add an attribute \a equalityType to the python
+ * wrapper class, which will be the corresponding constant from the
+ * EqualityType enum (which for this variant of add_eq_operators() must
+ * always be \a BY_VALUE).
+ *
+ * If \a C is a packet type (such as regina::Text) or is inherited by a packet
+ * type (such as regina::Link), then you should use packet_eq_operators()
+ * instead.
+ */
+template <class C, typename... options>
+void add_eq_operators(pybind11::class_<C, options...>& c,
+    const char* docEq, const char* docNeq);
+
+/**
+ * Adds appropriate == and != operators to the python bindings for a C++ class,
+ * without docstrings.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>regina::python::add_eq_operators(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.  The effect will be as follows:
+ *
+ * - If \a T provides both == and != operators (either as member
+ *   functions or as global functions), then the python operators == and !=
+ *   will compare by value.  No docstrings will be provided.
+ *
+ * - If \a T provides neither == nor != operators, then the python
+ *   operators == and != will compare by reference.  Sensible docstrings
+ *   for comparison-by-reference will be provided.
+ *
+ * - If \a T provides one of == or != but not the other, then this will
+ *   generate a compile error.  You should fix the C++ class \a T to make its
+ *   comparison operators consistent.
  *
  * Furthermore, this will add an attribute \a equalityType to the python
  * wrapper class, which will be the corresponding constant from the
@@ -110,8 +145,7 @@ enum EqualityType {
  * instead.
  */
 template <class C, typename... options>
-void add_eq_operators(pybind11::class_<C, options...>& c,
-    const char* docEq = nullptr, const char* docNeq = nullptr);
+void add_eq_operators(pybind11::class_<C, options...>& c);
 
 /**
  * Adds appropriate == and != operators to the python bindings for a C++ class
@@ -156,7 +190,8 @@ void packet_disasble_eq_operators(pybind11::class_<C, options...>& c);
  *
  * - Placeholder operators == and != will be added to the python wrapper class
  *   (thus overriding any default provided by pybind11).  These operators will
- *   throw python exceptions if they are ever called.
+ *   throw python exceptions if they are ever called.  Sensible docstrings
+ *   for these operators will be provided.
  *
  * - The attribute \a equalityType will be added to the python wrapper class.
  *   Its value will be the EqualityType enum constant \a NEVER_INSTANTIATED.
@@ -180,7 +215,8 @@ void no_eq_operators(pybind11::class_<C, options...>& c);
  *
  * - Operators == and != will be added to the python wrapper class (thus
  *   overriding any default provided by pybind11), and these operators will
- *   throw python exceptions that contain useful explanations.
+ *   throw python exceptions that contain useful explanations.  Sensible
+ *   docstrings for these operators will be provided.
  *
  * - The attribute \a equalityType will be added to the python wrapper class.
  *   Its value will be the EqualityType enum constant \a DISABLED.
@@ -315,26 +351,40 @@ inline void add_eq_operators(pybind11::class_<C, options...>& c,
     constexpr EqualityType equalityType =
         add_eq_operators_detail::EqualityOperators<C>::equalityType();
 
-    if (docEq) {
-        c.def("__eq__",
-            &add_eq_operators_detail::EqualityOperators<C>::are_equal, docEq);
-    } else if constexpr (equalityType == BY_REFERENCE) {
+    static_assert(equalityType == BY_VALUE,
+        "The variant of add_eq_operators() that takes docstrings "
+        "should only be used for classes that compare by value.");
+
+    c.def("__eq__",
+        &add_eq_operators_detail::EqualityOperators<C>::are_equal, docEq);
+    c.def("__ne__",
+        &add_eq_operators_detail::EqualityOperators<C>::are_not_equal, docNeq);
+
+    c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
+        doc::common::eq_None);
+    c.def("__ne__", [](const C&, std::nullptr_t) { return true; },
+        doc::common::neq_None);
+
+    c.attr("equalityType") = equalityType;
+}
+
+template <class C, typename... options>
+inline void add_eq_operators(pybind11::class_<C, options...>& c) {
+    constexpr EqualityType equalityType =
+        add_eq_operators_detail::EqualityOperators<C>::equalityType();
+
+    if constexpr (equalityType == BY_REFERENCE) {
         c.def("__eq__",
             &add_eq_operators_detail::EqualityOperators<C>::are_equal,
             python::doc::common::eq_reference);
-    } else {
-        c.def("__eq__",
-            &add_eq_operators_detail::EqualityOperators<C>::are_equal);
-    }
-    if (docNeq) {
-        c.def("__ne__",
-            &add_eq_operators_detail::EqualityOperators<C>::are_not_equal,
-            docNeq);
-    } else if constexpr (equalityType == BY_REFERENCE) {
         c.def("__ne__",
             &add_eq_operators_detail::EqualityOperators<C>::are_not_equal,
             python::doc::common::neq_reference);
     } else {
+        // We are comparing by value, but do not have docstrings to tell the
+        // user what "by value" actually means.  Leave the docstrings empty.
+        c.def("__eq__",
+            &add_eq_operators_detail::EqualityOperators<C>::are_equal);
         c.def("__ne__",
             &add_eq_operators_detail::EqualityOperators<C>::are_not_equal);
     }

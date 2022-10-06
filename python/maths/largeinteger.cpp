@@ -35,12 +35,15 @@
 #include "../pybind11/stl.h"
 #include "maths/integer.h"
 #include "../helpers.h"
+#include "../docstrings/maths/integer.h"
 
 using pybind11::overload_cast;
 using regina::LargeInteger;
 
 void addLargeInteger(pybind11::module_& m) {
-    auto c = pybind11::class_<LargeInteger>(m, "LargeInteger")
+    RDOC_SCOPE_BEGIN(IntegerBase)
+
+    auto c = pybind11::class_<LargeInteger>(m, "LargeInteger", rdoc_scope)
         .def(pybind11::init<>())
         .def(pybind11::init<long>())
         .def(pybind11::init<const LargeInteger&>())
@@ -137,13 +140,17 @@ void addLargeInteger(pybind11::module_& m) {
         .def_readonly_static("one", &LargeInteger::one)
         .def_readonly_static("infinity", &LargeInteger::infinity)
     ;
-    regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_tight_encoding(c, rdoc::tightEncoding);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
+    RDOC_SCOPE_SWITCH_MAIN
+
     m.def("tightEncoding", static_cast<std::string(&)(LargeInteger)>(
-        regina::tightEncoding));
-    regina::python::add_global_swap<LargeInteger>(m);
+        regina::tightEncoding), rdoc::tightEncoding, rdoc::tightDecoding);
+    regina::python::add_global_swap<LargeInteger>(m, rdoc::swap);
+
+    RDOC_SCOPE_END
 
     pybind11::implicitly_convertible<long, LargeInteger>();
     pybind11::implicitly_convertible<std::string, LargeInteger>();

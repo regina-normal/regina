@@ -35,12 +35,15 @@
 #include "../pybind11/stl.h"
 #include "maths/integer.h"
 #include "../helpers.h"
+#include "../docstrings/maths/integer.h"
 
 using pybind11::overload_cast;
 using regina::Integer;
 
 void addInteger(pybind11::module_& m) {
-    auto c = pybind11::class_<Integer>(m, "Integer")
+    RDOC_SCOPE_BEGIN(IntegerBase)
+
+    auto c = pybind11::class_<Integer>(m, "Integer", rdoc_scope)
         .def(pybind11::init<>())
         .def(pybind11::init<long>())
         .def(pybind11::init<const Integer&>())
@@ -132,13 +135,17 @@ void addInteger(pybind11::module_& m) {
         .def_readonly_static("zero", &Integer::zero)
         .def_readonly_static("one", &Integer::one)
     ;
-    regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_tight_encoding(c, rdoc::tightEncoding);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
+    RDOC_SCOPE_SWITCH_MAIN
+
     m.def("tightEncoding", static_cast<std::string(&)(Integer)>(
-        regina::tightEncoding));
-    regina::python::add_global_swap<Integer>(m);
+        regina::tightEncoding), rdoc::tightEncoding, rdoc::tightDecoding);
+    regina::python::add_global_swap<Integer>(m, rdoc::scope);
+
+    RDOC_SCOPE_END
 
     pybind11::implicitly_convertible<long, Integer>();
     pybind11::implicitly_convertible<std::string, Integer>();
