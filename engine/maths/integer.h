@@ -322,7 +322,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * @param value the new value of this integer.
          */
-        #ifdef __DOXYGEN
+        #ifdef __APIDOCS
         IntegerBase(Long value);
         #endif
 

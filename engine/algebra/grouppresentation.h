@@ -1524,7 +1524,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          */
         std::string gap(const std::string& groupVariable = "g") const;
 
-#ifdef __DOXYGEN
+#ifdef __APIDOCS
         /**
          * A SageMath-only routine that returns a copy of this group
          * presentation in a format native to SageMath.

@@ -154,7 +154,6 @@ def process_comment(comment):
         'extends': 'Extends',
         'pre': 'Precondition',
         'ifacespython': 'Python',
-        'cpp': 'C++',
         'i18n': 'Internationalisation'
     }.items():
         s = re.sub(r'[\\@]%s\s*' % in_, r'\n\n$%s:\n\n' % out_, s)
@@ -172,7 +171,9 @@ def process_comment(comment):
                r'$.. note::\n\n\1\n\n', s, flags=re.DOTALL)
 
     # Regina-specific paragraphs that we can ignore in Python:
-    s = re.sub(r'\\headers\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
+    s = re.sub(r'\\headers\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
+    s = re.sub(r'\\cpp\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
+    s = re.sub(r'\\nocpp\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
 
     # Doxygen paragraphs that we will likewise ignore in Python:
     s = re.sub(r'[\\@]todo\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
