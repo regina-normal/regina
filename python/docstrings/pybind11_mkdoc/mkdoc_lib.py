@@ -209,6 +209,7 @@ def process_comment(comment):
     s = re.sub(r'\\<', r'<', s)
     s = re.sub(r'\\>', r'>', s)
     s = re.sub(r'\\&', r'&', s)
+    s = re.sub(r'\\%', r'%', s)
 
     s = s.replace('``true``', '``True``')
     s = s.replace('``false``', '``False``')

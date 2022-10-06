@@ -975,7 +975,7 @@ are chosen; in particular it chooses the unique *r* in the range ``0
 Note that this differs from other division routines in this class, in
 that it always rounds to give a non-negative remainder. Thus
 (-7).divisionAlg(3) gives quotient -3 and remainder 2, whereas (-7)/3
-gives quotient -2 and (-7)\%3 gives remainder -1.
+gives quotient -2 and (-7)%3 gives remainder -1.
 
 In the special case where the given divisor is 0 (not allowed by the
 usual division algorithm), this routine selects quotient 0 and
