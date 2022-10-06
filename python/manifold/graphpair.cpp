@@ -55,6 +55,6 @@ void addGraphPair(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 
-    m.def("swap", (void(*)(GraphPair&, GraphPair&))(regina::swap));
+    regina::python::add_global_swap<GraphPair>(m);
 }
 

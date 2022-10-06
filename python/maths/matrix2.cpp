@@ -130,11 +130,12 @@ void addMatrix2(pybind11::module_& m) {
     regina::python::add_eq_operators(c2);
     regina::python::add_output_ostream(c2);
 
-    m.def("swap", (void(*)(Matrix2&, Matrix2&))(regina::swap));
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&>(
         &regina::simpler));
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&,
             const Matrix2&, const Matrix2&>(
         &regina::simpler));
+
+    regina::python::add_global_swap<Matrix2>(m);
 }
 

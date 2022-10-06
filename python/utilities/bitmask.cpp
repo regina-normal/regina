@@ -124,7 +124,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);
 
-    m.def("swap", (void(*)(Bitmask&, Bitmask&))(regina::swap));
+    regina::python::add_global_swap<Bitmask>(m);
 }
 
 void addBitmask(pybind11::module_& m) {

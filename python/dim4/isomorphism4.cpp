@@ -88,6 +88,6 @@ void addIsomorphism4(pybind11::module_& m) {
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
-    m.def("swap", (void(*)(Isomorphism<4>&, Isomorphism<4>&))(regina::swap));
+    regina::python::add_global_swap<Isomorphism<4>>(m);
 }
 

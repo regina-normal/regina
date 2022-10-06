@@ -90,7 +90,6 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
-    m.def("swap",
-        (void(*)(FacetPairing<dim>&, FacetPairing<dim>&))(regina::swap));
+    regina::python::add_global_swap<FacetPairing<dim>>(m);
 }
 

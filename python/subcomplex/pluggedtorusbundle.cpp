@@ -58,7 +58,6 @@ void addPluggedTorusBundle(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.def("swap",
-        (void(*)(PluggedTorusBundle&, PluggedTorusBundle&))(regina::swap));
+    regina::python::add_global_swap<PluggedTorusBundle>(m);
 }
 

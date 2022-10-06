@@ -118,5 +118,5 @@ void addModelLinkGraph(pybind11::module_& m) {
 
     regina::python::addListView<decltype(ModelLinkGraph().cells().arcs(0))>(m);
 
-    m.def("swap", (void(*)(ModelLinkGraph&, ModelLinkGraph&))(regina::swap));
+    regina::python::add_global_swap<ModelLinkGraph>(m);
 }

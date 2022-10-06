@@ -218,6 +218,6 @@ void addCut(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.def("swap", (void(*)(Cut&, Cut&))(regina::swap));
+    regina::python::add_global_swap<Cut>(m);
 }
 

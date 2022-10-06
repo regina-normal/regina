@@ -105,7 +105,7 @@ void addSFSpace(pybind11::module_& m) {
     regina::python::add_eq_operators(s);
     regina::python::add_output(s);
 
-    m.def("swap", (void(*)(SFSpace&, SFSpace&))(regina::swap));
+    regina::python::add_global_swap<SFSpace>(m);
 
     pybind11::enum_<SFSpace::ClassType>(s, "ClassType")
         .value("o1", SFSpace::o1)

@@ -52,6 +52,6 @@ void addSignature(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.def("swap", (void(*)(Signature&, Signature&))(regina::swap));
+    regina::python::add_global_swap<Signature>(m);
 }
 

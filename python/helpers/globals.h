@@ -30,35 +30,45 @@
  *                                                                        *
  **************************************************************************/
 
-#include "../pybind11/pybind11.h"
-#include "../pybind11/stl.h"
-#include "subcomplex/plugtrisolidtorus.h"
-#include "triangulation/dim3.h"
-#include "../helpers.h"
+/*! \file python/helpers/globals.h
+ *  \brief Assists with safely wrapping heavily overloaded functions.
+ */
 
-using regina::PlugTriSolidTorus;
+namespace regina {
 
-void addPlugTriSolidTorus(pybind11::module_& m) {
-    auto c = pybind11::class_<PlugTriSolidTorus, regina::StandardTriangulation>
-            (m, "PlugTriSolidTorus")
-        .def(pybind11::init<const PlugTriSolidTorus&>())
-        .def("swap", &PlugTriSolidTorus::swap)
-        .def("core", &PlugTriSolidTorus::core,
-            pybind11::return_value_policy::reference_internal)
-        .def("chain", &PlugTriSolidTorus::chain,
-            pybind11::return_value_policy::reference_internal)
-        .def("chainType", &PlugTriSolidTorus::chainType)
-        .def("equatorType", &PlugTriSolidTorus::equatorType)
-        .def_static("recognise", &PlugTriSolidTorus::recognise)
-        .def_readonly_static("CHAIN_NONE", &PlugTriSolidTorus::CHAIN_NONE)
-        .def_readonly_static("CHAIN_MAJOR", &PlugTriSolidTorus::CHAIN_MAJOR)
-        .def_readonly_static("CHAIN_MINOR", &PlugTriSolidTorus::CHAIN_MINOR)
-        .def_readonly_static("EQUATOR_MAJOR", &PlugTriSolidTorus::EQUATOR_MAJOR)
-        .def_readonly_static("EQUATOR_MINOR", &PlugTriSolidTorus::EQUATOR_MINOR)
-    ;
-    regina::python::add_eq_operators(c);
-    regina::python::add_output(c);
+// Declare a dummy swap function, so that regina::swap always resolves.
+// This avoids a compile error in scenarios where we are including this header
+// but not calling add_global_swap(), and where there is in fact no variant of
+// regina::swap() currently visible.
+//
+void swap(nullptr_t, nullptr_t) noexcept;
 
-    regina::python::add_global_swap<PlugTriSolidTorus>(m);
+namespace python {
+
+/**
+ * Adds a Python binding for the overloaded global regina::swap function
+ * for objects of type T, using the given docstring.
+ *
+ * This routine exists purely for safety: it uses static_cast (not C-style
+ * casts) to resolve the overload, so that there is no risk of accidentally
+ * binding the wrong variant of regina::swap().
+ */
+template <class T>
+inline void add_global_swap(pybind11::module_& m, const char* doc) {
+    m.def("swap", static_cast<void(&)(T&, T&)>(regina::swap), doc);
 }
 
+/**
+ * Adds a Python binding for the overloaded global regina::swap function
+ * for objects of type T, with no docstring.
+ *
+ * This routine exists purely for safety: it uses static_cast (not C-style
+ * casts) to resolve the overload, so that there is no risk of accidentally
+ * binding the wrong variant of regina::swap().
+ */
+template <class T>
+inline void add_global_swap(pybind11::module_& m) {
+    m.def("swap", static_cast<void(&)(T&, T&)>(regina::swap));
+}
+
+} } // namespace regina::python

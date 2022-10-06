@@ -99,7 +99,6 @@ void addPolynomial(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.def("swap", (void(*)(Polynomial<Rational>&,
-        Polynomial<Rational>&))(regina::swap));
+    regina::python::add_global_swap<Polynomial<Rational>>(m);
 }
 
