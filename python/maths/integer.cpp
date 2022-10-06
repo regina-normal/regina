@@ -50,13 +50,13 @@ void addInteger(pybind11::module_& m) {
         .def(pybind11::init<long>(), rdoc::IntegerBase_2)
         .def(pybind11::init<const Integer&>(), rdoc::IntegerBase_3)
         .def(pybind11::init<const regina::LargeInteger&>(), rdoc::IntegerBase_4)
-        .def(pybind11::init<double>(), rdoc::IntegerBase_6)
-        .def(pybind11::init<const char*, int>(),
-            pybind11::arg(), pybind11::arg("base") = 10,
-            rdoc::IntegerBase_7)
         .def(pybind11::init([](pybind11::int_ l){
             return new Integer(pybind11::cast<std::string>(pybind11::str(l)));
-        }))
+        }), rdoc::IntegerBase_6)
+        .def(pybind11::init<double>(), rdoc::IntegerBase_7)
+        .def(pybind11::init<const char*, int>(),
+            pybind11::arg(), pybind11::arg("base") = 10,
+            rdoc::IntegerBase_8)
         .def("isNative", &Integer::isNative, rdoc::isNative)
         .def("isZero", &Integer::isZero, rdoc::isZero)
         .def("sign", &Integer::sign, rdoc::sign)

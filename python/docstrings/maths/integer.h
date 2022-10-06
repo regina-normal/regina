@@ -187,13 +187,24 @@ Parameter ``src``:
 
 // Docstring regina::python::doc::IntegerBase_::IntegerBase_6
 static const char *IntegerBase_6 =
+R"doc(Initialises this to the given Python arbitrary-precision integer.
+
+The argument is of the Python type ``long``, which Python uses to
+store integers of arbitrary magnitude (much like Regina does with its
+Integer and LargeInteger classes).
+
+Parameter ``value``:
+    the new value of this integer.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::IntegerBase_7
+static const char *IntegerBase_7 =
 R"doc(Initialises this integer to the truncation of the given real number.
 
 Parameter ``value``:
     the real number to be truncated.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_7
-static const char *IntegerBase_7 =
+// Docstring regina::python::doc::IntegerBase_::IntegerBase_8
+static const char *IntegerBase_8 =
 R"doc(Initialises this integer to the given value which is represented as a
 string of digits in a given base.
 
@@ -230,8 +241,8 @@ Parameter ``value``:
 Parameter ``base``:
     the base in which *value* is given.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_8
-static const char *IntegerBase_8 =
+// Docstring regina::python::doc::IntegerBase_::IntegerBase_9
+static const char *IntegerBase_9 =
 R"doc(Initialises this integer to the given value which is represented as a
 string of digits in a given base.
 
