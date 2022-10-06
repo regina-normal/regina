@@ -141,8 +141,8 @@ void addLargeInteger(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
-    m.def("tightEncoding",
-        (std::string(*)(LargeInteger))(regina::tightEncoding));
+    m.def("tightEncoding", static_cast<std::string(&)(LargeInteger)>(
+        regina::tightEncoding));
     regina::python::add_global_swap<LargeInteger>(m);
 
     pybind11::implicitly_convertible<long, LargeInteger>();

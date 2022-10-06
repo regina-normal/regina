@@ -57,8 +57,8 @@ void addSigUtils(pybind11::module_& m) {
             pybind11::overload_cast<const std::array<uint8_t, 3>&>(
             &Base64SigEncoding::encodeTrits<3>))
         // overload_cast cannot handle template vs non-template overloads.
-        .def_static("decodeTrits", (std::array<uint8_t, 3> (*)(char))(
-            &Base64SigEncoding::decodeTrits))
+        .def_static("decodeTrits", static_cast<std::array<uint8_t, 3>(&)(char)>(
+            Base64SigEncoding::decodeTrits))
     ;
     regina::python::no_eq_operators(c);
 }

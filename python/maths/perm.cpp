@@ -120,7 +120,7 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("compareWith", &Perm<n>::compareWith)
         .def("isIdentity", &Perm<n>::isIdentity)
         .def_static("rot", &Perm<n>::rot)
-        .def_static("rand", (Perm<n> (*)(bool))(&Perm<n>::rand),
+        .def_static("rand", static_cast<Perm<n>(&)(bool)>(Perm<n>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<n>::trunc)
         .def("clear", &Perm<n>::clear)

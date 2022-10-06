@@ -39,9 +39,12 @@ using pybind11::overload_cast;
 void addTightEncoding(pybind11::module_& m) {
     // We cannot use overload_cast here because there is a templated
     // global tightEncoding() function.
-    m.def("tightEncoding", (std::string (*)(long))(&regina::tightEncoding));
-    m.def("tightEncoding", (std::string (*)(long long))(&regina::tightEncoding));
-    m.def("tightEncoding", (std::string (*)(bool))(&regina::tightEncoding));
+    m.def("tightEncoding", static_cast<std::string(&)(long)>(
+        regina::tightEncoding));
+    m.def("tightEncoding", static_cast<std::string(&)(long long)>(
+        regina::tightEncoding));
+    m.def("tightEncoding", static_cast<std::string(&)(bool)>(
+        regina::tightEncoding));
     m.def("tightDecoding", [](const std::string& enc) {
         // Try a native integer conversion first.
         try {

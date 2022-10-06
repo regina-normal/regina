@@ -97,7 +97,7 @@ void addPerm3(pybind11::module_& m) {
         })
         .def(pybind11::self < pybind11::self)
         .def_static("rot", &Perm<3>::rot)
-        .def_static("rand", (Perm<3> (*)(bool))(&Perm<3>::rand),
+        .def_static("rand", static_cast<Perm<3>(&)(bool)>(Perm<3>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<3>::trunc)
         .def("trunc2", &Perm<3>::trunc2)

@@ -43,8 +43,8 @@ void addStringUtils(pybind11::module_& m) {
 
     // overload_cast has trouble with templated vs non-templated overloads.
     // Just cast directly.
-    m.def("basicTokenise", (std::vector<std::string> (*)(const std::string&))(
-        &regina::basicTokenise));
+    m.def("basicTokenise", static_cast<std::vector<std::string>(&)(
+        const std::string&)>(regina::basicTokenise));
 
     m.def("subscript",
         &regina::subscript<long>);

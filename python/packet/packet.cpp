@@ -174,6 +174,7 @@ void addPacket(pybind11::module_& m) {
     // each subclass of Packet provides its own custom == and != operators.
     regina::python::no_eq_operators(c);
 
-    m.def("open", (std::shared_ptr<Packet> (*)(const char*)) &regina::open);
+    m.def("open", static_cast<std::shared_ptr<Packet>(&)(const char*)>(
+        regina::open));
 }
 
