@@ -906,12 +906,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
@@ -932,12 +926,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
-         *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
          *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
@@ -985,13 +973,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
          */
@@ -1007,13 +988,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
-         *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
          *
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
@@ -1146,12 +1120,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
@@ -1172,12 +1140,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
-         *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
          *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
@@ -1225,13 +1187,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
          * @param other the integer modulo which this integer will be
          * reduced.
          * @return a reference to this integer with its new value.
@@ -1248,13 +1203,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
-         *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
          *
          * @param other the integer modulo which this integer will be
          * reduced.
@@ -2155,12 +2103,6 @@ class NativeInteger {
          *
          * \pre \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
@@ -2174,12 +2116,6 @@ class NativeInteger {
          * For a division routine that always rounds down, see divisionAlg().
          *
          * \pre \a other must be non-zero.
-         *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
          *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
@@ -2216,13 +2152,6 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
          */
@@ -2237,13 +2166,6 @@ class NativeInteger {
          * remainder, see divisionAlg().
          *
          * \pre \a other is not zero.
-         *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
          *
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
@@ -2346,12 +2268,6 @@ class NativeInteger {
          *
          * \pre \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
@@ -2365,12 +2281,6 @@ class NativeInteger {
          * For a division routine that always rounds down, see divisionAlg().
          *
          * \pre \a other must be non-zero.
-         *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
          *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
@@ -2407,13 +2317,6 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
          * @param other the integer modulo which this integer will be
          * reduced.
          * @return a reference to this integer with its new value.
@@ -2429,13 +2332,6 @@ class NativeInteger {
          * remainder, see divisionAlg().
          *
          * \pre \a other is not zero.
-         *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
          *
          * @param other the integer modulo which this integer will be
          * reduced.

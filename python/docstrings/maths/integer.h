@@ -336,13 +336,6 @@ Precondition:
     If this class does not support infinity, then *other* must be non-
     zero.
 
-.. warning::
-    As I understand it, the direction of rounding for native C/C++
-    integer division was fixed in the C++11 specification, but left to
-    the compiler implementation in earlier versions of the
-    specification; however, any modern hardware should satisfy the
-    C++11 rounding rule as described above.
-
 Parameter ``other``:
     the integer to divide this by.
 
@@ -366,13 +359,6 @@ For a division routine that always rounds down, see divisionAlg().
 Precondition:
     If this class does not support infinity, then *other* must be non-
     zero.
-
-.. warning::
-    As I understand it, the direction of rounding for native C/C++
-    integer division was fixed in the C++11 specification, but left to
-    the compiler implementation in earlier versions of the
-    specification; however, any modern hardware should satisfy the
-    C++11 rounding rule as described above.
 
 Parameter ``other``:
     the integer to divide this by.
@@ -497,13 +483,6 @@ Precondition:
     If this class does not support infinity, then *other* must be non-
     zero.
 
-.. warning::
-    As I understand it, the direction of rounding for native C/C++
-    integer division was fixed in the C++11 specification, but left to
-    the compiler implementation in earlier versions of the
-    specification; however, any modern hardware should satisfy the
-    C++11 rounding rule as described above.
-
 Parameter ``other``:
     the integer to divide this by.
 
@@ -528,13 +507,6 @@ Precondition:
     If this class does not support infinity, then *other* must be non-
     zero.
 
-.. warning::
-    As I understand it, the direction of rounding for native C/C++
-    integer division was fixed in the C++11 specification, but left to
-    the compiler implementation in earlier versions of the
-    specification; however, any modern hardware should satisfy the
-    C++11 rounding rule as described above.
-
 Parameter ``other``:
     the integer to divide this by.
 
@@ -556,13 +528,6 @@ Precondition:
 Precondition:
     Neither this nor *other* is infinite.
 
-.. warning::
-    As I understand it, the sign of the result under native C/C++
-    integer division when the second operand is negative was fixed in
-    the C++11 specification, but left to the compiler implementation
-    in earlier versions of the specification; however, any modern
-    hardware should satisfy the C++11 sign rule as described above.
-
 Parameter ``other``:
     the integer modulo which this integer will be reduced.
 
@@ -583,13 +548,6 @@ Precondition:
 
 Precondition:
     This integer is not infinite.
-
-.. warning::
-    As I understand it, the sign of the result under native C/C++
-    integer division when the second operand is negative was fixed in
-    the C++11 specification, but left to the compiler implementation
-    in earlier versions of the specification; however, any modern
-    hardware should satisfy the C++11 sign rule as described above.
 
 Parameter ``other``:
     the integer modulo which this integer will be reduced.
@@ -722,13 +680,6 @@ Precondition:
 Precondition:
     Neither this nor *other* is infinite.
 
-.. warning::
-    As I understand it, the sign of the result under native C/C++
-    integer division when the second operand is negative was fixed in
-    the C++11 specification, but left to the compiler implementation
-    in earlier versions of the specification; however, any modern
-    hardware should satisfy the C++11 sign rule as described above.
-
 Parameter ``other``:
     the integer to divide this by.
 
@@ -749,13 +700,6 @@ Precondition:
 
 Precondition:
     This integer is not infinite.
-
-.. warning::
-    As I understand it, the sign of the result under native C/C++
-    integer division when the second operand is negative was fixed in
-    the C++11 specification, but left to the compiler implementation
-    in earlier versions of the specification; however, any modern
-    hardware should satisfy the C++11 sign rule as described above.
 
 Parameter ``other``:
     the integer to divide this by.
