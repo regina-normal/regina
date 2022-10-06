@@ -56,6 +56,10 @@ AVAILABILITY_BLACKLIST = [
     AvailabilityKind.NOT_AVAILABLE
 ]
 
+NAMESPACE_BLACKLIST = [
+    'detail'
+]
+
 CLASS_BLACKLIST = [
 ]
 
@@ -294,20 +298,22 @@ def extract(filename, node, namespace, output):
         return
 
     if node.kind in RECURSE_LIST and node.spelling not in CLASS_BLACKLIST:
-        sub_namespace = namespace
-        if node.kind not in PREFIX_BLACKLIST:
-            # Ignore the leading regina:: namespace, which everything has.
-            if not (node.kind == CursorKind.NAMESPACE and \
-                    node.spelling == 'regina' and namespace == ''):
-                if len(namespace) > 0:
-                    sub_namespace += '::'
-                sub_namespace += sanitize_name(d(node.spelling))
-                # When delving into the class/struct/enum X, use the
-                # namespace X_ for the members of X.
-                if node.kind != CursorKind.NAMESPACE:
-                    sub_namespace += '_'
-        for i in node.get_children():
-            extract(filename, i, sub_namespace, output)
+        if not (node.kind == CursorKind.NAMESPACE and \
+                node.spelling in NAMESPACE_BLACKLIST):
+            sub_namespace = namespace
+            if node.kind not in PREFIX_BLACKLIST:
+                # Ignore the leading regina:: namespace, which everything has.
+                if not (node.kind == CursorKind.NAMESPACE and \
+                        node.spelling == 'regina' and namespace == ''):
+                    if len(namespace) > 0:
+                        sub_namespace += '::'
+                    sub_namespace += sanitize_name(d(node.spelling))
+                    # When delving into the class/struct/enum X, use the
+                    # namespace X_ for the members of X.
+                    if node.kind != CursorKind.NAMESPACE:
+                        sub_namespace += '_'
+            for i in node.get_children():
+                extract(filename, i, sub_namespace, output)
     if node.kind in PRINT_LIST and \
             node.access_specifier not in ACCESS_BLACKLIST and \
             node.availability not in AVAILABILITY_BLACKLIST and \
@@ -324,7 +330,8 @@ def extract(filename, node, namespace, output):
             fullname += name
 
             # if node.lexical_parent != node.semantic_parent:
-            if node != node.canonical:
+            if node != node.canonical and \
+                    node.kind != CursorKind.CLASS_TEMPLATE:
                 # We are seeing functions with inline definitions and/or
                 # forward declarations appear multiple times in the output.
                 # Try to ensure that their docstrings are listed only once.

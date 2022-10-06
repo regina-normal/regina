@@ -30,6 +30,44 @@ static const char *InfinityBase_3 =
 R"doc(An empty internal base class inherited by Integer, which does not
 support infinity as an allowed value.)doc";
 
+// Docstring regina::python::doc::IntegerBase
+static const char *IntegerBase =
+R"doc(Represents an arbitrary precision integer. Calculations are always
+guaranteed to be exact, regardless of how large the integers become.
+
+The current implementation uses fast native integer arithmetic
+wherever possible, whilst always testing for potential overflow. If a
+potential overflow is detected, this class switches to using the GNU
+multiple precision arithmetic library (libgmp) instead.
+
+This class takes a single boolean argument *supportInfinity*. If this
+is ``True``, then this class will support infinity as an allowed
+value. If this is ``False`` (the default), then infinity is not
+supported, and any attempt to work with infinity will lead to
+undefined behaviour. Supporting infinity is more flexible, but also
+comes with a slight performance cost (very roughly estimated at around
+10%-20%).
+
+For the purposes of comparison, infinity is considered larger than any
+other integer but equal to itself.
+
+All routines in this class, including random number generation, are
+thread-safe.
+
+The opportunistic use of native arithmetic where possible was inspired
+by the (much more complex and powerful) lazy exact arithmetic in CGAL.
+Thanks to Menelaos Karavelas for encouraging me to take another look
+at these ideas.
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.
+
+Python:
+    Both variants of this template are available through Python. For
+    *supportInfinity* = ``False``, use the name Integer. For
+    *supportInfinity* = ``True``, use the name LargeInteger.)doc";
+
 // Docstring regina::python::doc::__add
 static const char *__add =
 R"doc(Adds the given native integer to the given large integer. If the large
@@ -1349,30 +1387,6 @@ currently using.
 
 Precondition:
     This integer is not infinite.)doc";
-
-}
-
-namespace detail {
-
-// Docstring regina::python::doc::detail::mpz_from_ll
-static const char *mpz_from_ll =
-R"doc(Returns a raw GMP integer holding the given value.
-
-Parameter ``value``:
-    the value to assign to the new GMP integer.
-
-Returns:
-    a corresponding newly created and initialised GMP integer.)doc";
-
-// Docstring regina::python::doc::detail::mpz_from_ull
-static const char *mpz_from_ull =
-R"doc(Returns a raw GMP integer holding the given value.
-
-Parameter ``value``:
-    the value to assign to the new GMP integer.
-
-Returns:
-    a corresponding newly created and initialised GMP integer.)doc";
 
 }
 
