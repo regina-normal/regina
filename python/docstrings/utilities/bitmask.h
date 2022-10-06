@@ -80,8 +80,79 @@ Python:
     (where possible) or the C++ Bitmask2<T,U> template class (if
     necessary).)doc";
 
+// Docstring regina::python::doc::Bitmask1_2
+static const char *Bitmask1_2 =
+R"doc(A small but extremely fast bitmask class that can store up to 8 *
+sizeof(*T*) true-or-false bits.
+
+This bitmask packs all of the bits together into a single variable of
+type *T*. This means that operations on bitmasks are extremely fast,
+because all of the bits can be processed at once.
+
+The downside of course is that the number of bits that can be stored
+is limited to 8 * sizeof(*T*), where *T* must be a native unsigned
+integer type (such as unsigned char, unsigned int, or unsigned long
+long).
+
+For another extremely fast bitmask class that can store twice as many
+bits, see Bitmask2. For a bitmask class that can store arbitrarily
+many bits, see Bitmask.
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.
+
+Precondition:
+    Type *T* is an unsigned integral numeric type.
+
+Python:
+    Python does not support templates, and so instead Regina's python
+    interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+    Bitmask64, Bitmask128, and (if the machine supports 128-bit
+    integers) Bitmask256. Each of these will be an optimised bitmask
+    class that can hold the corresponding number of bits, and is
+    guaranteed to be an instance of either the C++ Bitmask1<T> class
+    (where possible) or the C++ Bitmask2<T,U> template class (if
+    necessary).)doc";
+
 // Docstring regina::python::doc::Bitmask2
 static const char *Bitmask2 =
+R"doc(A small but extremely fast bitmask class that can store up to 8 *
+sizeof(*T*) + 8 * sizeof(*U*) true-or-false bits.
+
+This bitmask packs all of the bits together into a single variable of
+type *T* and a single variable of type *U*. This means that operations
+on entire bitmasks are extremely fast, because all of the bits can be
+processed in just two "native" operations.
+
+The downside of course is that the number of bits that can be stored
+is limited to 8 * sizeof(*T*) + 8 * sizeof(*U*), where *T* and *U*
+must be native unsigned integer types (such as unsigned char, unsigned
+int, or unsigned long long).
+
+For an even faster bitmask class that can only store half as many
+bits, see Bitmask1. For a bitmask class that can store arbitrarily
+many bits, see Bitmask.
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.
+
+Precondition:
+    Types *T* and *U* are unsigned integral numeric types.
+
+Python:
+    Python does not support templates, and so instead Regina's python
+    interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+    Bitmask64, Bitmask128, and (if the machine supports 128-bit
+    integers) Bitmask256. Each of these will be an optimised bitmask
+    class that can hold the corresponding number of bits, and is
+    guaranteed to be an instance of either the C++ Bitmask1<T> class
+    (where possible) or the C++ Bitmask2<T,U> template class (if
+    necessary).)doc";
+
+// Docstring regina::python::doc::Bitmask2_2
+static const char *Bitmask2_2 =
 R"doc(A small but extremely fast bitmask class that can store up to 8 *
 sizeof(*T*) + 8 * sizeof(*U*) true-or-false bits.
 
