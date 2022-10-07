@@ -42,6 +42,11 @@ CLASS_MEMBER_BLACKLIST = [ '__doc__', '__hash__', '__module__',
 FUNCTION_BLACKLIST = [ 'reginaSetup', '__execScript' ]
 
 def checkFunctionArg(name, argType):
+    # Strip out default values.
+    pos = argType.find(' = ')
+    if pos >= 0:
+        argType = argType[:pos]
+
     if '<' in argType:
         print('TEMPLATE TYPE:', name, ':', argType)
     if 'regina.engine' in argType:
