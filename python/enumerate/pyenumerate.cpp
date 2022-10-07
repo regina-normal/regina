@@ -53,8 +53,8 @@ void addEnumerateClasses(pybind11::module_& m) {
     addHilbertPrimal(m);
     addMaxAdmissible(m);
     addOrdering(m);
-    addTreeConstraint(m);
     addTreeLP(m);
     addTreeTraversal(m);
+    addTreeConstraint(m);
 }
 

@@ -62,11 +62,11 @@ void addMathsClasses(pybind11::module_& m) {
     addInteger(m);
     addLargeInteger(m);
     addRational(m);
+    addVectorInt(m);
+    addVectorLarge(m);
     addMatrix2(m);
     addMatrixBool(m);
     addMatrixInt(m);
-    addVectorInt(m);
-    addVectorLarge(m);
 
     addBinom(m);
     addMatrixOps(m);

@@ -62,7 +62,7 @@ def checkFunction(name, member):
         foundSynopsis = True
         # m[3] is the list of arguments; m[4] is the return type.
         if len(m[3]) > 0:
-            args = re.split(r'(?:, )?[A-Za-z0-9_]+: ', m[3])
+            args = re.split(r'(?:^|, )[A-Za-z0-9_]+: ', m[3])
             bad = False
             if not args:
                 bad = True
