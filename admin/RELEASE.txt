@@ -58,6 +58,7 @@ Don't forget:
     check for docbook warnings/errors
     run valgrind over the test suite and GUI
     python bindings for new routines
+    rebuild python docstrings and sanity check them
     rebuild manpages
     website, including updated news, what's new and deprecation guide
     build binary packages
