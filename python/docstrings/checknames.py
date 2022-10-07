@@ -50,9 +50,7 @@ def checkFunctionArg(name, argType):
     if '<' in argType:
         print('TEMPLATE TYPE:', name, ':', argType)
     if 'regina.engine' in argType:
-        # TODO: Enable this check later on.
-        # print('ENGINE TYPE:', name, ':', argType)
-        pass
+        print('ENGINE TYPE:', name, ':', argType)
 
 
 def checkFunction(name, member):
