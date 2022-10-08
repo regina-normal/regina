@@ -135,6 +135,10 @@ namespace {
                     typeid(decltype(Triangulation<2>().boundaryComponent(0)->
                         facets())).hash_code(),
                     "<internal>.ListView[regina.Edge2]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<2>().boundaryComponent(0)->
+                        vertices())).hash_code(),
+                    "<internal>.ListView[regina.Vertex2]");
             } else if constexpr (i.value == 3) {
                 pythonNames->emplace(typeid(Tetrahedron<3>).hash_code(),
                     "regina.Tetrahedron3");
@@ -150,6 +154,14 @@ namespace {
                     typeid(decltype(Triangulation<3>().boundaryComponent(0)->
                         facets())).hash_code(),
                     "<internal>.ListView[regina.Triangle3]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<3>().boundaryComponent(0)->
+                        edges())).hash_code(),
+                    "<internal>.ListView[regina.Edge3]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<3>().boundaryComponent(0)->
+                        vertices())).hash_code(),
+                    "<internal>.ListView[regina.Vertex3]");
             } else if constexpr (i.value == 4) {
                 pythonNames->emplace(typeid(Pentachoron<4>).hash_code(),
                     "regina.Pentachoron4");
@@ -165,6 +177,18 @@ namespace {
                     typeid(decltype(Triangulation<4>().boundaryComponent(0)->
                         facets())).hash_code(),
                     "<internal>.ListView[regina.Tetrahedron4]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<4>().boundaryComponent(0)->
+                        triangles())).hash_code(),
+                    "<internal>.ListView[regina.Triangle4]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<4>().boundaryComponent(0)->
+                        edges())).hash_code(),
+                    "<internal>.ListView[regina.Edge4]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<4>().boundaryComponent(0)->
+                        vertices())).hash_code(),
+                    "<internal>.ListView[regina.Vertex4]");
             } else {
                 pythonNames->emplace(typeid(Face<i.value, i.value>).hash_code(),
                     std::string("regina.Simplex") +
@@ -324,6 +348,20 @@ namespace {
                 std::string("regina.PacketOfTriangulation") +
                     regina::detail::Strings<i.value>::dim);
         });
+
+        pythonNames->emplace(typeid(decltype(SnapPeaTriangulation().cusps())).
+                hash_code(),
+            "<internal>.ListView[regina.Cusp]");
+        pythonNames->emplace(typeid(decltype(Link().crossings())).hash_code(),
+            "<internal>.ListView[regina.Crossing]");
+        pythonNames->emplace(typeid(decltype(Link().components())).hash_code(),
+            "<internal>.ListView[regina.StrandRef]");
+        pythonNames->emplace(typeid(decltype(ModelLinkGraph().nodes())).
+                hash_code(),
+            "<internal>.ListView[regina.ModelLinkGraphNode]");
+        pythonNames->emplace(typeid(decltype(ModelLinkGraph().cells().arcs(0))).
+                hash_code(),
+            "<internal>.ListView[regina.ModelLinkGraphArc]");
 
         // Enums that live within individual face classes:
         pythonNames->emplace(typeid(Vertex<3>::LinkType).hash_code(),
