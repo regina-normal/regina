@@ -81,8 +81,6 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);
-
-    m.def("swap", (void(*)(B&, B&))(regina::swap));
 }
 
 void addBitmaskGeneric(pybind11::module_& m) {
