@@ -462,7 +462,7 @@ class FacetPairingBase :
          *
          * The string returned will contain no newlines.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -506,8 +506,7 @@ class FacetPairingBase :
          * \exception FailedPrecondition Some simplex facet has a destination
          * that is explicitly disallowed by the precondition above.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -549,8 +548,7 @@ class FacetPairingBase :
          * directed graphs.  The final DOT file should be used with
          * either the \a neato or \a fdp programs shipped with Graphviz.
          *
-         * \ifacespython Not present; instead use the variant dot() that
-         * returns a string.
+         * \nopython Use dot() instead, which returns a string.
          *
          * @param out the output stream to which to write.
          * @param prefix a string to prepend to the name of each graph
@@ -617,8 +615,8 @@ class FacetPairingBase :
          * a tight encoding of a <i>dim</i>-dimensional facet pairing on
          * a positive number of simplices.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for a <i>dim</i>-dimensional facet pairing.
@@ -651,8 +649,7 @@ class FacetPairingBase :
          * directed graphs.  The final DOT file should be used with
          * either the \a neato or \a fdp programs shipped with Graphviz.
          *
-         * \ifacespython Not present; instead use the variant dotHeader() that
-         * returns a string.
+         * \nopython Use dotHeader() instead, which returns a string.
          *
          * @param out the output stream to which to write.
          * @param graphName the name of the graph in the DOT file.

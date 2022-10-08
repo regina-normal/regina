@@ -101,7 +101,7 @@ class FaceEmbeddingBase :
          * Default constructor.  This object is unusable until it has
          * some data assigned to it using <tt>operator =</tt>.
          *
-         * \ifacespython Not present, since the C++ assignment operators
+         * \nopython This is because the C++ assignment operators
          * are not accessible to Python.
          */
         FaceEmbeddingBase();
@@ -234,7 +234,7 @@ class FaceEmbeddingBase :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -261,7 +261,7 @@ class FaceEmbeddingBase :
  * End users should have no need to use this class, and should never
  * need to see or know about the data type that it describes.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
@@ -558,8 +558,7 @@ class FaceBase :
          * }
          * \endcode
          *
-         * \ifacespython Not present; Python users can iterate over
-         * embeddings() instead.
+         * \nopython Python users can iterate over embeddings() instead.
          *
          * @return a iterator that points to the first appearance.
          */
@@ -577,8 +576,7 @@ class FaceBase :
          * The precise C++ type of the iterator is subject to change, so
          * C++ users should use \c auto (just like this declaration does).
          *
-         * \ifacespython Not present; Python users can iterate over
-         * embeddings() instead.
+         * \nopython Python users can iterate over embeddings() instead.
          *
          * @return a "beyond the end" iterator that comes immediately
          * after the last appearance.
@@ -927,7 +925,7 @@ class FaceBase :
          * since the output routines cast down to Face<dim, subdim>
          * before calling it.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
