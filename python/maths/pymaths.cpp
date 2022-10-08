@@ -70,9 +70,8 @@ void addMathsClasses(pybind11::module_& m) {
 
     addBinom(m);
     addMatrixOps(m);
-    addCyclotomic(m);
-    addLaurent(m);
-    addLaurent2(m);
+    addPrimes(m);
+    addNumberTheory(m);
     addPerm2(m);
     addPerm3(m);
     addPerm4(m);
@@ -81,7 +80,8 @@ void addMathsClasses(pybind11::module_& m) {
     addPerm7(m);
     addPerm(m);
     addPolynomial(m);
-    addPrimes(m);
-    addNumberTheory(m);
+    addCyclotomic(m);
+    addLaurent(m);
+    addLaurent2(m);
 }
 
