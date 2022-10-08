@@ -48,7 +48,9 @@ def checkFunctionArg(name, argType):
         argType = argType[:pos]
 
     if '<' in argType:
-        print('TEMPLATE TYPE:', name, ':', argType)
+        stripped = argType.replace('<internal>', '')
+        if '<' in stripped:
+            print('TEMPLATE TYPE:', name, ':', argType)
     if 'regina.engine' in argType:
         print('ENGINE TYPE:', name, ':', argType)
 

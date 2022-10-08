@@ -77,6 +77,8 @@ namespace {
         // this separately.
         pythonNames->emplace(typeid(Perm<16>).hash_code(), "regina.Perm16");
 
+        // TODO: Use Vertex etc instead of Face/Simplex
+
         for_constexpr<2, REGINA_MAXDIM + 1>([](auto i) {
             pythonNames->emplace(typeid(Triangulation<i.value>).hash_code(),
                 std::string("regina.Triangulation") +
@@ -105,11 +107,55 @@ namespace {
                 std::string("regina.FacetPairing") +
                     regina::detail::Strings<i.value>::dim);
 
+            pythonNames->emplace(
+                typeid(decltype(Triangulation<i.value>().components())).
+                    hash_code(),
+                std::string("<internal>.ListView[regina.Component") +
+                    regina::detail::Strings<i.value>::dim + ']');
+            pythonNames->emplace(
+                typeid(decltype(Triangulation<i.value>().boundaryComponents())).
+                    hash_code(),
+                std::string("<internal>.ListView[regina.BoundaryComponent") +
+                    regina::detail::Strings<i.value>::dim + ']');
+            pythonNames->emplace(
+                typeid(decltype(Triangulation<i.value>().simplices())).
+                    hash_code(),
+                std::string("<internal>.ListView[regina.Simplex") +
+                    regina::detail::Strings<i.value>::dim + ']');
+            pythonNames->emplace(
+                typeid(decltype(Triangulation<i.value>().component(0)->
+                    simplices())).hash_code(),
+                std::string("<internal>.ListView[regina.Simplex") +
+                    regina::detail::Strings<i.value>::dim + ']');
+            pythonNames->emplace(
+                typeid(decltype(Triangulation<i.value>().component(0)->
+                    boundaryComponents())).hash_code(),
+                std::string("<internal>.ListView[regina.BoundaryComponent") +
+                    regina::detail::Strings<i.value>::dim + ']');
+            pythonNames->emplace(
+                typeid(decltype(Triangulation<i.value>().boundaryComponent(0)->
+                    facets())).hash_code(),
+                std::string("<internal>.ListView[regina.Face") +
+                    regina::detail::Strings<i.value>::dim + '_' +
+                    regina::detail::Strings<i.value - 1>::dim + ']');
+
             for_constexpr<0, i.value>([i](auto j) {
                 pythonNames->emplace(typeid(Face<i.value, j.value>).hash_code(),
                     std::string("regina.Face") +
                         regina::detail::Strings<i.value>::dim + '_' +
                         regina::detail::Strings<j.value>::dim);
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<i.value>().
+                        template faces<j.value>())).hash_code(),
+                    std::string("<internal>.ListView[regina.Face") +
+                        regina::detail::Strings<i.value>::dim + '_' +
+                        regina::detail::Strings<j.value>::dim + ']');
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<i.value>().
+                        template face<j.value>(0)->embeddings())).hash_code(),
+                    std::string("<internal>.ListView[regina.FaceEmbedding") +
+                        regina::detail::Strings<i.value>::dim + '_' +
+                        regina::detail::Strings<j.value>::dim + ']');
             });
 
             pythonNames->emplace(
