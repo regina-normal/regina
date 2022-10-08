@@ -437,7 +437,9 @@ protected:
                 if (!t) {
                     pybind11_fail("Internal error while parsing type signature (1)");
                 }
-                if (auto *tinfo = detail::get_type_info(*t)) {
+                if (const char* name = regina::pythonTypename(t)) {
+                    signature += name;
+                } else if (auto *tinfo = detail::get_type_info(*t)) {
                     handle th((PyObject *) tinfo->type);
                     const auto m = th.attr("__module__").cast<std::string>();
                     if (m == "regina.engine")
@@ -459,13 +461,9 @@ protected:
                         rec->scope.attr("__module__").cast<std::string>() + "."
                             + rec->scope.attr("__qualname__").cast<std::string>();
                 } else {
-                    if (const char* name = regina::pythonTypename(t)) {
-                        signature += name;
-                    } else {
-                        std::string tname(t->name());
-                        detail::clean_type_id(tname);
-                        signature += tname;
-                    }
+                    std::string tname(t->name());
+                    detail::clean_type_id(tname);
+                    signature += tname;
                 }
             } else {
                 signature += c;
