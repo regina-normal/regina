@@ -1,0 +1,226 @@
+Help on instancemethod in module regina.engine:
+
+boundaryComponents(...)
+    boundaryComponents(self: regina.Triangulation6) -> <internal>.ListView[regina.BoundaryComponent6]
+
+Help on instancemethod in module regina.engine:
+
+components(...)
+    components(self: regina.Triangulation6) -> <internal>.ListView[regina.Component6]
+
+Help on instancemethod in module regina.engine:
+
+faces(...)
+    faces(self: regina.Triangulation6, arg0: int) -> Union[<internal>.ListView[regina.Face6_0], <internal>.ListView[regina.Face6_1], <internal>.ListView[regina.Face6_2], <internal>.ListView[regina.Face6_3], <internal>.ListView[regina.Face6_4], <internal>.ListView[regina.Face6_5]]
+
+Help on instancemethod in module regina.engine:
+
+simplices(...)
+    simplices(self: regina.Triangulation6) -> <internal>.ListView[regina.Simplex6]
+
+Help on instancemethod in module regina.engine:
+
+faces(...)
+    faces(self: regina.Triangulation4, arg0: int) -> Union[<internal>.ListView[regina.Face4_0], <internal>.ListView[regina.Face4_1], <internal>.ListView[regina.Face4_2], <internal>.ListView[regina.Face4_3]]
+
+Help on instancemethod in module regina.engine:
+
+embeddings(...)
+    embeddings(self: regina.Face3_0) -> <internal>.ListView[regina.FaceEmbedding3_0]
+
+Help on instancemethod in module regina.engine:
+
+triangulation(...)
+    triangulation(self: regina.BoundaryComponent3) -> regina.Triangulation3
+
+Help on instancemethod in module regina.engine:
+
+packet(...)
+    packet(self: regina.Link) -> regina.PacketOfLink
+
+Help on instancemethod in module regina.engine:
+
+__init__(...)
+    __init__(*args, **kwargs)
+    Overloaded function.
+    
+    1. __init__(self: regina.Integer) -> None
+    
+    Initialises this integer to zero.
+    
+    2. __init__(self: regina.Integer, arg0: int) -> None
+    
+    Initialises this integer to the given value.
+    
+    Python:
+        In Python, this is the only native-integer constructor available.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    3. __init__(self: regina.Integer, arg0: regina.Integer) -> None
+    
+    Initialises this integer to the given value.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    4. __init__(self: regina.Integer, arg0: regina.LargeInteger) -> None
+    
+    Initialises this integer to the given value.
+    
+    Precondition:
+        The given integer is not infinite.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    5. __init__(self: regina.Integer, arg0: int) -> None
+    
+    Initialises this to the given Python arbitrary-precision integer.
+    
+    The argument is of the Python type ``long``, which Python uses to
+    store integers of arbitrary magnitude (much like Regina does with its
+    Integer and LargeInteger classes).
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    6. __init__(self: regina.Integer, arg0: float) -> None
+    
+    Initialises this integer to the truncation of the given real number.
+    
+    Parameter ``value``:
+        the real number to be truncated.
+    
+    7. __init__(self: regina.Integer, arg0: str, base: int = 10) -> None
+    
+    Initialises this integer to the given value which is represented as a
+    string of digits in a given base.
+    
+    If not specified, the base defaults to 10. If the given base is zero,
+    the base will be automatically determined. If the given string begins
+    with ``0x`` or ``0X``, the base will be assumed to be 16. Otherwise,
+    if the string begins with ``0``, the base will be assumed to be 8.
+    Otherwise it will be taken as base 10.
+    
+    If the template argument *supportInfinity* is ``True``, then any
+    string beginning with "inf" (after any initial whitesapce) will be
+    interpreted as infinity.
+    
+    Whitespace may be present at the beginning or the end of the given
+    string, and will simply be ignored.
+    
+    For finer details on how the string parsing works, see strtol() from
+    the standard C library (on which this method is based).
+    
+    Precondition:
+        The given base is zero, or is between 2 and 36 inclusive.
+    
+    Precondition:
+        The given string represents an integer in the given base, with
+        optional whitespace beforehand.
+    
+    Exception ``InvalidArgument``:
+        The given string was not a valid large integer representation.
+    
+    Parameter ``value``:
+        the new value of this integer, represented as a string of digits
+        in base *base*.
+    
+    Parameter ``base``:
+        the base in which *value* is given.
+
+Help on instancemethod in module regina.engine:
+
+__init__(...)
+    __init__(*args, **kwargs)
+    Overloaded function.
+    
+    1. __init__(self: regina.LargeInteger) -> None
+    
+    Initialises this integer to zero.
+    
+    2. __init__(self: regina.LargeInteger, arg0: int) -> None
+    
+    Initialises this integer to the given value.
+    
+    Python:
+        In Python, this is the only native-integer constructor available.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    3. __init__(self: regina.LargeInteger, arg0: regina.LargeInteger) -> None
+    
+    Initialises this integer to the given value.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    4. __init__(self: regina.LargeInteger, arg0: regina.Integer) -> None
+    
+    Initialises this integer to the given value.
+    
+    Precondition:
+        The given integer is not infinite.
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    5. __init__(self: regina.LargeInteger, arg0: int) -> None
+    
+    Initialises this to the given Python arbitrary-precision integer.
+    
+    The argument is of the Python type ``long``, which Python uses to
+    store integers of arbitrary magnitude (much like Regina does with its
+    Integer and LargeInteger classes).
+    
+    Parameter ``value``:
+        the new value of this integer.
+    
+    6. __init__(self: regina.LargeInteger, arg0: float) -> None
+    
+    Initialises this integer to the truncation of the given real number.
+    
+    Parameter ``value``:
+        the real number to be truncated.
+    
+    7. __init__(self: regina.LargeInteger, arg0: str, base: int = 10) -> None
+    
+    Initialises this integer to the given value which is represented as a
+    string of digits in a given base.
+    
+    If not specified, the base defaults to 10. If the given base is zero,
+    the base will be automatically determined. If the given string begins
+    with ``0x`` or ``0X``, the base will be assumed to be 16. Otherwise,
+    if the string begins with ``0``, the base will be assumed to be 8.
+    Otherwise it will be taken as base 10.
+    
+    If the template argument *supportInfinity* is ``True``, then any
+    string beginning with "inf" (after any initial whitesapce) will be
+    interpreted as infinity.
+    
+    Whitespace may be present at the beginning or the end of the given
+    string, and will simply be ignored.
+    
+    For finer details on how the string parsing works, see strtol() from
+    the standard C library (on which this method is based).
+    
+    Precondition:
+        The given base is zero, or is between 2 and 36 inclusive.
+    
+    Precondition:
+        The given string represents an integer in the given base, with
+        optional whitespace beforehand.
+    
+    Exception ``InvalidArgument``:
+        The given string was not a valid large integer representation.
+    
+    Parameter ``value``:
+        the new value of this integer, represented as a string of digits
+        in base *base*.
+    
+    Parameter ``base``:
+        the base in which *value* is given.
+
