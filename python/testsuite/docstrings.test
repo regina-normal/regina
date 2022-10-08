@@ -37,11 +37,15 @@
 help(Triangulation6.boundaryComponents)
 help(Triangulation6.components)
 help(Triangulation6.faces)
+help(Triangulation6.face)
 help(Triangulation6.simplices)
 
 help(Triangulation4.faces)
+help(Triangulation4.face)
 
+help(Vertex6.embeddings)
 help(Vertex3.embeddings)
+help(Edge6.vertex)
 help(BoundaryComponent3.triangulation)
 
 help(Link.packet)

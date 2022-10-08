@@ -77,21 +77,34 @@ namespace {
         // this separately.
         pythonNames->emplace(typeid(Perm<16>).hash_code(), "regina.Perm16");
 
-        // TODO: Use Vertex etc instead of Face/Simplex
-
         for_constexpr<2, REGINA_MAXDIM + 1>([](auto i) {
             pythonNames->emplace(typeid(Triangulation<i.value>).hash_code(),
                 std::string("regina.Triangulation") +
                     regina::detail::Strings<i.value>::dim);
+
             pythonNames->emplace(typeid(Component<i.value>).hash_code(),
                 std::string("regina.Component") +
                     regina::detail::Strings<i.value>::dim);
+            pythonNames->emplace(
+                typeid(decltype(Triangulation<i.value>().components())).
+                    hash_code(),
+                std::string("<internal>.ListView[regina.Component") +
+                    regina::detail::Strings<i.value>::dim + ']');
+
             pythonNames->emplace(typeid(BoundaryComponent<i.value>).hash_code(),
                 std::string("regina.BoundaryComponent") +
                     regina::detail::Strings<i.value>::dim);
-            pythonNames->emplace(typeid(Face<i.value, i.value>).hash_code(),
-                std::string("regina.Simplex") +
-                    regina::detail::Strings<i.value>::dim);
+            pythonNames->emplace(
+                typeid(decltype(Triangulation<i.value>().boundaryComponents())).
+                    hash_code(),
+                std::string("<internal>.ListView[regina.BoundaryComponent") +
+                    regina::detail::Strings<i.value>::dim + ']');
+            pythonNames->emplace(
+                typeid(decltype(Triangulation<i.value>().component(0)->
+                    boundaryComponents())).hash_code(),
+                std::string("<internal>.ListView[regina.BoundaryComponent") +
+                    regina::detail::Strings<i.value>::dim + ']');
+
             pythonNames->emplace(typeid(Isomorphism<i.value>).hash_code(),
                 std::string("regina.Isomorphism") +
                     regina::detail::Strings<i.value>::dim);
@@ -107,55 +120,203 @@ namespace {
                 std::string("regina.FacetPairing") +
                     regina::detail::Strings<i.value>::dim);
 
-            pythonNames->emplace(
-                typeid(decltype(Triangulation<i.value>().components())).
-                    hash_code(),
-                std::string("<internal>.ListView[regina.Component") +
-                    regina::detail::Strings<i.value>::dim + ']');
-            pythonNames->emplace(
-                typeid(decltype(Triangulation<i.value>().boundaryComponents())).
-                    hash_code(),
-                std::string("<internal>.ListView[regina.BoundaryComponent") +
-                    regina::detail::Strings<i.value>::dim + ']');
-            pythonNames->emplace(
-                typeid(decltype(Triangulation<i.value>().simplices())).
-                    hash_code(),
-                std::string("<internal>.ListView[regina.Simplex") +
-                    regina::detail::Strings<i.value>::dim + ']');
-            pythonNames->emplace(
-                typeid(decltype(Triangulation<i.value>().component(0)->
-                    simplices())).hash_code(),
-                std::string("<internal>.ListView[regina.Simplex") +
-                    regina::detail::Strings<i.value>::dim + ']');
-            pythonNames->emplace(
-                typeid(decltype(Triangulation<i.value>().component(0)->
-                    boundaryComponents())).hash_code(),
-                std::string("<internal>.ListView[regina.BoundaryComponent") +
-                    regina::detail::Strings<i.value>::dim + ']');
-            pythonNames->emplace(
-                typeid(decltype(Triangulation<i.value>().boundaryComponent(0)->
-                    facets())).hash_code(),
-                std::string("<internal>.ListView[regina.Face") +
-                    regina::detail::Strings<i.value>::dim + '_' +
-                    regina::detail::Strings<i.value - 1>::dim + ']');
+            if constexpr (i.value == 2) {
+                pythonNames->emplace(typeid(Triangle<2>).hash_code(),
+                    "regina.Triangle2");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<2>().simplices())).
+                        hash_code(),
+                    "<internal>.ListView[regina.Triangle2]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<2>().component(0)->
+                        simplices())).hash_code(),
+                    "<internal>.ListView[regina.Triangle2]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<2>().boundaryComponent(0)->
+                        facets())).hash_code(),
+                    "<internal>.ListView[regina.Edge2]");
+            } else if constexpr (i.value == 3) {
+                pythonNames->emplace(typeid(Tetrahedron<3>).hash_code(),
+                    "regina.Tetrahedron3");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<3>().simplices())).
+                        hash_code(),
+                    "<internal>.ListView[regina.Tetrahedron3]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<3>().component(0)->
+                        simplices())).hash_code(),
+                    "<internal>.ListView[regina.Tetrahedron3]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<3>().boundaryComponent(0)->
+                        facets())).hash_code(),
+                    "<internal>.ListView[regina.Triangle3]");
+            } else if constexpr (i.value == 4) {
+                pythonNames->emplace(typeid(Pentachoron<4>).hash_code(),
+                    "regina.Pentachoron4");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<4>().simplices())).
+                        hash_code(),
+                    "<internal>.ListView[regina.Pentachoron4]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<4>().component(0)->
+                        simplices())).hash_code(),
+                    "<internal>.ListView[regina.Pentachoron4]");
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<4>().boundaryComponent(0)->
+                        facets())).hash_code(),
+                    "<internal>.ListView[regina.Tetrahedron4]");
+            } else {
+                pythonNames->emplace(typeid(Face<i.value, i.value>).hash_code(),
+                    std::string("regina.Simplex") +
+                        regina::detail::Strings<i.value>::dim);
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<i.value>().simplices())).
+                        hash_code(),
+                    std::string("<internal>.ListView[regina.Simplex") +
+                        regina::detail::Strings<i.value>::dim + ']');
+                pythonNames->emplace(
+                    typeid(decltype(Triangulation<i.value>().component(0)->
+                        simplices())).hash_code(),
+                    std::string("<internal>.ListView[regina.Simplex") +
+                        regina::detail::Strings<i.value>::dim + ']');
+                if constexpr (i.value == 5) {
+                    pythonNames->emplace(
+                        typeid(decltype(Triangulation<5>().
+                            boundaryComponent(0)->facets())).hash_code(),
+                        "<internal>.ListView[regina.Pentachoron5]");
+                } else {
+                    pythonNames->emplace(
+                        typeid(decltype(Triangulation<i.value>().
+                            boundaryComponent(0)->facets())).hash_code(),
+                        std::string("<internal>.ListView[regina.Face") +
+                            regina::detail::Strings<i.value>::dim + '_' +
+                            regina::detail::Strings<i.value - 1>::dim + ']');
+                }
+            }
 
             for_constexpr<0, i.value>([i](auto j) {
-                pythonNames->emplace(typeid(Face<i.value, j.value>).hash_code(),
-                    std::string("regina.Face") +
-                        regina::detail::Strings<i.value>::dim + '_' +
-                        regina::detail::Strings<j.value>::dim);
-                pythonNames->emplace(
-                    typeid(decltype(Triangulation<i.value>().
-                        template faces<j.value>())).hash_code(),
-                    std::string("<internal>.ListView[regina.Face") +
-                        regina::detail::Strings<i.value>::dim + '_' +
-                        regina::detail::Strings<j.value>::dim + ']');
-                pythonNames->emplace(
-                    typeid(decltype(Triangulation<i.value>().
-                        template face<j.value>(0)->embeddings())).hash_code(),
-                    std::string("<internal>.ListView[regina.FaceEmbedding") +
-                        regina::detail::Strings<i.value>::dim + '_' +
-                        regina::detail::Strings<j.value>::dim + ']');
+                if constexpr (j.value == 0) {
+                    pythonNames->emplace(
+                        typeid(Vertex<i.value>).hash_code(),
+                        std::string("regina.Vertex") +
+                            regina::detail::Strings<i.value>::dim);
+                    pythonNames->emplace(
+                        typeid(decltype(Triangulation<i.value>().
+                            vertices())).hash_code(),
+                        std::string("<internal>.ListView[regina.Vertex") +
+                            regina::detail::Strings<i.value>::dim + ']');
+                    pythonNames->emplace(
+                        typeid(decltype(Triangulation<i.value>().
+                            vertex(0)->embeddings())).hash_code(),
+                        std::string(
+                            "<internal>.ListView[regina.VertexEmbedding") +
+                            regina::detail::Strings<i.value>::dim + ']');
+                } else if constexpr (j.value == 1) {
+                    pythonNames->emplace(
+                        typeid(Edge<i.value>).hash_code(),
+                        std::string("regina.Edge") +
+                            regina::detail::Strings<i.value>::dim);
+                    pythonNames->emplace(
+                        typeid(decltype(Triangulation<i.value>().
+                            edges())).hash_code(),
+                        std::string("<internal>.ListView[regina.Edge") +
+                            regina::detail::Strings<i.value>::dim + ']');
+                    pythonNames->emplace(
+                        typeid(decltype(Triangulation<i.value>().
+                            edge(0)->embeddings())).hash_code(),
+                        std::string(
+                            "<internal>.ListView[regina.EdgeEmbedding") +
+                            regina::detail::Strings<i.value>::dim + ']');
+                } else if constexpr (j.value == 2) {
+                    // Despite the fact that this code is only generated
+                    // for 0 <= j < i, it is still being *parsed* for i == 2,
+                    // thus generating compile errors (because
+                    // Triangle<2>::embeddings() does not exist).
+                    // Putting another constexpr-if check on i seems to fix it.
+                    // Strangely, combining this with the constexpr test on j
+                    // above does *not* fix it.  Is this a flaw in my compiler
+                    // (clang / xcode 14), or a flaw in my understanding of
+                    // how constexpr-if works?
+                    if constexpr (i.value > 2) {
+                        pythonNames->emplace(
+                            typeid(Triangle<i.value>).hash_code(),
+                            std::string("regina.Triangle") +
+                                regina::detail::Strings<i.value>::dim);
+                        pythonNames->emplace(
+                            typeid(decltype(Triangulation<i.value>().
+                                triangles())).hash_code(),
+                            std::string("<internal>.ListView[regina.Triangle") +
+                                regina::detail::Strings<i.value>::dim + ']');
+                        pythonNames->emplace(
+                            typeid(decltype(Triangulation<i.value>().
+                                triangle(0)->embeddings())).hash_code(),
+                            std::string("<internal>.ListView["
+                                "regina.TriangleEmbedding") +
+                                regina::detail::Strings<i.value>::dim + ']');
+                    }
+                } else if constexpr (j.value == 3) {
+                    // See the j == 2 case for why we need this extra test on i.
+                    if constexpr (i.value > 3) {
+                        pythonNames->emplace(
+                            typeid(Tetrahedron<i.value>).hash_code(),
+                            std::string("regina.Tetrahedron") +
+                                regina::detail::Strings<i.value>::dim);
+                        pythonNames->emplace(
+                            typeid(decltype(Triangulation<i.value>().
+                                tetrahedra())).hash_code(),
+                            std::string(
+                                "<internal>.ListView[regina.Tetrahedron") +
+                                regina::detail::Strings<i.value>::dim + ']');
+                        pythonNames->emplace(
+                            typeid(decltype(Triangulation<i.value>().
+                                tetrahedron(0)->embeddings())).hash_code(),
+                            std::string(
+                                "<internal>.ListView["
+                                "regina.TetrahedronEmbedding") +
+                                regina::detail::Strings<i.value>::dim + ']');
+                    }
+                } else if constexpr (j.value == 4) {
+                    // See the j == 2 case for why we need this extra test on i.
+                    if constexpr (i.value > 4) {
+                        pythonNames->emplace(
+                            typeid(Pentachoron<i.value>).hash_code(),
+                            std::string("regina.Pentachoron") +
+                                regina::detail::Strings<i.value>::dim);
+                        pythonNames->emplace(
+                            typeid(decltype(Triangulation<i.value>().
+                                pentachora())).hash_code(),
+                            std::string(
+                                "<internal>.ListView[regina.Pentachoron") +
+                                regina::detail::Strings<i.value>::dim + ']');
+                        pythonNames->emplace(
+                            typeid(decltype(Triangulation<i.value>().
+                                pentachoron(0)->embeddings())).hash_code(),
+                            std::string(
+                                "<internal>.ListView["
+                                "regina.PentachoronEmbedding") +
+                                regina::detail::Strings<i.value>::dim + ']');
+                    }
+                } else {
+                    pythonNames->emplace(
+                        typeid(Face<i.value, j.value>).hash_code(),
+                        std::string("regina.Face") +
+                            regina::detail::Strings<i.value>::dim + '_' +
+                            regina::detail::Strings<j.value>::dim);
+                    pythonNames->emplace(
+                        typeid(decltype(Triangulation<i.value>().
+                            template faces<j.value>())).hash_code(),
+                        std::string("<internal>.ListView[regina.Face") +
+                            regina::detail::Strings<i.value>::dim + '_' +
+                            regina::detail::Strings<j.value>::dim + ']');
+                    pythonNames->emplace(
+                        typeid(decltype(Triangulation<i.value>().
+                            template face<j.value>(0)->embeddings())).
+                            hash_code(),
+                        std::string(
+                            "<internal>.ListView[regina.FaceEmbedding") +
+                            regina::detail::Strings<i.value>::dim + '_' +
+                            regina::detail::Strings<j.value>::dim + ']');
+                }
             });
 
             pythonNames->emplace(
@@ -164,6 +325,7 @@ namespace {
                     regina::detail::Strings<i.value>::dim);
         });
 
+        // Enums that live within individual face classes:
         pythonNames->emplace(typeid(Vertex<3>::LinkType).hash_code(),
             "regina.Vertex3.LinkType");
         pythonNames->emplace(typeid(Triangle<3>::Type).hash_code(),

@@ -11,7 +11,12 @@ components(...)
 Help on instancemethod in module regina.engine:
 
 faces(...)
-    faces(self: regina.Triangulation6, arg0: int) -> Union[<internal>.ListView[regina.Face6_0], <internal>.ListView[regina.Face6_1], <internal>.ListView[regina.Face6_2], <internal>.ListView[regina.Face6_3], <internal>.ListView[regina.Face6_4], <internal>.ListView[regina.Face6_5]]
+    faces(self: regina.Triangulation6, arg0: int) -> Union[<internal>.ListView[regina.Vertex6], <internal>.ListView[regina.Edge6], <internal>.ListView[regina.Triangle6], <internal>.ListView[regina.Tetrahedron6], <internal>.ListView[regina.Pentachoron6], <internal>.ListView[regina.Face6_5]]
+
+Help on instancemethod in module regina.engine:
+
+face(...)
+    face(self: regina.Triangulation6, arg0: int, arg1: int) -> Union[regina.Vertex6, regina.Edge6, regina.Triangle6, regina.Tetrahedron6, regina.Pentachoron6, regina.Face6_5]
 
 Help on instancemethod in module regina.engine:
 
@@ -21,12 +26,27 @@ simplices(...)
 Help on instancemethod in module regina.engine:
 
 faces(...)
-    faces(self: regina.Triangulation4, arg0: int) -> Union[<internal>.ListView[regina.Face4_0], <internal>.ListView[regina.Face4_1], <internal>.ListView[regina.Face4_2], <internal>.ListView[regina.Face4_3]]
+    faces(self: regina.Triangulation4, arg0: int) -> Union[<internal>.ListView[regina.Vertex4], <internal>.ListView[regina.Edge4], <internal>.ListView[regina.Triangle4], <internal>.ListView[regina.Tetrahedron4]]
+
+Help on instancemethod in module regina.engine:
+
+face(...)
+    face(self: regina.Triangulation4, arg0: int, arg1: int) -> Union[regina.Vertex4, regina.Edge4, regina.Triangle4, regina.Tetrahedron4]
 
 Help on instancemethod in module regina.engine:
 
 embeddings(...)
-    embeddings(self: regina.Face3_0) -> <internal>.ListView[regina.FaceEmbedding3_0]
+    embeddings(self: regina.Vertex6) -> <internal>.ListView[regina.VertexEmbedding6]
+
+Help on instancemethod in module regina.engine:
+
+embeddings(...)
+    embeddings(self: regina.Vertex3) -> <internal>.ListView[regina.VertexEmbedding3]
+
+Help on instancemethod in module regina.engine:
+
+vertex(...)
+    vertex(self: regina.Edge6, arg0: int) -> regina.Vertex6
 
 Help on instancemethod in module regina.engine:
 
