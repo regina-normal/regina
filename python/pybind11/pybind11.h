@@ -47,6 +47,10 @@
 #    pragma GCC diagnostic ignored "-Wnoexcept-type"
 #endif
 
+namespace regina {
+    const char* pythonTypename(const std::type_info*);
+}
+
 PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
 
 PYBIND11_NAMESPACE_BEGIN(detail)
@@ -455,9 +459,13 @@ protected:
                         rec->scope.attr("__module__").cast<std::string>() + "."
                             + rec->scope.attr("__qualname__").cast<std::string>();
                 } else {
-                    std::string tname(t->name());
-                    detail::clean_type_id(tname);
-                    signature += tname;
+                    if (const char* name = regina::pythonTypename(t)) {
+                        signature += name;
+                    } else {
+                        std::string tname(t->name());
+                        detail::clean_type_id(tname);
+                        signature += tname;
+                    }
                 }
             } else {
                 signature += c;

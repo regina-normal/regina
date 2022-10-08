@@ -84,10 +84,21 @@ index 1878089e3..60586b9d7 100644
              auto size = static_cast<size_t>(pptr() - pbase());
              size_t remainder = utf8_remainder();
 diff --git a/python/pybind11/pybind11.h b/python/pybind11/pybind11.h
-index d61dcd5c7..024bc6864 100644
+index d61dcd5c7..186fa14ec 100644
 --- a/python/pybind11/pybind11.h
 +++ b/python/pybind11/pybind11.h
-@@ -435,13 +435,25 @@ protected:
+@@ -47,6 +47,10 @@
+ #    pragma GCC diagnostic ignored "-Wnoexcept-type"
+ #endif
+ 
++namespace regina {
++    const char* pythonTypename(const std::type_info*);
++}
++
+ PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
+ 
+ PYBIND11_NAMESPACE_BEGIN(detail)
+@@ -435,17 +439,33 @@ protected:
                  }
                  if (auto *tinfo = detail::get_type_info(*t)) {
                      handle th((PyObject *) tinfo->type);
@@ -115,9 +126,20 @@ index d61dcd5c7..024bc6864 100644
 +                        rec->scope.attr("__module__").cast<std::string>() + "."
 +                            + rec->scope.attr("__qualname__").cast<std::string>();
                  } else {
-                     std::string tname(t->name());
-                     detail::clean_type_id(tname);
-@@ -2627,13 +2627,13 @@ void print(Args &&...args) {
+-                    std::string tname(t->name());
+-                    detail::clean_type_id(tname);
+-                    signature += tname;
++                    if (const char* name = regina::pythonTypename(t)) {
++                        signature += name;
++                    } else {
++                        std::string tname(t->name());
++                        detail::clean_type_id(tname);
++                        signature += tname;
++                    }
+                 }
+             } else {
+                 signature += c;
+@@ -2627,13 +2647,13 @@ void print(Args &&...args) {
  
  inline void
  error_already_set::m_fetched_error_deleter(detail::error_fetch_and_normalize *raw_ptr) {
@@ -133,7 +155,7 @@ index d61dcd5c7..024bc6864 100644
      error_scope scope;
      return m_fetched_error->error_string().c_str();
  }
-@@ -2748,7 +2748,7 @@ function get_override(const T *this_ptr, const char *name) {
+@@ -2748,7 +2768,7 @@ function get_override(const T *this_ptr, const char *name) {
  
  #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
      do {                                                                                          \

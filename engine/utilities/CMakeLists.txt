@@ -11,6 +11,7 @@ SET ( FILES
   stringutils.cpp
   tightencoding.cpp
   trieset.cpp
+  typeutils.cpp
   xmlutils.cpp
   )
 
