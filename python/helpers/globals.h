@@ -34,6 +34,8 @@
  *  \brief Assists with safely wrapping heavily overloaded functions.
  */
 
+#include <cstddef> // for nullptr_t
+
 namespace regina {
 
 // Declare a dummy swap function, so that regina::swap always resolves.
