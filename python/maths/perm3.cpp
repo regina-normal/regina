@@ -34,6 +34,7 @@
 #include "../pybind11/operators.h"
 #include "../pybind11/stl.h"
 #include "maths/perm.h"
+#include "utilities/typeutils.h"
 #include "../constarray.h"
 #include "../helpers.h"
 
@@ -47,23 +48,6 @@ namespace {
         Perm3_orderedS3_arr(Perm<3>::orderedS3, 6);
     ConstArray<decltype(Perm<3>::S2), int>
         Perm3_S2_arr(Perm<3>::S2, 2);
-
-    template <int k>
-    struct Perm3_contract {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("contract", &Perm<3>::contract<k>);
-            Perm3_contract<k+1>::add_bindings(c);
-        }
-    };
-
-    template <>
-    struct Perm3_contract<16> {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("contract", &Perm<3>::contract<16>);
-        }
-    };
 }
 
 void addPerm3(pybind11::module_& m) {
@@ -124,7 +108,9 @@ void addPerm3(pybind11::module_& m) {
         .def_readonly_static("code201", &Perm<3>::code201)
         .def_readonly_static("code210", &Perm<3>::code210)
     ;
-    Perm3_contract<4>::add_bindings(c);
+    regina::for_constexpr<4, 17>([&c](auto i) {
+        c.def_static("contract", &Perm<3>::template contract<i.value>);
+    });
     regina::python::add_output_basic(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
