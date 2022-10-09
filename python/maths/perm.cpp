@@ -34,6 +34,7 @@
 #include "../pybind11/operators.h"
 #include "../pybind11/stl.h"
 #include "maths/perm.h"
+#include "utilities/typeutils.h"
 #include "../constarray.h"
 #include "../helpers.h"
 
@@ -41,48 +42,6 @@ using regina::Perm;
 using regina::python::ConstArray;
 
 namespace {
-    template <int n, int k>
-    struct Perm_extend {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("extend", &Perm<n>::template extend<k>);
-            Perm_extend<n, k-1>::add_bindings(c);
-        }
-    };
-
-    template <int n>
-    struct Perm_extend<n, 2> {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("extend", &Perm<n>::template extend<2>);
-        }
-    };
-
-    template <int n, int k>
-    struct Perm_contract {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("contract", &Perm<n>::template contract<k>);
-            Perm_contract<n, k+1>::add_bindings(c);
-        }
-    };
-
-    template <int n>
-    struct Perm_contract<n, 16> {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("contract", &Perm<n>::template contract<16>);
-        }
-    };
-
-    template <int n>
-    struct Perm_contract<n, 17> {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            // Only called for Perm16, which has no contract() methods at all.
-        }
-    };
-
     template <int n>
     ConstArray<decltype(Perm<n>::Sn), typename Perm<n>::Index> Perm_Sn_arr(
         Perm<n>::Sn, Perm<n>::nPerms);
@@ -134,8 +93,12 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def_readonly_static("Sn", &Perm_Sn_arr<n>)
         .def_readonly_static("orderedSn", &Perm_orderedSn_arr<n>)
     ;
-    Perm_extend<n, n-1>::add_bindings(c);
-    Perm_contract<n, n+1>::add_bindings(c);
+    regina::for_constexpr<2, n>([&c](auto i) {
+        c.def_static("extend", &Perm<n>::template extend<i.value>);
+    });
+    regina::for_constexpr<n+1, 17>([&c](auto i) {
+        c.def_static("contract", &Perm<n>::template contract<i.value>);
+    });
     regina::python::add_output_basic(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
