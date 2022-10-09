@@ -82,6 +82,7 @@ void addPerm7(pybind11::module_& m) {
         .def("pow", &Perm<7>::pow)
         .def("cachedPow", &Perm<7>::cachedPow)
         .def("order", &Perm<7>::order)
+        .def("cachedOrder", &Perm<7>::cachedOrder)
         .def("reverse", &Perm<7>::reverse)
         .def("sign", &Perm<7>::sign)
         .def("__getitem__", &Perm<7>::operator[])
