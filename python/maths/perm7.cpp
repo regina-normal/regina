@@ -34,6 +34,7 @@
 #include "../pybind11/operators.h"
 #include "../pybind11/stl.h"
 #include "maths/perm.h"
+#include "utilities/typeutils.h"
 #include "../constarray.h"
 #include "../helpers.h"
 
@@ -46,23 +47,6 @@ namespace {
         Perm7_S7_arr(Perm<7>::S7, 5040);
     ConstArray<decltype(Perm<7>::orderedS7), int>
         Perm7_orderedS7_arr(Perm<7>::orderedS7, 5040);
-
-    template <int k>
-    struct Perm7_contract {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("contract", &Perm<7>::contract<k>);
-            Perm7_contract<k+1>::add_bindings(c);
-        }
-    };
-
-    template <>
-    struct Perm7_contract<16> {
-        template <class C, typename... options>
-        static void add_bindings(pybind11::class_<C, options...>& c) {
-            c.def_static("contract", &Perm<7>::contract<16>);
-        }
-    };
 }
 
 void addPerm7(pybind11::module_& m) {
@@ -132,7 +116,9 @@ void addPerm7(pybind11::module_& m) {
         .def_readonly_static("orderedS7", &Perm7_orderedS7_arr)
         .def_readonly_static("orderedSn", &Perm7_orderedS7_arr)
     ;
-    Perm7_contract<8>::add_bindings(c);
+    regina::for_constexpr<8, 17>([&c](auto i) {
+        c.def_static("contract", &Perm<7>::template contract<i.value>);
+    });
     regina::python::add_output_basic(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
