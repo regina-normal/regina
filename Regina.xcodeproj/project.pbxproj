@@ -2509,6 +2509,42 @@
 		05098A6828F24CD8005E4716 /* globals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
 		05098A6928F24D3C005E4716 /* docstrings.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstrings.test; sourceTree = "<group>"; };
 		05098A6A28F24D3C005E4716 /* docstrings.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstrings.out; sourceTree = "<group>"; };
+		05098A6D28F24D98005E4716 /* mkdoc_lib.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = mkdoc_lib.py; sourceTree = "<group>"; };
+		05098A6E28F24D98005E4716 /* __init__.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = __init__.py; sourceTree = "<group>"; };
+		05098A6F28F24D98005E4716 /* __main__.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = __main__.py; sourceTree = "<group>"; };
+		05098A7128F24D98005E4716 /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
+		05098A7228F24D98005E4716 /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
+		05098A7328F24D98005E4716 /* regina-core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "regina-core.h"; sourceTree = "<group>"; };
+		05098A7428F24D98005E4716 /* checknames.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = checknames.py; sourceTree = "<group>"; };
+		05098A7628F24D98005E4716 /* progresstracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = progresstracker.h; sourceTree = "<group>"; };
+		05098A7828F24D98005E4716 /* fileformat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileformat.h; sourceTree = "<group>"; };
+		05098A7928F24D98005E4716 /* globaldirs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globaldirs.h; sourceTree = "<group>"; };
+		05098A7A28F24D98005E4716 /* fileinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileinfo.h; sourceTree = "<group>"; };
+		05098A7C28F24D98005E4716 /* equality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = equality.h; sourceTree = "<group>"; };
+		05098A7F28F24D98005E4716 /* trieset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trieset.h; sourceTree = "<group>"; };
+		05098A8028F24D98005E4716 /* intutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = intutils.h; sourceTree = "<group>"; };
+		05098A8128F24D98005E4716 /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
+		05098A8228F24D98005E4716 /* randutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = randutils.h; sourceTree = "<group>"; };
+		05098A8328F24D98005E4716 /* boolset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boolset.h; sourceTree = "<group>"; };
+		05098A8428F24D98005E4716 /* stringutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringutils.h; sourceTree = "<group>"; };
+		05098A8528F24D98005E4716 /* bitmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitmask.h; sourceTree = "<group>"; };
+		05098A8628F24D98005E4716 /* tightencoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tightencoding.h; sourceTree = "<group>"; };
+		05098A8728F24D98005E4716 /* xmlutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlutils.h; sourceTree = "<group>"; };
+		05098A8828F24D98005E4716 /* sigutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sigutils.h; sourceTree = "<group>"; };
+		05098A8928F24D98005E4716 /* bitmanip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitmanip.h; sourceTree = "<group>"; };
+		05098A8A28F24D98005E4716 /* i18nutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = i18nutils.h; sourceTree = "<group>"; };
+		05098A8B28F24D98005E4716 /* exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exception.h; sourceTree = "<group>"; };
+		05098A8C28F24D98005E4716 /* snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = snapshot.h; sourceTree = "<group>"; };
+		05098A8D28F24D98005E4716 /* qitmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qitmask.h; sourceTree = "<group>"; };
+		05098A8E28F24D98005E4716 /* osutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osutils.h; sourceTree = "<group>"; };
+		05098A9028F24D98005E4716 /* binom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = binom.h; sourceTree = "<group>"; };
+		05098A9128F24D98005E4716 /* numbertheory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = numbertheory.h; sourceTree = "<group>"; };
+		05098A9228F24D98005E4716 /* polynomial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = polynomial.h; sourceTree = "<group>"; };
+		05098A9328F24D98005E4716 /* primes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = primes.h; sourceTree = "<group>"; };
+		05098A9428F24D98005E4716 /* matrixops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrixops.h; sourceTree = "<group>"; };
+		05098A9528F24D98005E4716 /* integer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = integer.h; sourceTree = "<group>"; };
+		05098A9628F24D98005E4716 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05098A9728F24D98005E4716 /* gendoc.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = gendoc.sh; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -4899,6 +4935,105 @@
 			path = packets;
 			sourceTree = "<group>";
 		};
+		05098A6B28F24D98005E4716 /* docstrings */ = {
+			isa = PBXGroup;
+			children = (
+				05098A7428F24D98005E4716 /* checknames.py */,
+				05098A7028F24D98005E4716 /* core */,
+				05098A7728F24D98005E4716 /* file */,
+				05098A9728F24D98005E4716 /* gendoc.sh */,
+				05098A8F28F24D98005E4716 /* maths */,
+				05098A7528F24D98005E4716 /* progress */,
+				05098A6C28F24D98005E4716 /* pybind11_mkdoc */,
+				05098A7B28F24D98005E4716 /* python */,
+				05098A9628F24D98005E4716 /* README.txt */,
+				05098A7E28F24D98005E4716 /* utilities */,
+			);
+			path = docstrings;
+			sourceTree = "<group>";
+		};
+		05098A6C28F24D98005E4716 /* pybind11_mkdoc */ = {
+			isa = PBXGroup;
+			children = (
+				05098A6D28F24D98005E4716 /* mkdoc_lib.py */,
+				05098A6E28F24D98005E4716 /* __init__.py */,
+				05098A6F28F24D98005E4716 /* __main__.py */,
+			);
+			path = pybind11_mkdoc;
+			sourceTree = "<group>";
+		};
+		05098A7028F24D98005E4716 /* core */ = {
+			isa = PBXGroup;
+			children = (
+				05098A7128F24D98005E4716 /* engine.h */,
+				05098A7228F24D98005E4716 /* output.h */,
+				05098A7328F24D98005E4716 /* regina-core.h */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		05098A7528F24D98005E4716 /* progress */ = {
+			isa = PBXGroup;
+			children = (
+				05098A7628F24D98005E4716 /* progresstracker.h */,
+			);
+			path = progress;
+			sourceTree = "<group>";
+		};
+		05098A7728F24D98005E4716 /* file */ = {
+			isa = PBXGroup;
+			children = (
+				05098A7828F24D98005E4716 /* fileformat.h */,
+				05098A7A28F24D98005E4716 /* fileinfo.h */,
+				05098A7928F24D98005E4716 /* globaldirs.h */,
+			);
+			path = file;
+			sourceTree = "<group>";
+		};
+		05098A7B28F24D98005E4716 /* python */ = {
+			isa = PBXGroup;
+			children = (
+				05098A7C28F24D98005E4716 /* equality.h */,
+			);
+			path = python;
+			sourceTree = "<group>";
+		};
+		05098A7E28F24D98005E4716 /* utilities */ = {
+			isa = PBXGroup;
+			children = (
+				05098A8128F24D98005E4716 /* base64.h */,
+				05098A8928F24D98005E4716 /* bitmanip.h */,
+				05098A8528F24D98005E4716 /* bitmask.h */,
+				05098A8328F24D98005E4716 /* boolset.h */,
+				05098A8B28F24D98005E4716 /* exception.h */,
+				05098A8A28F24D98005E4716 /* i18nutils.h */,
+				05098A8028F24D98005E4716 /* intutils.h */,
+				05098A8E28F24D98005E4716 /* osutils.h */,
+				05098A8D28F24D98005E4716 /* qitmask.h */,
+				05098A8228F24D98005E4716 /* randutils.h */,
+				05098A8828F24D98005E4716 /* sigutils.h */,
+				05098A8C28F24D98005E4716 /* snapshot.h */,
+				05098A8428F24D98005E4716 /* stringutils.h */,
+				05098A8628F24D98005E4716 /* tightencoding.h */,
+				05098A7F28F24D98005E4716 /* trieset.h */,
+				05098A8728F24D98005E4716 /* xmlutils.h */,
+			);
+			path = utilities;
+			sourceTree = "<group>";
+		};
+		05098A8F28F24D98005E4716 /* maths */ = {
+			isa = PBXGroup;
+			children = (
+				05098A9028F24D98005E4716 /* binom.h */,
+				05098A9528F24D98005E4716 /* integer.h */,
+				05098A9428F24D98005E4716 /* matrixops.h */,
+				05098A9128F24D98005E4716 /* numbertheory.h */,
+				05098A9228F24D98005E4716 /* polynomial.h */,
+				05098A9328F24D98005E4716 /* primes.h */,
+			);
+			path = maths;
+			sourceTree = "<group>";
+		};
 		050F5CDE1B9BAAAA00C1F681 /* python */ = {
 			isa = PBXGroup;
 			children = (
@@ -4912,6 +5047,7 @@
 				050F5D071B9BAB9C00C1F681 /* angle */,
 				050F5DC01B9BAB9C00C1F681 /* census */,
 				059D024B25BB08F1004150F7 /* constarray.h */,
+				05098A6B28F24D98005E4716 /* docstrings */,
 				050F5D0C1B9BAB9C00C1F681 /* dim2 */,
 				050F5DAA1B9BAB9C00C1F681 /* dim3 */,
 				0591E7F71C4F760500793A9C /* dim4 */,
