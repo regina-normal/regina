@@ -121,7 +121,7 @@ void add_output(pybind11::class_<C, options...>& c,
                 std::ostringstream s;
                 s << "<regina.";
                 s << pybind11::str(pybind11::type::handle_of<C>().attr(
-                        "__name__")).cast<std::string_view>() << ": ";
+                        "__qualname__")).cast<std::string_view>() << ": ";
                 c.writeTextShort(s);
                 s << '>';
                 return s.str();
@@ -174,7 +174,7 @@ void add_output_basic(pybind11::class_<C, options...>& c,
                 std::ostringstream s;
                 s << "<regina."
                     << pybind11::str(pybind11::type::handle_of<C>().attr(
-                        "__name__")).cast<std::string_view>()
+                        "__qualname__")).cast<std::string_view>()
                     << ": " << c.str() << '>';
                 return s.str();
             });
@@ -223,7 +223,7 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
                 std::ostringstream s;
                 s << "<regina."
                     << pybind11::str(pybind11::type::handle_of<C>().attr(
-                        "__name__")).cast<std::string_view>()
+                        "__qualname__")).cast<std::string_view>()
                     << ": " << c << '>';
                 return s.str();
             });
@@ -270,7 +270,7 @@ void add_output_custom(pybind11::class_<C, options...>& c,
         std::ostringstream s;
         s << "<regina."
             << pybind11::str(pybind11::type::handle_of<C>().attr(
-                "__name__")).cast<std::string_view>() << ": ";
+                "__qualname__")).cast<std::string_view>() << ": ";
         outputFunction(c, s);
         s << '>';
         return s.str();

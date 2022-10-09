@@ -543,3 +543,5 @@ t = Example3.trefoil()
 tree = TreeEnumeration_NonSpun(t, NS_QUAD)
 tree.run(dump)
 
+dump(Perm8.Sn)
+
