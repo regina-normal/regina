@@ -161,31 +161,33 @@ class Perm<3> {
         using Code = uint8_t;
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * three elements.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 5 inclusive.
-         *
-         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
-         * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
+         * This element access is extremely fast (a fact that is not true for
+         * the larger permutation classes Perm<n> with \a n &ge; 8).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * This is different from Perm<3>::orderedSn, since this array \a Sn
+         * This array is different from Perm<3>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
          * stores permutations in lexicographical order.
+         *
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr S3Lookup Sn {};
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * three elements.
          *
          * This is a dimension-specific alias for Perm<3>::Sn; see that member
@@ -200,30 +202,32 @@ class Perm<3> {
         static constexpr S3Lookup S3 {};
 
         /**
-         * Gives array-like access to all possible permutations of three
+         * Gives fast array-like access to all possible permutations of three
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
          * must be between 0 and 5 inclusive.
+         * This element access is extremely fast (a fact that is not true for
+         * the larger permutation classes Perm<n> with \a n &ge; 8).
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], \a p[1], \a p[2]).
          *
+         * This array is different from Perm<3>::Sn, since \a orderedSn stores
+         * permutations in lexicographical order, whereas \a Sn alternates
+         * between even and odd permutations.
+         *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
-         *
-         * This is different from Perm<3>::Sn, since this array \a orderedSn
-         * stores permutations in lexicographical order, whereas \a Sn
-         * alternates between even and odd permutations.
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr OrderedS3Lookup orderedSn {};
 
         /**
-         * Gives array-like access to all possible permutations of three
+         * Gives fast array-like access to all possible permutations of three
          * elements in lexicographical order.
          *
          * This is a dimension-specific alias for Perm<3>::orderedSn; see that
@@ -235,27 +239,27 @@ class Perm<3> {
         static constexpr OrderedS3Lookup orderedS3 {};
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * two elements.  In each permutation, 2 maps to 2.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be
          * between 0 and 1 inclusive.
          *
-         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
-         * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
-         *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
          * odd permutations.
+         *
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr S2Lookup Sn_1 {};
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * two elements.
          *
          * This is a dimension-specific alias for Perm<3>::Sn_1; see that

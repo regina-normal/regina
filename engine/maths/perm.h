@@ -300,17 +300,17 @@ class Perm {
          * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and <i>n</i>!-1 inclusive.
          *
-         * The object that is returned is lightweight and is defined in the
-         * headers only.  In particular, you cannot make a reference to it
-         * (but you can always make a copy).
-         *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * This is different from Perm<n>::orderedSn, since this array \a Sn
+         * This array is different from Perm<n>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
          * stores permutations in lexicographical order.
+         *
+         * This is a lightweight object, and it is defined in the headers only.
+         * In particular, you cannot make a reference to it (but it is cheap
+         * to make a copy).
          *
          * \warning For \a n &le; 7, the square bracket operator is a
          * very fast constant-time routine.  However, for \a n &ge; 8,
@@ -330,13 +330,13 @@ class Perm {
          * Lexicographical ordering treats each permutation \a p as the
          * <i>n</i>-tuple (\a p[0], \a p[1], ..., \a p[<i>n</i>-1]).
          *
-         * The object that is returned is lightweight and is defined in the
-         * headers only.  In particular, you cannot make a reference to it
-         * (but you can always make a copy).
-         *
-         * This is different from Perm<n>::Sn, since this array \a orderedSn
+         * This array is different from Perm<n>::Sn, since \a orderedSn
          * stores permutations in lexicographical order, whereas \a Sn
          * alternates between even and odd permutations.
+         *
+         * This is a lightweight object, and it is defined in the headers only.
+         * In particular, you cannot make a reference to it (but it is cheap
+         * to make a copy).
          *
          * \warning For \a n &le; 7, the square bracket operator is a
          * very fast constant-time routine.  However, for \a n &ge; 8,

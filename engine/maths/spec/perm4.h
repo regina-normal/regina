@@ -250,31 +250,33 @@ class Perm<4> {
         using Code2 = uint8_t;
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * four elements.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 23 inclusive.
-         *
-         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
-         * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
+         * This element access is extremely fast (a fact that is not true for
+         * the larger permutation classes Perm<n> with \a n &ge; 8).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * This is different from Perm<4>::orderedSn, since this array \a Sn
+         * This array is different from Perm<4>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
          * stores permutations in lexicographical order.
+         *
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr S4Lookup Sn {};
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * four elements.
          *
          * This is a dimension-specific alias for Perm<4>::Sn; see that member
@@ -289,30 +291,32 @@ class Perm<4> {
         static constexpr S4Lookup S4 {};
 
         /**
-         * Gives array-like access to all possible permutations of four
+         * Gives fast array-like access to all possible permutations of four
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
          * must be between 0 and 23 inclusive.
+         * This element access is extremely fast (a fact that is not true for
+         * the larger permutation classes Perm<n> with \a n &ge; 8).
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[3]).
          *
+         * This array is different from Perm<4>::Sn, since \a orderedSn stores
+         * permutations in lexicographical order, whereas \a Sn alternates
+         * between even and odd permutations.
+         *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
-         *
-         * This is different from Perm<4>::Sn, since this array \a orderedSn
-         * stores permutations in lexicographical order, whereas \a Sn
-         * alternates between even and odd permutations.
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr OrderedS4Lookup orderedSn {};
 
         /**
-         * Gives array-like access to all possible permutations of four
+         * Gives fast array-like access to all possible permutations of four
          * elements in lexicographical order.
          *
          * This is a dimension-specific alias for Perm<4>::orderedSn; see that
@@ -324,32 +328,32 @@ class Perm<4> {
         static constexpr OrderedS4Lookup orderedS4 {};
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * three elements.  In each permutation, 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be
          * between 0 and 5 inclusive.
          *
-         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
-         * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
-         *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * This is different from Perm<4>::orderedS3, since this array
-         * \a Sn_1 (or equivalently, \a S3) alternates between even and odd
+         * This array is different from Perm<4>::orderedS3, since \a Sn_1
+         * (or equivalently, \a S3) alternates between even and odd
          * permutations, whereas \a orderedS3 stores permutations in
          * lexicographical order.
+         *
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr S3Lookup Sn_1 {};
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * three elements.
          *
          * This is a dimension-specific alias for Perm<4>::Sn_1; see that
@@ -362,43 +366,40 @@ class Perm<4> {
         static constexpr S3Lookup S3 {};
 
         /**
-         * Gives array-like access to all possible permutations of three
+         * Gives fast array-like access to all possible permutations of three
          * elements in lexicographical order.  In each permutation, 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>orderedS3[i]</tt>.  The index \a i
          * must be between 0 and 5 inclusive.
          *
-         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
-         * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
+         * Lexicographical ordering treats each permutation \a p as the
+         * ordered pair (\a p[0], ..., \a p[2]).
          *
-         * This is different from Perm<4>::S3, since this array \a orderedS3
-         * stores permutations in lexicographical order, whereas \a S3 (or
+         * This array is different from Perm<4>::S3, since \a orderedS3 stores
+         * permutations in lexicographical order, whereas \a S3 (or
          * equivalently, \a Sn_1) alternates between even and odd permutations.
          *
          * Note that the small permutation classes Perm<3>, Perm<4> and Perm<5>
          * all have an \a orderedS3 array; these all store the same six
          * permutations in the same order (but of course using different data
          * types).
+         *
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr OrderedS3Lookup orderedS3 {};
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * two elements.  In each permutation, 2 maps to 2 and 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>S2[i]</tt>.  The index \a i must be
          * between 0 and 1 inclusive.
-         *
-         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
-         * since Regina 7.0 it has changed type, but accessing elements as
-         * described above remains extremely fast.  The object that is returned
-         * is lightweight and is defined in the headers only; in particular,
-         * you cannot make a reference to it (but you can always make a copy).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -410,6 +411,12 @@ class Perm<4> {
          *
          * There is no corresponding \a orderedS2 array, since the
          * (trivial) arrays \a S2 and \a orderedS2 are identical.
+         *
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
+         * described above remains extremely fast.  This is now a lightweight
+         * object, and is defined in the headers only; in particular, you
+         * cannot make a reference to it (but you can always make a copy).
          */
         static constexpr S2Lookup S2 {};
 

@@ -194,30 +194,31 @@ class Perm<6> {
         using Code2 = uint16_t;
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * six elements.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 719 inclusive.
-         *
-         * Accessing elements through this object is extremely fast.
-         * The object that is returned is lightweight and is defined in the
-         * headers only; in particular, you cannot make a reference to it
-         * (but you can always make a copy).
+         * This element access is extremely fast (a fact that is not true for
+         * the larger permutation classes Perm<n> with \a n &ge; 8).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * This is different from Perm<6>::orderedSn, since this array \a Sn
+         * This array is different from Perm<6>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
          * stores permutations in lexicographical order.
+         *
+         * This is a lightweight object, and it is defined in the headers only.
+         * In particular, you cannot make a reference to it (but it is cheap
+         * to make a copy).
          */
         static constexpr S6Lookup Sn {};
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * six elements.
          *
          * This is a dimension-specific alias for Perm<6>::Sn; see that member
@@ -228,29 +229,30 @@ class Perm<6> {
         static constexpr S6Lookup S6 {};
 
         /**
-         * Gives array-like access to all possible permutations of six
+         * Gives fast array-like access to all possible permutations of six
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
          * must be between 0 and 719 inclusive.
+         * This element access is extremely fast (a fact that is not true for
+         * the larger permutation classes Perm<n> with \a n &ge; 8).
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[5]).
          *
-         * Accessing elements through this object is extremely fast.
-         * The object that is returned is lightweight and is defined in the
-         * headers only; in particular, you cannot make a reference to it
-         * (but you can always make a copy).
+         * This array is different from Perm<6>::Sn, since \a orderedSn stores
+         * permutations in lexicographical order, whereas \a Sn alternates
+         * between even and odd permutations.
          *
-         * This is different from Perm<6>::Sn, since this array \a orderedSn
-         * stores permutations in lexicographical order, whereas \a Sn
-         * alternates between even and odd permutations.
+         * This is a lightweight object, and it is defined in the headers only.
+         * In particular, you cannot make a reference to it (but it is cheap
+         * to make a copy).
          */
         static constexpr OrderedS6Lookup orderedSn {};
 
         /**
-         * Gives array-like access to all possible permutations of six
+         * Gives fast array-like access to all possible permutations of six
          * elements in lexicographical order.
          *
          * This is a dimension-specific alias for Perm<6>::orderedSn; see that
