@@ -210,6 +210,7 @@ def process_comment(comment):
     s = re.sub(r'(^|[^\\])&le;', r'\1≤', s)
     s = re.sub(r'(^|[^\\])&ge;', r'\1≥', s)
     s = re.sub(r'(^|[^\\])&amp;', r'\1&', s)
+    s = re.sub(r'(^|[^\\])&nbsp;', r'\1 ', s)
     s = re.sub(r'\\<', r'<', s)
     s = re.sub(r'\\>', r'>', s)
     s = re.sub(r'\\&', r'&', s)

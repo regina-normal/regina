@@ -451,8 +451,8 @@ q[n - 1 - i]`` for all *i*.)doc";
 
 // Docstring regina::python::doc::Perm_::rot
 static const char *rot =
-R"doc(Returns the *i*th rotation. This maps *k* to *k*&nbsp;+&nbsp;*i* (mod
-*n*) for all *k*.
+R"doc(Returns the *i*th rotation. This maps *k* to *k* + *i* (mod *n*) for
+all *k*.
 
 Parameter ``i``:
     the image of 0; this must be between 0 and *n*-1 inclusive.
@@ -562,6 +562,13 @@ Parameter ``index``:
 Returns:
     the corresponding permutation in orderedSn.)doc";
 
+// Docstring regina::python::doc::Perm_::OrderedSnLookup_::size
+static const char *size =
+R"doc(Returns the number of permutations in the array orderedSn.
+
+Returns:
+    the size of this array.)doc";
+
 }
 
 namespace Perm_::SnLookup_ {
@@ -580,6 +587,13 @@ Parameter ``index``:
 
 Returns:
     the corresponding permutation in Sn.)doc";
+
+// Docstring regina::python::doc::Perm_::SnLookup_::size
+static const char *size =
+R"doc(Returns the number of permutations in the array Sn.
+
+Returns:
+    the size of this array.)doc";
 
 }
 

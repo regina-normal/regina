@@ -567,8 +567,8 @@ i]`` for all *i*.)doc";
 
 // Docstring regina::python::doc::Perm_::rot
 static const char *rot =
-R"doc(Returns the *i*th rotation. This maps *k* to *k*&nbsp;+&nbsp;*i* (mod
-4) for all *k*.
+R"doc(Returns the *i*th rotation. This maps *k* to *k* + *i* (mod 4) for all
+*k*.
 
 Parameter ``i``:
     the image of 0; this must be between 0 and 3 inclusive.
