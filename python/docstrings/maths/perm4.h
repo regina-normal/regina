@@ -11,7 +11,60 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::Perm
+static const char *Perm =
+R"doc(Represents a permutation of {0,1,2,3}. This is a specialisation of the
+generic Perm template: it is highly optimised, and also offers some
+additional functionality. Amongst other things, this permutation class
+is used to specify how simplices of a 3-manifold triangulation are
+glued together.
+
+As with all Perm template classes, these objects are small enough to
+pass by value and swap with std::swap(), with no need for any
+specialised move operations or swap functions. Moreover, Perm<4> in
+particular is extremely fast to work with.
+
+Each permutation has an internal code, which is a single native
+integer that is sufficient to reconstruct the permutation. Thus the
+internal code may be a useful means for passing permutation objects to
+and from the engine. For Perm<4>, the internal permutation codes have
+changed as of Regina 4.6.1:
+
+* *First*-generation codes were used internally in Regina 4.6 and
+  earlier. These are *image packs*: characters whose lowest two bits
+  represent the image of 0, whose next lowest two bits represent the
+  image of 1, and so on. The routines permCode1(), setPermCode1(),
+  fromPermCode1() and isPermCode1() continue to work with first-
+  generation codes for backward compatibility. Likewise, the XML data
+  file format continues to use first-generation codes to describe
+  tetrahedron gluings.
+
+* *Second*-generation codes are used internally in Regina 4.6.1 and
+  above. These codes are integers between 0 and 23 inclusive,
+  representing the index of the permutation in the array Perm<4>::S4.
+  The routines permCode2(), setPermCode2(), fromPermCode2() and
+  isPermCode2() work with second-generation codes.
+
+It is highly recommended that, if you need to work with permutation
+codes at all, you use second-generation codes where possible. This is
+because the first-generation routines incur additional overhead in
+converting back and forth between the second-generation codes (which
+are used internally by Perm<4>).
+
+To use this class, simply include the main permutation header
+maths/perm.h.
+
+Python:
+    Since Python does not support templates, this class is made
+    available under the name Perm4.)doc";
+
 namespace Perm_ {
+
+// Docstring regina::python::doc::Perm_::OrderedS3Lookup
+static const char *OrderedS3Lookup = R"doc(A lightweight array-like object used to implement Perm<4>::orderedS3.)doc";
+
+// Docstring regina::python::doc::Perm_::OrderedS4Lookup
+static const char *OrderedS4Lookup = R"doc(A lightweight array-like object used to implement Perm<4>::orderedS4.)doc";
 
 // Docstring regina::python::doc::Perm_::Perm
 static const char *Perm = R"doc(Creates the identity permutation.)doc";
@@ -100,6 +153,12 @@ R"doc(Creates a permutation that is a clone of the given permutation.
 Parameter ``cloneMe``:
     the permutation to clone.)doc";
 
+// Docstring regina::python::doc::Perm_::S2Lookup
+static const char *S2Lookup = R"doc(A lightweight array-like object used to implement Perm<4>::S2.)doc";
+
+// Docstring regina::python::doc::Perm_::S3Lookup
+static const char *S3Lookup = R"doc(A lightweight array-like object used to implement Perm<4>::S3.)doc";
+
 // Docstring regina::python::doc::Perm_::S4Index
 static const char *S4Index =
 R"doc(Returns the index of this permutation in the Perm<4>::S4 array.
@@ -114,6 +173,9 @@ See Sn for further information on how these permutations are indexed.
 Returns:
     the index *i* for which this permutation is equal to
     Perm<4>::S4[i]. This will be between 0 and 23 inclusive.)doc";
+
+// Docstring regina::python::doc::Perm_::S4Lookup
+static const char *S4Lookup = R"doc(A lightweight array-like object used to implement Perm<4>::S4.)doc";
 
 // Docstring regina::python::doc::Perm_::SnIndex
 static const char *SnIndex =
@@ -714,6 +776,13 @@ Parameter ``index``:
 Returns:
     the corresponding permutation in orderedS3.)doc";
 
+// Docstring regina::python::doc::Perm_::OrderedS3Lookup_::size
+static const char *size =
+R"doc(Returns the number of permutations in the array orderedS3.
+
+Returns:
+    the size of this array.)doc";
+
 }
 
 namespace Perm_::OrderedS4Lookup_ {
@@ -730,6 +799,13 @@ Parameter ``index``:
 
 Returns:
     the corresponding permutation in orderedS4.)doc";
+
+// Docstring regina::python::doc::Perm_::OrderedS4Lookup_::size
+static const char *size =
+R"doc(Returns the number of permutations in the array orderedS4.
+
+Returns:
+    the size of this array.)doc";
 
 }
 
@@ -748,6 +824,13 @@ Parameter ``index``:
 Returns:
     the corresponding permutation in S2.)doc";
 
+// Docstring regina::python::doc::Perm_::S2Lookup_::size
+static const char *size =
+R"doc(Returns the number of permutations in the array S2.
+
+Returns:
+    the size of this array.)doc";
+
 }
 
 namespace Perm_::S3Lookup_ {
@@ -765,6 +848,13 @@ Parameter ``index``:
 Returns:
     the corresponding permutation in S3.)doc";
 
+// Docstring regina::python::doc::Perm_::S3Lookup_::size
+static const char *size =
+R"doc(Returns the number of permutations in the array S3.
+
+Returns:
+    the size of this array.)doc";
+
 }
 
 namespace Perm_::S4Lookup_ {
@@ -781,6 +871,13 @@ Parameter ``index``:
 
 Returns:
     the corresponding permutation in S4.)doc";
+
+// Docstring regina::python::doc::Perm_::S4Lookup_::size
+static const char *size =
+R"doc(Returns the number of permutations in the array S4.
+
+Returns:
+    the size of this array.)doc";
 
 }
 

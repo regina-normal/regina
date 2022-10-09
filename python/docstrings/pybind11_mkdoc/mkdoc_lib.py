@@ -64,7 +64,10 @@ CLASS_BLACKLIST = [
 ]
 
 CLASS_WHITELIST = [
-    'SnLookup', 'OrderedSnLookup'
+    'SnLookup', 'S1Lookup', 'S2Lookup', 'S3Lookup', 'S4Lookup',
+    'S5Lookup', 'S6Lookup', 'S7Lookup',
+    'OrderedSnLookup', 'OrderedS3Lookup', 'OrderedS4Lookup', 'OrderedS5Lookup',
+    'OrderedS6Lookup', 'OrderedS7Lookup', 'OrderedSnLookup'
 ]
 
 MEMBER_BLACKLIST = [

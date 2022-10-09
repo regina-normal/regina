@@ -37,29 +37,14 @@
 #include "utilities/typeutils.h"
 #include "../constarray.h"
 #include "../helpers.h"
+#include "../docstrings/maths/perm4.h"
 
 using regina::Perm;
-using regina::python::ConstArray;
-
-namespace {
-    ConstArray<decltype(Perm<4>::S4), int>
-        Perm4_S4_arr(Perm<4>::S4, 24);
-    ConstArray<decltype(Perm<4>::orderedS4), int>
-        Perm4_orderedS4_arr(Perm<4>::orderedS4, 24);
-    ConstArray<decltype(Perm<4>::S3), int> Perm4_S3_arr(Perm<4>::S3, 6);
-    ConstArray<decltype(Perm<4>::orderedS3), int>
-        Perm4_orderedS3_arr(Perm<4>::orderedS3, 6);
-    ConstArray<decltype(Perm<4>::S2), int> Perm4_S2_arr(Perm<4>::S2, 2);
-}
 
 void addPerm4(pybind11::module_& m) {
-    decltype(Perm4_S4_arr)::wrapClass(m, "ConstArray_Perm4_S4");
-    decltype(Perm4_orderedS4_arr)::wrapClass(m, "ConstArray_Perm4_orderedS4");
-    decltype(Perm4_S3_arr)::wrapClass(m, "ConstArray_Perm4_S3");
-    decltype(Perm4_orderedS3_arr)::wrapClass(m, "ConstArray_Perm4_orderedS3");
-    decltype(Perm4_S2_arr)::wrapClass(m, "ConstArray_Perm4_S2");
+    RDOC_SCOPE_BEGIN(Perm)
 
-    auto c = pybind11::class_<Perm<4>>(m, "Perm4")
+    auto c = pybind11::class_<Perm<4>>(m, "Perm4", rdoc_scope)
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
         .def(pybind11::init<int, int, int, int>())
@@ -104,27 +89,42 @@ void addPerm4(pybind11::module_& m) {
         .def("orderedSnIndex", &Perm<4>::orderedS4Index)
         .def("isConjugacyMinimal", &Perm<4>::isConjugacyMinimal)
         .def("pairs", &Perm<4>::pairs)
-        .def_static("extend", &Perm<4>::extend<2>)
-        .def_static("extend", &Perm<4>::extend<3>)
+        .def_static("extend", &Perm<4>::extend<2>, rdoc::extend)
+        .def_static("extend", &Perm<4>::extend<3>, rdoc::extend)
         .def_readonly_static("codeType", &Perm<4>::codeType)
         .def_readonly_static("imageBits", &Perm<4>::imageBits)
         .def_readonly_static("imageMask", &Perm<4>::imageMask)
         .def_readonly_static("nPerms", &Perm<4>::nPerms)
         .def_readonly_static("nPerms_1", &Perm<4>::nPerms_1)
-        .def_readonly_static("S4", &Perm4_S4_arr)
-        .def_readonly_static("Sn", &Perm4_S4_arr)
-        .def_readonly_static("orderedS4", &Perm4_orderedS4_arr)
-        .def_readonly_static("orderedSn", &Perm4_orderedS4_arr)
-        .def_readonly_static("S3", &Perm4_S3_arr)
-        .def_readonly_static("Sn_1", &Perm4_S3_arr)
-        .def_readonly_static("orderedS3", &Perm4_orderedS3_arr)
-        .def_readonly_static("S2", &Perm4_S2_arr)
+        .def_readonly_static("S4", &Perm<4>::S4)
+        .def_readonly_static("Sn", &Perm<4>::Sn)
+        .def_readonly_static("orderedS4", &Perm<4>::orderedS4)
+        .def_readonly_static("orderedSn", &Perm<4>::orderedSn)
+        .def_readonly_static("S3", &Perm<4>::S3)
+        .def_readonly_static("Sn_1", &Perm<4>::Sn_1)
+        .def_readonly_static("orderedS3", &Perm<4>::orderedS3)
+        .def_readonly_static("S2", &Perm<4>::S2)
     ;
     regina::for_constexpr<5, 17>([&c](auto i) {
-        c.def_static("contract", &Perm<4>::template contract<i.value>);
+        c.def_static("contract", &Perm<4>::template contract<i.value>,
+            rdoc::contract);
     });
-    regina::python::add_output_basic(c);
-    regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_output_basic(c, rdoc::str);
+    regina::python::add_tight_encoding(c, rdoc::tightEncoding,
+        rdoc::tightDecoding);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    regina::python::add_lightweight_array<decltype(Perm<4>::S4)>(c,
+        "_S4", rdoc::S4Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<4>::orderedS4)>(c,
+        "_orderedS4", rdoc::OrderedS4Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<4>::S3)>(c,
+        "_S3", rdoc::S3Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<4>::orderedS3)>(c,
+        "_orderedS3", rdoc::OrderedS3Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<4>::S2)>(c,
+        "_S2", rdoc::S2Lookup);
+
+    RDOC_SCOPE_END
 }
 

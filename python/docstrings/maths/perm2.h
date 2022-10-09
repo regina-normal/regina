@@ -11,6 +11,46 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::Perm
+static const char *Perm =
+R"doc(Represents a permutation of {0,1}. This is a specialisation of the
+generic Perm template: it is highly optimised, but also somewhat
+trivial (since there are only two possible permutations). It is
+provided simply to optimise the general Perm<n> template for this
+trivial case.
+
+As with all Perm template classes, these objects are small enough to
+pass by value and swap with std::swap(), with no need for any
+specialised move operations or swap functions. Moreover, Perm<2> in
+particular is extremely fast to work with.
+
+Each permutation has an internal code, which is a single native
+integer that is sufficient to reconstruct the permutation. Thus the
+internal code may be a useful means for passing permutation objects to
+and from the engine. For Perm<2>, the internal code is 0 for the
+identity permutation, or 1 for the (unique) non-identity permutation.
+This is consistent with the second-generation codes used in classes
+Perm<4>,...,Perm<7>.
+
+To use this class, simply include the main permutation header
+maths/perm.h.
+
+.. warning::
+    Every permutation class Perm<n> provides a transposition (i.e.,
+    pair swap) constructor ``Perm<n>(a,b).`` In addition, the
+    specialised classes Perm<3>, Perm<4> and Perm<5> provide "list of
+    images" constructors ``Perm<3>(a,b,c)``, ``Perm<4>(a,b,c,d)`` and
+    ``Perm<5>(a,b,c,d,e)``. For Perm<2>, these two constructors would
+    be indistinguishable (since both would take two integer
+    arguments). Here Perm<2> takes an approach that is consistent with
+    the generic Perm<n> class: ``Perm<2>(a,b)`` is interpreted as the
+    *transposition* of *a* and *b*. In particular, ``Perm(0,1)`` is
+    *not* the identity permutation.
+
+Python:
+    Since Python does not support templates, this class is made
+    available under the name Perm2.)doc";
+
 namespace Perm_ {
 
 // Docstring regina::python::doc::Perm_::Perm
@@ -47,6 +87,9 @@ R"doc(Creates a permutation that is a clone of the given permutation.
 Parameter ``cloneMe``:
     the permutation to clone.)doc";
 
+// Docstring regina::python::doc::Perm_::S1Lookup
+static const char *S1Lookup = R"doc(A lightweight array-like object used to implement Perm<2>::S1.)doc";
+
 // Docstring regina::python::doc::Perm_::S2Index
 static const char *S2Index =
 R"doc(Returns the index of this permutation in the Perm<2>::S2 array.
@@ -58,6 +101,9 @@ See Sn for further information on how these permutations are indexed.
 Returns:
     the index *i* for which this permutation is equal to
     Perm<2>::S2[i]. This will be 0 or 1.)doc";
+
+// Docstring regina::python::doc::Perm_::S2Lookup
+static const char *S2Lookup = R"doc(A lightweight array-like object used to implement Perm<2>::S2.)doc";
 
 // Docstring regina::python::doc::Perm_::SnIndex
 static const char *SnIndex =
@@ -443,6 +489,30 @@ Returns:
 
 }
 
+namespace Perm_::S1Lookup_ {
+
+// Docstring regina::python::doc::Perm_::S1Lookup_::__array
+static const char *__array =
+R"doc(Returns the permutation at the given index in the array S1. See
+Perm<2>::S1 for details.
+
+This operation is extremely fast (and constant time).
+
+Parameter ``index``:
+    an index; the only allowed value is 0.
+
+Returns:
+    the corresponding permutation in S1.)doc";
+
+// Docstring regina::python::doc::Perm_::S1Lookup_::size
+static const char *size =
+R"doc(Returns the number of permutations in the array S1.
+
+Returns:
+    the size of this array.)doc";
+
+}
+
 namespace Perm_::S2Lookup_ {
 
 // Docstring regina::python::doc::Perm_::S2Lookup_::__array
@@ -457,6 +527,13 @@ Parameter ``index``:
 
 Returns:
     the corresponding permutation in S2.)doc";
+
+// Docstring regina::python::doc::Perm_::S2Lookup_::size
+static const char *size =
+R"doc(Returns the number of permutations in the array S2.
+
+Returns:
+    the size of this array.)doc";
 
 }
 

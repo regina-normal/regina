@@ -43,15 +43,11 @@
 #define __REGINA_PERM_H
 #endif
 
-#include <array>
 #include <cstdlib>
-#include <iostream>
 #include <iterator>
-#include <string>
 #include "regina-core.h"
-#include "utilities/exception.h"
+#include "maths/perm-prereq.h"
 #include "utilities/intutils.h"
-#include "utilities/randutils.h"
 
 namespace regina {
 
@@ -88,40 +84,6 @@ inline constexpr char digit(int i) {
 inline constexpr int64_t factorial(int n) {
     return (n <= 1 ? 1 : factorial(n - 1) * n);
 }
-
-/**
- * Represents the different kinds of internal permutation codes that are
- * used in Regina's various Perm<n> template classes.  See the Perm<n>
- * class notes for more information on exactly how these codes are constructed.
- * The class constant Perm<n>::codeType indicates which type of code is used
- * for which \a n.
- *
- * \ingroup maths
- */
-enum PermCodeType {
-    /**
-     * This is a permutation code that packs the images of 0,...,<i>n</i>-1
-     * into a single native integer using a handful of bits per image.
-     * Such codes are easier to manipulate on an element-by-element basis.
-     *
-     * Codes of this type can always be queried using Perm<n>::permCode(), and
-     * permutations can be recreated from them using Perm<n>::fromPermCode().
-     */
-    PERM_CODE_IMAGES = 1,
-    /**
-     * This is a permutation code that stores the index into the full
-     * permutation group \a S_n.  Such codes typically require fewer bytes and
-     * are packed together, making them ideal for working with lookup tables.
-     *
-     * Codes of this type can be queried using Perm<n>::SnIndex(), and
-     * permutations can be recreated from them by indexing into Perm<n>::Sn.
-     *
-     * \warning The routines Perm<n>::permCode() and Perm<n>::fromPermCode()
-     * will still be present, but in some classes (e.g., Perm<4> and Perm<5>),
-     * these are legacy routines that refer to different types of codes.
-     */
-    PERM_CODE_INDEX = 2
-};
 
 /**
  * Represents a permutation of {0,1,...,<i>n</i>-1}.

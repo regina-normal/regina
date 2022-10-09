@@ -37,20 +37,14 @@
 #include "utilities/typeutils.h"
 #include "../constarray.h"
 #include "../helpers.h"
+#include "../docstrings/maths/perm2.h"
 
 using regina::Perm;
-using regina::python::ConstArray;
-
-namespace {
-    // Note that S2 and S1 are the same C++ type.
-    ConstArray<decltype(Perm<2>::S2), int> Perm2_S2_arr(Perm<2>::S2, 2);
-    ConstArray<decltype(Perm<2>::S2), int> Perm2_S1_arr(Perm<2>::S1, 1);
-}
 
 void addPerm2(pybind11::module_& m) {
-    decltype(Perm2_S2_arr)::wrapClass(m, "ConstArray_Perm2_S2");
+    RDOC_SCOPE_BEGIN(Perm)
 
-    auto c = pybind11::class_<Perm<2>>(m, "Perm2")
+    auto c = pybind11::class_<Perm<2>>(m, "Perm2", rdoc_scope)
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
         .def(pybind11::init<const std::array<int, 2>&>())
@@ -86,18 +80,27 @@ void addPerm2(pybind11::module_& m) {
         .def_readonly_static("codeType", &Perm<2>::codeType)
         .def_readonly_static("nPerms", &Perm<2>::nPerms)
         .def_readonly_static("nPerms_1", &Perm<2>::nPerms_1)
-        .def_readonly_static("S2", &Perm2_S2_arr)
-        .def_readonly_static("Sn", &Perm2_S2_arr)
-        .def_readonly_static("orderedS2", &Perm2_S2_arr)
-        .def_readonly_static("orderedSn", &Perm2_S2_arr)
-        .def_readonly_static("S1", &Perm2_S1_arr)
-        .def_readonly_static("Sn_1", &Perm2_S1_arr)
+        .def_readonly_static("S2", &Perm<2>::S2)
+        .def_readonly_static("Sn", &Perm<2>::Sn)
+        .def_readonly_static("orderedS2", &Perm<2>::orderedS2)
+        .def_readonly_static("orderedSn", &Perm<2>::orderedSn)
+        .def_readonly_static("S1", &Perm<2>::S1)
+        .def_readonly_static("Sn_1", &Perm<2>::Sn_1)
     ;
     regina::for_constexpr<3, 17>([&c](auto i) {
-        c.def_static("contract", &Perm<2>::template contract<i.value>);
+        c.def_static("contract", &Perm<2>::template contract<i.value>,
+            rdoc::contract);
     });
-    regina::python::add_output_basic(c);
-    regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_output_basic(c, rdoc::str);
+    regina::python::add_tight_encoding(c, rdoc::tightEncoding,
+        rdoc::tightDecoding);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    regina::python::add_lightweight_array<decltype(Perm<2>::S2)>(c,
+        "_S2", rdoc::S2Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<2>::S1)>(c,
+        "_S1", rdoc::S1Lookup);
+
+    RDOC_SCOPE_END
 }
 

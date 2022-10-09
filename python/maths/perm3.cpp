@@ -37,25 +37,14 @@
 #include "utilities/typeutils.h"
 #include "../constarray.h"
 #include "../helpers.h"
+#include "../docstrings/maths/perm3.h"
 
 using regina::Perm;
-using regina::python::ConstArray;
-
-namespace {
-    ConstArray<decltype(Perm<3>::S3), int>
-        Perm3_S3_arr(Perm<3>::S3, 6);
-    ConstArray<decltype(Perm<3>::orderedS3), int>
-        Perm3_orderedS3_arr(Perm<3>::orderedS3, 6);
-    ConstArray<decltype(Perm<3>::S2), int>
-        Perm3_S2_arr(Perm<3>::S2, 2);
-}
 
 void addPerm3(pybind11::module_& m) {
-    decltype(Perm3_S3_arr)::wrapClass(m, "ConstArray_Perm3_S3");
-    decltype(Perm3_orderedS3_arr)::wrapClass(m, "ConstArray_Perm3_orderedS3");
-    decltype(Perm3_S2_arr)::wrapClass(m, "ConstArray_Perm3_S2");
+    RDOC_SCOPE_BEGIN(Perm)
 
-    auto c = pybind11::class_<Perm<3>>(m, "Perm3")
+    auto c = pybind11::class_<Perm<3>>(m, "Perm3", rdoc_scope)
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
         .def(pybind11::init<int, int, int>())
@@ -91,16 +80,16 @@ void addPerm3(pybind11::module_& m) {
         .def("orderedS3Index", &Perm<3>::orderedS3Index)
         .def("orderedSnIndex", &Perm<3>::orderedS3Index)
         .def("isConjugacyMinimal", &Perm<3>::isConjugacyMinimal)
-        .def_static("extend", &Perm<3>::extend<2>)
+        .def_static("extend", &Perm<3>::extend<2>, rdoc::extend)
         .def_readonly_static("codeType", &Perm<3>::codeType)
         .def_readonly_static("nPerms", &Perm<3>::nPerms)
         .def_readonly_static("nPerms_1", &Perm<3>::nPerms_1)
-        .def_readonly_static("S3", &Perm3_S3_arr)
-        .def_readonly_static("Sn", &Perm3_S3_arr)
-        .def_readonly_static("orderedS3", &Perm3_orderedS3_arr)
-        .def_readonly_static("orderedSn", &Perm3_orderedS3_arr)
-        .def_readonly_static("S2", &Perm3_S2_arr)
-        .def_readonly_static("Sn_1", &Perm3_S2_arr)
+        .def_readonly_static("S3", &Perm<3>::S3)
+        .def_readonly_static("Sn", &Perm<3>::Sn)
+        .def_readonly_static("orderedS3", &Perm<3>::orderedS3)
+        .def_readonly_static("orderedSn", &Perm<3>::orderedSn)
+        .def_readonly_static("S2", &Perm<3>::S2)
+        .def_readonly_static("Sn_1", &Perm<3>::Sn_1)
         .def_readonly_static("code012", &Perm<3>::code012)
         .def_readonly_static("code021", &Perm<3>::code021)
         .def_readonly_static("code102", &Perm<3>::code102)
@@ -109,10 +98,21 @@ void addPerm3(pybind11::module_& m) {
         .def_readonly_static("code210", &Perm<3>::code210)
     ;
     regina::for_constexpr<4, 17>([&c](auto i) {
-        c.def_static("contract", &Perm<3>::template contract<i.value>);
+        c.def_static("contract", &Perm<3>::template contract<i.value>,
+            rdoc::contract);
     });
-    regina::python::add_output_basic(c);
-    regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_output_basic(c, rdoc::str);
+    regina::python::add_tight_encoding(c, rdoc::tightEncoding,
+        rdoc::tightDecoding);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    regina::python::add_lightweight_array<decltype(Perm<3>::S3)>(c,
+        "_S3", rdoc::S3Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<3>::orderedS3)>(c,
+        "_orderedS3", rdoc::OrderedS3Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<3>::S2)>(c,
+        "_S2", rdoc::S2Lookup);
+
+    RDOC_SCOPE_END
 }
 

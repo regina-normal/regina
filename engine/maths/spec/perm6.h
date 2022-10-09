@@ -37,11 +37,17 @@
  *  end users to include this specialisation header explicitly.
  */
 
+#ifndef __DOCSTRINGS
 // We include perm.h before the header guard, to ensure that the
 // various permutation headers are processed in exactly the right order.
 // This specialisation header will be re-included at the beginning of
 // perm-impl.h.
 #include "maths/perm.h"
+#else
+// For generating docstrings, we *need* to see this file first, but also
+// we don't need any of the others.  Just use forward declarations.
+#include "maths/perm-prereq.h"
+#endif
 
 #ifndef __REGINA_PERM6_H
 #ifndef __DOXYGEN
@@ -97,39 +103,6 @@ namespace regina {
  */
 template <>
 class Perm<6> {
-    private:
-        /**
-         * A lightweight array-like object used to implement Perm<6>::S6.
-         */
-        struct S6Lookup {
-            /**
-             * Returns the permutation at the given index in the array S6.
-             * See Perm<6>::S6 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 719 inclusive.
-             * @return the corresponding permutation in S6.
-             */
-            constexpr Perm<6> operator[] (int index) const;
-        };
-
-        /**
-         * A lightweight array-like object used to implement Perm<6>::orderedS6.
-         */
-        struct OrderedS6Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS6.  See Perm<6>::orderedS6 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 719 inclusive.
-             * @return the corresponding permutation in orderedS6.
-             */
-            constexpr Perm<6> operator[] (int index) const;
-        };
-
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -193,6 +166,54 @@ class Perm<6> {
          */
         using Code2 = uint16_t;
 
+    private:
+        /**
+         * A lightweight array-like object used to implement Perm<6>::S6.
+         */
+        struct S6Lookup {
+            /**
+             * Returns the permutation at the given index in the array S6.
+             * See Perm<6>::S6 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 719 inclusive.
+             * @return the corresponding permutation in S6.
+             */
+            constexpr Perm<6> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array S6.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 720; }
+        };
+
+        /**
+         * A lightweight array-like object used to implement Perm<6>::orderedS6.
+         */
+        struct OrderedS6Lookup {
+            /**
+             * Returns the permutation at the given index in the array
+             * orderedS6.  See Perm<6>::orderedS6 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 719 inclusive.
+             * @return the corresponding permutation in orderedS6.
+             */
+            constexpr Perm<6> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array orderedS6.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 720; }
+        };
+
+    public:
         /**
          * Gives fast array-like access to all possible permutations of
          * six elements.

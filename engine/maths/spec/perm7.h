@@ -37,11 +37,18 @@
  *  end users to include this specialisation header explicitly.
  */
 
+#ifndef __DOCSTRINGS
 // We include perm.h before the header guard, to ensure that the
 // various permutation headers are processed in exactly the right order.
 // This specialisation header will be re-included at the beginning of
 // perm-impl.h.
 #include "maths/perm.h"
+#else
+// For generating docstrings, we *need* to see this file first, but also
+// we don't need any of the others.  Just use forward declarations.
+#include "maths/perm-prereq.h"
+#include "maths/spec/perm6.h"
+#endif
 
 #ifndef __REGINA_PERM7_H
 #ifndef __DOXYGEN
@@ -97,39 +104,6 @@ namespace regina {
  */
 template <>
 class Perm<7> {
-    private:
-        /**
-         * A lightweight array-like object used to implement Perm<7>::S7.
-         */
-        struct S7Lookup {
-            /**
-             * Returns the permutation at the given index in the array S7.
-             * See Perm<7>::S7 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 5039 inclusive.
-             * @return the corresponding permutation in S7.
-             */
-            constexpr Perm<7> operator[] (int index) const;
-        };
-
-        /**
-         * A lightweight array-like object used to implement Perm<7>::orderedS7.
-         */
-        struct OrderedS7Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS7.  See Perm<7>::orderedS7 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 5039 inclusive.
-             * @return the corresponding permutation in orderedS7.
-             */
-            constexpr Perm<7> operator[] (int index) const;
-        };
-
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -193,6 +167,54 @@ class Perm<7> {
          */
         using Code2 = uint16_t;
 
+    private:
+        /**
+         * A lightweight array-like object used to implement Perm<7>::S7.
+         */
+        struct S7Lookup {
+            /**
+             * Returns the permutation at the given index in the array S7.
+             * See Perm<7>::S7 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 5039 inclusive.
+             * @return the corresponding permutation in S7.
+             */
+            constexpr Perm<7> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array S7.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 5040; }
+        };
+
+        /**
+         * A lightweight array-like object used to implement Perm<7>::orderedS7.
+         */
+        struct OrderedS7Lookup {
+            /**
+             * Returns the permutation at the given index in the array
+             * orderedS7.  See Perm<7>::orderedS7 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 5039 inclusive.
+             * @return the corresponding permutation in orderedS7.
+             */
+            constexpr Perm<7> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array orderedS7.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 5040; }
+        };
+
+    public:
         /**
          * Gives fast array-like access to all possible permutations of
          * seven elements.

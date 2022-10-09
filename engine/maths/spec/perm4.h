@@ -37,11 +37,19 @@
  *  end users to include this specialisation header explicitly.
  */
 
+#ifndef __DOCSTRINGS
 // We include perm.h before the header guard, to ensure that the
 // various permutation headers are processed in exactly the right order.
 // This specialisation header will be re-included at the beginning of
 // perm-impl.h.
 #include "maths/perm.h"
+#else
+// For generating docstrings, we *need* to see this file first, but also
+// we don't need any of the others.  Just use forward declarations.
+#include "maths/perm-prereq.h"
+#include "maths/spec/perm3.h"
+#include "maths/spec/perm6.h"
+#endif
 
 #ifndef __REGINA_PERM4_H
 #ifndef __DOXYGEN
@@ -97,87 +105,6 @@ namespace regina {
  */
 template <>
 class Perm<4> {
-    private:
-        /**
-         * A lightweight array-like object used to implement Perm<4>::S4.
-         */
-        struct S4Lookup {
-            /**
-             * Returns the permutation at the given index in the array S4.
-             * See Perm<4>::S4 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 23 inclusive.
-             * @return the corresponding permutation in S4.
-             */
-            constexpr Perm<4> operator[] (int index) const;
-        };
-
-        /**
-         * A lightweight array-like object used to implement Perm<4>::orderedS4.
-         */
-        struct OrderedS4Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS4.  See Perm<4>::orderedS4 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 23 inclusive.
-             * @return the corresponding permutation in orderedS4.
-             */
-            constexpr Perm<4> operator[] (int index) const;
-        };
-
-        /**
-         * A lightweight array-like object used to implement Perm<4>::S3.
-         */
-        struct S3Lookup {
-            /**
-             * Returns the permutation at the given index in the array S3.
-             * See Perm<4>::S3 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 5 inclusive.
-             * @return the corresponding permutation in S3.
-             */
-            constexpr Perm<4> operator[] (int index) const;
-        };
-
-        /**
-         * A lightweight array-like object used to implement Perm<4>::orderedS3.
-         */
-        struct OrderedS3Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS3.  See Perm<4>::orderedS3 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 5 inclusive.
-             * @return the corresponding permutation in orderedS3.
-             */
-            constexpr Perm<4> operator[] (int index) const;
-        };
-
-        /**
-         * A lightweight array-like object used to implement Perm<4>::S2.
-         */
-        struct S2Lookup {
-            /**
-             * Returns the permutation at the given index in the array S2.
-             * See Perm<4>::S2 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 1 inclusive.
-             * @return the corresponding permutation in S2.
-             */
-            constexpr Perm<4> operator[] (int index) const;
-        };
-
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -249,6 +176,123 @@ class Perm<4> {
          */
         using Code2 = uint8_t;
 
+    private:
+        /**
+         * A lightweight array-like object used to implement Perm<4>::S4.
+         */
+        struct S4Lookup {
+            /**
+             * Returns the permutation at the given index in the array S4.
+             * See Perm<4>::S4 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 23 inclusive.
+             * @return the corresponding permutation in S4.
+             */
+            constexpr Perm<4> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array S4.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 24; }
+        };
+
+        /**
+         * A lightweight array-like object used to implement Perm<4>::orderedS4.
+         */
+        struct OrderedS4Lookup {
+            /**
+             * Returns the permutation at the given index in the array
+             * orderedS4.  See Perm<4>::orderedS4 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 23 inclusive.
+             * @return the corresponding permutation in orderedS4.
+             */
+            constexpr Perm<4> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array orderedS4.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 24; }
+        };
+
+        /**
+         * A lightweight array-like object used to implement Perm<4>::S3.
+         */
+        struct S3Lookup {
+            /**
+             * Returns the permutation at the given index in the array S3.
+             * See Perm<4>::S3 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 5 inclusive.
+             * @return the corresponding permutation in S3.
+             */
+            constexpr Perm<4> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array S3.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 6; }
+        };
+
+        /**
+         * A lightweight array-like object used to implement Perm<4>::orderedS3.
+         */
+        struct OrderedS3Lookup {
+            /**
+             * Returns the permutation at the given index in the array
+             * orderedS3.  See Perm<4>::orderedS3 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 5 inclusive.
+             * @return the corresponding permutation in orderedS3.
+             */
+            constexpr Perm<4> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array orderedS3.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 6; }
+        };
+
+        /**
+         * A lightweight array-like object used to implement Perm<4>::S2.
+         */
+        struct S2Lookup {
+            /**
+             * Returns the permutation at the given index in the array S2.
+             * See Perm<4>::S2 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 1 inclusive.
+             * @return the corresponding permutation in S2.
+             */
+            constexpr Perm<4> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array S2.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 2; }
+        };
+
+    public:
         /**
          * Gives fast array-like access to all possible permutations of
          * four elements.

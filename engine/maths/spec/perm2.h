@@ -37,11 +37,17 @@
  *  end users to include this specialisation header explicitly.
  */
 
+#ifndef __DOCSTRINGS
 // We include perm.h before the header guard, to ensure that the
 // various permutation headers are processed in exactly the right order.
 // This specialisation header will be re-included at the beginning of
 // perm-impl.h.
 #include "maths/perm.h"
+#else
+// For generating docstrings, we *need* to see this file first, but also
+// we don't need any of the others.  Just use forward declarations.
+#include "maths/perm-prereq.h"
+#endif
 
 #ifndef __REGINA_PERM2_H
 #ifndef __DOXYGEN
@@ -90,23 +96,6 @@ namespace regina {
  */
 template <>
 class Perm<2> {
-    private:
-        /**
-         * A lightweight array-like object used to implement Perm<2>::S2.
-         */
-        struct S2Lookup {
-            /**
-             * Returns the permutation at the given index in the array S2.
-             * See Perm<2>::S2 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 1 inclusive.
-             * @return the corresponding permutation in S2.
-             */
-            constexpr Perm<2> operator[] (int index) const;
-        };
-
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -139,6 +128,54 @@ class Perm<2> {
          */
         using Code = uint8_t;
 
+    private:
+        /**
+         * A lightweight array-like object used to implement Perm<2>::S2.
+         */
+        struct S2Lookup {
+            /**
+             * Returns the permutation at the given index in the array S2.
+             * See Perm<2>::S2 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 1 inclusive.
+             * @return the corresponding permutation in S2.
+             */
+            constexpr Perm<2> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array S2.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 2; }
+        };
+
+        /**
+         * A lightweight array-like object used to implement Perm<2>::S1.
+         */
+        struct S1Lookup {
+            /**
+             * Returns the permutation at the given index in the array S1.
+             * See Perm<2>::S1 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index; the only allowed value is 0.
+             * @return the corresponding permutation in S1.
+             */
+            constexpr Perm<2> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array S1.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 1; }
+        };
+
+    public:
         /**
          * Gives fast array-like access to all possible permutations of
          * two elements.
@@ -240,7 +277,7 @@ class Perm<2> {
          * object, and is defined in the headers only; in particular, you
          * cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr S2Lookup Sn_1 {};
+        static constexpr S1Lookup Sn_1 {};
 
         /**
          * Gives fast array-like access to all possible permutations of
@@ -249,7 +286,7 @@ class Perm<2> {
          * This is a dimension-specific alias for Perm<2>::Sn_1; see that
          * member for further information.
          */
-        static constexpr S2Lookup S1 {};
+        static constexpr S1Lookup S1 {};
 
     protected:
         Code code_;
@@ -805,6 +842,10 @@ class Perm<2> {
 
 inline constexpr Perm<2> Perm<2>::S2Lookup::operator[] (int index) const {
     return Perm<2>(static_cast<Code>(index));
+}
+
+inline constexpr Perm<2> Perm<2>::S1Lookup::operator[] (int) const {
+    return Perm<2>();
 }
 
 inline constexpr Perm<2>::Perm() : code_(0) {

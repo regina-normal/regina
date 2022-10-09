@@ -37,23 +37,15 @@
 #include "utilities/typeutils.h"
 #include "../constarray.h"
 #include "../helpers.h"
+#include "../docstrings/maths/perm7.h"
 
 using pybind11::overload_cast;
 using regina::Perm;
-using regina::python::ConstArray;
-
-namespace {
-    ConstArray<decltype(Perm<7>::S7), int>
-        Perm7_S7_arr(Perm<7>::S7, 5040);
-    ConstArray<decltype(Perm<7>::orderedS7), int>
-        Perm7_orderedS7_arr(Perm<7>::orderedS7, 5040);
-}
 
 void addPerm7(pybind11::module_& m) {
-    decltype(Perm7_S7_arr)::wrapClass(m, "ConstArray_Perm7_S7");
-    decltype(Perm7_orderedS7_arr)::wrapClass(m, "ConstArray_Perm7_orderedS7");
+    RDOC_SCOPE_BEGIN(Perm)
 
-    auto c = pybind11::class_<Perm<7>>(m, "Perm7")
+    auto c = pybind11::class_<Perm<7>>(m, "Perm7", rdoc_scope)
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
         .def(pybind11::init<int, int, int, int, int, int, int>())
@@ -102,26 +94,35 @@ void addPerm7(pybind11::module_& m) {
         .def("orderedS7Index", &Perm<7>::orderedS7Index)
         .def("orderedSnIndex", &Perm<7>::orderedS7Index)
         .def("isConjugacyMinimal", &Perm<7>::isConjugacyMinimal)
-        .def_static("extend", &Perm<7>::extend<2>)
-        .def_static("extend", &Perm<7>::extend<3>)
-        .def_static("extend", &Perm<7>::extend<4>)
-        .def_static("extend", &Perm<7>::extend<5>)
-        .def_static("extend", &Perm<7>::extend<6>)
+        .def_static("extend", &Perm<7>::extend<2>, rdoc::extend)
+        .def_static("extend", &Perm<7>::extend<3>, rdoc::extend)
+        .def_static("extend", &Perm<7>::extend<4>, rdoc::extend)
+        .def_static("extend", &Perm<7>::extend<5>, rdoc::extend)
+        .def_static("extend", &Perm<7>::extend<6>, rdoc::extend)
         .def_readonly_static("codeType", &Perm<7>::codeType)
         .def_readonly_static("imageBits", &Perm<7>::imageBits)
         .def_readonly_static("imageMask", &Perm<7>::imageMask)
         .def_readonly_static("nPerms", &Perm<7>::nPerms)
         .def_readonly_static("nPerms_1", &Perm<7>::nPerms_1)
-        .def_readonly_static("S7", &Perm7_S7_arr)
-        .def_readonly_static("Sn", &Perm7_S7_arr)
-        .def_readonly_static("orderedS7", &Perm7_orderedS7_arr)
-        .def_readonly_static("orderedSn", &Perm7_orderedS7_arr)
+        .def_readonly_static("S7", &Perm<7>::S7)
+        .def_readonly_static("Sn", &Perm<7>::Sn)
+        .def_readonly_static("orderedS7", &Perm<7>::orderedS7)
+        .def_readonly_static("orderedSn", &Perm<7>::orderedSn)
     ;
     regina::for_constexpr<8, 17>([&c](auto i) {
-        c.def_static("contract", &Perm<7>::template contract<i.value>);
+        c.def_static("contract", &Perm<7>::template contract<i.value>,
+            rdoc::contract);
     });
-    regina::python::add_output_basic(c);
-    regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_output_basic(c, rdoc::str);
+    regina::python::add_tight_encoding(c, rdoc::tightEncoding,
+        rdoc::tightDecoding);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    regina::python::add_lightweight_array<decltype(Perm<7>::S7)>(c,
+        "_S7", rdoc::S7Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<7>::orderedS7)>(c,
+        "_orderedS7", rdoc::OrderedS7Lookup);
+
+    RDOC_SCOPE_END
 }
 
