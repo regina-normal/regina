@@ -446,8 +446,7 @@ protected:
                         signature += "regina." +
                             th.attr("__qualname__").cast<std::string>();
                     else
-                        signature +=
-                            th.attr("__module__").cast<std::string>() + "." +
+                        signature += m + "." +
                             th.attr("__qualname__").cast<std::string>();
                 } else if (rec->is_new_style_constructor && arg_index == 0) {
                     // A new-style `__init__` takes `self` as `value_and_holder`.
@@ -457,8 +456,7 @@ protected:
                         signature += "regina."
                             + rec->scope.attr("__qualname__").cast<std::string>();
                     else
-                        signature +=
-                        rec->scope.attr("__module__").cast<std::string>() + "."
+                        signature += m + "."
                             + rec->scope.attr("__qualname__").cast<std::string>();
                 } else {
                     std::string tname(t->name());

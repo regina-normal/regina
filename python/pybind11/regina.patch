@@ -84,7 +84,7 @@ index 1878089e3..60586b9d7 100644
              auto size = static_cast<size_t>(pptr() - pbase());
              size_t remainder = utf8_remainder();
 diff --git a/python/pybind11/pybind11.h b/python/pybind11/pybind11.h
-index d61dcd5c7..bcd0b297c 100644
+index d61dcd5c7..9675827af 100644
 --- a/python/pybind11/pybind11.h
 +++ b/python/pybind11/pybind11.h
 @@ -47,6 +47,10 @@
@@ -98,7 +98,7 @@ index d61dcd5c7..bcd0b297c 100644
  PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
  
  PYBIND11_NAMESPACE_BEGIN(detail)
-@@ -433,15 +437,29 @@ protected:
+@@ -433,15 +437,27 @@ protected:
                  if (!t) {
                      pybind11_fail("Internal error while parsing type signature (1)");
                  }
@@ -114,8 +114,7 @@ index d61dcd5c7..bcd0b297c 100644
 +                        signature += "regina." +
 +                            th.attr("__qualname__").cast<std::string>();
 +                    else
-+                        signature +=
-+                            th.attr("__module__").cast<std::string>() + "." +
++                        signature += m + "." +
 +                            th.attr("__qualname__").cast<std::string>();
                  } else if (rec->is_new_style_constructor && arg_index == 0) {
                      // A new-style `__init__` takes `self` as `value_and_holder`.
@@ -127,13 +126,12 @@ index d61dcd5c7..bcd0b297c 100644
 +                        signature += "regina."
 +                            + rec->scope.attr("__qualname__").cast<std::string>();
 +                    else
-+                        signature +=
-+                        rec->scope.attr("__module__").cast<std::string>() + "."
++                        signature += m + "."
 +                            + rec->scope.attr("__qualname__").cast<std::string>();
                  } else {
                      std::string tname(t->name());
                      detail::clean_type_id(tname);
-@@ -2627,13 +2645,13 @@ void print(Args &&...args) {
+@@ -2627,13 +2643,13 @@ void print(Args &&...args) {
  
  inline void
  error_already_set::m_fetched_error_deleter(detail::error_fetch_and_normalize *raw_ptr) {
@@ -149,7 +147,7 @@ index d61dcd5c7..bcd0b297c 100644
      error_scope scope;
      return m_fetched_error->error_string().c_str();
  }
-@@ -2748,7 +2766,7 @@ function get_override(const T *this_ptr, const char *name) {
+@@ -2748,7 +2764,7 @@ function get_override(const T *this_ptr, const char *name) {
  
  #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
      do {                                                                                          \
