@@ -146,8 +146,9 @@ void add_output(pybind11::class_<C, options...>& c,
  * output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output_basic(c, style)</t>, where \a c is the
- * pybind11::class_ object that wraps \a T.
+ * <t>regina::python::add_output_basic(c, doc, style)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T and \a doc is the Python docstring
+ * for str().
  *
  * It is assumed that the wrapped class \a T does not derive from
  * regina::Output (otherwise you should use add_output, not add_output_basic).
@@ -156,11 +157,15 @@ void add_output(pybind11::class_<C, options...>& c,
  */
 template <class C, typename... options>
 void add_output_basic(pybind11::class_<C, options...>& c,
-        ReprStyle style = PYTHON_REPR_DETAILED) {
+        const char* doc = nullptr, ReprStyle style = PYTHON_REPR_DETAILED) {
     using BaseType = typename regina::OutputBase<C>::type;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
-    c.def("str", OutputFunctionType(&BaseType::str), doc::common::Output_str);
+    if (doc)
+        c.def("str", OutputFunctionType(&BaseType::str), doc);
+    else
+        c.def("str", OutputFunctionType(&BaseType::str),
+            doc::common::Output_str);
     c.def("__str__", OutputFunctionType(&BaseType::str));
 
     switch (style) {
