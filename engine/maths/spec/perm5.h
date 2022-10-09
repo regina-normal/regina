@@ -98,7 +98,7 @@ template <>
 class Perm<5> {
     private:
         /**
-         * An array-like object used to implement Perm<5>::S5.
+         * A lightweight array-like object used to implement Perm<5>::S5.
          */
         struct S5Lookup {
             /**
@@ -114,7 +114,7 @@ class Perm<5> {
         };
 
         /**
-         * An array-like object used to implement Perm<5>::orderedS5.
+         * A lightweight array-like object used to implement Perm<5>::orderedS5.
          */
         struct OrderedS5Lookup {
             /**
@@ -130,7 +130,7 @@ class Perm<5> {
         };
 
         /**
-         * An array-like object used to implement Perm<5>::S4.
+         * A lightweight array-like object used to implement Perm<5>::S4.
          */
         struct S4Lookup {
             /**
@@ -146,7 +146,7 @@ class Perm<5> {
         };
 
         /**
-         * An array-like object used to implement Perm<5>::orderedS4.
+         * A lightweight array-like object used to implement Perm<5>::orderedS4.
          */
         struct OrderedS4Lookup {
             /**
@@ -162,7 +162,7 @@ class Perm<5> {
         };
 
         /**
-         * An array-like object used to implement Perm<5>::S3.
+         * A lightweight array-like object used to implement Perm<5>::S3.
          */
         struct S3Lookup {
             /**
@@ -178,7 +178,7 @@ class Perm<5> {
         };
 
         /**
-         * An array-like object used to implement Perm<5>::orderedS3.
+         * A lightweight array-like object used to implement Perm<5>::orderedS3.
          */
         struct OrderedS3Lookup {
             /**
@@ -194,7 +194,7 @@ class Perm<5> {
         };
 
         /**
-         * An array-like object used to implement Perm<5>::S2.
+         * A lightweight array-like object used to implement Perm<5>::S2.
          */
         struct S2Lookup {
             /**

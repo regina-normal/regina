@@ -99,7 +99,7 @@ template <>
 class Perm<4> {
     private:
         /**
-         * An array-like object used to implement Perm<4>::S4.
+         * A lightweight array-like object used to implement Perm<4>::S4.
          */
         struct S4Lookup {
             /**
@@ -115,7 +115,7 @@ class Perm<4> {
         };
 
         /**
-         * An array-like object used to implement Perm<4>::orderedS4.
+         * A lightweight array-like object used to implement Perm<4>::orderedS4.
          */
         struct OrderedS4Lookup {
             /**
@@ -131,7 +131,7 @@ class Perm<4> {
         };
 
         /**
-         * An array-like object used to implement Perm<4>::S3.
+         * A lightweight array-like object used to implement Perm<4>::S3.
          */
         struct S3Lookup {
             /**
@@ -147,7 +147,7 @@ class Perm<4> {
         };
 
         /**
-         * An array-like object used to implement Perm<4>::orderedS3.
+         * A lightweight array-like object used to implement Perm<4>::orderedS3.
          */
         struct OrderedS3Lookup {
             /**
@@ -163,7 +163,7 @@ class Perm<4> {
         };
 
         /**
-         * An array-like object used to implement Perm<4>::S2.
+         * A lightweight array-like object used to implement Perm<4>::S2.
          */
         struct S2Lookup {
             /**

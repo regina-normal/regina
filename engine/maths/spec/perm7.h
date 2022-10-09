@@ -99,7 +99,7 @@ template <>
 class Perm<7> {
     private:
         /**
-         * An array-like object used to implement Perm<7>::S7.
+         * A lightweight array-like object used to implement Perm<7>::S7.
          */
         struct S7Lookup {
             /**
@@ -115,7 +115,7 @@ class Perm<7> {
         };
 
         /**
-         * An array-like object used to implement Perm<7>::orderedS7.
+         * A lightweight array-like object used to implement Perm<7>::orderedS7.
          */
         struct OrderedS7Lookup {
             /**

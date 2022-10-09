@@ -81,7 +81,7 @@ template <>
 class Perm<3> {
     private:
         /**
-         * An array-like object used to implement Perm<3>::S3.
+         * A lightweight array-like object used to implement Perm<3>::S3.
          */
         struct S3Lookup {
             /**
@@ -97,7 +97,7 @@ class Perm<3> {
         };
 
         /**
-         * An array-like object used to implement Perm<3>::orderedS3.
+         * A lightweight array-like object used to implement Perm<3>::orderedS3.
          */
         struct OrderedS3Lookup {
             /**
@@ -113,7 +113,7 @@ class Perm<3> {
         };
 
         /**
-         * An array-like object used to implement Perm<3>::S2.
+         * A lightweight array-like object used to implement Perm<3>::S2.
          */
         struct S2Lookup {
             /**

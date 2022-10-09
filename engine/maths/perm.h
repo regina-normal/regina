@@ -256,7 +256,7 @@ class Perm {
              n == 10 || n == 11 ? 4 : n == 12 || n == 13 ? 5 : n == 14 ? 6 : 7);
 
         /**
-         * An array-like object used to implement Perm<n>::Sn.
+         * A lightweight array-like object used to implement Perm<n>::Sn.
          */
         struct SnLookup {
             /**
@@ -274,7 +274,7 @@ class Perm {
         };
 
         /**
-         * An array-like object used to implement Perm<n>::orderedSn.
+         * A lightweight array-like object used to implement Perm<n>::orderedSn.
          */
         struct OrderedSnLookup {
             /**

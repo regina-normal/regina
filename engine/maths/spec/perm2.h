@@ -92,7 +92,7 @@ template <>
 class Perm<2> {
     private:
         /**
-         * An array-like object used to implement Perm<2>::S2.
+         * A lightweight array-like object used to implement Perm<2>::S2.
          */
         struct S2Lookup {
             /**
