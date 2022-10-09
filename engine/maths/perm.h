@@ -271,6 +271,13 @@ class Perm {
              * @return the corresponding permutation in Sn.
              */
             constexpr Perm<n> operator[] (Index index) const;
+
+            /**
+             * Returns the number of permutations in the array Sn.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return nPerms; }
         };
 
         /**
@@ -289,6 +296,13 @@ class Perm {
              * @return the corresponding permutation in orderedSn.
              */
             constexpr Perm<n> operator[] (Index index) const;
+
+            /**
+             * Returns the number of permutations in the array orderedSn.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return nPerms; }
         };
 
     public:

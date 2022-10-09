@@ -89,7 +89,7 @@ enum ReprStyle {
  * output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output(c, style)</t>, where \a c is the
+ * <tt>regina::python::add_output(c, style)</tt>, where \a c is the
  * pybind11::class_ object that wraps \a T.
  *
  * The wrapped class \a T should either derive from regina::Output, or
@@ -146,7 +146,7 @@ void add_output(pybind11::class_<C, options...>& c,
  * output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output_basic(c, doc, style)</t>, where \a c is the
+ * <tt>regina::python::add_output_basic(c, doc, style)</tt>, where \a c is the
  * pybind11::class_ object that wraps \a T and \a doc is the Python docstring
  * for str().
  *
@@ -198,7 +198,7 @@ void add_output_basic(pybind11::class_<C, options...>& c,
  * a \a __repr__ function, using the given output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output_ostream(c, style)</t>, where \a c is the
+ * <tt>regina::python::add_output_ostream(c, style)</tt>, where \a c is the
  * pybind11::class_ object that wraps \a T.
  *
  * It is assumed that the wrapped class \a T does not derive from regina::Output
@@ -251,7 +251,7 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
  * PYTHON_REPR_DETAILED.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output_custom(c, style)</t>, where \a c is the
+ * <tt>regina::python::add_output_custom(c, style)</tt>, where \a c is the
  * pybind11::class_ object that wraps \a T.
  */
 template <class C, typename Function, typename... options>

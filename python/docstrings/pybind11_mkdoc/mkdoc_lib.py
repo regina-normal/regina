@@ -63,6 +63,10 @@ NAMESPACE_BLACKLIST = [
 CLASS_BLACKLIST = [
 ]
 
+CLASS_WHITELIST = [
+    'SnLookup', 'OrderedSnLookup'
+]
+
 MEMBER_BLACKLIST = [
     'operator='
 ]
@@ -316,11 +320,14 @@ def extract(filename, node, namespace, output):
             for i in node.get_children():
                 extract(filename, i, sub_namespace, output)
     if node.kind in PRINT_LIST and \
-            node.access_specifier not in ACCESS_BLACKLIST and \
-            node.availability not in AVAILABILITY_BLACKLIST and \
-            node.spelling not in MEMBER_BLACKLIST and \
-            node.spelling not in CLASS_BLACKLIST and \
-            (not node.is_move_constructor()):
+            (node.access_specifier not in ACCESS_BLACKLIST and \
+                node.availability not in AVAILABILITY_BLACKLIST and \
+                node.spelling not in MEMBER_BLACKLIST and \
+                node.spelling not in CLASS_BLACKLIST and \
+                (not node.is_move_constructor())) or \
+            ((node.kind == CursorKind.CLASS_DECL or \
+                node.kind == CursorKind.STRUCT_DECL) and \
+                node.spelling in CLASS_WHITELIST):
         sub_namespace = namespace
         if len(node.spelling) > 0:
             name = sanitize_name(d(node.spelling))

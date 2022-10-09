@@ -129,6 +129,9 @@ permutations can be recreated from them by indexing into Perm<n>::Sn.
 
 namespace Perm_ {
 
+// Docstring regina::python::doc::Perm_::OrderedSnLookup
+static const char *OrderedSnLookup = R"doc(A lightweight array-like object used to implement Perm<n>::orderedSn.)doc";
+
 // Docstring regina::python::doc::Perm_::Perm
 static const char *Perm = R"doc(Creates the identity permutation.)doc";
 
@@ -173,6 +176,9 @@ See Sn for further information on how these permutations are indexed.
 Returns:
     the index *i* for which this permutation is equal to
     Perm<n>::Sn[i]. This will be between 0 and *n*!-1 inclusive.)doc";
+
+// Docstring regina::python::doc::Perm_::SnLookup
+static const char *SnLookup = R"doc(A lightweight array-like object used to implement Perm<n>::Sn.)doc";
 
 // Docstring regina::python::doc::Perm_::__array
 static const char *__array =

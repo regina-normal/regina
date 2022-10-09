@@ -40,25 +40,9 @@
 #include "../docstrings/maths/perm.h"
 
 using regina::Perm;
-using regina::python::ConstArray;
-
-namespace {
-    template <int n>
-    ConstArray<decltype(Perm<n>::Sn), typename Perm<n>::Index> Perm_Sn_arr(
-        Perm<n>::Sn, Perm<n>::nPerms);
-
-    template <int n>
-    ConstArray<decltype(Perm<n>::orderedSn), typename Perm<n>::Index>
-        Perm_orderedSn_arr(Perm<n>::orderedSn, Perm<n>::nPerms);
-}
 
 template <int n>
 void addPerm(pybind11::module_& m, const char* name) {
-    decltype(Perm_Sn_arr<n>)::wrapClass(m,
-        (std::string("ConstArray_") + name + "_Sn").c_str());
-    decltype(Perm_orderedSn_arr<n>)::wrapClass(m,
-        (std::string("ConstArray_") + name + "_orderedSn").c_str());;
-
     RDOC_SCOPE_BEGIN(Perm)
 
     auto c = pybind11::class_<Perm<n>>(m, name, rdoc_scope)
@@ -95,19 +79,26 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def_readonly_static("imageMask", &Perm<n>::imageMask)
         .def_readonly_static("nPerms", &Perm<n>::nPerms)
         .def_readonly_static("nPerms_1", &Perm<n>::nPerms_1)
-        .def_readonly_static("Sn", &Perm_Sn_arr<n>)
-        .def_readonly_static("orderedSn", &Perm_orderedSn_arr<n>)
+        .def_readonly_static("Sn", &Perm<n>::Sn)
+        .def_readonly_static("orderedSn", &Perm<n>::orderedSn)
     ;
     regina::for_constexpr<2, n>([&c](auto i) {
-        c.def_static("extend", &Perm<n>::template extend<i.value>);
+        c.def_static("extend", &Perm<n>::template extend<i.value>,
+            rdoc::extend);
     });
     regina::for_constexpr<n+1, 17>([&c](auto i) {
-        c.def_static("contract", &Perm<n>::template contract<i.value>);
+        c.def_static("contract", &Perm<n>::template contract<i.value>,
+            rdoc::contract);
     });
     regina::python::add_output_basic(c, rdoc::str);
     regina::python::add_tight_encoding(c, rdoc::tightEncoding,
         rdoc::tightDecoding);
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    regina::python::add_lightweight_array<decltype(Perm<n>::Sn)>(c,
+        "_Sn", rdoc::SnLookup);
+    regina::python::add_lightweight_array<decltype(Perm<n>::orderedSn)>(c,
+        "_OrderedSn", rdoc::OrderedSnLookup);
 
     RDOC_SCOPE_END
 }
