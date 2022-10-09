@@ -47,6 +47,8 @@
 		0506EC1D19F65B43003E455B /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0506EC1C19F65B43003E455B /* iPhone.storyboard */; };
 		0507C5A71C54495D00D1C86C /* eltmovedialog4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */; };
 		0507C5A81C54497200D1C86C /* eltmovedialog4.h in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A41C54494E00D1C86C /* eltmovedialog4.h */; };
+		05098A6628F24CBC005E4716 /* typeutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098A6528F24CBC005E4716 /* typeutils.cpp */; };
+		05098A6728F24CBC005E4716 /* typeutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098A6528F24CBC005E4716 /* typeutils.cpp */; };
 		050AFC5319DCB90E00835ED6 /* SnapPeaCusps.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */; };
 		050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */; };
 		050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */; };
@@ -2503,6 +2505,10 @@
 		0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog4.cpp; sourceTree = "<group>"; };
 		0507C5A41C54494E00D1C86C /* eltmovedialog4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eltmovedialog4.h; sourceTree = "<group>"; };
 		05098A6428EA891E005E4716 /* docstrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = docstrings.h; sourceTree = "<group>"; };
+		05098A6528F24CBC005E4716 /* typeutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = typeutils.cpp; sourceTree = "<group>"; };
+		05098A6828F24CD8005E4716 /* globals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
+		05098A6928F24D3C005E4716 /* docstrings.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstrings.test; sourceTree = "<group>"; };
+		05098A6A28F24D3C005E4716 /* docstrings.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstrings.out; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -5173,6 +5179,8 @@
 				050F5D861B9BAB9C00C1F681 /* cube.orb */,
 				05CAE60F2743F1ED007C93F3 /* discs.out */,
 				05CAE6102743F1ED007C93F3 /* discs.test */,
+				05098A6A28F24D3C005E4716 /* docstrings.out */,
+				05098A6928F24D3C005E4716 /* docstrings.test */,
 				050F5D871B9BAB9C00C1F681 /* dodec.orb */,
 				0577E6DF1F97087A00CBDF15 /* embeddings.out */,
 				0577E6EA1F97088000CBDF15 /* embeddings.test */,
@@ -6194,6 +6202,7 @@
 				052F9E75180600FB00FAE4DF /* trieset.h */,
 				0512E0A026DF356300DDB222 /* trieset.cpp */,
 				05199A5B25C63CCE0006B8FA /* typeutils.h */,
+				05098A6528F24CBC005E4716 /* typeutils.cpp */,
 				052F9E7F180600FB00FAE4DF /* xmlutils.cpp */,
 				052F9E80180600FB00FAE4DF /* xmlutils.h */,
 				0534FAE022DFDDA7000A96A3 /* zstr.h */,
@@ -6714,6 +6723,7 @@
 				05098A6428EA891E005E4716 /* docstrings.h */,
 				05431FC81C40F607009BC072 /* equality.h */,
 				055CF2B728C817E000CA9034 /* gil.h */,
+				05098A6828F24CD8005E4716 /* globals.h */,
 				05199A2C25C63AED0006B8FA /* listview.h */,
 				05D81A8B1C66B0E500DDCE64 /* output.h */,
 				05772EDD270CFAB300D26D8A /* packet.h */,
@@ -9271,6 +9281,7 @@
 				05249F7C1DBC174E001FE29E /* i18nutils.cpp in Sources */,
 				05721F061F97160900A83FFC /* laurent2.cpp in Sources */,
 				054209111DF0DA450018AB24 /* torusbundle.cpp in Sources */,
+				05098A6728F24CBC005E4716 /* typeutils.cpp in Sources */,
 				052FA1701806129B00FAE4DF /* gluingpermsearcher3.cpp in Sources */,
 				054208D11DF0D2A60018AB24 /* torusbundle.cpp in Sources */,
 				052FA21C180612DD00FAE4DF /* cusp_cross_sections.c in Sources */,
@@ -10407,6 +10418,7 @@
 				05B7FFC825AC22D3003BAF5C /* full_cone.cpp in Sources */,
 				05C265B5282C948700232420 /* facetpairing3.cpp in Sources */,
 				054208BB1DF0D2740018AB24 /* manifold.cpp in Sources */,
+				05098A6628F24CBC005E4716 /* typeutils.cpp in Sources */,
 				052F9EF3180600FB00FAE4DF /* treeconstraint.cpp in Sources */,
 				059802E326683C6D002D5D57 /* xmlsnappeareader.cpp in Sources */,
 				05A067101DFA68190047872E /* blockedsfstriple.cpp in Sources */,
