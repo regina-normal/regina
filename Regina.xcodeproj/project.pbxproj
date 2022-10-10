@@ -49,6 +49,7 @@
 		0507C5A81C54497200D1C86C /* eltmovedialog4.h in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A41C54494E00D1C86C /* eltmovedialog4.h */; };
 		05098A6628F24CBC005E4716 /* typeutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098A6528F24CBC005E4716 /* typeutils.cpp */; };
 		05098A6728F24CBC005E4716 /* typeutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098A6528F24CBC005E4716 /* typeutils.cpp */; };
+		05098AA028F44A05005E4716 /* perm-prereq.h in Headers */ = {isa = PBXBuildFile; fileRef = 05098A9F28F44A04005E4716 /* perm-prereq.h */; };
 		050AFC5319DCB90E00835ED6 /* SnapPeaCusps.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */; };
 		050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */; };
 		050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */; };
@@ -2545,6 +2546,24 @@
 		05098A9528F24D98005E4716 /* integer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = integer.h; sourceTree = "<group>"; };
 		05098A9628F24D98005E4716 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05098A9728F24D98005E4716 /* gendoc.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = gendoc.sh; sourceTree = "<group>"; };
+		05098A9F28F44A04005E4716 /* perm-prereq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-prereq.h"; sourceTree = "<group>"; };
+		05098AA128F44AAD005E4716 /* perm6.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm6.h; sourceTree = "<group>"; };
+		05098AA228F44AAD005E4716 /* perm5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm5.h; sourceTree = "<group>"; };
+		05098AA328F44AAE005E4716 /* perm3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm3.h; sourceTree = "<group>"; };
+		05098AA428F44AAE005E4716 /* perm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm.h; sourceTree = "<group>"; };
+		05098AA528F44AAE005E4716 /* matrix2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = matrix2.h; sourceTree = "<group>"; };
+		05098AA628F44AAE005E4716 /* perm-prereq.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "perm-prereq.h"; sourceTree = "<group>"; };
+		05098AA728F44AAE005E4716 /* cyclotomic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cyclotomic.h; sourceTree = "<group>"; };
+		05098AA828F44AAE005E4716 /* perm2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm2.h; sourceTree = "<group>"; };
+		05098AA928F44AAE005E4716 /* rational.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rational.h; sourceTree = "<group>"; };
+		05098AAA28F44AAF005E4716 /* perm4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm4.h; sourceTree = "<group>"; };
+		05098AAB28F44AAF005E4716 /* perm7.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm7.h; sourceTree = "<group>"; };
+		05098AAC28F44AAF005E4716 /* laurent2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = laurent2.h; sourceTree = "<group>"; };
+		05098AAD28F44AAF005E4716 /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
+		05098AAE28F44AAF005E4716 /* matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = matrix.h; sourceTree = "<group>"; };
+		05098AAF28F44AAF005E4716 /* laurent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = laurent.h; sourceTree = "<group>"; };
+		05098AB028F44ADD005E4716 /* listview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listview.h; sourceTree = "<group>"; };
+		05098AB228F44AF2005E4716 /* packet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = packet.h; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -4943,6 +4962,7 @@
 				05098A7728F24D98005E4716 /* file */,
 				05098A9728F24D98005E4716 /* gendoc.sh */,
 				05098A8F28F24D98005E4716 /* maths */,
+				05098AB128F44AF2005E4716 /* packet */,
 				05098A7528F24D98005E4716 /* progress */,
 				05098A6C28F24D98005E4716 /* pybind11_mkdoc */,
 				05098A7B28F24D98005E4716 /* python */,
@@ -5008,6 +5028,7 @@
 				05098A8B28F24D98005E4716 /* exception.h */,
 				05098A8A28F24D98005E4716 /* i18nutils.h */,
 				05098A8028F24D98005E4716 /* intutils.h */,
+				05098AB028F44ADD005E4716 /* listview.h */,
 				05098A8E28F24D98005E4716 /* osutils.h */,
 				05098A8D28F24D98005E4716 /* qitmask.h */,
 				05098A8228F24D98005E4716 /* randutils.h */,
@@ -5025,13 +5046,36 @@
 			isa = PBXGroup;
 			children = (
 				05098A9028F24D98005E4716 /* binom.h */,
+				05098AA728F44AAE005E4716 /* cyclotomic.h */,
 				05098A9528F24D98005E4716 /* integer.h */,
+				05098AAF28F44AAF005E4716 /* laurent.h */,
+				05098AAC28F44AAF005E4716 /* laurent2.h */,
+				05098AAE28F44AAF005E4716 /* matrix.h */,
+				05098AA528F44AAE005E4716 /* matrix2.h */,
 				05098A9428F24D98005E4716 /* matrixops.h */,
 				05098A9128F24D98005E4716 /* numbertheory.h */,
+				05098AA428F44AAE005E4716 /* perm.h */,
+				05098AA828F44AAE005E4716 /* perm2.h */,
+				05098AA328F44AAE005E4716 /* perm3.h */,
+				05098AAA28F44AAF005E4716 /* perm4.h */,
+				05098AA228F44AAD005E4716 /* perm5.h */,
+				05098AA128F44AAD005E4716 /* perm6.h */,
+				05098AAB28F44AAF005E4716 /* perm7.h */,
+				05098AA628F44AAE005E4716 /* perm-prereq.h */,
 				05098A9228F24D98005E4716 /* polynomial.h */,
 				05098A9328F24D98005E4716 /* primes.h */,
+				05098AA928F44AAE005E4716 /* rational.h */,
+				05098AAD28F44AAF005E4716 /* vector.h */,
 			);
 			path = maths;
+			sourceTree = "<group>";
+		};
+		05098AB128F44AF2005E4716 /* packet */ = {
+			isa = PBXGroup;
+			children = (
+				05098AB228F44AF2005E4716 /* packet.h */,
+			);
+			path = packet;
 			sourceTree = "<group>";
 		};
 		050F5CDE1B9BAAAA00C1F681 /* python */ = {
@@ -5967,6 +6011,7 @@
 				052F9CF7180600FA00FAE4DF /* numbertheory.h */,
 				05431F2A1C40F2DB009BC072 /* perm.h */,
 				057EE4341C6009A700C4D155 /* perm-impl.h */,
+				05098A9F28F44A04005E4716 /* perm-prereq.h */,
 				0541AF4A1B8BE2F5002E166B /* polynomial.h */,
 				052F9CF0180600FA00FAE4DF /* primes.cpp */,
 				052F9CF1180600FA00FAE4DF /* primes.h */,
@@ -8294,6 +8339,7 @@
 				05A067231DFA68190047872E /* pillowtwosphere.h in Headers */,
 				0542087D1DF0D0B50018AB24 /* matcher.h in Headers */,
 				05431F6D1C40F3C9009BC072 /* full_cone.h in Headers */,
+				05098AA028F44A05005E4716 /* perm-prereq.h in Headers */,
 				052F9F8F180600FB00FAE4DF /* link_projection.h in Headers */,
 				054C6A7E1DCC20DA005373F0 /* example.h in Headers */,
 				05A067371DFA68190047872E /* snappedtwosphere.h in Headers */,
