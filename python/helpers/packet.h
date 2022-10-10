@@ -104,9 +104,10 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
  * At the Python level, this constructor looks like PacketOfHeld(x, y, .., z).
  * At the C++ level, it will call PacketOf<Held>(std::in_place, x, y, ..., z).
  *
- * To add the wrapper, call add_packet_constructor<Tx, Ty, ...  Tz>(c),
+ * To add the wrapper, call add_packet_constructor<Tx, Ty, ...  Tz>(c, doc),
  * where c is the pybind11::class_ object returned from add_packet_wrapper()
- * (that is, the pybind11 wrapper for the C++ class PacketOf<Held>).
+ * (that is, the pybind11 wrapper for the C++ class PacketOf<Held>), and
+ * where doc is the Python docstring for your constructor.
  *
  * The additional \a options arguments are the usual pybind11 options
  * (for example, pybind11::arg objects to specify default arguments).
@@ -115,11 +116,18 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
  * explicitly specified as part of the template function call).
  */
 template <typename... Args, typename PythonClass, typename... Options>
-void add_packet_constructor(PythonClass& classWrapper, Options&&... options) {
-    classWrapper.def(pybind11::init([](Args... args) {
-        using WrappedType = typename PythonClass::type;
-        return new WrappedType(std::in_place, std::forward<Args>(args)...);
-    }), std::forward<Options>(options)...);
+void add_packet_constructor(PythonClass& classWrapper,
+        const char* doc = nullptr, Options&&... options) {
+    if (doc)
+        classWrapper.def(pybind11::init([](Args... args) {
+            using WrappedType = typename PythonClass::type;
+            return new WrappedType(std::in_place, std::forward<Args>(args)...);
+        }), std::forward<Options>(options)..., doc);
+    else
+        classWrapper.def(pybind11::init([](Args... args) {
+            using WrappedType = typename PythonClass::type;
+            return new WrappedType(std::in_place, std::forward<Args>(args)...);
+        }), std::forward<Options>(options)...);
 }
 
 /**

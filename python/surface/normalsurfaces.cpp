@@ -117,7 +117,7 @@ void addNormalSurfaces(pybind11::module_& m) {
         m, "PacketOfNormalSurfaces");
     regina::python::add_packet_constructor<const Triangulation<3>&,
             regina::NormalCoords, regina::NormalList, regina::NormalAlg,
-            ProgressTracker*>(wrap,
+            ProgressTracker*>(wrap, nullptr /* docstring */,
         pybind11::arg(), pybind11::arg(),
         pybind11::arg("which") = regina::NS_LIST_DEFAULT,
         pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,

@@ -92,6 +92,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         m, "PacketOfNormalHypersurfaces");
     regina::python::add_packet_constructor<const Triangulation<4>&, HyperCoords,
             regina::HyperList, regina::HyperAlg, ProgressTracker*>(wrap,
+        nullptr /* docstring */,
         pybind11::arg(), pybind11::arg(),
         pybind11::arg("which") = regina::HS_LIST_DEFAULT,
         pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,

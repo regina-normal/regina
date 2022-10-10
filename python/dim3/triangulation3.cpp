@@ -533,6 +533,7 @@ void addTriangulation3(pybind11::module_& m) {
     regina::python::add_packet_constructor<>(wrap);
     regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap);
     regina::python::add_packet_constructor<const regina::Link&, bool>(wrap,
+        nullptr /* docstring */,
         pybind11::arg(), pybind11::arg("simplify") = true);
     regina::python::add_packet_constructor<const std::string&>(wrap);
     wrap.def(pybind11::init([](const regina::python::SnapPyObject& obj) {

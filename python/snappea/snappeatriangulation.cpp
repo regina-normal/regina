@@ -152,6 +152,7 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     regina::python::add_packet_constructor<>(wrap);
     regina::python::add_packet_constructor<const std::string&>(wrap);
     regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap,
+        nullptr /* docstring */,
         pybind11::arg(), pybind11::arg("ignored") = false);
     regina::python::add_packet_constructor<const regina::Link&>(wrap);
 
