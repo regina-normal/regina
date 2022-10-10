@@ -40,8 +40,7 @@ void addLaurent(pybind11::module_& m);
 void addLaurent2(pybind11::module_& m);
 void addVector(pybind11::module_& m);
 void addMatrix2(pybind11::module_& m);
-void addMatrixBool(pybind11::module_& m);
-void addMatrixInt(pybind11::module_& m);
+void addMatrix(pybind11::module_& m);
 void addPerm2(pybind11::module_& m);
 void addPerm3(pybind11::module_& m);
 void addPerm4(pybind11::module_& m);
@@ -61,8 +60,7 @@ void addMathsClasses(pybind11::module_& m) {
     addRational(m);
     addVector(m);
     addMatrix2(m);
-    addMatrixBool(m);
-    addMatrixInt(m);
+    addMatrix(m);
 
     addBinom(m);
     addMatrixOps(m);

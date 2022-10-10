@@ -9,8 +9,7 @@ SET ( FILES
   cyclotomic.cpp
   integer.cpp
   matrix2.cpp
-  matrixbool.cpp
-  matrixint.cpp
+  matrix.cpp
   numbertheory.cpp
   perm.cpp
   perm2.cpp
