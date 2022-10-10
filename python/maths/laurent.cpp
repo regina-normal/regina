@@ -105,8 +105,7 @@ void addLaurent(pybind11::module_& m) {
         .def(- pybind11::self, global::__sub)
     ;
     regina::python::add_output(c);
-    regina::python::add_tight_encoding(c, rdoc::tightEncoding,
-        rdoc::tightDecoding);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
     regina::python::add_global_swap<Laurent<regina::Integer>>(m, global::swap);

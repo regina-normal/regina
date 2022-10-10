@@ -34,7 +34,11 @@
  *  \brief Assists with wrapping Regina's tight encoding and decoding routines.
  */
 
-namespace regina::python {
+namespace regina {
+
+template <typename> struct TightEncodable;
+
+namespace python {
 
 /**
  * Adds tight encoding and decoding functions to the python bindings for a
@@ -78,8 +82,15 @@ void add_tight_encoding(pybind11::class_<C, options...>& c,
  */
 template <class C, typename... options>
 void add_tight_encoding(pybind11::class_<C, options...>& c) {
-    c.def("tightEncoding", &C::tightEncoding);
-    c.def("tightDecoding", &C::tightDecoding);
+    if constexpr (std::is_base_of_v<TightEncodable<C>, C>) {
+        // TODO: Get docstrings from TightEncodable.
+        c.def("tightEncoding", &C::tightEncoding);
+        c.def("tightDecoding", &C::tightDecoding);
+    } else {
+        // TODO: Warn or fail in this case.
+        c.def("tightEncoding", &C::tightEncoding);
+        c.def("tightDecoding", &C::tightDecoding);
+    }
 }
 
-} // namespace regina::python
+} } // namespace regina::python
