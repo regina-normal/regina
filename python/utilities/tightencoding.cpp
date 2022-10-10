@@ -38,6 +38,13 @@
 
 using pybind11::overload_cast;
 
+// Docstrings that are generated once but need to be reused across many
+// source files:
+namespace regina::python::doc::common {
+    const char* TightEncodable_encoding = TightEncodable_::tightEncoding;
+    const char* TightEncodable_decoding = TightEncodable_::tightDecoding;
+}
+
 void addTightEncoding(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 

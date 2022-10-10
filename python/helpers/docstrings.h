@@ -58,6 +58,9 @@ namespace regina::python::doc::common {
     extern const char* ListView_eq;
     extern const char* ListView_neq;
 
+    extern const char* TightEncodable_encoding;
+    extern const char* TightEncodable_decoding;
+
     extern const char* eq_reference;
     extern const char* neq_reference;
     extern const char* eq_None;

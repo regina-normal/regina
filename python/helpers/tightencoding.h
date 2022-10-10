@@ -83,9 +83,10 @@ void add_tight_encoding(pybind11::class_<C, options...>& c,
 template <class C, typename... options>
 void add_tight_encoding(pybind11::class_<C, options...>& c) {
     if constexpr (std::is_base_of_v<TightEncodable<C>, C>) {
-        // TODO: Get docstrings from TightEncodable.
-        c.def("tightEncoding", &C::tightEncoding);
-        c.def("tightDecoding", &C::tightDecoding);
+        c.def("tightEncoding", &C::tightEncoding,
+            regina::python::doc::common::TightEncodable_encoding);
+        c.def("tightDecoding", &C::tightDecoding,
+            regina::python::doc::common::TightEncodable_decoding);
     } else {
         // TODO: Warn or fail in this case.
         c.def("tightEncoding", &C::tightEncoding);

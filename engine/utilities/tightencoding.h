@@ -160,8 +160,8 @@ class IntegerBase;
  * derived from the class \a T.  In other words, end users cannot
  * construct objects of the parent class TightEncodable<T>.
  *
- * \nopython However, the routines tightEncoding() and tightDecoding() will be
- * provided directly through the various subclasses.
+ * \ifacespython Not present, but the routines tightEncoding() and
+ * tightDecoding() will be provided directly through the various subclasses.
  *
  * \ingroup utilities
  */
