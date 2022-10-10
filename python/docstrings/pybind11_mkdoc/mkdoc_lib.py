@@ -347,7 +347,11 @@ def extract(filename, node, namespace, output):
                 # We are seeing functions with inline definitions and/or
                 # forward declarations appear multiple times in the output.
                 # Try to ensure that their docstrings are listed only once.
-                return
+                #
+                # Try not to be fooled by friend declarations, however
+                # (which often claim the canonical role).
+                if node.canonical.get_tokens().__next__().spelling != 'friend':
+                    return
 
             if node.raw_comment is None:
                 print('    Undocumented:', fullname, '-- skipping')

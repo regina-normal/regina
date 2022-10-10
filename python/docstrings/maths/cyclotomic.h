@@ -106,6 +106,22 @@ Parameter ``rhs``:
 Returns:
     the sum of both field elements.)doc";
 
+// Docstring regina::python::doc::__add_5
+static const char *__add_5 =
+R"doc(Adds the two given cyclotomic field elements.
+
+Precondition:
+    Both arguments belong to the same cyclotomic field.
+
+Parameter ``lhs``:
+    the first field element to add.
+
+Parameter ``rhs``:
+    the second field element to add.
+
+Returns:
+    the sum of both field elements.)doc";
+
 // Docstring regina::python::doc::__div
 static const char *__div =
 R"doc(Divides the given field element by the given rational.
@@ -243,6 +259,22 @@ Returns:
 
 // Docstring regina::python::doc::__sub_5
 static const char *__sub_5 =
+R"doc(Subtracts the two given cyclotomic field elements.
+
+Precondition:
+    Both arguments belong to the same cyclotomic field.
+
+Parameter ``lhs``:
+    the field element to subtract from.
+
+Parameter ``rhs``:
+    the field element to subtract.
+
+Returns:
+    the first field element minus the second.)doc";
+
+// Docstring regina::python::doc::__sub_6
+static const char *__sub_6 =
 R"doc(Subtracts the two given cyclotomic field elements.
 
 Precondition:
