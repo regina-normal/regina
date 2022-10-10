@@ -828,9 +828,6 @@ Equality type : EqualityType.BY_VALUE
 Matrix2 : class
 Equality type : EqualityType.BY_VALUE
 
-Matrix2Row : class
-Equality type : EqualityType.BY_VALUE
-
 MatrixBool : class
 Equality type : EqualityType.BY_VALUE
 

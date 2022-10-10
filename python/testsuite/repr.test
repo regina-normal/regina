@@ -48,7 +48,7 @@ def dump(x):
 		else:
 			print('empty list')
 	else:
-		print(x.__class__.__name__)
+		print(x.__class__.__qualname__)
 		print(str(x))
 	print(repr(x))
 	print()
