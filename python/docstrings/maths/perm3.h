@@ -129,7 +129,7 @@ R"doc(Returns the index of this permutation in the Perm<3>::S3 array.
 
 This is a dimension-specific alias for SnIndex(). In general, for
 every *n* there will be a member function Perm<n>::SnIndex(); however,
-these numerical aliases Perm<2>::S2Index(), ..., Perm<5>::S5Index()
+these numerical aliases Perm<2>::S2Index(), ..., Perm<7>::S7Index()
 are only available for small *n*.
 
 See Sn for further information on how these permutations are indexed.
@@ -375,7 +375,7 @@ the index of this permutation in the Perm<3>::orderedSn array.
 This is a dimension-specific alias for orderedSnIndex(). In general,
 for every *n* there will be a member function
 Perm<n>::orderedSnIndex(); however, these numerical aliases
-Perm<2>::orderedS2Index(), ..., Perm<5>::orderedS5Index() are only
+Perm<2>::orderedS2Index(), ..., Perm<7>::orderedS7Index() are only
 available for small *n*.
 
 See orderedSn for further information on lexicographical ordering.

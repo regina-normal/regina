@@ -94,7 +94,10 @@ static const char *S1Lookup = R"doc(A lightweight array-like object used to impl
 static const char *S2Index =
 R"doc(Returns the index of this permutation in the Perm<2>::S2 array.
 
-This is a dimension-specific alias for SnIndex().
+This is a dimension-specific alias for SnIndex(). In general, for
+every *n* there will be a member function Perm<n>::SnIndex(); however,
+these numerical aliases Perm<2>::S2Index(), ..., Perm<7>::S7Index()
+are only available for small *n*.
 
 See Sn for further information on how these permutations are indexed.
 
@@ -312,7 +315,11 @@ static const char *orderedS2Index =
 R"doc(Returns the lexicographical index of this permutation. This will be
 the index of this permutation in the Perm<2>::orderedSn array.
 
-This is a dimension-specific alias for orderedSnIndex().
+This is a dimension-specific alias for orderedSnIndex(). In general,
+for every *n* there will be a member function
+Perm<n>::orderedSnIndex(); however, these numerical aliases
+Perm<2>::orderedS2Index(), ..., Perm<7>::orderedS7Index() are only
+available for small *n*.
 
 See orderedSn for further information on lexicographical ordering.
 
