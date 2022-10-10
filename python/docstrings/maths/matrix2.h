@@ -281,14 +281,14 @@ Returns:
 
 // Docstring regina::python::doc::Matrix2_::isIdentity
 static const char *isIdentity =
-R"doc(Determines if this is the 2x2 identity matrix.
+R"doc(Determines if this is the 2-by-2 identity matrix.
 
 Returns:
     ``True`` if this is the identity matrix, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Matrix2_::isZero
 static const char *isZero =
-R"doc(Determines if this is the 2x2 zero matrix.
+R"doc(Determines if this is the 2-by-2 zero matrix.
 
 Returns:
     ``True`` if this is the zero matrix, or ``False`` otherwise.)doc";

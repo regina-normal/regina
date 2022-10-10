@@ -254,14 +254,14 @@ class Matrix2 {
          */
         long determinant() const;
         /**
-         * Determines if this is the 2x2 identity matrix.
+         * Determines if this is the 2-by-2 identity matrix.
          *
          * @return \c true if this is the identity matrix, or \c false
          * otherwise.
          */
         bool isIdentity() const;
         /**
-         * Determines if this is the 2x2 zero matrix.
+         * Determines if this is the 2-by-2 zero matrix.
          *
          * @return \c true if this is the zero matrix, or \c false
          * otherwise.
