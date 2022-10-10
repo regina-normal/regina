@@ -42,7 +42,7 @@ using regina::VectorLarge;
 void addVectorLarge(pybind11::module_& m) {
     auto c = pybind11::class_<VectorLarge>(m, "VectorLarge")
         .def(pybind11::init<size_t>())
-        .def(pybind11::init<size_t, const regina::Integer&>())
+        .def(pybind11::init<size_t, const regina::LargeInteger&>())
         .def(pybind11::init<const VectorLarge&>())
         .def(pybind11::init([](const std::vector<regina::LargeInteger> v) {
             return new VectorLarge(v.begin(), v.end());
@@ -53,7 +53,7 @@ void addVectorLarge(pybind11::module_& m) {
             return v[index];
         }, pybind11::return_value_policy::reference_internal)
         .def("__setitem__", [](VectorLarge& v, size_t index,
-                const regina::Integer& value) {
+                const regina::LargeInteger& value) {
             v[index] = value;
         })
         .def("__iter__", [](const VectorLarge& list) {
@@ -61,10 +61,10 @@ void addVectorLarge(pybind11::module_& m) {
         }, pybind11::keep_alive<0, 1>()) // iterator keeps vector alive
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self -= pybind11::self)
-        .def(pybind11::self *= regina::Integer())
+        .def(pybind11::self *= regina::LargeInteger())
         .def(pybind11::self + pybind11::self)
         .def(pybind11::self - pybind11::self)
-        .def(pybind11::self * regina::Integer())
+        .def(pybind11::self * regina::LargeInteger())
         .def(pybind11::self * pybind11::self)
         .def("negate", &VectorLarge::negate)
         .def("norm", &VectorLarge::norm)
