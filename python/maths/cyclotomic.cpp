@@ -36,64 +36,72 @@
 #include "../pybind11/stl.h"
 #include "maths/cyclotomic.h"
 #include "../helpers.h"
+#include "../docstrings/maths/cyclotomic.h"
 
 using pybind11::overload_cast;
 using regina::Cyclotomic;
 using regina::Rational;
 
 void addCyclotomic(pybind11::module_& m) {
-    auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic")
-        .def(pybind11::init<>())
-        .def(pybind11::init<size_t>())
-        .def(pybind11::init<size_t, int>())
-        .def(pybind11::init<size_t, const regina::Rational&>())
-        .def(pybind11::init<const Cyclotomic&>())
+    namespace global = regina::python::doc;
+
+    RDOC_SCOPE_BEGIN(Cyclotomic)
+
+    auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Cyclotomic)
+        .def(pybind11::init<size_t>(), rdoc::Cyclotomic_2)
+        .def(pybind11::init<size_t, int>(), rdoc::Cyclotomic_3)
+        .def(pybind11::init<size_t, const regina::Rational&>(),
+            rdoc::Cyclotomic_4)
+        .def(pybind11::init<const Cyclotomic&>(), rdoc::Cyclotomic_5)
         .def(pybind11::init([](size_t field, const std::vector<Rational>& c) {
             return new Cyclotomic(field, c.begin(), c.end());
-        }))
-        .def("init", &Cyclotomic::init)
-        .def("field", &Cyclotomic::field)
-        .def("degree", &Cyclotomic::degree)
+        }), rdoc::Cyclotomic_6)
+        .def("init", &Cyclotomic::init, rdoc::init)
+        .def("field", &Cyclotomic::field, rdoc::field)
+        .def("degree", &Cyclotomic::degree, rdoc::degree)
         .def("__getitem__", [](Cyclotomic& c, int exp) -> regina::Rational& {
             return c[exp];
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::reference_internal, rdoc::__array)
         .def("__setitem__", [](Cyclotomic& c, int exp,
                 const regina::Rational& value) {
             c[exp] = value;
-        })
-        .def("polynomial", &Cyclotomic::polynomial)
+        }, rdoc::__array_2)
+        .def("polynomial", &Cyclotomic::polynomial, rdoc::polynomial)
         .def("evaluate", &Cyclotomic::evaluate,
-            pybind11::arg("whichRoot") = 1)
-        .def("swap", &Cyclotomic::swap)
-        .def("negate", &Cyclotomic::invert)
-        .def("invert", &Cyclotomic::invert)
-        .def("inverse", &Cyclotomic::inverse)
-        .def(pybind11::self *= regina::Rational())
-        .def(pybind11::self /= regina::Rational())
-        .def(pybind11::self += pybind11::self)
-        .def(pybind11::self -= pybind11::self)
-        .def(pybind11::self *= pybind11::self)
-        .def(pybind11::self /= pybind11::self)
-        .def(pybind11::self * regina::Rational())
-        .def(regina::Rational() * pybind11::self)
-        .def(pybind11::self / regina::Rational())
-        .def(pybind11::self + pybind11::self)
-        .def(pybind11::self - pybind11::self)
-        .def(pybind11::self * pybind11::self)
-        .def(pybind11::self / pybind11::self)
-        .def(- pybind11::self)
+            pybind11::arg("whichRoot") = 1, rdoc::evaluate)
+        .def("swap", &Cyclotomic::swap, rdoc::swap)
+        .def("negate", &Cyclotomic::negate, rdoc::negate)
+        .def("invert", &Cyclotomic::invert, rdoc::invert)
+        .def("inverse", &Cyclotomic::inverse, rdoc::inverse)
+        .def(pybind11::self *= regina::Rational(), rdoc::__imul)
+        .def(pybind11::self /= regina::Rational(), rdoc::__idiv)
+        .def(pybind11::self += pybind11::self, rdoc::__iadd)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
+        .def(pybind11::self /= pybind11::self, rdoc::__idiv_2)
+        .def(pybind11::self * regina::Rational(), global::__mul)
+        .def(regina::Rational() * pybind11::self, global::__mul_2)
+        .def(pybind11::self / regina::Rational(), global::__div)
+        .def(pybind11::self + pybind11::self, global::__add)
+        .def(pybind11::self - pybind11::self, global::__sub_2)
+        .def(pybind11::self * pybind11::self, global::__mul_3)
+        .def(pybind11::self / pybind11::self, global::__div_2)
+        .def(- pybind11::self, global::__sub)
         .def_static("cyclotomic", [](size_t n) {
             return new regina::Polynomial<regina::Rational>(
                 Cyclotomic::cyclotomic(n));
-        })
+        }, rdoc::cyclotomic)
         .def("str", overload_cast<const char*>(
-            &Cyclotomic::str, pybind11::const_))
+            &Cyclotomic::str, pybind11::const_), rdoc::str)
         .def("utf8", overload_cast<const char*>(
-            &Cyclotomic::utf8, pybind11::const_))
+            &Cyclotomic::utf8, pybind11::const_), rdoc::utf8)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<Cyclotomic>(m);
+    regina::python::add_global_swap<Cyclotomic>(m, global::swap);
+
+    RDOC_SCOPE_END
 }
 
