@@ -16,6 +16,9 @@ meant to form part of Regina's usual build process.  To regenerate all
 docstrings, run ./gendoc.sh.  To regenerate only some of the docstrings,
 you can pass ./gendoc.sh an optional list of engine subdirectories.
 
+The headers define *many* static const strings. Ideally, each header should
+only be included by _one_ of the compiled binding sources (*.cpp).
+
 ----------------------------------------------------------------------------
 
 The upstream pybind11_mkdoc tool is distributed under the following license:
