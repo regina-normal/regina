@@ -96,7 +96,8 @@ void addMatrixBool(pybind11::module_& m) {
         })
         .def("transpose", &Matrix<bool>::transpose)
         .def("swapRows", &Matrix<bool>::swapRows)
-        .def("swapCols", &Matrix<bool>::swapCols)
+        .def("swapCols", &Matrix<bool>::swapCols,
+            pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

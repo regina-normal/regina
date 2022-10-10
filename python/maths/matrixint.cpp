@@ -95,6 +95,9 @@ void addMatrixInt(pybind11::module_& m) {
             m.entry(row, col) = value;
         })
         .def("transpose", &MatrixInt::transpose)
+        .def("swapRows", &MatrixInt::swapRows)
+        .def("swapCols", &MatrixInt::swapCols,
+            pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0)
         // The C-style casts below are to avoid a compile error under gcc7
         // (but not gcc8), where the compiler cannot determine the type of a
         // template member function.
@@ -105,9 +108,6 @@ void addMatrixInt(pybind11::module_& m) {
             (bool (MatrixInt::*)() const)
             &MatrixInt::isZero<>)
         .def("swap", &MatrixInt::swap)
-        .def("swapRows", &MatrixInt::swapRows)
-        .def("swapCols", &MatrixInt::swapCols,
-            pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0)
         .def_static("identity",
             (MatrixInt (*)(size_t))
             &MatrixInt::identity<>)
