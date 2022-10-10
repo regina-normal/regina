@@ -75,19 +75,21 @@ namespace python {
 template <class Held>
 auto add_packet_wrapper(pybind11::module_& m, const char* className) {
     auto c = pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
-            std::shared_ptr<regina::PacketOf<Held>>>(m, className)
-        .def(pybind11::init<const Held&>()) // also takes PacketOf<Held>
+            std::shared_ptr<regina::PacketOf<Held>>>(m, className,
+            doc::common::PacketOf)
+        .def(pybind11::init<const Held&>(), // also takes PacketOf<Held>
+            doc::common::PacketOf_copy)
         .def_readonly_static("typeID", &regina::PacketOf<Held>::typeID)
     ;
     regina::python::add_output(c);
     m.def("make_packet", [](const Held& h) {
         // The C++ make_packet expects an rvalue reference.
         return regina::make_packet(Held(h));
-    });
+    }, doc::common::make_packet);
     m.def("make_packet", [](const Held& h, const std::string& label) {
         // The C++ make_packet expects an rvalue reference.
         return regina::make_packet(Held(h), label);
-    });
+    }, doc::common::make_packet_2);
     return c;
 }
 
@@ -131,8 +133,9 @@ template <typename PythonClass>
 void add_packet_data(PythonClass& classWrapper) {
     using DataType = regina::PacketData<typename PythonClass::type>;
     classWrapper
-        .def("packet", pybind11::overload_cast<>(&DataType::packet))
-        .def("anonID", &DataType::anonID)
+        .def("packet", pybind11::overload_cast<>(&DataType::packet),
+            doc::common::PacketData_packet)
+        .def("anonID", &DataType::anonID, doc::common::PacketData_anonID)
         ;
 }
 

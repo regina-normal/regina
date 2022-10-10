@@ -35,6 +35,7 @@
 #include "../pybind11/iostream.h"
 #include "packet/packet.h"
 #include "../helpers.h"
+#include "../docstrings/packet/packet.h"
 
 using pybind11::overload_cast;
 using regina::ChildIterator;
@@ -44,6 +45,17 @@ using regina::PacketDescendants;
 using regina::PacketShell;
 using regina::PacketType;
 using regina::SubtreeIterator;
+
+// Docstrings that are generated once but need to be reused across many
+// source files:
+namespace regina::python::doc::common {
+    const char* PacketData_anonID = regina::python::doc::PacketData_::anonID;
+    const char* PacketData_packet = regina::python::doc::PacketData_::packet;
+    const char* PacketOf = regina::python::doc::PacketOf;
+    const char* PacketOf_copy = regina::python::doc::PacketOf_::PacketOf_2;
+    const char* make_packet = regina::python::doc::make_packet;
+    const char* make_packet_2 = regina::python::doc::make_packet_2;
+}
 
 namespace {
     // Support for iterables and iterators:
