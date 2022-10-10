@@ -57,10 +57,10 @@ void addLaurent(pybind11::module_& m) {
         }), rdoc::Laurent_4)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
-        .def("init", (void (Laurent<regina::Integer>::*)())
-            &Laurent<regina::Integer>::init, rdoc::init)
-        .def("init", (void (Laurent<regina::Integer>::*)(long))
-            &Laurent<regina::Integer>::init, rdoc::init_2)
+        .def("init", static_cast<void (Laurent<regina::Integer>::*)()>(
+            &Laurent<regina::Integer>::init), rdoc::init)
+        .def("init", static_cast<void (Laurent<regina::Integer>::*)(long)>(
+            &Laurent<regina::Integer>::init), rdoc::init_2)
         .def("init", [](Laurent<regina::Integer>& p, long minExp,
                 const std::vector<Integer>& c) {
             p.init(minExp, c.begin(), c.end());

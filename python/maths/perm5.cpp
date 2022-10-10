@@ -88,8 +88,8 @@ void addPerm5(pybind11::module_& m) {
         .def("trunc3", &Perm<5>::trunc3, rdoc::trunc3)
         .def("trunc4", &Perm<5>::trunc4, rdoc::trunc4)
         .def("clear", &Perm<5>::clear, rdoc::clear)
-        .def("S5Index", (int (Perm<5>::*)() const) &Perm<5>::S5Index,
-            rdoc::S5Index)
+        .def("S5Index", static_cast<int (Perm<5>::*)() const>(
+            &Perm<5>::S5Index), rdoc::S5Index)
         .def("SnIndex", &Perm<5>::SnIndex, rdoc::SnIndex)
         .def("orderedS5Index", &Perm<5>::orderedS5Index, rdoc::orderedS5Index)
         .def("orderedSnIndex", &Perm<5>::orderedSnIndex, rdoc::orderedSnIndex)

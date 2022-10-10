@@ -79,7 +79,7 @@ void addVectorOf(pybind11::module_& m, const char* className) {
         .def("addCopies", &Vec::addCopies, rdoc::addCopies)
         .def("subtractCopies", &Vec::subtractCopies, rdoc::subtractCopies)
         .def("isZero", &Vec::isZero, rdoc::isZero)
-        // The C-style casts below are to avoid a compile error under gcc7
+        // The static casts below are to avoid a compile error under gcc7
         // (but not gcc8), where the compiler cannot determine the type of a
         // template member function.
         .def("scaleDown",

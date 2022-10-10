@@ -129,7 +129,7 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
             rdoc::swapCols)
     ;
     if constexpr (Info::ring) {
-        // The C-style casts below are to avoid a compile error under gcc7
+        // The static casts below are to avoid a compile error under gcc7
         // (but not gcc8), where the compiler cannot determine the type of a
         // template member function.
         c

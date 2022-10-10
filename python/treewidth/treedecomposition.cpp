@@ -143,7 +143,7 @@ void addTreeDecomposition(pybind11::module_& m) {
             t.makeNice(h.data());
         })
         // overload_cast cannot handle template vs non-template overloads.
-        .def("reroot", (void (TreeDecomposition::*)(TreeBag*))(
+        .def("reroot", static_cast<void (TreeDecomposition::*)(TreeBag*)>(
             &TreeDecomposition::reroot))
         .def("reroot", [](TreeDecomposition& t,
                 const std::vector<double>& costSame,

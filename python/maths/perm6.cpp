@@ -92,8 +92,8 @@ void addPerm6(pybind11::module_& m) {
             pybind11::arg("even") = false, rdoc::rand)
         .def("trunc", &Perm<6>::trunc, rdoc::trunc)
         .def("clear", &Perm<6>::clear, rdoc::clear)
-        .def("S6Index", (int (Perm<6>::*)() const) &Perm<6>::S6Index,
-            rdoc::S6Index)
+        .def("S6Index", static_cast<int (Perm<6>::*)() const>(
+            &Perm<6>::S6Index), rdoc::S6Index)
         .def("SnIndex", &Perm<6>::SnIndex, rdoc::SnIndex)
         .def("orderedS6Index", &Perm<6>::orderedS6Index, rdoc::orderedS6Index)
         .def("orderedSnIndex", &Perm<6>::orderedSnIndex, rdoc::orderedSnIndex)

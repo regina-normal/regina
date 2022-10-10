@@ -48,7 +48,8 @@ void addSFSAlt(pybind11::module_& m) {
         .def("swap", &SFSAlt::swap)
         .def_static("altSet", &SFSAlt::altSet)
         .def_static("canNegate", &SFSAlt::canNegate)
-        .def("alt", (const SFSpace& (SFSAlt::*)() const&)(&SFSAlt::alt))
+        .def("alt", static_cast<const SFSpace& (SFSAlt::*)() const&>(
+            &SFSAlt::alt))
         .def("conversion", &SFSAlt::conversion)
         .def("reflected", &SFSAlt::reflected)
     ;

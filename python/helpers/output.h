@@ -106,14 +106,14 @@ void add_output(pybind11::class_<C, options...>& c,
         typename regina::OutputBase<C>::type>;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
-    c.def("str", OutputFunctionType(&BaseType::str),
+    c.def("str", static_cast<OutputFunctionType>(&BaseType::str),
         doc::common::Output_str);
-    c.def("utf8", OutputFunctionType(&BaseType::utf8),
+    c.def("utf8", static_cast<OutputFunctionType>(&BaseType::utf8),
         doc::common::Output_utf8);
-    c.def("detail", OutputFunctionType(&BaseType::detail),
+    c.def("detail", static_cast<OutputFunctionType>(&BaseType::detail),
         doc::common::Output_detail);
 
-    c.def("__str__", OutputFunctionType(&BaseType::str));
+    c.def("__str__", static_cast<OutputFunctionType>(&BaseType::str));
 
     switch (style) {
         case PYTHON_REPR_DETAILED:
@@ -129,7 +129,7 @@ void add_output(pybind11::class_<C, options...>& c,
             break;
 
         case PYTHON_REPR_SLIM:
-            c.def("__repr__", OutputFunctionType(&BaseType::str));
+            c.def("__repr__", static_cast<OutputFunctionType>(&BaseType::str));
             break;
 
         case PYTHON_REPR_NONE:
@@ -161,8 +161,8 @@ void add_output_basic(pybind11::class_<C, options...>& c,
     using BaseType = typename regina::OutputBase<C>::type;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
-    c.def("str", OutputFunctionType(&BaseType::str), doc);
-    c.def("__str__", OutputFunctionType(&BaseType::str));
+    c.def("str", static_cast<OutputFunctionType>(&BaseType::str), doc);
+    c.def("__str__", static_cast<OutputFunctionType>(&BaseType::str));
 
     switch (style) {
         case PYTHON_REPR_DETAILED:
@@ -177,7 +177,7 @@ void add_output_basic(pybind11::class_<C, options...>& c,
             break;
 
         case PYTHON_REPR_SLIM:
-            c.def("__repr__", OutputFunctionType(&BaseType::str));
+            c.def("__repr__", static_cast<OutputFunctionType>(&BaseType::str));
             break;
 
         case PYTHON_REPR_NONE:
