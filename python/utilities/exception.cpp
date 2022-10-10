@@ -38,7 +38,10 @@
 #include "../docstrings/utilities/exception.h"
 #include "../docstrings/utilities/snapshot.h"
 
-// Bring in all our exception classes from all our headers.
+// Bring in all of the exception classes defined in utilities/*.h.
+//
+// The SnapPea kernel exceptions are added elsewhere (since they are
+// defined in snappea/*.h).
 
 void addException(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
@@ -74,12 +77,6 @@ void addException(pybind11::module_& m) {
     pybind11::register_exception<regina::SnapPeaIsNull>(m,
         "SnapPeaIsNull", PyExc_RuntimeError)
         .doc() = rdoc::SnapPeaIsNull;
-
-    // Critical errors within the SnapPea kernel:
-    pybind11::register_exception<regina::SnapPeaFatalError>(m,
-        "SnapPeaFatalError", PyExc_RuntimeError);
-    pybind11::register_exception<regina::SnapPeaMemoryFull>(m,
-        "SnapPeaMemoryFull", PyExc_RuntimeError);
 
     // Snapshotting machinery:
     pybind11::register_exception<regina::SnapshotWriteError>(m,

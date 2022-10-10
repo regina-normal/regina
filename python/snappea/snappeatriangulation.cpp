@@ -45,6 +45,11 @@ using regina::SnapPeaTriangulation;
 using regina::Triangulation;
 
 void addSnapPeaTriangulation(pybind11::module_& m) {
+    pybind11::register_exception<regina::SnapPeaFatalError>(m,
+        "SnapPeaFatalError", PyExc_RuntimeError);
+    pybind11::register_exception<regina::SnapPeaMemoryFull>(m,
+        "SnapPeaMemoryFull", PyExc_RuntimeError);
+
     auto c1 = pybind11::class_<Cusp>(m, "Cusp")
         .def("vertex", &Cusp::vertex,
             pybind11::return_value_policy::reference)
