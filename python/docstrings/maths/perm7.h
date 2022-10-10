@@ -262,7 +262,7 @@ Returns:
 static const char *__mul =
 R"doc(Returns the composition of this permutation with the given
 permutation. If this permutation is *p*, the resulting permutation
-will be *p o q*, satisfying ``(p*q)[x] == p[q[x]]``.
+will be *p*∘*q*, and will satisfy ``(p*q)[x] == p[q[x]]``.
 
 For permutations of five and fewer objects, composition is extremely
 fast because it uses hard-coded lookup tables. However, for Perm<7>

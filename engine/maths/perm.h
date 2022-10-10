@@ -470,7 +470,8 @@ class Perm {
         /**
          * Returns the composition of this permutation with the given
          * permutation.  If this permutation is <i>p</i>, the
-         * resulting permutation will satisfy <tt>(p*q)[x] == p[q[x]]</tt>.
+         * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
+         * <tt>(p*q)[x] == p[q[x]]</tt>.
          *
          * @param q the permutation to compose this with.
          * @return the composition of both permutations.

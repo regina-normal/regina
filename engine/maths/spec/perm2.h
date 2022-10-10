@@ -384,7 +384,7 @@ class Perm<2> {
         /**
          * Returns the composition of this permutation with the given
          * permutation.  If this permutation is <i>p</i>, the
-         * resulting permutation will be <i>p o q</i>, satisfying
+         * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
          * <tt>(p*q)[x] == p[q[x]]</tt>.
          *
          * @param q the permutation with which to compose this.

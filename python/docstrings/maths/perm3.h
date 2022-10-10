@@ -207,7 +207,7 @@ Returns:
 static const char *__mul =
 R"doc(Returns the composition of this permutation with the given
 permutation. If this permutation is *p*, the resulting permutation
-will be *p o q*, satisfying ``(p*q)[x] == p[q[x]]``.
+will be *p*∘*q*, and will satisfy ``(p*q)[x] == p[q[x]]``.
 
 Parameter ``q``:
     the permutation with which to compose this.
