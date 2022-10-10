@@ -57,6 +57,36 @@ Help on instancemethod in module regina.engine:
 
 packet(...)
     packet(self: regina.Link) -> regina.PacketOfLink
+    
+    Returns the packet that holds this data, if there is one.
+    
+    If this object is being held by a packet *p* of type PacketOf<Held>,
+    then that packet *p* will be returned. Otherwise, if this is a
+    "standalone" object of type Held, then this routine will return
+    ``null``.
+    
+    There is a special case when dealing with a packet *q* that holds a
+    SnapPea triangulation. Here *q* is of type
+    PacketOf<SnapPeaTriangulation>, and it holds a Triangulation<3>
+    "indirectly" in the sense that Packetof<SnapPeaTriangulation> derives
+    from SnapPeaTriangulation, which in turn derives from
+    Triangulation<3>. In this scenario:
+    
+    * calling Triangulation<3>::packet() will return ``null``, since there
+      is no "direct" PacketOf<Triangulation<3>>;
+    
+    * calling SnapPeaTriangulation::packet() will return the enclosing
+      packet *q*, since there is a PacketOf<SnapPeaTriangulation>;
+    
+    * calling the special routine Triangulation<3>::inAnyPacket() will
+      also return the "indirect" enclosing packet *q*.
+    
+    The function inAnyPacket() is specific to Triangulation<3>, and is not
+    offered for other *Held* types.
+    
+    Returns:
+        the packet that holds this data, or ``null`` if this data is not
+        (directly) held by a packet.
 
 Help on instancemethod in module regina.engine:
 
