@@ -65,7 +65,7 @@ void addCyclotomic(pybind11::module_& m) {
         .def("evaluate", &Cyclotomic::evaluate,
             pybind11::arg("whichRoot") = 1)
         .def("swap", &Cyclotomic::swap)
-        .def("negate", &Cyclotomic::invert)
+        .def("negate", &Cyclotomic::negate)
         .def("invert", &Cyclotomic::invert)
         .def("inverse", &Cyclotomic::inverse)
         .def(pybind11::self *= regina::Rational())
