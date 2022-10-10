@@ -36,7 +36,6 @@ void addBinom(pybind11::module_& m);
 void addMatrixOps(pybind11::module_& m);
 void addCyclotomic(pybind11::module_& m);
 void addInteger(pybind11::module_& m);
-void addLargeInteger(pybind11::module_& m);
 void addLaurent(pybind11::module_& m);
 void addLaurent2(pybind11::module_& m);
 void addVector(pybind11::module_& m);
@@ -59,7 +58,6 @@ void addMathsClasses(pybind11::module_& m) {
     // These types come first, so that the docstrings for later classes
     // can use the abbreviated names Integer, LargeInteger, etc.
     addInteger(m);
-    addLargeInteger(m);
     addRational(m);
     addVector(m);
     addMatrix2(m);

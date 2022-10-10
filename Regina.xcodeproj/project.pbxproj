@@ -92,7 +92,6 @@
 		050F5DF51B9BAB9C00C1F681 /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2E1B9BAB9C00C1F681 /* matrixops.cpp */; };
 		050F5DF61B9BAB9C00C1F681 /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */; };
 		050F5DF71B9BAB9C00C1F681 /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D301B9BAB9C00C1F681 /* integer.cpp */; };
-		050F5DF81B9BAB9C00C1F681 /* largeinteger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D311B9BAB9C00C1F681 /* largeinteger.cpp */; };
 		050F5DF91B9BAB9C00C1F681 /* matrix2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D321B9BAB9C00C1F681 /* matrix2.cpp */; };
 		050F5DFA1B9BAB9C00C1F681 /* matrixint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D331B9BAB9C00C1F681 /* matrixint.cpp */; };
 		050F5DFB1B9BAB9C00C1F681 /* perm3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D341B9BAB9C00C1F681 /* perm3.cpp */; };
@@ -292,7 +291,6 @@
 		05249F261DBC170A001FE29E /* pymanifold.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2B1B9BAB9C00C1F681 /* pymanifold.cpp */; };
 		05249F271DBC1711001FE29E /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */; };
 		05249F281DBC1711001FE29E /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D301B9BAB9C00C1F681 /* integer.cpp */; };
-		05249F291DBC1711001FE29E /* largeinteger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D311B9BAB9C00C1F681 /* largeinteger.cpp */; };
 		05249F2A1DBC1711001FE29E /* matrix2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D321B9BAB9C00C1F681 /* matrix2.cpp */; };
 		05249F2B1DBC1711001FE29E /* matrixint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D331B9BAB9C00C1F681 /* matrixint.cpp */; };
 		05249F2C1DBC1711001FE29E /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2E1B9BAB9C00C1F681 /* matrixops.cpp */; };
@@ -2610,7 +2608,6 @@
 		050F5D2E1B9BAB9C00C1F681 /* matrixops.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrixops.cpp; sourceTree = "<group>"; };
 		050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		050F5D301B9BAB9C00C1F681 /* integer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = integer.cpp; sourceTree = "<group>"; };
-		050F5D311B9BAB9C00C1F681 /* largeinteger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = largeinteger.cpp; sourceTree = "<group>"; };
 		050F5D321B9BAB9C00C1F681 /* matrix2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix2.cpp; sourceTree = "<group>"; };
 		050F5D331B9BAB9C00C1F681 /* matrixint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrixint.cpp; sourceTree = "<group>"; };
 		050F5D341B9BAB9C00C1F681 /* perm3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm3.cpp; sourceTree = "<group>"; };
@@ -5204,7 +5201,6 @@
 				05DADB1621928EBF00DC80E1 /* binom.cpp */,
 				050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */,
 				050F5D301B9BAB9C00C1F681 /* integer.cpp */,
-				050F5D311B9BAB9C00C1F681 /* largeinteger.cpp */,
 				05721F011F97160200A83FFC /* laurent.cpp */,
 				05721F021F97160200A83FFC /* laurent2.cpp */,
 				050F5D321B9BAB9C00C1F681 /* matrix2.cpp */,
@@ -9129,7 +9125,6 @@
 				057EE4D41C600A3600C4D155 /* isomorphism6.cpp in Sources */,
 				0591E8291C4F764F00793A9C /* normalhypersurfaces.cpp in Sources */,
 				050F5E501B9BAB9C00C1F681 /* osutils.cpp in Sources */,
-				050F5DF81B9BAB9C00C1F681 /* largeinteger.cpp in Sources */,
 				054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */,
 				05A066AE1DFA67D40047872E /* standardtri.cpp in Sources */,
 				050F5E611B9BAB9C00C1F681 /* globalarray.cpp in Sources */,
@@ -9955,7 +9950,6 @@
 				052FA235180612DD00FAE4DF /* subdivide.c in Sources */,
 				05F0A00E1DBF079600117BFC /* edge4.cpp in Sources */,
 				05249F761DBC1747001FE29E /* tetrahedron3.cpp in Sources */,
-				05249F291DBC1711001FE29E /* largeinteger.cpp in Sources */,
 				05226DF327422C82000A45D5 /* hilbertprimal.cpp in Sources */,
 				057B0CAC26A2ABF60017F5EA /* base64.cpp in Sources */,
 				05C265C82830A4B800232420 /* facetpairing3.cpp in Sources */,
