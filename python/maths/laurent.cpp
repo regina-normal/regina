@@ -36,71 +36,81 @@
 #include "maths/integer.h"
 #include "maths/laurent.h"
 #include "../helpers.h"
+#include "../docstrings/maths/laurent.h"
 
 using pybind11::overload_cast;
 using regina::Integer;
 using regina::Laurent;
 
 void addLaurent(pybind11::module_& m) {
-    auto c = pybind11::class_<Laurent<regina::Integer>>(m, "Laurent")
-        .def(pybind11::init<>())
-        .def(pybind11::init<long>())
-        .def(pybind11::init<const Laurent<Integer>&>())
+    namespace global = regina::python::doc;
+
+    RDOC_SCOPE_BEGIN(Laurent)
+
+    auto c = pybind11::class_<Laurent<regina::Integer>>(m, "Laurent",
+            rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Laurent)
+        .def(pybind11::init<long>(), rdoc::Laurent_2)
+        .def(pybind11::init<const Laurent<Integer>&>(), rdoc::Laurent_3)
         .def(pybind11::init([](long minExp, const std::vector<Integer>& c) {
             return new Laurent<Integer>(minExp, c.begin(), c.end());
-        }))
+        }), rdoc::Laurent_4)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("init", (void (Laurent<regina::Integer>::*)())
-            &Laurent<regina::Integer>::init)
+            &Laurent<regina::Integer>::init, rdoc::init)
         .def("init", (void (Laurent<regina::Integer>::*)(long))
-            &Laurent<regina::Integer>::init)
+            &Laurent<regina::Integer>::init, rdoc::init_2)
         .def("init", [](Laurent<regina::Integer>& p, long minExp,
                 const std::vector<Integer>& c) {
             p.init(minExp, c.begin(), c.end());
-        })
-        .def("minExp", &Laurent<regina::Integer>::minExp)
-        .def("maxExp", &Laurent<regina::Integer>::maxExp)
-        .def("isZero", &Laurent<regina::Integer>::isZero)
+        }, rdoc::init_3)
+        .def("minExp", &Laurent<regina::Integer>::minExp, rdoc::minExp)
+        .def("maxExp", &Laurent<regina::Integer>::maxExp, rdoc::maxExp)
+        .def("isZero", &Laurent<regina::Integer>::isZero, rdoc::isZero)
         .def("__getitem__", [](const Laurent<regina::Integer>& p, long exp) {
             return p[exp];
-        }, pybind11::return_value_policy::copy) // to enforce constness
+        }, pybind11::return_value_policy::copy, // to enforce constness
+            rdoc::__array)
         .def("__setitem__", [](Laurent<regina::Integer>& p, long exp,
                 const regina::Integer& value) {
             p.set(exp, value);
-        })
-        .def("set", &Laurent<regina::Integer>::set)
-        .def("swap", &Laurent<regina::Integer>::swap)
-        .def("shift", &Laurent<regina::Integer>::shift)
-        .def("scaleUp", &Laurent<regina::Integer>::scaleUp)
-        .def("scaleDown", &Laurent<regina::Integer>::scaleDown)
-        .def("negate", &Laurent<regina::Integer>::negate)
-        .def("invertX", &Laurent<regina::Integer>::invertX)
+        }, rdoc::__array)
+        .def("set", &Laurent<regina::Integer>::set, rdoc::set)
+        .def("swap", &Laurent<regina::Integer>::swap, rdoc::swap)
+        .def("shift", &Laurent<regina::Integer>::shift, rdoc::shift)
+        .def("scaleUp", &Laurent<regina::Integer>::scaleUp, rdoc::scaleUp)
+        .def("scaleDown", &Laurent<regina::Integer>::scaleDown, rdoc::scaleDown)
+        .def("negate", &Laurent<regina::Integer>::negate, rdoc::negate)
+        .def("invertX", &Laurent<regina::Integer>::invertX, rdoc::invertX)
         .def("str", overload_cast<const char*>(
-            &Laurent<regina::Integer>::str, pybind11::const_))
+            &Laurent<regina::Integer>::str, pybind11::const_), rdoc::str)
         .def("utf8", overload_cast<const char*>(
-            &Laurent<regina::Integer>::utf8, pybind11::const_))
-        .def(pybind11::self < pybind11::self)
-        .def(pybind11::self > pybind11::self)
-        .def(pybind11::self <= pybind11::self)
-        .def(pybind11::self >= pybind11::self)
-        .def(pybind11::self *= regina::Integer())
-        .def(pybind11::self /= regina::Integer())
-        .def(pybind11::self += pybind11::self)
-        .def(pybind11::self -= pybind11::self)
-        .def(pybind11::self *= pybind11::self)
-        .def(pybind11::self * regina::Integer())
-        .def(regina::Integer() * pybind11::self)
-        .def(pybind11::self / regina::Integer())
-        .def(pybind11::self + pybind11::self)
-        .def(pybind11::self - pybind11::self)
-        .def(pybind11::self * pybind11::self)
-        .def(- pybind11::self)
+            &Laurent<regina::Integer>::utf8, pybind11::const_), rdoc::utf8)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
+        .def(pybind11::self > pybind11::self, rdoc::__gt)
+        .def(pybind11::self <= pybind11::self, rdoc::__le)
+        .def(pybind11::self >= pybind11::self, rdoc::__ge)
+        .def(pybind11::self *= regina::Integer(), rdoc::__imul)
+        .def(pybind11::self /= regina::Integer(), rdoc::__idiv)
+        .def(pybind11::self += pybind11::self, rdoc::__iadd)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
+        .def(pybind11::self * regina::Integer(), global::__mul)
+        .def(regina::Integer() * pybind11::self, global::__mul_2)
+        .def(pybind11::self / regina::Integer(), global::__div)
+        .def(pybind11::self + pybind11::self, global::__add)
+        .def(pybind11::self - pybind11::self, global::__sub_2)
+        .def(pybind11::self * pybind11::self, global::__mul_3)
+        .def(- pybind11::self, global::__sub)
     ;
     regina::python::add_output(c);
-    regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_tight_encoding(c, rdoc::tightEncoding,
+        rdoc::tightDecoding);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<Laurent<regina::Integer>>(m);
+    regina::python::add_global_swap<Laurent<regina::Integer>>(m, global::swap);
+
+    RDOC_SCOPE_END
 }
 

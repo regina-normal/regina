@@ -100,6 +100,7 @@ template <bool supportInfinity>
 struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public std::true_type {};
 #endif // __DOXYGEN
 
+#ifndef __DOCSTRINGS
 /**
  * Conditionally enables a member function for a template class only
  * when the type \a T is one of Regina's own integer classes.
@@ -128,6 +129,10 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
 #define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) \
     template <typename... Args, typename Return = returnType> \
     std::enable_if_t<IsReginaInteger<T>::value, Return>
+#else
+// When generating docstrings, we want docs for all member functions.
+#define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) returnType
+#endif
 
 /**
  * Returns the number of bits required to store integers in the range

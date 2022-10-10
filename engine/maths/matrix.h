@@ -48,7 +48,7 @@
 #include "maths/integer.h"
 #include "utilities/intutils.h"
 
-#ifndef __DOXYGEN
+#ifndef __APIDOCS
 // The following macros are used to conditionally enable member functions
 // of Matrix only for certain underlying types T.
 //
@@ -95,6 +95,13 @@
 #define REGINA_ENABLE_FOR_RING_DEPRECATED(returnType) \
     template <typename... Args, typename Return = returnType> \
     [[deprecated]] std::enable_if_t<ring, Return>
+#else
+  #ifdef __DOCSTRINGS
+    // Generate docstrings for all member functions.
+    #define REGINA_ENABLE_FOR_RING(r) r
+    #define REGINA_ENABLE_FOR_RING_STATIC(r) r
+    #define REGINA_ENABLE_FOR_RING_DEPRECATED(r) [[deprecated]] r
+  #endif
 #endif
 
 namespace regina {

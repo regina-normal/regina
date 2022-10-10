@@ -35,55 +35,66 @@
 #include "../pybind11/stl.h"
 #include "maths/vector.h"
 #include "../helpers.h"
+#include "../docstrings/maths/vector.h"
 
 using pybind11::overload_cast;
 using regina::VectorLarge;
 
 void addVectorLarge(pybind11::module_& m) {
-    auto c = pybind11::class_<VectorLarge>(m, "VectorLarge")
-        .def(pybind11::init<size_t>())
-        .def(pybind11::init<size_t, const regina::Integer&>())
-        .def(pybind11::init<const VectorLarge&>())
+    namespace global = regina::python::doc;
+
+    RDOC_SCOPE_BEGIN(Vector)
+
+    auto c = pybind11::class_<VectorLarge>(m, "VectorLarge", rdoc_scope)
+        .def(pybind11::init<size_t>(), rdoc::Vector)
+        .def(pybind11::init<size_t, const regina::LargeInteger&>(),
+            rdoc::Vector_2)
         .def(pybind11::init([](const std::vector<regina::LargeInteger> v) {
             return new VectorLarge(v.begin(), v.end());
-        }))
-        .def("size", &VectorLarge::size)
+        }), rdoc::Vector_3)
+        .def(pybind11::init<const VectorLarge&>(), rdoc::Vector_4)
+        .def("size", &VectorLarge::size, rdoc::size)
         .def("__getitem__", [](VectorLarge& v, size_t index) ->
                 regina::LargeInteger& {
             return v[index];
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::reference_internal, rdoc::__array)
         .def("__setitem__", [](VectorLarge& v, size_t index,
-                const regina::Integer& value) {
+                const regina::LargeInteger& value) {
             v[index] = value;
-        })
+        }, rdoc::__array_2)
         .def("__iter__", [](const VectorLarge& list) {
             return pybind11::make_iterator(list);
-        }, pybind11::keep_alive<0, 1>()) // iterator keeps vector alive
-        .def(pybind11::self += pybind11::self)
-        .def(pybind11::self -= pybind11::self)
-        .def(pybind11::self *= regina::Integer())
-        .def(pybind11::self + pybind11::self)
-        .def(pybind11::self - pybind11::self)
-        .def(pybind11::self * regina::Integer())
-        .def(pybind11::self * pybind11::self)
-        .def("negate", &VectorLarge::negate)
-        .def("norm", &VectorLarge::norm)
-        .def("elementSum", &VectorLarge::elementSum)
-        .def("addCopies", &VectorLarge::addCopies)
-        .def("subtractCopies", &VectorLarge::subtractCopies)
-        .def("isZero", &VectorLarge::isZero)
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps vector alive
+            global::common::iter)
+        .def(pybind11::self += pybind11::self, rdoc::__iadd)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def(pybind11::self *= regina::LargeInteger(), rdoc::__imul)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self - pybind11::self, rdoc::__sub)
+        .def(pybind11::self * regina::LargeInteger(), rdoc::__mul)
+        .def(pybind11::self * pybind11::self, rdoc::__mul_2)
+        .def("swap", &VectorLarge::swap, rdoc::swap)
+        .def("negate", &VectorLarge::negate, rdoc::negate)
+        .def("norm", &VectorLarge::norm, rdoc::norm)
+        .def("elementSum", &VectorLarge::elementSum, rdoc::elementSum)
+        .def("addCopies", &VectorLarge::addCopies, rdoc::addCopies)
+        .def("subtractCopies", &VectorLarge::subtractCopies,
+            rdoc::subtractCopies)
+        .def("isZero", &VectorLarge::isZero, rdoc::isZero)
         // The C-style casts below are to avoid a compile error under gcc7
         // (but not gcc8), where the compiler cannot determine the type of a
         // template member function.
         .def("scaleDown",
-            (regina::LargeInteger (VectorLarge::*)())
-            &VectorLarge::scaleDown)
-        .def_static("unit", &VectorLarge::unit)
+            (regina::LargeInteger (VectorLarge::*)())(&VectorLarge::scaleDown),
+            rdoc::scaleDown)
+        .def_static("unit", &VectorLarge::unit, rdoc::unit)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<VectorLarge>(m);
+    regina::python::add_global_swap<VectorLarge>(m, global::swap);
+
+    RDOC_SCOPE_END
 
     pybind11::implicitly_convertible<std::vector<int>, VectorLarge>();
     pybind11::implicitly_convertible<std::vector<regina::LargeInteger>,

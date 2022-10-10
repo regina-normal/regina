@@ -87,7 +87,7 @@ void addListView(pybind11::module_& m) {
         .def("__iter__", [](const T& view) {
             return pybind11::make_iterator<Policy>(view.begin(), view.end());
         }, pybind11::keep_alive<0, 1>(), // iterator keeps ListView alive
-            doc::common::ListView_iter)
+            doc::common::iter)
         .def("__getitem__", [](const T& view, size_t index) {
             return view[index];
         }, Policy, doc::common::ListView_array)

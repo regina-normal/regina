@@ -275,7 +275,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
+         * \nopython Vector is an iterable object: instead of providing
          * begin() and end(), it implements the Python iterable interface.
          *
          * @return an iterator pointing to the first element of this vector.
@@ -290,7 +290,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
+         * \nopython Vector is an iterable object: instead of providing
          * begin() and end(), it implements the Python iterable interface.
          *
          * @return an iterator pointing to the first element of this vector.
@@ -305,7 +305,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
+         * \nopython Vector is an iterable object: instead of providing
          * begin() and end(), it implements the Python iterable interface.
          *
          * @return an iterator beyond the last element of this vector.
@@ -320,7 +320,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
+         * \nopython Vector is an iterable object: instead of providing
          * begin() and end(), it implements the Python iterable interface.
          *
          * @return an iterator beyond the last element of this vector.

@@ -66,6 +66,8 @@ namespace regina::python::doc::common {
     extern const char* eq_packet_disabled;
     extern const char* eq_packet_invalid;
     extern const char* eq_never_instantiated;
+
+    extern const char* iter;
 }
 
 /**

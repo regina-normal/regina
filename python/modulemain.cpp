@@ -57,7 +57,6 @@ namespace regina::python::doc::common {
     const char* ListView_back = regina::python::doc::ListView_::back;
     const char* ListView_eq = regina::python::doc::ListView_::__eq;
     const char* ListView_neq = regina::python::doc::ListView_::__ne;
-    const char* ListView_iter = "Implements the Python iterable interface.";
 
     // Note: docstrings should be wrapped at 70 characters per line;
     // the hard maximum is 72.
@@ -145,6 +144,8 @@ use Packet.samePacket() instead.)doc";
 R"doc(Disabled in Regina.
 
 Objects of this type cannot be created, and so cannot be compared.)doc";
+
+    const char* iter = "Implements the Python iterable interface.";
 }
 
 void addGlobalArray(pybind11::module_& m);
