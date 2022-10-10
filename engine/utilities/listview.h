@@ -75,6 +75,13 @@ namespace regina {
  * ListView objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
+ * \ifacespython The ListView classes are deliberately difficult to access: they
+ * live within their own private Python namespaces, and are all give the same
+ * class name (\a ListView).  You would typically only interact with a ListView
+ * when it is returned from a function (e.g., <tt>Link.crossings()</tt>),
+ * and in most cases you would simply iterate over this resulting ListView
+ * without ever knowing its exact type.
+ *
  * \tparam Container the internal type of the list that this object grants
  * access to.  This type must support at least the same operations as this
  * class itself, except for the copy semantics.  In particular, both
@@ -138,6 +145,8 @@ class ListView {
         /**
          * Returns a view for the given list.
          *
+         * \nopython
+         *
          * @param list the list that this object will access.
          * Internally, this object will store a reference to \a list (which
          * means \a list needs to exist for at least as long as this object).
@@ -195,7 +204,7 @@ class ListView {
         /**
          * Returns an iterator pointing to the first element.
          *
-         * \ifacespython ListView is an iterable object: instead of providing
+         * \nopython ListView is an iterable object: instead of providing
          * begin() and end(), it implements the Python iterable interface.
          *
          * @return an iterator at the beginning of this list.
@@ -204,12 +213,39 @@ class ListView {
         /**
          * Returns an iterator pointing beyond the last element.
          *
-         * \ifacespython ListView is an iterable object: instead of providing
+         * \nopython ListView is an iterable object: instead of providing
          * begin() and end(), it implements the Python iterable interface.
          *
          * @return an iterator beyond the end of this list.
          */
         const_iterator end() const;
+        /**
+         * Determines whether this and the given list view are accessing
+         * the same underlying container.
+         *
+         * Here the containers are compared by \e reference (i.e., they
+         * must be the same container object at the same location in memory;
+         * it is not enough to be two containers with identical contents).
+         *
+         * @param other the list view to compare with this.
+         * @return \c true if and only if this and the given list use
+         * the same underlying container.
+         */
+        bool operator == (const ListView& other) const;
+        /**
+         * Determines whether this and the given list view are accessing
+         * different underlying containers.
+         *
+         * Here the containers are compared by \e reference (i.e., to be
+         * considered equal they must be the same container object at the same
+         * location in memory; it is not enough to be two containers with
+         * identical contents).
+         *
+         * @param other the list view to compare with this.
+         * @return \c true if and only if this and the given list use
+         * different underlying containers.
+         */
+        bool operator != (const ListView& other) const;
 };
 
 /**
@@ -362,6 +398,36 @@ class ListView<Element*> {
          * @return an iterator beyond the end of this list.
          */
         const_iterator end() const;
+        /**
+         * Determines whether this and the given list view are accessing
+         * the same underlying C-style array.
+         *
+         * To be considered the same array, the two arrays must have the same
+         * location in memory (i.e., the pointers that define the C-style arrays
+         * must be equal), \e and the two arrays must have the same length.
+         * In particular, it is not enough for the two arrays just to have
+         * identical contents.
+         *
+         * @param other the list view to compare with this.
+         * @return \c true if and only if this and the given list use
+         * the same underlying array.
+         */
+        bool operator == (const ListView& other) const;
+        /**
+         * Determines whether this and the given list view are accessing
+         * different underlying C-style arrays.
+         *
+         * To be considered the same array, the two arrays must have the same
+         * location in memory (i.e., the pointers that define the C-style arrays
+         * must be equal), \e and the two arrays must have the same length.
+         * In particular, it is not enough for the two arrays just to have
+         * identical contents.
+         *
+         * @param other the list view to compare with this.
+         * @return \c true if and only if this and the given list use
+         * different underlying arrays.
+         */
+        bool operator != (const ListView& other) const;
 };
 
 // Deduction guides (hide these from Doxygen, which cannot handle them):
@@ -383,7 +449,7 @@ ListView(const Element*, size_t) -> ListView<Element*>;
 // Inline functions for ListView
 
 template <class Container>
-ListView<Container>::ListView(const Container& list) : list_(&list) {
+inline ListView<Container>::ListView(const Container& list) : list_(&list) {
 }
 
 template <class Container>
@@ -427,50 +493,74 @@ inline typename ListView<Container>::const_iterator ListView<Container>::end()
     return list_->end();
 }
 
+template <class Container>
+inline bool ListView<Container>::operator == (const ListView& other) const {
+    return (list_ == other.list_);
+}
+
+template <class Container>
+inline bool ListView<Container>::operator != (const ListView& other) const {
+    return (list_ != other.list_);
+}
+
 template <class Element>
-ListView<Element*>::ListView(const Element* array, size_t size) :
+inline ListView<Element*>::ListView(const Element* array, size_t size) :
         begin_(array), end_(array + size) {
 }
 
 template <class Element>
-ListView<Element*>::ListView(const Element* begin, const Element* end) :
+inline ListView<Element*>::ListView(const Element* begin, const Element* end) :
         begin_(begin), end_(end) {
 }
 
 template <class Element>
-bool ListView<Element*>::empty() const {
+inline bool ListView<Element*>::empty() const {
     return (begin_ == end_);
 }
 
 template <class Element>
-typename ListView<Element*>::size_type ListView<Element*>::size() const {
+inline typename ListView<Element*>::size_type ListView<Element*>::size() const {
     return (end_ - begin_);
 }
 
 template <class Element>
-typename ListView<Element*>::const_reference ListView<Element*>::operator [](
-        size_type index) const {
+inline typename ListView<Element*>::const_reference ListView<Element*>::
+        operator [](size_type index) const {
     return begin_[index];
 }
 
 template <class Element>
-typename ListView<Element*>::const_reference ListView<Element*>::front() const {
+inline typename ListView<Element*>::const_reference ListView<Element*>::front()
+        const {
     return *begin_;
 }
 
 template <class Element>
-typename ListView<Element*>::const_reference ListView<Element*>::back() const {
+inline typename ListView<Element*>::const_reference ListView<Element*>::back()
+        const {
     return *(end_ - 1);
 }
 
 template <class Element>
-typename ListView<Element*>::const_iterator ListView<Element*>::begin() const {
+inline typename ListView<Element*>::const_iterator ListView<Element*>::begin()
+        const {
     return begin_;
 }
 
 template <class Element>
-typename ListView<Element*>::const_iterator ListView<Element*>::end() const {
+inline typename ListView<Element*>::const_iterator ListView<Element*>::end()
+        const {
     return end_;
+}
+
+template <class Element>
+inline bool ListView<Element*>::operator == (const ListView& other) const {
+    return (begin_ == other.begin_ && end_ == other.end_);
+}
+
+template <class Element>
+inline bool ListView<Element*>::operator != (const ListView& other) const {
+    return (begin_ != other.begin_ || end_ != other.end_);
 }
 
 } // namespace regina

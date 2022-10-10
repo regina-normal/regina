@@ -47,6 +47,17 @@ namespace regina::python::doc::common {
     extern const char* make_packet;
     extern const char* make_packet_2;
 
+    extern const char* ListView;
+    extern const char* ListView_ListView;
+    extern const char* ListView_iter;
+    extern const char* ListView_array;
+    extern const char* ListView_empty;
+    extern const char* ListView_size;
+    extern const char* ListView_front;
+    extern const char* ListView_back;
+    extern const char* ListView_eq;
+    extern const char* ListView_neq;
+
     extern const char* eq_reference;
     extern const char* neq_reference;
     extern const char* eq_None;

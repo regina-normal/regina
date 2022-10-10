@@ -60,7 +60,6 @@ for dir in $dirs; do
       case "$dir/$header" in
         *-impl.h ) ;;
         utilities/flags.h ) ;;
-        utilities/listview.h ) ;;
         utilities/markedvector.h ) ;;
         utilities/memstream.h ) ;;
         utilities/sequence.h ) ;;

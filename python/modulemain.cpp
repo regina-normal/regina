@@ -39,13 +39,25 @@
 #include "docstrings/core/output.h"
 #include "docstrings/core/regina-core.h"
 #include "docstrings/python/equality.h"
+#include "docstrings/utilities/listview.h"
 
 // Docstrings that are generated once but need to be reused across many
 // source files:
 namespace regina::python::doc::common {
-    const char* Output_detail = Output_::detail;
-    const char* Output_str = Output_::str;
-    const char* Output_utf8 = Output_::utf8;
+    const char* Output_detail = regina::python::doc::Output_::detail;
+    const char* Output_str = regina::python::doc::Output_::str;
+    const char* Output_utf8 = regina::python::doc::Output_::utf8;
+
+    const char* ListView = regina::python::doc::ListView;
+    const char* ListView_ListView = regina::python::doc::ListView_::ListView;
+    const char* ListView_array = regina::python::doc::ListView_::__array;
+    const char* ListView_empty = regina::python::doc::ListView_::empty;
+    const char* ListView_size = regina::python::doc::ListView_::size;
+    const char* ListView_front = regina::python::doc::ListView_::front;
+    const char* ListView_back = regina::python::doc::ListView_::back;
+    const char* ListView_eq = regina::python::doc::ListView_::__eq;
+    const char* ListView_neq = regina::python::doc::ListView_::__ne;
+    const char* ListView_iter = "Implements the Python iterable interface.";
 
     // Note: docstrings should be wrapped at 70 characters per line;
     // the hard maximum is 72.
