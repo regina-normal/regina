@@ -202,6 +202,8 @@ def process_comment(comment):
     s = re.sub(r'<em>(.*?)</em>', r'*\1*', s, flags=re.DOTALL)
     s = re.sub(r'<i>(.*?)</i>', r'*\1*', s, flags=re.DOTALL)
     s = re.sub(r'<b>(.*?)</b>', r'**\1**', s, flags=re.DOTALL)
+    s = re.sub(r'<sup>(.*?)</sup>', r'^(\1)', s, flags=re.DOTALL)
+    s = re.sub(r'<sub>(.*?)</sub>', r'_(\1)', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]f\$(.*?)[\\@]f\$', r':math:`\1`', s, flags=re.DOTALL)
     s = re.sub(r'<li>', r'\n\n* ', s)
     s = re.sub(r'</?ul>', r'', s)
