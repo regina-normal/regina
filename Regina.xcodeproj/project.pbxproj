@@ -50,6 +50,8 @@
 		05098A6628F24CBC005E4716 /* typeutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098A6528F24CBC005E4716 /* typeutils.cpp */; };
 		05098A6728F24CBC005E4716 /* typeutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098A6528F24CBC005E4716 /* typeutils.cpp */; };
 		05098AA028F44A05005E4716 /* perm-prereq.h in Headers */ = {isa = PBXBuildFile; fileRef = 05098A9F28F44A04005E4716 /* perm-prereq.h */; };
+		05098AB428F452C6005E4716 /* vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098AB328F452C6005E4716 /* vector.cpp */; };
+		05098AB528F452C6005E4716 /* vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098AB328F452C6005E4716 /* vector.cpp */; };
 		050AFC5319DCB90E00835ED6 /* SnapPeaCusps.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */; };
 		050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */; };
 		050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */; };
@@ -1168,16 +1170,12 @@
 		05772EE6270CFAD200D26D8A /* trieset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EE0270CFAD200D26D8A /* trieset.cpp */; };
 		05772EE8270CFB1200D26D8A /* sfsalt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EE7270CFB1200D26D8A /* sfsalt.cpp */; };
 		05772EE9270CFB1200D26D8A /* sfsalt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EE7270CFB1200D26D8A /* sfsalt.cpp */; };
-		05772EEF270CFB2000D26D8A /* vectorint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EEA270CFB1F00D26D8A /* vectorint.cpp */; };
-		05772EF0270CFB2000D26D8A /* vectorint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EEA270CFB1F00D26D8A /* vectorint.cpp */; };
 		05772EF1270CFB2000D26D8A /* matrixbool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EEB270CFB2000D26D8A /* matrixbool.cpp */; };
 		05772EF2270CFB2000D26D8A /* matrixbool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EEB270CFB2000D26D8A /* matrixbool.cpp */; };
 		05772EF3270CFB2000D26D8A /* perm6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EEC270CFB2000D26D8A /* perm6.cpp */; };
 		05772EF4270CFB2000D26D8A /* perm6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EEC270CFB2000D26D8A /* perm6.cpp */; };
 		05772EF5270CFB2000D26D8A /* perm7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EED270CFB2000D26D8A /* perm7.cpp */; };
 		05772EF6270CFB2000D26D8A /* perm7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EED270CFB2000D26D8A /* perm7.cpp */; };
-		05772EF7270CFB2000D26D8A /* vectorlarge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EEE270CFB2000D26D8A /* vectorlarge.cpp */; };
-		05772EF8270CFB2000D26D8A /* vectorlarge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EEE270CFB2000D26D8A /* vectorlarge.cpp */; };
 		05772EFB270CFB3D00D26D8A /* sigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EF9270CFB3D00D26D8A /* sigcensus.cpp */; };
 		05772EFC270CFB3D00D26D8A /* sigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EF9270CFB3D00D26D8A /* sigcensus.cpp */; };
 		05772EFD270CFB3D00D26D8A /* sigisomorphism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05772EFA270CFB3D00D26D8A /* sigisomorphism.cpp */; };
@@ -2564,6 +2562,7 @@
 		05098AAF28F44AAF005E4716 /* laurent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = laurent.h; sourceTree = "<group>"; };
 		05098AB028F44ADD005E4716 /* listview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listview.h; sourceTree = "<group>"; };
 		05098AB228F44AF2005E4716 /* packet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = packet.h; sourceTree = "<group>"; };
+		05098AB328F452C6005E4716 /* vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector.cpp; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -3790,11 +3789,9 @@
 		05772EDF270CFAD100D26D8A /* bitmask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitmask.cpp; sourceTree = "<group>"; };
 		05772EE0270CFAD200D26D8A /* trieset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trieset.cpp; sourceTree = "<group>"; };
 		05772EE7270CFB1200D26D8A /* sfsalt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sfsalt.cpp; sourceTree = "<group>"; };
-		05772EEA270CFB1F00D26D8A /* vectorint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vectorint.cpp; sourceTree = "<group>"; };
 		05772EEB270CFB2000D26D8A /* matrixbool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrixbool.cpp; sourceTree = "<group>"; };
 		05772EEC270CFB2000D26D8A /* perm6.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm6.cpp; sourceTree = "<group>"; };
 		05772EED270CFB2000D26D8A /* perm7.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm7.cpp; sourceTree = "<group>"; };
-		05772EEE270CFB2000D26D8A /* vectorlarge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vectorlarge.cpp; sourceTree = "<group>"; };
 		05772EF9270CFB3D00D26D8A /* sigcensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sigcensus.cpp; sourceTree = "<group>"; };
 		05772EFA270CFB3D00D26D8A /* sigisomorphism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sigisomorphism.cpp; sourceTree = "<group>"; };
 		05772EFF270CFB5F00D26D8A /* faces.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = faces.test; sourceTree = "<group>"; };
@@ -5226,8 +5223,7 @@
 				050F5D381B9BAB9C00C1F681 /* primes.cpp */,
 				050F5D3C1B9BAB9C00C1F681 /* pymaths.cpp */,
 				050F5D391B9BAB9C00C1F681 /* rational.cpp */,
-				05772EEA270CFB1F00D26D8A /* vectorint.cpp */,
-				05772EEE270CFB2000D26D8A /* vectorlarge.cpp */,
+				05098AB328F452C6005E4716 /* vector.cpp */,
 			);
 			path = maths;
 			sourceTree = "<group>";
@@ -9045,7 +9041,6 @@
 				050F5DE81B9BAB9C00C1F681 /* pyfile.cpp in Sources */,
 				05226DF227422C82000A45D5 /* hilbertprimal.cpp in Sources */,
 				050F5E0F1B9BAB9C00C1F681 /* pyprogress.cpp in Sources */,
-				05772EF7270CFB2000D26D8A /* vectorlarge.cpp in Sources */,
 				050F5DDD1B9BAB9C00C1F681 /* edge2.cpp in Sources */,
 				0591E8151C4F763B00793A9C /* example4.cpp in Sources */,
 				050F5E391B9BAB9C00C1F681 /* surfacefilter.cpp in Sources */,
@@ -9189,7 +9184,6 @@
 				05772F1B270CFBAA00D26D8A /* typetrie.cpp in Sources */,
 				050F5E001B9BAB9C00C1F681 /* rational.cpp in Sources */,
 				050F5E461B9BAB9C00C1F681 /* homologicaldata.cpp in Sources */,
-				05772EEF270CFB2000D26D8A /* vectorint.cpp in Sources */,
 				054209071DF0DA450018AB24 /* torusbundle.cpp in Sources */,
 				054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */,
 				05CAE60527427A8A007C93F3 /* ordering.cpp in Sources */,
@@ -9213,6 +9207,7 @@
 				05431FC41C40F5D4009BC072 /* pygeneric.cpp in Sources */,
 				0591E81B1C4F763B00793A9C /* triangulation4.cpp in Sources */,
 				05CAE6012741C871007C93F3 /* validityconstraints.cpp in Sources */,
+				05098AB428F452C6005E4716 /* vector.cpp in Sources */,
 				050C64951DA12FC000C9420F /* examplesnappea.cpp in Sources */,
 				05772ED8270CFA8B00D26D8A /* angleflags.cpp in Sources */,
 				050F5DFC1B9BAB9C00C1F681 /* perm4.cpp in Sources */,
@@ -9548,6 +9543,7 @@
 				0589FACC1814BECF0064CD57 /* PacketListenerIOS.mm in Sources */,
 				0542090A1DF0DA450018AB24 /* graphtriple.cpp in Sources */,
 				052FA211180612DD00FAE4DF /* canonize.c in Sources */,
+				05098AB528F452C6005E4716 /* vector.cpp in Sources */,
 				0591E7E71C4F751B00793A9C /* links.cpp in Sources */,
 				05F0A0171DBF079600117BFC /* triangulation4.cpp in Sources */,
 				0598030326683C9F002D5D57 /* xmlfilterreader.cpp in Sources */,
@@ -9913,7 +9909,6 @@
 				05431F911C40F40E009BC072 /* offload_handler.cpp in Sources */,
 				05CAE60827427A8A007C93F3 /* maxadmissible.cpp in Sources */,
 				0542088D1DF0D0CF0018AB24 /* definition.cpp in Sources */,
-				05772EF0270CFB2000D26D8A /* vectorint.cpp in Sources */,
 				0598030526683C9F002D5D57 /* xmllinkreader.cpp in Sources */,
 				05C064551C55C811006E6483 /* HyperSummary.mm in Sources */,
 				05B7FF8F25AC22AA003BAF5C /* general.cpp in Sources */,
@@ -10020,7 +10015,6 @@
 				05F0A0621DBF0B7000117BFC /* surfaces.cpp in Sources */,
 				05249F3C1DBC1718001FE29E /* script.cpp in Sources */,
 				05772EE2270CFAD200D26D8A /* exception.cpp in Sources */,
-				05772EF8270CFB2000D26D8A /* vectorlarge.cpp in Sources */,
 				05772EFE270CFB3D00D26D8A /* sigisomorphism.cpp in Sources */,
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
 				052FA1AA1806129B00FAE4DF /* script.cpp in Sources */,
