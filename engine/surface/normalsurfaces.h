@@ -682,7 +682,7 @@ class NormalSurfaces :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -691,7 +691,7 @@ class NormalSurfaces :
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -831,7 +831,7 @@ class NormalSurfaces :
          *     ...
          * \endcode
          *
-         * \ifacespython Not present; use vectors() instead.
+         * \nopython Use vectors() instead.
          *
          * @return an iterator at the beginning of this surface list.
          */
@@ -846,7 +846,7 @@ class NormalSurfaces :
          * by a single routine vectors(), which returns an iterable object;
          * see the beginVectors() documentation for further details.
          *
-         * \ifacespython Not present; use vectors() instead.
+         * \nopython Use vectors() instead.
          *
          * @return an iterator past the end of this surface list.
          */
@@ -856,9 +856,9 @@ class NormalSurfaces :
          * A bidirectional iterator that runs through the raw vectors for
          * surfaces in this list.
          *
-         * \ifacespython Not present.  Instead NormalSurfaces::vectors()
-         * returns an object of a different (hidden) class that supports
-         * the Python iterable/iterator interface.
+         * \nopython Instead NormalSurfaces::vectors() returns an object of a
+         * different (hidden) class that supports the Python iterable/iterator
+         * interface.
          */
         class VectorIterator {
             public:

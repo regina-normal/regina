@@ -521,7 +521,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -530,7 +530,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -592,7 +592,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *     ...
          * \endcode
          *
-         * \ifacespython Not present; use vectors() instead.
+         * \nopython Use vectors() instead.
          *
          * @return an iterator at the beginning of this hypersurface list.
          */
@@ -607,7 +607,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * by a single routine vectors(), which returns an iterable object;
          * see the beginVectors() documentation for further details.
          *
-         * \ifacespython Not present; use vectors() instead.
+         * \nopython Use vectors() instead.
          *
          * @return an iterator past the end of this hypersurface list.
          */
@@ -617,9 +617,9 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * A bidirectional iterator that runs through the raw vectors for
          * hypersurfaces in this list.
          *
-         * \ifacespython Not present.  Instead NormalHypersurfaces::vectors()
-         * returns an object of a different (hidden) class that supports
-         * the Python iterable/iterator interface.
+         * \nopython Instead NormalHypersurfaces::vectors() returns an object
+         * of a different (hidden) class that supports the Python
+         * iterable/iterator interface.
          */
         class VectorIterator {
             public:

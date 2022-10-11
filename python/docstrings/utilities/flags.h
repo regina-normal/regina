@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Flags
-static constexpr const char *Flags =
+constexpr const char *Flags =
 R"doc(A class representing a bitwise combination of flags defined by an
 enumeration type.
 
@@ -26,29 +26,33 @@ functions.
 
 Python:
     Present only for some particular enumeration types *T*, when
-    explicitly noted in the corresponding enum documentation.)doc";
+    explicitly noted in the corresponding enum documentation. The
+    enumeration type is typically the flag class name with the suffix
+    ``Flags`` or ``Fields``; for instance, the flags classes NormalAlg
+    and SurfaceExport work with the enum types NormalAlgFlags and
+    SurfaceExportFields respectively.)doc";
 
 namespace Flags_ {
 
 // Docstring regina::python::doc::Flags_::Flags
-static constexpr const char *Flags = R"doc(Creates an empty flag set, with no flags set at all.)doc";
+constexpr const char *Flags = R"doc(Creates an empty flag set, with no flags set at all.)doc";
 
 // Docstring regina::python::doc::Flags_::Flags_2
-static constexpr const char *Flags_2 =
+constexpr const char *Flags_2 =
 R"doc(Creates a flag set initialised to the given value.
 
 Parameter ``init``:
     the initial value of this flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::Flags_3
-static constexpr const char *Flags_3 =
+constexpr const char *Flags_3 =
 R"doc(Creates a clone of the given flag set.
 
 Parameter ``init``:
     the flag set to clone.)doc";
 
 // Docstring regina::python::doc::Flags_::__band
-static constexpr const char *__band =
+constexpr const char *__band =
 R"doc(Returns the bitwise AND of this set and the given flag. This flag set
 is not changed.
 
@@ -59,7 +63,7 @@ Returns:
     the combination of this set and the given flag.)doc";
 
 // Docstring regina::python::doc::Flags_::__band_2
-static constexpr const char *__band_2 =
+constexpr const char *__band_2 =
 R"doc(Returns the bitwise AND of this and the given flag set. This flag set
 is not changed.
 
@@ -70,7 +74,7 @@ Returns:
     the combination of this and the given flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__bor
-static constexpr const char *__bor =
+constexpr const char *__bor =
 R"doc(Returns the bitwise OR of this set and the given flag. This flag set
 is not changed.
 
@@ -81,7 +85,7 @@ Returns:
     the combination of this set and the given flag.)doc";
 
 // Docstring regina::python::doc::Flags_::__bor_2
-static constexpr const char *__bor_2 =
+constexpr const char *__bor_2 =
 R"doc(Returns the bitwise OR of this and the given flag set. This flag set
 is not changed.
 
@@ -92,7 +96,7 @@ Returns:
     the combination of this and the given flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__bxor
-static constexpr const char *__bxor =
+constexpr const char *__bxor =
 R"doc(Returns the bitwise XOR of this set and the given flag. This flag set
 is not changed.
 
@@ -103,7 +107,7 @@ Returns:
     the combination of this set and the given flag.)doc";
 
 // Docstring regina::python::doc::Flags_::__bxor_2
-static constexpr const char *__bxor_2 =
+constexpr const char *__bxor_2 =
 R"doc(Returns the bitwise XOR of this and the given flag set. This flag set
 is not changed.
 
@@ -114,7 +118,7 @@ Returns:
     the combination of this and the given flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__eq
-static constexpr const char *__eq =
+constexpr const char *__eq =
 R"doc(Determines whether this set is precisely equal to the given flag.
 
 Parameter ``rhs``:
@@ -124,7 +128,7 @@ Returns:
     ``True`` if and only if this and the given flag are identical.)doc";
 
 // Docstring regina::python::doc::Flags_::__eq_2
-static constexpr const char *__eq_2 =
+constexpr const char *__eq_2 =
 R"doc(Determines whether this set is precisely equal to the given flag set.
 
 Parameter ``rhs``:
@@ -134,7 +138,7 @@ Returns:
     ``True`` if and only if this and the given flag set are identical.)doc";
 
 // Docstring regina::python::doc::Flags_::__iand
-static constexpr const char *__iand =
+constexpr const char *__iand =
 R"doc(Changes this flag set by taking a bitwise AND with the given flag.
 
 Parameter ``rhs``:
@@ -144,7 +148,7 @@ Returns:
     a reference to this flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__iand_2
-static constexpr const char *__iand_2 =
+constexpr const char *__iand_2 =
 R"doc(Changes this flag set by taking a bitwise AND with the given flag set.
 
 Parameter ``rhs``:
@@ -154,7 +158,7 @@ Returns:
     a reference to this flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__ior
-static constexpr const char *__ior =
+constexpr const char *__ior =
 R"doc(Changes this flag set by taking a bitwise OR with the given flag.
 
 Parameter ``rhs``:
@@ -164,7 +168,7 @@ Returns:
     a reference to this flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__ior_2
-static constexpr const char *__ior_2 =
+constexpr const char *__ior_2 =
 R"doc(Changes this flag set by taking a bitwise OR with the given flag set.
 
 Parameter ``rhs``:
@@ -174,7 +178,7 @@ Returns:
     a reference to this flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__ixor
-static constexpr const char *__ixor =
+constexpr const char *__ixor =
 R"doc(Changes this flag set by taking a bitwise XOR with the given flag.
 
 Parameter ``rhs``:
@@ -184,7 +188,7 @@ Returns:
     a reference to this flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__ixor_2
-static constexpr const char *__ixor_2 =
+constexpr const char *__ixor_2 =
 R"doc(Changes this flag set by taking a bitwise XOR with the given flag set.
 
 Parameter ``rhs``:
@@ -194,7 +198,7 @@ Returns:
     a reference to this flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__ne
-static constexpr const char *__ne =
+constexpr const char *__ne =
 R"doc(Determines whether this set is not equal to the given flag.
 
 Parameter ``rhs``:
@@ -204,7 +208,7 @@ Returns:
     ``True`` if and only if this and the given flag are not identical.)doc";
 
 // Docstring regina::python::doc::Flags_::__ne_2
-static constexpr const char *__ne_2 =
+constexpr const char *__ne_2 =
 R"doc(Determines whether this set is not equal to the given flag set.
 
 Parameter ``rhs``:
@@ -215,21 +219,21 @@ Returns:
     identical.)doc";
 
 // Docstring regina::python::doc::Flags_::clear
-static constexpr const char *clear =
+constexpr const char *clear =
 R"doc(Clears all bits from this set that appear in the given flag.
 
 Parameter ``rhs``:
     the flag to clear from this set.)doc";
 
 // Docstring regina::python::doc::Flags_::clear_2
-static constexpr const char *clear_2 =
+constexpr const char *clear_2 =
 R"doc(Clears all bits from this set that appear in the given set.
 
 Parameter ``rhs``:
     identifies the bits to clear from this set.)doc";
 
 // Docstring regina::python::doc::Flags_::ensureOne
-static constexpr const char *ensureOne =
+constexpr const char *ensureOne =
 R"doc(Adjust this set so that exactly one and only one of the two given
 flags are included.
 
@@ -246,7 +250,7 @@ Parameter ``other``:
     the flag that will be cleared if any adjustments need to be made.)doc";
 
 // Docstring regina::python::doc::Flags_::ensureOne_2
-static constexpr const char *ensureOne_2 =
+constexpr const char *ensureOne_2 =
 R"doc(Adjust this set so that exactly one and only one of the three given
 flags are included.
 
@@ -267,7 +271,7 @@ Parameter ``last``:
     the lowest-priority flag.)doc";
 
 // Docstring regina::python::doc::Flags_::ensureOne_3
-static constexpr const char *ensureOne_3 =
+constexpr const char *ensureOne_3 =
 R"doc(Adjust this set so that exactly one and only one of the four given
 flags are included.
 
@@ -291,7 +295,7 @@ Parameter ``last``:
     the lowest-priority flag.)doc";
 
 // Docstring regina::python::doc::Flags_::fromInt
-static constexpr const char *fromInt =
+constexpr const char *fromInt =
 R"doc(Returns the set corresponding to the given integer value. This is
 suitable for file input and/or output.
 
@@ -303,7 +307,7 @@ Returns:
     the set corresponding to the given integer value.)doc";
 
 // Docstring regina::python::doc::Flags_::has
-static constexpr const char *has =
+constexpr const char *has =
 R"doc(Returns whether the given flag is set.
 
 This requires *all* of the bits of the given flag to be set. The test
@@ -316,7 +320,7 @@ Returns:
     ``True`` if and only if all of the bits of the given flag are set.)doc";
 
 // Docstring regina::python::doc::Flags_::has_2
-static constexpr const char *has_2 =
+constexpr const char *has_2 =
 R"doc(Returns whether all of the flags in the given set are set.
 
 This requires *all* of the bits of all of the flags in the given set
@@ -331,7 +335,7 @@ Returns:
     present in this set.)doc";
 
 // Docstring regina::python::doc::Flags_::intValue
-static constexpr const char *intValue =
+constexpr const char *intValue =
 R"doc(Returns the integer representation of this set. This is suitable for
 file input and/or output.
 

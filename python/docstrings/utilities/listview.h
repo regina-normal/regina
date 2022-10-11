@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::ListView
-static const char *ListView =
+constexpr const char *ListView =
 R"doc(A lightweight object that can be used for iteration and random access
 to all elements of a given list.
 
@@ -66,10 +66,10 @@ Template parameter ``Container``:
 namespace ListView_ {
 
 // Docstring regina::python::doc::ListView_::ListView
-static const char *ListView = R"doc(Creates a new copy of the given list view.)doc";
+constexpr const char *ListView = R"doc(Creates a new copy of the given list view.)doc";
 
 // Docstring regina::python::doc::ListView_::__array
-static const char *__array =
+constexpr const char *__array =
 R"doc(Returns the requested element of this list.
 
 Parameter ``index``:
@@ -80,7 +80,7 @@ Returns:
     the (*index*)th element in this list.)doc";
 
 // Docstring regina::python::doc::ListView_::__eq
-static const char *__eq =
+constexpr const char *__eq =
 R"doc(Determines whether this and the given list view are accessing the same
 underlying container.
 
@@ -96,14 +96,14 @@ Returns:
     underlying container.)doc";
 
 // Docstring regina::python::doc::ListView_::__iter__
-static const char *__iter__ =
+constexpr const char *__iter__ =
 R"doc(Returns a Python iterator over the elements of this list.
 
 Returns:
     an iterator over the elements of this list.)doc";
 
 // Docstring regina::python::doc::ListView_::__ne
-static const char *__ne =
+constexpr const char *__ne =
 R"doc(Determines whether this and the given list view are accessing
 different underlying containers.
 
@@ -120,7 +120,7 @@ Returns:
     underlying containers.)doc";
 
 // Docstring regina::python::doc::ListView_::back
-static const char *back =
+constexpr const char *back =
 R"doc(Returns the last element of this list.
 
 Precondition:
@@ -130,14 +130,14 @@ Returns:
     the last element in this list.)doc";
 
 // Docstring regina::python::doc::ListView_::empty
-static const char *empty =
+constexpr const char *empty =
 R"doc(Determines if this list is empty.
 
 Returns:
     ``True`` if and only if this list is empty.)doc";
 
 // Docstring regina::python::doc::ListView_::front
-static const char *front =
+constexpr const char *front =
 R"doc(Returns the first element of this list.
 
 Precondition:
@@ -147,7 +147,7 @@ Returns:
     the first element in this list.)doc";
 
 // Docstring regina::python::doc::ListView_::size
-static const char *size =
+constexpr const char *size =
 R"doc(Returns the number of elements in this list.
 
 Returns:

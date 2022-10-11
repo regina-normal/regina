@@ -121,8 +121,8 @@ class AbelianGroup :
          * requirement (where each invariant factor must divide the one
          * after it).
          *
-         * \ifacespython Not available, but there is a constructor that
-         * takes the invariant factors as a Python list.
+         * \nopython Instead, use the constructor that takes the invariant
+         * factors as a Python list.
          *
          * \tparam T an integer type, which may be a native C++ integer
          * type or one of Regina's own integer types.

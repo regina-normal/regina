@@ -64,31 +64,6 @@ Exception ``InvalidArgument``:
     not satisfy the divisibily requirement (where each invariant
     factor must divide the one after it).
 
-Python:
-    Not available, but there is a constructor that takes the invariant
-    factors as a Python list.
-
-Template parameter ``T``:
-    an integer type, which may be a native C++ integer type or one of
-    Regina's own integer types.
-
-Parameter ``rank``:
-    the rank of the new group (i.e., the number of copies of *Z*).
-
-Parameter ``invFac``:
-    the list of invariant factors *d0*, *d1*, ..., as described in the
-    class notes, where each invariant factor is greater than 1 and
-    divides the invariant factor after it.)doc";
-
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_5
-static const char *AbelianGroup_5 =
-R"doc(Creates a new group with the given rank and invariant factors.
-
-Exception ``InvalidArgument``:
-    The invariant factors were not all greater than 1, and/or they did
-    not satisfy the divisibily requirement (where each invariant
-    factor must divide the one after it).
-
 Template parameter ``Container``:
     a container or view that supports reverse iteration via rbegin(),
     rend(), that has an empty() function, and whose elements may be of
@@ -103,8 +78,8 @@ Parameter ``invFac``:
     class notes, where each invariant factor is greater than 1 and
     divides the invariant factor after it.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_6
-static const char *AbelianGroup_6 =
+// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_5
+static const char *AbelianGroup_5 =
 R"doc(Creates the abelian group defined by the given presentation matrix.
 
 Each column of the matrix represents a generator, and each row of the
@@ -113,8 +88,8 @@ matrix represents a relation.
 Parameter ``presentation``:
     a presentation matrix for the new group.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_7
-static const char *AbelianGroup_7 =
+// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_6
+static const char *AbelianGroup_6 =
 R"doc(Creates an abelian group as the homology of a chain complex. The
 abelian group is the kernel of *M* modulo the image of *N*.
 
@@ -144,8 +119,8 @@ Parameter ``N``:
     the `left' matrix in the chain complex; that is, the matrix that
     one takes the image of when computing homology.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_8
-static const char *AbelianGroup_8 =
+// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_7
+static const char *AbelianGroup_7 =
 R"doc(Creates an abelian group as the homology of a chain complex, using
 mod-*p* coefficients. The abelian group is the kernel of *M* modulo
 the image of *N*.

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Output
-static const char *Output =
+constexpr const char *Output =
 R"doc(A common base class for objects that write human-readable text output.
 This class ensures that text output routines have consistent names and
 behaviours across Regina's entire API.
@@ -86,7 +86,7 @@ Python:
     will be provided directly through the various subclasses.)doc";
 
 // Docstring regina::python::doc::OutputBase
-static const char *OutputBase =
+constexpr const char *OutputBase =
 R"doc(Provides a type alias to help identify where in the class hierarchy
 the output functions T::str() and T::detail() are implemented.
 
@@ -108,7 +108,7 @@ Precondition:
     *T* is a class or struct type.)doc";
 
 // Docstring regina::python::doc::ShortOutput
-static const char *ShortOutput =
+constexpr const char *ShortOutput =
 R"doc(A common base class for objects that provide short text output only.
 
 All classes that provide human-readable text output should ultimately
@@ -148,7 +148,7 @@ Python:
 namespace Output_ {
 
 // Docstring regina::python::doc::Output_::detail
-static const char *detail =
+constexpr const char *detail =
 R"doc(Returns a detailed text representation of this object. This text may
 span many lines, and should provide the user with all the information
 they could want. It should be human-readable, should not contain
@@ -160,7 +160,7 @@ Returns:
     a detailed text representation of this object.)doc";
 
 // Docstring regina::python::doc::Output_::str
-static const char *str =
+constexpr const char *str =
 R"doc(Returns a short text representation of this object. This text should
 be human-readable, should use plain ASCII characters where possible,
 and should not contain any newlines.
@@ -178,7 +178,7 @@ Returns:
     a short text representation of this object.)doc";
 
 // Docstring regina::python::doc::Output_::utf8
-static const char *utf8 =
+constexpr const char *utf8 =
 R"doc(Returns a short text representation of this object using unicode
 characters. Like str(), this text should be human-readable, should not
 contain any newlines, and (within these constraints) should be as
