@@ -43,7 +43,7 @@ namespace regina {
 // but not calling add_global_swap(), and where there is in fact no variant of
 // regina::swap() currently visible.
 //
-void swap(nullptr_t, nullptr_t) noexcept;
+void swap(std::nullptr_t, std::nullptr_t) noexcept;
 
 namespace python {
 
