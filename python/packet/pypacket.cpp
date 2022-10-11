@@ -34,7 +34,6 @@ namespace pybind11 { class module_; }
 
 void addContainer(pybind11::module_& m);
 void addPacket(pybind11::module_& m);
-void addPacketListener(pybind11::module_& m);
 void addAttachment(pybind11::module_& m);
 void addScript(pybind11::module_& m);
 void addText(pybind11::module_& m);
@@ -43,7 +42,6 @@ void addPacketType(pybind11::module_& m);
 void addPacketClasses(pybind11::module_& m) {
     addPacketType(m);
     addPacket(m);
-    addPacketListener(m);
     addContainer(m);
     addAttachment(m);
     addScript(m);

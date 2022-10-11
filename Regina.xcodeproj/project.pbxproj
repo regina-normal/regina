@@ -1653,8 +1653,6 @@
 		05B22D1622D543E80099008B /* pythoninterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1322D543E70099008B /* pythoninterpreter.cpp */; };
 		05B22D1922D54C980099008B /* pythonoutputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1722D54C970099008B /* pythonoutputstream.cpp */; };
 		05B22D1A22D54C980099008B /* pythonoutputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1722D54C970099008B /* pythonoutputstream.cpp */; };
-		05B22D1C22D966A60099008B /* packetlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1B22D966A60099008B /* packetlistener.cpp */; };
-		05B22D1D22D966A60099008B /* packetlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1B22D966A60099008B /* packetlistener.cpp */; };
 		05B44D1521914FA300B1D343 /* binom.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B44D1321914FA200B1D343 /* binom.h */; };
 		05B4D2BA229F376B00B7B11C /* project_and_lift.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2A8229F376700B7B11C /* project_and_lift.h */; };
 		05B4D2BB229F376B00B7B11C /* nmz_integrate.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2A9229F376800B7B11C /* nmz_integrate.h */; };
@@ -4264,7 +4262,6 @@
 		05B22D1422D543E80099008B /* pythoninterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythoninterpreter.h; sourceTree = "<group>"; };
 		05B22D1722D54C970099008B /* pythonoutputstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonoutputstream.cpp; sourceTree = "<group>"; };
 		05B22D1822D54C970099008B /* pythonoutputstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonoutputstream.h; sourceTree = "<group>"; };
-		05B22D1B22D966A60099008B /* packetlistener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packetlistener.cpp; sourceTree = "<group>"; };
 		05B44D1321914FA200B1D343 /* binom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = binom.h; sourceTree = "<group>"; };
 		05B4D2A7229F376700B7B11C /* descent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descent.cpp; sourceTree = "<group>"; };
 		05B4D2A8229F376700B7B11C /* project_and_lift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = project_and_lift.h; sourceTree = "<group>"; };
@@ -5227,7 +5224,6 @@
 				050F5D3F1B9BAB9C00C1F681 /* CMakeLists.txt */,
 				050F5D401B9BAB9C00C1F681 /* container.cpp */,
 				050F5D411B9BAB9C00C1F681 /* packet.cpp */,
-				05B22D1B22D966A60099008B /* packetlistener.cpp */,
 				050F5D451B9BAB9C00C1F681 /* packettype.cpp */,
 				050F5D461B9BAB9C00C1F681 /* pypacket.cpp */,
 				050F5D431B9BAB9C00C1F681 /* script.cpp */,
@@ -9233,7 +9229,6 @@
 				050F5E041B9BAB9C00C1F681 /* modulemain.cpp in Sources */,
 				05431FCF1C40F663009BC072 /* intutils.cpp in Sources */,
 				0591E8131C4F763B00793A9C /* component4.cpp in Sources */,
-				05B22D1C22D966A60099008B /* packetlistener.cpp in Sources */,
 				05CAE6772745256E007C93F3 /* gluingperms3.cpp in Sources */,
 				05772F1D270CFBAA00D26D8A /* pyenumerate.cpp in Sources */,
 				050F5E111B9BAB9C00C1F681 /* snappeatriangulation.cpp in Sources */,
@@ -9633,7 +9628,6 @@
 				05CAE66C2745256E007C93F3 /* gluingperms8.cpp in Sources */,
 				05B7FFAB25AC22D2003BAF5C /* project_and_lift.cpp in Sources */,
 				05EDDA4E27E3102A001743C1 /* signed_dec.cpp in Sources */,
-				05B22D1D22D966A60099008B /* packetlistener.cpp in Sources */,
 				054208921DF0D0CF0018AB24 /* state.cpp in Sources */,
 				05249EEB1DBC16EA001FE29E /* facetpairing7.cpp in Sources */,
 				05F0A0631DBF0B7000117BFC /* triangle3.cpp in Sources */,
