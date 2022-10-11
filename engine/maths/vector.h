@@ -352,7 +352,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * functions instead.  In particular, you can iterate over the elements
          * of this list in the usual way using a range-based \c for loop.
          *
-         * @return an iterator over the elements of this list.
+         * @return an iterator over the elements of this vector.
          */
         auto __iter__() const;
 #endif

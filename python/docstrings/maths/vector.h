@@ -247,7 +247,7 @@ static const char *__iter__ =
 R"doc(Returns a Python iterator over the elements of this vector.
 
 Returns:
-    an iterator over the elements of this list.)doc";
+    an iterator over the elements of this vector.)doc";
 
 // Docstring regina::python::doc::Vector_::__mul
 static const char *__mul =
