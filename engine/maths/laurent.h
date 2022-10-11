@@ -149,6 +149,10 @@ class Laurent :
          *
          * \pre Objects of type \a T can be assigned values of type \a U.
          *
+         * \nopython Python only supports Laurent polynomials with one type of
+         * coefficient (the case where \a T is Integer).  Therefore
+         * Python users can use the non-templated copy constructor.
+         *
          * @param value the polynomial to clone.
          */
         template <typename U>
@@ -203,8 +207,8 @@ class Laurent :
          * the sequence is zero.
          * An empty sequence will be treated as the zero polynomial.
          *
-         * \ifacespython Not available, but there is a Python constructor
-         * that takes a list of coefficients (which need not be constant).
+         * \nopython Instead, use the Python constructor that takes a list
+         * of coefficients (which need not be constant).
          *
          * @param minExp the exponent corresponding to the first
          * coefficient in the sequence.
@@ -294,8 +298,8 @@ class Laurent :
          * by value (to enforce constness), which means for example you
          * cannot write something like <tt>poly[exp].negate()</tt>.
          *
-         * \ifacescpp C++ users must always set coefficients using the
-         * separate routine set(), since this square bracket operator is const.
+         * \cpp For C++ users, this operator is read-only.  To \e set
+         * coefficients, you must use the separate routine set().
          *
          * @param exp the exponent of the term whose coefficient should
          * be returned.
@@ -583,7 +587,7 @@ class Laurent :
          * using UTF-8.  This will make the output nicer, but will require more
          * complex fonts to be available on the user's machine.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
          * @param utf8 \c true if unicode characters may be used.
@@ -637,8 +641,7 @@ class Laurent :
          * tightEncode() function.  This is true for Regina's arbitrary
          * precision integer types (Integer and LargeInteger).
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -664,8 +667,8 @@ class Laurent :
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a single-variable Laurent polynomial.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for a single-variable Laurent polynomial.

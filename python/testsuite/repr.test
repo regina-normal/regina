@@ -48,7 +48,7 @@ def dump(x):
 		else:
 			print('empty list')
 	else:
-		print(x.__class__.__name__)
+		print(x.__class__.__qualname__)
 		print(str(x))
 	print(repr(x))
 	print()
@@ -542,4 +542,6 @@ tree.run(dump)
 t = Example3.trefoil()
 tree = TreeEnumeration_NonSpun(t, NS_QUAD)
 tree.run(dump)
+
+dump(Perm8.Sn)
 

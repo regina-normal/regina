@@ -32,10 +32,14 @@
 
 #include "../pybind11/pybind11.h"
 #include "utilities/base64.h"
+#include "../helpers/docstrings.h"
+#include "../docstrings/utilities/base64.h"
 
 void addBase64(pybind11::module_& m) {
-    m.def("base64Length", regina::base64Length);
-    m.def("isBase64", regina::isBase64);
+    RDOC_SCOPE_BEGIN_MAIN
+
+    m.def("base64Length", regina::base64Length, rdoc::base64Length);
+    m.def("isBase64", regina::isBase64, rdoc::isBase64);
     m.attr("base64Table") = regina::base64Table;
     m.attr("base64Spare") = regina::base64Spare;
 
@@ -62,7 +66,7 @@ void addBase64(pybind11::module_& m) {
         pybind11::str ans(out, outlen);
         delete[] out;
         return ans;
-    });
+    }, pybind11::arg("input_bytes"), rdoc::base64Encode_2);
 
     m.def("base64Decode", [](const std::string& s) -> pybind11::object {
         char* out;
@@ -75,6 +79,8 @@ void addBase64(pybind11::module_& m) {
         } else {
             return pybind11::none();
         }
-    });
+    }, pybind11::arg("input_string"), rdoc::base64Decode_2);
+
+    RDOC_SCOPE_END
 }
 

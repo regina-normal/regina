@@ -37,10 +37,10 @@
 #include "simplex-bindings.h"
 
 void addTriangulations12(pybind11::module_& m) {
-    addTriangulation<12>(m, "Triangulation12");
+    addSimplex<12>(m, "Simplex12");
     addComponent<12>(m, "Component12");
     addBoundaryComponent<12>(m, "BoundaryComponent12");
-    addSimplex<12>(m, "Simplex12");
+    addTriangulation<12>(m, "Triangulation12");
 
     addIsoSigClassic<12>(m, "IsoSigClassic12");
     addIsoSigEdgeDegrees<12>(m, "IsoSigEdgeDegrees12");

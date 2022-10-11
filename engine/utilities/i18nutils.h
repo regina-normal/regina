@@ -123,7 +123,7 @@ class Locale {
  * machine, though in this case it will simply pass data through without
  * performing any translations.
  *
- * \ifacespython Not included.
+ * \nopython
  *
  * @author Parts of this code are modified from the cxxtools library
  * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is
@@ -251,7 +251,7 @@ class IConvStreamBuffer : public std::streambuf {
  * machine, though in this case it will simply pass data straight through
  * to the destination output stream without any conversion.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * @author Parts of this code are modified from the cxxtools library
  * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is

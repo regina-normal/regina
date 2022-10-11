@@ -34,52 +34,60 @@
 #include "../pybind11/operators.h"
 #include "maths/rational.h"
 #include "../helpers.h"
+#include "../docstrings/maths/rational.h"
 
 using regina::Integer;
 using regina::LargeInteger;
 using regina::Rational;
 
 void addRational(pybind11::module_& m) {
-    auto c = pybind11::class_<Rational>(m, "Rational")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const Rational&>())
-        .def(pybind11::init<const Integer&>())
-        .def(pybind11::init<const LargeInteger&>())
-        .def(pybind11::init<long>())
-        .def(pybind11::init<const Integer&, const Integer&>())
-        .def(pybind11::init<const LargeInteger&, const LargeInteger&>())
-        .def(pybind11::init<long, unsigned long>())
-        .def("swap", &Rational::swap)
-        .def("numerator", &Rational::numerator)
-        .def("denominator", &Rational::denominator)
-        .def(pybind11::self * pybind11::self)
-        .def(pybind11::self / pybind11::self)
-        .def(pybind11::self + pybind11::self)
-        .def(pybind11::self - pybind11::self)
-        .def(- pybind11::self)
-        .def("inverse", &Rational::inverse)
-        .def("abs", &Rational::abs)
-        .def(pybind11::self += pybind11::self)
-        .def(pybind11::self -= pybind11::self)
-        .def(pybind11::self *= pybind11::self)
-        .def(pybind11::self /= pybind11::self)
-        .def("negate", &Rational::negate)
-        .def("invert", &Rational::invert)
-        .def(pybind11::self < pybind11::self)
-        .def(pybind11::self > pybind11::self)
-        .def(pybind11::self <= pybind11::self)
-        .def(pybind11::self >= pybind11::self)
-        .def("doubleApprox", &Rational::doubleApprox)
-        .def("tex", &Rational::tex)
+    RDOC_SCOPE_BEGIN(Rational)
+
+    auto c = pybind11::class_<Rational>(m, "Rational", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Rational)
+        .def(pybind11::init<const Rational&>(), rdoc::Rational_2)
+        .def(pybind11::init<const Integer&>(), rdoc::Rational_3)
+        .def(pybind11::init<const LargeInteger&>(), rdoc::Rational_3)
+        .def(pybind11::init<long>(), rdoc::Rational_4)
+        .def(pybind11::init<const Integer&, const Integer&>(), rdoc::Rational_5)
+        .def(pybind11::init<const LargeInteger&, const LargeInteger&>(),
+            rdoc::Rational_5)
+        .def(pybind11::init<long, unsigned long>(), rdoc::Rational_6)
+        .def("swap", &Rational::swap, rdoc::swap)
+        .def("numerator", &Rational::numerator, rdoc::numerator)
+        .def("denominator", &Rational::denominator, rdoc::denominator)
+        .def(pybind11::self * pybind11::self, rdoc::__mul)
+        .def(pybind11::self / pybind11::self, rdoc::__div)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self - pybind11::self, rdoc::__sub)
+        .def(- pybind11::self, rdoc::__sub_2)
+        .def("inverse", &Rational::inverse, rdoc::inverse)
+        .def("abs", &Rational::abs, rdoc::abs)
+        .def(pybind11::self += pybind11::self, rdoc::__iadd)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul)
+        .def(pybind11::self /= pybind11::self, rdoc::__idiv)
+        .def("negate", &Rational::negate, rdoc::negate)
+        .def("invert", &Rational::invert, rdoc::invert)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
+        .def(pybind11::self > pybind11::self, rdoc::__gt)
+        .def(pybind11::self <= pybind11::self, rdoc::__le)
+        .def(pybind11::self >= pybind11::self, rdoc::__ge)
+        .def("doubleApprox", &Rational::doubleApprox, rdoc::doubleApprox)
+        .def("tex", &Rational::tex, rdoc::tex)
         .def_readonly_static("zero", &Rational::zero)
         .def_readonly_static("one", &Rational::one)
         .def_readonly_static("infinity", &Rational::infinity)
         .def_readonly_static("undefined", &Rational::undefined)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
-    regina::python::add_global_swap<Rational>(m);
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_global_swap<Rational>(m, rdoc::swap);
+
+    RDOC_SCOPE_END
 
     pybind11::implicitly_convertible<Integer, Rational>();
     pybind11::implicitly_convertible<LargeInteger, Rational>();

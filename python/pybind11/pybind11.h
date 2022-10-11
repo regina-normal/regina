@@ -47,6 +47,10 @@
 #    pragma GCC diagnostic ignored "-Wnoexcept-type"
 #endif
 
+namespace regina {
+    const char* pythonTypename(const std::type_info*);
+}
+
 PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
 
 PYBIND11_NAMESPACE_BEGIN(detail)
@@ -433,15 +437,27 @@ protected:
                 if (!t) {
                     pybind11_fail("Internal error while parsing type signature (1)");
                 }
-                if (auto *tinfo = detail::get_type_info(*t)) {
+                if (const char* name = regina::pythonTypename(t)) {
+                    signature += name;
+                } else if (auto *tinfo = detail::get_type_info(*t)) {
                     handle th((PyObject *) tinfo->type);
-                    signature += th.attr("__module__").cast<std::string>() + "."
-                                 + th.attr("__qualname__").cast<std::string>();
+                    const auto m = th.attr("__module__").cast<std::string>();
+                    if (m == "regina.engine")
+                        signature += "regina." +
+                            th.attr("__qualname__").cast<std::string>();
+                    else
+                        signature += m + "." +
+                            th.attr("__qualname__").cast<std::string>();
                 } else if (rec->is_new_style_constructor && arg_index == 0) {
                     // A new-style `__init__` takes `self` as `value_and_holder`.
                     // Rewrite it to the proper class type.
-                    signature += rec->scope.attr("__module__").cast<std::string>() + "."
-                                 + rec->scope.attr("__qualname__").cast<std::string>();
+                    const auto m = rec->scope.attr("__module__").cast<std::string>();
+                    if (m == "regina.engine")
+                        signature += "regina."
+                            + rec->scope.attr("__qualname__").cast<std::string>();
+                    else
+                        signature += m + "."
+                            + rec->scope.attr("__qualname__").cast<std::string>();
                 } else {
                     std::string tname(t->name());
                     detail::clean_type_id(tname);

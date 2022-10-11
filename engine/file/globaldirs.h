@@ -68,7 +68,7 @@ class GlobalDirs {
          * \e examples/ and so on.
          *
          * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina .
+         * <tt>/usr/local/share/regina</tt> .
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
@@ -100,7 +100,7 @@ class GlobalDirs {
          * Users can access them by calling Census::lookup().
          *
          * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina/data/census .
+         * <tt>/usr/local/share/regina/data/census</tt>.
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
@@ -119,7 +119,7 @@ class GlobalDirs {
          * of home().
          *
          * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina/examples .
+         * <tt>/usr/local/share/regina/examples</tt> .
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
@@ -144,7 +144,7 @@ class GlobalDirs {
          *   build tree where the API docs are built.
          *
          * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina/engine-docs .
+         * <tt>/usr/local/share/regina/engine-docs</tt> .
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
@@ -163,7 +163,7 @@ class GlobalDirs {
          * of home().
          *
          * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina/data .
+         * <tt>/usr/local/share/regina/data</tt> .
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you

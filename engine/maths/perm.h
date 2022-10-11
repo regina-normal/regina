@@ -43,15 +43,11 @@
 #define __REGINA_PERM_H
 #endif
 
-#include <array>
 #include <cstdlib>
-#include <iostream>
 #include <iterator>
-#include <string>
 #include "regina-core.h"
-#include "utilities/exception.h"
+#include "maths/perm-prereq.h"
 #include "utilities/intutils.h"
-#include "utilities/randutils.h"
 
 namespace regina {
 
@@ -88,40 +84,6 @@ inline constexpr char digit(int i) {
 inline constexpr int64_t factorial(int n) {
     return (n <= 1 ? 1 : factorial(n - 1) * n);
 }
-
-/**
- * Represents the different kinds of internal permutation codes that are
- * used in Regina's various Perm<n> template classes.  See the Perm<n>
- * class notes for more information on exactly how these codes are constructed.
- * The class constant Perm<n>::codeType indicates which type of code is used
- * for which \a n.
- *
- * \ingroup maths
- */
-enum PermCodeType {
-    /**
-     * This is a permutation code that packs the images of 0,...,<i>n</i>-1
-     * into a single native integer using a handful of bits per image.
-     * Such codes are easier to manipulate on an element-by-element basis.
-     *
-     * Codes of this type can always be queried using Perm<n>::permCode(), and
-     * permutations can be recreated from them using Perm<n>::fromPermCode().
-     */
-    PERM_CODE_IMAGES = 1,
-    /**
-     * This is a permutation code that stores the index into the full
-     * permutation group \a S_n.  Such codes typically require fewer bytes and
-     * are packed together, making them ideal for working with lookup tables.
-     *
-     * Codes of this type can be queried using Perm<n>::SnIndex(), and
-     * permutations can be recreated from them by indexing into Perm<n>::Sn.
-     *
-     * \warning The routines Perm<n>::permCode() and Perm<n>::fromPermCode()
-     * will still be present, but in some classes (e.g., Perm<4> and Perm<5>),
-     * these are legacy routines that refer to different types of codes.
-     */
-    PERM_CODE_INDEX = 2
-};
 
 /**
  * Represents a permutation of {0,1,...,<i>n</i>-1}.
@@ -256,7 +218,7 @@ class Perm {
              n == 10 || n == 11 ? 4 : n == 12 || n == 13 ? 5 : n == 14 ? 6 : 7);
 
         /**
-         * An array-like object used to implement Perm<n>::Sn.
+         * A lightweight array-like object used to implement Perm<n>::Sn.
          */
         struct SnLookup {
             /**
@@ -271,10 +233,17 @@ class Perm {
              * @return the corresponding permutation in Sn.
              */
             constexpr Perm<n> operator[] (Index index) const;
+
+            /**
+             * Returns the number of permutations in the array Sn.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return nPerms; }
         };
 
         /**
-         * An array-like object used to implement Perm<n>::orderedSn.
+         * A lightweight array-like object used to implement Perm<n>::orderedSn.
          */
         struct OrderedSnLookup {
             /**
@@ -289,6 +258,13 @@ class Perm {
              * @return the corresponding permutation in orderedSn.
              */
             constexpr Perm<n> operator[] (Index index) const;
+
+            /**
+             * Returns the number of permutations in the array orderedSn.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return nPerms; }
         };
 
     public:
@@ -300,17 +276,17 @@ class Perm {
          * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and <i>n</i>!-1 inclusive.
          *
-         * The object that is returned is lightweight and is defined in the
-         * headers only.  In particular, you cannot make a reference to it
-         * (but you can always make a copy).
-         *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * This is different from Perm<n>::orderedSn, since this array \a Sn
+         * This array is different from Perm<n>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
          * stores permutations in lexicographical order.
+         *
+         * This is a lightweight object, and it is defined in the headers only.
+         * In particular, you cannot make a reference to it (but it is cheap
+         * to make a copy).
          *
          * \warning For \a n &le; 7, the square bracket operator is a
          * very fast constant-time routine.  However, for \a n &ge; 8,
@@ -330,13 +306,13 @@ class Perm {
          * Lexicographical ordering treats each permutation \a p as the
          * <i>n</i>-tuple (\a p[0], \a p[1], ..., \a p[<i>n</i>-1]).
          *
-         * The object that is returned is lightweight and is defined in the
-         * headers only.  In particular, you cannot make a reference to it
-         * (but you can always make a copy).
-         *
-         * This is different from Perm<n>::Sn, since this array \a orderedSn
+         * This array is different from Perm<n>::Sn, since \a orderedSn
          * stores permutations in lexicographical order, whereas \a Sn
          * alternates between even and odd permutations.
+         *
+         * This is a lightweight object, and it is defined in the headers only.
+         * In particular, you cannot make a reference to it (but it is cheap
+         * to make a copy).
          *
          * \warning For \a n &le; 7, the square bracket operator is a
          * very fast constant-time routine.  However, for \a n &ge; 8,
@@ -494,7 +470,8 @@ class Perm {
         /**
          * Returns the composition of this permutation with the given
          * permutation.  If this permutation is <i>p</i>, the
-         * resulting permutation will satisfy <tt>(p*q)[x] == p[q[x]]</tt>.
+         * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
+         * <tt>(p*q)[x] == p[q[x]]</tt>.
          *
          * @param q the permutation to compose this with.
          * @return the composition of both permutations.
@@ -651,8 +628,8 @@ class Perm {
          * \tparam URBG A type which, once any references are removed, must
          * adhere to the C++ \a UniformRandomBitGenerator concept.
          *
-         * \ifacespython Not present, though the non-thread-safe variant
-         * without the \a gen argument is available.
+         * \nopython Python users are still able to use the non-thread-safe
+         * variant without the \a gen argument.
          *
          * @param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
@@ -698,8 +675,7 @@ class Perm {
          * code.  For larger permutation classes however (8 &le; \a n &le; 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -761,8 +737,8 @@ class Perm {
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an <i>n</i>-element permutation.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for an <i>n</i>-element permutation.

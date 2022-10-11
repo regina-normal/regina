@@ -46,7 +46,9 @@
 
 using pybind11::overload_cast;
 using regina::python::GILCallbackManager;
+using regina::AbelianGroup;
 using regina::Isomorphism;
+using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
 using regina::Triangulation;
 
@@ -64,9 +66,10 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<4>::simplices,
             pybind11::keep_alive<0, 1>())
-        // Use a C-style cast because GCC struggles with the overload_cast here:
-        .def("pentachoron", (regina::Simplex<4>* (Triangulation<4>::*)(size_t))(
-            &Triangulation<4>::pentachoron),
+        // Use a static cast because GCC struggles with the overload_cast here:
+        .def("pentachoron",
+            static_cast<regina::Simplex<4>* (Triangulation<4>::*)(size_t)>(
+                &Triangulation<4>::pentachoron),
             pybind11::return_value_policy::reference_internal)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<4>::simplex),
@@ -139,12 +142,14 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<4>::edge,
             pybind11::return_value_policy::reference_internal)
-        // Use C-style casts because GCC struggles with overload_cast here:
-        .def("triangle", (regina::Face<4, 2>* (Triangulation<4>::*)(size_t))(
-            &Triangulation<4>::triangle),
+        // Use static casts because GCC struggles with overload_cast here:
+        .def("triangle",
+            static_cast<regina::Face<4, 2>* (Triangulation<4>::*)(size_t)>(
+                &Triangulation<4>::triangle),
             pybind11::return_value_policy::reference_internal)
-        .def("tetrahedron", (regina::Face<4, 3>* (Triangulation<4>::*)(size_t))(
-            &Triangulation<4>::tetrahedron),
+        .def("tetrahedron",
+            static_cast<regina::Face<4, 3>* (Triangulation<4>::*)(size_t)>(
+                &Triangulation<4>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
         .def("translate", &Triangulation<4>::translate<0>,
             pybind11::return_value_policy::reference_internal)
@@ -190,7 +195,8 @@ void addTriangulation4(pybind11::module_& m) {
         .def("countBoundaryFacets", &Triangulation<4>::countBoundaryFacets)
         .def("countBoundaryTetrahedra",
             &Triangulation<4>::countBoundaryTetrahedra)
-        .def("countBoundaryFaces", (size_t (Triangulation<4>::*)(int) const)(
+        .def("countBoundaryFaces",
+            static_cast<size_t (Triangulation<4>::*)(int) const>(
             &Triangulation<4>::countBoundaryFaces))
         .def("isClosed", &Triangulation<4>::isClosed)
         .def("isOrientable", &Triangulation<4>::isOrientable)
@@ -201,18 +207,21 @@ void addTriangulation4(pybind11::module_& m) {
         .def("simplifiedFundamentalGroup",
             &Triangulation<4>::simplifiedFundamentalGroup)
         .def("homology",
-            (regina::AbelianGroup (Triangulation<4>::*)(int) const)(
-            &Triangulation<4>::homology),
+            static_cast<AbelianGroup (Triangulation<4>::*)(int) const>(
+                &Triangulation<4>::homology),
             pybind11::arg("k") = 1)
         .def("markedHomology",
-            (regina::MarkedAbelianGroup (Triangulation<4>::*)(int) const)(
-            &Triangulation<4>::markedHomology),
+            static_cast<MarkedAbelianGroup (Triangulation<4>::*)(int) const>(
+                &Triangulation<4>::markedHomology),
             pybind11::arg("k") = 1)
-        .def("boundaryMap", (MatrixInt (Triangulation<4>::*)(int) const)(
+        .def("boundaryMap",
+            static_cast<MatrixInt (Triangulation<4>::*)(int) const>(
             &Triangulation<4>::boundaryMap))
-        .def("dualBoundaryMap", (MatrixInt (Triangulation<4>::*)(int) const)(
+        .def("dualBoundaryMap",
+            static_cast<MatrixInt (Triangulation<4>::*)(int) const>(
             &Triangulation<4>::dualBoundaryMap))
-        .def("dualToPrimal", (MatrixInt (Triangulation<4>::*)(int) const)(
+        .def("dualToPrimal",
+            static_cast<MatrixInt (Triangulation<4>::*)(int) const>(
             &Triangulation<4>::dualToPrimal))
         .def("intersectionForm", &Triangulation<4>::intersectionForm)
         .def("orient", &Triangulation<4>::orient)

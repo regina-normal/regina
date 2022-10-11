@@ -37,102 +37,107 @@
 #include "utilities/typeutils.h"
 #include "../constarray.h"
 #include "../helpers.h"
+#include "../docstrings/maths/perm5.h"
 
 using regina::Perm;
-using regina::python::ConstArray;
-
-namespace {
-    ConstArray<decltype(Perm<5>::S5), int>
-        Perm5_S5_arr(Perm<5>::S5, 120);
-    ConstArray<decltype(Perm<5>::orderedS5), int>
-        Perm5_orderedS5_arr(Perm<5>::orderedS5, 120);
-    ConstArray<decltype(Perm<5>::S4), int> Perm5_S4_arr(Perm<5>::S4, 24);
-    ConstArray<decltype(Perm<5>::orderedS4), int>
-        Perm5_orderedS4_arr(Perm<5>::orderedS4, 24);
-    ConstArray<decltype(Perm<5>::S3), int> Perm5_S3_arr(Perm<5>::S3, 6);
-    ConstArray<decltype(Perm<5>::orderedS3), int>
-        Perm5_orderedS3_arr(Perm<5>::orderedS3, 6);
-    ConstArray<decltype(Perm<5>::S2), int> Perm5_S2_arr(Perm<5>::S2, 2);
-}
 
 void addPerm5(pybind11::module_& m) {
-    decltype(Perm5_S5_arr)::wrapClass(m, "ConstArray_Perm5_S5");
-    decltype(Perm5_orderedS5_arr)::wrapClass(m, "ConstArray_Perm5_orderedS5");
-    decltype(Perm5_S4_arr)::wrapClass(m, "ConstArray_Perm5_S4");
-    decltype(Perm5_orderedS4_arr)::wrapClass(m, "ConstArray_Perm5_orderedS4");
-    decltype(Perm5_S3_arr)::wrapClass(m, "ConstArray_Perm5_S3");
-    decltype(Perm5_orderedS3_arr)::wrapClass(m, "ConstArray_Perm5_orderedS3");
-    decltype(Perm5_S2_arr)::wrapClass(m, "ConstArray_Perm5_S2");
+    RDOC_SCOPE_BEGIN(Perm)
 
-    auto c = pybind11::class_<Perm<5>>(m, "Perm5")
-        .def(pybind11::init<>())
-        .def(pybind11::init<int, int>())
-        .def(pybind11::init<int, int, int, int, int>())
-        .def(pybind11::init<int, int, int, int, int, int, int, int, int, int>())
-        .def(pybind11::init<const std::array<int, 5>&>())
-        .def(pybind11::init<const Perm<5>&>())
-        .def("permCode1", &Perm<5>::permCode1)
-        .def("permCode2", &Perm<5>::permCode2)
-        .def("setPermCode1", &Perm<5>::setPermCode1)
-        .def("setPermCode2", &Perm<5>::setPermCode2)
-        .def_static("fromPermCode1", &Perm<5>::fromPermCode1)
-        .def_static("fromPermCode2", &Perm<5>::fromPermCode2)
-        .def_static("isPermCode1", &Perm<5>::isPermCode1)
-        .def_static("isPermCode2", &Perm<5>::isPermCode2)
-        .def("imagePack", &Perm<5>::imagePack)
-        .def_static("fromImagePack", &Perm<5>::fromImagePack)
-        .def_static("isImagePack", &Perm<5>::isImagePack)
-        .def(pybind11::self * pybind11::self)
-        .def("inverse", &Perm<5>::inverse)
-        .def("pow", &Perm<5>::pow)
-        .def("order", &Perm<5>::order)
-        .def("reverse", &Perm<5>::reverse)
-        .def("sign", &Perm<5>::sign)
-        .def("__getitem__", &Perm<5>::operator[])
-        .def("pre", &Perm<5>::pre)
-        .def("compareWith", &Perm<5>::compareWith)
-        .def("isIdentity", &Perm<5>::isIdentity)
+    auto c = pybind11::class_<Perm<5>>(m, "Perm5", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Perm)
+        .def(pybind11::init<int, int>(), rdoc::Perm_2)
+        .def(pybind11::init<int, int, int, int, int>(), rdoc::Perm_3)
+        .def(pybind11::init<const std::array<int, 5>&>(), rdoc::Perm_4)
+        .def(pybind11::init<int, int, int, int, int,
+                            int, int, int, int, int>(), rdoc::Perm_5)
+        .def(pybind11::init<const Perm<5>&>(), rdoc::Perm_6)
+        .def("permCode1", &Perm<5>::permCode1, rdoc::permCode1)
+        .def("permCode2", &Perm<5>::permCode2, rdoc::permCode2)
+        .def("setPermCode1", &Perm<5>::setPermCode1, rdoc::setPermCode1)
+        .def("setPermCode2", &Perm<5>::setPermCode2, rdoc::setPermCode2)
+        .def_static("fromPermCode1", &Perm<5>::fromPermCode1,
+            rdoc::fromPermCode1)
+        .def_static("fromPermCode2", &Perm<5>::fromPermCode2,
+            rdoc::fromPermCode2)
+        .def_static("isPermCode1", &Perm<5>::isPermCode1, rdoc::isPermCode1)
+        .def_static("isPermCode2", &Perm<5>::isPermCode2, rdoc::isPermCode2)
+        .def("imagePack", &Perm<5>::imagePack, rdoc::imagePack)
+        .def_static("fromImagePack", &Perm<5>::fromImagePack,
+            rdoc::fromImagePack)
+        .def_static("isImagePack", &Perm<5>::isImagePack, rdoc::isImagePack)
+        .def(pybind11::self * pybind11::self, rdoc::__mul)
+        .def("inverse", &Perm<5>::inverse, rdoc::inverse)
+        .def("pow", &Perm<5>::pow, rdoc::pow)
+        .def("order", &Perm<5>::order, rdoc::order)
+        .def("reverse", &Perm<5>::reverse, rdoc::reverse)
+        .def("sign", &Perm<5>::sign, rdoc::sign)
+        .def("__getitem__", &Perm<5>::operator[], rdoc::__array)
+        .def("pre", &Perm<5>::pre, rdoc::pre)
+        .def("compareWith", &Perm<5>::compareWith, rdoc::compareWith)
+        .def("isIdentity", &Perm<5>::isIdentity, rdoc::isIdentity)
         .def("inc", [](Perm<5>& p) {
             return p++;
-        })
-        .def(pybind11::self < pybind11::self)
-        .def_static("rot", &Perm<5>::rot)
+        }, rdoc::__inc)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
+        .def_static("rot", &Perm<5>::rot, rdoc::rot)
         .def_static("rand", static_cast<Perm<5>(&)(bool)>(Perm<5>::rand),
-            pybind11::arg("even") = false)
-        .def("trunc", &Perm<5>::trunc)
-        .def("trunc2", &Perm<5>::trunc2)
-        .def("trunc3", &Perm<5>::trunc3)
-        .def("trunc4", &Perm<5>::trunc4)
-        .def("clear", &Perm<5>::clear)
-        .def("S5Index", (int (Perm<5>::*)() const) &Perm<5>::S5Index)
-        .def("SnIndex", &Perm<5>::SnIndex)
-        .def("orderedS5Index", &Perm<5>::orderedS5Index)
-        .def("orderedSnIndex", &Perm<5>::orderedS5Index)
-        .def("isConjugacyMinimal", &Perm<5>::isConjugacyMinimal)
-        .def_static("extend", &Perm<5>::extend<2>)
-        .def_static("extend", &Perm<5>::extend<3>)
-        .def_static("extend", &Perm<5>::extend<4>)
+            pybind11::arg("even") = false, rdoc::rand)
+        .def("trunc", &Perm<5>::trunc, rdoc::trunc)
+        .def("trunc2", &Perm<5>::trunc2, rdoc::trunc2)
+        .def("trunc3", &Perm<5>::trunc3, rdoc::trunc3)
+        .def("trunc4", &Perm<5>::trunc4, rdoc::trunc4)
+        .def("clear", &Perm<5>::clear, rdoc::clear)
+        .def("S5Index", static_cast<int (Perm<5>::*)() const>(
+            &Perm<5>::S5Index), rdoc::S5Index)
+        .def("SnIndex", &Perm<5>::SnIndex, rdoc::SnIndex)
+        .def("orderedS5Index", &Perm<5>::orderedS5Index, rdoc::orderedS5Index)
+        .def("orderedSnIndex", &Perm<5>::orderedSnIndex, rdoc::orderedSnIndex)
+        .def("isConjugacyMinimal", &Perm<5>::isConjugacyMinimal,
+            rdoc::isConjugacyMinimal)
+        .def_static("extend", &Perm<5>::extend<2>, rdoc::extend)
+        .def_static("extend", &Perm<5>::extend<3>, rdoc::extend)
+        .def_static("extend", &Perm<5>::extend<4>, rdoc::extend)
         .def_readonly_static("codeType", &Perm<5>::codeType)
         .def_readonly_static("imageBits", &Perm<5>::imageBits)
         .def_readonly_static("imageMask", &Perm<5>::imageMask)
         .def_readonly_static("nPerms", &Perm<5>::nPerms)
         .def_readonly_static("nPerms_1", &Perm<5>::nPerms_1)
-        .def_readonly_static("S5", &Perm5_S5_arr)
-        .def_readonly_static("Sn", &Perm5_S5_arr)
-        .def_readonly_static("orderedS5", &Perm5_orderedS5_arr)
-        .def_readonly_static("orderedSn", &Perm5_orderedS5_arr)
-        .def_readonly_static("S4", &Perm5_S4_arr)
-        .def_readonly_static("Sn_1", &Perm5_S4_arr)
-        .def_readonly_static("orderedS4", &Perm5_orderedS4_arr)
-        .def_readonly_static("S3", &Perm5_S3_arr)
-        .def_readonly_static("orderedS3", &Perm5_orderedS3_arr)
-        .def_readonly_static("S2", &Perm5_S2_arr)
+        .def_readonly_static("S5", &Perm<5>::S5)
+        .def_readonly_static("Sn", &Perm<5>::Sn)
+        .def_readonly_static("orderedS5", &Perm<5>::orderedS5)
+        .def_readonly_static("orderedSn", &Perm<5>::orderedSn)
+        .def_readonly_static("S4", &Perm<5>::S4)
+        .def_readonly_static("Sn_1", &Perm<5>::Sn_1)
+        .def_readonly_static("orderedS4", &Perm<5>::orderedS4)
+        .def_readonly_static("S3", &Perm<5>::S3)
+        .def_readonly_static("orderedS3", &Perm<5>::orderedS3)
+        .def_readonly_static("S2", &Perm<5>::S2)
     ;
     regina::for_constexpr<6, 17>([&c](auto i) {
-        c.def_static("contract", &Perm<5>::template contract<i.value>);
+        c.def_static("contract", &Perm<5>::template contract<i.value>,
+            rdoc::contract);
     });
-    regina::python::add_output_basic(c);
-    regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_output_basic(c, rdoc::str);
+    regina::python::add_tight_encoding(c, rdoc::tightEncoding,
+        rdoc::tightDecoding);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    regina::python::add_lightweight_array<decltype(Perm<5>::S5)>(c,
+        "_S5", rdoc::S5Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<5>::orderedS5)>(c,
+        "_orderedS5", rdoc::OrderedS5Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<5>::S4)>(c,
+        "_S4", rdoc::S4Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<5>::orderedS4)>(c,
+        "_orderedS4", rdoc::OrderedS4Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<5>::S3)>(c,
+        "_S3", rdoc::S3Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<5>::orderedS3)>(c,
+        "_orderedS3", rdoc::OrderedS3Lookup);
+    regina::python::add_lightweight_array<decltype(Perm<5>::S2)>(c,
+        "_S2", rdoc::S2Lookup);
+
+    RDOC_SCOPE_END
 }
 

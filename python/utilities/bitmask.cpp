@@ -36,6 +36,7 @@
 #include "utilities/exception.h"
 #include "utilities/intutils.h"
 #include "../helpers.h"
+#include "../docstrings/utilities/bitmask.h"
 
 using regina::Bitmask;
 using regina::Bitmask1;
@@ -43,15 +44,19 @@ using regina::Bitmask2;
 
 template <class B>
 void addBitmaskOpt(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<B>(m, name)
-        .def(pybind11::init<>())
-        .def(pybind11::init<size_t>())
-        .def(pybind11::init<const B&>())
-        .def("reset", pybind11::overload_cast<>(&B::reset))
-        .def("reset", pybind11::overload_cast<size_t>(&B::reset))
-        .def("truncate", &B::truncate)
-        .def("get", &B::get)
-        .def("set", (void (B::*)(size_t, bool))(&B::set))
+    // B could be an instance of either Bitmask1 or Bitmask2, but since the
+    // Python docs are essentially the same we will just use Bitmask1 here.
+    RDOC_SCOPE_BEGIN(Bitmask1)
+
+    auto c = pybind11::class_<B>(m, name, rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Bitmask1)
+        .def(pybind11::init<size_t>(), rdoc::Bitmask1_2)
+        .def(pybind11::init<const B&>(), rdoc::Bitmask1_3)
+        .def("reset", pybind11::overload_cast<>(&B::reset), rdoc::reset)
+        .def("reset", pybind11::overload_cast<size_t>(&B::reset), rdoc::reset_2)
+        .def("truncate", &B::truncate, rdoc::truncate)
+        .def("get", &B::get, rdoc::get)
+        .def("set", static_cast<void (B::*)(size_t, bool)>(&B::set), rdoc::set)
         .def("set", [](B& b, pybind11::list indices, bool value) {
             std::vector<size_t> arg;
             for (auto item : indices) {
@@ -63,33 +68,38 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
                 }
             }
             b.set(arg.begin(), arg.end(), value);
-        })
-        .def(pybind11::self &= pybind11::self)
-        .def(pybind11::self |= pybind11::self)
-        .def(pybind11::self ^= pybind11::self)
-        .def(pybind11::self -= pybind11::self)
-        .def("flip", &B::flip)
-        .def("lessThan", &B::lessThan)
-        .def(pybind11::self <= pybind11::self)
-        .def("inUnion", &B::inUnion)
-        .def("containsIntn", &B::containsIntn)
-        .def("bits", &B::bits)
-        .def("firstBit", &B::firstBit)
-        .def("lastBit", &B::lastBit)
-        .def("atMostOneBit", &B::atMostOneBit)
+        }, rdoc::set_2)
+        .def(pybind11::self &= pybind11::self, rdoc::__iand)
+        .def(pybind11::self |= pybind11::self, rdoc::__ior)
+        .def(pybind11::self ^= pybind11::self, rdoc::__ixor)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def("flip", &B::flip, rdoc::flip)
+        .def("lessThan", &B::lessThan, rdoc::lessThan)
+        .def(pybind11::self <= pybind11::self, rdoc::__le)
+        .def("inUnion", &B::inUnion, rdoc::inUnion)
+        .def("containsIntn", &B::containsIntn, rdoc::containsIntn)
+        .def("bits", &B::bits, rdoc::bits)
+        .def("firstBit", &B::firstBit, rdoc::firstBit)
+        .def("lastBit", &B::lastBit, rdoc::lastBit)
+        .def("atMostOneBit", &B::atMostOneBit, rdoc::atMostOneBit)
         .def_readonly_static("fixedSize", &B::fixedSize)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 
 void addBitmaskGeneric(pybind11::module_& m) {
-    auto c = pybind11::class_<Bitmask>(m, "Bitmask")
-        .def(pybind11::init<>())
-        .def(pybind11::init<size_t>())
-        .def(pybind11::init<const Bitmask&>())
-        .def("get", &Bitmask::get)
-        .def("set", (void (Bitmask::*)(size_t, bool))(&Bitmask::set))
+    RDOC_SCOPE_BEGIN(Bitmask)
+
+    auto c = pybind11::class_<Bitmask>(m, "Bitmask", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Bitmask)
+        .def(pybind11::init<size_t>(), rdoc::Bitmask_2)
+        .def(pybind11::init<const Bitmask&>(), rdoc::Bitmask_3)
+        .def("get", &Bitmask::get, rdoc::get)
+        .def("set", static_cast<void (Bitmask::*)(size_t, bool)>(&Bitmask::set),
+            rdoc::set)
         .def("set", [](Bitmask& b, pybind11::list indices, bool value) {
             std::vector<size_t> arg;
             for (auto item : indices) {
@@ -101,30 +111,35 @@ void addBitmaskGeneric(pybind11::module_& m) {
                 }
             }
             b.set(arg.begin(), arg.end(), value);
-        })
-        .def("reset", pybind11::overload_cast<>(&Bitmask::reset))
-        .def("reset", pybind11::overload_cast<size_t>(&Bitmask::reset))
-        .def("swap", &Bitmask::swap)
-        .def("truncate", &Bitmask::truncate)
-        .def(pybind11::self &= pybind11::self)
-        .def(pybind11::self |= pybind11::self)
-        .def(pybind11::self ^= pybind11::self)
-        .def(pybind11::self -= pybind11::self)
-        .def("flip", &Bitmask::flip)
-        .def("lessThan", &Bitmask::lessThan)
-        .def(pybind11::self <= pybind11::self)
-        .def("inUnion", &Bitmask::inUnion)
-        .def("containsIntn", &Bitmask::containsIntn)
-        .def("bits", &Bitmask::bits)
-        .def("firstBit", &Bitmask::firstBit)
-        .def("lastBit", &Bitmask::lastBit)
-        .def("atMostOneBit", &Bitmask::atMostOneBit)
+        }, rdoc::set_2)
+        .def("reset", pybind11::overload_cast<>(&Bitmask::reset), rdoc::reset)
+        .def("reset", pybind11::overload_cast<size_t>(&Bitmask::reset),
+            rdoc::reset_2)
+        .def("swap", &Bitmask::swap, rdoc::swap)
+        .def("truncate", &Bitmask::truncate, rdoc::truncate)
+        .def(pybind11::self &= pybind11::self, rdoc::__iand)
+        .def(pybind11::self |= pybind11::self, rdoc::__ior)
+        .def(pybind11::self ^= pybind11::self, rdoc::__ixor)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def("flip", &Bitmask::flip, rdoc::flip)
+        .def("lessThan", &Bitmask::lessThan, rdoc::lessThan)
+        .def(pybind11::self <= pybind11::self, rdoc::__le)
+        .def("inUnion", &Bitmask::inUnion, rdoc::inUnion)
+        .def("containsIntn", &Bitmask::containsIntn, rdoc::containsIntn)
+        .def("bits", &Bitmask::bits, rdoc::bits)
+        .def("firstBit", &Bitmask::firstBit, rdoc::firstBit)
+        .def("lastBit", &Bitmask::lastBit, rdoc::lastBit)
+        .def("atMostOneBit", &Bitmask::atMostOneBit, rdoc::atMostOneBit)
         .def_readonly_static("fixedSize", &Bitmask::fixedSize)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<Bitmask>(m);
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_global_swap<Bitmask>(m, rdoc::swap);
+
+    RDOC_SCOPE_END
 }
 
 void addBitmask(pybind11::module_& m) {

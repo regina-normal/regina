@@ -33,24 +33,31 @@
 #include "../pybind11/pybind11.h"
 #include "packet/text.h"
 #include "../helpers.h"
+#include "../docstrings/packet/text.h"
 
 using pybind11::overload_cast;
 using regina::Text;
 
 void addText(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(Text)
+
     auto c = pybind11::class_<Text, regina::Packet, std::shared_ptr<Text>>(
-            m, "Text")
-        .def(pybind11::init<>())
-        .def(pybind11::init<std::string>())
-        .def(pybind11::init<const Text&>())
-        .def("swap", &Text::swap)
-        .def("text", &Text::text)
-        .def("setText", &Text::setText)
+            m, "Text", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Text)
+        .def(pybind11::init<std::string>(), rdoc::Text_2)
+        .def(pybind11::init<const Text&>(), rdoc::Text_3)
+        .def("swap", &Text::swap, rdoc::swap)
+        .def("text", &Text::text, rdoc::text)
+        .def("setText", &Text::setText, rdoc::setText)
         .def_readonly_static("typeID", &Text::typeID)
     ;
     regina::python::add_output(c);
-    regina::python::packet_eq_operators(c);
+    regina::python::packet_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<Text>(m);
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_global_swap<Text>(m, rdoc::swap);
+
+    RDOC_SCOPE_END
 }
 

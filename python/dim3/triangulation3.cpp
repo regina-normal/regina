@@ -50,8 +50,10 @@
 
 using pybind11::overload_cast;
 using regina::python::GILCallbackManager;
+using regina::AbelianGroup;
 using regina::Example;
 using regina::Isomorphism;
+using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
 using regina::Triangulation;
 
@@ -121,9 +123,10 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<3>::simplices,
             pybind11::keep_alive<0, 1>())
-        // Use a C-style cast because GCC struggles with the overload_cast here:
-        .def("tetrahedron", (regina::Simplex<3>* (Triangulation<3>::*)(size_t))(
-            &Triangulation<3>::tetrahedron),
+        // Use a static cast because GCC struggles with the overload_cast here:
+        .def("tetrahedron",
+            static_cast<regina::Simplex<3>* (Triangulation<3>::*)(size_t)>(
+                &Triangulation<3>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<3>::simplex),
@@ -193,9 +196,10 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<3>::edge,
             pybind11::return_value_policy::reference_internal)
-        // Use a C-style cast because GCC struggles with the overload_cast here:
-        .def("triangle", (regina::Face<3, 2>* (Triangulation<3>::*)(size_t))(
-            &Triangulation<3>::triangle),
+        // Use a static cast because GCC struggles with the overload_cast here:
+        .def("triangle",
+            static_cast<regina::Face<3, 2>* (Triangulation<3>::*)(size_t)>(
+                &Triangulation<3>::triangle),
             pybind11::return_value_policy::reference_internal)
         .def("translate", &Triangulation<3>::translate<0>,
             pybind11::return_value_policy::reference_internal)
@@ -245,7 +249,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("hasBoundaryTriangles", &Triangulation<3>::hasBoundaryTriangles)
         .def("countBoundaryFacets", &Triangulation<3>::countBoundaryFacets)
         .def("countBoundaryTriangles", &Triangulation<3>::countBoundaryTriangles)
-        .def("countBoundaryFaces", (size_t (Triangulation<3>::*)(int) const)(
+        .def("countBoundaryFaces",
+            static_cast<size_t (Triangulation<3>::*)(int) const>(
             &Triangulation<3>::countBoundaryFaces))
         .def("isClosed", &Triangulation<3>::isClosed)
         .def("isOrientable", &Triangulation<3>::isOrientable)
@@ -257,8 +262,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("simplifiedFundamentalGroup",
             &Triangulation<3>::simplifiedFundamentalGroup)
         .def("homology",
-            (regina::AbelianGroup (Triangulation<3>::*)(int) const)(
-            &Triangulation<3>::homology),
+            static_cast<AbelianGroup (Triangulation<3>::*)(int) const>(
+                &Triangulation<3>::homology),
             pybind11::arg("k") = 1)
         .def("homologyRel", &Triangulation<3>::homologyRel,
             pybind11::return_value_policy::reference_internal)
@@ -266,14 +271,17 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("homologyH2Z2", &Triangulation<3>::homologyH2Z2)
         .def("markedHomology",
-            (regina::MarkedAbelianGroup (Triangulation<3>::*)(int) const)(
-            &Triangulation<3>::markedHomology),
+            static_cast<MarkedAbelianGroup (Triangulation<3>::*)(int) const>(
+                &Triangulation<3>::markedHomology),
             pybind11::arg("k") = 1)
-        .def("boundaryMap", (MatrixInt (Triangulation<3>::*)(int) const)(
+        .def("boundaryMap",
+            static_cast<MatrixInt (Triangulation<3>::*)(int) const>(
             &Triangulation<3>::boundaryMap))
-        .def("dualBoundaryMap", (MatrixInt (Triangulation<3>::*)(int) const)(
+        .def("dualBoundaryMap",
+            static_cast<MatrixInt (Triangulation<3>::*)(int) const>(
             &Triangulation<3>::dualBoundaryMap))
-        .def("dualToPrimal", (MatrixInt (Triangulation<3>::*)(int) const)(
+        .def("dualToPrimal",
+            static_cast<MatrixInt (Triangulation<3>::*)(int) const>(
             &Triangulation<3>::dualToPrimal))
         .def("turaevViro", &Triangulation<3>::turaevViro,
             pybind11::arg(), pybind11::arg("parity") = true,
@@ -533,6 +541,7 @@ void addTriangulation3(pybind11::module_& m) {
     regina::python::add_packet_constructor<>(wrap);
     regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap);
     regina::python::add_packet_constructor<const regina::Link&, bool>(wrap,
+        nullptr /* docstring */,
         pybind11::arg(), pybind11::arg("simplify") = true);
     regina::python::add_packet_constructor<const std::string&>(wrap);
     wrap.def(pybind11::init([](const regina::python::SnapPyObject& obj) {

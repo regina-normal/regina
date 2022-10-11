@@ -93,9 +93,9 @@ class Rational;
  * \pre An element \c t of type T can be written to an output stream
  * \c out using the standard expression <tt>out << t</tt>.
  *
- * \ifacespython Not present in general, although the specific types
- * Vector<Integer> and Vector<LargeInteger> are available under the names
- * VectorInt and VectorLarge respectively.
+ * \ifacespython Only the specific types Vector<Integer> and
+ * Vector<LargeInteger> are available, under the names VectorInt and
+ * VectorLarge respectively.
  *
  * \ingroup maths
  */
@@ -199,8 +199,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * This constructor can be used (for example) to create
          * hard-coded examples directly in C++ code.
          *
-         * \ifacespython Not available, but there is a Python constructor
-         * that takes a list of coefficients (which need not be constant).
+         * \nopython Instead, use the Python constructor that takes a list
+         * of coefficients (which need not be constant).
          *
          * @param data the elements of the vector.
          */
@@ -269,14 +269,18 @@ class Vector : public ShortOutput<Vector<T>> {
             return elts_[index];
         }
         /**
-         * Returns the beginning of a non-const iterator range that runs
-         * through all elements of this vector.
+         * Returns a C++ non-const iterator pointing to the first element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
          * @return an iterator pointing to the first element of this vector.
          */
@@ -284,14 +288,18 @@ class Vector : public ShortOutput<Vector<T>> {
             return elts_;
         }
         /**
-         * Returns the beginning of a const iterator range that runs through
-         * all elements of this vector.
+         * Returns a C++ non-const iterator pointing to the first element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
          * @return an iterator pointing to the first element of this vector.
          */
@@ -299,14 +307,18 @@ class Vector : public ShortOutput<Vector<T>> {
             return elts_;
         }
         /**
-         * Returns the end of a non-const iterator range that runs through
-         * all elements of this vector.
+         * Returns a C++ non-const iterator pointing beyond the last element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
          * @return an iterator beyond the last element of this vector.
          */
@@ -314,20 +326,36 @@ class Vector : public ShortOutput<Vector<T>> {
             return end_;
         }
         /**
-         * Returns the end of a const iterator range that runs through
-         * all elements of this vector.
+         * Returns a C++ const iterator pointing beyond the last element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \ifacespython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
          * @return an iterator beyond the last element of this vector.
          */
         inline const_iterator end() const {
             return end_;
         }
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the elements of this vector.
+         *
+         * \nocpp For C++ users, Vector provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over the elements
+         * of this list in the usual way using a range-based \c for loop.
+         *
+         * @return an iterator over the elements of this vector.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Determines if this vector is equal to the given vector.
@@ -641,7 +669,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */

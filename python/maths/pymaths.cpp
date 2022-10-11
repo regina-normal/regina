@@ -36,14 +36,11 @@ void addBinom(pybind11::module_& m);
 void addMatrixOps(pybind11::module_& m);
 void addCyclotomic(pybind11::module_& m);
 void addInteger(pybind11::module_& m);
-void addLargeInteger(pybind11::module_& m);
 void addLaurent(pybind11::module_& m);
 void addLaurent2(pybind11::module_& m);
-void addVectorInt(pybind11::module_& m);
-void addVectorLarge(pybind11::module_& m);
+void addVector(pybind11::module_& m);
 void addMatrix2(pybind11::module_& m);
-void addMatrixBool(pybind11::module_& m);
-void addMatrixInt(pybind11::module_& m);
+void addMatrix(pybind11::module_& m);
 void addPerm2(pybind11::module_& m);
 void addPerm3(pybind11::module_& m);
 void addPerm4(pybind11::module_& m);
@@ -57,18 +54,18 @@ void addRational(pybind11::module_& m);
 void addNumberTheory(pybind11::module_& m);
 
 void addMathsClasses(pybind11::module_& m) {
+    // These types come first, so that the docstrings for later classes
+    // can use the abbreviated names Integer, LargeInteger, etc.
+    addInteger(m);
+    addRational(m);
+    addVector(m);
+    addMatrix2(m);
+    addMatrix(m);
+
     addBinom(m);
     addMatrixOps(m);
-    addCyclotomic(m);
-    addInteger(m);
-    addLargeInteger(m);
-    addLaurent(m);
-    addLaurent2(m);
-    addVectorInt(m);
-    addVectorLarge(m);
-    addMatrix2(m);
-    addMatrixBool(m);
-    addMatrixInt(m);
+    addPrimes(m);
+    addNumberTheory(m);
     addPerm2(m);
     addPerm3(m);
     addPerm4(m);
@@ -77,8 +74,8 @@ void addMathsClasses(pybind11::module_& m) {
     addPerm7(m);
     addPerm(m);
     addPolynomial(m);
-    addPrimes(m);
-    addRational(m);
-    addNumberTheory(m);
+    addCyclotomic(m);
+    addLaurent(m);
+    addLaurent2(m);
 }
 

@@ -434,8 +434,7 @@ class AbelianGroup :
          * Writes the tight encoding of this abelian group to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -457,8 +456,8 @@ class AbelianGroup :
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an abelian group.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for an abelian group.
@@ -486,7 +485,7 @@ class AbelianGroup :
          * invariant factors of the group, as described in the
          * AbelianGroup notes.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
          * @param utf8 if \c true, then richer unicode characters will

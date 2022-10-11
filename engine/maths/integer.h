@@ -76,6 +76,10 @@ namespace regina {
 template <int bytes>
 class NativeInteger;
 
+#ifdef __DOCSTRINGS
+class Long; // Represents a Python arbitrary-precision integer.
+#endif
+
 /**
  * Internal base classes for use with IntegerBase, templated on whether we
  * should support infinity as an allowed value.
@@ -209,7 +213,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
          * @param value the new value of this integer.
@@ -218,7 +222,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
          * @param value the new value of this integer.
@@ -236,7 +240,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
          * @param value the new value of this integer.
@@ -245,7 +249,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
          * @param value the new value of this integer.
@@ -254,7 +258,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, the only native-integer constructor
+         * \nopython In Python, the only native-integer constructor
          * is IntegerBase(long).
          *
          * @param value the new value of this integer.
@@ -304,13 +308,14 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * compile-time assertion, but may be lifted in future versions
          * of Regina.
          *
-         * \ifacespython Not present, since NativeInteger is not available to
-         * Python users.
+         * \nopython This is because the NativeInteger classes are not
+         * available to Python users.
          *
          * @param value the new value of this integer.
          */
         template <int bytes>
         IntegerBase(const NativeInteger<bytes>& value);
+#ifdef __APIDOCS
         /**
          * Initialises this to the given Python arbitrary-precision integer.
          *
@@ -318,13 +323,12 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * to store integers of arbitrary magnitude (much like Regina does
          * with its Integer and LargeInteger classes).
          *
-         * \ifacescpp Not available: this constructor is for Python only.
+         * \nocpp
          *
          * @param value the new value of this integer.
          */
-        #ifdef __DOXYGEN
         IntegerBase(Long value);
-        #endif
+#endif
 
         /**
          * Initialises this integer to the truncation of the given
@@ -504,8 +508,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinity.
          *
-         * \ifacespython Not present, but you can use the non-templated
-         * longValue() instead.
+         * \nopython Python users can use the non-templated longValue()
+         * function instead.
          *
          * @return the value of this integer.
          */
@@ -773,8 +777,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator increments this integer by one, and returns a
          * reference to the integer \e after the increment.
          *
-         * \ifacespython Not present, although the postincrement operator is
-         * present in python as the member function inc().
+         * \nopython The postincrement operator is present in Python as the
+         * member function inc().
          *
          * @return a reference to this integer after the increment.
          */
@@ -797,8 +801,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator decrements this integer by one, and returns a
          * reference to the integer \e after the decrement.
          *
-         * \ifacespython Not present, although the postdecrement operator is
-         * present in python as the member function dec().
+         * \nopython The postdecrement operator is present in python as the
+         * member function dec().
          *
          * @return a reference to this integer after the decrement.
          */
@@ -902,12 +906,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
@@ -928,12 +926,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
-         *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
          *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
@@ -981,13 +973,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
          */
@@ -1003,13 +988,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
-         *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
          *
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
@@ -1142,12 +1120,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
@@ -1168,12 +1140,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
-         *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
          *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
@@ -1221,13 +1187,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre \a other is not zero.
          * \pre Neither this nor \a other is infinite.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
          * @param other the integer modulo which this integer will be
          * reduced.
          * @return a reference to this integer with its new value.
@@ -1244,13 +1203,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
-         *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
          *
          * @param other the integer modulo which this integer will be
          * reduced.
@@ -1491,7 +1443,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This routine allows IntegerBase to interact directly with
          * libgmp and libgmpxx if necessary.
          *
-         * \ifacespython Not available.
+         * \nopython
          *
          * @param fromData the raw GMP integer to clone.
          */
@@ -1512,7 +1464,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinite.
          *
-         * \ifacespython Not available.
+         * \nopython
          *
          * @return the raw GMP data.
          */
@@ -1533,7 +1485,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinite.
          *
-         * \ifacespython Not available.
+         * \nopython
          *
          * @return the raw GMP data.
          */
@@ -1575,8 +1527,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * rvalue reference (since this const member function induces an extra
          * deep copy).
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -1640,8 +1591,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an integer of this type.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for an integer.
@@ -1801,7 +1752,7 @@ IntegerBase<supportInfinity> operator * (long lhs,
  * if the integer argument is an rvalue reference (since the const member
  * function induces an extra deep copy).
  *
- * \ifacespython Not present; use tightEncoding() instead.
+ * \nopython Use tightEncoding() instead.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -1856,8 +1807,8 @@ std::string tightEncoding(IntegerBase<supportInfinity> value);
  * \pre The system must support integers of the given size; in particular,
  * there must be an appropriate specialisation IntOfSize<bytes>.
  *
- * \ifacespython Not present, since the purpose of NativeInteger is to be a
- * highly optimised drop-in replacement for Integer as a C++ template parameter.
+ * \nopython The purpose of NativeInteger is to be a highly optimised
+ * drop-in replacement for Integer as a C++ template parameter.
  * Python users should just use regina.Integer if you need Regina's integer
  * interface, or Python's own integer type if you do not.
  *
@@ -2152,12 +2103,6 @@ class NativeInteger {
          *
          * \pre \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
@@ -2171,12 +2116,6 @@ class NativeInteger {
          * For a division routine that always rounds down, see divisionAlg().
          *
          * \pre \a other must be non-zero.
-         *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
          *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
@@ -2213,13 +2152,6 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
          */
@@ -2234,13 +2166,6 @@ class NativeInteger {
          * remainder, see divisionAlg().
          *
          * \pre \a other is not zero.
-         *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
          *
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
@@ -2343,12 +2268,6 @@ class NativeInteger {
          *
          * \pre \a other must be non-zero.
          *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
-         *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
@@ -2362,12 +2281,6 @@ class NativeInteger {
          * For a division routine that always rounds down, see divisionAlg().
          *
          * \pre \a other must be non-zero.
-         *
-         * \warning As I understand it, the direction of rounding for
-         * native C/C++ integer division was fixed in the C++11
-         * specification, but left to the compiler implementation in
-         * earlier versions of the specification; however, any modern
-         * hardware should satisfy the C++11 rounding rule as described above.
          *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
@@ -2404,13 +2317,6 @@ class NativeInteger {
          *
          * \pre \a other is not zero.
          *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
-         *
          * @param other the integer modulo which this integer will be
          * reduced.
          * @return a reference to this integer with its new value.
@@ -2426,13 +2332,6 @@ class NativeInteger {
          * remainder, see divisionAlg().
          *
          * \pre \a other is not zero.
-         *
-         * \warning As I understand it, the sign of the result under
-         * native C/C++ integer division when the second operand is
-         * negative was fixed in the C++11 specification, but left to the
-         * compiler implementation in earlier versions of the specification;
-         * however, any modern hardware should satisfy the C++11 sign rule
-         * as described above.
          *
          * @param other the integer modulo which this integer will be
          * reduced.
@@ -2525,8 +2424,7 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  * NativeLong is a type alias for the NativeInteger template class whose
  * underlying integer type is a native long.
  *
- * \ifacespython Not present, since NativeInteger is not available to
- * Python users.
+ * \nopython The NativeInteger classes are not available to Python users.
  *
  * \ingroup maths
  */

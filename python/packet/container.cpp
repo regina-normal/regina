@@ -32,21 +32,28 @@
 
 #include "packet/container.h"
 #include "../helpers.h"
+#include "../docstrings/packet/container.h"
 
 using regina::Container;
 
 void addContainer(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(Container)
+
     auto c = pybind11::class_<Container, regina::Packet,
-            std::shared_ptr<Container>>(m, "Container")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const std::string&>())
-        .def(pybind11::init<const Container&>())
-        .def("swap", &Container::swap)
+            std::shared_ptr<Container>>(m, "Container", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Container)
+        .def(pybind11::init<const std::string&>(), rdoc::Container_2)
+        .def(pybind11::init<const Container&>(), rdoc::Container_3)
+        .def("swap", &Container::swap, rdoc::swap)
         .def_readonly_static("typeID", &Container::typeID)
     ;
     regina::python::add_output(c);
     regina::python::packet_disable_eq_operators(c);
 
-    regina::python::add_global_swap<Container>(m);
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_global_swap<Container>(m, rdoc::swap);
+
+    RDOC_SCOPE_END
 }
 

@@ -34,27 +34,59 @@
  *  \brief Assists with wrapping Regina's tight encoding and decoding routines.
  */
 
-namespace regina::python {
+namespace regina {
+
+template <typename> struct TightEncodable;
+
+namespace python {
 
 /**
  * Adds tight encoding and decoding functions to the python bindings for a
- * C++ class.
+ * C++ class that provides its own tightEncoding() and tightDecoding()
+ * member functions.
  *
- * This will add tightEncoding() and tightDecoding() to the python class,
- * as provided by the regina::TightEncodable (templated) C++ base class.
+ * This will add corresponding tightEncoding() and tightDecoding() functions
+ * to the python class, with the Python docstrings \a docEnc and \a docDec
+ * respectively.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * <t>regina::python::add_tight_encoding(c)</t>, where \a c is the
  * pybind11::class_ object that wraps \a T.
+ */
+template <class C, typename... options>
+void add_tight_encoding(pybind11::class_<C, options...>& c,
+        const char* docEnc, const char* docDec) {
+    static_assert(! std::is_base_of_v<TightEncodable<C>, C>,
+        "The docstring version of add_tight_encoding() should "
+        "only be used for classes that provide their own "
+        "custom tightEncoding() and tightDecoding() functions.");
+
+    c.def("tightEncoding", &C::tightEncoding, docEnc);
+    c.def("tightDecoding", &C::tightDecoding, docDec);
+}
+
+/**
+ * Adds tight encoding and decoding functions to the python bindings for a
+ * C++ class that derives from regina::TightEncodable.
  *
- * The wrapped class \a T should either derive from regina::TightEncodable, or
- * should provide tightEncoding() and tightDecoding() functions in a way that
- * is consistent with the regina::TightEncodable interface.
+ * This will add corresonding tightEncoding() and tightDecoding() functions
+ * to the python class, as provided by the regina::TightEncodable (templated)
+ * C++ base class.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>regina::python::add_tight_encoding(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.
  */
 template <class C, typename... options>
 void add_tight_encoding(pybind11::class_<C, options...>& c) {
-    c.def("tightEncoding", &C::tightEncoding);
-    c.def("tightDecoding", &C::tightDecoding);
+    static_assert(std::is_base_of_v<TightEncodable<C>, C>,
+        "The no-docstring version of add_tight_encoding() should "
+        "only be used for classes C that derive from TightEncodable<C>.");
+
+    c.def("tightEncoding", &C::tightEncoding,
+        regina::python::doc::common::TightEncodable_encoding);
+    c.def("tightDecoding", &C::tightDecoding,
+        regina::python::doc::common::TightEncodable_decoding);
 }
 
-} // namespace regina::python
+} } // namespace regina::python

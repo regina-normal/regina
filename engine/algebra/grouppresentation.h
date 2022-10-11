@@ -220,10 +220,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
          *
-         *  - \c a^7b^-2
-         *  - \c aaaaaaaBB
-         *  - \c a^7B^2
-         *  - \c g0^7g1^-2
+         * - \c a^7b^-2
+         * - \c aaaaaaaBB
+         * - \c a^7B^2
+         * - \c g0^7g1^-2
          *
          * The string may contain whitespace, which will simply be ignored.
          *
@@ -237,10 +237,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
          *
-         *  - \c a^7b^-2
-         *  - \c aaaaaaaBB
-         *  - \c a^7B^2
-         *  - \c g0^7g1^-2
+         * - \c a^7b^-2
+         * - \c aaaaaaaBB
+         * - \c a^7B^2
+         * - \c g0^7g1^-2
          *
          * The string may contain whitespace, which will simply be ignored.
          *
@@ -593,7 +593,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \pre If \a cyclic is \c true, then both this word and \a other
          * have been cyclically reduced.
          *
-         * \ifacespython Not present.
+         * \nopython
          *
          * @param other the word to compare against this.
          * @param cyclic if \c false we get a list of exact relabellings from
@@ -631,8 +631,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * The text representation will be of the form
          * <tt>g_2^4 g_{13}^{-5} g_4</tt>.
          *
-         * \ifacespython Not present; instead use the variant tex() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant tex() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -701,7 +701,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
          * @param utf8 \c true if exponents should be written using
@@ -1443,8 +1443,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The output will be of the form &lt; generators | relators &gt;.
          * There will be no final newline.
          *
-         * \ifacespython Not present; instead use the variant tex() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant tex() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -1474,8 +1474,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * functions, though the output from writeTextShort() may change in
          * future versions of Regina.
          *
-         * \ifacespython Not present; instead use the variant compact() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant compact() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -1489,7 +1489,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * functions, though the output from writeTextShort() may change in
          * future versions of Regina.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1498,7 +1498,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1524,12 +1524,12 @@ class GroupPresentation : public Output<GroupPresentation> {
          */
         std::string gap(const std::string& groupVariable = "g") const;
 
-#ifdef __DOXYGEN
+#ifdef __APIDOCS
         /**
          * A SageMath-only routine that returns a copy of this group
          * presentation in a format native to SageMath.
          *
-         * \ifacescpp Not present.
+         * \nocpp
          * \ifacespython Only present when run within SageMath.
          *
          * @return a copy of this group as a mathematical object native to

@@ -34,6 +34,7 @@
 #include "../pybind11/operators.h"
 #include "maths/matrix2.h"
 #include "../helpers.h"
+#include "../docstrings/maths/matrix2.h"
 
 using pybind11::overload_cast;
 
@@ -86,56 +87,84 @@ using regina::Matrix2;
 using regina::Matrix2Row;
 
 void addMatrix2(pybind11::module_& m) {
-    auto c1 = pybind11::class_<Matrix2Row>(m, "Matrix2Row")
-        .def("__getitem__", &Matrix2Row::getItem)
-        .def("__setitem__", &Matrix2Row::setItem)
-        .def("__len__", [](const Matrix2Row&) {
-            return 2;
-        })
-        ;
-    regina::python::add_eq_operators(c1);
-    regina::python::add_output_ostream(c1);
+    RDOC_SCOPE_BEGIN(Matrix2)
 
-    auto c2 = pybind11::class_<Matrix2>(m, "Matrix2")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const Matrix2&>())
-        .def(pybind11::init<long, long, long, long>())
-        .def("swap", &Matrix2::swap)
+    auto c = pybind11::class_<Matrix2>(m, "Matrix2", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Matrix2)
+        .def(pybind11::init<const Matrix2&>(), rdoc::Matrix2_2)
+        .def(pybind11::init<long, long, long, long>(), rdoc::Matrix2_3)
+        .def("swap", &Matrix2::swap, rdoc::swap)
         .def("__getitem__", [](Matrix2& m, int row) {
             if (row < 0 || row > 1)
                 throw pybind11::index_error(
                     "Matrix2 row index out of range");
             return new Matrix2Row(m, row);
-        }, pybind11::keep_alive<0, 1>())
+        }, pybind11::keep_alive<0, 1>(), rdoc::__array_2)
         .def("__len__", [](const Matrix2&) {
             return 2;
-        })
-        .def(pybind11::self * pybind11::self)
-        .def(pybind11::self * long())
-        .def(pybind11::self + pybind11::self)
-        .def(pybind11::self - pybind11::self)
-        .def(- pybind11::self)
-        .def("transpose", &Matrix2::transpose)
-        .def("inverse", &Matrix2::inverse)
-        .def(pybind11::self += pybind11::self)
-        .def(pybind11::self -= pybind11::self)
-        .def(pybind11::self *= pybind11::self)
-        .def(pybind11::self *= long())
-        .def("negate", &Matrix2::negate)
-        .def("invert", &Matrix2::invert)
-        .def("determinant", &Matrix2::determinant)
-        .def("isIdentity", &Matrix2::isIdentity)
-        .def("isZero", &Matrix2::isZero)
+        }, "Returns the number of rows in this matrix. This will always be 2.")
+        .def(pybind11::self * pybind11::self, rdoc::__mul)
+        .def(pybind11::self * long(), rdoc::__mul_2)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self - pybind11::self, rdoc::__sub)
+        .def(- pybind11::self, rdoc::__sub_2)
+        .def("transpose", &Matrix2::transpose, rdoc::transpose)
+        .def("inverse", &Matrix2::inverse, rdoc::inverse)
+        .def(pybind11::self += pybind11::self, rdoc::__iadd)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul)
+        .def(pybind11::self *= long(), rdoc::__imul_2)
+        .def("negate", &Matrix2::negate, rdoc::negate)
+        .def("invert", &Matrix2::invert, rdoc::invert)
+        .def("determinant", &Matrix2::determinant, rdoc::determinant)
+        .def("isIdentity", &Matrix2::isIdentity, rdoc::isIdentity)
+        .def("isZero", &Matrix2::isZero, rdoc::isZero)
     ;
-    regina::python::add_eq_operators(c2);
-    regina::python::add_output_ostream(c2);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+    regina::python::add_output_ostream(c);
+
+    auto row = pybind11::class_<Matrix2Row>(c, "_Row",
+R"doc(Gives access to a single row of a 2-by-2 integer matrix.
+
+See the main class Matrix2 for further details.)doc")
+        .def("__getitem__", &Matrix2Row::getItem,
+R"doc(Returns the integer at the given index in this row.
+
+The given index must be either 0 or 1.
+
+You should not need to call this directly.  To access the (*i*, *j*)
+entry of a 2-by-2 matrix *M*, you can call ``M[i][j]``.
+
+See the main class Matrix2 for further details.)doc")
+        .def("__setitem__", &Matrix2Row::setItem,
+R"doc(Sets the integer at the given index in this row to the given value.
+
+The given index must be either 0 or 1.
+
+You should not need to call this directly.  To set the (*i*, *j*)
+entry of a 2-by-2 matrix *M*, you can use ``M[i][j] = value``.
+
+See the main class Matrix2 for further details.)doc")
+        .def("__len__", [](const Matrix2Row&) {
+            return 2;
+        },
+"Returns the number of entries in this row. This will always be 2.")
+        ;
+    regina::python::add_eq_operators(row,
+"Tests whether this and the given row contain the same integer entries.",
+"Tests whether this and the given row contain different integer entries.");
+    regina::python::add_output_ostream(row);
+
+    RDOC_SCOPE_SWITCH_MAIN
 
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&>(
-        &regina::simpler));
+        &regina::simpler), rdoc::simpler);
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&,
             const Matrix2&, const Matrix2&>(
-        &regina::simpler));
+        &regina::simpler), rdoc::simpler_2);
 
-    regina::python::add_global_swap<Matrix2>(m);
+    regina::python::add_global_swap<Matrix2>(m, rdoc::swap);
+
+    RDOC_SCOPE_END
 }
 

@@ -716,7 +716,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * invariant factors of the group, as described in the
          * MarkedAbelianGroup notes.
          *
-         * \ifacespython Not present; use str() or utf8() instead.
+         * \nopython Use str() or utf8() instead.
          *
          * @param out the stream to write to.
          * @param utf8 if \c true, then richer unicode characters will
@@ -1009,9 +1009,8 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * This writes exactly the same information as the no-argument variant
          * of summary() returns; see that routine for further details.
          *
-         * \ifacespython Not present, but you can call the no-argument
-         * variant of summary instead(), which returns this same
-         * information in string form.
+         * \nopython Instead you can call the no-argument variant of summary(),
+         * which returns this same information in string form.
          *
          * @param out the output stream to which to write.
          */
@@ -1021,7 +1020,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the stream to write to.
          */
@@ -1031,7 +1030,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the stream to write to.
          */

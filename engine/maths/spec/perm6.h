@@ -37,11 +37,17 @@
  *  end users to include this specialisation header explicitly.
  */
 
+#ifndef __DOCSTRINGS
 // We include perm.h before the header guard, to ensure that the
 // various permutation headers are processed in exactly the right order.
 // This specialisation header will be re-included at the beginning of
 // perm-impl.h.
 #include "maths/perm.h"
+#else
+// For generating docstrings, we *need* to see this file first, but also
+// we don't need any of the others.  Just use forward declarations.
+#include "maths/perm-prereq.h"
+#endif
 
 #ifndef __REGINA_PERM6_H
 #ifndef __DOXYGEN
@@ -97,39 +103,6 @@ namespace regina {
  */
 template <>
 class Perm<6> {
-    private:
-        /**
-         * An array-like object used to implement Perm<6>::S6.
-         */
-        struct S6Lookup {
-            /**
-             * Returns the permutation at the given index in the array S6.
-             * See Perm<6>::S6 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 719 inclusive.
-             * @return the corresponding permutation in S6.
-             */
-            constexpr Perm<6> operator[] (int index) const;
-        };
-
-        /**
-         * An array-like object used to implement Perm<6>::orderedS6.
-         */
-        struct OrderedS6Lookup {
-            /**
-             * Returns the permutation at the given index in the array
-             * orderedS6.  See Perm<6>::orderedS6 for details.
-             *
-             * This operation is extremely fast (and constant time).
-             *
-             * @param index an index between 0 and 719 inclusive.
-             * @return the corresponding permutation in orderedS6.
-             */
-            constexpr Perm<6> operator[] (int index) const;
-        };
-
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -193,31 +166,80 @@ class Perm<6> {
          */
         using Code2 = uint16_t;
 
+    private:
         /**
-         * Gives array-like access to all possible permutations of
+         * A lightweight array-like object used to implement Perm<6>::S6.
+         */
+        struct S6Lookup {
+            /**
+             * Returns the permutation at the given index in the array S6.
+             * See Perm<6>::S6 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 719 inclusive.
+             * @return the corresponding permutation in S6.
+             */
+            constexpr Perm<6> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array S6.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 720; }
+        };
+
+        /**
+         * A lightweight array-like object used to implement Perm<6>::orderedS6.
+         */
+        struct OrderedS6Lookup {
+            /**
+             * Returns the permutation at the given index in the array
+             * orderedS6.  See Perm<6>::orderedS6 for details.
+             *
+             * This operation is extremely fast (and constant time).
+             *
+             * @param index an index between 0 and 719 inclusive.
+             * @return the corresponding permutation in orderedS6.
+             */
+            constexpr Perm<6> operator[] (int index) const;
+
+            /**
+             * Returns the number of permutations in the array orderedS6.
+             *
+             * @return the size of this array.
+             */
+            static constexpr Index size() { return 720; }
+        };
+
+    public:
+        /**
+         * Gives fast array-like access to all possible permutations of
          * six elements.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 719 inclusive.
-         *
-         * Accessing elements through this object is extremely fast.
-         * The object that is returned is lightweight and is defined in the
-         * headers only; in particular, you cannot make a reference to it
-         * (but you can always make a copy).
+         * This element access is extremely fast (a fact that is not true for
+         * the larger permutation classes Perm<n> with \a n &ge; 8).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * This is different from Perm<6>::orderedSn, since this array \a Sn
+         * This array is different from Perm<6>::orderedSn, since \a Sn
          * alternates between even and odd permutations, whereas \a orderedSn
          * stores permutations in lexicographical order.
+         *
+         * This is a lightweight object, and it is defined in the headers only.
+         * In particular, you cannot make a reference to it (but it is cheap
+         * to make a copy).
          */
         static constexpr S6Lookup Sn {};
 
         /**
-         * Gives array-like access to all possible permutations of
+         * Gives fast array-like access to all possible permutations of
          * six elements.
          *
          * This is a dimension-specific alias for Perm<6>::Sn; see that member
@@ -228,29 +250,30 @@ class Perm<6> {
         static constexpr S6Lookup S6 {};
 
         /**
-         * Gives array-like access to all possible permutations of six
+         * Gives fast array-like access to all possible permutations of six
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
          * must be between 0 and 719 inclusive.
+         * This element access is extremely fast (a fact that is not true for
+         * the larger permutation classes Perm<n> with \a n &ge; 8).
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[5]).
          *
-         * Accessing elements through this object is extremely fast.
-         * The object that is returned is lightweight and is defined in the
-         * headers only; in particular, you cannot make a reference to it
-         * (but you can always make a copy).
+         * This array is different from Perm<6>::Sn, since \a orderedSn stores
+         * permutations in lexicographical order, whereas \a Sn alternates
+         * between even and odd permutations.
          *
-         * This is different from Perm<6>::Sn, since this array \a orderedSn
-         * stores permutations in lexicographical order, whereas \a Sn
-         * alternates between even and odd permutations.
+         * This is a lightweight object, and it is defined in the headers only.
+         * In particular, you cannot make a reference to it (but it is cheap
+         * to make a copy).
          */
         static constexpr OrderedS6Lookup orderedSn {};
 
         /**
-         * Gives array-like access to all possible permutations of six
+         * Gives fast array-like access to all possible permutations of six
          * elements in lexicographical order.
          *
          * This is a dimension-specific alias for Perm<6>::orderedSn; see that
@@ -537,7 +560,7 @@ class Perm<6> {
         /**
          * Returns the composition of this permutation with the given
          * permutation.  If this permutation is <i>p</i>, the
-         * resulting permutation will be <i>p o q</i>, satisfying
+         * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
          * <tt>(p*q)[x] == p[q[x]]</tt>.
          *
          * For permutations of five and fewer objects, composition is
@@ -769,8 +792,8 @@ class Perm<6> {
          * then this will wrap around to become the first permutation in
          * Perm<6>::Sn, which is the identity.
          *
-         * \ifacespython Not present, although the postincrement operator is
-         * present in python as the member function inc().
+         * \nopython The postincrement operator is present in Python as the
+         * member function inc().
          *
          * @return a reference to this permutation after the increment.
          */
@@ -844,8 +867,8 @@ class Perm<6> {
          * \tparam URBG A type which, once any references are removed, must
          * adhere to the C++ \a UniformRandomBitGenerator concept.
          *
-         * \ifacespython Not present, though the non-thread-safe variant
-         * without the \a gen argument is available.
+         * \nopython Python users are still able to use the non-thread-safe
+         * variant without the \a gen argument.
          *
          * @param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
@@ -889,8 +912,7 @@ class Perm<6> {
          * code.  For larger permutation classes however (8 &le; \a n &le; 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -952,8 +974,8 @@ class Perm<6> {
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a 6-element permutation.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for a 6-element permutation.
@@ -993,7 +1015,7 @@ class Perm<6> {
          * This is a dimension-specific alias for SnIndex().  In general,
          * for every \a n there will be a member function Perm<n>::SnIndex();
          * however, these numerical aliases Perm<2>::S2Index(), ...,
-         * Perm<6>::S6Index() are only available for small \a n.
+         * Perm<7>::S7Index() are only available for small \a n.
          *
          * See Sn for further information on how these permutations are indexed.
          *
@@ -1020,7 +1042,7 @@ class Perm<6> {
          * This is a dimension-specific alias for orderedSnIndex().
          * In general, for every \a n there will be a member function
          * Perm<n>::orderedSnIndex(); however, these numerical aliases
-         * Perm<2>::orderedS2Index(), ..., Perm<6>::orderedS6Index() are
+         * Perm<2>::orderedS2Index(), ..., Perm<7>::orderedS7Index() are
          * only available for small \a n.
          *
          * See orderedSn for further information on lexicographical ordering.

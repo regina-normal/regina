@@ -34,6 +34,7 @@
 #include "utilities/intutils.h"
 #include "utilities/trieset.h"
 #include "../helpers.h"
+#include "../docstrings/utilities/trieset.h"
 
 using regina::Bitmask;
 using regina::Bitmask1;
@@ -48,47 +49,64 @@ using Bitmask128 = Bitmask2<uint64_t, uint64_t>;
 #endif
 
 void addTrieSet(pybind11::module_& m) {
-    auto c = pybind11::class_<TrieSet>(m, "TrieSet")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const TrieSet&>())
-        .def("swap", &TrieSet::swap)
+    RDOC_SCOPE_BEGIN(TrieSet)
 
-        .def("insert", &TrieSet::insert<Bitmask>)
-        .def("hasSubset", &TrieSet::hasSubset<Bitmask>)
-        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask>)
+    auto c = pybind11::class_<TrieSet>(m, "TrieSet", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::TrieSet)
+        .def(pybind11::init<const TrieSet&>(), rdoc::TrieSet_2)
+        .def("swap", &TrieSet::swap, rdoc::swap)
+
+        .def("insert", &TrieSet::insert<Bitmask>, rdoc::insert)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask>, rdoc::hasSubset)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask>,
+            rdoc::hasExtraSuperset)
 
         // The following set of bitmask types matches the types that we
         // bind in python; see bitmask.cpp for the full list.
 
-        .def("insert", &TrieSet::insert<Bitmask1<uint8_t>>)
-        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint8_t>>)
-        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint8_t>>)
+        .def("insert", &TrieSet::insert<Bitmask1<uint8_t>>, rdoc::insert)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint8_t>>,
+            rdoc::hasSubset)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint8_t>>,
+            rdoc::hasExtraSuperset)
 
-        .def("insert", &TrieSet::insert<Bitmask1<uint16_t>>)
-        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint16_t>>)
-        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint16_t>>)
+        .def("insert", &TrieSet::insert<Bitmask1<uint16_t>>, rdoc::insert)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint16_t>>,
+            rdoc::hasSubset)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint16_t>>,
+            rdoc::hasExtraSuperset)
 
-        .def("insert", &TrieSet::insert<Bitmask1<uint32_t>>)
-        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint32_t>>)
-        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint32_t>>)
+        .def("insert", &TrieSet::insert<Bitmask1<uint32_t>>, rdoc::insert)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint32_t>>,
+            rdoc::hasSubset)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint32_t>>,
+            rdoc::hasExtraSuperset)
 
-        .def("insert", &TrieSet::insert<Bitmask1<uint64_t>>)
-        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint64_t>>)
-        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint64_t>>)
+        .def("insert", &TrieSet::insert<Bitmask1<uint64_t>>, rdoc::insert)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask1<uint64_t>>,
+            rdoc::hasSubset)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask1<uint64_t>>,
+            rdoc::hasExtraSuperset)
 
-        .def("insert", &TrieSet::insert<Bitmask128>)
-        .def("hasSubset", &TrieSet::hasSubset<Bitmask128>)
-        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask128>)
+        .def("insert", &TrieSet::insert<Bitmask128>, rdoc::insert)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask128>, rdoc::hasSubset)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask128>,
+            rdoc::hasExtraSuperset)
 
         #ifdef INT128_AVAILABLE
-        .def("insert", &TrieSet::insert<Bitmask256>)
-        .def("hasSubset", &TrieSet::hasSubset<Bitmask256>)
-        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask256>)
+        .def("insert", &TrieSet::insert<Bitmask256>, rdoc::insert)
+        .def("hasSubset", &TrieSet::hasSubset<Bitmask256>, rdoc::hasSubset)
+        .def("hasExtraSuperset", &TrieSet::hasExtraSuperset<Bitmask256>,
+            rdoc::hasExtraSuperset)
         #endif
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<TrieSet>(m);
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_global_swap<TrieSet>(m, rdoc::swap);
+
+    RDOC_SCOPE_END
 }
 

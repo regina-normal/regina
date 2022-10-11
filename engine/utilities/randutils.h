@@ -105,7 +105,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * Constructor that locks the internal mutex.
          * The mutex will be unlocked when this object is destroyed.
          *
-         * \ifacespython Not present.
+         * \nopython
          */
         RandomEngine();
 
@@ -117,7 +117,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * directly to other random number generation functions as you
          * use them, and not store a reference to it for later use.
          *
-         * \ifacespython Not present.
+         * \nopython
          *
          * @return a reference to the global URBG.
          */

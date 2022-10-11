@@ -5,7 +5,6 @@ SET ( FILES
   attachment.cpp
   container.cpp
   packet.cpp
-  packetlistener.cpp
   packettype.cpp
   pypacket.cpp
   script.cpp

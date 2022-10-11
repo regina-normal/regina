@@ -33,60 +33,75 @@
 #include "../pybind11/pybind11.h"
 #include "packet/script.h"
 #include "../helpers.h"
+#include "../docstrings/packet/script.h"
 
 using pybind11::overload_cast;
 using regina::Script;
 
 void addScript(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(Script)
+
     auto c = pybind11::class_<Script, regina::Packet, std::shared_ptr<Script>>(
-            m, "Script")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const Script&>())
-        .def("swap", &Script::swap)
-        .def("text", &Script::text)
-        .def("setText", &Script::setText)
+            m, "Script", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Script)
+        .def(pybind11::init<const Script&>(), rdoc::Script_2)
+        .def("swap", &Script::swap, rdoc::swap)
+        .def("text", &Script::text, rdoc::text)
+        .def("setText", &Script::setText, rdoc::setText)
         // We define Packet::append() again, since otherwise this is
         // hidden by the binding for Script::append().
-        .def("append", &regina::Packet::append)
-        .def("append", &Script::append)
-        .def("countVariables", &Script::countVariables)
-        .def("variableName", &Script::variableName)
+        .def("append", &regina::Packet::append,
+            regina::python::doc::common::Packet_append)
+        .def("append", &Script::append, rdoc::append)
+        .def("countVariables", &Script::countVariables, rdoc::countVariables)
+        .def("variableName", &Script::variableName, rdoc::variableName)
         .def("variableValue", overload_cast<size_t>(
-            &Script::variableValue, pybind11::const_))
+            &Script::variableValue, pybind11::const_), rdoc::variableValue)
         .def("variableValue", overload_cast<const std::string&>(
-            &Script::variableValue, pybind11::const_))
-        .def("variableIndex", &Script::variableIndex)
-        .def("setVariableName", &Script::setVariableName)
+            &Script::variableValue, pybind11::const_), rdoc::variableValue_2)
+        .def("variableIndex", &Script::variableIndex, rdoc::variableIndex)
+        .def("setVariableName", &Script::setVariableName, rdoc::setVariableName)
         .def("setVariableValue", [](Script& s, size_t index,
                 std::shared_ptr<regina::Packet> value) {
             // We need to reimplement this, since Regina's function
             // takes a weak_ptr, not a shared_ptr.
             s.setVariableValue(index, value);
-        }, pybind11::arg(), pybind11::arg("value") = nullptr)
+        }, pybind11::arg(), pybind11::arg("value") = nullptr,
+            rdoc::setVariableValue)
         .def("addVariable", [](Script& s, const std::string& name,
                 std::shared_ptr<regina::Packet> value) {
             // We need to reimplement this, since Regina's function
             // takes a weak_ptr, not a shared_ptr.
             return s.addVariable(name, value);
-        }, pybind11::arg(), pybind11::arg("value") = nullptr)
+        }, pybind11::arg(), pybind11::arg("value") = nullptr,
+            rdoc::addVariable)
         .def("addVariableName", [](Script& s, const std::string& name,
                 std::shared_ptr<regina::Packet> value) {
             // We need to reimplement this, since Regina's function
             // takes a weak_ptr, not a shared_ptr.
             return s.addVariableName(name, value);
-        }, pybind11::arg(), pybind11::arg("value") = nullptr)
+        }, pybind11::arg(), pybind11::arg("value") = nullptr,
+            rdoc::addVariableName)
         .def("removeVariable",
-            overload_cast<size_t>(&Script::removeVariable))
+            overload_cast<const std::string&>(&Script::removeVariable),
+            rdoc::removeVariable)
         .def("removeVariable",
-            overload_cast<const std::string&>(&Script::removeVariable))
-        .def("removeAllVariables", &Script::removeAllVariables)
+            overload_cast<size_t>(&Script::removeVariable),
+            rdoc::removeVariable_2)
+        .def("removeAllVariables", &Script::removeAllVariables,
+            rdoc::removeAllVariables)
         .def_readonly_static("typeID", &Script::typeID)
-        .def("listenVariables", &Script::listenVariables)
-        .def("unlistenVariables", &Script::unlistenVariables)
+        .def("listenVariables", &Script::listenVariables, rdoc::listenVariables)
+        .def("unlistenVariables", &Script::unlistenVariables,
+            rdoc::unlistenVariables)
     ;
     regina::python::add_output(c);
-    regina::python::packet_eq_operators(c);
+    regina::python::packet_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<Script>(m);
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_global_swap<Script>(m, rdoc::swap);
+
+    RDOC_SCOPE_END
 }
 

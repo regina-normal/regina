@@ -433,7 +433,7 @@ class Rational {
          * Writes this rational in TeX format to the given output stream.
          * No leading or trailing dollar signs will be included.
          *
-         * \ifacespython Not present; instead use the variant tex()
+         * \nopython Instead use the variant tex()
          * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.

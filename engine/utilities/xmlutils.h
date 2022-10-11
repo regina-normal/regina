@@ -97,7 +97,7 @@ std::string xmlEncodeComment(const std::string& comment);
  * contain any special characters (such as <tt>\<</tt> or <tt>\&</tt>)
  * that need to be encoded as XML entities.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * @param tagName the name of the XML tag to create.
  * @param value the value to assign to the <i>value</i> property of the tag.
@@ -112,7 +112,7 @@ inline std::string xmlValueTag(const std::string& tagName, const T& value) {
     return out.str();
 }
 
-#ifndef __DOXYGEN
+#ifndef __APIDOCS
     /**
      * Specialisations of xmlValueTag():
      */

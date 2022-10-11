@@ -258,7 +258,7 @@ class PacketInfo {
  * In particular, if \a Held is a full packet type itself (such as Container,
  * Script, or PacketOf<...>), then this template variable will be PACKET_NONE.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 template <typename Held>
 static constexpr PacketType packetTypeHolds = PACKET_NONE;

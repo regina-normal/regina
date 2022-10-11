@@ -41,6 +41,8 @@
 #endif
 
 #include <array>
+#include <cstdint>
+#include <string>
 #include "regina-core.h"
 
 namespace regina {
@@ -185,8 +187,8 @@ struct Base64SigEncoding {
      *
      * The inverse to this routine is decodeTrits().
      *
-     * \ifacespython Not present; instead you can use the variant of
-     * this routine that takes the trits as a fixed-size array.
+     * \nopython Instead you can use the variant of this routine that takes
+     * the trits as a fixed-size array.
      *
      * @param trits an input iterator pointing to the first trit to encode;
      * it must be possible to read and advance this iterator at least
@@ -247,8 +249,8 @@ struct Base64SigEncoding {
      * The inverse to this routine is encodeTrits(); see that routine
      * for details of the encoding.
      *
-     * \ifacespython Not present; instead you can use the variant of
-     * this routine that takes one argument and returns a fixed-size array.
+     * \nopython Instead you can use the variant of this routine that takes
+     * one argument and returns a fixed-size array.
      *
      * @param c the base64 character to decode.
      * @param result an output iterator pointing to the location where the

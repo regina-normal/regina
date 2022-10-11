@@ -31,8 +31,8 @@
  **************************************************************************/
 
 /*! \file utilities/typeutils.h
- *  \brief Provides helper template classes for use with template
- *  metaprogramming.  The need for these will likely diminish as
+ *  \brief Provides helper classes for use with template metaprogramming
+ *  and type analysis.  The need for these will likely diminish as
  *  Regina switches to use more modern C++ standards.
  */
 
@@ -42,6 +42,7 @@
 #endif
 
 #include <functional>
+#include <typeinfo>
 #include <variant>
 #include "regina-core.h"
 
@@ -333,6 +334,35 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
 };
 
 #endif // __DOXYGEN
+
+/**
+ * Returns the preferred Python display name for the given C++ type.
+ *
+ * The Python bindings have an internal mechanism for converting \e any
+ * C++ type into a suitable display name.  However, for some of Regina's
+ * classes the results are not ideal.
+ *
+ * For example, the 3-D triangulation class may be displayed as
+ * <tt>regina::Triangulation&lt;3&gt;</tt> instead of its "real" Python name
+ * <tt>regina.Triangulation3</tt>.  (This kind of problem most commonly
+ * appears in docstrings, where function signatures are generated as each
+ * function is bound, which may happen before all of the types in the
+ * argument/return list have been bound.)
+ *
+ * The purpose of this function is to override this default typename
+ * conversion mechanism.  If the C++ type referred to by \a t has a
+ * known Python name that should always be used, this function will
+ * return it.  Otherwise this function returns \c nullptr, indicating
+ * that the default conversion mechanism should be used.
+ *
+ * \nopython
+ *
+ * @param t an object that references the C++ type whose display name we
+ * wish to obtain.
+ * @return the preferred display name for this type in Python, or \c nullptr
+ * if the default C++-to-Python name conversion mechanism should be used.
+ */
+const char* pythonTypename(const std::type_info* t);
 
 } // namespace regina
 

@@ -47,7 +47,7 @@
 
 namespace regina {
 
-#ifndef __DOXYGEN
+#ifndef __APIDOCS
 template <class T, bool supportsUtf8 = false> struct Output;
 #else
 /**
@@ -222,8 +222,8 @@ struct ShortOutput : public Output<T, supportsUtf8> {
      * This routine simply calls \a T::writeTextShort() and appends
      * a final newline.
      *
-     * \ifacespython Not present; instead you can call detail() from the
-     * subclass \a T, which returns this output as a string.
+     * \nopython Instead you can call detail() from the subclass \a T, which
+     * returns this output as a string.
      *
      * @param out the output stream to which to write.
      */

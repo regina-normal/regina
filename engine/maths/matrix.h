@@ -48,7 +48,7 @@
 #include "maths/integer.h"
 #include "utilities/intutils.h"
 
-#ifndef __DOXYGEN
+#ifndef __APIDOCS
 // The following macros are used to conditionally enable member functions
 // of Matrix only for certain underlying types T.
 //
@@ -95,6 +95,13 @@
 #define REGINA_ENABLE_FOR_RING_DEPRECATED(returnType) \
     template <typename... Args, typename Return = returnType> \
     [[deprecated]] std::enable_if_t<ring, Return>
+#else
+  #ifdef __DOCSTRINGS
+    // Generate docstrings for all member functions.
+    #define REGINA_ENABLE_FOR_RING(r) r
+    #define REGINA_ENABLE_FOR_RING_STATIC(r) r
+    #define REGINA_ENABLE_FOR_RING_DEPRECATED(r) [[deprecated]] r
+  #endif
 #endif
 
 namespace regina {
@@ -152,9 +159,8 @@ template <class> class Vector;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython Not present in general, although the specific types
- * Matrix<Integer> and Matrix<bool> are available under the names
- * MatrixInt and MatrixBool respectively.
+ * \ifacespython Only the specific types Matrix<Integer> and Matrix<bool>
+ * are available, under the names MatrixInt and MatrixBool respectively.
  *
  * \tparam T the type of each individual matrix element.
  * \tparam ring \c true if we should enable member functions that only
@@ -200,8 +206,8 @@ class Matrix : public Output<Matrix<T>> {
          *   case the other matrix will become uninitialised also and subject
          *   to similar constraints.
          *
-         * \ifacespython Not present, since the C++ assignment operators
-         * are not accessible to Python.
+         * \nopython This is because the C++ assignment operators are
+         * not accessible to Python.
          */
         Matrix() : rows_(0), cols_(0), data_(nullptr) {
         }
@@ -609,7 +615,7 @@ class Matrix : public Output<Matrix<T>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -630,7 +636,7 @@ class Matrix : public Output<Matrix<T>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1327,14 +1333,14 @@ class Matrix : public Output<Matrix<T>> {
          *
          * Our convention is that a matrix is in row echelon form if:
          *
-         * -# each row is either zero or there is a first non-zero entry which
-         *    is positive;
-         * -# moving from the top row to the bottom, these first non-zero
-         *    entries have strictly increasing column indices;
-         * -# for each first non-zero row entry, in that column all the elements
-         *    above are smaller and non-negative (and all elements below are
-         *    already zero by the previous condition);
-         * -# all the zero rows are at the bottom of the matrix.
+         * - each row is either zero or there is a first non-zero entry which
+         *   is positive;
+         * - moving from the top row to the bottom, these first non-zero
+         *   entries have strictly increasing column indices;
+         * - for each first non-zero row entry, in that column all the elements
+         *   above are smaller and non-negative (and all elements below are
+         *   already zero by the previous condition);
+         * - all the zero rows are at the bottom of the matrix.
          *
          * This routine is only available when \a T is one of Regina's
          * own integer classes (Integer, LargeInteger, or NativeIntgeger).
@@ -1418,14 +1424,14 @@ class Matrix : public Output<Matrix<T>> {
          *
          * Our convention is that a matrix is in column echelon form if:
          *
-         * -# each column is either zero or there is a first non-zero entry
-         *    which is positive;
-         * -# moving from the left column to the right, these first non-zero
-         *    entries have strictly increasing row indices;
-         * -# for each first non-zero column entry, in that row all the elements
-         *    to the left are smaller and non-negative (and all elements to the
-         *    right are already zero by the previous condition);
-         * -# all the zero columns are at the right hand end of the matrix.
+         * - each column is either zero or there is a first non-zero entry
+         *   which is positive;
+         * - moving from the left column to the right, these first non-zero
+         *   entries have strictly increasing row indices;
+         * - for each first non-zero column entry, in that row all the elements
+         *   to the left are smaller and non-negative (and all elements to the
+         *   right are already zero by the previous condition);
+         * - all the zero columns are at the right hand end of the matrix.
          *
          * This routine is only available when \a T is one of Regina's
          * own integer classes (Integer, LargeInteger, or NativeIntgeger).

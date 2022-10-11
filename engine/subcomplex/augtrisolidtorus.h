@@ -55,16 +55,16 @@ namespace regina {
  * TriSolidTorus).  Observe that the three axis edges divide the
  * boundary into three annuli.  Then take one of the following actions.
  *
- *   - To each of these annuli, glue a layered solid torus.
- *     Note that the degenerate (2,1,1) layered solid torus
- *     (i.e., a one-triangle mobius strip) is allowed and corresponds to
- *     simply gluing the two triangles of the annulus together.
+ * - To each of these annuli, glue a layered solid torus.
+ *   Note that the degenerate (2,1,1) layered solid torus
+ *   (i.e., a one-triangle mobius strip) is allowed and corresponds to
+ *   simply gluing the two triangles of the annulus together.
  *
- *   - To one of these annuli, glue a layered solid torus as described
- *     above.  Join the other two annuli with a layered chain
- *     in either the manner described by
- *     TriSolidTorus::areAnnuliLinkedMajor() or the manner described by
- *     TriSolidTorus::areAnnuliLinkedAxis().
+ * - To one of these annuli, glue a layered solid torus as described
+ *   above.  Join the other two annuli with a layered chain
+ *   in either the manner described by
+ *   TriSolidTorus::areAnnuliLinkedMajor() or the manner described by
+ *   TriSolidTorus::areAnnuliLinkedAxis().
  *
  * It will be assumed that all layered solid tori other than the
  * degenerate (2,1,1) will have (3,2,1) layered solid tori at their

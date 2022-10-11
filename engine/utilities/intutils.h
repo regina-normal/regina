@@ -64,7 +64,7 @@ class NativeInteger;
  * The result will be available through the compile-time boolean constant
  * IsReginaInteger<T>::value.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -88,7 +88,7 @@ struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
  * The result will be available through the compile-time boolean constant
  * IsReginaArbitraryPrecisionInteger<T>::value.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -100,6 +100,7 @@ template <bool supportInfinity>
 struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public std::true_type {};
 #endif // __DOXYGEN
 
+#ifndef __DOCSTRINGS
 /**
  * Conditionally enables a member function for a template class only
  * when the type \a T is one of Regina's own integer classes.
@@ -128,6 +129,10 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
 #define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) \
     template <typename... Args, typename Return = returnType> \
     std::enable_if_t<IsReginaInteger<T>::value, Return>
+#else
+// When generating docstrings, we want docs for all member functions.
+#define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) returnType
+#endif
 
 /**
  * Returns the number of bits required to store integers in the range
@@ -188,7 +193,7 @@ constexpr IntType nextPowerOfTwo(IntType n) {
  *
  * The template parameter \a coeff can be any positive integer.
  *
- * \ifacespython Not present, since Python does not support templates.
+ * \nopython This is because Python does not support templates.
  *
  * \ingroup utilities
  */
@@ -206,7 +211,7 @@ inline constexpr IntType maxSafeFactor =
  *
  * The template parameter \a coeff can be any positive integer.
  *
- * \ifacespython Not present, since Python does not support templates.
+ * \nopython This is because Python does not support templates.
  *
  * \ingroup utilities
  */
@@ -221,7 +226,7 @@ inline constexpr IntType minSafeFactor =
  * \tparam bytes the exact number of bytes in the native integer types
  * (i.e., the integer \a k described above).
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * @see IntOfMinSize
  *
@@ -255,7 +260,7 @@ struct IntOfSize {
  * \tparam bytes the minimum number of bytes in the native integer types
  * (i.e., the integer \a k described above).
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * @see IntOfSize
  *
@@ -363,7 +368,7 @@ struct IntOfSize<8> {
  * (Integer, LargeInteger and NativeInteger).  If you attempt to use this
  * with other types (e.g., int or long), this struct will be undefined.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */

@@ -33,9 +33,10 @@ VERBATIM_HEADERS     = NO
 
 # Aliases:
 ALIASES = \
-    "ifaces=\par Interfaces^^" \
-    "ifacescpp=\par C++^^" \
+    "cpp=\par C++^^" \
     "ifacespython=\par Python^^" \
+    "nocpp=\par C++^^Not present." \
+    "nopython=\par Python^^Not present." \
     "snappy=\par SnapPy^^" \
     "i18n=\par Internationalisation^^" \
     "proburgent=<i><b>Bug (urgent):</b></i>" \
@@ -113,6 +114,7 @@ MACRO_EXPANSION      = YES
 EXPAND_ONLY_PREDEF   = YES
 PREDEFINED           = \
     __DOXYGEN \
+    __APIDOCS \
     REGINA_ENABLE_FOR_RING(returnType)=returnType \
     REGINA_ENABLE_FOR_REGINA_INTEGER(returnType)=returnType \
     ENABLE_MEMBER_FOR_REGINA_INTEGER(T,returnType)=returnType \

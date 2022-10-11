@@ -560,8 +560,7 @@ class TriangulationBase :
          * reason relates to the fact that top-dimensional simplices are built
          * manually, whereas lower-dimensional faces are deduced properties).
          *
-         * \ifacespython Not present, since Python does not support templates.
-         * Python users can instead use the variant <tt>countFaces(subdim)</tt>.
+         * \nopython Instead use the variant <tt>countFaces(subdim)</tt>.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * \a dim inclusive.
@@ -744,8 +743,7 @@ class TriangulationBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \ifacespython Not present, since Python does not support templates.
-         * Python users can instead use the variant <tt>faces(subdim)</tt>.
+         * \nopython Instead use the variant <tt>faces(subdim)</tt>.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
@@ -862,9 +860,7 @@ class TriangulationBase :
          * Returns the requested <i>subdim</i>-face of this triangulation,
          * in a way that is optimised for C++ programmers.
          *
-         * \ifacespython Not present, since Python does not support templates.
-         * Python users can instead use the variant
-         * <tt>face(subdim, index)</tt>.
+         * \nopython Instead use the variant <tt>face(subdim, index)</tt>.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
@@ -1136,8 +1132,7 @@ class TriangulationBase :
          *   but will "spring apart" into multiple faces when the boundary is
          *   triangulated.
          *
-         * \ifacespython Not present, since Python does not support templates.
-         * Python users can instead use the variant
+         * \nopython Instead use the variant
          * <tt>countBoundaryFaces(subdim)</tt>.
          *
          * \tparam subdim the face dimension; this must be between 0 and
@@ -1348,8 +1343,7 @@ class TriangulationBase :
          * \exception FailedPrecondition This triangulation is invalid, and
          * the homology dimension \a k is not 1.
          *
-         * \ifacespython Not present, since Python does not support templates.
-         * Python users can instead use the variant <tt>homology(k)</tt>.
+         * \nopython Instead use the variant <tt>homology(k)</tt>.
          *
          * \tparam k the dimension of the homology group to return;
          * this must be between 1 and (\a dim - 1) inclusive if \a dim is
@@ -1435,8 +1429,7 @@ class TriangulationBase :
          *
          * \exception FailedPrecondition This triangulation is empty or invalid.
          *
-         * \ifacespython Not present, since Python does not support templates.
-         * Python users can instead use the variant <tt>markedHomology(k)</tt>.
+         * \nopython Instead use the variant <tt>markedHomology(k)</tt>.
          *
          * \tparam k the dimension of the homology group to compute; this must
          * be between 1 and (<i>dim</i>-1) inclusive.
@@ -1523,9 +1516,7 @@ class TriangulationBase :
          *
          * \pre This triangulation is valid and non-empty.
          *
-         * \ifacespython Not present, since Python does not support templates.
-         * Python users can instead use the variant
-         * <tt>homologyMap(subdim)</tt>.
+         * \nopython Instead use the variant <tt>homologyMap(subdim)</tt>.
          *
          * \tparam subdim the face dimension; this must be between 1 and
          * \a dim inclusive.
@@ -2306,7 +2297,7 @@ class TriangulationBase :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -2315,7 +2306,7 @@ class TriangulationBase :
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -2475,8 +2466,7 @@ class TriangulationBase :
          * Writes the tight encoding of this triangulation to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -2759,8 +2749,8 @@ class TriangulationBase :
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a <i>dim</i>-dimensional triangulation.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for a <i>dim</i>-dimensional triangulation.

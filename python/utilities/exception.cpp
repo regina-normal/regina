@@ -35,40 +35,54 @@
 #include "utilities/exception.h"
 #include "utilities/snapshot.h"
 #include "../helpers.h"
+#include "../docstrings/utilities/exception.h"
+#include "../docstrings/utilities/snapshot.h"
 
-// Bring in all our exception classes from all our headers.
+// Bring in all of the exception classes defined in utilities/*.h.
+//
+// The SnapPea kernel exceptions are added elsewhere (since they are
+// defined in snappea/*.h).
 
 void addException(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN_MAIN
+
     // Derived from ReginaException:
     pybind11::register_exception<regina::ReginaException>(m,
-        "ReginaException", PyExc_RuntimeError);
+        "ReginaException", PyExc_RuntimeError)
+        .doc() = rdoc::ReginaException;
     pybind11::register_exception<regina::FailedPrecondition>(m,
-        "FailedPrecondition", PyExc_RuntimeError);
+        "FailedPrecondition", PyExc_RuntimeError)
+        .doc() = rdoc::FailedPrecondition;
     pybind11::register_exception<regina::InvalidArgument>(m,
-        "InvalidArgument", PyExc_RuntimeError);
+        "InvalidArgument", PyExc_RuntimeError)
+        .doc() = rdoc::InvalidArgument;
     pybind11::register_exception<regina::InvalidInput>(m,
-        "InvalidInput", PyExc_RuntimeError);
+        "InvalidInput", PyExc_RuntimeError)
+        .doc() = rdoc::InvalidInput;
     pybind11::register_exception<regina::NotImplemented>(m,
-        "NotImplemented", PyExc_RuntimeError);
+        "NotImplemented", PyExc_RuntimeError)
+        .doc() = rdoc::NotImplemented;
     pybind11::register_exception<regina::FileError>(m,
-        "FileError", PyExc_RuntimeError);
+        "FileError", PyExc_RuntimeError)
+        .doc() = rdoc::FileError;
     pybind11::register_exception<regina::NoSolution>(m,
-        "NoSolution", PyExc_RuntimeError);
+        "NoSolution", PyExc_RuntimeError)
+        .doc() = rdoc::NoSolution;
     pybind11::register_exception<regina::UnsolvedCase>(m,
-        "UnsolvedCase", PyExc_RuntimeError);
+        "UnsolvedCase", PyExc_RuntimeError)
+        .doc() = rdoc::UnsolvedCase;
     pybind11::register_exception<regina::SnapPeaUnsolvedCase>(m,
-        "SnapPeaUnsolvedCase", PyExc_RuntimeError);
+        "SnapPeaUnsolvedCase", PyExc_RuntimeError)
+        .doc() = rdoc::SnapPeaUnsolvedCase;
     pybind11::register_exception<regina::SnapPeaIsNull>(m,
-        "SnapPeaIsNull", PyExc_RuntimeError);
-
-    // Critical errors within the SnapPea kernel:
-    pybind11::register_exception<regina::SnapPeaFatalError>(m,
-        "SnapPeaFatalError", PyExc_RuntimeError);
-    pybind11::register_exception<regina::SnapPeaMemoryFull>(m,
-        "SnapPeaMemoryFull", PyExc_RuntimeError);
+        "SnapPeaIsNull", PyExc_RuntimeError)
+        .doc() = rdoc::SnapPeaIsNull;
 
     // Snapshotting machinery:
     pybind11::register_exception<regina::SnapshotWriteError>(m,
-        "SnapshotWriteError", PyExc_RuntimeError);
+        "SnapshotWriteError", PyExc_RuntimeError)
+        .doc() = rdoc::SnapshotWriteError;
+
+    RDOC_SCOPE_END
 }
 

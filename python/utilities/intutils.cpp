@@ -32,9 +32,15 @@
 
 #include "../pybind11/pybind11.h"
 #include "utilities/intutils.h"
+#include "../helpers/docstrings.h"
+#include "../docstrings/utilities/intutils.h"
 
 void addIntUtils(pybind11::module_& m) {
-    m.def("bitsRequired", regina::bitsRequired<long>);
-    m.def("nextPowerOfTwo", regina::nextPowerOfTwo<long>);
+    RDOC_SCOPE_BEGIN_MAIN
+
+    m.def("bitsRequired", regina::bitsRequired<long>, rdoc::bitsRequired);
+    m.def("nextPowerOfTwo", regina::nextPowerOfTwo<long>, rdoc::nextPowerOfTwo);
+
+    RDOC_SCOPE_END
 }
 

@@ -54,7 +54,7 @@ namespace regina {
  * End users should not use this class, but should use mem_istream instead.
  * The API for this class is subject to change in future versions of Regina.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -85,7 +85,7 @@ class mem_istream : public std::istream {
  * End users should not use this class, but should use mem_istream instead.
  * The API for this class is subject to change in future versions of Regina.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */

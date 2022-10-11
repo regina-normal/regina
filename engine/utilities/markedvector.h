@@ -73,7 +73,7 @@ namespace regina {
  *
  * See MarkedVector for further information.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -149,7 +149,7 @@ class MarkedElement {
  *
  * \pre The type \a T is a class derived from MarkedElement.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup utilities
  */

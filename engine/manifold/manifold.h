@@ -202,8 +202,8 @@ class Manifold : public Output<Manifold> {
          * Writes the common name of this 3-manifold as a
          * human-readable string to the given output stream.
          *
-         * \ifacespython Not present; instead use the variant name()
-         * that takes no arguments and returns a string.
+         * \nopython Instead use the variant name() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -218,8 +218,8 @@ class Manifold : public Output<Manifold> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * \ifacespython Not present; instead use the variant texName()
-         * that takes no arguments and returns a string.
+         * \nopython Instead use the variant texName() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -235,8 +235,8 @@ class Manifold : public Output<Manifold> {
          * details are deemed necessary.  The default implementation of
          * this routine behaves in this way.
          *
-         * \ifacespython Not present; instead use the variant structure()
-         * that takes no arguments and returns a string.
+         * \nopython Instead use the variant structure() that takes no
+         * arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -250,7 +250,7 @@ class Manifold : public Output<Manifold> {
          * Subclasses must not override this routine.  They should
          * override writeName() instead.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -262,7 +262,7 @@ class Manifold : public Output<Manifold> {
          * Subclasses must not override this routine.  They should
          * override writeName() and writeStructure() instead.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */

@@ -53,7 +53,7 @@ namespace regina {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
- * \ifacespython Only the end-user class BitManipulator<unsigned long> is
+ * \nopython Only the end-user class BitManipulator<unsigned long> is
  * available to Python users.
  *
  * @tparam T an unsigned integral numeric type, which we treat as a
@@ -173,7 +173,7 @@ class BitManipulatorByType<unsigned long long> {
  * \pre Type \a T is an unsigned integral numeric type.
  * \pre The argument \a size is a power of two, and is at most sizeof(\a T).
  *
- * \ifacespython Only the end-user class BitManipulator<unsigned long> is
+ * \nopython Only the end-user class BitManipulator<unsigned long> is
  * available to Python users.
  *
  * @tparam T an unsigned integral numeric type, which we treat as a

@@ -922,6 +922,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This routine takes time proportional to the number of steps.
          *
          * \pre The given number of steps is strictly positive.
+         *
+         * @param steps the number of steps up to move.
          */
         void moveUp(unsigned steps = 1);
 
@@ -934,6 +936,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This routine takes time proportional to the number of steps.
          *
          * \pre The given number of steps is strictly positive.
+         *
+         * @param steps the number of steps down to move.
          */
         void moveDown(unsigned steps = 1);
 
@@ -969,28 +973,19 @@ class Packet : public std::enable_shared_from_this<Packet>,
         /*@{*/
 
         /**
-         * Returns a non-const iterator at the beginning of the range of
+         * Returns a C++ non-const iterator at the beginning of the range of
          * packets in the subtree rooted at this packet.
          *
          * Subtree iteration is depth-first, where a parent packet is always
-         * processed before its descendants.  Therefore the iterator returned
-         * by begin() will always point to this packet itself.
+         * processed before its descendants.  In particular, the iterator
+         * returned by begin() will always point to this packet itself.
          *
-         * The begin() and end() routines allow you to iterate through
+         * In C++, these begin() and end() routines allow you to iterate through
          * an entire packet subtree using C++11 range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> subtree = ...;
          * for (Packet& p : *subtree) { ... }
-         * \endcode
-         *
-         * In Python, each packet can be treated as an iterable object, again
-         * iterating through the corresponding subtree:
-         *
-         * \code{.py}
-         * subtree = ...
-         * for p in subtree:
-         *     ...
          * \endcode
          *
          * Since Regina 7.0, the return type is templated in order to support
@@ -1003,42 +998,42 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * and children() for iterating just through the immediate children
          * of this packet (not the full subtree).
          *
-         * \ifacespython As well as treating each packet as an iterable
-         * object, Regina supplies a member function <tt>Packet.subtree()</tt>
-         * which returns an iterable object.  Iterating over a packet directly
-         * is exactly the same as iterating over <tt>Packet.subtree()</tt>;
-         * the latter is offered because it may be clearer for readers.
+         * \nopython For Python users, Packet implements the Python iterable
+         * interface.  You can iterate over the packets in a subtree in the
+         * usual Python way, by treating the subtree root as you would any
+         * native Python container.  See __iter__() for details.
          *
          * @return an iterator at the beginning of this subtree.
          */
         SubtreeIterator<false> begin();
 
         /**
-         * Returns a non-const iterator beyond the end of the range of packets
-         * in the subtree rooted at this packet.
+         * Returns a C++ non-const iterator beyond the end of the range of
+         * packets in the subtree rooted at this packet.
          *
-         * In C++, the begin() and end() routines allow you to iterate through
+         * In C++, these begin() and end() routines allow you to iterate through
          * an entire packet subtree using C++11 range-based \c for loops.
-         * In Python, each packet can be treated as an iterable object.
          *
          * See the begin() documentation for further details.
          *
-         * \ifacespython Again, see the begin() documentation for the iterable
-         * objects that Regina provides for Python users.
+         * \nopython For Python users, Packet implements the Python iterable
+         * interface.  You can iterate over the packets in a subtree in the
+         * usual Python way, by treating the subtree root as you would any
+         * native Python container.  See __iter__() for details.
          *
          * @return an iterator beyond the end of this subtree.
          */
         SubtreeIterator<false> end();
 
         /**
-         * Returns a const iterator at the beginning of the range of packets
+         * Returns a C++ const iterator at the beginning of the range of packets
          * in the subtree rooted at this packet.
          *
          * Subtree iteration is depth-first, where a parent packet is always
-         * processed before its descendants.  Therefore the iterator returned
-         * by begin() will always point to this packet itself.
+         * processed before its descendants.  In particular, the iterator
+         * returned by begin() will always point to this packet itself.
          *
-         * The begin() and end() routines allow you to iterate through
+         * In C++, these begin() and end() routines allow you to iterate through
          * an entire packet subtree using C++11 range-based \c for loops:
          *
          * \code{.cpp}
@@ -1056,22 +1051,70 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * and children() for iterating just through the immediate children
          * of this packet (not the full subtree).
          *
+         * \nopython For Python users, Packet implements the Python iterable
+         * interface.  You can iterate over the packets in a subtree in the
+         * usual Python way, by treating the subtree root as you would any
+         * native Python container.  See __iter__() for details.
+         *
          * @return an iterator at the beginning of this subtree.
          */
         SubtreeIterator<true> begin() const;
 
         /**
-         * Returns a const iterator beyond the end of the range of packets
+         * Returns a C++ const iterator beyond the end of the range of packets
          * in the subtree rooted at this packet.
          *
-         * In C++, the begin() and end() routines allow you to iterate through
+         * In C++, these begin() and end() routines allow you to iterate through
          * an entire packet subtree using C++11 range-based \c for loops.
          *
          * See the begin() documentation for further details.
          *
+         * \nopython For Python users, Packet implements the Python iterable
+         * interface.  You can iterate over the packets in a subtree in the
+         * usual Python way, by treating the subtree root as you would any
+         * native Python container.  See __iter__() for details.
+         *
          * @return an iterator beyond the end of this subtree.
          */
         SubtreeIterator<true> end() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the packets in the subtree rooted
+         * at this packet.
+         *
+         * Subtree iteration is depth-first, where a parent packet is always
+         * processed before its descendants.  In particular, this packet
+         * (as the root of the subtree) will be processed first.
+         *
+         * In Python, each packet can be treated as an iterable object, with
+         * the effect of iterating through the corresponding subtree:
+         *
+         * \code{.py}
+         * subtree = ...
+         * for p in subtree:
+         *     ...
+         * \endcode
+         *
+         * Regina also supplies Python users with a member function
+         * <tt>Packet.subtree()</tt>, which returns an iterable object.
+         * Iterating over <tt>Packet.subtree()</tt> is exactly the same as
+         * iterating the packet itself; the <tt>subtree()</tt> function is
+         * offered because the intention may be clearer for readers.
+         *
+         * See also descendants() for iterating through just the strict
+         * descendants in the subtree (i.e., excluding this packet itself),
+         * and children() for iterating just through the immediate children
+         * of this packet (not the full subtree).
+         *
+         * \nocpp For C++ users, Packet provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over a packet
+         * subtree in the usual C++ way using a range-based \c for loop.
+         *
+         * @return an iterator over the subtree rooted at this packet.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Returns a lightweight object for iterating through all
@@ -1432,8 +1475,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre The given stream is open for writing.
          * \pre The given packet does not depend on its parent.
          *
-         * \ifacespython Not present, to avoid confusion with the
-         * filename-based save().  However, if you wish to write a Regina
+         * \nopython This is not available in Python to avoid confusion with
+         * the filename-based save().  However, if you wish to write a Regina
          * XML data file directly to an open Python file, you can still use
          * writeXMLFile() for this.
          *
@@ -1532,6 +1575,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * In particular, Regina does not offer any way for a ChangeEventSpan
          * to transfer its duty (i.e., firing events upon destruction) to
          * another object.
+         *
+         * \nopython
          */
         class ChangeEventSpan {
             private:
@@ -1893,7 +1938,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This must be reimplemented by subclasses.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1905,7 +1950,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This may be reimplemented by subclasses, but the parent
          * Packet class offers a reasonable default implementation.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1935,6 +1980,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
  * which is then held by a PacketOf<SnapPeaTriangulation>.  In this case
  * the inherited PacketData<Triangulation<3>> will store HELD_BY_SNAPPEA, and
  * the inherited PacketData<SnapPeaTriangulation> will store HELD_BY_PACKET.
+ *
+ * \nopython
  */
 enum PacketHeldBy {
     /**
@@ -2145,6 +2192,9 @@ class PacketOf : public Packet, public Held {
  * is a single PacketHeldBy enumeration value.  All of the class constructors
  * set this value to HELD_BY_NONE; it is the responsibility of subclasses
  * (e.g., PacketOf<Held>) to change this where necessary.
+ *
+ * \ifacespython Not present, but the routines anonID() and packet() will be
+ * provided directly through the various subclasses.
  */
 template <typename Held>
 class PacketData {
@@ -2299,6 +2349,8 @@ class PacketData {
          * In particular, Regina does not offer any way for a ChangeEventSpan
          * to transfer its duty (i.e., firing events upon destruction) to
          * another object.
+         *
+         * \nopython
          */
         class ChangeEventSpan {
             private:
@@ -2425,9 +2477,8 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython Not present, since this routine is too heavily templated
- * for Python.  Instead you can just directly call the constructor
- * <tt>PacketOfHeld(args...)</tt>.
+ * \nopython This routine is too heavily templated for Python.  Instead you
+ * can just directly call the constructor <tt>PacketOfHeld(args...)</tt>.
  *
  * @param args the arguments to be forwarded to the appropriate
  * \a Held constructor.
@@ -2454,9 +2505,8 @@ std::shared_ptr<PacketOf<Held>> make_packet(std::in_place_t, Args&&... args) {
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython Not present, since this routine is too heavily templated
- * for Python.  Instead you can just directly call the constructor
- * <tt>PacketOfHeld()</tt>.
+ * \nopython This routine is too heavily templated for Python.  Instead you
+ * can just directly call the constructor <tt>PacketOfHeld()</tt>.
  *
  * @return the new wrapped packet.
  *
@@ -2483,7 +2533,7 @@ std::shared_ptr<PacketOf<Held>> make_packet() {
  * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
- * \ifacespython Not present, since casting is unnecessary in Python.
+ * \nopython Casting is unnecessary in Python.
  *
  * @param p a reference, presented as a packet.
  * @return the same reference, presented using the type \a Held.
@@ -2511,7 +2561,7 @@ Held& static_packet_cast(Packet& p) {
  * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
- * \ifacespython Not present, since casting is unnecessary in Python.
+ * \nopython Casting is unnecessary in Python.
  *
  * @param p a reference, presented as a packet.
  * @return the same reference, presented using the type \a Held.
@@ -2564,8 +2614,7 @@ std::shared_ptr<Packet> open(const char* filename);
  *
  * \pre The given stream is open for reading.
  *
- * \ifacespython Not present; instead you can use the variant of open() that
- * takes a filename.
+ * \nopython Instead you can use the variant of open() that takes a filename.
  *
  * @param in the input stream to read from.
  * @return the packet tree read from file, or \c null on error.
@@ -2590,7 +2639,7 @@ std::shared_ptr<Packet> open(std::istream& in);
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
  * the single function <tt>__iter__()</tt>, which returns a ChildIterator;
- * then ChildIterator implements <tt>next()</tt>, which either returns
+ * then ChildIterator implements <tt>__next__()</tt>, which either returns
  * the next child packet in the iteration or else throws a
  * <tt>StopException</tt> if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
@@ -2623,22 +2672,22 @@ class ChildIterator {
         /**
          * Creates a past-the-end iterator.
          *
-         * \ifacespython Not present.  The only way to create a ChildIterator
-         * is via Packet::children().
+         * \nopython The only way to create a ChildIterator is via
+         * Packet::children().
          */
         ChildIterator() = default;
         /**
          * Default copy constructor.
          *
-         * \ifacespython Not present.  The only way to create a ChildIterator
-         * is via Packet::children().
+         * \nopython The only way to create a ChildIterator is via
+         * Packet::children().
          */
         ChildIterator(const ChildIterator&) = default;
         /**
          * Creates a new iterator pointing to the given child packet.
          *
-         * \ifacespython Not present.  The only way to create a ChildIterator
-         * is via Packet::children().
+         * \nopython The only way to create a ChildIterator is via
+         * Packet::children().
          *
          * @param current the child packet that the new iterator should
          * point to, or \c null if the new iterator should be past-the-end.
@@ -2666,10 +2715,8 @@ class ChildIterator {
         /**
          * Preincrement operator.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current child packet and
-         * increments the iterator, or else throws a <tt>StopIteration</tt>
-         * exception if the iterator is past-the-end.
+         * \nopython For Python users, ChildIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return a reference to this iterator.
          */
@@ -2677,22 +2724,34 @@ class ChildIterator {
         /**
          * Postincrement operator.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current child packet and
-         * increments the iterator, or else throws a <tt>StopIteration</tt>
-         * exception if the iterator is past-the-end.
+         * \nopython For Python users, ChildIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return a a copy of this iterator before it was incremented.
          */
         ChildIterator operator ++ (int);
+#ifdef __APIDOCS
+        /**
+         * Returns the current child packet and increments this iterator.
+         *
+         * \nocpp For C++ users, ChildIterator provides the usual iterator
+         * preincrement, postincrement and dereferencing operators (++ and *)
+         * instead.
+         *
+         * \exception StopIteration The iterator is already past-the-end
+         * when this function is called.
+         *
+         * @return the child packet that this iterator is pointing to, before
+         * the increment takes place.
+         */
+        auto __next__();
+#endif
 
         /**
          * Returns the packet that this iterator is currently pointing to.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current child packet and
-         * increments the iterator, or else throws a <tt>StopIteration</tt>
-         * exception if the iterator is past-the-end.
+         * \nopython For Python users, ChildIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return the current packet.
          */
@@ -2701,10 +2760,8 @@ class ChildIterator {
         /**
          * Identifies whether this iterator is dereferencable.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current child packet and
-         * increments the iterator, or else throws a <tt>StopIteration</tt>
-         * exception if the iterator is not dereferencable.
+         * \nopython For Python users, ChildIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return \c true if and only if this is dereferencable (i.e.,
          * not past-the-end).
@@ -2730,7 +2787,7 @@ class ChildIterator {
  * \ifacespython Instead of the C++ interface described here, in Python
  * this class implements the Python iterable/iterator interface.  It implements
  * the function <tt>__iter__()</tt>, which returns the iterator object itself;
- * it also implements <tt>next()</tt>, which either returns the next packet
+ * it also implements <tt>__next__()</tt>, which either returns the next packet
  * in the subtree iteration or else throws a <tt>StopException</tt> if there
  * are no more packets to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
@@ -2765,16 +2822,16 @@ class SubtreeIterator {
         /**
          * Creates a past-the-end iterator.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          */
         SubtreeIterator() = default;
         /**
          * Default copy constructor.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          */
         SubtreeIterator(const SubtreeIterator&) = default;
@@ -2783,8 +2840,8 @@ class SubtreeIterator {
          * the given subtree.  Dereferencing this iterator will return
          * \a subtree itself.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          *
          * @param subtree the packet subtree that we are iterating through.
@@ -2796,8 +2853,8 @@ class SubtreeIterator {
          * Creates a new iterator pointing to the given packet within
          * the given subtree.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          *
          * @param subtree the packet subtree that we are iterating through.
@@ -2817,10 +2874,27 @@ class SubtreeIterator {
          */
         SubtreeIterator& operator = (const SubtreeIterator&) = default;
 
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over all members of the relevant
+         * packet subtree.
+         *
+         * \nocpp For C++ users, you can access such iterators by calling
+         * begin() and end() on either (i) the packet at the root of the
+         * subtree, or (ii) the PacketDescendant object returned by
+         * Packet::descendants().  In particular, this allows you to iterate
+         * through a packet subtree (including or excluding the subtree root
+         * respectively) using a range-based \c for loop.
+         *
+         * @return an iterator over all members of the relevant packet subtree.
+         */
+        auto __iter__() const;
+#endif
+
         /**
          * Tests whether this and the given iterator are equal.
          *
-         * \note This routine only compares the packets that each iterator
+         * This routine only compares the packets that each iterator
          * is currently pointing to.  It does not compare the roots of the
          * subtrees themselves.
          *
@@ -2830,7 +2904,7 @@ class SubtreeIterator {
         /**
          * Tests whether this and the given iterator are different.
          *
-         * \note This routine only compares the packets that each iterator
+         * This routine only compares the packets that each iterator
          * is currently pointing to.  It does not compare the roots of the
          * subtrees themselves.
          *
@@ -2841,10 +2915,8 @@ class SubtreeIterator {
         /**
          * Preincrement operator.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current packet in the
-         * subtree and increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \nopython For Python users, SubtreeIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return a reference to this iterator.
          */
@@ -2852,22 +2924,35 @@ class SubtreeIterator {
         /**
          * Postincrement operator.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current packet in the
-         * subtree and increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \nopython For Python users, SubtreeIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return a copy of this iterator before it was incremented.
          */
         SubtreeIterator operator ++ (int);
+#ifdef __APIDOCS
+        /**
+         * Returns the current packet in the subtree and increments this
+         * iterator.
+         *
+         * \nocpp For C++ users, SubtreeIterator provides the usual iterator
+         * preincrement, postincrement and dereferencing operators (++ and *)
+         * instead.
+         *
+         * \exception StopIteration The iterator is already past-the-end
+         * when this function is called.
+         *
+         * @return the packet that this iterator is pointing to, before
+         * the increment takes place.
+         */
+        auto __next__();
+#endif
 
         /**
          * Returns the packet that this iterator is currently pointing to.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current packet in the
-         * subtree and increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \nopython For Python users, SubtreeIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return the current packet.
          */
@@ -2876,10 +2961,8 @@ class SubtreeIterator {
         /**
          * Identifies whether this iterator is dereferencable.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current child packet and
-         * increments the iterator, or else throws a <tt>StopIteration</tt>
-         * exception if the iterator is not dereferencable.
+         * \nopython For Python users, SubtreeIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return \c true if and only if this is dereferencable (i.e.,
          * not past-the-end).
@@ -2924,7 +3007,7 @@ class SubtreeIterator {
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
  * the single function <tt>__iter__()</tt>, which returns a ChildIterator;
- * then ChildIterator implements <tt>next()</tt>, which either returns
+ * then ChildIterator implements <tt>__next__()</tt>, which either returns
  * the next child packet in the iteration or else throws a
  * <tt>StopException</tt> if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
@@ -2947,14 +3030,16 @@ class PacketChildren {
         /**
          * Default copy constructor.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketChildren object is via
+         * Packet::children().
          */
         PacketChildren(const PacketChildren&) = default;
         /**
          * Creates a new object for iterating through the immediate
          * children of the given packet.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketChildren object is via
+         * Packet::children().
          *
          * @param parent the packet whose children we will iterate through.
          */
@@ -2962,29 +3047,51 @@ class PacketChildren {
 
         /**
          * Default copy assignment operator.
-         *
-         * \ifacespython Not present.
          */
         PacketChildren& operator = (const PacketChildren&) = default;
 
         /**
-         * Returns an iterator at the beginning of the range of children.
+         * Returns a C++ iterator pointing to the first immediate child packet.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>__iter__()</tt>, as described in the class notes.
+         * The iterator range from begin() to end() runs through all
+         * immediate children in order from first to last.
+         *
+         * \nopython For Python users, PacketChildren implements the Python
+         * iterable interface.  You can iterate over all immediate child
+         * packets in the usual Python way, by treating this PacketChildren
+         * object as you would any native Python container.
          *
          * @return the beginning iterator.
          */
         ChildIterator<const_> begin() const;
         /**
-         * Returns an iterator at the end of the range of children.
+         * Returns a C++ iterator pointing beyond the last immediate
+         * child packet.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>__iter__()</tt>, as described in the class notes.
+         * The iterator range from begin() to end() runs through all
+         * immediate children in order from first to last.
+         *
+         * \nopython For Python users, PacketChildren implements the Python
+         * iterable interface.  You can iterate over all immediate child
+         * packets in the usual Python way, by treating this PacketChildren
+         * object as you would any native Python container.
          *
          * @return the past-the-end iterator.
          */
         ChildIterator<const_> end() const;
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over all immediate child packets.
+         *
+         * \nocpp For C++ users, PacketChildren provides the usual
+         * begin() and end() functions instead.  In particular, this
+         * allows you to iterate through all immediate child packets
+         * in the usual way using a range-based \c for loop.
+         *
+         * @return an iterator over all immediate child packets.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Determines whether this and the given object are designed to
@@ -3042,7 +3149,7 @@ class PacketChildren {
  * the classes PacketDescendants and SubtreeIterator together implement the
  * Python iterable/iterator interface.  The class PacketDescendants has just
  * the single function <tt>__iter__()</tt>, which returns a SubtreeIterator;
- * then SubtreeIterator implements <tt>next()</tt>, which either returns
+ * then SubtreeIterator implements <tt>__next__()</tt>, which either returns
  * the next descendant packet in the iteration or else throws a
  * <tt>StopException</tt> if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
@@ -3065,14 +3172,16 @@ class PacketDescendants {
         /**
          * Default copy constructor.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketDescendants object is via
+         * Packet::descendants().
          */
         PacketDescendants(const PacketDescendants&) = default;
         /**
          * Creates a new object for iterating through the strict descendants
          * of the given packet.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketDescendants object is via
+         * Packet::descendants().
          *
          * @param subtree the packet whose strict descendants we will iterate
          * through.
@@ -3082,30 +3191,48 @@ class PacketDescendants {
         /**
          * Default copy assignment operator.
          *
-         * \ifacespython Not present.
+         * \nopython
          */
         PacketDescendants& operator = (const PacketDescendants&) = default;
 
         /**
-         * Returns an iterator at the beginning of the range of strict
-         * descendants.  This will point to the first child packet (if
+         * Returns a C++ iterator at the beginning of the range of strict
+         * descendant packets.  This will point to the first child packet (if
          * one exists) of the packet whose descendants we are iterating over.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>__iter__()</tt>, as described in the class notes.
+         * \nopython For Python users, PacketDescendants implements the Python
+         * iterable interface.  You can iterate over the strict descendant
+         * packets in the usual Python way, by treating this PacketDescendants
+         * object as you would any native Python container.
          *
          * @return the beginning iterator.
          */
         SubtreeIterator<const_> begin() const;
         /**
-         * Returns an iterator at the end of the range of strict descendants.
+         * Returns a C++ iterator at the end of the range of strict descendant
+         * packets.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>__iter__()</tt>, as described in the class notes.
+         * \nopython For Python users, PacketDescendants implements the Python
+         * iterable interface.  You can iterate over the strict descendant
+         * packets in the usual Python way, by treating this PacketDescendants
+         * object as you would any native Python container.
          *
          * @return the past-the-end iterator.
          */
         SubtreeIterator<const_> end() const;
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over all strict descendant packets.
+         *
+         * \nocpp For C++ users, PacketDescendants provides the usual
+         * begin() and end() functions instead.  In particular, this
+         * allows you to iterate through all strict descendant packets
+         * in the usual way using a range-based \c for loop.
+         *
+         * @return an iterator over all strict descendant packets.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Determines whether this and the given object are designed to
@@ -3617,7 +3744,7 @@ class PacketListener {
          * The new form of the packetToBeChanged() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, packetToBeChanged() refers to the new
+         * \nopython In Python, packetToBeChanged() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void packetToBeChanged(Packet*) final {};
@@ -3629,7 +3756,7 @@ class PacketListener {
          * The new form of the packetWasChanged() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, packetWasChanged() refers to the new
+         * \nopython In Python, packetWasChanged() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void packetWasChanged(Packet*) final {};
@@ -3641,7 +3768,7 @@ class PacketListener {
          * The new form of the packetToBeRenamed() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, packetToBeRenamed() refers to the new
+         * \nopython In Python, packetToBeRenamed() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void packetToBeRenamed(Packet*) final {};
@@ -3653,7 +3780,7 @@ class PacketListener {
          * The new form of the packetWasRenamed() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, packetWasRenamed() refers to the new
+         * \nopython In Python, packetWasRenamed() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void packetWasRenamed(Packet*) final {};
@@ -3666,7 +3793,7 @@ class PacketListener {
          * emphasise the fact that we are already well inside the packet
          * destructor when this is called.
          *
-         * \ifacespython Not present, since Python does not provide a mechanism
+         * \nopython This is because Python does not provide a mechanism
          * such as \c final to prevent subclasses from overriding a function.
          */
         virtual void packetToBeDestroyed(PacketShell) final {};
@@ -3678,7 +3805,7 @@ class PacketListener {
          * The new form of the childToBeAdded() callback now takes its
          * arguments by reference, not by pointer.
          *
-         * \ifacespython In Python, childToBeAdded() refers to the new
+         * \nopython In Python, childToBeAdded() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childToBeAdded(Packet*, Packet*) final {};
@@ -3690,7 +3817,7 @@ class PacketListener {
          * The new form of the childWasAdded() callback now takes its
          * arguments by reference, not by pointer.
          *
-         * \ifacespython In Python, childWasAdded() refers to the new
+         * \nopython In Python, childWasAdded() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childWasAdded(Packet*, Packet*) final {};
@@ -3703,7 +3830,7 @@ class PacketListener {
          * arguments by reference, not by pointer, and is no longer
          * called from within either the child or parent destructor.
          *
-         * \ifacespython In Python, childToBeRemoved() refers to the new
+         * \nopython In Python, childToBeRemoved() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childToBeRemoved(Packet*, Packet*) final {};
@@ -3716,7 +3843,7 @@ class PacketListener {
          * arguments by reference, not by pointer, and is no longer
          * called from within either the child or parent destructor.
          *
-         * \ifacespython In Python, childWasRemoved() refers to the new
+         * \nopython In Python, childWasRemoved() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childWasRemoved(Packet*, Packet*) final {};
@@ -3728,7 +3855,7 @@ class PacketListener {
          * The new form of the childrenToBeReordered() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, childrenToBeReordered() refers to the new
+         * \nopython In Python, childrenToBeReordered() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childrenToBeReordered(Packet*) final {};
@@ -3740,7 +3867,7 @@ class PacketListener {
          * The new form of the childrenWereReordered() callback now takes its
          * argument by reference, not by pointer.
          *
-         * \ifacespython In Python, childrenWereReordered() refers to the new
+         * \nopython In Python, childrenWereReordered() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childrenWereReordered(Packet*) final {};
@@ -3752,7 +3879,7 @@ class PacketListener {
          * The new form of the childToBeRenamed() callback now takes its
          * arguments by reference, not by pointer.
          *
-         * \ifacespython In Python, childToBeRenamed() refers to the new
+         * \nopython In Python, childToBeRenamed() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childToBeRenamed(Packet*, Packet*) final {};
@@ -3764,7 +3891,7 @@ class PacketListener {
          * The new form of the childWasRenamed() callback now takes its
          * arguments by reference, not by pointer.
          *
-         * \ifacespython In Python, childWasRenamed() refers to the new
+         * \nopython In Python, childWasRenamed() refers to the new
          * (reference-based) form of this callback.
          */
         virtual void childWasRenamed(Packet*, Packet*) final {};

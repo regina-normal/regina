@@ -36,69 +36,80 @@
 #include "maths/polynomial.h"
 #include "maths/rational.h"
 #include "../helpers.h"
+#include "../docstrings/maths/polynomial.h"
 
 using pybind11::overload_cast;
 using regina::Polynomial;
 using regina::Rational;
 
 void addPolynomial(pybind11::module_& m) {
-    auto c = pybind11::class_<Polynomial<Rational>>(m, "Polynomial")
-        .def(pybind11::init<>())
-        .def(pybind11::init<size_t>())
-        .def(pybind11::init<const Polynomial<Rational>&>())
+    namespace global = regina::python::doc;
+
+    RDOC_SCOPE_BEGIN(Polynomial)
+
+    auto c = pybind11::class_<Polynomial<Rational>>(m, "Polynomial", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Polynomial)
+        .def(pybind11::init<size_t>(), rdoc::Polynomial_2)
+        .def(pybind11::init<const Polynomial<Rational>&>(), rdoc::Polynomial_3)
         .def(pybind11::init([](const std::vector<Rational>& coeffs) {
             return new Polynomial<Rational>(coeffs.begin(), coeffs.end());
-        }))
+        }), rdoc::Polynomial_4)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
-        .def("init", (void (Polynomial<Rational>::*)())
-            &Polynomial<Rational>::init)
-        .def("init", (void (Polynomial<Rational>::*)(size_t))
-            &Polynomial<Rational>::init)
+        .def("init", static_cast<void (Polynomial<Rational>::*)()>(
+            &Polynomial<Rational>::init), rdoc::init)
+        .def("init", static_cast<void (Polynomial<Rational>::*)(size_t)>(
+            &Polynomial<Rational>::init), rdoc::init_2)
         .def("init", [](Polynomial<Rational>& p,
                 const std::vector<Rational>& c) {
             p.init(c.begin(), c.end());
-        })
-        .def("degree", &Polynomial<Rational>::degree)
-        .def("isZero", &Polynomial<Rational>::isZero)
-        .def("isMonic", &Polynomial<Rational>::isMonic)
+        }, rdoc::init_3)
+        .def("degree", &Polynomial<Rational>::degree, rdoc::degree)
+        .def("isZero", &Polynomial<Rational>::isZero, rdoc::isZero)
+        .def("isMonic", &Polynomial<Rational>::isMonic, rdoc::isMonic)
         .def("leading", &Polynomial<Rational>::leading,
-            pybind11::return_value_policy::copy) // to enforce constness
+            pybind11::return_value_policy::copy, // to enforce constness
+            rdoc::leading)
         .def("__getitem__", [](const Polynomial<Rational>& p, size_t exp) {
             return p[exp];
-        }, pybind11::return_value_policy::copy) // to enforce constness
+        }, pybind11::return_value_policy::copy, // to enforce constness
+            rdoc::__array)
         .def("__setitem__", [](Polynomial<Rational>& p, size_t exp,
                 const regina::Rational& value) {
             p.set(exp, value);
-        })
-        .def("set", &Polynomial<Rational>::set)
-        .def("swap", &Polynomial<Rational>::swap)
-        .def("negate", &Polynomial<Rational>::negate)
+        }, rdoc::__array)
+        .def("set", &Polynomial<Rational>::set, rdoc::set)
+        .def("swap", &Polynomial<Rational>::swap, rdoc::swap)
+        .def("negate", &Polynomial<Rational>::negate, rdoc::negate)
         .def("str", overload_cast<const char*>(
-            &Polynomial<Rational>::str, pybind11::const_))
+            &Polynomial<Rational>::str, pybind11::const_), rdoc::str)
         .def("utf8", overload_cast<const char*>(
-            &Polynomial<Rational>::utf8, pybind11::const_))
-        .def(pybind11::self *= Rational())
-        .def(pybind11::self /= Rational())
-        .def(pybind11::self += pybind11::self)
-        .def(pybind11::self -= pybind11::self)
-        .def(pybind11::self *= pybind11::self)
-        .def(pybind11::self /= pybind11::self)
-        .def(pybind11::self * regina::Rational())
-        .def(regina::Rational() * pybind11::self)
-        .def(pybind11::self / regina::Rational())
-        .def(pybind11::self + pybind11::self)
-        .def(pybind11::self - pybind11::self)
-        .def(pybind11::self * pybind11::self)
-        .def(pybind11::self / pybind11::self)
-        .def(- pybind11::self)
+            &Polynomial<Rational>::utf8, pybind11::const_), rdoc::utf8)
+        .def(pybind11::self *= Rational(), rdoc::__imul)
+        .def(pybind11::self /= Rational(), rdoc::__idiv)
+        .def(pybind11::self += pybind11::self, rdoc::__iadd)
+        .def(pybind11::self -= pybind11::self, rdoc::__isub)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
+        .def(pybind11::self /= pybind11::self, rdoc::__idiv_2)
+        .def(pybind11::self * regina::Rational(), global::__mul)
+        .def(regina::Rational() * pybind11::self, global::__mul_2)
+        .def(pybind11::self / regina::Rational(), global::__div)
+        .def(pybind11::self + pybind11::self, global::__add)
+        .def(pybind11::self - pybind11::self, global::__sub_2)
+        .def(pybind11::self * pybind11::self, global::__mul_3)
+        .def(pybind11::self / pybind11::self, global::__div_2)
+        .def(- pybind11::self, global::__sub)
         .def("divisionAlg", overload_cast<const Polynomial<Rational>&>(
-            &Polynomial<Rational>::divisionAlg, pybind11::const_))
-        .def("gcdWithCoeffs", &Polynomial<Rational>::gcdWithCoeffs<Rational>)
+            &Polynomial<Rational>::divisionAlg, pybind11::const_),
+            rdoc::divisionAlg)
+        .def("gcdWithCoeffs", &Polynomial<Rational>::gcdWithCoeffs<Rational>,
+            rdoc::gcdWithCoeffs)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<Polynomial<Rational>>(m);
+    regina::python::add_global_swap<Polynomial<Rational>>(m, global::swap);
+
+    RDOC_SCOPE_END
 }
 

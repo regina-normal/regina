@@ -43,7 +43,9 @@
 #include "../generic/isosig-bindings.h"
 
 using pybind11::overload_cast;
+using regina::AbelianGroup;
 using regina::Isomorphism;
+using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
 using regina::Triangulation;
 
@@ -61,9 +63,10 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<2>::simplices,
             pybind11::keep_alive<0, 1>())
-        // Use a C-style cast because GCC struggles with the overload_cast here:
-        .def("triangle", (regina::Simplex<2>* (Triangulation<2>::*)(size_t))(
-            &Triangulation<2>::triangle),
+        // Use a static cast because GCC struggles with the overload_cast here:
+        .def("triangle",
+            static_cast<regina::Simplex<2>* (Triangulation<2>::*)(size_t)>(
+                &Triangulation<2>::triangle),
             pybind11::return_value_policy::reference_internal)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<2>::simplex),
@@ -169,7 +172,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("hasBoundaryEdges", &Triangulation<2>::hasBoundaryEdges)
         .def("countBoundaryFacets", &Triangulation<2>::countBoundaryFacets)
         .def("countBoundaryEdges", &Triangulation<2>::countBoundaryEdges)
-        .def("countBoundaryFaces", (size_t (Triangulation<2>::*)(int) const)(
+        .def("countBoundaryFaces",
+            static_cast<size_t (Triangulation<2>::*)(int) const>(
             &Triangulation<2>::countBoundaryFaces))
         .def("isOrientable", &Triangulation<2>::isOrientable)
         .def("isOriented", &Triangulation<2>::isOriented)
@@ -182,18 +186,21 @@ void addTriangulation2(pybind11::module_& m) {
         .def("reflect", &Triangulation<2>::reflect)
         .def("triangulateComponents", &Triangulation<2>::triangulateComponents)
         .def("homology",
-            (regina::AbelianGroup (Triangulation<2>::*)(int) const)(
-            &Triangulation<2>::homology),
+            static_cast<AbelianGroup (Triangulation<2>::*)(int) const>(
+                &Triangulation<2>::homology),
             pybind11::arg("k") = 1)
         .def("markedHomology",
-            (regina::MarkedAbelianGroup (Triangulation<2>::*)(int) const)(
-            &Triangulation<2>::markedHomology),
+            static_cast<MarkedAbelianGroup (Triangulation<2>::*)(int) const>(
+                &Triangulation<2>::markedHomology),
             pybind11::arg("k") = 1)
-        .def("boundaryMap", (MatrixInt (Triangulation<2>::*)(int) const)(
+        .def("boundaryMap",
+            static_cast<MatrixInt (Triangulation<2>::*)(int) const>(
             &Triangulation<2>::boundaryMap))
-        .def("dualBoundaryMap", (MatrixInt (Triangulation<2>::*)(int) const)(
+        .def("dualBoundaryMap",
+            static_cast<MatrixInt (Triangulation<2>::*)(int) const>(
             &Triangulation<2>::dualBoundaryMap))
-        .def("dualToPrimal", (MatrixInt (Triangulation<2>::*)(int) const)(
+        .def("dualToPrimal",
+            static_cast<MatrixInt (Triangulation<2>::*)(int) const>(
             &Triangulation<2>::dualToPrimal))
         .def("pachner", &Triangulation<2>::pachner<2>,
             pybind11::arg(),

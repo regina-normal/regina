@@ -52,6 +52,7 @@
 #endif
 
 #include "pybind11/pybind11.h"
+#include "helpers/docstrings.h"
 #include "helpers/equality.h"
 #include "helpers/gil.h"
 #include "helpers/globals.h"

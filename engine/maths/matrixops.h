@@ -108,8 +108,6 @@ void smithNormalForm(MatrixInt& matrix);
  * above for details).
  * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
  *
- * \author Ryan Budney
- *
  * \ingroup maths
  */
 void smithNormalForm(MatrixInt& matrix,
@@ -244,15 +242,15 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  *
  * Our convention is that a matrix is in column echelon form if:
  *
- * -# each column is either zero or there is a first non-zero entry which
- *    is positive (but see the note regarding \a rowList below);
- * -# moving from the leftmost column to the rightmost column, the rows
- *    containing the first non-zero entries for these columns have strictly
- *    increasing indices in \a rowList;
- * -# given a first non-zero column entry, in that row all the elements to
- *    the left are smaller and non-negative (all elements to the right are
- *    already zero by the previous condition);
- * -# all the zero columns are on the right hand side of the matrix.
+ * - each column is either zero or there is a first non-zero entry which
+ *   is positive (but see the note regarding \a rowList below);
+ * - moving from the leftmost column to the rightmost column, the rows
+ *   containing the first non-zero entries for these columns have strictly
+ *   increasing indices in \a rowList;
+ * - given a first non-zero column entry, in that row all the elements to
+ *   the left are smaller and non-negative (all elements to the right are
+ *   already zero by the previous condition);
+ * - all the zero columns are on the right hand side of the matrix.
  *
  * By a "zero column" here we simply mean "zero for every row in \a
  * rowList".  Likewise, by "first non-zero entry" we mean "first row in
