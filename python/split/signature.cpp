@@ -35,23 +35,30 @@
 #include "split/signature.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/split/signature.h"
 
 using regina::Signature;
 
 void addSignature(pybind11::module_& m) {
-    auto c = pybind11::class_<Signature>(m, "Signature")
-        .def(pybind11::init<const std::string&>())
-        .def(pybind11::init<const Signature&>())
-        .def("swap", &Signature::swap)
-        .def("order", &Signature::order)
-        .def("triangulate", &Signature::triangulate)
+    RDOC_SCOPE_BEGIN(Signature)
+
+    auto c = pybind11::class_<Signature>(m, "Signature", rdoc_scope)
+        .def(pybind11::init<const std::string&>(), rdoc::Signature)
+        .def(pybind11::init<const Signature&>(), rdoc::Signature_2)
+        .def("swap", &Signature::swap, rdoc::swap)
+        .def("order", &Signature::order, rdoc::order)
+        .def("triangulate", &Signature::triangulate, rdoc::triangulate)
         .def("str", pybind11::overload_cast<
             const std::string&, const std::string&, const std::string&>(
-            &Signature::str, pybind11::const_))
+            &Signature::str, pybind11::const_), rdoc::str)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<Signature>(m);
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_global_swap<Signature>(m, rdoc::swap);
+
+    RDOC_SCOPE_END
 }
 

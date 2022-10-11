@@ -338,7 +338,6 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
             bool operator () (unsigned cycle1, unsigned cycle2) const;
         };
 
-    friend struct SigPartialIsomorphism::ShorterCycle;
     friend class regina::SigCensus;
 };
 

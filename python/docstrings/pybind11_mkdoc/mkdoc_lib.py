@@ -308,7 +308,9 @@ def extract(filename, node, namespace, output):
         # It is noted in the C++ docs that this entity has no Python binding.
         return
 
-    if node.kind in RECURSE_LIST and node.spelling not in CLASS_BLACKLIST:
+    if node.kind in RECURSE_LIST and \
+            node.spelling not in CLASS_BLACKLIST and \
+            node.access_specifier not in ACCESS_BLACKLIST:
         if not (node.kind == CursorKind.NAMESPACE and \
                 node.spelling in NAMESPACE_BLACKLIST):
             sub_namespace = namespace

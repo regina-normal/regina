@@ -35,14 +35,20 @@
 #include "../pybind11/stl.h"
 #include "split/sigcensus.h"
 #include "../helpers.h"
+#include "../docstrings/split/sigcensus.h"
 
 using regina::SigCensus;
 
 void addSigCensus(pybind11::module_& m) {
-    auto c = pybind11::class_<SigCensus>(m, "SigCensus")
+    RDOC_SCOPE_BEGIN(SigCensus)
+
+    auto c = pybind11::class_<SigCensus>(m, "SigCensus", rdoc_scope)
         .def_static("formCensus", &SigCensus::formCensus<const std::function<
-            void(const regina::Signature&, const SigCensus::IsoList&)>&>)
+            void(const regina::Signature&, const SigCensus::IsoList&)>&>,
+            rdoc::formCensus)
     ;
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 
