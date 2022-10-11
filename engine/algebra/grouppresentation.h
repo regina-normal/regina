@@ -55,6 +55,10 @@
 
 // There are more includes at the end of this file.
 
+#ifdef __APIDOCS
+class FinitelyPresentedGroup; // Returned by GroupPresentation::sage().
+#endif
+
 namespace regina {
 
 class AbelianGroup;

@@ -1068,28 +1068,6 @@ Returns:
 
 }
 
-namespace TreeDecomposition_::Graph_ {
-
-// Docstring regina::python::doc::TreeDecomposition_::Graph_::Graph
-static const char *Graph =
-R"doc(Constructs a new graph with no arcs.
-
-Parameter ``order``:
-    the number of nodes in the new graph.)doc";
-
-// Docstring regina::python::doc::TreeDecomposition_::Graph_::dump
-static const char *dump =
-R"doc(Writes the adjacency matrix of this graph in a compact format to the
-given output stream.
-
-The output will be formatted as a matrix, and will be spread across
-multiple lines.
-
-Parameter ``out``:
-    the output stream to which to write.)doc";
-
-}
-
 } // namespace regina::python::doc
 
 #if defined(__GNUG__)

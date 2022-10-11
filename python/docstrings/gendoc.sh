@@ -2,7 +2,7 @@
 set -e
 
 if [ "$#" = 0 ]; then
-  dirs="core file foreign maths packet progress python split treewidth utilities"
+  dirs="algebra core file foreign maths packet progress python split treewidth utilities"
 else
   dirs="$@"
 fi
@@ -59,7 +59,6 @@ for dir in $dirs; do
       header=`basename "$i"`
       case "$dir/$header" in
         *-impl.h ) ;;
-        utilities/flags.h ) ;;
         utilities/markedvector.h ) ;;
         utilities/memstream.h ) ;;
         utilities/sequence.h ) ;;

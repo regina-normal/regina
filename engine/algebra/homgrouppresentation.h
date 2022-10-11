@@ -39,10 +39,7 @@
 #define __REGINA_HOMGROUPPRESENTATION_H
 #endif
 
-#include <optional>
-#include <vector>
-#include "regina-core.h"
-#include "core/output.h"
+#include "algebra/grouppresentation.h"
 
 namespace regina {
 

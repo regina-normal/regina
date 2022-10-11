@@ -181,42 +181,6 @@ Parameter ``other``:
 
 }
 
-namespace SigPartialIsomorphism_::ShorterCycle_ {
-
-// Docstring regina::python::doc::SigPartialIsomorphism_::ShorterCycle_::ShorterCycle
-static const char *ShorterCycle =
-R"doc(Creates a new comparison function.
-
-Parameter ``newSig``:
-    the signature containing the cycles that this function will
-    examine.
-
-Parameter ``newIso``:
-    the partial isomorphism to apply to the cycles before they are
-    compared.)doc";
-
-// Docstring regina::python::doc::SigPartialIsomorphism_::ShorterCycle_::__call
-static const char *__call =
-R"doc(Determines whether the image of one cycle is lexicographically less
-than the image of another. See the class notes for further details on
-how this comparison is done.
-
-Parameter ``cycle1``:
-    the index of the first cycle to examine; this must be less than
-    the total number of cycles mapped by the isomorphism concerned and
-    less than the total number of cycles in the signature concerned.
-
-Parameter ``cycle2``:
-    the index of the second cycle to examine; this must be less than
-    the total number of cycles mapped by the isomorphism concerned and
-    less than the total number of cycles in the signature concerned.
-
-Returns:
-    ``True`` if and only if the image of the first cycle is less than
-    the image of the second cycle.)doc";
-
-}
-
 } // namespace regina::python::doc
 
 #if defined(__GNUG__)

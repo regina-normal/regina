@@ -194,16 +194,6 @@ Parameter ``other``:
 
 }
 
-namespace TrieSet_::Node_ {
-
-// Docstring regina::python::doc::TrieSet_::Node_::Node
-static const char *Node = R"doc(Constructs an empty node.)doc";
-
-// Docstring regina::python::doc::TrieSet_::Node_::Node_2
-static const char *Node_2 = R"doc(Constructs a node filled with the given data.)doc";
-
-}
-
 } // namespace regina::python::doc
 
 #if defined(__GNUG__)

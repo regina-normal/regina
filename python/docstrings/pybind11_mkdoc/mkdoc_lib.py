@@ -310,8 +310,12 @@ def extract(filename, node, namespace, output):
         return
 
     if node.kind in RECURSE_LIST and \
-            node.spelling not in CLASS_BLACKLIST and \
-            node.access_specifier not in ACCESS_BLACKLIST:
+            ((node.access_specifier not in ACCESS_BLACKLIST and \
+                node.spelling not in CLASS_BLACKLIST and \
+                node.spelling not in NAMESPACE_BLACKLIST) or \
+            ((node.kind == CursorKind.CLASS_DECL or \
+                node.kind == CursorKind.STRUCT_DECL) and \
+                node.spelling in CLASS_WHITELIST)):
         if not (node.kind == CursorKind.NAMESPACE and \
                 node.spelling in NAMESPACE_BLACKLIST):
             sub_namespace = namespace
@@ -329,14 +333,14 @@ def extract(filename, node, namespace, output):
             for i in node.get_children():
                 extract(filename, i, sub_namespace, output)
     if node.kind in PRINT_LIST and \
-            (node.access_specifier not in ACCESS_BLACKLIST and \
+            ((node.access_specifier not in ACCESS_BLACKLIST and \
                 node.availability not in AVAILABILITY_BLACKLIST and \
                 node.spelling not in MEMBER_BLACKLIST and \
                 node.spelling not in CLASS_BLACKLIST and \
                 (not node.is_move_constructor())) or \
             ((node.kind == CursorKind.CLASS_DECL or \
                 node.kind == CursorKind.STRUCT_DECL) and \
-                node.spelling in CLASS_WHITELIST):
+                node.spelling in CLASS_WHITELIST)):
         sub_namespace = namespace
         if len(node.spelling) > 0:
             # We are seeing functions with inline definitions and/or
