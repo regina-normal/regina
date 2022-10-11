@@ -30,8 +30,8 @@ Python:
     PacketChildren and ChildIterator together implement the Python
     iterable/iterator interface. The class PacketChildren has just the
     single function ``__iter__()``, which returns a ChildIterator;
-    then ChildIterator implements ``next()``, which either returns the
-    next child packet in the iteration or else throws a
+    then ChildIterator implements ``__next__()``, which either returns
+    the next child packet in the iteration or else throws a
     ``StopException`` if there are no more children to return. All
     iteration in Python is non-const (i.e., Python exclusively uses
     the classes where *const_* is ``False``).)doc";
@@ -205,8 +205,8 @@ Python:
     PacketChildren and ChildIterator together implement the Python
     iterable/iterator interface. The class PacketChildren has just the
     single function ``__iter__()``, which returns a ChildIterator;
-    then ChildIterator implements ``next()``, which either returns the
-    next child packet in the iteration or else throws a
+    then ChildIterator implements ``__next__()``, which either returns
+    the next child packet in the iteration or else throws a
     ``StopException`` if there are no more children to return. All
     iteration in Python is non-const (i.e., Python exclusively uses
     the classes where *const_* is ``False``).)doc";
@@ -254,8 +254,8 @@ Python:
     PacketChildren and ChildIterator together implement the Python
     iterable/iterator interface. The class PacketChildren has just the
     single function ``__iter__()``, which returns a ChildIterator;
-    then ChildIterator implements ``next()``, which either returns the
-    next child packet in the iteration or else throws a
+    then ChildIterator implements ``__next__()``, which either returns
+    the next child packet in the iteration or else throws a
     ``StopException`` if there are no more children to return. All
     iteration in Python is non-const (i.e., Python exclusively uses
     the classes where *const_* is ``False``).)doc";
@@ -273,7 +273,11 @@ else must be implemented for each wrapped packet type.
 This base class is extremely lightweight: the only data that it
 contains is a single PacketHeldBy enumeration value. All of the class
 constructors set this value to HELD_BY_NONE; it is the responsibility
-of subclasses (e.g., PacketOf<Held>) to change this where necessary.)doc";
+of subclasses (e.g., PacketOf<Held>) to change this where necessary.
+
+Python:
+    Not present, but the routines anonID() and packet() will be
+    provided directly through the various subclasses.)doc";
 
 // Docstring regina::python::doc::PacketData_2
 static const char *PacketData_2 =
@@ -288,7 +292,11 @@ else must be implemented for each wrapped packet type.
 This base class is extremely lightweight: the only data that it
 contains is a single PacketHeldBy enumeration value. All of the class
 constructors set this value to HELD_BY_NONE; it is the responsibility
-of subclasses (e.g., PacketOf<Held>) to change this where necessary.)doc";
+of subclasses (e.g., PacketOf<Held>) to change this where necessary.
+
+Python:
+    Not present, but the routines anonID() and packet() will be
+    provided directly through the various subclasses.)doc";
 
 // Docstring regina::python::doc::PacketDescendants
 static const char *PacketDescendants =
@@ -333,10 +341,10 @@ Python:
     PacketDescendants and SubtreeIterator together implement the
     Python iterable/iterator interface. The class PacketDescendants
     has just the single function ``__iter__()``, which returns a
-    SubtreeIterator; then SubtreeIterator implements ``next()``, which
-    either returns the next descendant packet in the iteration or else
-    throws a ``StopException`` if there are no more children to
-    return. All iteration in Python is non-const (i.e., Python
+    SubtreeIterator; then SubtreeIterator implements ``__next__()``,
+    which either returns the next descendant packet in the iteration
+    or else throws a ``StopException`` if there are no more children
+    to return. All iteration in Python is non-const (i.e., Python
     exclusively uses the classes where *const_* is ``False``).)doc";
 
 // Docstring regina::python::doc::PacketDescendants_2
@@ -382,35 +390,11 @@ Python:
     PacketDescendants and SubtreeIterator together implement the
     Python iterable/iterator interface. The class PacketDescendants
     has just the single function ``__iter__()``, which returns a
-    SubtreeIterator; then SubtreeIterator implements ``next()``, which
-    either returns the next descendant packet in the iteration or else
-    throws a ``StopException`` if there are no more children to
-    return. All iteration in Python is non-const (i.e., Python
+    SubtreeIterator; then SubtreeIterator implements ``__next__()``,
+    which either returns the next descendant packet in the iteration
+    or else throws a ``StopException`` if there are no more children
+    to return. All iteration in Python is non-const (i.e., Python
     exclusively uses the classes where *const_* is ``False``).)doc";
-
-// Docstring regina::python::doc::PacketHeldBy
-static const char *PacketHeldBy =
-R"doc(Internal constants that support wrapped packets.
-
-These constants indicate whether an object of type *Held* is in fact
-part of the inherited interface for a derived class of Held, which is
-typically the wrapped packet type PacketOf<Held>. These constants are
-used as a lightweight (and significantly less rich) replacement for
-polymorphism, virtual functions and dynamic casts.
-
-These constants only know about two types of relationships:
-
-* an object of type *Held* being part of a larger PacketOf<Held>
-  (indicated by the constant HELD_BY_PACKET);
-
-* an object of type Triangulation<3> being part of a larger
-  SnapPeaTriangulation (indicated by the constant HELD_BY_SNAPPEA).
-
-Of course, a Triangulation<3> could belong to a SnapPeaTriangulation
-which is then held by a PacketOf<SnapPeaTriangulation>. In this case
-the inherited PacketData<Triangulation<3>> will store HELD_BY_SNAPPEA,
-and the inherited PacketData<SnapPeaTriangulation> will store
-HELD_BY_PACKET.)doc";
 
 // Docstring regina::python::doc::PacketListener
 static const char *PacketListener =
@@ -572,8 +556,8 @@ Python:
     Instead of the C++ interface described here, in Python this class
     implements the Python iterable/iterator interface. It implements
     the function ``__iter__()``, which returns the iterator object
-    itself; it also implements ``next()``, which either returns the
-    next packet in the subtree iteration or else throws a
+    itself; it also implements ``__next__()``, which either returns
+    the next packet in the subtree iteration or else throws a
     ``StopException`` if there are no more packets to return. All
     iteration in Python is non-const (i.e., Python exclusively uses
     the classes where *const_* is ``False``).)doc";
@@ -599,8 +583,8 @@ Python:
     Instead of the C++ interface described here, in Python this class
     implements the Python iterable/iterator interface. It implements
     the function ``__iter__()``, which returns the iterator object
-    itself; it also implements ``next()``, which either returns the
-    next packet in the subtree iteration or else throws a
+    itself; it also implements ``__next__()``, which either returns
+    the next packet in the subtree iteration or else throws a
     ``StopException`` if there are no more packets to return. All
     iteration in Python is non-const (i.e., Python exclusively uses
     the classes where *const_* is ``False``).)doc";
@@ -700,64 +684,6 @@ Parameter ``label``:
 Returns:
     the new wrapped packet.)doc";
 
-// Docstring regina::python::doc::make_packet_3
-static const char *make_packet_3 =
-R"doc(Creates a new packet that wraps a *Held* object, passing the given
-arguments to the *Held* constructor.
-
-The given arguments *args* will be forwarded directly to the
-appropriate *Held* constructor (using C++ perfect forwarding).
-
-The initial argument should just be ``std::in_place``; this is so the
-compiler can disambiguate between this function and other variants of
-make_packet().
-
-The packet that is returned will be newly created, and will have no
-packet label.
-
-.. note::
-    This function is trivial (it simply calls std::make_shared).
-    Nevertheless, using this function is recommended since it makes it
-    clear (and searchable) that you are correctly wrapping the new
-    packet in a std::shared_ptr, as is required for all packets in
-    Regina.
-
-Python:
-    Not present, since this routine is too heavily templated for
-    Python. Instead you can just directly call the constructor
-    ``PacketOfHeld(args...)``.
-
-Parameter ``args``:
-    the arguments to be forwarded to the appropriate *Held*
-    constructor.
-
-Returns:
-    the new wrapped packet.)doc";
-
-// Docstring regina::python::doc::make_packet_4
-static const char *make_packet_4 =
-R"doc(Creates a new packet that wraps a default-constructed *Held* object.
-
-This is equivalent to calling make_packet<Held>(std::in_place).
-
-The packet that is returned will be newly created, and will have no
-packet label.
-
-.. note::
-    This function is trivial (it simply calls std::make_shared).
-    Nevertheless, using this function is recommended since it makes it
-    clear (and searchable) that you are correctly wrapping the new
-    packet in a std::shared_ptr, as is required for all packets in
-    Regina.
-
-Python:
-    Not present, since this routine is too heavily templated for
-    Python. Instead you can just directly call the constructor
-    ``PacketOfHeld()``.
-
-Returns:
-    the new wrapped packet.)doc";
-
 // Docstring regina::python::doc::open
 static const char *open =
 R"doc(Reads a Regina data file, and returns the corresponding packet tree.
@@ -788,118 +714,7 @@ Parameter ``filename``:
 Returns:
     the packet tree read from file, or ``null`` on error.)doc";
 
-// Docstring regina::python::doc::open_2
-static const char *open_2 =
-R"doc(Reads a Regina data file from the given input stream, and returns the
-corresponding packet tree. This uses Regina's native XML file format;
-it does not matter whether the XML file is compressed or uncompressed.
-
-If the stream could not be read or if the top-level packet in the tree
-could not be read, then this routine will return ``null``. If some
-packet deeper within the tree could not be read then that particular
-packet (and its descendants, if any) will simply be ignored.
-
-Precondition:
-    The given stream is open for reading.
-
-Python:
-    Not present; instead you can use the variant of open() that takes
-    a filename.
-
-Parameter ``in``:
-    the input stream to read from.
-
-Returns:
-    the packet tree read from file, or ``null`` on error.)doc";
-
-// Docstring regina::python::doc::static_packet_cast
-static const char *static_packet_cast =
-R"doc(Casts a reference from Packet to *Held*, assuming that the given
-packet is actually a PacketOf<Held>.
-
-This is analogous to static_cast<Held&>(). It is provided because we
-cannot perform a direct static cast between Packet and *Held* (since
-the two classes do not have a one-way inheritance relationship).
-
-Precondition:
-    The given reference refers to an object of type PacketOf<Held>.
-
-.. warning::
-    If you try to use static_packet_cast<Triangulation<3>> on a
-    reference to a PacketOf<SnapPeaTriangulation>, this will *not*
-    work, since PacketOf<SnapPeaTriangulation> is *not* a subclass of
-    PacketOf<Triangulation<3>>. The behaviour in this scenario is
-    undefined. You should use regina::static_triangulation3_cast()
-    instead.
-
-Python:
-    Not present, since casting is unnecessary in Python.
-
-Parameter ``p``:
-    a reference, presented as a packet.
-
-Returns:
-    the same reference, presented using the type *Held*.)doc";
-
-// Docstring regina::python::doc::static_packet_cast_2
-static const char *static_packet_cast_2 =
-R"doc(Casts a const reference from Packet to *Held*, assuming that the given
-packet is actually a PacketOf<Held>.
-
-This is analogous to static_cast<const Held&>(). It is provided
-because we cannot perform a direct static cast between Packet and
-*Held* (since the two classes do not have a one-way inheritance
-relationship).
-
-Precondition:
-    The given reference refers to an object of type PacketOf<Held>.
-
-.. warning::
-    If you try to use static_packet_cast<Triangulation<3>> on a
-    reference to a PacketOf<SnapPeaTriangulation>, this will *not*
-    work, since PacketOf<SnapPeaTriangulation> is *not* a subclass of
-    PacketOf<Triangulation<3>>. The behaviour in this scenario is
-    undefined. You should use regina::static_triangulation3_cast()
-    instead.
-
-Python:
-    Not present, since casting is unnecessary in Python.
-
-Parameter ``p``:
-    a reference, presented as a packet.
-
-Returns:
-    the same reference, presented using the type *Held*.)doc";
-
 namespace ChildIterator_ {
-
-// Docstring regina::python::doc::ChildIterator_::ChildIterator
-static const char *ChildIterator =
-R"doc(Creates a past-the-end iterator.
-
-Python:
-    Not present. The only way to create a ChildIterator is via
-    Packet::children().)doc";
-
-// Docstring regina::python::doc::ChildIterator_::ChildIterator_2
-static const char *ChildIterator_2 =
-R"doc(Default copy constructor.
-
-Python:
-    Not present. The only way to create a ChildIterator is via
-    Packet::children().)doc";
-
-// Docstring regina::python::doc::ChildIterator_::ChildIterator_3
-static const char *ChildIterator_3 =
-R"doc(Creates a new iterator pointing to the given child packet.
-
-Python:
-    Not present. The only way to create a ChildIterator is via
-    Packet::children().
-
-Parameter ``current``:
-    the child packet that the new iterator should point to, or
-    ``null`` if the new iterator should be past-the-end.)doc";
 
 // Docstring regina::python::doc::ChildIterator_::__eq
 static const char *__eq =
@@ -908,45 +723,6 @@ R"doc(Tests whether this and the given iterator are equal.
 Returns:
     true if and only if the two iterators are equal.)doc";
 
-// Docstring regina::python::doc::ChildIterator_::__inc
-static const char *__inc =
-R"doc(Preincrement operator.
-
-Python:
-    Not present; instead this class implements ``next()``, which
-    either returns the current child packet and increments the
-    iterator, or else throws a ``StopIteration`` exception if the
-    iterator is past-the-end.
-
-Returns:
-    a reference to this iterator.)doc";
-
-// Docstring regina::python::doc::ChildIterator_::__inc_2
-static const char *__inc_2 =
-R"doc(Postincrement operator.
-
-Python:
-    Not present; instead this class implements ``next()``, which
-    either returns the current child packet and increments the
-    iterator, or else throws a ``StopIteration`` exception if the
-    iterator is past-the-end.
-
-Returns:
-    a a copy of this iterator before it was incremented.)doc";
-
-// Docstring regina::python::doc::ChildIterator_::__mul
-static const char *__mul =
-R"doc(Returns the packet that this iterator is currently pointing to.
-
-Python:
-    Not present; instead this class implements ``next()``, which
-    either returns the current child packet and increments the
-    iterator, or else throws a ``StopIteration`` exception if the
-    iterator is past-the-end.
-
-Returns:
-    the current packet.)doc";
-
 // Docstring regina::python::doc::ChildIterator_::__ne
 static const char *__ne =
 R"doc(Tests whether this and the given iterator are different.
@@ -954,41 +730,20 @@ R"doc(Tests whether this and the given iterator are different.
 Returns:
     true if and only if the two iterators are different.)doc";
 
-// Docstring regina::python::doc::ChildIterator_::operator_bool
-static const char *operator_bool =
-R"doc(Identifies whether this iterator is dereferencable.
+// Docstring regina::python::doc::ChildIterator_::__next__
+static const char *__next__ =
+R"doc(Returns the current child packet and increments this iterator.
 
-Python:
-    Not present; instead this class implements ``next()``, which
-    either returns the current child packet and increments the
-    iterator, or else throws a ``StopIteration`` exception if the
-    iterator is not dereferencable.
+Exception ``StopIteration``:
+    The iterator is already past-the-end when this function is called.
 
 Returns:
-    ``True`` if and only if this is dereferencable (i.e., not past-
-    the-end).)doc";
+    the child packet that this iterator is pointing to, before the
+    increment takes place.)doc";
 
 }
 
 namespace PacketChildren_ {
-
-// Docstring regina::python::doc::PacketChildren_::PacketChildren
-static const char *PacketChildren =
-R"doc(Default copy constructor.
-
-Python:
-    Not present.)doc";
-
-// Docstring regina::python::doc::PacketChildren_::PacketChildren_2
-static const char *PacketChildren_2 =
-R"doc(Creates a new object for iterating through the immediate children of
-the given packet.
-
-Python:
-    Not present.
-
-Parameter ``parent``:
-    the packet whose children we will iterate through.)doc";
 
 // Docstring regina::python::doc::PacketChildren_::__eq
 static const char *__eq =
@@ -999,6 +754,13 @@ Returns:
     ``True`` if and only if this object and *rhs* iterate over
     children of the same packet.)doc";
 
+// Docstring regina::python::doc::PacketChildren_::__iter__
+static const char *__iter__ =
+R"doc(Returns a Python iterator over all strict descendant packets.
+
+Returns:
+    an iterator over all strict descendant packets.)doc";
+
 // Docstring regina::python::doc::PacketChildren_::__ne
 static const char *__ne =
 R"doc(Determines whether this and the given object are designed to iterate
@@ -1008,63 +770,9 @@ Returns:
     ``True`` if and only if this object and *rhs* iterate over
     children of different packets.)doc";
 
-// Docstring regina::python::doc::PacketChildren_::begin
-static const char *begin =
-R"doc(Returns an iterator at the beginning of the range of children.
-
-Python:
-    Not present; instead this class implements ``__iter__()``, as
-    described in the class notes.
-
-Returns:
-    the beginning iterator.)doc";
-
-// Docstring regina::python::doc::PacketChildren_::end
-static const char *end =
-R"doc(Returns an iterator at the end of the range of children.
-
-Python:
-    Not present; instead this class implements ``__iter__()``, as
-    described in the class notes.
-
-Returns:
-    the past-the-end iterator.)doc";
-
 }
 
 namespace PacketData_ {
-
-// Docstring regina::python::doc::PacketData_::ChangeEventSpan
-static const char *ChangeEventSpan =
-R"doc(An object that facilitates firing packetToBeChanged() and
-packetWasChanged() events.
-
-This performs the same function as Packet::ChangeEventSpan; see that
-class for full details on how it works. The main differences are:
-
-* If the underlying *Held* object is not actually part of a larger
-  PacketOf<Held>, then this ChangeEventSpan will do nothing. In such a
-  scenario, the ChangeEventSpan constructor and destructor are both
-  extremely cheap (each will make just a single integer comparison).
-
-* If the underlying *Held* object *is* part of a PacketOf<Held>, then
-  this ChangeEventSpan will ensure that the appropriate packet events
-  are fired (just like Packet::ChangeEventSpan).
-
-Just like Packet::ChangeEventSpan, these objects can be nested so that
-only the outermost object will fire change events; furthermore,
-PacketData<Held>::ChangeEventSpan objects and Packet::ChangeEventSpan
-objects can be nested within each other.
-
-When working with PacketData<Triangulation<3>>, this class includes
-special code that nullifies a SnapPea triangulation when its inherited
-Triangulation<3> data changes unexpectedly. See the
-SnapPeaTriangulation class for details.
-
-ChangeEventSpan objects are not copyable, movable or swappable. In
-particular, Regina does not offer any way for a ChangeEventSpan to
-transfer its duty (i.e., firing events upon destruction) to another
-object.)doc";
 
 // Docstring regina::python::doc::PacketData_::PacketData
 static const char *PacketData = R"doc(Default constructor that sets *heldBy_* to HELD_BY_NONE.)doc";
@@ -1155,42 +863,7 @@ Returns:
 
 }
 
-namespace PacketData_::ChangeEventSpan_ {
-
-// Docstring regina::python::doc::PacketData_::ChangeEventSpan_::ChangeEventSpan
-static const char *ChangeEventSpan =
-R"doc(Creates a new change event object for the given *Held* data.
-
-If *data* is part of a PacketOf<Held>, and this is the only
-ChangeEventSpan currently in existence for *data*, then this
-constructor will call PacketListener::packetToBeChanged() for all
-registered listeners for the packet.
-
-Parameter ``data``:
-    the object whose data is about to change; this may or may not be
-    of the subclass PacketOf<Held>.)doc";
-
-}
-
 namespace PacketDescendants_ {
-
-// Docstring regina::python::doc::PacketDescendants_::PacketDescendants
-static const char *PacketDescendants =
-R"doc(Default copy constructor.
-
-Python:
-    Not present.)doc";
-
-// Docstring regina::python::doc::PacketDescendants_::PacketDescendants_2
-static const char *PacketDescendants_2 =
-R"doc(Creates a new object for iterating through the strict descendants of
-the given packet.
-
-Python:
-    Not present.
-
-Parameter ``subtree``:
-    the packet whose strict descendants we will iterate through.)doc";
 
 // Docstring regina::python::doc::PacketDescendants_::__eq
 static const char *__eq =
@@ -1201,6 +874,13 @@ Returns:
     ``True`` if and only if this object and *rhs* iterate over
     descendants of the same packet.)doc";
 
+// Docstring regina::python::doc::PacketDescendants_::__iter__
+static const char *__iter__ =
+R"doc(Returns a Python iterator over all strict descendant packets.
+
+Returns:
+    an iterator over all strict descendant packets.)doc";
+
 // Docstring regina::python::doc::PacketDescendants_::__ne
 static const char *__ne =
 R"doc(Determines whether this and the given object are designed to iterate
@@ -1209,49 +889,6 @@ over strict descendants of different packets.
 Returns:
     ``True`` if and only if this object and *rhs* iterate over
     descendants of different packets.)doc";
-
-// Docstring regina::python::doc::PacketDescendants_::begin
-static const char *begin =
-R"doc(Returns an iterator at the beginning of the range of strict
-descendants. This will point to the first child packet (if one exists)
-of the packet whose descendants we are iterating over.
-
-Python:
-    Not present; instead this class implements ``__iter__()``, as
-    described in the class notes.
-
-Returns:
-    the beginning iterator.)doc";
-
-// Docstring regina::python::doc::PacketDescendants_::end
-static const char *end =
-R"doc(Returns an iterator at the end of the range of strict descendants.
-
-Python:
-    Not present; instead this class implements ``__iter__()``, as
-    described in the class notes.
-
-Returns:
-    the past-the-end iterator.)doc";
-
-}
-
-namespace PacketHeldBy_ {
-
-// Docstring regina::python::doc::PacketHeldBy_::HELD_BY_NONE
-static const char *HELD_BY_NONE =
-R"doc(Indicates that the object is not held within either a wrapped packet
-or a SnapPea triangulation.)doc";
-
-// Docstring regina::python::doc::PacketHeldBy_::HELD_BY_PACKET
-static const char *HELD_BY_PACKET =
-R"doc(Indicates that an object of type *Held* is in fact the inherited data
-for a PacketOf<Held>.)doc";
-
-// Docstring regina::python::doc::PacketHeldBy_::HELD_BY_SNAPPEA
-static const char *HELD_BY_SNAPPEA =
-R"doc(Indicates that a Triangulation<3> is in fact the inherited native
-Regina data for a SnapPeaTriangulation.)doc";
 
 }
 
@@ -1270,19 +907,6 @@ Parameter ``packet``:
 
 Parameter ``child``:
     the child packet to be added.)doc";
-
-// Docstring regina::python::doc::PacketListener_::childToBeAdded_2
-static const char *childToBeAdded_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the childToBeAdded() callback now takes its arguments
-by reference, not by pointer.
-
-Python:
-    In Python, childToBeAdded() refers to the new (reference-based)
-    form of this callback.)doc";
 
 // Docstring regina::python::doc::PacketListener_::childToBeRemoved
 static const char *childToBeRemoved =
@@ -1305,20 +929,6 @@ Parameter ``packet``:
 Parameter ``child``:
     the child packet to be removed.)doc";
 
-// Docstring regina::python::doc::PacketListener_::childToBeRemoved_2
-static const char *childToBeRemoved_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the childToBeRemoved() callback now takes its
-arguments by reference, not by pointer, and is no longer called from
-within either the child or parent destructor.
-
-Python:
-    In Python, childToBeRemoved() refers to the new (reference-based)
-    form of this callback.)doc";
-
 // Docstring regina::python::doc::PacketListener_::childToBeRenamed
 static const char *childToBeRenamed =
 R"doc(Called before one of this packet's immediate children has its label or
@@ -1336,19 +946,6 @@ Parameter ``child``:
 See also:
     packetToBeRenamed())doc";
 
-// Docstring regina::python::doc::PacketListener_::childToBeRenamed_2
-static const char *childToBeRenamed_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the childToBeRenamed() callback now takes its
-arguments by reference, not by pointer.
-
-Python:
-    In Python, childToBeRenamed() refers to the new (reference-based)
-    form of this callback.)doc";
-
 // Docstring regina::python::doc::PacketListener_::childWasAdded
 static const char *childWasAdded =
 R"doc(Called after a child packet has been inserted directly beneath the
@@ -1362,19 +959,6 @@ Parameter ``packet``:
 
 Parameter ``child``:
     the child packet that was added.)doc";
-
-// Docstring regina::python::doc::PacketListener_::childWasAdded_2
-static const char *childWasAdded_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the childWasAdded() callback now takes its arguments
-by reference, not by pointer.
-
-Python:
-    In Python, childWasAdded() refers to the new (reference-based)
-    form of this callback.)doc";
 
 // Docstring regina::python::doc::PacketListener_::childWasRemoved
 static const char *childWasRemoved =
@@ -1397,20 +981,6 @@ Parameter ``packet``:
 Parameter ``child``:
     the child packet that was removed.)doc";
 
-// Docstring regina::python::doc::PacketListener_::childWasRemoved_2
-static const char *childWasRemoved_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the childWasRemoved() callback now takes its arguments
-by reference, not by pointer, and is no longer called from within
-either the child or parent destructor.
-
-Python:
-    In Python, childWasRemoved() refers to the new (reference-based)
-    form of this callback.)doc";
-
 // Docstring regina::python::doc::PacketListener_::childWasRenamed
 static const char *childWasRenamed =
 R"doc(Called after one of this packet's immediate children has its label or
@@ -1428,19 +998,6 @@ Parameter ``child``:
 See also:
     packetWasRenamed())doc";
 
-// Docstring regina::python::doc::PacketListener_::childWasRenamed_2
-static const char *childWasRenamed_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the childWasRenamed() callback now takes its arguments
-by reference, not by pointer.
-
-Python:
-    In Python, childWasRenamed() refers to the new (reference-based)
-    form of this callback.)doc";
-
 // Docstring regina::python::doc::PacketListener_::childrenToBeReordered
 static const char *childrenToBeReordered =
 R"doc(Called before the child packets directly beneath the packet are to be
@@ -1452,19 +1009,6 @@ The default implementation of this routine is to do nothing.
 Parameter ``packet``:
     the packet being listened to.)doc";
 
-// Docstring regina::python::doc::PacketListener_::childrenToBeReordered_2
-static const char *childrenToBeReordered_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the childrenToBeReordered() callback now takes its
-argument by reference, not by pointer.
-
-Python:
-    In Python, childrenToBeReordered() refers to the new (reference-
-    based) form of this callback.)doc";
-
 // Docstring regina::python::doc::PacketListener_::childrenWereReordered
 static const char *childrenWereReordered =
 R"doc(Called after the child packets directly beneath the packet have been
@@ -1475,19 +1019,6 @@ The default implementation of this routine is to do nothing.
 
 Parameter ``packet``:
     the packet being listened to.)doc";
-
-// Docstring regina::python::doc::PacketListener_::childrenWereReordered_2
-static const char *childrenWereReordered_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the childrenWereReordered() callback now takes its
-argument by reference, not by pointer.
-
-Python:
-    In Python, childrenWereReordered() refers to the new (reference-
-    based) form of this callback.)doc";
 
 // Docstring regina::python::doc::PacketListener_::isListening
 static const char *isListening =
@@ -1536,33 +1067,6 @@ The default implementation of this routine is to do nothing.
 Parameter ``packet``:
     the packet being listened to.)doc";
 
-// Docstring regina::python::doc::PacketListener_::packetToBeChanged_2
-static const char *packetToBeChanged_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the packetToBeChanged() callback now takes its
-argument by reference, not by pointer.
-
-Python:
-    In Python, packetToBeChanged() refers to the new (reference-based)
-    form of this callback.)doc";
-
-// Docstring regina::python::doc::PacketListener_::packetToBeDestroyed
-static const char *packetToBeDestroyed =
-R"doc(A placeholder for an old callback function that is no longer used.
-This has been kept but marked ``final`` to force a compile error if
-any subclass attempts to remimplement it.
-
-This callback has been renamed to packetBeingDestroyed(), to emphasise
-the fact that we are already well inside the packet destructor when
-this is called.
-
-Python:
-    Not present, since Python does not provide a mechanism such as
-    ``final`` to prevent subclasses from overriding a function.)doc";
-
 // Docstring regina::python::doc::PacketListener_::packetToBeRenamed
 static const char *packetToBeRenamed =
 R"doc(Called before the packet label or tags are to be changed. Once the
@@ -1576,19 +1080,6 @@ Parameter ``packet``:
 See also:
     childToBeRenamed())doc";
 
-// Docstring regina::python::doc::PacketListener_::packetToBeRenamed_2
-static const char *packetToBeRenamed_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the packetToBeRenamed() callback now takes its
-argument by reference, not by pointer.
-
-Python:
-    In Python, packetToBeRenamed() refers to the new (reference-based)
-    form of this callback.)doc";
-
 // Docstring regina::python::doc::PacketListener_::packetWasChanged
 static const char *packetWasChanged =
 R"doc(Called after the contents of the packet have been changed. Before the
@@ -1598,19 +1089,6 @@ The default implementation of this routine is to do nothing.
 
 Parameter ``packet``:
     the packet being listened to.)doc";
-
-// Docstring regina::python::doc::PacketListener_::packetWasChanged_2
-static const char *packetWasChanged_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the packetWasChanged() callback now takes its argument
-by reference, not by pointer.
-
-Python:
-    In Python, packetWasChanged() refers to the new (reference-based)
-    form of this callback.)doc";
 
 // Docstring regina::python::doc::PacketListener_::packetWasRenamed
 static const char *packetWasRenamed =
@@ -1624,19 +1102,6 @@ Parameter ``packet``:
 
 See also:
     childWasRenamed())doc";
-
-// Docstring regina::python::doc::PacketListener_::packetWasRenamed_2
-static const char *packetWasRenamed_2 =
-R"doc(A placeholder for an old form of a callback function that is no longer
-used. This has been kept but marked ``final`` to force a compile error
-if any subclass attempts to remimplement it.
-
-The new form of the packetWasRenamed() callback now takes its argument
-by reference, not by pointer.
-
-Python:
-    In Python, packetWasRenamed() refers to the new (reference-based)
-    form of this callback.)doc";
 
 // Docstring regina::python::doc::PacketListener_::unlisten
 static const char *unlisten =
@@ -1862,35 +1327,38 @@ Returns:
 
 namespace Packet_ {
 
-// Docstring regina::python::doc::Packet_::ChangeEventSpan
-static const char *ChangeEventSpan =
-R"doc(An object that facilitates firing packetToBeChanged() and
-packetWasChanged() events.
+// Docstring regina::python::doc::Packet_::__iter__
+static const char *__iter__ =
+R"doc(Returns a Python iterator over the packets in the subtree rooted at
+this packet.
 
-Objects of this type should be created on the stack before data within
-a packet is changed. On creation, this object will fire a
-PacketListener::packetToBeChanged() event to all registered listeners.
-On destruction (i.e., when the object goes out of scope), it will fire
-a PacketListener::packetWasChanged() event.
+Subtree iteration is depth-first, where a parent packet is always
+processed before its descendants. In particular, this packet (as the
+root of the subtree) will be processed first.
 
-It may be the case that several objects of this type all exist at the
-same time for the same packet. In this case, only the outermost object
-will fire events; that is, only the first object to be constructed
-will fire PacketListener::packetToBeChanged(), and only the last
-object to be destroyed will fire PacketListener::packetWasChanged().
-This is because the "inner" ChangeEventSpan objects earlier represent
-smaller events that are part of a larger suite of changes.
+In Python, each packet can be treated as an iterable object, with the
+effect of iterating through the corresponding subtree:
 
-If you are writing code that makes a large number of changes to a
-packet, it is highly recommended that you declare a ChangeEventSpan at
-the beginning of your code. This will ensure that listeners only
-receive one pair of events for the entire change set, instead of many
-events representing each individual modification.
+```
+{.py}
+subtree = ...
+for p in subtree:
+    ...
+```
 
-ChangeEventSpan objects are not copyable, movable or swappable. In
-particular, Regina does not offer any way for a ChangeEventSpan to
-transfer its duty (i.e., firing events upon destruction) to another
-object.)doc";
+Regina also supplies Python users with a member function
+``Packet.subtree()``, which returns an iterable object. Iterating over
+``Packet.subtree()`` is exactly the same as iterating the packet
+itself; the ``subtree()`` function is offered because the intention
+may be clearer for readers.
+
+See also descendants() for iterating through just the strict
+descendants in the subtree (i.e., excluding this packet itself), and
+children() for iterating just through the immediate children of this
+packet (not the full subtree).
+
+Returns:
+    an iterator over the subtree rooted at this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::addTag
 static const char *addTag =
@@ -1966,85 +1434,6 @@ Exception ``InvalidArgument``:
 
 Parameter ``child``:
     the child to insert.)doc";
-
-// Docstring regina::python::doc::Packet_::begin
-static const char *begin =
-R"doc(Returns a non-const iterator at the beginning of the range of packets
-in the subtree rooted at this packet.
-
-Subtree iteration is depth-first, where a parent packet is always
-processed before its descendants. Therefore the iterator returned by
-begin() will always point to this packet itself.
-
-The begin() and end() routines allow you to iterate through an entire
-packet subtree using C++11 range-based ``for`` loops:
-
-```
-{.cpp}
-std::shared_ptr<Packet> subtree = ...;
-for (Packet& p : *subtree) { ... }
-```
-
-In Python, each packet can be treated as an iterable object, again
-iterating through the corresponding subtree:
-
-```
-{.py}
-subtree = ...
-for p in subtree:
-    ...
-```
-
-Since Regina 7.0, the return type is templated in order to support
-both const and non-const iteration. It is recommended that you just
-use ``auto`` if you need to store a local copy of the returned
-iterator.
-
-See also descendants() for iterating through just the strict
-descendants in the subtree (i.e., excluding this packet itself), and
-children() for iterating just through the immediate children of this
-packet (not the full subtree).
-
-Python:
-    As well as treating each packet as an iterable object, Regina
-    supplies a member function ``Packet.subtree()`` which returns an
-    iterable object. Iterating over a packet directly is exactly the
-    same as iterating over ``Packet.subtree()``; the latter is offered
-    because it may be clearer for readers.
-
-Returns:
-    an iterator at the beginning of this subtree.)doc";
-
-// Docstring regina::python::doc::Packet_::begin_2
-static const char *begin_2 =
-R"doc(Returns a const iterator at the beginning of the range of packets in
-the subtree rooted at this packet.
-
-Subtree iteration is depth-first, where a parent packet is always
-processed before its descendants. Therefore the iterator returned by
-begin() will always point to this packet itself.
-
-The begin() and end() routines allow you to iterate through an entire
-packet subtree using C++11 range-based ``for`` loops:
-
-```
-{.cpp}
-std::shared_ptr<const Packet> subtree = ...;
-for (const Packet& p : *subtree) { ... }
-```
-
-Since Regina 7.0, the return type is templated in order to support
-both const and non-const iteration. It is recommended that you just
-use ``auto`` if you need to store a local copy of the returned
-iterator.
-
-See also descendants() for iterating through just the strict
-descendants in the subtree (i.e., excluding this packet itself), and
-children() for iterating just through the immediate children of this
-packet (not the full subtree).
-
-Returns:
-    an iterator at the beginning of this subtree.)doc";
 
 // Docstring regina::python::doc::Packet_::children
 static const char *children =
@@ -2251,37 +1640,6 @@ packet's immediate children.
 Returns:
     an object for iterating through the strict descendants of this
     packet.)doc";
-
-// Docstring regina::python::doc::Packet_::end
-static const char *end =
-R"doc(Returns a non-const iterator beyond the end of the range of packets in
-the subtree rooted at this packet.
-
-In C++, the begin() and end() routines allow you to iterate through an
-entire packet subtree using C++11 range-based ``for`` loops. In
-Python, each packet can be treated as an iterable object.
-
-See the begin() documentation for further details.
-
-Python:
-    Again, see the begin() documentation for the iterable objects that
-    Regina provides for Python users.
-
-Returns:
-    an iterator beyond the end of this subtree.)doc";
-
-// Docstring regina::python::doc::Packet_::end_2
-static const char *end_2 =
-R"doc(Returns a const iterator beyond the end of the range of packets in the
-subtree rooted at this packet.
-
-In C++, the begin() and end() routines allow you to iterate through an
-entire packet subtree using C++11 range-based ``for`` loops.
-
-See the begin() documentation for further details.
-
-Returns:
-    an iterator beyond the end of this subtree.)doc";
 
 // Docstring regina::python::doc::Packet_::findPacketLabel
 static const char *findPacketLabel =
@@ -2963,43 +2321,6 @@ Parameter ``format``:
 Returns:
     ``True`` if and only if the file was successfully written.)doc";
 
-// Docstring regina::python::doc::Packet_::save_2
-static const char *save_2 =
-R"doc(Writes the subtree rooted at this packet to the given output stream,
-in the format of a Regina XML data file. The data file may be
-optionally compressed (Regina can happily read both compressed and
-uncompressed XML).
-
-Typically this will be called from the root of the packet tree, which
-will write the entire packet tree to the given output stream.
-
-Precondition:
-    The given stream is open for writing.
-
-Precondition:
-    The given packet does not depend on its parent.
-
-Python:
-    Not present, to avoid confusion with the filename-based save().
-    However, if you wish to write a Regina XML data file directly to
-    an open Python file, you can still use writeXMLFile() for this.
-
-Parameter ``s``:
-    the output stream to which to write.
-
-Parameter ``compressed``:
-    ``True`` if the XML data should be compressed, or ``False`` if it
-    should be written as plain text.
-
-Parameter ``format``:
-    indicates which of Regina's XML file formats to write. You should
-    use the default (REGINA_CURRENT_FILE_FORMAT) unless you need your
-    file to be readable by older versions of Regina. This must not be
-    REGINA_BINARY_GEN_1, which is no longer supported.
-
-Returns:
-    ``True`` if and only if the data was successfully written.)doc";
-
 // Docstring regina::python::doc::Packet_::setLabel
 static const char *setLabel =
 R"doc(Sets the label associated with this individual packet.
@@ -3109,33 +2430,6 @@ Returns:
     ``False`` if the given listener was not registered in the first
     place.)doc";
 
-// Docstring regina::python::doc::Packet_::writeTextLong
-static const char *writeTextLong =
-R"doc(Writes a detailed text representation of this object to the given
-output stream.
-
-This may be reimplemented by subclasses, but the parent Packet class
-offers a reasonable default implementation.
-
-Python:
-    Not present; use detail() instead.
-
-Parameter ``out``:
-    the output stream to which to write.)doc";
-
-// Docstring regina::python::doc::Packet_::writeTextShort
-static const char *writeTextShort =
-R"doc(Writes a short text representation of this object to the given output
-stream.
-
-This must be reimplemented by subclasses.
-
-Python:
-    Not present; use str() instead.
-
-Parameter ``out``:
-    the output stream to which to write.)doc";
-
 // Docstring regina::python::doc::Packet_::writeXMLFile
 static const char *writeXMLFile =
 R"doc(Writes the subtree rooted at this packet to the given output stream in
@@ -3164,77 +2458,7 @@ Parameter ``format``:
 
 }
 
-namespace Packet_::ChangeEventSpan_ {
-
-// Docstring regina::python::doc::Packet_::ChangeEventSpan_::ChangeEventSpan
-static const char *ChangeEventSpan =
-R"doc(Creates a new change event object for the given packet.
-
-If this is the only ChangeEventSpan currently in existence for the
-given packet, this constructor will call
-PacketListener::packetToBeChanged() for all registered listeners for
-the given packet.
-
-Parameter ``packet``:
-    the packet whose data is about to change.)doc";
-
-}
-
 namespace SubtreeIterator_ {
-
-// Docstring regina::python::doc::SubtreeIterator_::SubtreeIterator
-static const char *SubtreeIterator =
-R"doc(Creates a past-the-end iterator.
-
-Python:
-    Not present. The only way to create a SubtreeIterator is via
-    Packet::subtree() or Packet::descendants(), or by iterating over a
-    Packet itself.)doc";
-
-// Docstring regina::python::doc::SubtreeIterator_::SubtreeIterator_2
-static const char *SubtreeIterator_2 =
-R"doc(Default copy constructor.
-
-Python:
-    Not present. The only way to create a SubtreeIterator is via
-    Packet::subtree() or Packet::descendants(), or by iterating over a
-    Packet itself.)doc";
-
-// Docstring regina::python::doc::SubtreeIterator_::SubtreeIterator_3
-static const char *SubtreeIterator_3 =
-R"doc(Creates a new iterator pointing to the first packet within the given
-subtree. Dereferencing this iterator will return *subtree* itself.
-
-Python:
-    Not present. The only way to create a SubtreeIterator is via
-    Packet::subtree() or Packet::descendants(), or by iterating over a
-    Packet itself.
-
-Parameter ``subtree``:
-    the packet subtree that we are iterating through. This does not
-    need to be the root of the overall packet tree (i.e., *subtree* is
-    allowed to have a non-null parent).)doc";
-
-// Docstring regina::python::doc::SubtreeIterator_::SubtreeIterator_4
-static const char *SubtreeIterator_4 =
-R"doc(Creates a new iterator pointing to the given packet within the given
-subtree.
-
-Python:
-    Not present. The only way to create a SubtreeIterator is via
-    Packet::subtree() or Packet::descendants(), or by iterating over a
-    Packet itself.
-
-Parameter ``subtree``:
-    the packet subtree that we are iterating through. This does not
-    need to be the root of the overall packet tree (i.e., *subtree* is
-    allowed to have a non-null parent).
-
-Parameter ``current``:
-    the packet within the subtree that the new iterator should point
-    to, or ``null`` if the new iterator should be past-the-end. If
-    *current* is not null, then it must be equal to or a descendant of
-    *subtree*.)doc";
 
 // Docstring regina::python::doc::SubtreeIterator_::__eq
 static const char *__eq =
@@ -3248,44 +2472,13 @@ R"doc(Tests whether this and the given iterator are equal.
 Returns:
     true if and only if the two iterators are equal.)doc";
 
-// Docstring regina::python::doc::SubtreeIterator_::__inc
-static const char *__inc =
-R"doc(Preincrement operator.
-
-Python:
-    Not present; instead this class implements ``next()``, which
-    either returns the current packet in the subtree and increments
-    the iterator, or else throws a ``StopIteration`` exception if the
-    iterator is past-the-end.
+// Docstring regina::python::doc::SubtreeIterator_::__iter__
+static const char *__iter__ =
+R"doc(Returns a Python iterator over all members of the relevant packet
+subtree.
 
 Returns:
-    a reference to this iterator.)doc";
-
-// Docstring regina::python::doc::SubtreeIterator_::__inc_2
-static const char *__inc_2 =
-R"doc(Postincrement operator.
-
-Python:
-    Not present; instead this class implements ``next()``, which
-    either returns the current packet in the subtree and increments
-    the iterator, or else throws a ``StopIteration`` exception if the
-    iterator is past-the-end.
-
-Returns:
-    a copy of this iterator before it was incremented.)doc";
-
-// Docstring regina::python::doc::SubtreeIterator_::__mul
-static const char *__mul =
-R"doc(Returns the packet that this iterator is currently pointing to.
-
-Python:
-    Not present; instead this class implements ``next()``, which
-    either returns the current packet in the subtree and increments
-    the iterator, or else throws a ``StopIteration`` exception if the
-    iterator is past-the-end.
-
-Returns:
-    the current packet.)doc";
+    an iterator over all members of the relevant packet subtree.)doc";
 
 // Docstring regina::python::doc::SubtreeIterator_::__ne
 static const char *__ne =
@@ -3299,19 +2492,17 @@ R"doc(Tests whether this and the given iterator are different.
 Returns:
     true if and only if the two iterators are different.)doc";
 
-// Docstring regina::python::doc::SubtreeIterator_::operator_bool
-static const char *operator_bool =
-R"doc(Identifies whether this iterator is dereferencable.
+// Docstring regina::python::doc::SubtreeIterator_::__next__
+static const char *__next__ =
+R"doc(Returns the current packet in the subtree and increments this
+iterator.
 
-Python:
-    Not present; instead this class implements ``next()``, which
-    either returns the current child packet and increments the
-    iterator, or else throws a ``StopIteration`` exception if the
-    iterator is not dereferencable.
+Exception ``StopIteration``:
+    The iterator is already past-the-end when this function is called.
 
 Returns:
-    ``True`` if and only if this is dereferencable (i.e., not past-
-    the-end).)doc";
+    the packet that this iterator is pointing to, before the increment
+    takes place.)doc";
 
 }
 
