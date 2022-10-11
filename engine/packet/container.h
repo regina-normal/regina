@@ -105,7 +105,7 @@ class Container : public Packet {
         Container& operator = (const Container&) = default;
 
         /**
-         * Swaps function that does nothing.
+         * Swap function that does nothing.
          *
          * This is only here for consistency with the other packet types.
          * Like all packet types, this operation does not swap any of

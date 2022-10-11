@@ -33,16 +33,18 @@
 #include "../pybind11/pybind11.h"
 #include "packet/attachment.h"
 #include "../helpers.h"
+#include "../docstrings/packet/attachment.h"
 
 using pybind11::overload_cast;
 using regina::Attachment;
 
 void addAttachment(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(Attachment)
+
     auto c = pybind11::class_<Attachment, regina::Packet,
-            std::shared_ptr<Attachment>>(m, "Attachment")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const char*>())
-        .def(pybind11::init<const Attachment&>())
+            std::shared_ptr<Attachment>>(m, "Attachment", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Attachment)
+        .def(pybind11::init<const char*>(), rdoc::Attachment_2)
         .def(pybind11::init([](pybind11::bytes data, std::string filename) {
             char* in = nullptr;
             Py_ssize_t inlen = 0;
@@ -60,19 +62,20 @@ void addAttachment(pybind11::module_& m) {
             }
 
             return new Attachment(in, inlen, Attachment::DEEP_COPY, filename);
-        }))
-        .def("swap", &Attachment::swap)
-        .def("isNull", &Attachment::isNull)
+        }), rdoc::Attachment_3)
+        .def(pybind11::init<const Attachment&>(), rdoc::Attachment_4)
+        .def("swap", &Attachment::swap, rdoc::swap)
+        .def("isNull", &Attachment::isNull, rdoc::isNull)
         .def("data", [](const Attachment& a) -> pybind11::object {
             if (a.isNull())
                 return pybind11::none();
             else
                 return pybind11::bytes(a.data(), a.size());
-        })
-        .def("size", &Attachment::size)
-        .def("filename", &Attachment::filename)
-        .def("extension", &Attachment::extension)
-        .def("reset", overload_cast<>(&Attachment::reset))
+        }, rdoc::data)
+        .def("size", &Attachment::size, rdoc::size)
+        .def("filename", &Attachment::filename, rdoc::filename)
+        .def("extension", &Attachment::extension, rdoc::extension)
+        .def("reset", overload_cast<>(&Attachment::reset), rdoc::reset)
         .def("reset", [](Attachment& a, pybind11::bytes data,
                 std::string filename) {
             char* in = nullptr;
@@ -85,13 +88,17 @@ void addAttachment(pybind11::module_& m) {
             }
 
             a.reset(in, inlen, Attachment::DEEP_COPY, filename);
-        })
-        .def("save", &Attachment::save)
+        }, rdoc::reset_2)
+        .def("save", &Attachment::save, rdoc::save)
         .def_readonly_static("typeID", &Attachment::typeID)
     ;
     regina::python::add_output(c);
-    regina::python::packet_eq_operators(c);
+    regina::python::packet_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<Attachment>(m);
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_global_swap<Attachment>(m, rdoc::swap);
+
+    RDOC_SCOPE_END
 }
 

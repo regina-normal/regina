@@ -62,7 +62,7 @@ new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::Container_::swap
 static const char *swap =
-R"doc(Swaps function that does nothing.
+R"doc(Swap function that does nothing.
 
 This is only here for consistency with the other packet types. Like
 all packet types, this operation does not swap any of the packet

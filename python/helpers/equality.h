@@ -148,9 +148,25 @@ template <class C, typename... options>
 void add_eq_operators(pybind11::class_<C, options...>& c);
 
 /**
- * Adds appropriate == and != operators to the python bindings for a C++ class
- * that is either equal to a packet type (such as regina::Text), or inherited
- * by a packet type (such as regina::Link).
+ * Adds appropriate == and != operators to the python bindings,
+ * with docstrings, for a C++ class that is either equal to a packet type
+ * (such as regina::Text), or inherited by a packet type (such as regina::Link).
+ *
+ * This routine performs the same task as add_eq_operators, and in addition
+ * it adds fallback == and != operators that throw exceptions if an object of
+ * the given type is compared against a packet of some different type.
+ * The intent is for these exceptions to be informative, so that users are
+ * aware that they should use samePacket() and not the comparison operators
+ * to test whether two Python objects wrap the same packet.
+ */
+template <class C, typename... options>
+void packet_eq_operators(pybind11::class_<C, options...>& c,
+    const char* docEq, const char* docNeq);
+
+/**
+ * Adds appropriate == and != operators to the python bindings,
+ * without docstrings, for a C++ class that is either equal to a packet type
+ * (such as regina::Text), or inherited by a packet type (such as regina::Link).
  *
  * This routine performs the same task as add_eq_operators, and in addition
  * it adds fallback == and != operators that throw exceptions if an object of
@@ -425,6 +441,14 @@ inline bool invalidPacketComparison(const regina::Packet&,
         "now compare packet contents by value, and can only be used with two "
         "packets of the same type.  To test whether two Python objects refer "
         "to the same underlying packet, use Packet.samePacket() instead.");
+}
+
+template <class C, typename... options>
+inline void packet_eq_operators(pybind11::class_<C, options...>& c,
+        const char* docEq, const char* docNeq) {
+    add_eq_operators(c, docEq, docNeq);
+    c.def("__eq__", &invalidPacketComparison, doc::common::eq_packet_invalid);
+    c.def("__ne__", &invalidPacketComparison, doc::common::eq_packet_invalid);
 }
 
 template <class C, typename... options>

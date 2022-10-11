@@ -49,6 +49,7 @@ using regina::SubtreeIterator;
 // Docstrings that are generated once but need to be reused across many
 // source files:
 namespace regina::python::doc::common {
+    const char* Packet_append = regina::python::doc::Packet_::append;
     const char* PacketData_anonID = regina::python::doc::PacketData_::anonID;
     const char* PacketData_packet = regina::python::doc::PacketData_::packet;
     const char* PacketOf = regina::python::doc::PacketOf;

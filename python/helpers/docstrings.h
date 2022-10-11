@@ -40,6 +40,7 @@ namespace regina::python::doc::common {
     extern const char* Output_str;
     extern const char* Output_utf8;
 
+    extern const char* Packet_append;
     extern const char* PacketData_anonID;
     extern const char* PacketData_packet;
     extern const char* PacketOf;

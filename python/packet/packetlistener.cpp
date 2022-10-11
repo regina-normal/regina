@@ -130,7 +130,8 @@ void addPacketListener(pybind11::module_& m) {
 
     auto l = pybind11::class_<PacketListener, PyPacketListener>(
             m, "PacketListener", rdoc_scope)
-        .def(pybind11::init<>()) // necessary for pure python subclasses
+        .def(pybind11::init<>(), // necessary for pure python subclasses
+            "Default base class constructor that does nothing.")
         .def("isListening", &PacketListener::isListening, rdoc::isListening)
         .def("unlisten", &PacketListener::unlisten, rdoc::unlisten)
         .def("packetToBeChanged", overload_cast<Packet&>(
