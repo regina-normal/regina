@@ -474,7 +474,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1233,8 +1233,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * contained in each bag.  The resulting DOT file should be used
          * with the \a dot program shipped with Graphviz.
          *
-         * \ifacespython Not present; instead use the variant dot() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant dot() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          *
@@ -1267,8 +1267,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * the PACE text format stores the connections between bags as an
          * undirected, unrooted tree.
          *
-         * \ifacespython Not present; instead use the variant pace() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant pace() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          *
@@ -1298,7 +1298,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1308,7 +1308,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1401,8 +1401,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * As documented more thoroughly in the string variant of this
          * routine, the checks performed here are not exhaustive.
          *
-         * \ifacespython Not present; instead you can use the variant of
-         * fromPACE() that takes a string.
+         * \nopython Instead you can use the variant of fromPACE() that
+         * takes a string.
          *
          * @param in an input stream that provides a text
          * representation of the tree decomposition using the PACE text format.

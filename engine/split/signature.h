@@ -278,8 +278,8 @@ class Signature : public ShortOutput<Signature> {
          * Writes a customised string representation of this signature to the
          * given output stream.
          *
-         * \ifacespython Not present; instead use the variant of str() that
-         * takes the same three string arguments and returns a string.
+         * \nopython Instead use the variant of str() that takes the same
+         * three string arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @param cycleOpen the text to write at the beginning of a cycle
@@ -295,7 +295,7 @@ class Signature : public ShortOutput<Signature> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
