@@ -33,6 +33,8 @@
 #include "../pybind11/pybind11.h"
 #include "foreign/dehydration.h"
 #include "packet/container.h"
+#include "../helpers.h"
+#include "../docstrings/foreign/dehydration.h"
 
 using pybind11::overload_cast;
 
@@ -41,6 +43,7 @@ void addForeignDehydration(pybind11::module_& m) {
         pybind11::arg(),
         pybind11::arg("colDehydrations") = 0,
         pybind11::arg("colLabels") = -1,
-        pybind11::arg("ignoreLines") = 0);
+        pybind11::arg("ignoreLines") = 0,
+        regina::python::doc::readDehydrationList);
 }
 
