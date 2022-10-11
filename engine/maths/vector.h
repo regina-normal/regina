@@ -269,14 +269,18 @@ class Vector : public ShortOutput<Vector<T>> {
             return elts_[index];
         }
         /**
-         * Returns the beginning of a non-const iterator range that runs
-         * through all elements of this vector.
+         * Returns a C++ non-const iterator pointing to the first element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \nopython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
          * @return an iterator pointing to the first element of this vector.
          */
@@ -284,14 +288,18 @@ class Vector : public ShortOutput<Vector<T>> {
             return elts_;
         }
         /**
-         * Returns the beginning of a const iterator range that runs through
-         * all elements of this vector.
+         * Returns a C++ non-const iterator pointing to the first element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \nopython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
          * @return an iterator pointing to the first element of this vector.
          */
@@ -299,14 +307,18 @@ class Vector : public ShortOutput<Vector<T>> {
             return elts_;
         }
         /**
-         * Returns the end of a non-const iterator range that runs through
-         * all elements of this vector.
+         * Returns a C++ non-const iterator pointing beyond the last element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \nopython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
          * @return an iterator beyond the last element of this vector.
          */
@@ -314,20 +326,36 @@ class Vector : public ShortOutput<Vector<T>> {
             return end_;
         }
         /**
-         * Returns the end of a const iterator range that runs through
-         * all elements of this vector.
+         * Returns a C++ const iterator pointing beyond the last element of
+         * this vector.
+         *
+         * The iterator range from begin() to end() runs through all the
+         * elements of this vector in order from first to last.
          *
          * This is safe to use even if this vector has zero length (in
          * which case begin() and end() will be equal).
          *
-         * \nopython Vector is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * \nopython For Python users, Vector implements the Python iterable
+         * interface.  You can iterate over the elements of this vector in the
+         * same way that you would iterate over any native Python container.
          *
          * @return an iterator beyond the last element of this vector.
          */
         inline const_iterator end() const {
             return end_;
         }
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the elements of this vector.
+         *
+         * \nocpp For C++ users, Vector provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over the elements
+         * of this list in the usual way using a range-based \c for loop.
+         *
+         * @return an iterator over the elements of this list.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Determines if this vector is equal to the given vector.

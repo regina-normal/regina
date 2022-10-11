@@ -202,23 +202,43 @@ class ListView {
          */
         const_reference back() const;
         /**
-         * Returns an iterator pointing to the first element.
+         * Returns a C++ iterator pointing to the first element of this list.
          *
-         * \nopython ListView is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * The iterator range from begin() to end() runs through all the
+         * elements of this list in order from first to last.
+         *
+         * \nopython For Python users, ListView implements the Python iterable
+         * interface.  You can iterate over the elements of this list in the
+         * same way that you would iterate over any native Python container.
          *
          * @return an iterator at the beginning of this list.
          */
         const_iterator begin() const;
         /**
-         * Returns an iterator pointing beyond the last element.
+         * Returns a C++ iterator pointing beyond the last element of this list.
          *
-         * \nopython ListView is an iterable object: instead of providing
-         * begin() and end(), it implements the Python iterable interface.
+         * The iterator range from begin() to end() runs through all the
+         * elements of this list in order from first to last.
+         *
+         * \nopython For Python users, ListView implements the Python iterable
+         * interface.  You can iterate over the elements of this list in the
+         * same way that you would iterate over any native Python container.
          *
          * @return an iterator beyond the end of this list.
          */
         const_iterator end() const;
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the elements of this list.
+         *
+         * \nocpp For C++ users, ListView provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over the elements
+         * of this list in the usual way using a range-based \c for loop.
+         *
+         * @return an iterator over the elements of this list.
+         */
+        auto __iter__() const;
+#endif
         /**
          * Determines whether this and the given list view are accessing
          * the same underlying container.
