@@ -38,6 +38,8 @@
 #include <sstream>
 #include "utilities/flags.h"
 #include "pybind11/operators.h"
+#include "helpers/docstrings.h"
+#include "docstrings/utilities/flags.h"
 
 namespace regina::python {
 
@@ -71,27 +73,30 @@ void add_flags(pybind11::module_& m,
         return Flags(lhs) | rhs;
     });
 
-    auto f = pybind11::class_<Flags>(m, flagsName)
-        .def(pybind11::init<>())
-        .def(pybind11::init<Enum>())
-        .def(pybind11::init<const Flags&>())
+    RDOC_SCOPE_BEGIN(Flags)
+
+    auto f = pybind11::class_<Flags>(m, flagsName, rdoc_scope)
+        .def(pybind11::init<>(), rdoc::Flags)
+        .def(pybind11::init<Enum>(), rdoc::Flags_2)
+        .def(pybind11::init<const Flags&>(), rdoc::Flags_3)
         .def("has", pybind11::overload_cast<const Flags&>(
-            &Flags::has, pybind11::const_))
-        .def("intValue", &Flags::intValue)
-        .def_static("fromInt", &Flags::fromInt)
-        .def(pybind11::self |= pybind11::self)
-        .def(pybind11::self &= pybind11::self)
-        .def(pybind11::self ^= pybind11::self)
-        .def(pybind11::self | pybind11::self)
-        .def(pybind11::self & pybind11::self)
-        .def(pybind11::self ^ pybind11::self)
-        .def("clear", pybind11::overload_cast<const Flags&>(&Flags::clear))
+            &Flags::has, pybind11::const_), rdoc::has_2)
+        .def("intValue", &Flags::intValue, rdoc::intValue)
+        .def_static("fromInt", &Flags::fromInt, rdoc::fromInt)
+        .def(pybind11::self |= pybind11::self, rdoc::__ior_2)
+        .def(pybind11::self &= pybind11::self, rdoc::__iand_2)
+        .def(pybind11::self ^= pybind11::self, rdoc::__ixor_2)
+        .def(pybind11::self | pybind11::self, rdoc::__bor_2)
+        .def(pybind11::self & pybind11::self, rdoc::__band_2)
+        .def(pybind11::self ^ pybind11::self, rdoc::__bxor_2)
+        .def("clear", pybind11::overload_cast<const Flags&>(&Flags::clear),
+            rdoc::clear_2)
         .def("ensureOne", pybind11::overload_cast<Enum, Enum>(
-            &Flags::ensureOne))
+            &Flags::ensureOne), rdoc::ensureOne)
         .def("ensureOne", pybind11::overload_cast<Enum, Enum, Enum>(
-            &Flags::ensureOne))
+            &Flags::ensureOne), rdoc::ensureOne_2)
         .def("ensureOne", pybind11::overload_cast<Enum, Enum, Enum, Enum>(
-            &Flags::ensureOne))
+            &Flags::ensureOne), rdoc::ensureOne_3)
         .def("__str__", [](Flags f) {
             std::ostringstream out;
             out << "0x" << std::hex << std::setw(hexWidth) << std::setfill('0')
@@ -108,7 +113,9 @@ void add_flags(pybind11::module_& m,
             return out.str();
         })
         ;
-    regina::python::add_eq_operators(f);
+    regina::python::add_eq_operators(f, rdoc::__eq_2, rdoc::__ne_2);
+
+    RDOC_SCOPE_END
 
     pybind11::implicitly_convertible<Enum, Flags>();
 }

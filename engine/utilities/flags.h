@@ -54,6 +54,10 @@ namespace regina {
  *
  * \ifacespython Present only for some particular enumeration types \a T,
  * when explicitly noted in the corresponding enum documentation.
+ * The enumeration type is typically the flag class name with the suffix
+ * \c Flags or \c Fields; for instance, the flags classes NormalAlg
+ * and SurfaceExport work with the enum types NormalAlgFlags and
+ * SurfaceExportFields respectively.
  *
  * \ingroup utilities
  */
