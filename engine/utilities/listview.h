@@ -39,6 +39,7 @@
 #define __REGINA_LISTVIEW_H
 #endif
 
+#include <cstddef>
 #include "regina-core.h"
 
 namespace regina {

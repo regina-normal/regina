@@ -174,8 +174,8 @@ def process_comment(comment):
     s = re.sub(r'[\\@]short\s*', r'', s)
     s = re.sub(r'[\\@]ref\s*', r'', s)
 
-    s = re.sub(r'[\\@]code\s?(.*?)\s?[\\@]endcode',
-               r"```\n\1\n```\n", s, flags=re.DOTALL)
+    s = re.sub(r'[\\@]code\s?({\.[a-z]+}\s?)?(.*?)\s?[\\@]endcode',
+               r"```\n\2\n```\n", s, flags=re.DOTALL)
     s = re.sub(r'[\\@]warning\s?(.*?)\s?\n\n',
                r'$.. warning::\n\n\1\n\n', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]note\s?(.*?)\s?\n\n',

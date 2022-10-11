@@ -171,7 +171,6 @@ The purpose of this class is to support iteration through all children
 of a packet *p* using C++11 range-based ``for`` loops:
 
 ```
-{.cpp}
 std::shared_ptr<Packet> parent = ...;
 for (Packet& child : parent->children()) { ... }
 ```
@@ -179,7 +178,6 @@ for (Packet& child : parent->children()) { ... }
 In Python, PacketChildren is an iterable object:
 
 ```
-{.py}
 parent = ...
 for child in parent.children():
     ...
@@ -220,7 +218,6 @@ The purpose of this class is to support iteration through all children
 of a packet *p* using C++11 range-based ``for`` loops:
 
 ```
-{.cpp}
 std::shared_ptr<Packet> parent = ...;
 for (Packet& child : parent->children()) { ... }
 ```
@@ -228,7 +225,6 @@ for (Packet& child : parent->children()) { ... }
 In Python, PacketChildren is an iterable object:
 
 ```
-{.py}
 parent = ...
 for child in parent.children():
     ...
@@ -307,7 +303,6 @@ The purpose of this class is to support iteration through all strict
 descendants of a packet *p* using C++11 range-based ``for`` loops:
 
 ```
-{.cpp}
 std::shared_ptr<Packet> parent = ...;
 for (Packet& desc : parent->descendants()) { ... }
 ```
@@ -315,7 +310,6 @@ for (Packet& desc : parent->descendants()) { ... }
 In Python, PacketDescendants is an iterable object:
 
 ```
-{.py}
 parent = ...
 for desc in parent.descendants():
     ...
@@ -356,7 +350,6 @@ The purpose of this class is to support iteration through all strict
 descendants of a packet *p* using C++11 range-based ``for`` loops:
 
 ```
-{.cpp}
 std::shared_ptr<Packet> parent = ...;
 for (Packet& desc : parent->descendants()) { ... }
 ```
@@ -364,7 +357,6 @@ for (Packet& desc : parent->descendants()) { ... }
 In Python, PacketDescendants is an iterable object:
 
 ```
-{.py}
 parent = ...
 for desc in parent.descendants():
     ...
@@ -756,10 +748,10 @@ Returns:
 
 // Docstring regina::python::doc::PacketChildren_::__iter__
 static const char *__iter__ =
-R"doc(Returns a Python iterator over all strict descendant packets.
+R"doc(Returns a Python iterator over all immediate child packets.
 
 Returns:
-    an iterator over all strict descendant packets.)doc";
+    an iterator over all immediate child packets.)doc";
 
 // Docstring regina::python::doc::PacketChildren_::__ne
 static const char *__ne =
@@ -1340,7 +1332,6 @@ In Python, each packet can be treated as an iterable object, with the
 effect of iterating through the corresponding subtree:
 
 ```
-{.py}
 subtree = ...
 for p in subtree:
     ...
@@ -1444,7 +1435,6 @@ This routine allows you to iterate through the immediate children of a
 given packet using C++11 range-based ``for`` loops:
 
 ```
-{.cpp}
 std::shared_ptr<Packet> parent = ...;
 for (Packet& child : parent->children()) { ... }
 ```
@@ -1452,7 +1442,6 @@ for (Packet& child : parent->children()) { ... }
 In Python, this routine returns an iterable object:
 
 ```
-{.py}
 parent = ...
 for child in parent.children():
     ...
@@ -1482,7 +1471,6 @@ This routine allows you to iterate through the immediate children of a
 given packet using C++11 range-based ``for`` loops:
 
 ```
-{.cpp}
 std::shared_ptr<const Packet> parent = ...;
 for (const Packet& child : parent->children()) { ... }
 ```
@@ -1573,7 +1561,6 @@ This routine allows you to iterate through all strict descendants of a
 given packet using C++11 range-based ``for`` loops:
 
 ```
-{.cpp}
 std::shared_ptr<Packet> parent = ...;
 for (Packet& desc : parent->descendants()) { ... }
 ```
@@ -1581,7 +1568,6 @@ for (Packet& desc : parent->descendants()) { ... }
 In Python, this routine returns an iterable object:
 
 ```
-{.py}
 parent = ...
 for desc in parent.descendants():
     ...
@@ -1619,7 +1605,6 @@ This routine allows you to iterate through all strict descendants of a
 given packet using C++11 range-based ``for`` loops:
 
 ```
-{.cpp}
 std::shared_ptr<const Packet> parent = ...;
 for (const Packet& desc : parent->descendants()) { ... }
 ```
@@ -2047,7 +2032,10 @@ sibling list.
 This routine takes time proportional to the number of steps.
 
 Precondition:
-    The given number of steps is strictly positive.)doc";
+    The given number of steps is strictly positive.
+
+Parameter ``steps``:
+    the number of steps down to move.)doc";
 
 // Docstring regina::python::doc::Packet_::moveToFirst
 static const char *moveToFirst =
@@ -2071,7 +2059,10 @@ its sibling list.
 This routine takes time proportional to the number of steps.
 
 Precondition:
-    The given number of steps is strictly positive.)doc";
+    The given number of steps is strictly positive.
+
+Parameter ``steps``:
+    the number of steps up to move.)doc";
 
 // Docstring regina::python::doc::Packet_::nextSibling
 static const char *nextSibling =
@@ -2464,10 +2455,8 @@ namespace SubtreeIterator_ {
 static const char *__eq =
 R"doc(Tests whether this and the given iterator are equal.
 
-.. note::
-    This routine only compares the packets that each iterator is
-    currently pointing to. It does not compare the roots of the
-    subtrees themselves.
+This routine only compares the packets that each iterator is currently
+pointing to. It does not compare the roots of the subtrees themselves.
 
 Returns:
     true if and only if the two iterators are equal.)doc";
@@ -2484,10 +2473,8 @@ Returns:
 static const char *__ne =
 R"doc(Tests whether this and the given iterator are different.
 
-.. note::
-    This routine only compares the packets that each iterator is
-    currently pointing to. It does not compare the roots of the
-    subtrees themselves.
+This routine only compares the packets that each iterator is currently
+pointing to. It does not compare the roots of the subtrees themselves.
 
 Returns:
     true if and only if the two iterators are different.)doc";

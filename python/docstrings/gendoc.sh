@@ -2,7 +2,7 @@
 set -e
 
 if [ "$#" = 0 ]; then
-  dirs="core file maths progress python utilities"
+  dirs="core file maths packet progress python utilities"
 else
   dirs="$@"
 fi
