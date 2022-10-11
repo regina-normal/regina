@@ -53,3 +53,5 @@ help(Link.packet)
 help(Integer.__init__)
 help(LargeInteger.__init__)
 
+help(Triangulation3().vertices())
+
