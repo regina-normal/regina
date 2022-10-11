@@ -209,53 +209,6 @@ Python:
     iteration in Python is non-const (i.e., Python exclusively uses
     the classes where *const_* is ``False``).)doc";
 
-// Docstring regina::python::doc::PacketChildren_2
-static const char *PacketChildren_2 =
-R"doc(A lightweight object that gives access to all immediate children of a
-given packet.
-
-The purpose of this class is to support iteration through all children
-of a packet *p* using C++11 range-based ``for`` loops:
-
-```
-std::shared_ptr<Packet> parent = ...;
-for (Packet& child : parent->children()) { ... }
-```
-
-In Python, PacketChildren is an iterable object:
-
-```
-parent = ...
-for child in parent.children():
-    ...
-```
-
-Each object of this class will hold a std::shared_ptr to the packet
-whose children it gives access to. This guarantees that the packet
-will not be destroyed during iteration, but it also means that you
-must ensure that you dispose of these objects once you are finished
-with them.
-
-These are lightweight objects, small enough to pass by value and swap
-with std::swap(), with no need for any specialised move operations or
-swap functions. Copies of a PacketChildren will iterate over the
-children of the same underlying packet.
-
-Template parameter ``const_``:
-    Indicates whether this iterator should offer const or non-const
-    access to the child packets.
-
-Python:
-    Instead of the C++ interface described here, in Python the classes
-    PacketChildren and ChildIterator together implement the Python
-    iterable/iterator interface. The class PacketChildren has just the
-    single function ``__iter__()``, which returns a ChildIterator;
-    then ChildIterator implements ``__next__()``, which either returns
-    the next child packet in the iteration or else throws a
-    ``StopException`` if there are no more children to return. All
-    iteration in Python is non-const (i.e., Python exclusively uses
-    the classes where *const_* is ``False``).)doc";
-
 // Docstring regina::python::doc::PacketData
 static const char *PacketData =
 R"doc(A lightweight helper class that allows an object of type *Held* to
@@ -275,74 +228,8 @@ Python:
     Not present, but the routines anonID() and packet() will be
     provided directly through the various subclasses.)doc";
 
-// Docstring regina::python::doc::PacketData_2
-static const char *PacketData_2 =
-R"doc(A lightweight helper class that allows an object of type *Held* to
-connect with the wrapped packet class that contains it.
-
-For every wrapped packet type of the form PacketOf<Held>, the
-corresponding class *Held* must derive from PacketData<Held>. See the
-Packet class notes for more information about packets, and for what
-else must be implemented for each wrapped packet type.
-
-This base class is extremely lightweight: the only data that it
-contains is a single PacketHeldBy enumeration value. All of the class
-constructors set this value to HELD_BY_NONE; it is the responsibility
-of subclasses (e.g., PacketOf<Held>) to change this where necessary.
-
-Python:
-    Not present, but the routines anonID() and packet() will be
-    provided directly through the various subclasses.)doc";
-
 // Docstring regina::python::doc::PacketDescendants
 static const char *PacketDescendants =
-R"doc(A lightweight object that gives access to all strict descendants of a
-given packet.
-
-The purpose of this class is to support iteration through all strict
-descendants of a packet *p* using C++11 range-based ``for`` loops:
-
-```
-std::shared_ptr<Packet> parent = ...;
-for (Packet& desc : parent->descendants()) { ... }
-```
-
-In Python, PacketDescendants is an iterable object:
-
-```
-parent = ...
-for desc in parent.descendants():
-    ...
-```
-
-Each object of this class will hold a std::shared_ptr to the packet
-whose descendants it gives access to. This guarantees that the packet
-will not be destroyed during iteration, but it also means that you
-must ensure that you dispose of these objects once you are finished
-with them.
-
-These are lightweight objects, small enough to pass by value and swap
-with std::swap(), with no need for any specialised move operations or
-swap functions. Copies of a PacketDescendants will iterate over the
-descendants of the same underlying packet.
-
-Template parameter ``const_``:
-    Indicates whether this iterator should offer const or non-const
-    access to the packet tree.
-
-Python:
-    Instead of the C++ interface described here, in Python the classes
-    PacketDescendants and SubtreeIterator together implement the
-    Python iterable/iterator interface. The class PacketDescendants
-    has just the single function ``__iter__()``, which returns a
-    SubtreeIterator; then SubtreeIterator implements ``__next__()``,
-    which either returns the next descendant packet in the iteration
-    or else throws a ``StopException`` if there are no more children
-    to return. All iteration in Python is non-const (i.e., Python
-    exclusively uses the classes where *const_* is ``False``).)doc";
-
-// Docstring regina::python::doc::PacketDescendants_2
-static const char *PacketDescendants_2 =
 R"doc(A lightweight object that gives access to all strict descendants of a
 given packet.
 
@@ -529,33 +416,6 @@ remains of the same underlying packet.)doc";
 
 // Docstring regina::python::doc::SubtreeIterator
 static const char *SubtreeIterator =
-R"doc(A forward iterator for iterating through the entire packet subtree
-rooted at a given packet.
-
-The order of iteration is depth-first, where a parent packet is always
-processed before its descendants.
-
-Each iterator will hold a std::shared_ptr to the packet whose subtree
-it is iterating over. This guarantees that the packet will not be
-destroyed mid-iteration, but it also means that you must ensure that
-you dispose of your iterators once you are finished with them.
-
-Template parameter ``const_``:
-    Indicates whether this iterator should offer const or non-const
-    access to the packet tree.
-
-Python:
-    Instead of the C++ interface described here, in Python this class
-    implements the Python iterable/iterator interface. It implements
-    the function ``__iter__()``, which returns the iterator object
-    itself; it also implements ``__next__()``, which either returns
-    the next packet in the subtree iteration or else throws a
-    ``StopException`` if there are no more packets to return. All
-    iteration in Python is non-const (i.e., Python exclusively uses
-    the classes where *const_* is ``False``).)doc";
-
-// Docstring regina::python::doc::SubtreeIterator_2
-static const char *SubtreeIterator_2 =
 R"doc(A forward iterator for iterating through the entire packet subtree
 rooted at a given packet.
 

@@ -11,6 +11,16 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::SigCensus
+static const char *SigCensus =
+R"doc(A class responsible for building censuses of splitting surface
+signatures.
+
+The main entry point for building a census is the static routine
+formCensus(). End users cannot create their own objects of this class.
+
+See formCensus() for further information.)doc";
+
 namespace SigCensus_ {
 
 // Docstring regina::python::doc::SigCensus_::formCensus

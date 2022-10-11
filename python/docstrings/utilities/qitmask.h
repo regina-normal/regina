@@ -47,80 +47,8 @@ Python:
     (where possible) or the C++ Qitmask2<T,U> template class (if
     necessary).)doc";
 
-// Docstring regina::python::doc::Qitmask1_2
-static const char *Qitmask1_2 =
-R"doc(A small but extremely fast "base 4 bitmask" class that can store up to
-8 * sizeof(*T*) "qits", each equal to 0, 1, 2 or 3.
-
-This qitmask packs all of the qits together into two variables of type
-*T*. This means that operations on qitmasks are extremely fast,
-because all of the qits can be processed in just a few native CPU
-operations.
-
-The downside of course is that the number of qits that can be stored
-is limited to 8 * sizeof(*T*), where *T* must be a native unsigned
-integer type (such as unsigned char, unsigned int, or unsigned long
-long).
-
-For another extremely fast qitmask class that can store twice as many
-qits, see Qitmask2. At present there is no qitmask class in Regina
-that can store arbitrarily many qits.
-
-These objects are small enough to pass by value and swap with
-std::swap(), with no need for any specialised move operations or swap
-functions.
-
-Precondition:
-    Type *T* is an unsigned integral numeric type.
-
-Python:
-    Python does not support templates, and so instead Regina's python
-    interface offers the classes Qitmask8, Qitmask16, Qitmask32,
-    Qitmask64, Qitmask128, and (if the machine supports 128-bit
-    integers) Qitmask256. Each of these will be an optimised qitmask
-    class that can hold the corresponding number of bits, and is
-    guaranteed to be an instance of either the C++ Qitmask1<T> class
-    (where possible) or the C++ Qitmask2<T,U> template class (if
-    necessary).)doc";
-
 // Docstring regina::python::doc::Qitmask2
 static const char *Qitmask2 =
-R"doc(A small but extremely fast "base 4 bitmask" class that can store up to
-8 * sizeof(*T*) + 8 * sizeof(*U*) "qits", each equal to 0, 1, 2 or 3.
-
-This qitmask packs all of the qits together into two variables of type
-*T* and two variables of type *U*. This means that operations on
-entire qitmasks are extremely fast, because all of the qits can be
-processed in just a few native CPU operations.
-
-The downside of course is that the number of qits that can be stored
-is limited to 8 * sizeof(*T*) + 8 * sizeof(*U*), where *T* and *U*
-must be native unsigned integer types (such as unsigned char, unsigned
-int, or unsigned long long).
-
-For an even faster qitmask class that can only store half as many
-qits, see Qitmask1. At present there is no qitmask class in Regina
-that can store arbitrarily many qits.
-
-These objects are small enough to pass by value and swap with
-std::swap(), with no need for any specialised move operations or swap
-functions.
-
-Precondition:
-    Types *T* and *U* are unsigned integral numeric types.
-
-Python:
-    Python does not support templates, and so instead Regina's python
-    interface offers the classes Qitmask8, Qitmask16, Qitmask32,
-    Qitmask64, Qitmask128, and (if the machine supports 128-bit
-    integers) Qitmask256. Each of these will be an optimised qitmask
-    class that can hold the corresponding number of bits, and is
-    guaranteed to be an instance of either the C++ Qitmask1<T> class
-    (where possible) or the C++ Qitmask2<T,U> template class (if
-    necessary).)doc";
-
-// Docstring regina::python::doc::Qitmask2_2
-static const char *Qitmask2_2 =
 R"doc(A small but extremely fast "base 4 bitmask" class that can store up to
 8 * sizeof(*T*) + 8 * sizeof(*U*) "qits", each equal to 0, 1, 2 or 3.
 

@@ -83,6 +83,88 @@ them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
 of by the TreeDecomposition to which they belong.)doc";
 
+// Docstring regina::python::doc::TreeDecomposition
+static const char *TreeDecomposition =
+R"doc(Represents a tree decomposition of a graph.
+
+Whilst this class can be used to build tree decompositions of
+arbitrary graphs, it also offers a simple interface for building a
+tree decomposition of the facet pairing graph of a given
+triangulation. This is an important step in the implementation of
+fixed-parameter tractable algorithms on triangulated manifolds.
+
+Given a graph *G*, a tree decomposition of *G* consists of (i) an
+underlying tree *T*; and (ii) a *bag* at every node of this tree. Each
+bag is a set of zero or more nodes of *G*, and these bags are subject
+to the following constraints:
+
+* Every node of *G* belongs to some bag;
+
+* Every arc of *G* has both its endpoints in some common bag;
+
+* For every node *v* of *G*, the set of *all* bags containing *v*
+  forms a (connected) subtree of *T*.
+
+In Regina, the underlying tree *T* is a rooted tree, so that every
+non-root bag has exactly one parent bag, and every bag has some number
+of children (possibly many, possibly zero).
+
+Tree decompositions are generally considered "better" if their bags
+are smaller (i.e., contain fewer nodes of *G*). To this end, the
+*width* of a tree decomposition is one less than its largest bag size,
+and the *treewidth* of *G* is the minimum width over all tree
+decompositions of *G*.
+
+A tree decomposition is described by a single TreeDecomposition
+object, and the class TreeBag is used to represent each individual
+bag.
+
+* You can build a tree decomposition using the various
+  TreeDecomposition constructors, and manipulate it using member
+  functions such as compress() and makeNice().
+
+* To iterate through the bags of the tree decomposition, you can use
+  TreeDecomposition::first() and TreeBag::next() (for a postfix
+  iteration), or you can use TreeDecomposition::firstPrefix() and
+  TreeBag::nextPrefix() (for a prefix iteration).
+
+The bags themselves are stored as sets of integers: it is assumed that
+the nodes of *G* are numbered 0,1,2,..., and so the bags simply store
+the numbers of the nodes that they contain.
+
+This class also numbers its bags 0,1,...,size()-1 in a leaves-to-root,
+left-to-right manner:
+
+* for each non-root bag *b*, the parent of *b* will have a higher
+  index than *b*;
+
+* for each bag *b* with a next sibling, the next sibling of *b* will
+  have a higher index than *b*.
+
+This bag numbering may be useful if you wish to store auxiliary
+information alongside each bag in a separate array. You can access
+this numbering through the function TreeBag::index(). However, note
+that TreeDecomposition does *not* store its bags in an array, and so
+the "random access" function bag() is slow, with worst-case linear
+time.
+
+There are two broad classes of algorithms for building tree
+decompositions: (i) *exact* algorithms, which are slow but guarantee
+to find a tree decomposition of the smallest possible width; and (ii)
+*greedy* algorithms, which are fast and which aim to keep the width
+small but which do not promise minimality. Currently Regina only
+offers greedy algorithms, though this may change in a future release.
+See the TreeDecompositionAlg enumeration for a list of all algorithms
+that are currently available.
+
+Note that individual bags are allowed to be empty. Moreover, if the
+underlying graph *G* is empty then the tree decomposition may contain
+no bags at all.
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.)doc";
+
 // Docstring regina::python::doc::TreeDecompositionAlg
 static const char *TreeDecompositionAlg =
 R"doc(Indicates which algorithm should be used to compute a tree
