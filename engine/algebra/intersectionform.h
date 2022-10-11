@@ -214,7 +214,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to write to.
          */
@@ -224,7 +224,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to write to.
          */

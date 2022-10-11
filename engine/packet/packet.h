@@ -1432,8 +1432,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre The given stream is open for writing.
          * \pre The given packet does not depend on its parent.
          *
-         * \ifacespython Not present, to avoid confusion with the
-         * filename-based save().  However, if you wish to write a Regina
+         * \nopython This is not available in Python to avoid confusion with
+         * the filename-based save().  However, if you wish to write a Regina
          * XML data file directly to an open Python file, you can still use
          * writeXMLFile() for this.
          *
@@ -1893,7 +1893,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This must be reimplemented by subclasses.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1905,7 +1905,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This may be reimplemented by subclasses, but the parent
          * Packet class offers a reasonable default implementation.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -2425,9 +2425,8 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython Not present, since this routine is too heavily templated
- * for Python.  Instead you can just directly call the constructor
- * <tt>PacketOfHeld(args...)</tt>.
+ * \nopython This routine is too heavily templated for Python.  Instead you
+ * can just directly call the constructor <tt>PacketOfHeld(args...)</tt>.
  *
  * @param args the arguments to be forwarded to the appropriate
  * \a Held constructor.
@@ -2454,9 +2453,8 @@ std::shared_ptr<PacketOf<Held>> make_packet(std::in_place_t, Args&&... args) {
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython Not present, since this routine is too heavily templated
- * for Python.  Instead you can just directly call the constructor
- * <tt>PacketOfHeld()</tt>.
+ * \nopython This routine is too heavily templated for Python.  Instead you
+ * can just directly call the constructor <tt>PacketOfHeld()</tt>.
  *
  * @return the new wrapped packet.
  *
@@ -2483,7 +2481,7 @@ std::shared_ptr<PacketOf<Held>> make_packet() {
  * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
- * \ifacespython Not present, since casting is unnecessary in Python.
+ * \nopython Casting is unnecessary in Python.
  *
  * @param p a reference, presented as a packet.
  * @return the same reference, presented using the type \a Held.
@@ -2511,7 +2509,7 @@ Held& static_packet_cast(Packet& p) {
  * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
- * \ifacespython Not present, since casting is unnecessary in Python.
+ * \nopython Casting is unnecessary in Python.
  *
  * @param p a reference, presented as a packet.
  * @return the same reference, presented using the type \a Held.
@@ -2564,8 +2562,7 @@ std::shared_ptr<Packet> open(const char* filename);
  *
  * \pre The given stream is open for reading.
  *
- * \ifacespython Not present; instead you can use the variant of open() that
- * takes a filename.
+ * \nopython Instead you can use the variant of open() that takes a filename.
  *
  * @param in the input stream to read from.
  * @return the packet tree read from file, or \c null on error.
@@ -2623,22 +2620,22 @@ class ChildIterator {
         /**
          * Creates a past-the-end iterator.
          *
-         * \ifacespython Not present.  The only way to create a ChildIterator
-         * is via Packet::children().
+         * \nopython The only way to create a ChildIterator is via
+         * Packet::children().
          */
         ChildIterator() = default;
         /**
          * Default copy constructor.
          *
-         * \ifacespython Not present.  The only way to create a ChildIterator
-         * is via Packet::children().
+         * \nopython The only way to create a ChildIterator is via
+         * Packet::children().
          */
         ChildIterator(const ChildIterator&) = default;
         /**
          * Creates a new iterator pointing to the given child packet.
          *
-         * \ifacespython Not present.  The only way to create a ChildIterator
-         * is via Packet::children().
+         * \nopython The only way to create a ChildIterator is via
+         * Packet::children().
          *
          * @param current the child packet that the new iterator should
          * point to, or \c null if the new iterator should be past-the-end.
@@ -2765,16 +2762,16 @@ class SubtreeIterator {
         /**
          * Creates a past-the-end iterator.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          */
         SubtreeIterator() = default;
         /**
          * Default copy constructor.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          */
         SubtreeIterator(const SubtreeIterator&) = default;
@@ -2783,8 +2780,8 @@ class SubtreeIterator {
          * the given subtree.  Dereferencing this iterator will return
          * \a subtree itself.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          *
          * @param subtree the packet subtree that we are iterating through.
@@ -2796,8 +2793,8 @@ class SubtreeIterator {
          * Creates a new iterator pointing to the given packet within
          * the given subtree.
          *
-         * \ifacespython Not present.  The only way to create a SubtreeIterator
-         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * \nopython The only way to create a SubtreeIterator is via
+         * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          *
          * @param subtree the packet subtree that we are iterating through.
@@ -2947,14 +2944,16 @@ class PacketChildren {
         /**
          * Default copy constructor.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketChildren object is via
+         * Packet::children().
          */
         PacketChildren(const PacketChildren&) = default;
         /**
          * Creates a new object for iterating through the immediate
          * children of the given packet.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketChildren object is via
+         * Packet::children().
          *
          * @param parent the packet whose children we will iterate through.
          */
@@ -2963,7 +2962,7 @@ class PacketChildren {
         /**
          * Default copy assignment operator.
          *
-         * \ifacespython Not present.
+         * \nopython
          */
         PacketChildren& operator = (const PacketChildren&) = default;
 
@@ -3065,14 +3064,16 @@ class PacketDescendants {
         /**
          * Default copy constructor.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketDescendants object is via
+         * Packet::descendants().
          */
         PacketDescendants(const PacketDescendants&) = default;
         /**
          * Creates a new object for iterating through the strict descendants
          * of the given packet.
          *
-         * \ifacespython Not present.
+         * \nopython The only way to create a PacketDescendants object is via
+         * Packet::descendants().
          *
          * @param subtree the packet whose strict descendants we will iterate
          * through.
@@ -3082,7 +3083,7 @@ class PacketDescendants {
         /**
          * Default copy assignment operator.
          *
-         * \ifacespython Not present.
+         * \nopython
          */
         PacketDescendants& operator = (const PacketDescendants&) = default;
 
@@ -3666,7 +3667,7 @@ class PacketListener {
          * emphasise the fact that we are already well inside the packet
          * destructor when this is called.
          *
-         * \ifacespython Not present, since Python does not provide a mechanism
+         * \nopython This is because Python does not provide a mechanism
          * such as \c final to prevent subclasses from overriding a function.
          */
         virtual void packetToBeDestroyed(PacketShell) final {};

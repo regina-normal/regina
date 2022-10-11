@@ -81,8 +81,8 @@ class Attachment : public Packet {
          * Describes how an attachment packet should claim ownership of a block
          * of binary data.
          *
-         * \ifacespython Not present, since for Python users, blocks are
-         * always copied (i.e., the ownership policy is always DEEP_COPY).
+         * \nopython For Python users, blocks are always copied (i.e., the
+         * ownership policy is always DEEP_COPY).
          */
         enum OwnershipPolicy {
             /**
