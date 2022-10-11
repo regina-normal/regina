@@ -90,6 +90,7 @@ CPP_OPERATORS = OrderedDict(
 errors_detected = False
 docstring_width = int(70)
 
+printed = []
 
 class NoFilenamesError(ValueError):
     pass
@@ -338,24 +339,21 @@ def extract(filename, node, namespace, output):
                 node.spelling in CLASS_WHITELIST):
         sub_namespace = namespace
         if len(node.spelling) > 0:
+            # We are seeing functions with inline definitions and/or
+            # forward declarations appear multiple times in the output.
+            # Try to ensure that their docstrings are listed only once.
+            if node.canonical in printed:
+                return
+            if node.lexical_parent != node.semantic_parent and \
+                    node != node.canonical:
+                return
+
             name = sanitize_name(d(node.spelling))
 
             fullname = 'regina::'
             if namespace:
                 fullname = fullname + namespace + '::'
             fullname += name
-
-            # if node.lexical_parent != node.semantic_parent:
-            if node != node.canonical and \
-                    node.kind != CursorKind.CLASS_TEMPLATE:
-                # We are seeing functions with inline definitions and/or
-                # forward declarations appear multiple times in the output.
-                # Try to ensure that their docstrings are listed only once.
-                #
-                # Try not to be fooled by friend declarations, however
-                # (which often claim the canonical role).
-                if node.canonical.get_tokens().__next__().spelling != 'friend':
-                    return
 
             if node.raw_comment is None:
                 print('    Undocumented:', fullname, '-- skipping')
@@ -371,6 +369,7 @@ def extract(filename, node, namespace, output):
             comment = d(node.raw_comment)
             comment = process_comment(comment)
             output.append((sub_namespace, name, filename, comment))
+            printed.append(node.canonical)
 
 
 def read_args(args):

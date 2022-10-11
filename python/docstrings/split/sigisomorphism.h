@@ -11,6 +11,31 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::SigPartialIsomorphism
+static const char *SigPartialIsomorphism =
+R"doc(Represents a partial isomorphism between two splitting surface
+signatures. See class Signature for details on splitting surface
+signatures.
+
+The two signatures related by this partial isomorphism must have the
+same cycle structure, i.e., the same number of cycle groups and the
+same cycle length and number of cycles within each cycle group.
+
+The partial isomorphism maps symbols to symbols and cycles to cycles,
+with the option of rotating some cycles and/or reversing all cycles in
+the process. Cycles within the *k*th cycle group of the source
+signature must map to cycles within the *k*th cycle group of the
+destination signature.
+
+A *partial* isomorphism is only required to map the cycles and symbols
+found in the first *g* cycle groups of the source isomorphism (for
+some *g*). If only a subset of symbols are mapped, that subset must be
+symbols 0,1,...,*k* for some *k*.
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.)doc";
+
 // Docstring regina::python::doc::swap
 static const char *swap =
 R"doc(Swaps the contents of the given partial isomorphisms.
