@@ -803,8 +803,17 @@ choose the root of the tree arbitrarily.
 
 An example of this text format is as follows:
 
-\verbatim c A tree decomposition with 4 bags and width 2 s td 4 3 5 b
-1 1 2 3 b 2 2 3 4 b 3 3 4 5 b 4 1 2 2 3 2 4 \endverbatim
+```
+c A tree decomposition with 4 bags and width 2
+s td 4 3 5
+b 1 1 2 3
+b 2 2 3 4
+b 3 3 4 5
+b 4
+1 2
+2 3
+2 4
+```
 
 There are two variants of this routine. This variant contains a single
 string containing the entire text representation. The other variant
