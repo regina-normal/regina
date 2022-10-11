@@ -51,6 +51,7 @@ namespace regina::python::doc::common {
     const char* ListView = regina::python::doc::ListView;
     const char* ListView_ListView = regina::python::doc::ListView_::ListView;
     const char* ListView_array = regina::python::doc::ListView_::__array;
+    const char* ListView_iter = regina::python::doc::ListView_::__iter__;
     const char* ListView_empty = regina::python::doc::ListView_::empty;
     const char* ListView_size = regina::python::doc::ListView_::size;
     const char* ListView_front = regina::python::doc::ListView_::front;
@@ -144,8 +145,6 @@ use Packet.samePacket() instead.)doc";
 R"doc(Disabled in Regina.
 
 Objects of this type cannot be created, and so cannot be compared.)doc";
-
-    const char* iter = "Implements the Python iterable interface.";
 }
 
 void addGlobalArray(pybind11::module_& m);

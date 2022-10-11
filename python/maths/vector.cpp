@@ -64,7 +64,7 @@ void addVectorOf(pybind11::module_& m, const char* className) {
         .def("__iter__", [](const Vec& list) {
             return pybind11::make_iterator(list);
         }, pybind11::keep_alive<0, 1>(), // iterator keeps vector alive
-            global::common::iter)
+            rdoc::__iter__)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= T(), rdoc::__imul)

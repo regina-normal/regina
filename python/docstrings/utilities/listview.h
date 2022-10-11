@@ -95,6 +95,13 @@ Returns:
     ``True`` if and only if this and the given list use the same
     underlying container.)doc";
 
+// Docstring regina::python::doc::ListView_::__iter__
+static const char *__iter__ =
+R"doc(Returns a Python iterator over the elements of this list.
+
+Returns:
+    an iterator over the elements of this list.)doc";
+
 // Docstring regina::python::doc::ListView_::__ne
 static const char *__ne =
 R"doc(Determines whether this and the given list view are accessing

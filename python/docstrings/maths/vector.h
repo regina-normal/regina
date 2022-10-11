@@ -242,6 +242,13 @@ Parameter ``other``:
 Returns:
     a reference to this vector.)doc";
 
+// Docstring regina::python::doc::Vector_::__iter__
+static const char *__iter__ =
+R"doc(Returns a Python iterator over the elements of this vector.
+
+Returns:
+    an iterator over the elements of this list.)doc";
+
 // Docstring regina::python::doc::Vector_::__mul
 static const char *__mul =
 R"doc(Multiplies this vector by the given scalar, and returns the result.
