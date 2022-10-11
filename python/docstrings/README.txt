@@ -16,8 +16,18 @@ meant to form part of Regina's usual build process.  To regenerate all
 docstrings, run ./gendoc.sh.  To regenerate only some of the docstrings,
 you can pass ./gendoc.sh an optional list of engine subdirectories.
 
-The headers define *many* static const strings. Ideally, each header should
-only be included by _one_ of the compiled binding sources (*.cpp).
+Most of the headers define *many* static const strings. Therefore:
+
+- Normally, each header should only be included by _one_ of the compiled
+  binding sources (*.cpp).
+
+- The exception is those headers that use inline constexpr strings, which
+  can happily be included many times. These are whitelisted in the conversion
+  tool (see INLINE_FILES near the top of pybind11_mkdoc/mkdoc_lib.py).
+  You should *not* whitelist a header that will produce symbols that will
+  be used again elsewhere (e.g., the Perm<n> docstrings, all of which define
+  different variants of Perm and Perm_ corresponding to different template
+  specialisations).
 
 ----------------------------------------------------------------------------
 
