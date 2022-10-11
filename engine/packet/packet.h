@@ -922,6 +922,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This routine takes time proportional to the number of steps.
          *
          * \pre The given number of steps is strictly positive.
+         *
+         * @param steps the number of steps up to move.
          */
         void moveUp(unsigned steps = 1);
 
@@ -934,6 +936,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This routine takes time proportional to the number of steps.
          *
          * \pre The given number of steps is strictly positive.
+         *
+         * @param steps the number of steps down to move.
          */
         void moveDown(unsigned steps = 1);
 
@@ -2890,7 +2894,7 @@ class SubtreeIterator {
         /**
          * Tests whether this and the given iterator are equal.
          *
-         * \note This routine only compares the packets that each iterator
+         * This routine only compares the packets that each iterator
          * is currently pointing to.  It does not compare the roots of the
          * subtrees themselves.
          *
@@ -2900,7 +2904,7 @@ class SubtreeIterator {
         /**
          * Tests whether this and the given iterator are different.
          *
-         * \note This routine only compares the packets that each iterator
+         * This routine only compares the packets that each iterator
          * is currently pointing to.  It does not compare the roots of the
          * subtrees themselves.
          *
@@ -3077,14 +3081,14 @@ class PacketChildren {
         ChildIterator<const_> end() const;
 #ifdef __APIDOCS
         /**
-         * Returns a Python iterator over all strict descendant packets.
+         * Returns a Python iterator over all immediate child packets.
          *
-         * \nocpp For C++ users, PacketDescendants provides the usual
+         * \nocpp For C++ users, PacketChildren provides the usual
          * begin() and end() functions instead.  In particular, this
-         * allows you to iterate through all strict descendant packets
+         * allows you to iterate through all immediate child packets
          * in the usual way using a range-based \c for loop.
          *
-         * @return an iterator over all strict descendant packets.
+         * @return an iterator over all immediate child packets.
          */
         auto __iter__() const;
 #endif
