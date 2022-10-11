@@ -2558,6 +2558,24 @@
 		05098AB228F44AF2005E4716 /* packet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = packet.h; sourceTree = "<group>"; };
 		05098AB328F452C6005E4716 /* vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector.cpp; sourceTree = "<group>"; };
 		05098AB628F4C4CF005E4716 /* matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
+		05098AB928F62200005E4716 /* flags.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = flags.h; sourceTree = "<group>"; };
+		05098ABB28F6220D005E4716 /* homgrouppresentation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = homgrouppresentation.h; sourceTree = "<group>"; };
+		05098ABC28F6220D005E4716 /* markedabeliangroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = markedabeliangroup.h; sourceTree = "<group>"; };
+		05098ABD28F6220D005E4716 /* abeliangroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = abeliangroup.h; sourceTree = "<group>"; };
+		05098ABE28F6220D005E4716 /* grouppresentation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = grouppresentation.h; sourceTree = "<group>"; };
+		05098ABF28F6220D005E4716 /* intersectionform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = intersectionform.h; sourceTree = "<group>"; };
+		05098AC128F62233005E4716 /* treedecomposition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = treedecomposition.h; sourceTree = "<group>"; };
+		05098AC328F62234005E4716 /* isosig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isosig.h; sourceTree = "<group>"; };
+		05098AC428F62234005E4716 /* orb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = orb.h; sourceTree = "<group>"; };
+		05098AC528F62234005E4716 /* dehydration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dehydration.h; sourceTree = "<group>"; };
+		05098AC728F62234005E4716 /* signature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = signature.h; sourceTree = "<group>"; };
+		05098AC828F62234005E4716 /* sigcensus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sigcensus.h; sourceTree = "<group>"; };
+		05098AC928F62234005E4716 /* sigisomorphism.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sigisomorphism.h; sourceTree = "<group>"; };
+		05098ACA28F62271005E4716 /* container.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = container.h; sourceTree = "<group>"; };
+		05098ACB28F62271005E4716 /* attachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = attachment.h; sourceTree = "<group>"; };
+		05098ACC28F62271005E4716 /* script.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = script.h; sourceTree = "<group>"; };
+		05098ACD28F62271005E4716 /* packettype.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
+		05098ACE28F62272005E4716 /* text.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -4945,9 +4963,11 @@
 		05098A6B28F24D98005E4716 /* docstrings */ = {
 			isa = PBXGroup;
 			children = (
+				05098ABA28F6220D005E4716 /* algebra */,
 				05098A7428F24D98005E4716 /* checknames.py */,
 				05098A7028F24D98005E4716 /* core */,
 				05098A7728F24D98005E4716 /* file */,
+				05098AC228F62234005E4716 /* foreign */,
 				05098A9728F24D98005E4716 /* gendoc.sh */,
 				05098A8F28F24D98005E4716 /* maths */,
 				05098AB128F44AF2005E4716 /* packet */,
@@ -4955,6 +4975,8 @@
 				05098A6C28F24D98005E4716 /* pybind11_mkdoc */,
 				05098A7B28F24D98005E4716 /* python */,
 				05098A9628F24D98005E4716 /* README.txt */,
+				05098AC628F62234005E4716 /* split */,
+				05098AC028F62233005E4716 /* treewidth */,
 				05098A7E28F24D98005E4716 /* utilities */,
 			);
 			path = docstrings;
@@ -5014,6 +5036,7 @@
 				05098A8528F24D98005E4716 /* bitmask.h */,
 				05098A8328F24D98005E4716 /* boolset.h */,
 				05098A8B28F24D98005E4716 /* exception.h */,
+				05098AB928F62200005E4716 /* flags.h */,
 				05098A8A28F24D98005E4716 /* i18nutils.h */,
 				05098A8028F24D98005E4716 /* intutils.h */,
 				05098AB028F44ADD005E4716 /* listview.h */,
@@ -5061,9 +5084,54 @@
 		05098AB128F44AF2005E4716 /* packet */ = {
 			isa = PBXGroup;
 			children = (
+				05098ACB28F62271005E4716 /* attachment.h */,
+				05098ACA28F62271005E4716 /* container.h */,
 				05098AB228F44AF2005E4716 /* packet.h */,
+				05098ACD28F62271005E4716 /* packettype.h */,
+				05098ACC28F62271005E4716 /* script.h */,
+				05098ACE28F62272005E4716 /* text.h */,
 			);
 			path = packet;
+			sourceTree = "<group>";
+		};
+		05098ABA28F6220D005E4716 /* algebra */ = {
+			isa = PBXGroup;
+			children = (
+				05098ABD28F6220D005E4716 /* abeliangroup.h */,
+				05098ABE28F6220D005E4716 /* grouppresentation.h */,
+				05098ABB28F6220D005E4716 /* homgrouppresentation.h */,
+				05098ABF28F6220D005E4716 /* intersectionform.h */,
+				05098ABC28F6220D005E4716 /* markedabeliangroup.h */,
+			);
+			path = algebra;
+			sourceTree = "<group>";
+		};
+		05098AC028F62233005E4716 /* treewidth */ = {
+			isa = PBXGroup;
+			children = (
+				05098AC128F62233005E4716 /* treedecomposition.h */,
+			);
+			path = treewidth;
+			sourceTree = "<group>";
+		};
+		05098AC228F62234005E4716 /* foreign */ = {
+			isa = PBXGroup;
+			children = (
+				05098AC528F62234005E4716 /* dehydration.h */,
+				05098AC328F62234005E4716 /* isosig.h */,
+				05098AC428F62234005E4716 /* orb.h */,
+			);
+			path = foreign;
+			sourceTree = "<group>";
+		};
+		05098AC628F62234005E4716 /* split */ = {
+			isa = PBXGroup;
+			children = (
+				05098AC828F62234005E4716 /* sigcensus.h */,
+				05098AC928F62234005E4716 /* sigisomorphism.h */,
+				05098AC728F62234005E4716 /* signature.h */,
+			);
+			path = split;
 			sourceTree = "<group>";
 		};
 		050F5CDE1B9BAAAA00C1F681 /* python */ = {
