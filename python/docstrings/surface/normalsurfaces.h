@@ -381,6 +381,21 @@ Returns:
     ``True`` if both lists represent the same multiset of normal or
     almost normal surfaces, or ``False`` if not.)doc";
 
+// Docstring regina::python::doc::NormalSurfaces_::__iter__
+static const char *__iter__ =
+R"doc(Returns a Python iterator over the normal surfaces in this list.
+
+In Python, a normal surface list can be treated as an iterable object:
+
+```
+list = NormalSurfaces(...)
+for s in list:
+    ...
+```
+
+Returns:
+    an iterator over the normal surfaces in this list.)doc";
+
 // Docstring regina::python::doc::NormalSurfaces_::__ne
 static const char *__ne =
 R"doc(Determines whether this and the given list contain different sets of
@@ -451,34 +466,6 @@ coordinate system that was used for enumeration.
 Returns:
     ``True`` if and only if non-compact normal surfaces are supported.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::begin
-static const char *begin =
-R"doc(Returns an iterator at the beginning of this list of surfaces.
-
-The begin() and end() functions allow you to iterate through all
-surfaces in this list using C++11 range-based ``for`` loops:
-
-```
-NormalSurfaces list(...);
-for (const NormalSurface& s : list) { ... }
-```
-
-In Python, a normal surface list can be treated as an iterable object:
-
-```
-list = NormalSurfaces(...)
-for s in list:
-    ...
-```
-
-The type that is returned will be a lightweight iterator type,
-guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
-The precise C++ type of the iterator is subject to change, so C++
-users should use ``auto`` (just like this declaration does).
-
-Returns:
-    an iterator at the beginning of this list.)doc";
-
 // Docstring regina::python::doc::NormalSurfaces_::coords
 static const char *coords =
 R"doc(Returns the coordinate system that was originally used to enumerate
@@ -486,19 +473,6 @@ the surfaces in this list.
 
 Returns:
     the coordinate system used.)doc";
-
-// Docstring regina::python::doc::NormalSurfaces_::end
-static const char *end =
-R"doc(Returns an iterator beyond the end of this list of surfaces.
-
-In C++, the begin() and end() routines allow you to iterate through
-all surfaces in this list using C++11 range-based ``for`` loops. In
-Python, a normal surface list can be treated as an iterable object.
-
-See the begin() documentation for further details.
-
-Returns:
-    an iterator beyond the end of this list.)doc";
 
 // Docstring regina::python::doc::NormalSurfaces_::isEmbeddedOnly
 static const char *isEmbeddedOnly =

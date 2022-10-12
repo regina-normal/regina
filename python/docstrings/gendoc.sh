@@ -2,7 +2,7 @@
 set -e
 
 if [ "$#" = 0 ]; then
-  dirs="algebra angle core file foreign maths packet progress python split treewidth utilities"
+  dirs="algebra angle core file foreign hypersurface maths packet progress python split surface treewidth utilities"
 else
   dirs="$@"
 fi
