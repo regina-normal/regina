@@ -3,5 +3,8 @@ set -e
 
 # This filter adjusts the names of pybind11 local moduiles so that
 # they are independent of the C++ compiler that was used.
+#
+# Note that BSD sed does not support \+, which is why we use \{1,\} instead.
+# BSD sed also seems to have issues with \s and \S, so we avoid them too.
 
-sed -e 's#\(\s\)__pybind11_module_local_\(\S\+\) = <capsule.*\.\.\.#\1__pybind11_module_local__ = ...#'
+sed -e 's#\( \)__pybind11_module_local_\([a-zA-Z0-9_-]\{1,\}\) = <capsule.*\.\.\.#\1__pybind11_module_local__ = ...#'
