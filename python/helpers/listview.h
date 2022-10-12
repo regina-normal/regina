@@ -41,6 +41,21 @@
 
 namespace regina::python {
 
+namespace detail {
+    /**
+     * Casts the given C++ object to Python and writes its __repr__ to
+     * the given C++ output stream.
+     *
+     * For the moment this should only be used with objects where we
+     * know in advance that this process will succeed.
+     */
+    template <typename T>
+    void writeRepr(std::ostream& out, const T& obj) {
+        out << static_cast<std::string>(pybind11::str(
+            pybind11::cast(obj).attr("__repr__")()));
+    }
+}
+
 /**
  * Adds Python bindings for one of Regina's ListView classes, given the
  * class type.
@@ -94,13 +109,51 @@ void addListView(pybind11::module_& m) {
         }, pybind11::keep_alive<0, 1>(), // iterator keeps ListView alive
             doc::ListView_::__iter__)
         .def("__getitem__", [](const T& view, size_t index) {
+            if (index >= view.size())
+                throw pybind11::index_error("ListView index out of range");
             return view[index];
         }, Policy, doc::ListView_::__array)
         .def("empty", &T::empty, doc::ListView_::empty)
         .def("size", &T::size, doc::ListView_::size)
-        .def("front", &T::front, Policy, doc::ListView_::front)
-        .def("back", &T::back, Policy, doc::ListView_::back)
+        .def("front", [](const T& view) {
+            if (view.empty())
+                throw pybind11::index_error("List is empty");
+            return view.front();
+        }, Policy, doc::ListView_::front)
+        .def("back", [](const T& view) {
+            if (view.empty())
+                throw pybind11::index_error("List is empty");
+            return view.back();
+        }, Policy, doc::ListView_::back)
+        .def("__len__", &T::size)
         ;
+    regina::python::add_output_custom(c, [](const T& view, std::ostream& out) {
+        out << "[ ";
+        // For very small lists, output the entire list.
+        // For larger lists, do not output everything.
+        if (view.empty()) {
+            out << "[ ]";
+        } else if (view.size() <= 5) {
+            bool started = false;
+            for (const auto& i : view) {
+                if (started)
+                    out << ", ";
+                else
+                    started = true;
+                detail::writeRepr(out, i);
+            }
+            out << ' ';
+        } else {
+            for (int i = 0; i < 3; ++i) {
+                detail::writeRepr(out, view[i]);
+                out << ", ";
+            }
+            out << "..., ";
+            detail::writeRepr(out, view.back());
+            out << ' ';
+        }
+        out << ']';
+    });
     regina::python::add_eq_operators(c,
         doc::ListView_::__eq, doc::ListView_::__ne);
 }
