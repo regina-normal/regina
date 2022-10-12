@@ -1,6 +1,6 @@
 /*
   This file contains docstrings for use in the Python bindings.
-  Do not edit! They were automatically extracted by pybind11_mkdoc.
+  Do not edit! They were automatically extracted by ../gendoc.sh.
  */
 
 #if defined(__GNUG__)

@@ -1,12 +1,12 @@
-The pybind11_mkdoc directory contains a heavily modified version of
-pybind11_mkdoc.  The original was taken from:
+The file mkdoc.py contains a very heavily modified version of pybind11_mkdoc.
+The original was taken from:
 
   https://github.com/pybind/pybind11_mkdoc (commit eec43da56)
 
 The local modifications reorganise the way docstrings are stored and accessed,
 strip out a significant amount of unwanted noise (duplicates and/or methods
-that Regina does not bind in python), and better reflect Regina's use of
-doxygen tags.
+that Regina does not bind in python), understand a richer variety of Doxygen
+markup commands, and better reflect Regina's own custom Doxygen tags.
 
 This tool requires the python clang bindings (on debian/ubuntu, install the
 package python3-clang).
@@ -31,7 +31,7 @@ Most of the headers define *many* static const strings. Therefore:
 
 ----------------------------------------------------------------------------
 
-The upstream pybind11_mkdoc tool is distributed under the following license:
+The original pybind11_mkdoc tool is distributed under the following license:
 
   The MIT License (MIT)
 

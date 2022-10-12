@@ -42,16 +42,16 @@ for dir in $dirs; do
   fi
 
   if [ "$dir" = python ]; then
-    python3 -m pybind11_mkdoc -std=c++17 \
+    python3 ./mkdoc.py -std=c++17 \
       -o python/equality.h "../helpers/equality.h"
   else
     if [ "$dir" = core ]; then
-      python3 -m pybind11_mkdoc -std=c++17 \
+      python3 ./mkdoc.py -std=c++17 \
         -o core/regina-core.h "../../engine/regina-core.h"
     elif [ "$dir" = maths ]; then
       for i in ../../engine/"$dir"/spec/*.h; do
         header=`basename "$i"`
-        python3 -m pybind11_mkdoc -std=c++17 \
+        python3 ./mkdoc.py -std=c++17 \
           -o "$dir/$header" ../../engine/"$dir/spec/$header"
       done
     fi
@@ -66,7 +66,7 @@ for dir in $dirs; do
         utilities/typeutils.h ) ;;
         utilities/zstr.h ) ;;
         * )
-          python3 -m pybind11_mkdoc -std=c++17 \
+          python3 ./mkdoc.py -std=c++17 \
             -o "$dir/$header" ../../engine/"$dir/$header"
           ;;
       esac
