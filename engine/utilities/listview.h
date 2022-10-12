@@ -639,6 +639,9 @@ ListView(const Element*, const Element*) -> ListView<Element*>;
 
 template <typename Element>
 ListView(const Element*, size_t) -> ListView<Element*>;
+
+template <typename Element, int n>
+ListView(const Element (&)[n]) -> ListView<Element[n]>;
 #endif
 
 // Inline functions for ListView
