@@ -55,12 +55,12 @@
 
 namespace regina {
 
+class NormalSurfaces;
+
 /**
  * \defgroup surfaces Normal Surfaces
  * Normal surfaces in 3-manifold triangulations.
  */
-
-class NormalSurfaces;
 
 /**
  * Lists which quadrilateral types separate which pairs of vertices in a

@@ -224,10 +224,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
          *
-         * - \c a^7b^-2
-         * - \c aaaaaaaBB
-         * - \c a^7B^2
-         * - \c g0^7g1^-2
+         * - <tt>a^7b^-2</tt>
+         * - <tt>aaaaaaaBB</tt>
+         * - <tt>a^7B^2</tt>
+         * - <tt>g0^7g1^-2</tt>
          *
          * The string may contain whitespace, which will simply be ignored.
          *
@@ -241,10 +241,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
          *
-         * - \c a^7b^-2
-         * - \c aaaaaaaBB
-         * - \c a^7B^2
-         * - \c g0^7g1^-2
+         * - <tt>a^7b^-2</tt>
+         * - <tt>aaaaaaaBB</tt>
+         * - <tt>a^7B^2</tt>
+         * - <tt>g0^7g1^-2</tt>
          *
          * The string may contain whitespace, which will simply be ignored.
          *
@@ -1246,16 +1246,17 @@ class GroupPresentation : public Output<GroupPresentation> {
          * An entirely cosmetic re-writing of the presentation, which is
          * fast and superficial.
          *
-         *  1. If there are any length 1 relators, those generators are
-         *     deleted, and the remaining relators simplified.
-         *  2. It sorts the relators by number of generator indices that
-         *     appear, followed by relator numbers (lexico) followed by
-         *     relator length.
-         *  3. inverts relators if net sign of the generators is negative.
-         *  4. Given each generator, it looks for the smallest word where that
-         *     generator appears with non-zero weight.  If negative weight,
-         *     it inverts that generator.
-         *  5. It cyclically permutes relators to start with smallest gen.
+         * -# If there are any length 1 relators, those generators are
+         *    deleted, and the remaining relators simplified.
+         * -# It sorts the relators by number of generator indices that
+         *    appear, followed by relator numbers (lexico) followed by
+         *    relator length.
+         * -# It inverts relators if the net sign of the generators is
+              negative.
+         * -# Given each generator, it looks for the smallest word where that
+         *    generator appears with non-zero weight.  If negative weight,
+         *    it inverts that generator.
+         * -# It cyclically permutes relators to start with smallest gen.
          *
          * If this routine does return a homomorphism (because the choice of
          * generators was changed), then this homomorphsm will in fact be

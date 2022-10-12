@@ -206,6 +206,10 @@ def process_comment(comment):
     s = re.sub(r'[\\@]since\s?(.*?)\s?\n\n',
                r'.. versionadded:: \1\n\n', s, flags=re.DOTALL)
 
+    # Regina paragraphs that we need to translate and keep:
+    s = re.sub(r'\\apinotfinal\s?(.*?)\s?\n\n',
+        r'$.. warning::\n\n\The API for this class or function has not yet been finalised. This means that the interface may change in new versions of Regina, without maintaining backward compatibility. If you use this class directly in your own code, please check the detailed changelog with each new release to see if you need to make changes to your code.\n\n', s, flags=re.DOTALL)
+
     # HTML/TeX tags
     s = re.sub(r'<tt>(.*?)</tt>', r'``\1``', s, flags=re.DOTALL)
     s = re.sub(r'<pre>(.*?)</pre>', r"```\n\1\n```\n", s, flags=re.DOTALL)

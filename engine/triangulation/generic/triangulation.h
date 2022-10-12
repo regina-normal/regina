@@ -51,12 +51,12 @@
 #include <type_traits>
 #include "triangulation/detail/triangulation.h"
 
+namespace regina {
+
 /**
  * \defgroup generic Generic triangulations
  * Details for implementing triangulations in arbitrary dimensions.
  */
-
-namespace regina {
 
 /**
  * A <i>dim</i>-dimensional triangulation, built by gluing together

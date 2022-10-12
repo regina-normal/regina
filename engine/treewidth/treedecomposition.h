@@ -49,13 +49,13 @@
 
 namespace regina {
 
+class Link;
+class TreeBag;
+
 /**
  * \defgroup treewidth Treewidth
  * Treewidth and tree decompositions.
  */
-
-class Link;
-class TreeBag;
 
 /**
  * Indicates which algorithm should be used to compute a tree decomposition

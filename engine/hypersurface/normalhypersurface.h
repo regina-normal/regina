@@ -54,15 +54,15 @@
 
 namespace regina {
 
-/**
- * \defgroup hypersurface Normal Hypersurfaces
- * Normal hypersurfaces in 4-manifold triangulations.
- */
-
 class NormalHypersurfaces;
 
 template <typename, bool> class Matrix;
 using MatrixInt = Matrix<Integer, true>;
+
+/**
+ * \defgroup hypersurface Normal Hypersurfaces
+ * Normal hypersurfaces in 4-manifold triangulations.
+ */
 
 /**
  * Represents a single normal hypersurface in a 4-manifold triangulation.

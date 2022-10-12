@@ -62,11 +62,6 @@
 
 namespace regina {
 
-/**
- * \defgroup link Knots and Links
- * Knots and links in the 3-sphere
- */
-
 class Crossing;
 class Link;
 class ModelLinkGraph;
@@ -75,6 +70,11 @@ class Tangle;
 template <typename T> class Laurent;
 template <typename T> class Laurent2;
 template <int> class Triangulation;
+
+/**
+ * \defgroup link Knots and Links
+ * Knots and links in the 3-sphere
+ */
 
 /**
  * Indicates one of the standard framings of a knot or link.
