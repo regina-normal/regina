@@ -55,10 +55,6 @@
 
 // There are more includes at the end of this file.
 
-#ifdef __APIDOCS
-class FinitelyPresentedGroup; // Returned by GroupPresentation::sage().
-#endif
-
 namespace regina {
 
 class AbelianGroup;
@@ -1529,7 +1525,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          */
         std::string gap(const std::string& groupVariable = "g") const;
 
-#ifdef __APIDOCS
+#ifdef __DOXYGEN
         /**
          * A SageMath-only routine that returns a copy of this group
          * presentation in a format native to SageMath.
