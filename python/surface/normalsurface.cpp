@@ -49,17 +49,10 @@ using regina::python::GlobalArray3D;
 using regina::python::wrapListView;
 
 namespace {
-    const char* const quadString_1D[3] = {
-        regina::quadString[0],
-        regina::quadString[1],
-        regina::quadString[2]
-    };
-
     GlobalArray2D<int> quadSeparating_arr(regina::quadSeparating, 4);
     GlobalArray3D<int> quadMeeting_arr(regina::quadMeeting, 4);
     GlobalArray2D<int> quadDefn_arr(regina::quadDefn, 3);
     GlobalArray2D<int> quadPartner_arr(regina::quadPartner, 3);
-    GlobalArray<const char*> quadString_arr(quadString_1D, 3);
     GlobalArray2D<regina::Perm<4>> triDiscArcs_arr(regina::triDiscArcs, 4);
     GlobalArray2D<regina::Perm<4>> quadDiscArcs_arr(regina::quadDiscArcs, 3);
     GlobalArray2D<regina::Perm<4>> octDiscArcs_arr(regina::octDiscArcs, 3);
