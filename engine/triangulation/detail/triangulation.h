@@ -1055,11 +1055,11 @@ class TriangulationBase :
          * There are several conditions that might make a
          * <i>dim</i>-dimensional triangulation invalid:
          *
-         * 1. if some face is identified with itself under a non-identity
+         * -# if some face is identified with itself under a non-identity
          *    permutation (e.g., an edge is identified with itself in
          *    reverse, or a triangle is identified with itself under a
          *    rotation);
-         * 2. if some <i>subdim</i>-face does not have an appropriate link.
+         * -# if some <i>subdim</i>-face does not have an appropriate link.
          *    Here the meaning of "appropriate" depends upon the type of face:
          *    - for a face that belongs to some boundary facet(s) of this
          *      triangulation, its link must be a topological ball;

@@ -1248,7 +1248,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *    appear, followed by relator numbers (lexico) followed by
          *    relator length.
          * -# It inverts relators if the net sign of the generators is
-              negative.
+         *    negative.
          * -# Given each generator, it looks for the smallest word where that
          *    generator appears with non-zero weight.  If negative weight,
          *    it inverts that generator.

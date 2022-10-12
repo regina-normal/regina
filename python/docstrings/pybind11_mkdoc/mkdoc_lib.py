@@ -265,36 +265,59 @@ def process_comment(comment):
                 # optional list items.  (In particular, the list items can
                 # never be followed by additional plain text.)
                 #
-                # Note for later: when we get to detecting ordered lists,
-                # these should be rendered in the docstring as: #. <text>
+                # Note for later: doxygen supports also bullets of the
+                # form "1.", "2.", etc.  This will require a bit more work
+                # because we will need to override the automatic numbering.
                 list_indents = []
-                for z in re.split(r'(?:^|\n)(\s*[-+*]\s+)', y):
+                list_index = []
+                for z in re.split(r'(?:^|\n)(\s*(?:[-+*]|-#)\s+)', y):
                     # The list bullets, including their initial indents, will
                     # appear as separate pieces of the split we just performed.
                     if len(z) == 0:
                         continue
                     zstrip = z.lstrip()
+                    bullet = None
                     if len(zstrip) >= 2 and zstrip[:2] in [ '- ', '+ ', '* ' ]:
+                        bullet = 0 # unnumbered
+                    elif len(zstrip) >= 3 and zstrip[:3] == '-# ':
+                        bullet = 1 # numbered
+
+                    if bullet != None:
                         # This piece of the split is a bullet.
                         # Work out its indent and loop again to fetch
                         # the actual list item text.
                         indent = len(z) - len(zstrip)
                         if not list_indents:
                             list_indents = [ indent ]
+                            list_index = [ 1 if bullet == 1 else None ]
                         elif list_indents[-1] < indent:
                             list_indents.append(indent)
+                            list_index.append(1 if bullet == 1 else None)
                         else:
                             while list_indents and list_indents[-1] > indent:
                                 list_indents.pop()
+                            if list_index and (list_index[-1] != None):
+                                list_index[-1] += 1
                             # TODO: Maybe it would be polite to check here
                             # whether our reduced indent matches a
                             # previously-seen indent level.
+                            # TODO: We should also check when we repeat a
+                            # prior indent that our numbered/unnumbered state
+                            # matches.
                         continue
 
                     if list_indents:
-                        wrapper.initial_indent = '  ' * (len(list_indents) - 1)
-                        wrapper.subsequent_indent = '  ' * len(list_indents)
-                        z = '* ' + z
+                        wrapper.initial_indent = ' ' * sum( \
+                            (2 if i == None else 3) for i in list_index[:-1])
+                        wrapper.subsequent_indent = ' ' * sum( \
+                            (2 if i == None else 3) for i in list_index)
+                        # Sphinx wants us to render numbered lists with: #.
+                        # Here we will actually use real numbers.
+                        # For now we assume single-digit width.
+                        if list_index[-1] == None:
+                            z = '* ' + z
+                        else:
+                            z = str(list_index[-1]) + '. ' + z
 
                     wrapped = wrapper.fill(re.sub(r'\s+', ' ', z).strip())
 

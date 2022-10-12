@@ -1139,13 +1139,18 @@ R"doc(An entirely cosmetic re-writing of the presentation, which is fast and
 superficial.
 
 1. If there are any length 1 relators, those generators are deleted,
-and the remaining relators simplified. 2. It sorts the relators by
-number of generator indices that appear, followed by relator numbers
-(lexico) followed by relator length. 3. inverts relators if net sign
-of the generators is negative. 4. Given each generator, it looks for
-the smallest word where that generator appears with non-zero weight.
-If negative weight, it inverts that generator. 5. It cyclically
-permutes relators to start with smallest gen.
+   and the remaining relators simplified.
+
+2. It sorts the relators by number of generator indices that appear,
+   followed by relator numbers (lexico) followed by relator length.
+
+3. It inverts relators if the net sign of the generators is negative.
+
+4. Given each generator, it looks for the smallest word where that
+   generator appears with non-zero weight. If negative weight, it
+   inverts that generator.
+
+5. It cyclically permutes relators to start with smallest gen.
 
 If this routine does return a homomorphism (because the choice of
 generators was changed), then this homomorphsm will in fact be a

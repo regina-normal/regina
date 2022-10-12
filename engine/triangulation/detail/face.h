@@ -673,11 +673,11 @@ class FaceBase :
          * There are several conditions that might make a <i>subdim</i>-face
          * of a <i>dim</i>-dimensional triangulation invalid:
          *
-         * 1. if the face is identified with itself under a non-identity
+         * -# if the face is identified with itself under a non-identity
          *    permutation (e.g., an edge is identified with itself in
          *    reverse, or a triangle is identified with itself under a
          *    rotation);
-         * 2. if the face does not have an appropriate link.  Here the
+         * -# if the face does not have an appropriate link.  Here the
          *    meaning of "appropriate" depends upon the type of face:
          *    - for a face that belongs to some boundary facet(s) of the
          *      triangulation, its link must be a topological ball;
