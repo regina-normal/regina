@@ -185,13 +185,13 @@ static const char *GroupExpression_5 =
 R"doc(Attempts to interpret the given input string as a word in a group.
 Regina can recognise strings in the following four basic forms:
 
-* ``a``^7b^-2
+* ``a^7b^-2``
 
 * ``aaaaaaaBB``
 
-* ``a``^7B^2
+* ``a^7B^2``
 
-* ``g0``^7g1^-2
+* ``g0^7g1^-2``
 
 The string may contain whitespace, which will simply be ignored.
 
@@ -206,13 +206,13 @@ static const char *GroupExpression_6 =
 R"doc(Attempts to interpret the given input string as a word in a group.
 Regina can recognise strings in the following four basic forms:
 
-* ``a``^7b^-2
+* ``a^7b^-2``
 
 * ``aaaaaaaBB``
 
-* ``a``^7B^2
+* ``a^7B^2``
 
-* ``g0``^7g1^-2
+* ``g0^7g1^-2``
 
 The string may contain whitespace, which will simply be ignored.
 
@@ -833,7 +833,13 @@ This routine produces a constant stream of output (i.e., it calls
     their abelianisations then you are better off using the *abelian*
     group simplification / computation instead (which is much faster).
 
-\apinotfinal
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.
 
 Python:
     There are two versions of this function available in Python. The

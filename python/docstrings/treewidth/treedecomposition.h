@@ -14,9 +14,6 @@ namespace regina::python::doc {
 // Docstring regina::python::doc::BagComparison
 static const char *BagComparison = R"doc(Indicates the relationship between two bags in a tree decomposition.)doc";
 
-// Docstring regina::python::doc::Link
-static const char *Link = R"doc(\defgroup treewidth Treewidth Treewidth and tree decompositions.)doc";
-
 // Docstring regina::python::doc::NiceType
 static const char *NiceType =
 R"doc(Used to indicate the type of each bag in a *nice* tree decomposition.

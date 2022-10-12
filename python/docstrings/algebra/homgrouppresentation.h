@@ -33,7 +33,13 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.
 
-\apinotfinal)doc";
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.)doc";
 
 // Docstring regina::python::doc::swap
 static const char *swap =

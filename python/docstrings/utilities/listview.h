@@ -21,7 +21,8 @@ grant the user some basic read-only access to a much richer private
 data structure, in a way that allows the internal data structure to
 change at some later date without affecting the public API.
 
-The ListView class supports two different ways of representing a list:
+The ListView class supports several different ways of representing a
+list:
 
 * If your list is stored using a container class (e.g., std::vector or
   regina::MarkedVector), then you can create a ListView directly from
@@ -29,13 +30,19 @@ The ListView class supports two different ways of representing a list:
   the generic ListView<Container> class template. There is no need to
   explicitly specify the ListView template arguments.
 
-* If your list is stored using a C-style array, you can create a
-  ListView using either the syntax ``ListView(array, size)`` or
-  ``ListView(begin, end)``. Here *begin* and *end* are an iterator
-  pair (that is, ``begin == array`` and ``end == array + size``). This
-  syntax uses the specialised ListView<Element*> class template.
-  Again, there is no need to explicitly specify the ListView template
-  arguments.
+* If your list is stored using a C-style array whose size is not known
+  at compile-time, you can create a ListView using either the syntax
+  ``ListView(array, size)`` or ``ListView(begin, end)``. Here *begin*
+  and *end* are an iterator pair (that is, ``begin == array`` and
+  ``end == array + size``). This syntax uses the specialised
+  ListView<Element*> class template. Again, there is no need to
+  explicitly specify the ListView template arguments.
+
+* If your list is stored using a C-style array whose size is fixed at
+  compile-time (i.e., the type is ``Element[n]`` for some constant
+  *n*), you can create a ListView using the syntax
+  ``ListView(array)``. Once again, there is no need to explicitly
+  specify the ListView template arguments.
 
 End users should always store ListView objects using ``auto``, not by
 explicitly writing out the full ListView type. One reason for this is
