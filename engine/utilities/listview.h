@@ -53,7 +53,7 @@ namespace regina {
  * data structure, in a way that allows the internal data structure to
  * change at some later date without affecting the public API.
  *
- * The ListView class supports two different ways of representing a list:
+ * The ListView class supports several different ways of representing a list:
  *
  * - If your list is stored using a container class (e.g., std::vector or
  *   regina::MarkedVector), then you can create a ListView directly from the
@@ -61,12 +61,19 @@ namespace regina {
  *   This uses the generic ListView<Container> class template.
  *   There is no need to explicitly specify the ListView template arguments.
  *
- * - If your list is stored using a C-style array, you can create a ListView
- *   using either the syntax <tt>ListView(array, size)</tt> or
- *   <tt>ListView(begin, end)</tt>.  Here \a begin and \a end are an iterator
- *   pair (that is, <tt>begin == array</tt> and <tt>end == array + size</tt>).
- *   This syntax uses the specialised ListView<Element*> class template.  Again,
- *   there is no need to explicitly specify the ListView template arguments.
+ * - If your list is stored using a C-style array whose size is not known at
+ *   compile-time, you can create a ListView using either the syntax
+ *   <tt>ListView(array, size)</tt> or <tt>ListView(begin, end)</tt>.  Here
+ *   \a begin and \a end are an iterator pair (that is, <tt>begin == array</tt>
+ *   and <tt>end == array + size</tt>).  This syntax uses the specialised
+ *   ListView<Element*> class template.  Again, there is no need to explicitly
+ *   specify the ListView template arguments.
+ *
+ * - If your list is stored using a C-style array whose size is fixed at
+ *   compile-time (i.e., the type is <tt>Element[n]</tt> for some constant
+ *   \a n), you can create a ListView using the syntax <tt>ListView(array)</tt>.
+ *   Once again, there is no need to explicitly specify the ListView template
+ *   arguments.
  *
  * End users should always store ListView objects using \c auto, not by
  * explicitly writing out the full ListView type.  One reason for this
@@ -93,6 +100,10 @@ namespace regina {
  */
 template <class Container>
 class ListView {
+    static_assert(std::is_class_v<Container>,
+        "The generic ListView implementation should only be used for "
+        "container classes, such as std::vector or regina::MarkedVector.");
+
     private:
         const Container* list_;
             /**< The list that this object will access.  This is a pointer
@@ -271,7 +282,7 @@ class ListView {
 
 /**
  * A specialisation of ListView for working with lists stored in a C-style
- * array.
+ * array whose size is not known at compile-time.
  *
  * See the generic ListView class documentation for full details on how
  * this class works and how to use it.
@@ -451,6 +462,169 @@ class ListView<Element*> {
         bool operator != (const ListView& other) const;
 };
 
+/**
+ * A specialisation of ListView for working with lists stored in a C-style
+ * array whose size is fixed at compile-time.
+ *
+ * See the generic ListView class documentation for full details on how
+ * this class works and how to use it.
+ *
+ * \ifacespython As with the generic ListView template classes, Python will
+ * automatically translate any C++ ListView object into an internal lightweight
+ * class that supports both iteration and indexing at the Python level.
+ *
+ * \tparam Element the type of element stored in the C-style array.
+ *
+ * \ingroup utilities
+ */
+template <typename Element, int n>
+class ListView<Element[n]> {
+    private:
+        const Element* array_;
+            /**< A pointer to the beginning of the C-style array. */
+
+    public:
+        /**
+         * The type of element that is stored in this list.
+         */
+        using value_type = Element;
+
+        /**
+         * The type used for indexing into this list.
+         */
+        using size_type = size_t;
+
+        /**
+         * A reference to a list element.
+         *
+         * Both \a reference and \a const_reference are the same, since
+         * this class only offers read-only access to the underlying list.
+         */
+        using reference = const Element&;
+
+        /**
+         * A reference to a list element.
+         *
+         * Both \a reference and \a const_reference are the same, since
+         * this class only offers read-only access to the underlying list.
+         */
+        using const_reference = const Element&;
+
+        /**
+         * The iterator type for this list view.
+         *
+         * Both \a iterator and \a const_iterator are the same, since
+         * this class only offers read-only access to the underlying list.
+         */
+        using iterator = const Element*;
+
+        /**
+         * The iterator type for this list view.
+         *
+         * Both \a iterator and \a const_iterator are the same, since
+         * this class only offers read-only access to the underlying list.
+         */
+        using const_iterator = const Element*;
+
+    public:
+        /**
+         * Returns a view for the given C-style array.
+         *
+         * Internally, this object will store a pointer to the array, which
+         * means the array needs to exist for at least as long as this object.
+         *
+         * @param array the pointer to the C-style array.
+         */
+        ListView(const Element* array);
+        /**
+         * Creates a new copy of the given list view.
+         */
+        ListView(const ListView&) = default;
+        /**
+         * Sets this to be a copy of the given list view.
+         *
+         * @return a reference to this list view.
+         */
+        ListView& operator = (const ListView&) = default;
+
+        /**
+         * Determines if this list is empty.
+         *
+         * @return \c true if and only if this list is empty.
+         */
+        bool empty() const;
+        /**
+         * Returns the number of elements in this list.
+         *
+         * @return the number of elements.
+         */
+        size_type size() const;
+        /**
+         * Returns the requested element of this list.
+         *
+         * @param index indicates which element to return; this must be
+         * between 0 and size()-1 inclusive.
+         * @return the (\a index)th element in this list.
+         */
+        const_reference operator [](size_type index) const;
+        /**
+         * Returns the first element of this list.
+         *
+         * \pre This list is not empty.
+         *
+         * @return the first element in this list.
+         */
+        const_reference front() const;
+        /**
+         * Returns the last element of this list.
+         *
+         * \pre This list is not empty.
+         *
+         * @return the last element in this list.
+         */
+        const_reference back() const;
+        /**
+         * Returns an iterator pointing to the first element.
+         *
+         * @return an iterator at the beginning of this list.
+         */
+        const_iterator begin() const;
+        /**
+         * Returns an iterator pointing beyond the last element.
+         *
+         * @return an iterator beyond the end of this list.
+         */
+        const_iterator end() const;
+        /**
+         * Determines whether this and the given list view are accessing
+         * the same underlying C-style array.
+         *
+         * To be considered the same array, the two arrays must have the same
+         * location in memory (i.e., the pointers that define the C-style arrays
+         * must be equal).  In particular, it is not enough for the two arrays
+         * just to have identical contents.
+         *
+         * @param other the list view to compare with this.
+         * @return \c true if and only if this and the given list use
+         * the same underlying array.
+         */
+        bool operator == (const ListView& other) const;
+        /**
+         * Determines whether this and the given list view are accessing
+         * different underlying C-style arrays.
+         *
+         * To be considered the same array, the two arrays must have the same
+         * location in memory (i.e., the pointers that define the C-style arrays
+         * must be equal).  In particular, it is not enough for the two arrays
+         * just to have identical contents.
+         *
+         * @param other the list view to compare with this.
+         * @return \c true if and only if this and the given list use
+         * different underlying arrays.
+         */
+        bool operator != (const ListView& other) const;
+};
+
 // Deduction guides (hide these from Doxygen, which cannot handle them):
 
 #ifndef __DOXYGEN
@@ -582,6 +756,61 @@ inline bool ListView<Element*>::operator == (const ListView& other) const {
 template <class Element>
 inline bool ListView<Element*>::operator != (const ListView& other) const {
     return (begin_ != other.begin_ || end_ != other.end_);
+}
+
+template <class Element, int n>
+inline ListView<Element[n]>::ListView(const Element* array) : array_(array) {
+}
+
+template <class Element, int n>
+inline bool ListView<Element[n]>::empty() const {
+    return (n == 0);
+}
+
+template <class Element, int n>
+inline typename ListView<Element[n]>::size_type ListView<Element[n]>::size()
+        const {
+    return n;
+}
+
+template <class Element, int n>
+inline typename ListView<Element[n]>::const_reference ListView<Element[n]>::
+        operator [](size_type index) const {
+    return array_[index];
+}
+
+template <class Element, int n>
+inline typename ListView<Element[n]>::const_reference ListView<Element[n]>::
+        front() const {
+    return *array_;
+}
+
+template <class Element, int n>
+inline typename ListView<Element[n]>::const_reference ListView<Element[n]>::
+        back() const {
+    return *(array_ + n - 1);
+}
+
+template <class Element, int n>
+inline typename ListView<Element[n]>::const_iterator ListView<Element[n]>::
+        begin() const {
+    return array_;
+}
+
+template <class Element, int n>
+inline typename ListView<Element[n]>::const_iterator ListView<Element[n]>::end()
+        const {
+    return array_ + n;
+}
+
+template <class Element, int n>
+inline bool ListView<Element[n]>::operator == (const ListView& other) const {
+    return (array_ == other.array_);
+}
+
+template <class Element, int n>
+inline bool ListView<Element[n]>::operator != (const ListView& other) const {
+    return (array_ != other.array_);
 }
 
 } // namespace regina

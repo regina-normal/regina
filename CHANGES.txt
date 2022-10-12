@@ -12,6 +12,8 @@ Version 7.2  [ (to be determined) ]
     ENGINE:
         Class ListView<...>:
             - Added equality operators (== and !=).
+            - Added a specialisation for fixed-size C-style arrays:
+              ListView<Element[n]>.
     PYTHON:
         - Updated the included pybind11 library from 2.8.1 to 2.10.0.
           This means we can now support Python 3.11, but no longer support

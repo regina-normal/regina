@@ -37,17 +37,21 @@
 
 #include "utilities/listview.h"
 #include "../docstrings/utilities/listview.h"
+#include <cxxabi.h>
 
 namespace regina::python {
 
 /**
- * Adds Python bindings for one of Regina's ListView classes.
+ * Adds Python bindings for one of Regina's ListView classes, given the
+ * class type.
  *
- * The type \a T must be of the form regina::ListView<T>.
+ * The type \a T must be of the form regina::ListView<...>, and must be
+ * explicitly specified in the template arguments for addListView().
  *
- * Typically you would not write out the full type explicitly (since this is
- * an implementation detail that may change in future versions of Regina);
- * instead you would access the type using an appropriate decltype() statement.
+ * Typically you would not write out the full ListView type explicitly (since
+ * this is an implementation detail that may change in future versions of
+ * Regina); instead you would access the type using an appropriate decltype()
+ * statement.
  *
  * The Python class corresponding to \a T will not be given a unique name;
  * instead all such types will be called \c ListView, and will be put into
@@ -99,6 +103,31 @@ void addListView(pybind11::module_& m) {
         ;
     regina::python::add_eq_operators(c,
         doc::ListView_::__eq, doc::ListView_::__ne);
+}
+
+/**
+ * Adds Python bindings for one of Regina's ListView classes, given an
+ * object of that type.
+ *
+ * The type \a T must be of the form regina::ListView<T>.  Typically
+ * this type would be deduced automatically, and you would not need to
+ * supply any template arguments with this function call.
+ *
+ * This routine has the effect of (i) calling addListView<T>(m) to wrap the
+ * C++ class corresponding to \a view, and then (ii) returning \a view itself.
+ * This is simply a convenience that allows you to wrap a ListView class
+ * and set a class attribute or global constant, all in a single function call.
+ *
+ * The default return value policies supplied by addListView() will be used,
+ * and it is not possible to override them here.  See addListView() for
+ * further details.
+ */
+template <typename T>
+regina::ListView<T> wrapListView(pybind11::module_& m,
+        regina::ListView<T> view) {
+    addListView<regina::ListView<T>>(m);
+    // Remember: ListView is lightweight and cheap to pass by value.
+    return view;
 }
 
 } // namespace regina::python
