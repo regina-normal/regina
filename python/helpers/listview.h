@@ -36,6 +36,7 @@
  */
 
 #include "utilities/listview.h"
+#include "../docstrings/utilities/listview.h"
 
 namespace regina::python {
 
@@ -82,22 +83,22 @@ void addListView(pybind11::module_& m) {
     // and make them all local to their own unique Python namespaces.
     // End users should not be constructing them anyway.
     auto c = pybind11::class_<T>(pybind11::handle(), "ListView",
-            pybind11::module_local(), doc::common::ListView)
-        .def(pybind11::init<const T&>(), doc::common::ListView_ListView)
+            pybind11::module_local(), doc::ListView)
+        .def(pybind11::init<const T&>(), doc::ListView_::ListView)
         .def("__iter__", [](const T& view) {
             return pybind11::make_iterator<Policy>(view.begin(), view.end());
         }, pybind11::keep_alive<0, 1>(), // iterator keeps ListView alive
-            doc::common::ListView_iter)
+            doc::ListView_::__iter__)
         .def("__getitem__", [](const T& view, size_t index) {
             return view[index];
-        }, Policy, doc::common::ListView_array)
-        .def("empty", &T::empty, doc::common::ListView_empty)
-        .def("size", &T::size, doc::common::ListView_size)
-        .def("front", &T::front, Policy, doc::common::ListView_front)
-        .def("back", &T::back, Policy, doc::common::ListView_back)
+        }, Policy, doc::ListView_::__array)
+        .def("empty", &T::empty, doc::ListView_::empty)
+        .def("size", &T::size, doc::ListView_::size)
+        .def("front", &T::front, Policy, doc::ListView_::front)
+        .def("back", &T::back, Policy, doc::ListView_::back)
         ;
     regina::python::add_eq_operators(c,
-        doc::common::ListView_eq, doc::common::ListView_neq);
+        doc::ListView_::__eq, doc::ListView_::__ne);
 }
 
 } // namespace regina::python

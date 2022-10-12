@@ -155,15 +155,13 @@ See the main class Matrix2 for further details.)doc")
 "Tests whether this and the given row contain different integer entries.");
     regina::python::add_output_ostream(row);
 
-    RDOC_SCOPE_SWITCH_MAIN
-
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&>(
-        &regina::simpler), rdoc::simpler);
+        &regina::simpler), rdoc_global::simpler);
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&,
             const Matrix2&, const Matrix2&>(
-        &regina::simpler), rdoc::simpler_2);
+        &regina::simpler), rdoc_global::simpler_2);
 
-    regina::python::add_global_swap<Matrix2>(m, rdoc::swap);
+    regina::python::add_global_swap<Matrix2>(m, rdoc_global::swap);
 
     RDOC_SCOPE_END
 }

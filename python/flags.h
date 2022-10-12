@@ -48,9 +48,11 @@ namespace regina::python {
  * full-featured regina::Flags class type built upon it.
  *
  * The argument \c Enum should be a C++ enumeration type, and will be
- * given the Python enum name \a enumName.  The individual flag constants
- * should be passed in the list \a values: each pair is of the form
- * (\a python_name, \a real_value).
+ * given the Python enum name \a enumName and docstring \a enumDoc.
+ * The individual flag constants should be passed in the list \a values:
+ * each tuple is of the form (\a python_name, \a real_value, \a docstring).
+ * The extra string \a borDoc is the docstring that will be used for the
+ * bitwise OR of two individual flags.
  *
  * The corresponding flags class is assumed to be regina::Flags<Enum>,
  * and will be given the Python class name \a flagsName.
@@ -62,12 +64,17 @@ namespace regina::python {
 template <typename Enum, int hexWidth = 4>
 void add_flags(pybind11::module_& m,
         const char* enumName, const char* flagsName,
-        std::initializer_list<std::pair<const char*, Enum>> values) {
+        std::initializer_list<std::tuple<const char*, Enum, const char*>>
+            values,
+        const char* enumDoc, const char* borDoc) {
     using Flags = regina::Flags<Enum>;
 
-    auto e = pybind11::enum_<Enum>(m, enumName);
-    for (const auto& v : values)
-        e.value(v.first, v.second);
+    auto e = pybind11::enum_<Enum>(m, enumName, enumDoc);
+    for (const auto& v : values) {
+        // This should be a job for std::apply, except that e.value() is
+        // a non-static member function.
+        e.value(std::get<0>(v), std::get<1>(v), std::get<2>(v));
+    }
     e.export_values();
     e.def("__or__", [](const Enum& lhs, const Enum& rhs) {
         return Flags(lhs) | rhs;

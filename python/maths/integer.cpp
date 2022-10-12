@@ -156,11 +156,9 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
-    RDOC_SCOPE_SWITCH_MAIN
-
     m.def("tightEncoding", static_cast<std::string(&)(Int)>(
-        regina::tightEncoding), rdoc::tightEncoding);
-    regina::python::add_global_swap<Int>(m, rdoc::swap);
+        regina::tightEncoding), rdoc_global::tightEncoding);
+    regina::python::add_global_swap<Int>(m, rdoc_global::swap);
 
     RDOC_SCOPE_END
 

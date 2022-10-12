@@ -79,57 +79,77 @@ class SurfaceFilter;
  * \ingroup surfaces
  */
 enum SurfaceExportFields {
+    /**
+     * Represents the user-assigned surface name.
+     */
     surfaceExportName = 0x0001,
-        /**< Represents the user-assigned surface name. */
+    /**
+     * Represents the calculated Euler characteristic of a
+     * surface.  This will be an integer, and will be left empty
+     * if the Euler characteristic cannot be computed.
+     */
     surfaceExportEuler = 0x0002,
-        /**< Represents the calculated Euler characteristic of a
-             surface.  This will be an integer, and will be left empty
-             if the Euler characteristic cannot be computed. */
+    /**
+     * Represents the calculated property of whether a surface is
+     * orientable.  This will be the string \c TRUE or \c FALSE, or
+     * will be left empty if the orientability cannot be computed.
+     */
     surfaceExportOrient = 0x0004,
-        /**< Represents the calculated property of whether a surface is
-             orientable.  This will be the string \c TRUE or \c FALSE, or
-             will be left empty if the orientability cannot be computed. */
+    /**
+     * Represents the calculated property of whether a surface is
+     * one-sided or two-sided.  This will be the integer 1 or 2,
+     * or will be left empty if the "sidedness" cannot be computed.
+     */
     surfaceExportSides = 0x0008,
-        /**< Represents the calculated property of whether a surface is
-             one-sided or two-sided.  This will be the integer 1 or 2,
-             or will be left empty if the "sidedness" cannot be computed. */
+    /**
+     * Represents the calculated property of whether a surface is
+     * bounded.  In most cases, this will be one of the strings "closed",
+     * "real bdry" or "infinite" (where "infinite" indicates a
+     * surface with infinitely many discs).  For spun-normal
+     * surfaces in certain ideal triangulations, this string will
+     * be followed by the boundary slopes of the surface at the
+     * cusps: these written as a list of pairs (\a p, \a q),
+     * one for each cusp, indicating that the boundary curves of
+     * the surface run \a p times around the meridian and \a q times
+     * around the longitude.  See NormalSurface::boundaryIntersections()
+     * for further information on interpreting these values.
+     */
     surfaceExportBdry = 0x0010,
-        /**< Represents the calculated property of whether a surface is
-             bounded.  In most cases, this will be one of the strings "closed",
-             "real bdry" or "infinite" (where "infinite" indicates a
-             surface with infinitely many discs).  For spun-normal
-             surfaces in certain ideal triangulations, this string will
-             be followed by the boundary slopes of the surface at the
-             cusps: these written as a list of pairs (\a p, \a q),
-             one for each cusp, indicating that the boundary curves of
-             the surface run \a p times around the meridian and \a q times
-             around the longitude.  See NormalSurface::boundaryIntersections()
-             for further information on interpreting these values. */
+    /**
+     * Represents whether a surface is a single vertex link or a
+     * thin edge link.  See NormalSurface::isVertexLink() and
+     * NormalSurface::isThinEdgeLink() for details.  This will be
+     * written as a human-readable string.
+     */
     surfaceExportLink = 0x0020,
-        /**< Represents whether a surface is a single vertex link or a
-             thin edge link.  See NormalSurface::isVertexLink() and
-             NormalSurface::isThinEdgeLink() for details.  This will be
-             written as a human-readable string. */
+    /**
+     * Represents any additional high-level properties of a
+     * surface, such as whether it is a splitting surface or a
+     * central surface.  This will be written as a human-readable
+     * string.  This field is somewhat arbitrary, and the precise
+     * properties it describes are subject to change in future
+     * releases of Regina.
+     */
     surfaceExportType = 0x0040,
-        /**< Represents any additional high-level properties of a
-             surface, such as whether it is a splitting surface or a
-             central surface.  This will be written as a human-readable
-             string.  This field is somewhat arbitrary, and the precise
-             properties it describes are subject to change in future
-             releases of Regina. */
 
+    /**
+     * Indicates that no additional fields should be exported.
+     */
     surfaceExportNone = 0,
-        /**< Indicates that no additional fields should be exported. */
+    /**
+     * Indicates that all available fields should be exported,
+     * except for the user-assigned surface name.  Since the list
+     * of available fields may grow with future releases, the numerical
+     * value of this constant may change as a result.
+     */
     surfaceExportAllButName = 0x007e,
-        /**< Indicates that all available fields should be exported,
-             except for the user-assigned surface name.  Since the list
-             of available fields may grow with future releases, the numerical
-             value of this constant may change as a result. */
+    /**
+     * Indicates that all available fields should be exported,
+     * including the user-assigned surface name.  Since the list
+     * of available fields may grow with future releases, the numerical
+     * value of this constant may change as a result.
+     */
     surfaceExportAll = 0x007f
-        /**< Indicates that all available fields should be exported,
-             including the user-assigned surface name.  Since the list
-             of available fields may grow with future releases, the numerical
-             value of this constant may change as a result. */
 };
 
 /**

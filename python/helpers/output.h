@@ -37,6 +37,7 @@
 #include <type_traits>
 #include <sstream>
 #include "core/output.h"
+#include "../docstrings/core/output.h"
 
 namespace regina::python {
 
@@ -107,11 +108,11 @@ void add_output(pybind11::class_<C, options...>& c,
     using OutputFunctionType = std::string (BaseType::*)() const;
 
     c.def("str", static_cast<OutputFunctionType>(&BaseType::str),
-        doc::common::Output_str);
+        doc::Output_::str);
     c.def("utf8", static_cast<OutputFunctionType>(&BaseType::utf8),
-        doc::common::Output_utf8);
+        doc::Output_::utf8);
     c.def("detail", static_cast<OutputFunctionType>(&BaseType::detail),
-        doc::common::Output_detail);
+        doc::Output_::detail);
 
     c.def("__str__", static_cast<OutputFunctionType>(&BaseType::str));
 

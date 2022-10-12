@@ -36,10 +36,6 @@
 
 // Docstrings that are generated once but used across many source files:
 namespace regina::python::doc::common {
-    extern const char* Output_detail;
-    extern const char* Output_str;
-    extern const char* Output_utf8;
-
     extern const char* Packet_append;
     extern const char* PacketData_anonID;
     extern const char* PacketData_packet;
@@ -47,17 +43,6 @@ namespace regina::python::doc::common {
     extern const char* PacketOf_copy;
     extern const char* make_packet;
     extern const char* make_packet_2;
-
-    extern const char* ListView;
-    extern const char* ListView_ListView;
-    extern const char* ListView_iter;
-    extern const char* ListView_array;
-    extern const char* ListView_empty;
-    extern const char* ListView_size;
-    extern const char* ListView_front;
-    extern const char* ListView_back;
-    extern const char* ListView_eq;
-    extern const char* ListView_neq;
 
     extern const char* TightEncodable_encoding;
     extern const char* TightEncodable_decoding;
@@ -99,7 +84,7 @@ namespace regina::python::doc::common {
  * curly braces (in particular, local variables will go out of scope at the
  * end of the block).
  */
-#define RDOC_SCOPE_BEGIN(scope)  { const char* rdoc_scope = regina::python::doc::scope; namespace rdoc = regina::python::doc::scope ## _;
+#define RDOC_SCOPE_BEGIN(scope)  { const char* rdoc_scope = regina::python::doc::scope; namespace rdoc = regina::python::doc::scope ## _; namespace rdoc_global = regina::python::doc;
 #define RDOC_SCOPE_BEGIN_MAIN    { namespace rdoc = regina::python::doc;
 #define RDOC_SCOPE_SWITCH(scope) } RDOC_SCOPE_BEGIN(scope)
 #define RDOC_SCOPE_SWITCH_MAIN   } RDOC_SCOPE_BEGIN_MAIN

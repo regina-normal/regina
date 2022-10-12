@@ -50,9 +50,7 @@ void addContainer(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::packet_disable_eq_operators(c);
 
-    RDOC_SCOPE_SWITCH_MAIN
-
-    regina::python::add_global_swap<Container>(m, rdoc::swap);
+    regina::python::add_global_swap<Container>(m, rdoc_global::swap);
 
     RDOC_SCOPE_END
 }

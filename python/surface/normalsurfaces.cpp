@@ -40,6 +40,7 @@
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../flags.h"
+#include "../docstrings/surface/normalsurfaces.h"
 
 using namespace regina::python;
 using regina::NormalSurfaces;
@@ -48,19 +49,33 @@ using regina::SurfaceFilter;
 using regina::Triangulation;
 
 void addNormalSurfaces(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SurfaceExportFields)
+
     regina::python::add_flags<regina::SurfaceExportFields>(
         m, "SurfaceExportFields", "SurfaceExport", {
-            { "surfaceExportName", regina::surfaceExportName },
-            { "surfaceExportEuler", regina::surfaceExportEuler },
-            { "surfaceExportOrient", regina::surfaceExportOrient },
-            { "surfaceExportSides", regina::surfaceExportSides },
-            { "surfaceExportBdry", regina::surfaceExportBdry },
-            { "surfaceExportLink", regina::surfaceExportLink },
-            { "surfaceExportType", regina::surfaceExportType },
-            { "surfaceExportNone", regina::surfaceExportNone },
-            { "surfaceExportAllButName", regina::surfaceExportAllButName },
-            { "surfaceExportAll", regina::surfaceExportAll }
-        });
+            { "surfaceExportName", regina::surfaceExportName,
+                rdoc::surfaceExportName },
+            { "surfaceExportEuler", regina::surfaceExportEuler,
+                rdoc::surfaceExportEuler },
+            { "surfaceExportOrient", regina::surfaceExportOrient,
+                rdoc::surfaceExportOrient },
+            { "surfaceExportSides", regina::surfaceExportSides,
+                rdoc::surfaceExportSides },
+            { "surfaceExportBdry", regina::surfaceExportBdry,
+                rdoc::surfaceExportBdry },
+            { "surfaceExportLink", regina::surfaceExportLink,
+                rdoc::surfaceExportLink },
+            { "surfaceExportType", regina::surfaceExportType,
+                rdoc::surfaceExportType },
+            { "surfaceExportNone", regina::surfaceExportNone,
+                rdoc::surfaceExportNone },
+            { "surfaceExportAllButName", regina::surfaceExportAllButName,
+                rdoc::surfaceExportAllButName },
+            { "surfaceExportAll", regina::surfaceExportAll,
+                rdoc::surfaceExportAll }
+        }, rdoc_scope, rdoc_global::__bor);
+
+    RDOC_SCOPE_END
 
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);

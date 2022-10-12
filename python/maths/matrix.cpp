@@ -209,9 +209,7 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    RDOC_SCOPE_SWITCH_MAIN
-
-    regina::python::add_global_swap<Matrix>(m, rdoc::swap);
+    regina::python::add_global_swap<Matrix>(m, rdoc_global::swap);
 
     RDOC_SCOPE_END
 }
