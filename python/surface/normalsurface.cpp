@@ -40,6 +40,7 @@
 #include "../globalarray.h"
 #include "../helpers.h"
 
+using regina::ListView;
 using regina::NormalSurface;
 using regina::Triangulation;
 using regina::python::GlobalArray;
@@ -176,7 +177,7 @@ void addNormalSurface(pybind11::module_& m) {
     m.attr("quadMeeting") = &quadMeeting_arr;
     m.attr("quadDefn") = &quadDefn_arr;
     m.attr("quadPartner") = &quadPartner_arr;
-    m.attr("quadString") = &quadString_arr;
+    m.attr("quadString") = regina::wrapListView(ListView(regina::quadString));
     m.attr("triDiscArcs") = &triDiscArcs_arr;
     m.attr("quadDiscArcs") = &quadDiscArcs_arr;
     m.attr("octDiscArcs") = &octDiscArcs_arr;
