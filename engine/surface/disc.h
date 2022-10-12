@@ -397,7 +397,7 @@ class DiscSetTet {
  * \c a can be declared with no parameters and can then receive the
  * value of \c b using <tt>a=b</tt>.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup surfaces
  */
@@ -1100,7 +1100,7 @@ void swap(DiscSetSurfaceDataImpl<T>& a, DiscSetSurfaceDataImpl<T>& b) noexcept {
  * A structure that stores data of type \a T alongside every normal disc
  * within a particular normal surface.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \ingroup surfaces
  */
@@ -1173,8 +1173,8 @@ class DiscSpecIterator {
          * This iterator cannot be used or queried until either init() or the
          * assignmemnt operator is called.
          *
-         * \ifacespython Not present; the only way to create a
-         * DiscSpecIterator is to iterate over a DiscSetSurface.
+         * \nopython The only way to create a DiscSpecIterator is to iterate
+         * over a DiscSetSurface.
          */
         DiscSpecIterator() : internalDiscSet(nullptr) {
         }
@@ -1182,8 +1182,8 @@ class DiscSpecIterator {
          * Creates a new iterator pointing to the first disc in the
          * given disc set.
          *
-         * \ifacespython Not present; the only way to create a
-         * DiscSpecIterator is to iterate over a DiscSetSurface.
+         * \nopython The only way to create a DiscSpecIterator is to iterate
+         * over a DiscSetSurface.
          *
          * @param discSet the disc set used to initialise this iterator.
          */
@@ -1193,15 +1193,16 @@ class DiscSpecIterator {
         }
         /**
          * Default copy constructor.
+         *
+         * \nopython The only way to create a DiscSpecIterator is to iterate
+         * over a DiscSetSurface.
          */
         DiscSpecIterator(const DiscSpecIterator&) = default;
         /**
          * Points this iterator to the first disc in the given disc set.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current DiscSpec and
-         * increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \nopython For Python users, DiscSpecIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @param discSet the disc set used to reinitialise this iterator.
          */
@@ -1223,10 +1224,8 @@ class DiscSpecIterator {
          *
          * \pre This iterator is not past-the-end.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current DiscSpec and
-         * increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \nopython For Python users, DiscSpecIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return a reference to this iterator.
          */
@@ -1240,10 +1239,8 @@ class DiscSpecIterator {
          *
          * \pre This iterator is not past-the-end.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current DiscSpec and
-         * increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \nopython For Python users, DiscSpecIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return a copy of this iterator before it was incremented.
          */
@@ -1253,15 +1250,29 @@ class DiscSpecIterator {
             makeValid();
             return ans;
         }
+#ifdef __APIDOCS
+        /**
+         * Returns the current DiscSpec and increments this iterator.
+         *
+         * \nocpp For C++ users, DiscSpecIterator provides the usual iterator
+         * preincrement, postincrement and dereferencing operators (++ and *)
+         * instead.
+         *
+         * \exception StopIteration The iterator is already past-the-end
+         * when this function is called.
+         *
+         * @return a reference to the disc that this iterator is pointing to,
+         * before the increment takes place.
+         */
+        auto __next__();
+#endif
         /**
          * Returns a reference to the disc pointed to by this iterator.
          *
          * \pre This iterator is not past-the-end.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current DiscSpec and
-         * increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \nopython For Python users, DiscSpecIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return a reference to the disc pointed to by this iterator.
          */
@@ -1271,10 +1282,8 @@ class DiscSpecIterator {
         /**
          * Determines if this iterator is past-the-end.
          *
-         * \ifacespython Not present; instead this class implements
-         * <tt>next()</tt>, which either returns the current DiscSpec and
-         * increments the iterator, or else throws a
-         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         * \nopython For Python users, DiscSpecIterator implements the
+         * Python iterator interface instead.  See __next__() for details.
          *
          * @return \c true if and only if this iterator is past-the-end.
          */

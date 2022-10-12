@@ -590,15 +590,47 @@ class NormalSurfaces :
          */
         const NormalSurface& operator [](size_t index) const;
         /**
-         * Returns an iterator at the beginning of this list of surfaces.
+         * Returns a C++ iterator at the beginning of this list of surfaces.
          *
-         * The begin() and end() functions allow you to iterate through all
-         * surfaces in this list using C++11 range-based \c for loops:
+         * These begin() and end() functions allow you to iterate through all
+         * surfaces in this list using a range-based \c for loop:
          *
          * \code{.cpp}
          * NormalSurfaces list(...);
          * for (const NormalSurface& s : list) { ... }
          * \endcode
+         *
+         * The type that is returned will be a lightweight iterator type,
+         * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
+         * The precise C++ type of the iterator is subject to change, so
+         * C++ users should use \c auto (just like this declaration does).
+         *
+         * \nopython For Python users, NormalSurfaces implements the Python
+         * iterable interface.  You can iterate over the normal surfaces in
+         * this list in the same way that you would iterate over any native
+         * Python container.
+         *
+         * @return an iterator at the beginning of this list.
+         */
+        auto begin() const;
+        /**
+         * Returns a C++ iterator beyond the end of this list of surfaces.
+         *
+         * These begin() and end() routines allow you to iterate through all
+         * surfaces in this list using a range-based \c for loop.
+         * See the begin() documentation for further details.
+         *
+         * \nopython For Python users, NormalSurfaces implements the Python
+         * iterable interface.  You can iterate over the normal surfaces in
+         * this list in the same way that you would iterate over any native
+         * Python container.
+         *
+         * @return an iterator beyond the end of this list.
+         */
+        auto end() const;
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the normal surfaces in this list.
          *
          * In Python, a normal surface list can be treated as an iterable
          * object:
@@ -609,27 +641,15 @@ class NormalSurfaces :
          *     ...
          * \endcode
          *
-         * The type that is returned will be a lightweight iterator type,
-         * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
-         * The precise C++ type of the iterator is subject to change, so
-         * C++ users should use \c auto (just like this declaration does).
+         * \nocpp For C++ users, NormalSurfaces provides the usual begin()
+         * and end() functions instead.  In particular, you can iterate over
+         * the normal surfaces in this list in the usual way using a
+         * range-based \c for loop.
          *
-         * @return an iterator at the beginning of this list.
+         * @return an iterator over the normal surfaces in this list.
          */
-        auto begin() const;
-        /**
-         * Returns an iterator beyond the end of this list of surfaces.
-         *
-         * In C++, the begin() and end() routines allow you to iterate through
-         * all surfaces in this list using C++11 range-based \c for loops.
-         * In Python, a normal surface list can be treated as an iterable
-         * object.
-         *
-         * See the begin() documentation for further details.
-         *
-         * @return an iterator beyond the end of this list.
-         */
-        auto end() const;
+        auto __iter__() const;
+#endif
 
         /**
          * Determines whether this and the given list contain the same

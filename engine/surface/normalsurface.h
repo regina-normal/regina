@@ -361,8 +361,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * combinatorially identical to, the triangulation in which
          * \a src resides.
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
          * @param src the normal surface to copy.
          * @param triangulation a snapshot, frozen in time, of the
@@ -433,8 +432,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the given encoding.
          * This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * copies \a vector.
+         * \nopython Instead use the version that copies \a vector.
          *
          * @param triang the triangulation in which this normal surface resides.
          * @param enc indicates precisely how the given vector encodes a normal
@@ -461,8 +459,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the given encoding.
          * This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
          * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
@@ -490,8 +487,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the given encoding.
          * This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation and copies \a vector.
+         * \nopython Instead use the version that takes a "pure" triangulation
+         * and copies \a vector.
          *
          * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
@@ -565,8 +562,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the encoding
          * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * copies \a vector.
+         * \nopython Instead use the version that copies \a vector.
          *
          * @param triang the triangulation in which this normal surface resides.
          * @param coords the coordinate system from which the vector
@@ -597,8 +593,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the encoding
          * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
          * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
@@ -630,8 +625,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the encoding
          * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation and copies \a vector.
+         * \nopython Instead use the version that takes a "pure" triangulation
+         * and copies \a vector.
          *
          * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
@@ -916,7 +911,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * will only be written if the surface is stored using an encoding
          * that supports almost normal surfaces.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */

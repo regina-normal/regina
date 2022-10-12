@@ -188,8 +188,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * combinatorially identical to, the triangulation in which
          * \a src resides.
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
          * @param src the normal hypersurface to copy.
          * @param triangulation a snapshot, frozen in time, of the
@@ -261,8 +260,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * copies \a vector.
+         * \nopython Instead use the version that copies \a vector.
          *
          * @param triang the triangulation in which this normal hypersurface
          * resides.
@@ -290,8 +288,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
          * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
@@ -319,8 +316,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation and copies \a vector.
+         * \nopython Instead use the version that takes a "pure" triangulation
+         * and copies \a vector.
          *
          * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
@@ -395,8 +392,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the encoding
          * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * copies \a vector.
+         * \nopython Instead use the version that copies \a vector.
          *
          * @param triang the triangulation in which this normal hypersurface
          * resides.
@@ -428,8 +424,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the encoding
          * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
          * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
@@ -461,8 +456,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the encoding
          * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation and copies \a vector.
+         * \nopython Instead use the version that takes a "pure" triangulation
+         * and copies \a vector.
          *
          * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
@@ -682,7 +677,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Writes this hypersurface to the given output stream, using
          * standard tetrahedron-prism coordinates.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
