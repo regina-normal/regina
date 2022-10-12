@@ -34,24 +34,31 @@
 #include "../pybind11/operators.h"
 #include "algebra/intersectionform.h"
 #include "../helpers.h"
+#include "../docstrings/algebra/intersectionform.h"
 
 using regina::IntersectionForm;
 using regina::MatrixInt;
 
 void addIntersectionForm(pybind11::module_& m) {
-    auto c = pybind11::class_<IntersectionForm>(m, "IntersectionForm")
-        .def(pybind11::init<MatrixInt>())
-        .def(pybind11::init<const IntersectionForm&>())
-        .def("swap", &IntersectionForm::swap)
-        .def("matrix", &IntersectionForm::matrix)
-        .def("rank", &IntersectionForm::rank)
-        .def("signature", &IntersectionForm::signature)
-        .def("even", &IntersectionForm::even)
-        .def("odd", &IntersectionForm::odd)
+    RDOC_SCOPE_BEGIN(IntersectionForm)
+
+    auto c = pybind11::class_<IntersectionForm>(m, "IntersectionForm",
+            rdoc_scope)
+        .def(pybind11::init<MatrixInt>(), rdoc::IntersectionForm)
+        .def(pybind11::init<const IntersectionForm&>(),
+            rdoc::IntersectionForm_2)
+        .def("swap", &IntersectionForm::swap, rdoc::swap)
+        .def("matrix", &IntersectionForm::matrix, rdoc::matrix)
+        .def("rank", &IntersectionForm::rank, rdoc::rank)
+        .def("signature", &IntersectionForm::signature, rdoc::signature)
+        .def("even", &IntersectionForm::even, rdoc::even)
+        .def("odd", &IntersectionForm::odd, rdoc::odd)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<IntersectionForm>(m);
+    regina::python::add_global_swap<IntersectionForm>(m, rdoc_global::swap);
+
+    RDOC_SCOPE_END
 }
 
