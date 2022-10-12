@@ -46,6 +46,7 @@ using regina::Triangulation;
 using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
 using regina::python::GlobalArray3D;
+using regina::python::wrapListView;
 
 namespace {
     const char* const quadString_1D[3] = {
@@ -177,7 +178,7 @@ void addNormalSurface(pybind11::module_& m) {
     m.attr("quadMeeting") = &quadMeeting_arr;
     m.attr("quadDefn") = &quadDefn_arr;
     m.attr("quadPartner") = &quadPartner_arr;
-    m.attr("quadString") = regina::wrapListView(ListView(regina::quadString));
+    m.attr("quadString") = wrapListView(m, regina::quadString);
     m.attr("triDiscArcs") = &triDiscArcs_arr;
     m.attr("quadDiscArcs") = &quadDiscArcs_arr;
     m.attr("octDiscArcs") = &octDiscArcs_arr;

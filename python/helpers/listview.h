@@ -130,5 +130,30 @@ regina::ListView<T> wrapListView(pybind11::module_& m,
     return view;
 }
 
+/**
+ * Adds Python bindings for one of Regina's ListView classes, and wraps the
+ * given fixed-size C-style array in such a ListView.
+ *
+ * The given array should be a C-style array whose elements are of type \a T,
+ * and whose size \a n is known at compile-time.  Typically both \a T and \a n
+ * would be deduced automatically, and you would not need to supply any
+ * template arguments with this function call.
+ *
+ * This routine has the effect of (i) creating a ListView of the appropriate
+ * type to wrap \a array; (ii) calling addListView<T>(m) to wrap this
+ * ListView class in Python; and (iii) returning this ListView object
+ * so that it can be set as a class attribute or global constant.
+ *
+ * The default return value policies supplied by addListView() will be used,
+ * and it is not possible to override them here.  See addListView() for
+ * further details.
+ */
+template <typename T, int n>
+regina::ListView<T[n]> wrapListView(pybind11::module_& m, const T (&array)[n]) {
+    addListView<regina::ListView<T[n]>>(m);
+    // Remember: ListView is lightweight and cheap to pass by value.
+    return regina::ListView(array);
+}
+
 } // namespace regina::python
 
