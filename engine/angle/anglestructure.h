@@ -134,8 +134,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * combinatorially identical to, the triangulation on which
          * \a src is placed.
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
          * @param src the angle structure to copy.
          * @param triangulation a snapshot, frozen in time, of the
@@ -188,8 +187,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
          *
-         * \ifacespython Not present, but you can use the version that
-         * copies \a vector.
+         * \nopython Instead use the version that copies \a vector.
          *
          * @param triang the triangulation on which this angle structure lies.
          * @param vector a vector containing the individual angles in the
@@ -206,8 +204,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation.
+         * \nopython Instead use the version that takes a "pure" triangulation.
          *
          * @param triang a snapshot, frozen in time, of the triangulation on
          * which this angle structure lies.
@@ -225,8 +222,8 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
          *
-         * \ifacespython Not present, but you can use the version that
-         * takes a "pure" triangulation and copies \a vector.
+         * \nopython Instead use the version that takes a "pure" triangulation
+         * and copies \a vector.
          *
          * @param triang a snapshot, frozen in time, of the triangulation on
          * which this angle structure lies.
@@ -470,7 +467,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */

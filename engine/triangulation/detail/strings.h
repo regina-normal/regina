@@ -52,7 +52,7 @@ namespace regina::detail {
  */
 template <int dim_>
 struct Strings {
-#ifdef __APIDOCS
+#ifdef __DOXYGEN
     /**
      * A string that gives the dimension \a dim as a number.
      *
