@@ -89,6 +89,7 @@ while IFS= read -r -d $'\0' i; do
 	testname=`basename "$i"`
 	expected="${i/.test/.out}"
 	observed="$testoutdir/${testname/.test/.out}"
+	filter="$testdir/${testname/.test/.filter}"
 
 	# Run the test.
 	#
@@ -101,9 +102,15 @@ while IFS= read -r -d $'\0' i; do
 	# Fedora, where (as a result of a more exotic TERM setting) unprintable
 	# characters were being dumped at the beginning of the python output.
 	#
-	echo -n "Running $testname ... "
-	TERM= PYTHONIOENCODING=utf8 \
-		"$executable" "$i" "$testdir" > "$observed" 2>&1 && dummy=
+	if [ -e "$filter" ]; then
+		echo -n "Running $testname (with filter) ... "
+		TERM= PYTHONIOENCODING=utf8 \
+			"$executable" "$i" "$testdir" | "$filter" > "$observed" 2>&1 && dummy=
+	else
+		echo -n "Running $testname ... "
+		TERM= PYTHONIOENCODING=utf8 \
+			"$executable" "$i" "$testdir" > "$observed" 2>&1 && dummy=
+	fi
 
 	# Catch exitcode.
 	exitcode=$?

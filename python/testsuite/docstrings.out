@@ -453,7 +453,7 @@ class ListView(pybind11_object)
  |  
  |  __hash__ = None
  |  
- |  __pybind11_module_local_v4_clang_libcpp_cxxabi1002__ = <capsule object...
+ |  __pybind11_module_local__ = ...
  |  
  |  equalityType = <EqualityType.BY_VALUE: 1>
  |  

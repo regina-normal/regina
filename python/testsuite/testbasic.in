@@ -157,6 +157,7 @@ while IFS= read -r -d $'\0' i; do
 	testname=`basename "$i"`
 	expected="${i/.test/.out}"
 	observed="$testoutdir/${testname/.test/.out}"
+	filter="$testdir/${testname/.test/.filter}"
 
 	blacklisted=0
 	for b in $blacklist; do
@@ -187,15 +188,28 @@ while IFS= read -r -d $'\0' i; do
 		# Fedora, where (as a result of a more exotic TERM setting) unprintable
 		# characters were being dumped at the beginning of the python output.
 		#
-		if [ "$multithreading" = 0 ]; then
-			# echo -n "Running $testname (main thread) ... "
-			echo -n "Running $testname ... "
-			TERM= PYTHONIOENCODING=utf8 \
-				"$executable" -t "$timeout" "$i" > "$observed" 2>&1 && dummy=
+		if [ -e "$filter" ]; then
+			if [ "$multithreading" = 0 ]; then
+				# echo -n "Running $testname (with filter, main thread) ... "
+				echo -n "Running $testname (with filter) ... "
+				TERM= PYTHONIOENCODING=utf8 \
+					"$executable" -t "$timeout" "$i" | "$filter" > "$observed" 2>&1 && dummy=
+			else
+				echo -n "Running $testname (with filter, separate thread) ... "
+				TERM= PYTHONIOENCODING=utf8 \
+					"$executable" -m -t "$timeout" "$i" | "$filter" > "$observed" 2>&1 && dummy=
+			fi
 		else
-			echo -n "Running $testname (separate thread) ... "
-			TERM= PYTHONIOENCODING=utf8 \
-				"$executable" -m -t "$timeout" "$i" > "$observed" 2>&1 && dummy=
+			if [ "$multithreading" = 0 ]; then
+				# echo -n "Running $testname (main thread) ... "
+				echo -n "Running $testname ... "
+				TERM= PYTHONIOENCODING=utf8 \
+					"$executable" -t "$timeout" "$i" > "$observed" 2>&1 && dummy=
+			else
+				echo -n "Running $testname (separate thread) ... "
+				TERM= PYTHONIOENCODING=utf8 \
+					"$executable" -m -t "$timeout" "$i" > "$observed" 2>&1 && dummy=
+			fi
 		fi
 
 		# Catch exitcode.
