@@ -1265,17 +1265,6 @@ measure of the complexity of the presentation.
 Returns:
     the sum of word lengths.)doc";
 
-// Docstring regina::python::doc::GroupPresentation_::sage
-static const char *sage =
-R"doc(A SageMath-only routine that returns a copy of this group presentation
-in a format native to SageMath.
-
-Python:
-    Only present when run within SageMath.
-
-Returns:
-    a copy of this group as a mathematical object native to SageMath.)doc";
-
 // Docstring regina::python::doc::GroupPresentation_::simplifyWord
 static const char *simplifyWord =
 R"doc(Uses small cancellation theory to reduce the input word, using the
