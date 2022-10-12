@@ -36,6 +36,7 @@
 #include "algebra/markedabeliangroup.h"
 #include "maths/matrix.h"
 #include "../helpers.h"
+#include "../docstrings/algebra/markedabeliangroup.h"
 
 using pybind11::overload_cast;
 using regina::HomMarkedAbelianGroup;
@@ -44,101 +45,127 @@ using regina::MatrixInt;
 using regina::Integer;
 
 void addMarkedAbelianGroup(pybind11::module_& m) {
-    auto c1 = pybind11::class_<MarkedAbelianGroup>(m, "MarkedAbelianGroup")
-        .def(pybind11::init<const MatrixInt&, const MatrixInt&>())
-        .def(pybind11::init<const MarkedAbelianGroup&>())
+    RDOC_SCOPE_BEGIN(MarkedAbelianGroup)
+
+    auto c1 = pybind11::class_<MarkedAbelianGroup>(m, "MarkedAbelianGroup",
+            rdoc_scope)
+        .def(pybind11::init<const MatrixInt&, const MatrixInt&>(),
+            rdoc::MarkedAbelianGroup)
         .def(pybind11::init<const MatrixInt&, const MatrixInt&,
-            const Integer&>())
-        .def(pybind11::init<size_t, const Integer&>())
-        .def("swap", &MarkedAbelianGroup::swap)
-        .def("rank", &MarkedAbelianGroup::rank)
+            const Integer&>(), rdoc::MarkedAbelianGroup_2)
+        .def(pybind11::init<size_t, const Integer&>(),
+            rdoc::MarkedAbelianGroup_3)
+        .def(pybind11::init<const MarkedAbelianGroup&>(),
+            rdoc::MarkedAbelianGroup_4)
+        .def("swap", &MarkedAbelianGroup::swap, rdoc::swap)
+        .def("rank", &MarkedAbelianGroup::rank, rdoc::rank)
         .def("torsionRank", overload_cast<const regina::Integer&>(
-            &MarkedAbelianGroup::torsionRank, pybind11::const_))
+            &MarkedAbelianGroup::torsionRank, pybind11::const_),
+            rdoc::torsionRank)
         .def("torsionRank", overload_cast<unsigned long>(
-            &MarkedAbelianGroup::torsionRank, pybind11::const_))
-        .def("snfRank", &MarkedAbelianGroup::snfRank)
+            &MarkedAbelianGroup::torsionRank, pybind11::const_),
+            rdoc::torsionRank)
+        .def("snfRank", &MarkedAbelianGroup::snfRank, rdoc::snfRank)
         .def("countInvariantFactors",
-            &MarkedAbelianGroup::countInvariantFactors)
-        .def("invariantFactor", &MarkedAbelianGroup::invariantFactor)
-        .def("unmarked", &MarkedAbelianGroup::unmarked)
-        .def("isTrivial", &MarkedAbelianGroup::isTrivial)
-        .def("isZ", &MarkedAbelianGroup::isZ)
-        .def("isIsomorphicTo", &MarkedAbelianGroup::isIsomorphicTo)
-        .def("freeRep", &MarkedAbelianGroup::freeRep)
-        .def("torsionRep", &MarkedAbelianGroup::torsionRep)
+            &MarkedAbelianGroup::countInvariantFactors,
+            rdoc::countInvariantFactors)
+        .def("invariantFactor", &MarkedAbelianGroup::invariantFactor,
+            rdoc::invariantFactor)
+        .def("unmarked", &MarkedAbelianGroup::unmarked, rdoc::unmarked)
+        .def("isTrivial", &MarkedAbelianGroup::isTrivial, rdoc::isTrivial)
+        .def("isZ", &MarkedAbelianGroup::isZ, rdoc::isZ)
+        .def("isIsomorphicTo", &MarkedAbelianGroup::isIsomorphicTo,
+            rdoc::isIsomorphicTo)
+        .def("freeRep", &MarkedAbelianGroup::freeRep, rdoc::freeRep)
+        .def("torsionRep", &MarkedAbelianGroup::torsionRep, rdoc::torsionRep)
         // Below, the overloads that take a std::vector must come *last*,
         // since otherwise it treats func(x) as func([x]) never sees
         // the non-vector version.
         .def("ccRep", overload_cast<size_t>(
-            &MarkedAbelianGroup::ccRep, pybind11::const_))
+            &MarkedAbelianGroup::ccRep, pybind11::const_), rdoc::ccRep_2)
         .def("ccRep", overload_cast<const regina::Vector<Integer>&>(
-            &MarkedAbelianGroup::ccRep, pybind11::const_))
+            &MarkedAbelianGroup::ccRep, pybind11::const_), rdoc::ccRep)
         .def("cycleProjection", overload_cast<size_t>(
-            &MarkedAbelianGroup::cycleProjection, pybind11::const_))
+            &MarkedAbelianGroup::cycleProjection, pybind11::const_),
+            rdoc::cycleProjection_2)
         .def("cycleProjection", overload_cast<const regina::Vector<Integer>&>(
-            &MarkedAbelianGroup::cycleProjection, pybind11::const_))
-        .def("isCycle", &MarkedAbelianGroup::isCycle)
-        .def("boundaryOf", &MarkedAbelianGroup::boundaryOf)
-        .def("isBoundary", &MarkedAbelianGroup::isBoundary)
-        .def("asBoundary", &MarkedAbelianGroup::asBoundary)
-        .def("snfRep", &MarkedAbelianGroup::snfRep)
-        .def("ccRank", &MarkedAbelianGroup::ccRank)
-        .def("cycleRank", &MarkedAbelianGroup::cycleRank)
-        .def("cycleGen", &MarkedAbelianGroup::cycleGen)
+            &MarkedAbelianGroup::cycleProjection, pybind11::const_),
+            rdoc::cycleProjection)
+        .def("isCycle", &MarkedAbelianGroup::isCycle, rdoc::isCycle)
+        .def("boundaryOf", &MarkedAbelianGroup::boundaryOf, rdoc::boundaryOf)
+        .def("isBoundary", &MarkedAbelianGroup::isBoundary, rdoc::isBoundary)
+        .def("asBoundary", &MarkedAbelianGroup::asBoundary, rdoc::asBoundary)
+        .def("snfRep", &MarkedAbelianGroup::snfRep, rdoc::snfRep)
+        .def("ccRank", &MarkedAbelianGroup::ccRank, rdoc::ccRank)
+        .def("cycleRank", &MarkedAbelianGroup::cycleRank, rdoc::cycleRank)
+        .def("cycleGen", &MarkedAbelianGroup::cycleGen, rdoc::cycleGen)
         .def("m", &MarkedAbelianGroup::m,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::m)
         .def("n", &MarkedAbelianGroup::n,
-            pybind11::return_value_policy::reference_internal)
-        .def("coefficients", &MarkedAbelianGroup::coefficients)
-        .def("torsionSubgroup", &MarkedAbelianGroup::torsionSubgroup)
-        .def("torsionInclusion", &MarkedAbelianGroup::torsionInclusion)
-        .def("utf8", &MarkedAbelianGroup::utf8)
+            pybind11::return_value_policy::reference_internal, rdoc::n)
+        .def("coefficients", &MarkedAbelianGroup::coefficients,
+            rdoc::coefficients)
+        .def("torsionSubgroup", &MarkedAbelianGroup::torsionSubgroup,
+            rdoc::torsionSubgroup)
+        .def("torsionInclusion", &MarkedAbelianGroup::torsionInclusion,
+            rdoc::torsionInclusion)
     ;
     regina::python::add_output(c1);
-    regina::python::add_eq_operators(c1);
+    regina::python::add_eq_operators(c1, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<MarkedAbelianGroup>(m);
+    regina::python::add_global_swap<MarkedAbelianGroup>(m, rdoc_global::swap);
+
+    RDOC_SCOPE_SWITCH(HomMarkedAbelianGroup)
 
     auto c2 = pybind11::class_<HomMarkedAbelianGroup>(m,
-            "HomMarkedAbelianGroup")
+            "HomMarkedAbelianGroup", rdoc_scope)
         .def(pybind11::init<const MarkedAbelianGroup&,
-                const MarkedAbelianGroup&, const MatrixInt&>())
-        .def(pybind11::init<const HomMarkedAbelianGroup&>())
-        .def("swap", &HomMarkedAbelianGroup::swap)
-        .def("isChainMap", &HomMarkedAbelianGroup::isChainMap)
-        .def("isCycleMap", &HomMarkedAbelianGroup::isCycleMap)
-        .def("isEpic", &HomMarkedAbelianGroup::isEpic)
-        .def("isMonic", &HomMarkedAbelianGroup::isMonic)
-        .def("isIsomorphism", &HomMarkedAbelianGroup::isIsomorphism)
-        .def("isIdentity", &HomMarkedAbelianGroup::isIdentity)
-        .def("isZero", &HomMarkedAbelianGroup::isZero)
+                const MarkedAbelianGroup&, const MatrixInt&>(),
+            rdoc::HomMarkedAbelianGroup)
+        .def(pybind11::init<const HomMarkedAbelianGroup&>(),
+            rdoc::HomMarkedAbelianGroup_2)
+        .def("swap", &HomMarkedAbelianGroup::swap, rdoc::swap)
+        .def("isChainMap", &HomMarkedAbelianGroup::isChainMap, rdoc::isChainMap)
+        .def("isCycleMap", &HomMarkedAbelianGroup::isCycleMap, rdoc::isCycleMap)
+        .def("isEpic", &HomMarkedAbelianGroup::isEpic, rdoc::isEpic)
+        .def("isMonic", &HomMarkedAbelianGroup::isMonic, rdoc::isMonic)
+        .def("isIsomorphism", &HomMarkedAbelianGroup::isIsomorphism,
+            rdoc::isIsomorphism)
+        .def("isIdentity", &HomMarkedAbelianGroup::isIdentity, rdoc::isIdentity)
+        .def("isZero", &HomMarkedAbelianGroup::isZero, rdoc::isZero)
         .def("kernel", &HomMarkedAbelianGroup::kernel,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::kernel)
         .def("cokernel", &HomMarkedAbelianGroup::cokernel,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::cokernel)
         .def("image", &HomMarkedAbelianGroup::image,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::image)
         .def("domain", &HomMarkedAbelianGroup::domain,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::domain)
         .def("codomain", &HomMarkedAbelianGroup::codomain,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::codomain)
         .def("definingMatrix", &HomMarkedAbelianGroup::definingMatrix,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::definingMatrix)
         .def("reducedMatrix", &HomMarkedAbelianGroup::reducedMatrix,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::reducedMatrix)
         .def("summary", pybind11::overload_cast<>(
-            &HomMarkedAbelianGroup::summary, pybind11::const_))
-        .def("torsionSubgroup", &HomMarkedAbelianGroup::torsionSubgroup)
-        .def("evalCC", &HomMarkedAbelianGroup::evalCC)
-        .def("evalSNF", &HomMarkedAbelianGroup::evalSNF)
-        .def("inverseHom", &HomMarkedAbelianGroup::inverseHom)
-        .def(pybind11::self * pybind11::self)
+            &HomMarkedAbelianGroup::summary, pybind11::const_), rdoc::summary)
+        .def("torsionSubgroup", &HomMarkedAbelianGroup::torsionSubgroup,
+            rdoc::torsionSubgroup)
+        .def("evalCC", &HomMarkedAbelianGroup::evalCC, rdoc::evalCC)
+        .def("evalSNF", &HomMarkedAbelianGroup::evalSNF, rdoc::evalSNF)
+        .def("inverseHom", &HomMarkedAbelianGroup::inverseHom, rdoc::inverseHom)
+        .def(pybind11::self * pybind11::self, rdoc::__mul)
     ;
     regina::python::add_output(c2);
     // Deciding what we want comparisons to *mean* requires some thought.
     // Let's not make a decision now that we might regret later.
     regina::python::disable_eq_operators(c2);
 
-    regina::python::add_global_swap<HomMarkedAbelianGroup>(m);
+    regina::python::add_global_swap<HomMarkedAbelianGroup>(m,
+        rdoc_global::swap_2);
+
+    RDOC_SCOPE_END
 }
 
