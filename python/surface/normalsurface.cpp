@@ -62,13 +62,16 @@ namespace {
 void addNormalSurface(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(NormalSurface)
 
-    auto c = pybind11::class_<NormalSurface>(m, "NormalSurface")
-        .def(pybind11::init<const NormalSurface&>())
-        .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>())
+    auto c = pybind11::class_<NormalSurface>(m, "NormalSurface", rdoc_scope)
+        .def(pybind11::init<const NormalSurface&>(), rdoc::NormalSurface)
+        .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>(),
+            rdoc::NormalSurface_2)
         .def(pybind11::init<const Triangulation<3>&, regina::NormalEncoding,
-            const regina::Vector<regina::LargeInteger>&>())
+            const regina::Vector<regina::LargeInteger>&>(),
+            rdoc::NormalSurface_3)
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
-            const regina::Vector<regina::LargeInteger>&>())
+            const regina::Vector<regina::LargeInteger>&>(),
+            rdoc::NormalSurface_4)
         .def(pybind11::init([](const Triangulation<3>& t,
                 regina::NormalEncoding enc, pybind11::list values) {
             regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
@@ -83,7 +86,7 @@ void addNormalSurface(pybind11::module_& m) {
                     "List element not convertible to LargeInteger");
             }
             return new NormalSurface(t, enc, std::move(v));
-        }))
+        }), rdoc::NormalSurface_3)
         .def(pybind11::init([](const Triangulation<3>& t,
                 regina::NormalCoords coords, pybind11::list values) {
             regina::NormalEncoding enc(coords);
@@ -99,77 +102,90 @@ void addNormalSurface(pybind11::module_& m) {
                     "List element not convertible to LargeInteger");
             }
             return new NormalSurface(t, enc, std::move(v));
-        }))
-        .def("swap", &NormalSurface::swap)
+        }), rdoc::NormalSurface_4)
+        .def("swap", &NormalSurface::swap, rdoc::swap)
         .def("doubleSurface", [](const NormalSurface& s) {
             // This is deprecated, so we reimplement it ourselves.
             return s * 2;
-        })
-        .def("triangles", &NormalSurface::triangles)
-        .def("quads", &NormalSurface::quads)
-        .def("octs", &NormalSurface::octs)
-        .def("edgeWeight", &NormalSurface::edgeWeight)
-        .def("arcs", &NormalSurface::arcs)
-        .def("octPosition", &NormalSurface::octPosition)
+        }, rdoc::doubleSurface)
+        .def("triangles", &NormalSurface::triangles, rdoc::triangles)
+        .def("quads", &NormalSurface::quads, rdoc::quads)
+        .def("octs", &NormalSurface::octs, rdoc::octs)
+        .def("edgeWeight", &NormalSurface::edgeWeight, rdoc::edgeWeight)
+        .def("arcs", &NormalSurface::arcs, rdoc::arcs)
+        .def("octPosition", &NormalSurface::octPosition, rdoc::octPosition)
         .def("triangulation", &NormalSurface::triangulation,
-            pybind11::return_value_policy::reference_internal)
-        .def("name", &NormalSurface::name)
-        .def("setName", &NormalSurface::setName)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::triangulation)
+        .def("name", &NormalSurface::name, rdoc::name)
+        .def("setName", &NormalSurface::setName, rdoc::setName)
         .def("writeXMLData", [](const NormalSurface& s, pybind11::object file,
                 regina::FileFormat f, const regina::NormalSurfaces* list) {
             pybind11::scoped_ostream_redirect stream(std::cout, file);
             s.writeXMLData(std::cout, f, list);
-        })
-        .def("isEmpty", &NormalSurface::isEmpty)
-        .def("hasMultipleOctDiscs", &NormalSurface::hasMultipleOctDiscs)
-        .def("isCompact", &NormalSurface::isCompact)
-        .def("eulerChar", &NormalSurface::eulerChar)
-        .def("isOrientable", &NormalSurface::isOrientable)
-        .def("isTwoSided", &NormalSurface::isTwoSided)
-        .def("isConnected", &NormalSurface::isConnected)
-        .def("hasRealBoundary", &NormalSurface::hasRealBoundary)
-        .def("components", &NormalSurface::components)
-        .def("isVertexLinking", &NormalSurface::isVertexLinking)
+        }, rdoc::writeXMLData)
+        .def("isEmpty", &NormalSurface::isEmpty, rdoc::isEmpty)
+        .def("hasMultipleOctDiscs", &NormalSurface::hasMultipleOctDiscs,
+            rdoc::hasMultipleOctDiscs)
+        .def("isCompact", &NormalSurface::isCompact, rdoc::isCompact)
+        .def("eulerChar", &NormalSurface::eulerChar, rdoc::eulerChar)
+        .def("isOrientable", &NormalSurface::isOrientable, rdoc::isOrientable)
+        .def("isTwoSided", &NormalSurface::isTwoSided, rdoc::isTwoSided)
+        .def("isConnected", &NormalSurface::isConnected, rdoc::isConnected)
+        .def("hasRealBoundary", &NormalSurface::hasRealBoundary,
+            rdoc::hasRealBoundary)
+        .def("components", &NormalSurface::components, rdoc::components)
+        .def("isVertexLinking", &NormalSurface::isVertexLinking,
+            rdoc::isVertexLinking)
         .def("isVertexLink", &NormalSurface::isVertexLink,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rdoc::isVertexLink)
         .def("isThinEdgeLink", &NormalSurface::isThinEdgeLink,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rdoc::isThinEdgeLink)
         .def("isNormalEdgeLink", &NormalSurface::isNormalEdgeLink,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rdoc::isNormalEdgeLink)
         .def("isThinTriangleLink", &NormalSurface::isThinTriangleLink,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rdoc::isThinTriangleLink)
         .def("isNormalTriangleLink", &NormalSurface::isNormalTriangleLink,
-            pybind11::return_value_policy::reference)
-        .def("isSplitting", &NormalSurface::isSplitting)
-        .def("isCentral", &NormalSurface::isCentral)
-        .def("countBoundaries", &NormalSurface::countBoundaries)
+            pybind11::return_value_policy::reference,
+            rdoc::isNormalTriangleLink)
+        .def("isSplitting", &NormalSurface::isSplitting, rdoc::isSplitting)
+        .def("isCentral", &NormalSurface::isCentral, rdoc::isCentral)
+        .def("countBoundaries", &NormalSurface::countBoundaries,
+            rdoc::countBoundaries)
         .def("isCompressingDisc", &NormalSurface::isCompressingDisc,
-            pybind11::arg("knownConnected") = false)
-        .def("isIncompressible", &NormalSurface::isIncompressible)
-        .def("cutAlong", &NormalSurface::cutAlong)
-        .def("crush", &NormalSurface::crush)
-        .def("removeOcts", &NormalSurface::removeOcts)
-        .def("normal", &NormalSurface::normal)
-        .def("embedded", &NormalSurface::embedded)
-        .def("locallyCompatible", &NormalSurface::locallyCompatible)
-        .def("disjoint", &NormalSurface::disjoint)
-        .def("boundaryIntersections", &NormalSurface::boundaryIntersections)
+            pybind11::arg("knownConnected") = false,
+            rdoc::isCompressingDisc)
+        .def("isIncompressible", &NormalSurface::isIncompressible,
+            rdoc::isIncompressible)
+        .def("cutAlong", &NormalSurface::cutAlong, rdoc::cutAlong)
+        .def("crush", &NormalSurface::crush, rdoc::crush)
+        .def("removeOcts", &NormalSurface::removeOcts, rdoc::removeOcts)
+        .def("normal", &NormalSurface::normal, rdoc::normal)
+        .def("embedded", &NormalSurface::embedded, rdoc::embedded)
+        .def("locallyCompatible", &NormalSurface::locallyCompatible,
+            rdoc::locallyCompatible)
+        .def("disjoint", &NormalSurface::disjoint, rdoc::disjoint)
+        .def("boundaryIntersections", &NormalSurface::boundaryIntersections,
+            rdoc::boundaryIntersections)
         .def("vector", &NormalSurface::vector,
-            pybind11::return_value_policy::reference_internal)
-        .def("couldBeAlmostNormal", &NormalSurface::couldBeAlmostNormal)
-        .def("couldBeNonCompact", &NormalSurface::couldBeNonCompact)
-        .def("scaleDown", &NormalSurface::scaleDown)
+            pybind11::return_value_policy::reference_internal, rdoc::vector)
+        .def("encoding", &NormalSurface::encoding, rdoc::encoding)
+        .def("couldBeAlmostNormal", &NormalSurface::couldBeAlmostNormal,
+            rdoc::couldBeAlmostNormal)
+        .def("couldBeNonCompact", &NormalSurface::couldBeNonCompact,
+            rdoc::couldBeNonCompact)
+        .def("scaleDown", &NormalSurface::scaleDown, rdoc::scaleDown)
         .def_static("reconstructTriangles",
-            &NormalSurface::reconstructTriangles)
-        .def(pybind11::self + pybind11::self)
-        .def(pybind11::self * regina::LargeInteger())
-        .def(pybind11::self *= regina::LargeInteger())
-        .def(pybind11::self < pybind11::self)
+            &NormalSurface::reconstructTriangles, rdoc::reconstructTriangles)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self * regina::LargeInteger(), rdoc::__mul)
+        .def(pybind11::self *= regina::LargeInteger(), rdoc::__imul)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<NormalSurface>(m);
+    regina::python::add_global_swap<NormalSurface>(m, rdoc_global::swap);
 
     RDOC_SCOPE_END
 
