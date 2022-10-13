@@ -35,12 +35,15 @@
 #include "../pybind11/stl.h"
 #include "enumerate/hilbertdual.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/hilbertdual.h"
 
 using regina::python::GILCallbackManager;
 using regina::HilbertDual;
 using regina::VectorInt;
 
 void addHilbertDual(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(HilbertDual)
+
     auto c = pybind11::class_<HilbertDual>(m, "HilbertDual")
         .def_static("enumerate", [](
                 const std::function<void(VectorInt&&)>& action,
@@ -70,5 +73,7 @@ void addHilbertDual(pybind11::module_& m) {
             pybind11::call_guard<regina::python::GILScopedRelease>())
     ;
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

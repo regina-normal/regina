@@ -35,6 +35,7 @@
 #include "enumerate/treeconstraint.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/treeconstraint.h"
 
 using pybind11::overload_cast;
 
@@ -56,6 +57,8 @@ using regina::LPConstraintNonSpun;
 
 template <class LPConstraint>
 void addLPConstraint(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(LPConstraintBase)
+
     auto c = pybind11::class_<LPConstraint>(m, name)
         .def_readonly_static("nConstraints", &LPConstraint::nConstraints)
         .def_readonly_static("octAdjustment", &LPConstraint::octAdjustment)
@@ -88,10 +91,14 @@ void addLPConstraint(pybind11::module_& m, const char* name) {
         .def_static("supported", &LPConstraint::supported)
         ;
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 
 template <class BanConstraint, typename... BanArgs>
 void addBanConstraint(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(BanConstraintBase)
+
     auto c = pybind11::class_<BanConstraint>(m, name)
         .def(pybind11::init<
             const LPInitialTableaux<LPConstraintNone>&, BanArgs...>())
@@ -116,6 +123,8 @@ void addBanConstraint(pybind11::module_& m, const char* name) {
         ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 
 void addTreeConstraint(pybind11::module_& m) {

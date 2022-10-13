@@ -35,6 +35,7 @@
 #include "enumerate/treetraversal-impl.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/treetraversal.h"
 
 using regina::Integer;
 using regina::NormalEncoding;
@@ -52,6 +53,8 @@ using regina::BanTorusBoundary;
 
 template <class LPConstraint, typename BanConstraint>
 void addTreeTraversalBase(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(TreeTraversal)
+
     using Tree = regina::TreeTraversal<LPConstraint, BanConstraint, Integer>;
 
     auto c = pybind11::class_<Tree>(m, name)
@@ -64,10 +67,14 @@ void addTreeTraversalBase(pybind11::module_& m, const char* name) {
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 
 template <class LPConstraint, typename BanConstraint, typename... BanArgs>
 void addTreeEnumeration(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(TreeEnumeration)
+
     using Tree = regina::TreeEnumeration<LPConstraint, BanConstraint>;
     using Action = const std::function<bool(const Tree&)>&;
 
@@ -85,10 +92,14 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 
 template <class LPConstraint, typename BanConstraint, typename... BanArgs>
 void addTautEnumeration(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(TautEnumeration)
+
     using Tree = regina::TautEnumeration<LPConstraint, BanConstraint>;
     using Action = const std::function<bool(const Tree&)>&;
 
@@ -105,10 +116,14 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 
 template <class LPConstraint, typename BanConstraint, typename... BanArgs>
 void addTreeSingleSoln(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(TreeSingleSoln)
+
     using Tree = regina::TreeSingleSoln<LPConstraint, BanConstraint>;
 
     auto c = pybind11::class_<Tree, regina::TreeTraversal<
@@ -120,6 +135,8 @@ void addTreeSingleSoln(pybind11::module_& m, const char* name) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 
 void addTreeTraversal(pybind11::module_& m) {

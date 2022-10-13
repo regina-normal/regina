@@ -34,11 +34,14 @@
 #include "enumerate/typetrie.h"
 #include "utilities/exception.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/typetrie.h"
 
 using regina::TypeTrie;
 
 template <int nTypes>
 void addTypeTrieFor(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(TypeTrie)
+
     auto c = pybind11::class_<TypeTrie<nTypes>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<const TypeTrie<nTypes>&>())
@@ -96,6 +99,8 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<TypeTrie<nTypes>>(m);
+
+    RDOC_SCOPE_END
 }
 
 void addTypeTrie(pybind11::module_& m) {

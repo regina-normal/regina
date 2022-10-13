@@ -35,11 +35,14 @@
 #include "../pybind11/stl.h"
 #include "enumerate/hilbertcd.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/hilbertcd.h"
 
 using regina::HilbertCD;
 using regina::VectorInt;
 
 void addHilbertCD(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(HilbertCD)
+
     auto c = pybind11::class_<HilbertCD>(m, "HilbertCD")
         .def_static("enumerate", &HilbertCD::enumerate<VectorInt,
             const std::function<void(VectorInt&&)>&>)
@@ -53,5 +56,7 @@ void addHilbertCD(pybind11::module_& m) {
         })
     ;
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

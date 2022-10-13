@@ -35,10 +35,13 @@
 #include "enumerate/validityconstraints.h"
 #include "utilities/bitmask.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/validityconstraints.h"
 
 using regina::ValidityConstraints;
 
 void addValidityConstraints(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(ValidityConstraints)
+
     auto c = pybind11::class_<ValidityConstraints>(m, "ValidityConstraints")
         .def(pybind11::init<int, size_t, size_t, size_t>(),
             pybind11::arg(), pybind11::arg(),
@@ -64,5 +67,7 @@ void addValidityConstraints(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
 
     regina::python::add_global_swap<ValidityConstraints>(m);
+
+    RDOC_SCOPE_END
 }
 

@@ -35,11 +35,14 @@
 #include "enumerate/maxadmissible.h"
 #include "maths/vector.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/maxadmissible.h"
 
 using regina::MaxAdmissible;
 using regina::VectorInt;
 
 void addMaxAdmissible(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(MaxAdmissible)
+
     auto c = pybind11::class_<MaxAdmissible>(m, "MaxAdmissible")
         .def_static("enumerate", [](const std::vector<VectorInt>& rays,
                 const regina::ValidityConstraints& c) {
@@ -48,5 +51,7 @@ void addMaxAdmissible(pybind11::module_& m) {
         })
     ;
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

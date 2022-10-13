@@ -35,12 +35,15 @@
 #include "../pybind11/stl.h"
 #include "enumerate/doubledescription.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/doubledescription.h"
 
 using regina::python::GILCallbackManager;
 using regina::DoubleDescription;
 using regina::VectorInt;
 
 void addDoubleDescription(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(DoubleDescription)
+
     auto c = pybind11::class_<DoubleDescription>(m, "DoubleDescription")
         .def_static("enumerate", [](
                 const std::function<void(VectorInt&&)>& action,
@@ -70,5 +73,7 @@ void addDoubleDescription(pybind11::module_& m) {
             pybind11::call_guard<regina::python::GILScopedRelease>())
     ;
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

@@ -35,12 +35,15 @@
 #include "../pybind11/stl.h"
 #include "enumerate/hilbertprimal.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/hilbertprimal.h"
 
 using regina::python::GILCallbackManager;
 using regina::HilbertPrimal;
 using regina::VectorInt;
 
 void addHilbertPrimal(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(HilbertPrimal)
+
     auto c = pybind11::class_<HilbertPrimal>(m, "HilbertPrimal")
         .def_static("enumerate", [](const std::function<void(VectorInt&&)>& a,
                 const std::vector<VectorInt>& r,
@@ -66,5 +69,7 @@ void addHilbertPrimal(pybind11::module_& m) {
             pybind11::call_guard<regina::python::GILScopedRelease>())
     ;
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

@@ -35,6 +35,7 @@
 #include "enumerate/treelp.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/treelp.h"
 
 using pybind11::overload_cast;
 using regina::Integer;
@@ -52,6 +53,8 @@ using regina::LPConstraintNonSpun;
 
 template <class LPConstraint>
 void addLPInitialTableaux(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(LPInitialTableaux)
+
     using Tableaux = LPInitialTableaux<LPConstraint>;
 
     auto c = pybind11::class_<Tableaux>(m, name)
@@ -85,10 +88,14 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
     regina::python::disable_eq_operators(c);
 
     regina::python::add_global_swap<Tableaux>(m);
+
+    RDOC_SCOPE_END
 }
 
 template <class LPConstraint>
 void addLPData(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(LPData)
+
     using Data = LPData<LPConstraint, Integer>;
 
     auto c = pybind11::class_<Data>(m, name)
@@ -124,9 +131,13 @@ void addLPData(pybind11::module_& m, const char* name) {
     regina::python::disable_eq_operators(c);
 
     regina::python::add_global_swap<Data>(m);
+
+    RDOC_SCOPE_END
 }
 
 void addTreeLP(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(LPMatrix)
+
     auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix")
         .def(pybind11::init<>())
         .def(pybind11::init<size_t, size_t>())
@@ -152,6 +163,8 @@ void addTreeLP(pybind11::module_& m) {
 
     regina::python::add_global_swap<LPMatrix<Integer>>(m);
 
+    RDOC_SCOPE_SWITCH(LPSystem)
+
     auto s = pybind11::class_<LPSystem>(m, "LPSystem")
         .def(pybind11::init<regina::NormalEncoding>())
         .def(pybind11::init<const LPSystem&>())
@@ -175,5 +188,7 @@ void addTreeLP(pybind11::module_& m) {
     addLPData<LPConstraintEulerPositive>(m, "LPData_EulerPositive");
     addLPData<LPConstraintEulerZero>(m, "LPData_EulerZero");
     addLPData<LPConstraintNonSpun>(m, "LPData_NonSpun");
+
+    RDOC_SCOPE_END
 }
 

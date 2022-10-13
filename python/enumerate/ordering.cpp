@@ -34,11 +34,14 @@
 #include "enumerate/ordering.h"
 #include "maths/matrix.h"
 #include "../helpers.h"
+#include "../docstrings/enumerate/ordering.h"
 
 using regina::MatrixInt;
 using regina::PosOrder;
 
 void addOrdering(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(PosOrder)
+
     auto c = pybind11::class_<PosOrder>(m, "PosOrder")
         .def(pybind11::init<const MatrixInt&>())
         .def(pybind11::init<const PosOrder&>())
@@ -58,5 +61,7 @@ void addOrdering(pybind11::module_& m) {
     });
     // It doesn't really make sense to compare these objects either.
     regina::python::disable_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 
