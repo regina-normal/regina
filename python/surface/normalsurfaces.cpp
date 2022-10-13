@@ -75,10 +75,12 @@ void addNormalSurfaces(pybind11::module_& m) {
                 rdoc::surfaceExportAll }
         }, rdoc_scope, rdoc_global::__bor);
 
-    RDOC_SCOPE_END
+    RDOC_SCOPE_SWITCH_MAIN
 
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
+
+    RDOC_SCOPE_SWITCH(NormalSurfaces)
 
     auto l = pybind11::class_<NormalSurfaces,
             std::shared_ptr<NormalSurfaces>>(m, "NormalSurfaces")
@@ -142,5 +144,7 @@ void addNormalSurfaces(pybind11::module_& m) {
         regina::NormalTransform>(wrap);
 
     regina::python::add_global_swap<NormalSurfaces>(m);
+
+    RDOC_SCOPE_END
 }
 

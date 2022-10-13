@@ -35,12 +35,15 @@
 #include "../pybind11/operators.h"
 #include "surface/normalcoords.h"
 #include "../helpers.h"
+#include "../docstrings/surface/normalcoords.h"
 
 using regina::NormalCoords;
 using regina::NormalEncoding;
 using regina::NormalInfo;
 
 void addNormalCoords(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(NormalCoords)
+
     pybind11::enum_<NormalCoords>(m, "NormalCoords")
         .value("NS_STANDARD", regina::NS_STANDARD)
         .value("NS_AN_STANDARD", regina::NS_AN_STANDARD)
@@ -54,6 +57,8 @@ void addNormalCoords(pybind11::module_& m) {
         .value("NS_ANGLE", regina::NS_ANGLE)
         .export_values()
         ;
+
+    RDOC_SCOPE_SWITCH(NormalEncoding)
 
     auto e = pybind11::class_<NormalEncoding>(m, "NormalEncoding")
         .def(pybind11::init<NormalCoords>())
@@ -87,10 +92,14 @@ void addNormalCoords(pybind11::module_& m) {
         ;
     regina::python::add_eq_operators(e);
 
+    RDOC_SCOPE_SWITCH(NormalInfo)
+
     auto i = pybind11::class_<NormalInfo>(m, "NormalInfo")
         .def_static("name", &NormalInfo::name)
         ;
     regina::python::no_eq_operators(i);
+
+    RDOC_SCOPE_END
 
     pybind11::implicitly_convertible<NormalCoords, NormalEncoding>();
 }

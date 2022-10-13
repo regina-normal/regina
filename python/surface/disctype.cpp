@@ -34,10 +34,13 @@
 #include "../pybind11/operators.h"
 #include "surface/disctype.h"
 #include "../helpers.h"
+#include "../docstrings/surface/disctype.h"
 
 using regina::DiscType;
 
 void addDiscType(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(DiscType)
+
     auto c = pybind11::class_<DiscType>(m, "DiscType")
         .def(pybind11::init<>())
         .def(pybind11::init<unsigned long, int>())
@@ -49,5 +52,7 @@ void addDiscType(pybind11::module_& m) {
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

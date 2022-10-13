@@ -36,12 +36,15 @@
 #include "surface/surfacefilter.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/surface/surfacefilter.h"
 
 using regina::SurfaceFilter;
 using regina::SurfaceFilterCombination;
 using regina::SurfaceFilterProperties;
 
 void addSurfaceFilter(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SurfaceFilter)
+
     pybind11::class_<SurfaceFilter, regina::Packet,
             std::shared_ptr<SurfaceFilter>>(m, "SurfaceFilter")
         .def("accept", &SurfaceFilter::accept)
@@ -49,6 +52,8 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def("filterTypeName", &SurfaceFilter::filterTypeName)
         .def_readonly_static("typeID", &SurfaceFilter::typeID)
     ;
+
+    RDOC_SCOPE_SWITCH(SurfaceFilterCombination)
 
     auto c = pybind11::class_<SurfaceFilterCombination, regina::SurfaceFilter,
             std::shared_ptr<SurfaceFilterCombination>>
@@ -65,6 +70,8 @@ void addSurfaceFilter(pybind11::module_& m) {
     regina::python::packet_eq_operators(c);
 
     regina::python::add_global_swap<SurfaceFilterCombination>(m);
+
+    RDOC_SCOPE_SWITCH(SurfaceFilterProperties)
 
     auto p = pybind11::class_<SurfaceFilterProperties, regina::SurfaceFilter,
             std::shared_ptr<SurfaceFilterProperties>>
@@ -96,5 +103,7 @@ void addSurfaceFilter(pybind11::module_& m) {
     regina::python::packet_eq_operators(p);
 
     regina::python::add_global_swap<SurfaceFilterProperties>(m);
+
+    RDOC_SCOPE_END
 }
 

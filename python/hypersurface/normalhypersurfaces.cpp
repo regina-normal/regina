@@ -38,6 +38,7 @@
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
+#include "../docstrings/hypersurface/normalhypersurfaces.h"
 
 using namespace regina::python;
 using regina::HyperCoords;
@@ -47,8 +48,12 @@ using regina::ProgressTracker;
 using regina::Triangulation;
 
 void addNormalHypersurfaces(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN_MAIN
+
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
+
+    RDOC_SCOPE_SWITCH(NormalHypersurfaces)
 
     auto l = pybind11::class_<NormalHypersurfaces,
             std::shared_ptr<NormalHypersurfaces>>(m, "NormalHypersurfaces")
@@ -100,5 +105,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         pybind11::call_guard<GILScopedRelease>());
 
     regina::python::add_global_swap<NormalHypersurfaces>(m);
+
+    RDOC_SCOPE_END
 }
 
