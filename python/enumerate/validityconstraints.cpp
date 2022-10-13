@@ -42,31 +42,36 @@ using regina::ValidityConstraints;
 void addValidityConstraints(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(ValidityConstraints)
 
-    auto c = pybind11::class_<ValidityConstraints>(m, "ValidityConstraints")
+    auto c = pybind11::class_<ValidityConstraints>(m, "ValidityConstraints",
+            rdoc_scope)
         .def(pybind11::init<int, size_t, size_t, size_t>(),
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("reserveLocal") = 0,
-            pybind11::arg("reserveGlobal") = 0)
-        .def(pybind11::init<const ValidityConstraints&>())
+            pybind11::arg("reserveGlobal") = 0,
+            rdoc::ValidityConstraints)
+        .def(pybind11::init<const ValidityConstraints&>(),
+            rdoc::ValidityConstraints_2)
         .def("addLocal", [](ValidityConstraints& v,
                 const std::vector<int>& pos) {
             v.addLocal(pos.begin(), pos.end());
-        })
+        }, rdoc::addLocal)
         .def("addGlobal", [](ValidityConstraints& v,
                 const std::vector<int>& pos) {
             v.addGlobal(pos.begin(), pos.end());
-        })
-        .def("swap", &ValidityConstraints::swap)
+        }, rdoc::addGlobal)
+        .def("swap", &ValidityConstraints::swap, rdoc::swap)
         .def("bitmasks", pybind11::overload_cast<size_t>(
-            &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_))
+            &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_),
+            rdoc::bitmasks)
         .def("bitmasks", pybind11::overload_cast<>(
-            &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_))
+            &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_),
+            rdoc::bitmasks_2)
         .def_readonly_static("none", &ValidityConstraints::none)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<ValidityConstraints>(m);
+    regina::python::add_global_swap<ValidityConstraints>(m, rdoc::swap);
 
     RDOC_SCOPE_END
 }

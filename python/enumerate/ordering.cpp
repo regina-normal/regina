@@ -42,12 +42,12 @@ using regina::PosOrder;
 void addOrdering(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PosOrder)
 
-    auto c = pybind11::class_<PosOrder>(m, "PosOrder")
-        .def(pybind11::init<const MatrixInt&>())
-        .def(pybind11::init<const PosOrder&>())
+    auto c = pybind11::class_<PosOrder>(m, "PosOrder", rdoc_scope)
+        .def(pybind11::init<const MatrixInt&>(), rdoc::PosOrder)
+        .def(pybind11::init<const PosOrder&>(), rdoc::PosOrder_2)
         .def("__call__", [](const PosOrder& p, long i, long j) {
             return p(i, j);
-        })
+        }, rdoc::__call)
     ;
     regina::python::add_output_custom(c, [](const PosOrder& o,
             std::ostream& s) {

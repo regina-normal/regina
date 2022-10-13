@@ -42,11 +42,11 @@ template <int nTypes>
 void addTypeTrieFor(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TypeTrie)
 
-    auto c = pybind11::class_<TypeTrie<nTypes>>(m, name)
-        .def(pybind11::init<>())
-        .def(pybind11::init<const TypeTrie<nTypes>&>())
-        .def("swap", &TypeTrie<nTypes>::swap)
-        .def("clear", &TypeTrie<nTypes>::clear)
+    auto c = pybind11::class_<TypeTrie<nTypes>>(m, name, rdoc_scope)
+        .def(pybind11::init<>(), rdoc::TypeTrie)
+        .def(pybind11::init<const TypeTrie<nTypes>&>(), rdoc::TypeTrie_2)
+        .def("swap", &TypeTrie<nTypes>::swap, rdoc::swap)
+        .def("clear", &TypeTrie<nTypes>::clear, rdoc::clear)
         .def("insert", [](TypeTrie<nTypes>& t, pybind11::list arg) {
             char* c = new char[arg.size() + 1];
             size_t len = 0;
@@ -69,7 +69,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             c[len] = 0;
             t.insert(c, len);
             delete[] c;
-        })
+        }, rdoc::insert)
         .def("dominates", [](const TypeTrie<nTypes>& t, pybind11::list arg) {
             char* c = new char[arg.size() + 1];
             size_t len = 0;
@@ -93,12 +93,12 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             bool ans = t.dominates(c, len);
             delete[] c;
             return ans;
-        })
+        }, rdoc::dominates)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<TypeTrie<nTypes>>(m);
+    regina::python::add_global_swap<TypeTrie<nTypes>>(m, rdoc_global::swap);
 
     RDOC_SCOPE_END
 }

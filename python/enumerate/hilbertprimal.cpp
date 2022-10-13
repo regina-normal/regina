@@ -44,7 +44,7 @@ using regina::VectorInt;
 void addHilbertPrimal(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HilbertPrimal)
 
-    auto c = pybind11::class_<HilbertPrimal>(m, "HilbertPrimal")
+    auto c = pybind11::class_<HilbertPrimal>(m, "HilbertPrimal", rdoc_scope)
         .def_static("enumerate", [](const std::function<void(VectorInt&&)>& a,
                 const std::vector<VectorInt>& r,
                 const regina::ValidityConstraints& c,
@@ -55,7 +55,8 @@ void addHilbertPrimal(pybind11::module_& m) {
                 a(std::move(v));
             }, r.begin(), r.end(), c, p);
         }, pybind11::arg(), pybind11::arg(), pybind11::arg(),
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            rdoc::enumerate)
         .def_static("enumerate", [](const std::vector<VectorInt>& r,
                 const regina::ValidityConstraints& c,
                 regina::ProgressTracker* p) {
@@ -66,7 +67,8 @@ void addHilbertPrimal(pybind11::module_& m) {
             return ans;
         }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<regina::python::GILScopedRelease>())
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::enumerate)
     ;
     regina::python::no_eq_operators(c);
 

@@ -44,7 +44,7 @@ using regina::VectorInt;
 void addHilbertDual(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HilbertDual)
 
-    auto c = pybind11::class_<HilbertDual>(m, "HilbertDual")
+    auto c = pybind11::class_<HilbertDual>(m, "HilbertDual", rdoc_scope)
         .def_static("enumerate", [](
                 const std::function<void(VectorInt&&)>& action,
                 const regina::MatrixInt& s,
@@ -58,7 +58,8 @@ void addHilbertDual(pybind11::module_& m) {
         },
             pybind11::arg(), pybind11::arg(), pybind11::arg(),
             pybind11::arg("tracker") = nullptr,
-            pybind11::arg("initialRows") = 0)
+            pybind11::arg("initialRows") = 0,
+            rdoc::enumerate)
         .def_static("enumerate", [](const regina::MatrixInt& s,
                 const regina::ValidityConstraints& c,
                 regina::ProgressTracker* p, unsigned r) {
@@ -70,7 +71,8 @@ void addHilbertDual(pybind11::module_& m) {
         }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("tracker") = nullptr,
             pybind11::arg("initialRows") = 0,
-            pybind11::call_guard<regina::python::GILScopedRelease>())
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::enumerate)
     ;
     regina::python::no_eq_operators(c);
 
