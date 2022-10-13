@@ -71,7 +71,13 @@ void addDisc(pybind11::module_& m) {
             rdoc::DiscSetTet)
         .def(pybind11::init<unsigned long, unsigned long, unsigned long,
             unsigned long, unsigned long, unsigned long, unsigned long,
-            unsigned long, unsigned long, unsigned long>(), rdoc::DiscSetTet_2)
+            unsigned long, unsigned long, unsigned long>(),
+            pybind11::arg("tri0"), pybind11::arg("tri1"), pybind11::arg("tri2"),
+            pybind11::arg("tri3"), pybind11::arg("quad0"),
+            pybind11::arg("quad1"), pybind11::arg("quad2"),
+            pybind11::arg("oct0") = 0, pybind11::arg("oct1") = 0,
+            pybind11::arg("oct2") = 0,
+            rdoc::DiscSetTet_2)
         .def(pybind11::init<const DiscSetTet&>(), rdoc::DiscSetTet_3)
         .def("nDiscs", &DiscSetTet::nDiscs, rdoc::nDiscs)
         .def("arcFromDisc", &DiscSetTet::arcFromDisc, rdoc::arcFromDisc)
