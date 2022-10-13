@@ -677,6 +677,20 @@ The rules for using the triangulation() reference are:
 Returns:
     a reference to the underlying triangulation.)doc";
 
+// Docstring regina::python::doc::NormalSurfaces_::vectors
+static const char *vectors =
+R"doc(Returns a Python iterable object that iterates over the raw vectors
+for all surfaces in this list. For example:
+
+```
+list = NormalSurfaces(...)
+for v in list.vectors():
+    ...
+```
+
+Returns:
+    an iterator over the normal surfaces in this list.)doc";
+
 // Docstring regina::python::doc::NormalSurfaces_::which
 static const char *which =
 R"doc(Returns details of which normal surfaces this list represents within
