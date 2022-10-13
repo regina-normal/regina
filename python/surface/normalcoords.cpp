@@ -44,39 +44,49 @@ using regina::NormalInfo;
 void addNormalCoords(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(NormalCoords)
 
-    pybind11::enum_<NormalCoords>(m, "NormalCoords")
-        .value("NS_STANDARD", regina::NS_STANDARD)
-        .value("NS_AN_STANDARD", regina::NS_AN_STANDARD)
-        .value("NS_QUAD", regina::NS_QUAD)
-        .value("NS_QUAD_CLOSED", regina::NS_QUAD_CLOSED)
-        .value("NS_AN_QUAD_OCT", regina::NS_AN_QUAD_OCT)
-        .value("NS_AN_QUAD_OCT_CLOSED", regina::NS_AN_QUAD_OCT_CLOSED)
-        .value("NS_EDGE_WEIGHT", regina::NS_EDGE_WEIGHT)
-        .value("NS_TRIANGLE_ARCS", regina::NS_TRIANGLE_ARCS)
-        .value("NS_AN_LEGACY", regina::NS_AN_LEGACY)
-        .value("NS_ANGLE", regina::NS_ANGLE)
+    pybind11::enum_<NormalCoords>(m, "NormalCoords", rdoc_scope)
+        .value("NS_STANDARD", regina::NS_STANDARD, rdoc::NS_STANDARD)
+        .value("NS_AN_STANDARD", regina::NS_AN_STANDARD, rdoc::NS_AN_STANDARD)
+        .value("NS_QUAD", regina::NS_QUAD, rdoc::NS_QUAD)
+        .value("NS_QUAD_CLOSED", regina::NS_QUAD_CLOSED, rdoc::NS_QUAD_CLOSED)
+        .value("NS_AN_QUAD_OCT", regina::NS_AN_QUAD_OCT, rdoc::NS_AN_QUAD_OCT)
+        .value("NS_AN_QUAD_OCT_CLOSED", regina::NS_AN_QUAD_OCT_CLOSED,
+            rdoc::NS_AN_QUAD_OCT_CLOSED)
+        .value("NS_EDGE_WEIGHT", regina::NS_EDGE_WEIGHT, rdoc::NS_EDGE_WEIGHT)
+        .value("NS_TRIANGLE_ARCS", regina::NS_TRIANGLE_ARCS,
+            rdoc::NS_TRIANGLE_ARCS)
+        .value("NS_AN_LEGACY", regina::NS_AN_LEGACY, rdoc::NS_AN_LEGACY)
+        .value("NS_ANGLE", regina::NS_ANGLE, rdoc::NS_ANGLE)
         .export_values()
         ;
 
     RDOC_SCOPE_SWITCH(NormalEncoding)
 
-    auto e = pybind11::class_<NormalEncoding>(m, "NormalEncoding")
-        .def(pybind11::init<NormalCoords>())
-        .def(pybind11::init<const NormalEncoding&>())
-        .def("valid", &NormalEncoding::valid)
-        .def("block", &NormalEncoding::block)
-        .def("storesTriangles", &NormalEncoding::storesTriangles)
-        .def("storesOctagons", &NormalEncoding::storesOctagons)
-        .def("storesAngles", &NormalEncoding::storesAngles)
-        .def("couldBeVertexLink", &NormalEncoding::couldBeVertexLink)
-        .def("couldBeNonCompact", &NormalEncoding::couldBeNonCompact)
-        .def("withTriangles", &NormalEncoding::withTriangles)
-        .def("withoutTriangles", &NormalEncoding::withoutTriangles)
-        .def("withOctagons", &NormalEncoding::withOctagons)
-        .def("withoutOctagons", &NormalEncoding::withoutOctagons)
-        .def("intValue", &NormalEncoding::intValue)
-        .def_static("fromIntValue", &NormalEncoding::fromIntValue)
-        .def(pybind11::self + pybind11::self)
+    auto e = pybind11::class_<NormalEncoding>(m, "NormalEncoding", rdoc_scope)
+        .def(pybind11::init<NormalCoords>(), rdoc::NormalEncoding)
+        .def(pybind11::init<const NormalEncoding&>(), rdoc::NormalEncoding_2)
+        .def("valid", &NormalEncoding::valid, rdoc::valid)
+        .def("block", &NormalEncoding::block, rdoc::block)
+        .def("storesTriangles", &NormalEncoding::storesTriangles,
+            rdoc::storesTriangles)
+        .def("storesOctagons", &NormalEncoding::storesOctagons,
+            rdoc::storesOctagons)
+        .def("storesAngles", &NormalEncoding::storesAngles, rdoc::storesAngles)
+        .def("couldBeVertexLink", &NormalEncoding::couldBeVertexLink,
+            rdoc::couldBeVertexLink)
+        .def("couldBeNonCompact", &NormalEncoding::couldBeNonCompact,
+            rdoc::couldBeNonCompact)
+        .def("withTriangles", &NormalEncoding::withTriangles,
+            rdoc::withTriangles)
+        .def("withoutTriangles", &NormalEncoding::withoutTriangles,
+            rdoc::withoutTriangles)
+        .def("withOctagons", &NormalEncoding::withOctagons, rdoc::withOctagons)
+        .def("withoutOctagons", &NormalEncoding::withoutOctagons,
+            rdoc::withoutOctagons)
+        .def("intValue", &NormalEncoding::intValue, rdoc::intValue)
+        .def_static("fromIntValue", &NormalEncoding::fromIntValue,
+            rdoc::fromIntValue)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
         .def("__str__", [](NormalEncoding e) {
             std::ostringstream out;
             out << "0x" << std::hex << std::setw(4) << std::setfill('0')
@@ -90,12 +100,12 @@ void addNormalCoords(pybind11::module_& m) {
             return out.str();
         })
         ;
-    regina::python::add_eq_operators(e);
+    regina::python::add_eq_operators(e, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_SWITCH(NormalInfo)
 
-    auto i = pybind11::class_<NormalInfo>(m, "NormalInfo")
-        .def_static("name", &NormalInfo::name)
+    auto i = pybind11::class_<NormalInfo>(m, "NormalInfo", rdoc_scope)
+        .def_static("name", &NormalInfo::name, rdoc::name)
         ;
     regina::python::no_eq_operators(i);
 

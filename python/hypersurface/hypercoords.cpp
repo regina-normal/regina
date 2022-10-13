@@ -44,27 +44,32 @@ using regina::HyperInfo;
 void addHyperCoords(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HyperCoords)
 
-    pybind11::enum_<regina::HyperCoords>(m, "HyperCoords")
-        .value("HS_STANDARD", regina::HS_STANDARD)
-        .value("HS_PRISM", regina::HS_PRISM)
-        .value("HS_EDGE_WEIGHT", regina::HS_EDGE_WEIGHT)
+    pybind11::enum_<regina::HyperCoords>(m, "HyperCoords", rdoc_scope)
+        .value("HS_STANDARD", regina::HS_STANDARD, rdoc::HS_STANDARD)
+        .value("HS_PRISM", regina::HS_PRISM, rdoc::HS_PRISM)
+        .value("HS_EDGE_WEIGHT", regina::HS_EDGE_WEIGHT, rdoc::HS_EDGE_WEIGHT)
         .export_values()
         ;
 
     RDOC_SCOPE_SWITCH(HyperEncoding)
 
-    auto e = pybind11::class_<HyperEncoding>(m, "HyperEncoding")
-        .def(pybind11::init<HyperCoords>())
-        .def(pybind11::init<const HyperEncoding&>())
-        .def("valid", &HyperEncoding::valid)
-        .def("block", &HyperEncoding::block)
-        .def("storesTetrahedra", &HyperEncoding::storesTetrahedra)
-        .def("couldBeVertexLink", &HyperEncoding::couldBeVertexLink)
-        .def("couldBeNonCompact", &HyperEncoding::couldBeNonCompact)
-        .def("withTetrahedra", &HyperEncoding::withTetrahedra)
-        .def("intValue", &HyperEncoding::intValue)
-        .def_static("fromIntValue", &HyperEncoding::fromIntValue)
-        .def(pybind11::self + pybind11::self)
+    auto e = pybind11::class_<HyperEncoding>(m, "HyperEncoding", rdoc_scope)
+        .def(pybind11::init<HyperCoords>(), rdoc::HyperEncoding)
+        .def(pybind11::init<const HyperEncoding&>(), rdoc::HyperEncoding_2)
+        .def("valid", &HyperEncoding::valid, rdoc::valid)
+        .def("block", &HyperEncoding::block, rdoc::block)
+        .def("storesTetrahedra", &HyperEncoding::storesTetrahedra,
+            rdoc::storesTetrahedra)
+        .def("couldBeVertexLink", &HyperEncoding::couldBeVertexLink,
+            rdoc::couldBeVertexLink)
+        .def("couldBeNonCompact", &HyperEncoding::couldBeNonCompact,
+            rdoc::couldBeNonCompact)
+        .def("withTetrahedra", &HyperEncoding::withTetrahedra,
+            rdoc::withTetrahedra)
+        .def("intValue", &HyperEncoding::intValue, rdoc::intValue)
+        .def_static("fromIntValue", &HyperEncoding::fromIntValue,
+            rdoc::fromIntValue)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
         .def("__str__", [](HyperEncoding e) {
             std::ostringstream out;
             out << "0x" << std::hex << std::setw(4) << std::setfill('0')
@@ -78,12 +83,12 @@ void addHyperCoords(pybind11::module_& m) {
             return out.str();
         })
         ;
-    regina::python::add_eq_operators(e);
+    regina::python::add_eq_operators(e, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_SWITCH(HyperInfo)
 
-    auto i = pybind11::class_<HyperInfo>(m, "HyperInfo")
-        .def_static("name", &HyperInfo::name)
+    auto i = pybind11::class_<HyperInfo>(m, "HyperInfo", rdoc_scope)
+        .def_static("name", &HyperInfo::name, rdoc::name)
         ;
     regina::python::no_eq_operators(i);
 
