@@ -116,8 +116,8 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
  * explicitly specified as part of the template function call).
  */
 template <typename... Args, typename PythonClass, typename... Options>
-void add_packet_constructor(PythonClass& classWrapper,
-        const char* doc = nullptr, Options&&... options) {
+void add_packet_constructor(PythonClass& classWrapper, const char* doc,
+        Options&&... options) {
     if (doc)
         classWrapper.def(pybind11::init([](Args... args) {
             using WrappedType = typename PythonClass::type;
