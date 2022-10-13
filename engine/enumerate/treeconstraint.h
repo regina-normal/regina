@@ -352,7 +352,7 @@ class LPConstraintBase {
  * This class does not provide any additional functionality.  It is
  * merely a convenience to help describe and enforce preconditions.
  *
- * \ifacespython This base class is not present, but all of the "real" linear
+ * \nopython This base class is not present, but all of the "real" linear
  * constraint subclasses are available.  See the LPConstraintBase class notes
  * for further details on accessing linear constraints from within Python.
  *
@@ -773,7 +773,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */

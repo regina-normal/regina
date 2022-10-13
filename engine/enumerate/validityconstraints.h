@@ -225,9 +225,9 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * normal surfaces in standard coordinates, you can make the
          * single call <tt>addLocal({4, 5, 6})</tt>.
          *
-         * \ifacespython Not present, but there is a Python version of this
-         * function that takes the coordinate pattern as a Python list
-         * (which need not be constant).
+         * \nopython Instead, use the Python version of this function that
+         * takes the coordinate pattern as a Python list (which need not be
+         * constant).
          *
          * @param pattern the coordinates to constraint within each block,
          * relative to the start of the block.
@@ -274,9 +274,9 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * you can encode the constraint that there is at most one octagon
          * in the entire surface by calling <tt>addGlobal({7, 8, 9})</tt>.
          *
-         * \ifacespython Not present, but there is a Python version of this
-         * function that takes the coordinate pattern as a Python list
-         * (which need not be constant).
+         * \nopython Instead, use the Python version of this function that
+         * takes the coordinate pattern as a Python list (which need not be
+         * constant).
          *
          * @param pattern the coordinates to constraint within each block,
          * relative to the start of the block.
@@ -408,7 +408,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -418,7 +418,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */

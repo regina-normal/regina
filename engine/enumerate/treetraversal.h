@@ -326,8 +326,8 @@ class TreeTraversal : public ShortOutput<
          *
          * This routine outputs the same information that typeString() returns.
          *
-         * \ifacespython Not rpesent; instead use typeString(), which
-         * returns this same information as a string.
+         * \nopython Instead use typeString(), which returns this same
+         * information as a string.
          *
          * @param out the output stream to which to write.
          */
@@ -347,7 +347,7 @@ class TreeTraversal : public ShortOutput<
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */

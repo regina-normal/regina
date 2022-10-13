@@ -430,7 +430,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -440,7 +440,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -492,8 +492,8 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  * for use as internal storage for LPInitialTableaux, and at some point in the
  * future this class will most likely become private to LPInitialTableaux.
  *
- * \ifacespython Not present, since LPCol is only designed to be used
- * as part of the internal data storage for LPInitialTableaux.
+ * \nopython LPCol is only designed to be used as part of the internal
+ * data storage for LPInitialTableaux.
  *
  * \apinotfinal
  *
@@ -728,7 +728,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1178,7 +1178,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1188,7 +1188,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1767,7 +1767,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1777,7 +1777,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
