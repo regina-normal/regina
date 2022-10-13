@@ -89,7 +89,7 @@ coordinate, used to projectivise the angle structure polytope so that
 it becomes a polyhedral cone that is invariant under (positive)
 scaling. If the final scaling coordinate is *s*, then a rational value
 of *x* in any other coordinate position should be interpreted as the
-angle *x*.&pi;/*s*.
+angle (*x*/*s*)π.
 
 Precondition:
     This coordinate system must not be used with any of Regina's

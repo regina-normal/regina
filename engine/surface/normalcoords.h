@@ -203,7 +203,7 @@ enum NormalCoords {
      * polyhedral cone that is invariant under (positive) scaling.
      * If the final scaling coordinate is \a s, then a rational value of \a x
      * in any other coordinate position should be interpreted as the angle
-     * <i>x</i>.&pi;/<i>s</i>.
+     * (<i>x</i>/<i>s</i>)π.
      *
      * \pre This coordinate system must not be used with any of Regina's
      * routines unless they explicitly declare that NS_ANGLE is allowed.
