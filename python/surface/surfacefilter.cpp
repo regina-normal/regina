@@ -46,10 +46,11 @@ void addSurfaceFilter(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SurfaceFilter)
 
     pybind11::class_<SurfaceFilter, regina::Packet,
-            std::shared_ptr<SurfaceFilter>>(m, "SurfaceFilter")
-        .def("accept", &SurfaceFilter::accept)
-        .def("filterType", &SurfaceFilter::filterType)
-        .def("filterTypeName", &SurfaceFilter::filterTypeName)
+            std::shared_ptr<SurfaceFilter>>(m, "SurfaceFilter", rdoc_scope)
+        .def("accept", &SurfaceFilter::accept, rdoc::accept)
+        .def("filterType", &SurfaceFilter::filterType, rdoc::filterType)
+        .def("filterTypeName", &SurfaceFilter::filterTypeName,
+            rdoc::filterTypeName)
         .def_readonly_static("typeID", &SurfaceFilter::typeID)
     ;
 
@@ -57,52 +58,68 @@ void addSurfaceFilter(pybind11::module_& m) {
 
     auto c = pybind11::class_<SurfaceFilterCombination, regina::SurfaceFilter,
             std::shared_ptr<SurfaceFilterCombination>>
-            (m, "SurfaceFilterCombination")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const SurfaceFilterCombination&>())
-        .def("swap", &SurfaceFilterCombination::swap)
-        .def("usesAnd", &SurfaceFilterCombination::usesAnd)
-        .def("setUsesAnd", &SurfaceFilterCombination::setUsesAnd)
+            (m, "SurfaceFilterCombination", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::SurfaceFilterCombination)
+        .def(pybind11::init<const SurfaceFilterCombination&>(),
+            rdoc::SurfaceFilterCombination_2)
+        .def("swap", &SurfaceFilterCombination::swap, rdoc::swap)
+        .def("usesAnd", &SurfaceFilterCombination::usesAnd, rdoc::usesAnd)
+        .def("setUsesAnd", &SurfaceFilterCombination::setUsesAnd,
+            rdoc::setUsesAnd)
         .def_readonly_static("filterTypeID",
             &SurfaceFilterCombination::filterTypeID)
     ;
     regina::python::add_output(c);
-    regina::python::packet_eq_operators(c);
+    regina::python::packet_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<SurfaceFilterCombination>(m);
+    regina::python::add_global_swap<SurfaceFilterCombination>(m,
+        rdoc_global::swap);
 
     RDOC_SCOPE_SWITCH(SurfaceFilterProperties)
 
     auto p = pybind11::class_<SurfaceFilterProperties, regina::SurfaceFilter,
             std::shared_ptr<SurfaceFilterProperties>>
-            (m, "SurfaceFilterProperties")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const SurfaceFilterProperties&>())
-        .def("swap", &SurfaceFilterProperties::swap)
-        .def("eulerChars", &SurfaceFilterProperties::eulerChars)
-        .def("countEulerChars", &SurfaceFilterProperties::countEulerChars)
-        .def("eulerChar", &SurfaceFilterProperties::eulerChar)
-        .def("orientability", &SurfaceFilterProperties::orientability)
-        .def("compactness", &SurfaceFilterProperties::compactness)
-        .def("realBoundary", &SurfaceFilterProperties::realBoundary)
-        .def("addEulerChar", &SurfaceFilterProperties::addEulerChar)
-        .def("removeEulerChar", &SurfaceFilterProperties::removeEulerChar)
+            (m, "SurfaceFilterProperties", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::SurfaceFilterProperties)
+        .def(pybind11::init<const SurfaceFilterProperties&>(),
+            rdoc::SurfaceFilterProperties_2)
+        .def("swap", &SurfaceFilterProperties::swap, rdoc::swap)
+        .def("eulerChars", &SurfaceFilterProperties::eulerChars,
+            rdoc::eulerChars)
+        .def("countEulerChars", &SurfaceFilterProperties::countEulerChars,
+            rdoc::countEulerChars)
+        .def("eulerChar", &SurfaceFilterProperties::eulerChar, rdoc::eulerChar)
+        .def("orientability", &SurfaceFilterProperties::orientability,
+            rdoc::orientability)
+        .def("compactness", &SurfaceFilterProperties::compactness,
+            rdoc::compactness)
+        .def("realBoundary", &SurfaceFilterProperties::realBoundary,
+            rdoc::realBoundary)
+        .def("addEulerChar", &SurfaceFilterProperties::addEulerChar,
+            rdoc::addEulerChar)
+        .def("removeEulerChar", &SurfaceFilterProperties::removeEulerChar,
+            rdoc::removeEulerChar)
         .def("removeAllEulerChars",
-            &SurfaceFilterProperties::removeAllEulerChars)
+            &SurfaceFilterProperties::removeAllEulerChars,
+            rdoc::removeAllEulerChars)
         .def("setEulerChars", [](SurfaceFilterProperties& f,
                 const std::vector<regina::LargeInteger>& v) {
             f.setEulerChars(v.begin(), v.end());
-        })
-        .def("setOrientability", &SurfaceFilterProperties::setOrientability)
-        .def("setCompactness", &SurfaceFilterProperties::setCompactness)
-        .def("setRealBoundary", &SurfaceFilterProperties::setRealBoundary)
+        }, rdoc::setEulerChars)
+        .def("setOrientability", &SurfaceFilterProperties::setOrientability,
+            rdoc::setOrientability)
+        .def("setCompactness", &SurfaceFilterProperties::setCompactness,
+            rdoc::setCompactness)
+        .def("setRealBoundary", &SurfaceFilterProperties::setRealBoundary,
+            rdoc::setRealBoundary)
         .def_readonly_static("filterTypeID",
             &SurfaceFilterProperties::filterTypeID)
     ;
     regina::python::add_output(p);
-    regina::python::packet_eq_operators(p);
+    regina::python::packet_eq_operators(p, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<SurfaceFilterProperties>(m);
+    regina::python::add_global_swap<SurfaceFilterProperties>(m,
+        rdoc_global::swap_2);
 
     RDOC_SCOPE_END
 }
