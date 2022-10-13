@@ -149,13 +149,11 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
 
     auto wrap = regina::python::add_packet_wrapper<SnapPeaTriangulation>(
         m, "PacketOfSnapPeaTriangulation");
-    // TODO: Replace nullptr with docstrings.
-    regina::python::add_packet_constructor<>(wrap, nullptr);
-    regina::python::add_packet_constructor<const std::string&>(wrap, nullptr);
+    regina::python::add_packet_constructor<>(wrap);
+    regina::python::add_packet_constructor<const std::string&>(wrap);
     regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap,
-        nullptr /* docstring */,
         pybind11::arg(), pybind11::arg("ignored") = false);
-    regina::python::add_packet_constructor<const regina::Link&>(wrap, nullptr);
+    regina::python::add_packet_constructor<const regina::Link&>(wrap);
 
     auto st = pybind11::enum_<SnapPeaTriangulation::SolutionType>(
             c2, "SolutionType")

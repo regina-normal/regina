@@ -250,11 +250,9 @@ void addTriangulation2(pybind11::module_& m) {
 
     auto wrap = regina::python::add_packet_wrapper<Triangulation<2>>(
         m, "PacketOfTriangulation2");
-    // TODO: Replace nullptr with docstrings.
-    regina::python::add_packet_constructor<>(wrap, nullptr);
-    regina::python::add_packet_constructor<const Triangulation<2>&, bool>(wrap,
-        nullptr);
-    regina::python::add_packet_constructor<const std::string&>(wrap, nullptr);
+    regina::python::add_packet_constructor<>(wrap);
+    regina::python::add_packet_constructor<const Triangulation<2>&, bool>(wrap);
+    regina::python::add_packet_constructor<const std::string&>(wrap);
 
     // We cannot use add_global_swap() here, since add_global_swap() cannot
     // resolve regina::swap to the templated triangulation swap function.

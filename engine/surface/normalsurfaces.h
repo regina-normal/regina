@@ -859,11 +859,32 @@ class NormalSurfaces :
             SurfaceExport additionalFields = regina::surfaceExportAll) const;
 
         /**
-         * An iterator that gives access to the raw vectors for surfaces in
-         * this list, pointing to the beginning of this surface list.
+         * A C++ iterator that gives access to the raw vectors for surfaces
+         * in this list, pointing to the beginning of this surface list.
          *
-         * In Python, beginVectors() and endVectors() are replaced
-         * by a single routine vectors(), which returns an iterable object:
+         * \nopython Use vectors() instead, which returns an iterable object
+         * for iterating over these same raw vectors.
+         *
+         * @return an iterator at the beginning of this surface list.
+         */
+        VectorIterator beginVectors() const;
+
+        /**
+         * A C++ iterator that gives access to the raw vectors for surfaces
+         * in this list, pointing past the end of this surface list.
+         * This iterator is not dereferenceable.
+         *
+         * \nopython Use vectors() instead, which returns an iterable object
+         * for iterating over these same raw vectors.
+         *
+         * @return an iterator past the end of this surface list.
+         */
+        VectorIterator endVectors() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterable object that iterates over the raw
+         * vectors for all surfaces in this list.  For example:
          *
          * \code{.py}
          * list = NormalSurfaces(...)
@@ -871,27 +892,14 @@ class NormalSurfaces :
          *     ...
          * \endcode
          *
-         * \nopython Use vectors() instead.
+         * \nocpp For C++ users, NormalHypersurfaces provides beginVectors()
+         * and endVectors() instead, which together define an iterator range
+         * over these same raw vectors.
          *
-         * @return an iterator at the beginning of this surface list.
+         * @return an iterator over the normal surfaces in this list.
          */
-        VectorIterator beginVectors() const;
-
-        /**
-         * An iterator that gives access to the raw vectors for surfaces in
-         * this list, pointing past the end of this surface list.
-         * This iterator is not dereferenceable.
-         *
-         * In Python, beginVectors() and endVectors() are replaced
-         * by a single routine vectors(), which returns an iterable object;
-         * see the beginVectors() documentation for further details.
-         *
-         * \nopython Use vectors() instead.
-         *
-         * @return an iterator past the end of this surface list.
-         */
-        VectorIterator endVectors() const;
-
+        auto vectors() const;
+#endif
         /**
          * A bidirectional iterator that runs through the raw vectors for
          * surfaces in this list.

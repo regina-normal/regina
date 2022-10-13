@@ -336,11 +336,10 @@ void addLink(pybind11::module_& m) {
     regina::python::addListView<decltype(Link().components())>(m);
 
     auto wrap = regina::python::add_packet_wrapper<Link>(m, "PacketOfLink");
-    // TODO: Replace nullptr with docstrings.
-    regina::python::add_packet_constructor<>(wrap, nullptr);
-    regina::python::add_packet_constructor<size_t>(wrap, nullptr);
-    regina::python::add_packet_constructor<const Link&, bool>(wrap, nullptr);
-    regina::python::add_packet_constructor<const std::string&>(wrap, nullptr);
+    regina::python::add_packet_constructor<>(wrap);
+    regina::python::add_packet_constructor<size_t>(wrap);
+    regina::python::add_packet_constructor<const Link&, bool>(wrap);
+    regina::python::add_packet_constructor<const std::string&>(wrap);
 
     regina::python::add_global_swap<Link>(m);
 }

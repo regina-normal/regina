@@ -85,7 +85,7 @@ void addAngleStructures(pybind11::module_& m) {
     auto wrap = regina::python::add_packet_wrapper<AngleStructures>(
         m, "PacketOfAngleStructures");
     regina::python::add_packet_constructor<const Triangulation<3>&, bool,
-            regina::AngleAlg, ProgressTracker*>(wrap, nullptr /* docstring */,
+            regina::AngleAlg, ProgressTracker*>(wrap,
         pybind11::arg(),
         pybind11::arg("tautOnly") = false,
         pybind11::arg("algHints") = regina::AS_ALG_DEFAULT,
