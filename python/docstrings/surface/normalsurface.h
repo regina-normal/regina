@@ -928,6 +928,70 @@ will be reevaluated every time this routine is called.
 Returns:
     ``True`` if and only if this is a splitting surface.)doc";
 
+// Docstring regina::python::doc::NormalSurface_::isThinEdgeLink
+static const char *isThinEdgeLink =
+R"doc(Determines whether or not a positive rational multiple of this surface
+is the thin link of a single edge.
+
+Here a *thin* edge link is a normal surface which appears naturally as
+the frontier of a regular neighbourhood of an edge, with no need for
+any further normalisation.
+
+This behaves differently from isNormalEdgeLink(), which tests for a
+*normalised* edge link (which could end up far away from the edge, or
+could be normalised into a surface with different topology, or could
+even be normalised away to nothing). Although isNormalEdgeLink() will
+also indicate thin edge links, this test has significantly less
+overhead (and so should be faster).
+
+A surface (or its positive rational multiple) can be the *thin* edge
+link of at most two edges. If there are indeed two different edges
+*e1* and *e2* for which a multiple of this surface can be expressed as
+the thin edge link, then the pair (*e1*, *e2*) will be returned. If
+there is only one such edge *e*, then the pair (*e*, ``null``) will be
+returned. If no positive rational multiple of this surface is the thin
+link of any edge, then the pair (``null``, ``null``) will be returned.
+
+Note that the results of this routine are not cached. Thus the results
+will be reevaluated every time this routine is called.
+
+Returns:
+    a pair containing the edge(s) linked by a positive rational
+    multiple of this surface, as described above.)doc";
+
+// Docstring regina::python::doc::NormalSurface_::isThinTriangleLink
+static const char *isThinTriangleLink =
+R"doc(Determines whether or not a positive rational multiple of this surface
+is the thin link of a single triangle.
+
+Here a *thin* triangle link is a normal surface which appears
+naturally as the frontier of a regular neighbourhood of a triangle,
+with no need for any further normalisation.
+
+This behaves differently from isNormalTriangleLink(), which tests for
+a *normalised* triangle link (which could end up far away from the
+triangle, or could be normalised into a surface with different
+topology, or could even be normalised away to nothing). Unlike the
+tests for edge links, the routines isThinTriangleLink() and
+isNormalTriangleLink() use essentially the same implementation (so
+testing for only thin links may be a little faster, but not by much).
+
+A surface (or its positive rational multiple) can be the *thin* link
+of at most two triangles. If there are indeed two different triangles
+*t1* and *t2* for which a multiple of this surface can be expressed as
+the thin triangle link, then the pair (*t1*, *t2*) will be returned.
+If there is only one such triangle *t*, then the pair (*t*, ``null``)
+will be returned. If no positive rational multiple of this surface is
+the thin link of any triangle, then the pair (``null``, ``null``) will
+be returned.
+
+Note that the results of this routine are not cached. Thus the results
+will be reevaluated every time this routine is called.
+
+Returns:
+    a pair containing the triangle(s) linked by a positive rational
+    multiple of this surface, as described above.)doc";
+
 // Docstring regina::python::doc::NormalSurface_::isTwoSided
 static const char *isTwoSided =
 R"doc(Returns whether or not this surface is two-sided.
