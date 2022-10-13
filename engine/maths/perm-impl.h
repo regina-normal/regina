@@ -42,7 +42,7 @@
 // various permutation headers are processed in exactly the right order.
 #include "maths/perm.h"
 
-#ifndef __APIDOCS
+#ifndef __DOXYGEN
 // Hide the entire implementation from doxygen, since it cannot handle
 // specialisations.
 #ifndef __REGINA_PERM_IMPL_H
@@ -411,5 +411,5 @@ inline void Perm<n>::clear(unsigned from) {
 } // namespace regina
 
 #endif // __PERM_IMPL_H
-#endif // __APIDOCS
+#endif // __DOXYGEN
 
