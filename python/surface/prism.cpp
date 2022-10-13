@@ -42,15 +42,15 @@ using regina::PrismSpec;
 void addPrism(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PrismSpec)
 
-    auto c = pybind11::class_<PrismSpec>(m, "PrismSpec")
-        .def(pybind11::init<>())
-        .def(pybind11::init<unsigned long, int>())
-        .def(pybind11::init<const PrismSpec&>())
+    auto c = pybind11::class_<PrismSpec>(m, "PrismSpec", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::PrismSpec)
+        .def(pybind11::init<size_t, int>(), rdoc::PrismSpec_2)
+        .def(pybind11::init<const PrismSpec&>(), rdoc::PrismSpec_3)
         .def_readwrite("tetIndex", &PrismSpec::tetIndex)
         .def_readwrite("edge", &PrismSpec::edge)
     ;
     regina::python::add_output_ostream(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::_eq, rdoc::__ne);
 
     RDOC_SCOPE_END
 }

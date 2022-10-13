@@ -45,30 +45,37 @@ using regina::DiscSpecIterator;
 void addDisc(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(DiscSpec)
 
-    auto d = pybind11::class_<DiscSpec>(m, "DiscSpec")
-        .def(pybind11::init<>())
-        .def(pybind11::init<unsigned long, int, unsigned long>())
-        .def(pybind11::init<const DiscSpec&>())
+    auto d = pybind11::class_<DiscSpec>(m, "DiscSpec", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::DiscSpec)
+        .def(pybind11::init<size_t, int, unsigned long>(),
+            rdoc::DiscSpec_2)
+        .def(pybind11::init<const DiscSpec&>(), rdoc::DiscSpec_3)
         .def_readwrite("tetIndex", &DiscSpec::tetIndex)
         .def_readwrite("type", &DiscSpec::type)
         .def_readwrite("number", &DiscSpec::number)
     ;
     regina::python::add_output_ostream(d);
-    regina::python::add_eq_operators(d);
+    regina::python::add_eq_operators(d, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_SWITCH_MAIN
 
-    m.def("numberDiscsAwayFromVertex", regina::numberDiscsAwayFromVertex);
-    m.def("discOrientationFollowsEdge", regina::discOrientationFollowsEdge);
+    m.def("numberDiscsAwayFromVertex", regina::numberDiscsAwayFromVertex,
+        rdoc::numberDiscsAwayFromVertex);
+    m.def("discOrientationFollowsEdge", regina::discOrientationFollowsEdge,
+        rdoc::discOrientationFollowsEdge);
 
     RDOC_SCOPE_SWITCH(DiscSetTet)
 
-    auto t = pybind11::class_<DiscSetTet>(m, "DiscSetTet")
-        .def(pybind11::init<const regina::NormalSurface&, unsigned long>())
-        .def(pybind11::init<const DiscSetTet&>())
-        .def("nDiscs", &DiscSetTet::nDiscs)
-        .def("arcFromDisc", &DiscSetTet::arcFromDisc)
-        .def("discFromArc", &DiscSetTet::discFromArc)
+    auto t = pybind11::class_<DiscSetTet>(m, "DiscSetTet", rdoc_scope)
+        .def(pybind11::init<const regina::NormalSurface&, size_t>(),
+            rdoc::DiscSetTet)
+        .def(pybind11::init<unsigned long, unsigned long, unsigned long,
+            unsigned long, unsigned long, unsigned long, unsigned long,
+            unsigned long, unsigned long, unsigned long>(), rdoc::DiscSetTet_2)
+        .def(pybind11::init<const DiscSetTet&>(), rdoc::DiscSetTet_3)
+        .def("nDiscs", &DiscSetTet::nDiscs, rdoc::nDiscs)
+        .def("arcFromDisc", &DiscSetTet::arcFromDisc, rdoc::arcFromDisc)
+        .def("discFromArc", &DiscSetTet::discFromArc, rdoc::discFromArc)
     ;
     regina::python::add_output_custom(t, [](const DiscSetTet& d,
             std::ostream& s) {
@@ -77,22 +84,25 @@ void addDisc(pybind11::module_& m) {
             s << ' ' << d.nDiscs(i);
         s << " )";
     });
-    regina::python::add_eq_operators(t);
+    regina::python::add_eq_operators(t, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_SWITCH(DiscSetSurfaceDataImpl)
 
-    auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface")
-        .def(pybind11::init<const regina::NormalSurface&>())
-        .def(pybind11::init<const DiscSetSurface&>())
-        .def("swap", &DiscSetSurface::swap)
-        .def("nTets", &DiscSetSurface::nTets)
-        .def("nDiscs", &DiscSetSurface::nDiscs)
+    auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface", rdoc_scope)
+        .def(pybind11::init<const regina::NormalSurface&>(),
+            rdoc::DiscSetSurfaceDataImpl)
+        .def(pybind11::init<const DiscSetSurface&>(),
+            rdoc::DiscSetSurfaceDataImpl_2)
+        .def("swap", &DiscSetSurface::swap, rdoc::swap)
+        .def("nTets", &DiscSetSurface::nTets, rdoc::nTets)
+        .def("nDiscs", &DiscSetSurface::nDiscs, rdoc::nDiscs)
         .def("tetDiscs", &DiscSetSurface::tetDiscs,
-            pybind11::return_value_policy::reference_internal)
-        .def("adjacentDisc", &DiscSetSurface::adjacentDisc)
+            pybind11::return_value_policy::reference_internal, rdoc::tetDiscs)
+        .def("adjacentDisc", &DiscSetSurface::adjacentDisc, rdoc::adjacentDisc)
         .def("__iter__", [](const DiscSetSurface& d) {
             return DiscSpecIterator(d);
-        }, pybind11::keep_alive<0, 1>()) // iterator keeps disc set alive
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps disc set alive
+            rdoc::__iter__)
     ;
     regina::python::add_output_custom(s, [](const DiscSetSurface& d,
             std::ostream& s) {
@@ -105,21 +115,21 @@ void addDisc(pybind11::module_& m) {
         }
         s << " )";
     });
-    regina::python::add_eq_operators(s);
+    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<DiscSetSurface>(m);
+    regina::python::add_global_swap<DiscSetSurface>(m, rdoc_global::swap_2);
 
     RDOC_SCOPE_SWITCH(DiscSpecIterator)
 
     auto it = pybind11::class_<DiscSpecIterator<DiscSetTet>>(
-            m, "DiscSpecIterator")
+            m, "DiscSpecIterator", rdoc_scope)
         .def("__next__", [](DiscSpecIterator<DiscSetTet>& it) {
             if (! it.done())
                 return *it++;
             else
                 throw pybind11::stop_iteration();
-        });
-    regina::python::add_eq_operators(it);
+        }, rdoc::__next__);
+    regina::python::add_eq_operators(it, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_END
 }
