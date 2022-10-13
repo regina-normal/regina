@@ -354,7 +354,7 @@ of tetrahedra in the underlying triangulation.
 * In angle structure coordinates, this class identifies taut angle
   structures only. Here the type vector is a sequence of *n* integers,
   each equal to 1, 2 or 3, where the *i*th integer describes the
-  location of the two &pi; angles in the *i*th tetrahedron.
+  location of the two π angles in the *i*th tetrahedron.
 
 In the original Algorithmica paper, we choose types in the order
 type_[0], type_[1] and so on, working from the root of the tree down

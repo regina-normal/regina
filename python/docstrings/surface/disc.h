@@ -177,19 +177,6 @@ Returns:
 static const char *swap =
 R"doc(Swaps the contents of the two given disc sets.
 
-This global routine simply calls DiscSetTetData::swap(); it is
-provided so that DiscSetTetData meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first disc set whose contents should be swapped.
-
-Parameter ``b``:
-    the second disc set whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::swap_2
-static const char *swap_2 =
-R"doc(Swaps the contents of the two given disc sets.
-
 This global routine simply calls DiscSetSurfaceDataImpl::swap(); it is
 provided so that DiscSetSurfaceDataImpl meets the C++ Swappable
 requirements.
@@ -219,29 +206,6 @@ Parameter ``surface``:
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::DiscSetSurfaceDataImpl_2
 static const char *DiscSetSurfaceDataImpl_2 =
-R"doc(Creates a new disc set corresponding to the discs of the given normal
-surface. The data for each disc will be initialised to the given
-value.
-
-This disc set will be usable even if it outlives the given surface
-and/or its underlying triangulation. This is because it takes a
-snapshot of the necessary information as it appears right now (using
-Regina's snapshotting machinery, which only takes a deep copy when
-absolutely necessary).
-
-Precondition:
-    The template argument TetData is a class of the form
-    DiscSetTetData<T>, not DiscSetTet.
-
-Parameter ``surface``:
-    the normal surface whose discs we shall use.
-
-Parameter ``initValue``:
-    the value with which to initialise the data corresponding to each
-    disc.)doc";
-
-// Docstring regina::python::doc::DiscSetSurfaceDataImpl_::DiscSetSurfaceDataImpl_3
-static const char *DiscSetSurfaceDataImpl_3 =
 R"doc(Creates a new copy of the given set of normal discs.
 
 The data for each disc will be copied using the copy assignment
@@ -269,6 +233,22 @@ operator (==).
 Returns:
     ``True`` if and only if both sets are the same, as described
     above.)doc";
+
+// Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__iter__
+static const char *__iter__ =
+R"doc(Returns a Python iterator over all normal discs in the underlying
+normal surface.
+
+In Python, an object of this class can be treated as an iterable
+object:
+
+```
+for disc in surfaceData:
+    ...
+```
+
+Returns:
+    an iterator over all normal discs.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__ne
 static const char *__ne =
@@ -314,59 +294,6 @@ Returns:
     directed normal arc that was passed but expressed in terms of the
     vertices of the adjacent tetrahedron. This will be no value if
     there is no adjacent disc.)doc";
-
-// Docstring regina::python::doc::DiscSetSurfaceDataImpl_::begin
-static const char *begin =
-R"doc(Returns an iterator at the beginning of the range of all normal discs
-in the underlying normal surface.
-
-These begin() and end() routines allow you to iterate through all
-normal discs using C++11 range-based ``for`` loops:
-
-```
-for (const DiscSpec& s : surfaceData) { ... }
-```
-
-In Python, an object of this class can be treated as an iterable
-object, again iterating through all normal discs:
-
-```
-for s in surfaceData:
-    ...
-```
-
-Returns:
-    an iterator at the beginning of the range of all normal discs.)doc";
-
-// Docstring regina::python::doc::DiscSetSurfaceDataImpl_::data
-static const char *data =
-R"doc(Retrieves a reference to the data corresponding to the given normal
-disc.
-
-Precondition:
-    The template argument TetData is a class of the form
-    DiscSetTetData<T>, not DiscSetTet.
-
-Parameter ``disc``:
-    the disc whose data we require; this must refer to a disc within
-    this disc set.
-
-Returns:
-    a reference to the data corresponding to the given normal disc.)doc";
-
-// Docstring regina::python::doc::DiscSetSurfaceDataImpl_::end
-static const char *end =
-R"doc(Returns an iterator at the end of the range of all normal discs in the
-underlying normal surface.
-
-In C++, the begin() and end() routines allow you to iterate through
-all normal discs using C++11 range-based ``for`` loops. In Python, an
-object of this class can be treated as an iterable object.
-
-See the begin() documentation for further details.
-
-Returns:
-    an iterator at the end of the range of all normal discs.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::nDiscs
 static const char *nDiscs =

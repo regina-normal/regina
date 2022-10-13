@@ -664,6 +664,8 @@ class DiscSetTetData : public DiscSetTet {
  * This global routine simply calls DiscSetTetData::swap(); it is provided
  * so that DiscSetTetData meets the C++ Swappable requirements.
  *
+ * \nopython
+ *
  * @param a the first disc set whose contents should be swapped.
  * @param b the second disc set whose contents should be swapped.
  *
@@ -750,6 +752,10 @@ class DiscSetSurfaceDataImpl {
          *
          * \pre The template argument TetData is a class of the form
          * DiscSetTetData<T>, not DiscSetTet.
+         *
+         * \nopython In Python, the template argument TetData is always
+         * DiscSetTet, which does not store any additional data alongside
+         * each normal disc.
          *
          * @param surface the normal surface whose discs we shall use.
          * @param initValue the value with which to initialise the data
@@ -984,6 +990,10 @@ class DiscSetSurfaceDataImpl {
          * \pre The template argument TetData is a class of the form
          * DiscSetTetData<T>, not DiscSetTet.
          *
+         * \nopython In Python, the template argument TetData is always
+         * DiscSetTet, which does not store any additional data alongside
+         * each normal disc.
+         *
          * @param disc the disc whose data we require; this must refer
          * to a disc within this disc set.
          * @return a reference to the data corresponding to the given
@@ -1035,23 +1045,20 @@ class DiscSetSurfaceDataImpl {
         }
 
         /**
-         * Returns an iterator at the beginning of the range of all
+         * Returns a C++ iterator at the beginning of the range of all
          * normal discs in the underlying normal surface.
          *
          * These begin() and end() routines allow you to iterate through
-         * all normal discs using C++11 range-based \c for loops:
+         * all normal discs using a range-based \c for loop:
          *
          * \code{.cpp}
          * for (const DiscSpec& s : surfaceData) { ... }
          * \endcode
          *
-         * In Python, an object of this class can be treated as an iterable
-         * object, again iterating through all normal discs:
-         *
-         * \code{.py}
-         * for s in surfaceData:
-         *     ...
-         * \endcode
+         * \nopython For Python users, this class implements the Python iterable
+         * interface.  You can iterate over all normal discs in the underlying
+         * surface in the same way that you would iterate over any native
+         * Python container.
          *
          * @return an iterator at the beginning of the range of all
          * normal discs.
@@ -1060,14 +1067,17 @@ class DiscSetSurfaceDataImpl {
             return DiscSpecIterator<TetData>(*this);
         }
         /**
-         * Returns an iterator at the end of the range of all
+         * Returns a C++ iterator at the end of the range of all
          * normal discs in the underlying normal surface.
          *
-         * In C++, the begin() and end() routines allow you to iterate through
-         * all normal discs using C++11 range-based \c for loops.  In Python,
-         * an object of this class can be treated as an iterable object.
-         *
+         * These begin() and end() routines allow you to iterate through
+         * all normal discs using a range-based \c for loop.
          * See the begin() documentation for further details.
+         *
+         * \nopython For Python users, this class implements the Python iterable
+         * interface.  You can iterate over all normal discs in the underlying
+         * surface in the same way that you would iterate over any native
+         * Python container.
          *
          * @return an iterator at the end of the range of all normal discs.
          */
@@ -1078,6 +1088,28 @@ class DiscSetSurfaceDataImpl {
             ans.current.number = 0;
             return ans;
         }
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over all normal discs in the underlying
+         * normal surface.
+         *
+         * In Python, an object of this class can be treated as an iterable
+         * object:
+         *
+         * \code{.py}
+         * for disc in surfaceData:
+         *     ...
+         * \endcode
+         *
+         * \nocpp For C++ users, this class provides the usual begin() and
+         * end() functions instead.  In particular, you can iterate over
+         * all normal discs in the underlying normal surface in the usual way
+         * using a range-based \c for loop.
+         *
+         * @return an iterator over all normal discs.
+         */
+        auto __iter__() const;
+#endif
 };
 
 /**
