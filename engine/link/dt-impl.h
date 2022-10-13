@@ -118,7 +118,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
      */
     theAlternatingDT = new size_t[aNumCrossings];
     for (it = begin, i = 0; it != end; ++it, ++i)
-        theAlternatingDT[i] = abs(*it);
+        theAlternatingDT[i] = std::abs(*it);
 
     /*
      *  Switch from 1-based indexing to 0-based indexing.

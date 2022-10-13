@@ -43,6 +43,7 @@
 #endif
 
 #include <algorithm>
+#include <cstdlib>
 
 namespace regina {
 
@@ -302,14 +303,14 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     StrandRef prev, curr;
     Iterator it = begin;
 
-    Crossing* cr = ans.crossings_[::abs(*it) - 1];
+    Crossing* cr = ans.crossings_[std::abs(*it) - 1];
     curr = cr->strand(*it > 0 ? 1 : 0);
     ans.components_.push_back(curr);
 
     for (++it; it != end; ++it) {
         prev = curr;
 
-        cr = ans.crossings_[::abs(*it) - 1];
+        cr = ans.crossings_[std::abs(*it) - 1];
         curr = cr->strand(*it > 0 ? 1 : 0);
 
         prev.crossing()->next_[prev.strand()] = curr;
