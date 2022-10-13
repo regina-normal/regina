@@ -35,10 +35,13 @@
 #include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/surface/prism.h"
 
 using regina::PrismSpec;
 
 void addPrism(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(PrismSpec)
+
     auto c = pybind11::class_<PrismSpec>(m, "PrismSpec")
         .def(pybind11::init<>())
         .def(pybind11::init<unsigned long, int>())
@@ -48,5 +51,7 @@ void addPrism(pybind11::module_& m) {
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

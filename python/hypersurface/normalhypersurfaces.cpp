@@ -38,6 +38,7 @@
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
+#include "../docstrings/hypersurface/normalhypersurfaces.h"
 
 using namespace regina::python;
 using regina::HyperCoords;
@@ -47,8 +48,12 @@ using regina::ProgressTracker;
 using regina::Triangulation;
 
 void addNormalHypersurfaces(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN_MAIN
+
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
+
+    RDOC_SCOPE_SWITCH(NormalHypersurfaces)
 
     auto l = pybind11::class_<NormalHypersurfaces,
             std::shared_ptr<NormalHypersurfaces>>(m, "NormalHypersurfaces")
@@ -58,8 +63,10 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<GILScopedRelease>())
-        .def(pybind11::init<const NormalHypersurfaces&>())
+            pybind11::call_guard<GILScopedRelease>(),
+            rdoc::NormalHypersurfaces)
+        .def(pybind11::init<const NormalHypersurfaces&>(),
+            rdoc::NormalHypersurfaces_2)
         .def("swap", &NormalHypersurfaces::swap)
         .def("sort", &NormalHypersurfaces::sort<const std::function<
             bool(const NormalHypersurface&, const NormalHypersurface&)>&>)
@@ -97,8 +104,11 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         pybind11::arg("which") = regina::HS_LIST_DEFAULT,
         pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
         pybind11::arg("tracker") = nullptr,
-        pybind11::call_guard<GILScopedRelease>());
+        pybind11::call_guard<GILScopedRelease>(),
+        rdoc::NormalHypersurfaces);
 
     regina::python::add_global_swap<NormalHypersurfaces>(m);
+
+    RDOC_SCOPE_END
 }
 

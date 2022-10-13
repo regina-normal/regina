@@ -35,18 +35,23 @@
 #include "../pybind11/operators.h"
 #include "hypersurface/hypercoords.h"
 #include "../helpers.h"
+#include "../docstrings/hypersurface/hypercoords.h"
 
 using regina::HyperCoords;
 using regina::HyperEncoding;
 using regina::HyperInfo;
 
 void addHyperCoords(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(HyperCoords)
+
     pybind11::enum_<regina::HyperCoords>(m, "HyperCoords")
         .value("HS_STANDARD", regina::HS_STANDARD)
         .value("HS_PRISM", regina::HS_PRISM)
         .value("HS_EDGE_WEIGHT", regina::HS_EDGE_WEIGHT)
         .export_values()
         ;
+
+    RDOC_SCOPE_SWITCH(HyperEncoding)
 
     auto e = pybind11::class_<HyperEncoding>(m, "HyperEncoding")
         .def(pybind11::init<HyperCoords>())
@@ -75,9 +80,13 @@ void addHyperCoords(pybind11::module_& m) {
         ;
     regina::python::add_eq_operators(e);
 
+    RDOC_SCOPE_SWITCH(HyperInfo)
+
     auto i = pybind11::class_<HyperInfo>(m, "HyperInfo")
         .def_static("name", &HyperInfo::name)
         ;
     regina::python::no_eq_operators(i);
+
+    RDOC_SCOPE_END
 }
 

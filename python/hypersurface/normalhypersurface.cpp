@@ -38,11 +38,14 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
+#include "../docstrings/hypersurface/normalhypersurface.h"
 
 using regina::NormalHypersurface;
 using regina::Triangulation;
 
 void addNormalHypersurface(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(NormalHypersurface)
+
     auto c = pybind11::class_<NormalHypersurface>(m, "NormalHypersurface")
         .def(pybind11::init<const NormalHypersurface&>())
         .def(pybind11::init<const NormalHypersurface&,
@@ -143,5 +146,7 @@ void addNormalHypersurface(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
 
     regina::python::add_global_swap<NormalHypersurface>(m);
+
+    RDOC_SCOPE_END
 }
 

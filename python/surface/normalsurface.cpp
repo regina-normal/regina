@@ -39,6 +39,7 @@
 #include "triangulation/dim3.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../docstrings/surface/normalsurface.h"
 
 using regina::ListView;
 using regina::NormalSurface;
@@ -59,6 +60,8 @@ namespace {
 }
 
 void addNormalSurface(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(NormalSurface)
+
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface")
         .def(pybind11::init<const NormalSurface&>())
         .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>())
@@ -166,6 +169,10 @@ void addNormalSurface(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
+    regina::python::add_global_swap<NormalSurface>(m);
+
+    RDOC_SCOPE_END
+
     // Global arrays:
     m.attr("quadSeparating") = &quadSeparating_arr;
     m.attr("quadMeeting") = &quadMeeting_arr;
@@ -175,7 +182,5 @@ void addNormalSurface(pybind11::module_& m) {
     m.attr("triDiscArcs") = &triDiscArcs_arr;
     m.attr("quadDiscArcs") = &quadDiscArcs_arr;
     m.attr("octDiscArcs") = &octDiscArcs_arr;
-
-    regina::python::add_global_swap<NormalSurface>(m);
 }
 
