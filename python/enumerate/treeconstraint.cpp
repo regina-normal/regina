@@ -138,6 +138,8 @@ void addBanConstraint(pybind11::module_& m, const char* name,
 }
 
 void addTreeConstraint(pybind11::module_& m) {
+    // The constraint classes do not have their own method docs, and so
+    // the class-specific doc namespaces are unavailable.
     RDOC_SCOPE_BEGIN_MAIN
 
     addLPConstraint<LPConstraintNone>(m, "LPConstraintNone",
@@ -153,12 +155,17 @@ void addTreeConstraint(pybind11::module_& m) {
     // behaves identically to the base class constructor.
     addBanConstraint<BanNone>(m, "BanNone", rdoc::BanNone,
         rdoc::BanConstraintBase_::__init);
-    addBanConstraint<BanBoundary>(m, "BanBoundary", rdoc::BanBoundary,
-        rdoc::BanBoundary_::__init);
-    addBanConstraint<BanEdge, regina::Edge<3>*>(m, "BanEdge", rdoc::BanEdge,
-        rdoc::BanEdge_::__init);
-    addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary",
-        rdoc::BanTorusBoundary, rdoc::BanTorusBoundary_::__init);
+
+    RDOC_SCOPE_SWITCH(BanBoundary)
+    addBanConstraint<BanBoundary>(m, "BanBoundary", rdoc_scope, rdoc::__init);
+
+    RDOC_SCOPE_SWITCH(BanEdge)
+    addBanConstraint<BanEdge, regina::Edge<3>*>(m, "BanEdge", rdoc_scope,
+        rdoc::__init);
+
+    RDOC_SCOPE_SWITCH(BanTorusBoundary)
+    addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary", rdoc_scope,
+        rdoc::__init);
 
     RDOC_SCOPE_END
 }
