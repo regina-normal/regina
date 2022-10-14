@@ -287,19 +287,6 @@ Parameter ``rhs``:
 Returns:
     the difference of the two given polynomials.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given polynomials.
-
-This global routine simply calls Polynomial<T>::swap(); it is provided
-so that Polynomial<T> meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first polynomial whose contents should be swapped.
-
-Parameter ``b``:
-    the second polynomial whose contents should be swapped.)doc";
-
 namespace Polynomial_ {
 
 // Docstring regina::python::doc::Polynomial_::__array
@@ -574,6 +561,19 @@ Parameter ``u``:
 Parameter ``v``:
     a polynomial whose contents will be destroyed and replaced with
     *v*, as described above.)doc";
+
+// Docstring regina::python::doc::Polynomial_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given polynomials.
+
+This global routine simply calls Polynomial<T>::swap(); it is provided
+so that Polynomial<T> meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first polynomial whose contents should be swapped.
+
+Parameter ``b``:
+    the second polynomial whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Polynomial_::init
 static const char *init = R"doc(Sets this to become the zero polynomial.)doc";

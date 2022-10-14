@@ -2400,6 +2400,8 @@ class NativeInteger {
  * This global routine simply calls NativeInteger<bytes>::swap(); it is
  * provided so that NativeInteger<bytes> meets the C++ Swappable requirements.
  *
+ * \nopython The NativeInteger classes are not available to Python users.
+ *
  * @param a the first integer whose contents should be swapped.
  * @param b the second integer whose contents should be swapped.
  *

@@ -54,16 +54,6 @@ Python:
     This is available only for the template parameters *nTypes* = 4
     and 7, under the names TypeTrie4 and TypeTrie7 respectively.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given tries.
-
-Parameter ``a``:
-    the first trie whose contents should be swapped.
-
-Parameter ``b``:
-    the second trie whose contents should be swapped.)doc";
-
 namespace TypeTrie_ {
 
 // Docstring regina::python::doc::TypeTrie_::__eq
@@ -128,6 +118,16 @@ Parameter ``len``:
 Returns:
     ``True`` if and only if *vec* dominates some type vector stored in
     this trie.)doc";
+
+// Docstring regina::python::doc::TypeTrie_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given tries.
+
+Parameter ``a``:
+    the first trie whose contents should be swapped.
+
+Parameter ``b``:
+    the second trie whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TypeTrie_::insert
 static const char *insert =

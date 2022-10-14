@@ -345,48 +345,6 @@ These objects are small enough to pass by value and swap with
 std::swap(), with no need for any specialised move operations or swap
 functions.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given matrices.
-
-This global routine simply calls LPMatrix<IntType>::swap(); it is
-provided so that LPMatrix<IntType> meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first matrix whose contents should be swapped.
-
-Parameter ``b``:
-    the second matrix whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::swap_2
-static const char *swap_2 =
-R"doc(Swaps the contents of the given matrices.
-
-This global routine simply calls LPInitialTableaux<IntType>::swap();
-it is provided so that LPInitialTableaux<IntType> meets the C++
-Swappable requirements.
-
-Parameter ``a``:
-    the first matrix whose contents should be swapped.
-
-Parameter ``b``:
-    the second matrix whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::swap_3
-static const char *swap_3 =
-R"doc(Swaps the contents of the given tableaux.
-
-This global routine simply calls LPData<LPConstraint,
-IntType>::swap(); it is provided so that LPData<LPConstraint, IntType>
-meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first tableaux whose contents should be swapped.
-
-Parameter ``b``:
-    the second tableaux whose contents should be swapped.)doc";
-
 namespace LPData_ {
 
 // Docstring regina::python::doc::LPData_::__init
@@ -577,6 +535,20 @@ Parameter ``type``:
 Returns:
     a vector containing the values of all the variables. This vector
     will have length origTableaux_->coordinateColumns().)doc";
+
+// Docstring regina::python::doc::LPData_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given tableaux.
+
+This global routine simply calls LPData<LPConstraint,
+IntType>::swap(); it is provided so that LPData<LPConstraint, IntType>
+meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first tableaux whose contents should be swapped.
+
+Parameter ``b``:
+    the second tableaux whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LPData_::initClone
 static const char *initClone =
@@ -825,6 +797,20 @@ Precondition:
 
 Parameter ``m``:
     the matrix to fill.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given matrices.
+
+This global routine simply calls LPInitialTableaux<IntType>::swap();
+it is provided so that LPInitialTableaux<IntType> meets the C++
+Swappable requirements.
+
+Parameter ``a``:
+    the first matrix whose contents should be swapped.
+
+Parameter ``b``:
+    the second matrix whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LPInitialTableaux_::multColByRow
 static const char *multColByRow =
@@ -1115,6 +1101,20 @@ Parameter ``row``:
 Parameter ``col``:
     the column of the requested element. This must be between 0 and
     columns()-1 inclusive.)doc";
+
+// Docstring regina::python::doc::LPMatrix_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given matrices.
+
+This global routine simply calls LPMatrix<IntType>::swap(); it is
+provided so that LPMatrix<IntType> meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first matrix whose contents should be swapped.
+
+Parameter ``b``:
+    the second matrix whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LPMatrix_::initClone
 static const char *initClone =

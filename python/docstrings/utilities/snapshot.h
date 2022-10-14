@@ -17,23 +17,6 @@ R"doc(An exception thrown when someone tries to modify the read-only deep
 copy taken by a snapshot. See the Snapshot class notes for more
 information.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the given references so that they refer to each others'
-snapshots.
-
-This global routine simply calls SnapshotRef<T>::swap(); it is
-provided so that SnapshotRef<T> meets the C++ Swappable requirements.
-
-See the Snapshot documentation for a full explanation of how Regina's
-snapshotting machinery works.
-
-Parameter ``a``:
-    the first snapshot reference to swap.
-
-Parameter ``b``:
-    the second snapshot reference to swap.)doc";
-
 namespace SnapshotWriteError_ {
 
 // Docstring regina::python::doc::SnapshotWriteError_::__init

@@ -253,19 +253,6 @@ Parameter ``rhs``:
 Returns:
     the difference of the two given polynomials.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given polynomials.
-
-This global routine simply calls Laurent<T>::swap(); it is provided so
-that Laurent<T> meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first polynomial whose contents should be swapped.
-
-Parameter ``b``:
-    the second polynomial whose contents should be swapped.)doc";
-
 namespace Laurent_ {
 
 // Docstring regina::python::doc::Laurent_::__array
@@ -505,6 +492,19 @@ Parameter ``rhs``:
 Returns:
     ``True`` if and only if this and the given polynomial are not
     equal.)doc";
+
+// Docstring regina::python::doc::Laurent_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given polynomials.
+
+This global routine simply calls Laurent<T>::swap(); it is provided so
+that Laurent<T> meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first polynomial whose contents should be swapped.
+
+Parameter ``b``:
+    the second polynomial whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Laurent_::init
 static const char *init = R"doc(Sets this to become the zero polynomial.)doc";

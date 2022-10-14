@@ -96,34 +96,6 @@ Parameter ``rhs``:
 Returns:
     the product *lhs* times *rhs*.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given integers.
-
-This global routine simply calls IntegerBase<supportInfinity>::swap();
-it is provided so that IntegerBase<supportInfinity> meets the C++
-Swappable requirements.
-
-Parameter ``a``:
-    the first integer whose contents should be swapped.
-
-Parameter ``b``:
-    the second integer whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::swap_2
-static const char *swap_2 =
-R"doc(Swaps the contents of the given integers.
-
-This global routine simply calls NativeInteger<bytes>::swap(); it is
-provided so that NativeInteger<bytes> meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first integer whose contents should be swapped.
-
-Parameter ``b``:
-    the second integer whose contents should be swapped.)doc";
-
 // Docstring regina::python::doc::tightEncoding
 static const char *tightEncoding =
 R"doc(Returns the tight encoding of the given arbitrary precision integer.
@@ -1051,6 +1023,20 @@ Parameter ``v``:
 
 Returns:
     the greatest common divisor of *this* and *other*.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given integers.
+
+This global routine simply calls IntegerBase<supportInfinity>::swap();
+it is provided so that IntegerBase<supportInfinity> meets the C++
+Swappable requirements.
+
+Parameter ``a``:
+    the first integer whose contents should be swapped.
+
+Parameter ``b``:
+    the second integer whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::isInfinite
 static const char *isInfinite =

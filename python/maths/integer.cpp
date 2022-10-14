@@ -158,7 +158,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
 
     m.def("tightEncoding", static_cast<std::string(&)(Int)>(
         regina::tightEncoding), rdoc_global::tightEncoding);
-    regina::python::add_global_swap<Int>(m, rdoc_global::swap);
+    regina::python::add_global_swap<Int>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 

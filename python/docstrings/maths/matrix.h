@@ -75,19 +75,6 @@ Template parameter ``ring``:
     T represents an element of a ring. This has a sensible default;
     see above in the class documentation for details.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given matrices.
-
-This global routine simply calls Matrix<T>::swap(); it is provided so
-that Matrix<T> meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first matrix whose contents should be swapped.
-
-Parameter ``b``:
-    the second matrix whose contents should be swapped.)doc";
-
 namespace Matrix_ {
 
 // Docstring regina::python::doc::Matrix_::__eq
@@ -748,6 +735,19 @@ Parameter ``row``:
 
 Returns:
     the greatest common divisor of all elements of this row.)doc";
+
+// Docstring regina::python::doc::Matrix_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given matrices.
+
+This global routine simply calls Matrix<T>::swap(); it is provided so
+that Matrix<T> meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first matrix whose contents should be swapped.
+
+Parameter ``b``:
+    the second matrix whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Matrix_::identity
 static const char *identity =

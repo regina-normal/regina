@@ -759,6 +759,8 @@ class SnapshotRef {
  * See the Snapshot documentation for a full explanation of how Regina's
  * snapshotting machinery works.
  *
+ * \nopython The SnapshotRef classes are not accessible to Python users.
+ *
  * @param a the first snapshot reference to swap.
  * @param b the second snapshot reference to swap.
  *

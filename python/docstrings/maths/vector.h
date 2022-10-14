@@ -72,19 +72,6 @@ Python:
     are available, under the names VectorInt and VectorLarge
     respectively.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given vectors.
-
-This global routine simply calls Vector<T>::swap(); it is provided so
-that Vector<T> meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first vector whose contents should be swapped.
-
-Parameter ``b``:
-    the second vector whose contents should be swapped.)doc";
-
 namespace Vector_ {
 
 // Docstring regina::python::doc::Vector_::__add
@@ -321,6 +308,19 @@ R"doc(Returns the sum of all elements of this vector.
 
 Returns:
     the sum of the elements of this vector.)doc";
+
+// Docstring regina::python::doc::Vector_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given vectors.
+
+This global routine simply calls Vector<T>::swap(); it is provided so
+that Vector<T> meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first vector whose contents should be swapped.
+
+Parameter ``b``:
+    the second vector whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Vector_::isZero
 static const char *isZero =

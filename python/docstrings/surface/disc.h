@@ -173,20 +173,6 @@ Returns:
     the given vertex, or ``False`` if they are numbered towards the
     given vertex.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given disc sets.
-
-This global routine simply calls DiscSetSurfaceDataImpl::swap(); it is
-provided so that DiscSetSurfaceDataImpl meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first disc set whose contents should be swapped.
-
-Parameter ``b``:
-    the second disc set whose contents should be swapped.)doc";
-
 namespace DiscSetSurfaceDataImpl_ {
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__eq
@@ -294,6 +280,20 @@ Returns:
     directed normal arc that was passed but expressed in terms of the
     vertices of the adjacent tetrahedron. This will be no value if
     there is no adjacent disc.)doc";
+
+// Docstring regina::python::doc::DiscSetSurfaceDataImpl_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given disc sets.
+
+This global routine simply calls DiscSetSurfaceDataImpl::swap(); it is
+provided so that DiscSetSurfaceDataImpl meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first disc set whose contents should be swapped.
+
+Parameter ``b``:
+    the second disc set whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::nDiscs
 static const char *nDiscs =
