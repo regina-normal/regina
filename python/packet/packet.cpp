@@ -265,10 +265,10 @@ void addPacket(pybind11::module_& m) {
         .def("internalID", &Packet::internalID, rdoc::internalID)
         .def("__eq__", [](const Packet* p, PacketShell s) {
             return (s == p);
-        }, pybind11::is_operator(), regina::python::doc::__eq)
+        }, pybind11::is_operator(), rdoc_global::__eq)
         .def("__ne__", [](const Packet* p, PacketShell s) {
             return (s != p);
-        }, pybind11::is_operator(), regina::python::doc::__ne)
+        }, pybind11::is_operator(), rdoc_global::__ne)
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
@@ -276,8 +276,10 @@ void addPacket(pybind11::module_& m) {
     // each subclass of Packet provides its own custom == and != operators.
     regina::python::no_eq_operators(c);
 
+    RDOC_SCOPE_SWITCH_MAIN
+
     m.def("open", static_cast<std::shared_ptr<Packet>(&)(const char*)>(
-        regina::open), rdoc_global::open);
+        regina::open), rdoc::open);
 
     RDOC_SCOPE_SWITCH(PacketShell)
 

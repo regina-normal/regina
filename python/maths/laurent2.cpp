@@ -42,8 +42,6 @@ using pybind11::overload_cast;
 using regina::Laurent2;
 
 void addLaurent2(pybind11::module_& m) {
-    namespace global = regina::python::doc;
-
     RDOC_SCOPE_BEGIN(Laurent2)
 
     auto c = pybind11::class_<Laurent2<regina::Integer>>(m, "Laurent2",
@@ -91,13 +89,13 @@ void addLaurent2(pybind11::module_& m) {
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
-        .def(pybind11::self * regina::Integer(), global::__mul)
-        .def(regina::Integer() * pybind11::self, global::__mul_2)
-        .def(pybind11::self / regina::Integer(), global::__div)
-        .def(pybind11::self + pybind11::self, global::__add)
-        .def(pybind11::self - pybind11::self, global::__sub_2)
-        .def(pybind11::self * pybind11::self, global::__mul_3)
-        .def(- pybind11::self, global::__sub)
+        .def(pybind11::self * regina::Integer(), rdoc_global::__mul)
+        .def(regina::Integer() * pybind11::self, rdoc_global::__mul_2)
+        .def(pybind11::self / regina::Integer(), rdoc_global::__div)
+        .def(pybind11::self + pybind11::self, rdoc_global::__add)
+        .def(pybind11::self - pybind11::self, rdoc_global::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc_global::__mul_3)
+        .def(- pybind11::self, rdoc_global::__sub)
     ;
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);

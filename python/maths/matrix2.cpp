@@ -123,6 +123,8 @@ void addMatrix2(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output_ostream(c);
 
+    regina::python::add_global_swap<Matrix2>(m, rdoc::global_swap);
+
     auto row = pybind11::class_<Matrix2Row>(c, "_Row",
 R"doc(Gives access to a single row of a 2-by-2 integer matrix.
 
@@ -155,13 +157,13 @@ See the main class Matrix2 for further details.)doc")
 "Tests whether this and the given row contain different integer entries.");
     regina::python::add_output_ostream(row);
 
+    RDOC_SCOPE_SWITCH_MAIN
+
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&>(
-        &regina::simpler), rdoc_global::simpler);
+        &regina::simpler), rdoc::simpler);
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&,
             const Matrix2&, const Matrix2&>(
-        &regina::simpler), rdoc_global::simpler_2);
-
-    regina::python::add_global_swap<Matrix2>(m, rdoc::global_swap);
+        &regina::simpler), rdoc::simpler_2);
 
     RDOC_SCOPE_END
 }

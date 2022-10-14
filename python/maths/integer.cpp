@@ -44,8 +44,6 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
     using Int = regina::IntegerBase<inf>;
     using AltInt = regina::IntegerBase<! inf>; // Integer <-> LargeInteger
 
-    namespace global = regina::python::doc;
-
     RDOC_SCOPE_BEGIN(IntegerBase)
 
     auto c = pybind11::class_<Int>(m, className, rdoc_scope)
@@ -143,8 +141,8 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
             rdoc::randomCornerBinary)
         .def("makeLarge", &Int::makeLarge, rdoc::makeLarge)
         .def("tryReduce", &Int::tryReduce, rdoc::tryReduce)
-        .def(long() + pybind11::self, global::__add)
-        .def(long() * pybind11::self, global::__mul)
+        .def(long() + pybind11::self, rdoc_global::__add)
+        .def(long() * pybind11::self, rdoc_global::__mul)
         .def_readonly_static("zero", &Int::zero)
         .def_readonly_static("one", &Int::one)
     ;

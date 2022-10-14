@@ -43,6 +43,8 @@
 using pybind11::overload_cast;
 
 void addForeignIsoSig(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN_MAIN
+
     m.def("readSigList", [](int dimension, const char* filename,
             unsigned colSigs, int colLabels, unsigned long ignoreLines) {
         if (dimension > 4) {
@@ -72,6 +74,8 @@ void addForeignIsoSig(pybind11::module_& m) {
     pybind11::arg("colSigs") = 0,
     pybind11::arg("colLabels") = -1,
     pybind11::arg("ignoreLines") = 0,
-    regina::python::doc::readSigList);
+    rdoc::readSigList);
+
+    RDOC_SCOPE_END
 }
 

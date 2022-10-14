@@ -43,8 +43,6 @@ template <typename T>
 void addVectorOf(pybind11::module_& m, const char* className) {
     using Vec = regina::Vector<T>;
 
-    namespace global = regina::python::doc;
-
     RDOC_SCOPE_BEGIN(Vector)
 
     auto c = pybind11::class_<Vec>(m, className, rdoc_scope)

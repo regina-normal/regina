@@ -43,8 +43,6 @@ using regina::Polynomial;
 using regina::Rational;
 
 void addPolynomial(pybind11::module_& m) {
-    namespace global = regina::python::doc;
-
     RDOC_SCOPE_BEGIN(Polynomial)
 
     auto c = pybind11::class_<Polynomial<Rational>>(m, "Polynomial", rdoc_scope)
@@ -91,14 +89,14 @@ void addPolynomial(pybind11::module_& m) {
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
         .def(pybind11::self /= pybind11::self, rdoc::__idiv_2)
-        .def(pybind11::self * regina::Rational(), global::__mul)
-        .def(regina::Rational() * pybind11::self, global::__mul_2)
-        .def(pybind11::self / regina::Rational(), global::__div)
-        .def(pybind11::self + pybind11::self, global::__add)
-        .def(pybind11::self - pybind11::self, global::__sub_2)
-        .def(pybind11::self * pybind11::self, global::__mul_3)
-        .def(pybind11::self / pybind11::self, global::__div_2)
-        .def(- pybind11::self, global::__sub)
+        .def(pybind11::self * regina::Rational(), rdoc_global::__mul)
+        .def(regina::Rational() * pybind11::self, rdoc_global::__mul_2)
+        .def(pybind11::self / regina::Rational(), rdoc_global::__div)
+        .def(pybind11::self + pybind11::self, rdoc_global::__add)
+        .def(pybind11::self - pybind11::self, rdoc_global::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc_global::__mul_3)
+        .def(pybind11::self / pybind11::self, rdoc_global::__div_2)
+        .def(- pybind11::self, rdoc_global::__sub)
         .def("divisionAlg", overload_cast<const Polynomial<Rational>&>(
             &Polynomial<Rational>::divisionAlg, pybind11::const_),
             rdoc::divisionAlg)

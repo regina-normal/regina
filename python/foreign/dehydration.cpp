@@ -39,11 +39,15 @@
 using pybind11::overload_cast;
 
 void addForeignDehydration(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN_MAIN
+
     m.def("readDehydrationList", regina::readDehydrationList,
         pybind11::arg(),
         pybind11::arg("colDehydrations") = 0,
         pybind11::arg("colLabels") = -1,
         pybind11::arg("ignoreLines") = 0,
-        regina::python::doc::readDehydrationList);
+        rdoc::readDehydrationList);
+
+    RDOC_SCOPE_END
 }
 

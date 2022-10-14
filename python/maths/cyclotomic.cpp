@@ -43,8 +43,6 @@ using regina::Cyclotomic;
 using regina::Rational;
 
 void addCyclotomic(pybind11::module_& m) {
-    namespace global = regina::python::doc;
-
     RDOC_SCOPE_BEGIN(Cyclotomic)
 
     auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic", rdoc_scope)
@@ -79,14 +77,14 @@ void addCyclotomic(pybind11::module_& m) {
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
         .def(pybind11::self /= pybind11::self, rdoc::__idiv_2)
-        .def(pybind11::self * regina::Rational(), global::__mul)
-        .def(regina::Rational() * pybind11::self, global::__mul_2)
-        .def(pybind11::self / regina::Rational(), global::__div)
-        .def(pybind11::self + pybind11::self, global::__add)
-        .def(pybind11::self - pybind11::self, global::__sub_2)
-        .def(pybind11::self * pybind11::self, global::__mul_3)
-        .def(pybind11::self / pybind11::self, global::__div_2)
-        .def(- pybind11::self, global::__sub)
+        .def(pybind11::self * regina::Rational(), rdoc_global::__mul)
+        .def(regina::Rational() * pybind11::self, rdoc_global::__mul_2)
+        .def(pybind11::self / regina::Rational(), rdoc_global::__div)
+        .def(pybind11::self + pybind11::self, rdoc_global::__add)
+        .def(pybind11::self - pybind11::self, rdoc_global::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc_global::__mul_3)
+        .def(pybind11::self / pybind11::self, rdoc_global::__div_2)
+        .def(- pybind11::self, rdoc_global::__sub)
         .def_static("cyclotomic", [](size_t n) {
             return new regina::Polynomial<regina::Rational>(
                 Cyclotomic::cyclotomic(n));

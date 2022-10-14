@@ -37,6 +37,10 @@
 #include "../docstrings/foreign/orb.h"
 
 void addForeignOrb(pybind11::module_& m) {
-    m.def("readOrb", regina::readOrb, regina::python::doc::readOrb);
+    RDOC_SCOPE_BEGIN_MAIN
+
+    m.def("readOrb", regina::readOrb, rdoc::readOrb);
+
+    RDOC_SCOPE_END
 }
 

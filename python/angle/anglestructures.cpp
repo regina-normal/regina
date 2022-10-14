@@ -43,10 +43,12 @@ using regina::ProgressTracker;
 using regina::Triangulation;
 
 void addAngleStructures(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(AngleStructures)
+    RDOC_SCOPE_BEGIN_MAIN
 
     m.def("makeAngleEquations", regina::makeAngleEquations,
-        rdoc_global::makeAngleEquations);
+        rdoc::makeAngleEquations);
+
+    RDOC_SCOPE_SWITCH(AngleStructures)
 
     auto l = pybind11::class_<AngleStructures,
             std::shared_ptr<AngleStructures>>(m, "AngleStructures", rdoc_scope)
