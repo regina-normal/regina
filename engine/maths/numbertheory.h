@@ -96,8 +96,8 @@ long reducedMod(long k, long modBase);
  * tuple (\a d, \a u, \a v), where \a u and \a v are coefficients for which:
  *
  * - <tt>u*a + v*b = d</tt>;
- * - <tt>-abs(a)/d < v*sign(b) <= 0</tt>; and
- * - <tt>1 <= u*sign(a) <= abs(b)/d</tt>.
+ * - <tt>-abs(a)/d < v*sign(b) ≤ 0</tt>; and
+ * - <tt>1 ≤ u*sign(a) ≤ abs(b)/d</tt>.
  *
  * In the special case where one of the given integers is zero, the
  * corresponding coefficient will also be zero and the other coefficient

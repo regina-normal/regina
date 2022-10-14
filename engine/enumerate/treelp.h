@@ -1260,7 +1260,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  *
  * - Some variables have been constrained to be positive; as described
  *   in Burton and Ozlen, it is safe to do this using the non-strict
- *   inequality x_i >= 1 (instead of the strict inequality x_i > 0, which
+ *   inequality x_i ≥ 1 (instead of the strict inequality x_i > 0, which
  *   is more difficult to enforce).  We enforce this constraing using a
  *   change of variable: we replace the variable x_i with (x_i - 1),
  *   which is then constrained to be non-negative as usual.  The new

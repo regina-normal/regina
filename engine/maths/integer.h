@@ -1006,7 +1006,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * The division algorithm is precise about which values of \a q
          * and \a r are chosen; in particular it chooses the unique \a r
-         * in the range <tt>0 <= r < |d|</tt>.
+         * in the range <tt>0 ≤ r < |d|</tt>.
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
@@ -1305,8 +1305,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * coefficients for which:
          *
          * - <tt>u*this + v*other = d</tt>;
-         * - <tt>-abs(this)/d < v*sign(other) <= 0</tt>; and
-         * - <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         * - <tt>-abs(this)/d < v*sign(other) ≤ 0</tt>; and
+         * - <tt>1 ≤ u*sign(this) ≤ abs(other)/d</tt>.
          *
          * These equations are not satisfied when either of \a this or
          * \a other are zero, but in this case \a u and \a v will both be
@@ -1341,8 +1341,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * into \a u and \a v will be coefficients for which:
          *
          * - <tt>u*this + v*other = d</tt>;
-         * - <tt>-abs(this)/d < v*sign(other) <= 0</tt>; and
-         * - <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         * - <tt>-abs(this)/d < v*sign(other) ≤ 0</tt>; and
+         * - <tt>1 ≤ u*sign(this) ≤ abs(other)/d</tt>.
          *
          * These equations are not satisfied when either of \a this or
          * \a other are zero, but in this case \a u and \a v will both be
@@ -2184,7 +2184,7 @@ class NativeInteger {
          *
          * The division algorithm is precise about which values of \a q
          * and \a r are chosen; in particular it chooses the unique \a r
-         * in the range <tt>0 <= r < |d|</tt>.
+         * in the range <tt>0 ≤ r < |d|</tt>.
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
