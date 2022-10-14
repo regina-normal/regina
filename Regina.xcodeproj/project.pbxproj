@@ -2502,9 +2502,6 @@
 		05098A6828F24CD8005E4716 /* globals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = globals.h; sourceTree = "<group>"; };
 		05098A6928F24D3C005E4716 /* docstrings.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstrings.test; sourceTree = "<group>"; };
 		05098A6A28F24D3C005E4716 /* docstrings.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstrings.out; sourceTree = "<group>"; };
-		05098A6D28F24D98005E4716 /* mkdoc_lib.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = mkdoc_lib.py; sourceTree = "<group>"; };
-		05098A6E28F24D98005E4716 /* __init__.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = __init__.py; sourceTree = "<group>"; };
-		05098A6F28F24D98005E4716 /* __main__.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = __main__.py; sourceTree = "<group>"; };
 		05098A7128F24D98005E4716 /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
 		05098A7228F24D98005E4716 /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		05098A7328F24D98005E4716 /* regina-core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "regina-core.h"; sourceTree = "<group>"; };
@@ -2581,6 +2578,30 @@
 		05098AD328F63250005E4716 /* normalsurfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = normalsurfaces.h; sourceTree = "<group>"; };
 		05098AD528F63250005E4716 /* angleflags.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = angleflags.h; sourceTree = "<group>"; };
 		05098AD728F63250005E4716 /* hyperflags.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hyperflags.h; sourceTree = "<group>"; };
+		05098AD828FA2CAE005E4716 /* mkdoc.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = mkdoc.py; sourceTree = "<group>"; };
+		05098ADA28FA2CEC005E4716 /* hilbertdual.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hilbertdual.h; sourceTree = "<group>"; };
+		05098ADB28FA2CEC005E4716 /* treelp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = treelp.h; sourceTree = "<group>"; };
+		05098ADC28FA2CEC005E4716 /* hilbertprimal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hilbertprimal.h; sourceTree = "<group>"; };
+		05098ADD28FA2CEC005E4716 /* treeconstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = treeconstraint.h; sourceTree = "<group>"; };
+		05098ADE28FA2CEC005E4716 /* ordering.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ordering.h; sourceTree = "<group>"; };
+		05098ADF28FA2CEC005E4716 /* validityconstraints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = validityconstraints.h; sourceTree = "<group>"; };
+		05098AE028FA2CEC005E4716 /* maxadmissible.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = maxadmissible.h; sourceTree = "<group>"; };
+		05098AE128FA2CEC005E4716 /* hilbertcd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hilbertcd.h; sourceTree = "<group>"; };
+		05098AE228FA2CEC005E4716 /* treetraversal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = treetraversal.h; sourceTree = "<group>"; };
+		05098AE328FA2CEC005E4716 /* typetrie.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = typetrie.h; sourceTree = "<group>"; };
+		05098AE428FA2CEC005E4716 /* doubledescription.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = doubledescription.h; sourceTree = "<group>"; };
+		05098AE528FA2D21005E4716 /* anglestructure.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = anglestructure.h; sourceTree = "<group>"; };
+		05098AE628FA2D21005E4716 /* anglestructures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = anglestructures.h; sourceTree = "<group>"; };
+		05098AE728FA2D2F005E4716 /* normalhypersurfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = normalhypersurfaces.h; sourceTree = "<group>"; };
+		05098AE828FA2D2F005E4716 /* normalhypersurface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = normalhypersurface.h; sourceTree = "<group>"; };
+		05098AE928FA2D2F005E4716 /* hypercoords.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hypercoords.h; sourceTree = "<group>"; };
+		05098AEA28FA2D42005E4716 /* disctype.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = disctype.h; sourceTree = "<group>"; };
+		05098AEB28FA2D42005E4716 /* surfacefilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = surfacefilter.h; sourceTree = "<group>"; };
+		05098AEC28FA2D43005E4716 /* normalsurface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = normalsurface.h; sourceTree = "<group>"; };
+		05098AED28FA2D43005E4716 /* disc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = disc.h; sourceTree = "<group>"; };
+		05098AEE28FA2D43005E4716 /* normalcoords.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = normalcoords.h; sourceTree = "<group>"; };
+		05098AEF28FA2D43005E4716 /* surfacefiltertype.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = surfacefiltertype.h; sourceTree = "<group>"; };
+		05098AF028FA2D43005E4716 /* prism.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prism.h; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -4973,14 +4994,15 @@
 				05098ACF28F63250005E4716 /* census */,
 				05098A7428F24D98005E4716 /* checknames.py */,
 				05098A7028F24D98005E4716 /* core */,
+				05098AD928FA2CEC005E4716 /* enumerate */,
 				05098A7728F24D98005E4716 /* file */,
 				05098AC228F62234005E4716 /* foreign */,
 				05098A9728F24D98005E4716 /* gendoc.sh */,
 				05098AD628F63250005E4716 /* hypersurface */,
 				05098A8F28F24D98005E4716 /* maths */,
+				05098AD828FA2CAE005E4716 /* mkdoc.py */,
 				05098AB128F44AF2005E4716 /* packet */,
 				05098A7528F24D98005E4716 /* progress */,
-				05098A6C28F24D98005E4716 /* pybind11_mkdoc */,
 				05098A7B28F24D98005E4716 /* python */,
 				05098A9628F24D98005E4716 /* README.txt */,
 				05098AC628F62234005E4716 /* split */,
@@ -4989,16 +5011,6 @@
 				05098A7E28F24D98005E4716 /* utilities */,
 			);
 			path = docstrings;
-			sourceTree = "<group>";
-		};
-		05098A6C28F24D98005E4716 /* pybind11_mkdoc */ = {
-			isa = PBXGroup;
-			children = (
-				05098A6D28F24D98005E4716 /* mkdoc_lib.py */,
-				05098A6E28F24D98005E4716 /* __init__.py */,
-				05098A6F28F24D98005E4716 /* __main__.py */,
-			);
-			path = pybind11_mkdoc;
 			sourceTree = "<group>";
 		};
 		05098A7028F24D98005E4716 /* core */ = {
@@ -5154,8 +5166,15 @@
 		05098AD128F63250005E4716 /* surface */ = {
 			isa = PBXGroup;
 			children = (
+				05098AED28FA2D43005E4716 /* disc.h */,
+				05098AEA28FA2D42005E4716 /* disctype.h */,
+				05098AEE28FA2D43005E4716 /* normalcoords.h */,
 				05098AD228F63250005E4716 /* normalflags.h */,
+				05098AEC28FA2D43005E4716 /* normalsurface.h */,
 				05098AD328F63250005E4716 /* normalsurfaces.h */,
+				05098AF028FA2D43005E4716 /* prism.h */,
+				05098AEB28FA2D42005E4716 /* surfacefilter.h */,
+				05098AEF28FA2D43005E4716 /* surfacefiltertype.h */,
 			);
 			path = surface;
 			sourceTree = "<group>";
@@ -5164,6 +5183,8 @@
 			isa = PBXGroup;
 			children = (
 				05098AD528F63250005E4716 /* angleflags.h */,
+				05098AE528FA2D21005E4716 /* anglestructure.h */,
+				05098AE628FA2D21005E4716 /* anglestructures.h */,
 			);
 			path = angle;
 			sourceTree = "<group>";
@@ -5171,9 +5192,30 @@
 		05098AD628F63250005E4716 /* hypersurface */ = {
 			isa = PBXGroup;
 			children = (
+				05098AE928FA2D2F005E4716 /* hypercoords.h */,
 				05098AD728F63250005E4716 /* hyperflags.h */,
+				05098AE828FA2D2F005E4716 /* normalhypersurface.h */,
+				05098AE728FA2D2F005E4716 /* normalhypersurfaces.h */,
 			);
 			path = hypersurface;
+			sourceTree = "<group>";
+		};
+		05098AD928FA2CEC005E4716 /* enumerate */ = {
+			isa = PBXGroup;
+			children = (
+				05098AE428FA2CEC005E4716 /* doubledescription.h */,
+				05098AE128FA2CEC005E4716 /* hilbertcd.h */,
+				05098ADA28FA2CEC005E4716 /* hilbertdual.h */,
+				05098ADC28FA2CEC005E4716 /* hilbertprimal.h */,
+				05098AE028FA2CEC005E4716 /* maxadmissible.h */,
+				05098ADE28FA2CEC005E4716 /* ordering.h */,
+				05098ADD28FA2CEC005E4716 /* treeconstraint.h */,
+				05098ADB28FA2CEC005E4716 /* treelp.h */,
+				05098AE228FA2CEC005E4716 /* treetraversal.h */,
+				05098AE328FA2CEC005E4716 /* typetrie.h */,
+				05098ADF28FA2CEC005E4716 /* validityconstraints.h */,
+			);
+			path = enumerate;
 			sourceTree = "<group>";
 		};
 		050F5CDE1B9BAAAA00C1F681 /* python */ = {
