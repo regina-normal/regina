@@ -36,11 +36,11 @@ Container::swap() for further explanation.)doc";
 
 namespace Container_ {
 
-// Docstring regina::python::doc::Container_::Container
-static const char *Container = R"doc(Default constructor.)doc";
+// Docstring regina::python::doc::Container_::__init
+static const char *__init = R"doc(Default constructor.)doc";
 
-// Docstring regina::python::doc::Container_::Container_2
-static const char *Container_2 =
+// Docstring regina::python::doc::Container_::__init_2
+static const char *__init_2 =
 R"doc(Constructs a new container with the given packet label.
 
 This constructor is (for example) helpful when you are building a
@@ -50,8 +50,8 @@ containers to organise the data in this tree.
 Parameter ``label``:
     the packet label for this new container.)doc";
 
-// Docstring regina::python::doc::Container_::Container_3
-static const char *Container_3 =
+// Docstring regina::python::doc::Container_::__init_3
+static const char *__init_3 =
 R"doc(Copy constructor that does nothing.
 
 This is only here for consistency with the other packet types. Like

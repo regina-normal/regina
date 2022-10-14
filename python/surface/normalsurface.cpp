@@ -63,15 +63,13 @@ void addNormalSurface(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(NormalSurface)
 
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface", rdoc_scope)
-        .def(pybind11::init<const NormalSurface&>(), rdoc::NormalSurface)
+        .def(pybind11::init<const NormalSurface&>(), rdoc::__init)
         .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>(),
-            rdoc::NormalSurface_2)
+            rdoc::__init_2)
         .def(pybind11::init<const Triangulation<3>&, regina::NormalEncoding,
-            const regina::Vector<regina::LargeInteger>&>(),
-            rdoc::NormalSurface_3)
+            const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_3)
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
-            const regina::Vector<regina::LargeInteger>&>(),
-            rdoc::NormalSurface_4)
+            const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_4)
         .def(pybind11::init([](const Triangulation<3>& t,
                 regina::NormalEncoding enc, pybind11::list values) {
             regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
@@ -86,7 +84,7 @@ void addNormalSurface(pybind11::module_& m) {
                     "List element not convertible to LargeInteger");
             }
             return new NormalSurface(t, enc, std::move(v));
-        }), rdoc::NormalSurface_3)
+        }), rdoc::__init_3)
         .def(pybind11::init([](const Triangulation<3>& t,
                 regina::NormalCoords coords, pybind11::list values) {
             regina::NormalEncoding enc(coords);
@@ -102,7 +100,7 @@ void addNormalSurface(pybind11::module_& m) {
                     "List element not convertible to LargeInteger");
             }
             return new NormalSurface(t, enc, std::move(v));
-        }), rdoc::NormalSurface_4)
+        }), rdoc::__init_4)
         .def("swap", &NormalSurface::swap, rdoc::swap)
         .def("doubleSurface", [](const NormalSurface& s) {
             // This is deprecated, so we reimplement it ourselves.

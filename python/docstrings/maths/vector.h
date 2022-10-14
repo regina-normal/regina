@@ -87,66 +87,6 @@ Parameter ``b``:
 
 namespace Vector_ {
 
-// Docstring regina::python::doc::Vector_::Vector
-static const char *Vector =
-R"doc(Creates a new vector.
-
-All entries will be initialised using their default constructors. In
-particular, this means that for Regina's own integer classes (Integer,
-LargeInteger and NativeInteger), all entries will be initialised to
-zero.
-
-.. warning::
-    If *T* is a native C++ integer type (such as ``int`` or ``long``),
-    then the elements will not be initialised to any particular value.
-
-Parameter ``newVectorSize``:
-    the number of elements in the new vector.)doc";
-
-// Docstring regina::python::doc::Vector_::Vector_2
-static const char *Vector_2 =
-R"doc(Creates a new vector and initialises every element to the given value.
-
-Parameter ``newVectorSize``:
-    the number of elements in the new vector.
-
-Parameter ``initValue``:
-    the value to assign to every element of the vector.)doc";
-
-// Docstring regina::python::doc::Vector_::Vector_3
-static const char *Vector_3 =
-R"doc(Creates a new vector containing the given sequence of elements.
-
-This constructor induces a deep copy of the given range.
-
-Precondition:
-    Objects of type *T* can be assigned values from dereferenced
-    iterators of type *iterator*.
-
-.. warning::
-    This routine computes the length of the given sequence by
-    subtracting ``end - begin``, and so ideally *iterator* should be a
-    random access iterator type for which this operation is constant
-    time.
-
-Python:
-    Instead of a pair of iterators, this routine takes a python list
-    of coefficients.
-
-Parameter ``begin``:
-    the beginning of the sequence of elements.
-
-Parameter ``end``:
-    a past-the-end iterator indicating the end of the sequence of
-    elements.)doc";
-
-// Docstring regina::python::doc::Vector_::Vector_4
-static const char *Vector_4 =
-R"doc(Creates a new vector that is a clone of the given vector.
-
-Parameter ``src``:
-    the vector to clone.)doc";
-
 // Docstring regina::python::doc::Vector_::__add
 static const char *__add =
 R"doc(Adds the given vector to this vector, and returns the result. This
@@ -226,6 +166,66 @@ Parameter ``factor``:
 
 Returns:
     a reference to this vector.)doc";
+
+// Docstring regina::python::doc::Vector_::__init
+static const char *__init =
+R"doc(Creates a new vector.
+
+All entries will be initialised using their default constructors. In
+particular, this means that for Regina's own integer classes (Integer,
+LargeInteger and NativeInteger), all entries will be initialised to
+zero.
+
+.. warning::
+    If *T* is a native C++ integer type (such as ``int`` or ``long``),
+    then the elements will not be initialised to any particular value.
+
+Parameter ``newVectorSize``:
+    the number of elements in the new vector.)doc";
+
+// Docstring regina::python::doc::Vector_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new vector and initialises every element to the given value.
+
+Parameter ``newVectorSize``:
+    the number of elements in the new vector.
+
+Parameter ``initValue``:
+    the value to assign to every element of the vector.)doc";
+
+// Docstring regina::python::doc::Vector_::__init_3
+static const char *__init_3 =
+R"doc(Creates a new vector containing the given sequence of elements.
+
+This constructor induces a deep copy of the given range.
+
+Precondition:
+    Objects of type *T* can be assigned values from dereferenced
+    iterators of type *iterator*.
+
+.. warning::
+    This routine computes the length of the given sequence by
+    subtracting ``end - begin``, and so ideally *iterator* should be a
+    random access iterator type for which this operation is constant
+    time.
+
+Python:
+    Instead of a pair of iterators, this routine takes a python list
+    of coefficients.
+
+Parameter ``begin``:
+    the beginning of the sequence of elements.
+
+Parameter ``end``:
+    a past-the-end iterator indicating the end of the sequence of
+    elements.)doc";
+
+// Docstring regina::python::doc::Vector_::__init_4
+static const char *__init_4 =
+R"doc(Creates a new vector that is a clone of the given vector.
+
+Parameter ``src``:
+    the vector to clone.)doc";
 
 // Docstring regina::python::doc::Vector_::__isub
 static const char *__isub =

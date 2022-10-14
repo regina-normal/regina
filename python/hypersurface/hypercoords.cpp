@@ -54,8 +54,8 @@ void addHyperCoords(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(HyperEncoding)
 
     auto e = pybind11::class_<HyperEncoding>(m, "HyperEncoding", rdoc_scope)
-        .def(pybind11::init<HyperCoords>(), rdoc::HyperEncoding)
-        .def(pybind11::init<const HyperEncoding&>(), rdoc::HyperEncoding_2)
+        .def(pybind11::init<HyperCoords>(), rdoc::__init)
+        .def(pybind11::init<const HyperEncoding&>(), rdoc::__init_2)
         .def("valid", &HyperEncoding::valid, rdoc::valid)
         .def("block", &HyperEncoding::block, rdoc::block)
         .def("storesTetrahedra", &HyperEncoding::storesTetrahedra,

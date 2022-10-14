@@ -44,8 +44,25 @@ Parameter ``rhs``:
 
 namespace IntersectionForm_ {
 
-// Docstring regina::python::doc::IntersectionForm_::IntersectionForm
-static const char *IntersectionForm =
+// Docstring regina::python::doc::IntersectionForm_::__eq
+static const char *__eq =
+R"doc(Determines if this and the given bilinear form are represented by the
+same symmetric square integer matrices.
+
+This does *not* test whether this and the given form are congruent
+(i.e., related by a change basis in the underlying free abelian
+group). Instead it is equivalent to testing whether ``matrix() ==
+other.matrix()``.
+
+Parameter ``other``:
+    the bilinear form to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given bilinear form are
+    represented by identical matrices.)doc";
+
+// Docstring regina::python::doc::IntersectionForm_::__init
+static const char *__init =
 R"doc(Constructs the bilinear form described by the given symmetric square
 integer matrix.
 
@@ -65,25 +82,8 @@ Parameter ``form``:
     a symmetric square integer matrix that describes this bilinear
     form.)doc";
 
-// Docstring regina::python::doc::IntersectionForm_::IntersectionForm_2
-static const char *IntersectionForm_2 = R"doc(Creates a clone of the given intersection form.)doc";
-
-// Docstring regina::python::doc::IntersectionForm_::__eq
-static const char *__eq =
-R"doc(Determines if this and the given bilinear form are represented by the
-same symmetric square integer matrices.
-
-This does *not* test whether this and the given form are congruent
-(i.e., related by a change basis in the underlying free abelian
-group). Instead it is equivalent to testing whether ``matrix() ==
-other.matrix()``.
-
-Parameter ``other``:
-    the bilinear form to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given bilinear form are
-    represented by identical matrices.)doc";
+// Docstring regina::python::doc::IntersectionForm_::__init_2
+static const char *__init_2 = R"doc(Creates a clone of the given intersection form.)doc";
 
 // Docstring regina::python::doc::IntersectionForm_::__ne
 static const char *__ne =

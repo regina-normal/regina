@@ -86,28 +86,6 @@ Parameter ``b``:
 
 namespace Matrix2_ {
 
-// Docstring regina::python::doc::Matrix2_::Matrix2
-static const char *Matrix2 = R"doc(Initialises to the zero matrix.)doc";
-
-// Docstring regina::python::doc::Matrix2_::Matrix2_2
-static const char *Matrix2_2 = R"doc(Initialises to a copy of the given matrix.)doc";
-
-// Docstring regina::python::doc::Matrix2_::Matrix2_3
-static const char *Matrix2_3 =
-R"doc(Initialises to the given integer values.
-
-Parameter ``val00``:
-    the value to place in row 0, column 0.
-
-Parameter ``val01``:
-    the value to place in row 0, column 1.
-
-Parameter ``val10``:
-    the value to place in row 1, column 0.
-
-Parameter ``val11``:
-    the value to place in row 1, column 1.)doc";
-
 // Docstring regina::python::doc::Matrix2_::__add
 static const char *__add =
 R"doc(Calculates the sum of two matrices. Neither this nor the given matrix
@@ -188,6 +166,28 @@ Parameter ``scalar``:
 
 Returns:
     a reference to this matrix with its new value.)doc";
+
+// Docstring regina::python::doc::Matrix2_::__init
+static const char *__init = R"doc(Initialises to the zero matrix.)doc";
+
+// Docstring regina::python::doc::Matrix2_::__init_2
+static const char *__init_2 = R"doc(Initialises to a copy of the given matrix.)doc";
+
+// Docstring regina::python::doc::Matrix2_::__init_3
+static const char *__init_3 =
+R"doc(Initialises to the given integer values.
+
+Parameter ``val00``:
+    the value to place in row 0, column 0.
+
+Parameter ``val01``:
+    the value to place in row 0, column 1.
+
+Parameter ``val10``:
+    the value to place in row 1, column 0.
+
+Parameter ``val11``:
+    the value to place in row 1, column 1.)doc";
 
 // Docstring regina::python::doc::Matrix2_::__isub
 static const char *__isub =

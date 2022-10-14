@@ -51,14 +51,12 @@ void addHomGroupPresentation(pybind11::module_& m) {
     auto c = pybind11::class_<HomGroupPresentation>(m, "HomGroupPresentation",
             rdoc_scope)
         .def(pybind11::init<GroupPresentation, GroupPresentation,
-            std::vector<GroupExpression>>(), rdoc::HomGroupPresentation)
+            std::vector<GroupExpression>>(), rdoc::__init)
         .def(pybind11::init<GroupPresentation, GroupPresentation,
             std::vector<GroupExpression>, std::vector<GroupExpression>>(),
-            rdoc::HomGroupPresentation_2)
-        .def(pybind11::init<const GroupPresentation&>(),
-            rdoc::HomGroupPresentation_3)
-        .def(pybind11::init<const HomGroupPresentation&>(),
-            rdoc::HomGroupPresentation_4)
+            rdoc::__init_2)
+        .def(pybind11::init<const GroupPresentation&>(), rdoc::__init_3)
+        .def(pybind11::init<const HomGroupPresentation&>(), rdoc::__init_4)
         .def("swap", &HomGroupPresentation::swap, rdoc::swap)
         .def("domain", &HomGroupPresentation::domain,
             pybind11::return_value_policy::reference_internal, rdoc::domain)

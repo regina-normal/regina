@@ -72,9 +72,6 @@ Template parameter ``Container``:
 
 namespace ListView_ {
 
-// Docstring regina::python::doc::ListView_::ListView
-constexpr const char *ListView = R"doc(Creates a new copy of the given list view.)doc";
-
 // Docstring regina::python::doc::ListView_::__array
 constexpr const char *__array =
 R"doc(Returns the requested element of this list.
@@ -101,6 +98,9 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given list use the same
     underlying container.)doc";
+
+// Docstring regina::python::doc::ListView_::__init
+constexpr const char *__init = R"doc(Creates a new copy of the given list view.)doc";
 
 // Docstring regina::python::doc::ListView_::__iter__
 constexpr const char *__iter__ =

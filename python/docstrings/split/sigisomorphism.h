@@ -52,23 +52,6 @@ Parameter ``b``:
 
 namespace SigPartialIsomorphism_ {
 
-// Docstring regina::python::doc::SigPartialIsomorphism_::SigPartialIsomorphism
-static const char *SigPartialIsomorphism =
-R"doc(Creates a new partial isomorphism that maps no cycles or symbols. This
-empty isomorphism is designed to be extended at some later point.
-
-Parameter ``newDir``:
-    positive if this isomorphism specifies that all cycles are
-    reversed, or negative if this isomorphism specifies that all
-    cycles keep their original direction.)doc";
-
-// Docstring regina::python::doc::SigPartialIsomorphism_::SigPartialIsomorphism_2
-static const char *SigPartialIsomorphism_2 =
-R"doc(Creates a copy of the given partial isomorphism.
-
-Parameter ``iso``:
-    the partial isomorphism to copy.)doc";
-
 // Docstring regina::python::doc::SigPartialIsomorphism_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given partial isomorphism are
@@ -79,6 +62,23 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if this and *other* are identical.)doc";
+
+// Docstring regina::python::doc::SigPartialIsomorphism_::__init
+static const char *__init =
+R"doc(Creates a new partial isomorphism that maps no cycles or symbols. This
+empty isomorphism is designed to be extended at some later point.
+
+Parameter ``newDir``:
+    positive if this isomorphism specifies that all cycles are
+    reversed, or negative if this isomorphism specifies that all
+    cycles keep their original direction.)doc";
+
+// Docstring regina::python::doc::SigPartialIsomorphism_::__init_2
+static const char *__init_2 =
+R"doc(Creates a copy of the given partial isomorphism.
+
+Parameter ``iso``:
+    the partial isomorphism to copy.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::__ne
 static const char *__ne =

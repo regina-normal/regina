@@ -142,143 +142,6 @@ Returns:
 
 namespace IntegerBase_ {
 
-// Docstring regina::python::doc::IntegerBase_::IntegerBase
-static const char *IntegerBase = R"doc(Initialises this integer to zero.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_2
-static const char *IntegerBase_2 =
-R"doc(Initialises this integer to the given value.
-
-Python:
-    In Python, this is the only native-integer constructor available.
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_3
-static const char *IntegerBase_3 =
-R"doc(Initialises this integer to the given value.
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_4
-static const char *IntegerBase_4 =
-R"doc(Initialises this integer to the given value.
-
-Precondition:
-    The given integer is not infinite.
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_5
-static const char *IntegerBase_5 =
-R"doc(Moves the given integer into this new integer. This is a fast
-(constant time) operation.
-
-The integer that is passed (*src*) will no longer be usable.
-
-Precondition:
-    The given integer is not infinite.
-
-Parameter ``src``:
-    the integer to move.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_6
-static const char *IntegerBase_6 =
-R"doc(Initialises this to the given Python arbitrary-precision integer.
-
-The argument is of the Python type ``long``, which Python uses to
-store integers of arbitrary magnitude (much like Regina does with its
-Integer and LargeInteger classes).
-
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_7
-static const char *IntegerBase_7 =
-R"doc(Initialises this integer to the truncation of the given real number.
-
-Parameter ``value``:
-    the real number to be truncated.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_8
-static const char *IntegerBase_8 =
-R"doc(Initialises this integer to the given value which is represented as a
-string of digits in a given base.
-
-If not specified, the base defaults to 10. If the given base is zero,
-the base will be automatically determined. If the given string begins
-with ``0x`` or ``0X``, the base will be assumed to be 16. Otherwise,
-if the string begins with ``0``, the base will be assumed to be 8.
-Otherwise it will be taken as base 10.
-
-If the template argument *supportInfinity* is ``True``, then any
-string beginning with "inf" (after any initial whitesapce) will be
-interpreted as infinity.
-
-Whitespace may be present at the beginning or the end of the given
-string, and will simply be ignored.
-
-For finer details on how the string parsing works, see strtol() from
-the standard C library (on which this method is based).
-
-Precondition:
-    The given base is zero, or is between 2 and 36 inclusive.
-
-Precondition:
-    The given string represents an integer in the given base, with
-    optional whitespace beforehand.
-
-Exception ``InvalidArgument``:
-    The given string was not a valid large integer representation.
-
-Parameter ``value``:
-    the new value of this integer, represented as a string of digits
-    in base *base*.
-
-Parameter ``base``:
-    the base in which *value* is given.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::IntegerBase_9
-static const char *IntegerBase_9 =
-R"doc(Initialises this integer to the given value which is represented as a
-string of digits in a given base.
-
-If not specified, the base defaults to 10. If the given base is zero,
-the base will be automatically determined. If the given string begins
-with ``0x`` or ``0X``, the base will be assumed to be 16. Otherwise,
-if the string begins with ``0``, the base will be assumed to be 8.
-Otherwise it will be taken as base 10.
-
-If the template argument *supportInfinity* is ``True``, then any
-string beginning with "inf" (after any initial whitesapce) will be
-interpreted as infinity.
-
-Whitespace may be present at the beginning or the end of the given
-string, and will simply be ignored.
-
-For finer details on how the string parsing works, see strtol() from
-the standard C library (on which this method is based).
-
-Precondition:
-    The given base is zero, or is between 2 and 36 inclusive.
-
-Precondition:
-    The given string represents an integer in the given base, with
-    optional whitespace beforehand.
-
-Exception ``InvalidArgument``:
-    The given string was not a valid large integer representation.
-
-Parameter ``value``:
-    the new value of this integer, represented as a string of digits
-    in base *base*.
-
-Parameter ``base``:
-    the base in which *value* is given.)doc";
-
 // Docstring regina::python::doc::IntegerBase_::__add
 static const char *__add =
 R"doc(Adds this to the given integer and returns the result. This integer is
@@ -594,6 +457,143 @@ Python:
 
 Returns:
     a copy of this integer before the increment took place.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::__init
+static const char *__init = R"doc(Initialises this integer to zero.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::__init_2
+static const char *__init_2 =
+R"doc(Initialises this integer to the given value.
+
+Python:
+    In Python, this is the only native-integer constructor available.
+
+Parameter ``value``:
+    the new value of this integer.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::__init_3
+static const char *__init_3 =
+R"doc(Initialises this integer to the given value.
+
+Parameter ``value``:
+    the new value of this integer.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::__init_4
+static const char *__init_4 =
+R"doc(Initialises this integer to the given value.
+
+Precondition:
+    The given integer is not infinite.
+
+Parameter ``value``:
+    the new value of this integer.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::__init_5
+static const char *__init_5 =
+R"doc(Moves the given integer into this new integer. This is a fast
+(constant time) operation.
+
+The integer that is passed (*src*) will no longer be usable.
+
+Precondition:
+    The given integer is not infinite.
+
+Parameter ``src``:
+    the integer to move.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::__init_6
+static const char *__init_6 =
+R"doc(Initialises this to the given Python arbitrary-precision integer.
+
+The argument is of the Python type ``long``, which Python uses to
+store integers of arbitrary magnitude (much like Regina does with its
+Integer and LargeInteger classes).
+
+Parameter ``value``:
+    the new value of this integer.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::__init_7
+static const char *__init_7 =
+R"doc(Initialises this integer to the truncation of the given real number.
+
+Parameter ``value``:
+    the real number to be truncated.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::__init_8
+static const char *__init_8 =
+R"doc(Initialises this integer to the given value which is represented as a
+string of digits in a given base.
+
+If not specified, the base defaults to 10. If the given base is zero,
+the base will be automatically determined. If the given string begins
+with ``0x`` or ``0X``, the base will be assumed to be 16. Otherwise,
+if the string begins with ``0``, the base will be assumed to be 8.
+Otherwise it will be taken as base 10.
+
+If the template argument *supportInfinity* is ``True``, then any
+string beginning with "inf" (after any initial whitesapce) will be
+interpreted as infinity.
+
+Whitespace may be present at the beginning or the end of the given
+string, and will simply be ignored.
+
+For finer details on how the string parsing works, see strtol() from
+the standard C library (on which this method is based).
+
+Precondition:
+    The given base is zero, or is between 2 and 36 inclusive.
+
+Precondition:
+    The given string represents an integer in the given base, with
+    optional whitespace beforehand.
+
+Exception ``InvalidArgument``:
+    The given string was not a valid large integer representation.
+
+Parameter ``value``:
+    the new value of this integer, represented as a string of digits
+    in base *base*.
+
+Parameter ``base``:
+    the base in which *value* is given.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::__init_9
+static const char *__init_9 =
+R"doc(Initialises this integer to the given value which is represented as a
+string of digits in a given base.
+
+If not specified, the base defaults to 10. If the given base is zero,
+the base will be automatically determined. If the given string begins
+with ``0x`` or ``0X``, the base will be assumed to be 16. Otherwise,
+if the string begins with ``0``, the base will be assumed to be 8.
+Otherwise it will be taken as base 10.
+
+If the template argument *supportInfinity* is ``True``, then any
+string beginning with "inf" (after any initial whitesapce) will be
+interpreted as infinity.
+
+Whitespace may be present at the beginning or the end of the given
+string, and will simply be ignored.
+
+For finer details on how the string parsing works, see strtol() from
+the standard C library (on which this method is based).
+
+Precondition:
+    The given base is zero, or is between 2 and 36 inclusive.
+
+Precondition:
+    The given string represents an integer in the given base, with
+    optional whitespace beforehand.
+
+Exception ``InvalidArgument``:
+    The given string was not a valid large integer representation.
+
+Parameter ``value``:
+    the new value of this integer, represented as a string of digits
+    in base *base*.
+
+Parameter ``base``:
+    the base in which *value* is given.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::__isub
 static const char *__isub =

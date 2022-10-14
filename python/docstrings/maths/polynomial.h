@@ -302,57 +302,6 @@ Parameter ``b``:
 
 namespace Polynomial_ {
 
-// Docstring regina::python::doc::Polynomial_::Polynomial
-static const char *Polynomial = R"doc(Creates the zero polynomial.)doc";
-
-// Docstring regina::python::doc::Polynomial_::Polynomial_2
-static const char *Polynomial_2 =
-R"doc(Creates the polynomial ``x^d`` for the given degree *d*.
-
-Parameter ``degree``:
-    the degree of the new polynomial.)doc";
-
-// Docstring regina::python::doc::Polynomial_::Polynomial_3
-static const char *Polynomial_3 =
-R"doc(Creates a new copy of the given polynomial.
-
-This constructor induces a deep copy of *value*.
-
-A note for developers: even though this routine is identical to the
-templated copy constructor, it must be declared and implemented
-separately. Otherwise the compiler might create its own (incorrect)
-copy constructor automatically.
-
-Parameter ``value``:
-    the polynomial to clone.)doc";
-
-// Docstring regina::python::doc::Polynomial_::Polynomial_4
-static const char *Polynomial_4 =
-R"doc(Creates a new polynomial from the given sequence of coefficients. The
-coefficients should be given in order from the constant coefficient to
-the leading coefficient.
-
-There is no problem if the leading coefficient (i.e., the last
-coefficient in the sequence) is zero. An empty sequence will be
-treated as the zero polynomial.
-
-This constructor induces a deep copy of the given range.
-
-Precondition:
-    Objects of type *T* can be assigned values from dereferenced
-    iterators of type *iterator*.
-
-Python:
-    Instead of a pair of iterators, this routine takes a python list
-    of coefficients.
-
-Parameter ``begin``:
-    the beginning of the sequence of coefficients.
-
-Parameter ``end``:
-    a past-the-end iterator indicating the end of the sequence of
-    coefficients.)doc";
-
 // Docstring regina::python::doc::Polynomial_::__array
 static const char *__array =
 R"doc(Returns the given coefficient of this polynomial.
@@ -470,6 +419,57 @@ Parameter ``other``:
 
 Returns:
     a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Polynomial_::__init
+static const char *__init = R"doc(Creates the zero polynomial.)doc";
+
+// Docstring regina::python::doc::Polynomial_::__init_2
+static const char *__init_2 =
+R"doc(Creates the polynomial ``x^d`` for the given degree *d*.
+
+Parameter ``degree``:
+    the degree of the new polynomial.)doc";
+
+// Docstring regina::python::doc::Polynomial_::__init_3
+static const char *__init_3 =
+R"doc(Creates a new copy of the given polynomial.
+
+This constructor induces a deep copy of *value*.
+
+A note for developers: even though this routine is identical to the
+templated copy constructor, it must be declared and implemented
+separately. Otherwise the compiler might create its own (incorrect)
+copy constructor automatically.
+
+Parameter ``value``:
+    the polynomial to clone.)doc";
+
+// Docstring regina::python::doc::Polynomial_::__init_4
+static const char *__init_4 =
+R"doc(Creates a new polynomial from the given sequence of coefficients. The
+coefficients should be given in order from the constant coefficient to
+the leading coefficient.
+
+There is no problem if the leading coefficient (i.e., the last
+coefficient in the sequence) is zero. An empty sequence will be
+treated as the zero polynomial.
+
+This constructor induces a deep copy of the given range.
+
+Precondition:
+    Objects of type *T* can be assigned values from dereferenced
+    iterators of type *iterator*.
+
+Python:
+    Instead of a pair of iterators, this routine takes a python list
+    of coefficients.
+
+Parameter ``begin``:
+    the beginning of the sequence of coefficients.
+
+Parameter ``end``:
+    a past-the-end iterator indicating the end of the sequence of
+    coefficients.)doc";
 
 // Docstring regina::python::doc::Polynomial_::__isub
 static const char *__isub =

@@ -90,86 +90,6 @@ Parameter ``b``:
 
 namespace Matrix_ {
 
-// Docstring regina::python::doc::Matrix_::Matrix
-static const char *Matrix =
-R"doc(Creates a new square matrix of the given size. Both the number of rows
-and the number of columns will be set to *size*.
-
-All entries will be initialised using their default constructors. In
-particular, this means that for Regina's own integer classes (Integer,
-LargeInteger and NativeInteger), all entries will be initialised to
-zero.
-
-.. warning::
-    If *T* is a native C++ integer type (such as ``int`` or ``long``),
-    then the matrix elements will not be initialised to any particular
-    value.
-
-Precondition:
-    The given size is strictly positive.
-
-Parameter ``size``:
-    the number of rows and columns in the new matrix.)doc";
-
-// Docstring regina::python::doc::Matrix_::Matrix_2
-static const char *Matrix_2 =
-R"doc(Creates a new matrix of the given size.
-
-All entries will be initialised using their default constructors. In
-particular, this means that for Regina's own integer classes (Integer,
-LargeInteger and NativeInteger), all entries will be initialised to
-zero.
-
-.. warning::
-    If *T* is a native C++ integer type (such as ``int`` or ``long``),
-    then the matrix elements will not be initialised to any particular
-    value.
-
-Precondition:
-    The given number of rows and columns are both strictly positive.
-
-Parameter ``rows``:
-    the number of rows in the new matrix.
-
-Parameter ``cols``:
-    the number of columns in the new matrix.)doc";
-
-// Docstring regina::python::doc::Matrix_::Matrix_3
-static const char *Matrix_3 =
-R"doc(Creates a new matrix containing the given hard-coded entries. This
-constructor can be used (for example) to create hard-coded examples
-directly in C++ code.
-
-Each element of the initialiser list *data* describes a single row of
-the matrix.
-
-Precondition:
-    The list *data* is non-empty (i.e., the number of rows is
-    positive), and each of its elements is non-empty (i.e., the number
-    of columns is positive).
-
-Precondition:
-    All elements of *data* (representing the rows of the matrix) are
-    lists of the same size.
-
-Python:
-    The argument *data* should be a Python list of Python lists.
-
-Parameter ``data``:
-    the rows of the matrix, each given as a list of elements.)doc";
-
-// Docstring regina::python::doc::Matrix_::Matrix_4
-static const char *Matrix_4 =
-R"doc(Creates a new matrix that is a clone of the given matrix.
-
-This constructor induces a deep copy of *src*.
-
-This routine is safe to call even if *src* is uninitialised (in which
-case this matrix will become uninitialised also).
-
-Parameter ``src``:
-    the matrix to clone.)doc";
-
 // Docstring regina::python::doc::Matrix_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given matrix are identical.
@@ -192,6 +112,86 @@ Parameter ``other``:
 Returns:
     ``True`` if the matrices are equal as described above, or
     ``False`` otherwise.)doc";
+
+// Docstring regina::python::doc::Matrix_::__init
+static const char *__init =
+R"doc(Creates a new square matrix of the given size. Both the number of rows
+and the number of columns will be set to *size*.
+
+All entries will be initialised using their default constructors. In
+particular, this means that for Regina's own integer classes (Integer,
+LargeInteger and NativeInteger), all entries will be initialised to
+zero.
+
+.. warning::
+    If *T* is a native C++ integer type (such as ``int`` or ``long``),
+    then the matrix elements will not be initialised to any particular
+    value.
+
+Precondition:
+    The given size is strictly positive.
+
+Parameter ``size``:
+    the number of rows and columns in the new matrix.)doc";
+
+// Docstring regina::python::doc::Matrix_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new matrix of the given size.
+
+All entries will be initialised using their default constructors. In
+particular, this means that for Regina's own integer classes (Integer,
+LargeInteger and NativeInteger), all entries will be initialised to
+zero.
+
+.. warning::
+    If *T* is a native C++ integer type (such as ``int`` or ``long``),
+    then the matrix elements will not be initialised to any particular
+    value.
+
+Precondition:
+    The given number of rows and columns are both strictly positive.
+
+Parameter ``rows``:
+    the number of rows in the new matrix.
+
+Parameter ``cols``:
+    the number of columns in the new matrix.)doc";
+
+// Docstring regina::python::doc::Matrix_::__init_3
+static const char *__init_3 =
+R"doc(Creates a new matrix containing the given hard-coded entries. This
+constructor can be used (for example) to create hard-coded examples
+directly in C++ code.
+
+Each element of the initialiser list *data* describes a single row of
+the matrix.
+
+Precondition:
+    The list *data* is non-empty (i.e., the number of rows is
+    positive), and each of its elements is non-empty (i.e., the number
+    of columns is positive).
+
+Precondition:
+    All elements of *data* (representing the rows of the matrix) are
+    lists of the same size.
+
+Python:
+    The argument *data* should be a Python list of Python lists.
+
+Parameter ``data``:
+    the rows of the matrix, each given as a list of elements.)doc";
+
+// Docstring regina::python::doc::Matrix_::__init_4
+static const char *__init_4 =
+R"doc(Creates a new matrix that is a clone of the given matrix.
+
+This constructor induces a deep copy of *src*.
+
+This routine is safe to call even if *src* is uninitialised (in which
+case this matrix will become uninitialised also).
+
+Parameter ``src``:
+    the matrix to clone.)doc";
 
 // Docstring regina::python::doc::Matrix_::__mul
 static const char *__mul =

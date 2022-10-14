@@ -48,12 +48,12 @@ void addVectorOf(pybind11::module_& m, const char* className) {
     RDOC_SCOPE_BEGIN(Vector)
 
     auto c = pybind11::class_<Vec>(m, className, rdoc_scope)
-        .def(pybind11::init<size_t>(), rdoc::Vector)
-        .def(pybind11::init<size_t, const T&>(), rdoc::Vector_2)
+        .def(pybind11::init<size_t>(), rdoc::__init)
+        .def(pybind11::init<size_t, const T&>(), rdoc::__init_2)
         .def(pybind11::init([](const std::vector<T> v) {
             return new Vec(v.begin(), v.end());
-        }), rdoc::Vector_3)
-        .def(pybind11::init<const Vec&>(), rdoc::Vector_4)
+        }), rdoc::__init_3)
+        .def(pybind11::init<const Vec&>(), rdoc::__init_4)
         .def("size", &Vec::size, rdoc::size)
         .def("__getitem__", [](Vec& v, size_t index) -> T& {
             return v[index];

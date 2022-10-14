@@ -131,27 +131,6 @@ Parameter ``b``:
 
 namespace Bitmask1_ {
 
-// Docstring regina::python::doc::Bitmask1_::Bitmask1
-static const char *Bitmask1 = R"doc(Creates a new bitmask with all bits set to ``False``.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::Bitmask1_2
-static const char *Bitmask1_2 =
-R"doc(Creates a new bitmask with all bits set to ``False``.
-
-The integer argument is merely for compatibility with the Bitmask
-constructor, and will be ignored.
-
-.. warning::
-    This is *not* a constructor that initialises the bitmask to a
-    given pattern.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::Bitmask1_3
-static const char *Bitmask1_3 =
-R"doc(Creates a clone of the given bitmask.
-
-Parameter ``src``:
-    the bitmask to clone.)doc";
-
 // Docstring regina::python::doc::Bitmask1_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given bitmask are identical.
@@ -172,6 +151,27 @@ Parameter ``other``:
 
 Returns:
     a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1_::__init
+static const char *__init = R"doc(Creates a new bitmask with all bits set to ``False``.)doc";
+
+// Docstring regina::python::doc::Bitmask1_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new bitmask with all bits set to ``False``.
+
+The integer argument is merely for compatibility with the Bitmask
+constructor, and will be ignored.
+
+.. warning::
+    This is *not* a constructor that initialises the bitmask to a
+    given pattern.)doc";
+
+// Docstring regina::python::doc::Bitmask1_::__init_3
+static const char *__init_3 =
+R"doc(Creates a clone of the given bitmask.
+
+Parameter ``src``:
+    the bitmask to clone.)doc";
 
 // Docstring regina::python::doc::Bitmask1_::__ior
 static const char *__ior =
@@ -436,27 +436,6 @@ Parameter ``numBits``:
 
 namespace Bitmask2_ {
 
-// Docstring regina::python::doc::Bitmask2_::Bitmask2
-static const char *Bitmask2 = R"doc(Creates a new bitmask with all bits set to ``False``.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::Bitmask2_2
-static const char *Bitmask2_2 =
-R"doc(Creates a new bitmask with all bits set to ``False``.
-
-The integer argument is merely for compatibility with the Bitmask
-constructor, and will be ignored.
-
-.. warning::
-    This is *not* a constructor that initialises the bitmask to a
-    given pattern.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::Bitmask2_3
-static const char *Bitmask2_3 =
-R"doc(Creates a clone of the given bitmask.
-
-Parameter ``src``:
-    the bitmask to clone.)doc";
-
 // Docstring regina::python::doc::Bitmask2_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given bitmask are identical.
@@ -477,6 +456,27 @@ Parameter ``other``:
 
 Returns:
     a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2_::__init
+static const char *__init = R"doc(Creates a new bitmask with all bits set to ``False``.)doc";
+
+// Docstring regina::python::doc::Bitmask2_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new bitmask with all bits set to ``False``.
+
+The integer argument is merely for compatibility with the Bitmask
+constructor, and will be ignored.
+
+.. warning::
+    This is *not* a constructor that initialises the bitmask to a
+    given pattern.)doc";
+
+// Docstring regina::python::doc::Bitmask2_::__init_3
+static const char *__init_3 =
+R"doc(Creates a clone of the given bitmask.
+
+Parameter ``src``:
+    the bitmask to clone.)doc";
 
 // Docstring regina::python::doc::Bitmask2_::__ior
 static const char *__ior =
@@ -741,43 +741,6 @@ Parameter ``numBits``:
 
 namespace Bitmask_ {
 
-// Docstring regina::python::doc::Bitmask_::Bitmask
-static const char *Bitmask =
-R"doc(Creates a new invalid bitmask. You must call the one-argument
-reset(size_t) or use the assignment operator to give the bitmask a
-length before it can be used.
-
-Use of this default constructor is discouraged. The only reason it
-exists is to support arrays and containers of bitmasks, where the
-bitmasks must be created in bulk and then individually assigned
-lengths.
-
-.. warning::
-    No other routines can be used with this bitmask until it has been
-    assigned a length via reset(size_t) or the assignment operator. As
-    the single exception, the class destructor is safe to use even if
-    a bitmask has never been initialised.)doc";
-
-// Docstring regina::python::doc::Bitmask_::Bitmask_2
-static const char *Bitmask_2 =
-R"doc(Creates a new bitmask of the given length with all bits set to
-``False``.
-
-Parameter ``length``:
-    the number of bits stored in this bitmask; this must be at least
-    one.)doc";
-
-// Docstring regina::python::doc::Bitmask_::Bitmask_3
-static const char *Bitmask_3 =
-R"doc(Creates a clone of the given bitmask.
-
-It is fine if the given bitmask is invalid (but in this case, the new
-bitmask will be invalid also). Invalid bitmasks must be assigned a
-length using reset(size_t) or the assignment operator.
-
-Parameter ``src``:
-    the bitmask to clone.)doc";
-
 // Docstring regina::python::doc::Bitmask_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given bitmask are identical.
@@ -809,6 +772,43 @@ Parameter ``other``:
 
 Returns:
     a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask_::__init
+static const char *__init =
+R"doc(Creates a new invalid bitmask. You must call the one-argument
+reset(size_t) or use the assignment operator to give the bitmask a
+length before it can be used.
+
+Use of this default constructor is discouraged. The only reason it
+exists is to support arrays and containers of bitmasks, where the
+bitmasks must be created in bulk and then individually assigned
+lengths.
+
+.. warning::
+    No other routines can be used with this bitmask until it has been
+    assigned a length via reset(size_t) or the assignment operator. As
+    the single exception, the class destructor is safe to use even if
+    a bitmask has never been initialised.)doc";
+
+// Docstring regina::python::doc::Bitmask_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new bitmask of the given length with all bits set to
+``False``.
+
+Parameter ``length``:
+    the number of bits stored in this bitmask; this must be at least
+    one.)doc";
+
+// Docstring regina::python::doc::Bitmask_::__init_3
+static const char *__init_3 =
+R"doc(Creates a clone of the given bitmask.
+
+It is fine if the given bitmask is invalid (but in this case, the new
+bitmask will be invalid also). Invalid bitmasks must be assigned a
+length using reset(size_t) or the assignment operator.
+
+Parameter ``src``:
+    the bitmask to clone.)doc";
 
 // Docstring regina::python::doc::Bitmask_::__ior
 static const char *__ior =

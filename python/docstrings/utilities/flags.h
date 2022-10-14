@@ -34,23 +34,6 @@ Python:
 
 namespace Flags_ {
 
-// Docstring regina::python::doc::Flags_::Flags
-constexpr const char *Flags = R"doc(Creates an empty flag set, with no flags set at all.)doc";
-
-// Docstring regina::python::doc::Flags_::Flags_2
-constexpr const char *Flags_2 =
-R"doc(Creates a flag set initialised to the given value.
-
-Parameter ``init``:
-    the initial value of this flag set.)doc";
-
-// Docstring regina::python::doc::Flags_::Flags_3
-constexpr const char *Flags_3 =
-R"doc(Creates a clone of the given flag set.
-
-Parameter ``init``:
-    the flag set to clone.)doc";
-
 // Docstring regina::python::doc::Flags_::__band
 constexpr const char *__band =
 R"doc(Returns the bitwise AND of this set and the given flag. This flag set
@@ -156,6 +139,23 @@ Parameter ``rhs``:
 
 Returns:
     a reference to this flag set.)doc";
+
+// Docstring regina::python::doc::Flags_::__init
+constexpr const char *__init = R"doc(Creates an empty flag set, with no flags set at all.)doc";
+
+// Docstring regina::python::doc::Flags_::__init_2
+constexpr const char *__init_2 =
+R"doc(Creates a flag set initialised to the given value.
+
+Parameter ``init``:
+    the initial value of this flag set.)doc";
+
+// Docstring regina::python::doc::Flags_::__init_3
+constexpr const char *__init_3 =
+R"doc(Creates a clone of the given flag set.
+
+Parameter ``init``:
+    the flag set to clone.)doc";
 
 // Docstring regina::python::doc::Flags_::__ior
 constexpr const char *__ior =

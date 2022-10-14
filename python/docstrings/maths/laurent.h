@@ -268,63 +268,6 @@ Parameter ``b``:
 
 namespace Laurent_ {
 
-// Docstring regina::python::doc::Laurent_::Laurent
-static const char *Laurent = R"doc(Creates the zero polynomial.)doc";
-
-// Docstring regina::python::doc::Laurent_::Laurent_2
-static const char *Laurent_2 =
-R"doc(Creates the polynomial ``x^d`` for the given exponent *d*.
-
-Parameter ``exponent``:
-    the exponent to use for the new polynomial.)doc";
-
-// Docstring regina::python::doc::Laurent_::Laurent_3
-static const char *Laurent_3 =
-R"doc(Creates a new copy of the given polynomial.
-
-This constructor induces a deep copy of *value*.
-
-A note for developers: even though this routine is identical to the
-templated copy constructor, it must be declared and implemented
-separately. Otherwise the compiler might create its own (incorrect)
-copy constructor automatically.
-
-Parameter ``value``:
-    the polynomial to clone.)doc";
-
-// Docstring regina::python::doc::Laurent_::Laurent_4
-static const char *Laurent_4 =
-R"doc(Creates a new polynomial from the given sequence of coefficients.
-
-The coefficients should be given in order from the smallest exponent
-term to the largest. The first coefficient in the sequence will be
-associated with the exponent *minExp*.
-
-There is no problem if the first and/or last coefficient in the
-sequence is zero. An empty sequence will be treated as the zero
-polynomial.
-
-This constructor induces a deep copy of the given range.
-
-Precondition:
-    Objects of type *T* can be assigned values from dereferenced
-    iterators of type *iterator*.
-
-Python:
-    Instead of the iterators *begin* and *end*, this routine takes a
-    python list of coefficients.
-
-Parameter ``minExp``:
-    the exponent corresponding to the first coefficient in the
-    sequence.
-
-Parameter ``begin``:
-    the beginning of the sequence of coefficients.
-
-Parameter ``end``:
-    a past-the-end iterator indicating the end of the sequence of
-    coefficients.)doc";
-
 // Docstring regina::python::doc::Laurent_::__array
 static const char *__array =
 R"doc(Returns the given coefficient of this polynomial. There are no
@@ -445,6 +388,63 @@ Parameter ``other``:
 
 Returns:
     a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent_::__init
+static const char *__init = R"doc(Creates the zero polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent_::__init_2
+static const char *__init_2 =
+R"doc(Creates the polynomial ``x^d`` for the given exponent *d*.
+
+Parameter ``exponent``:
+    the exponent to use for the new polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent_::__init_3
+static const char *__init_3 =
+R"doc(Creates a new copy of the given polynomial.
+
+This constructor induces a deep copy of *value*.
+
+A note for developers: even though this routine is identical to the
+templated copy constructor, it must be declared and implemented
+separately. Otherwise the compiler might create its own (incorrect)
+copy constructor automatically.
+
+Parameter ``value``:
+    the polynomial to clone.)doc";
+
+// Docstring regina::python::doc::Laurent_::__init_4
+static const char *__init_4 =
+R"doc(Creates a new polynomial from the given sequence of coefficients.
+
+The coefficients should be given in order from the smallest exponent
+term to the largest. The first coefficient in the sequence will be
+associated with the exponent *minExp*.
+
+There is no problem if the first and/or last coefficient in the
+sequence is zero. An empty sequence will be treated as the zero
+polynomial.
+
+This constructor induces a deep copy of the given range.
+
+Precondition:
+    Objects of type *T* can be assigned values from dereferenced
+    iterators of type *iterator*.
+
+Python:
+    Instead of the iterators *begin* and *end*, this routine takes a
+    python list of coefficients.
+
+Parameter ``minExp``:
+    the exponent corresponding to the first coefficient in the
+    sequence.
+
+Parameter ``begin``:
+    the beginning of the sequence of coefficients.
+
+Parameter ``end``:
+    a past-the-end iterator indicating the end of the sequence of
+    coefficients.)doc";
 
 // Docstring regina::python::doc::Laurent_::__isub
 static const char *__isub =

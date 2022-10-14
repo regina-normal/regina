@@ -21,35 +21,6 @@ functions.)doc";
 
 namespace BoolSet_ {
 
-// Docstring regina::python::doc::BoolSet_::BoolSet
-static const char *BoolSet = R"doc(Creates a new empty set.)doc";
-
-// Docstring regina::python::doc::BoolSet_::BoolSet_2
-static const char *BoolSet_2 =
-R"doc(Creates a set containing a single boolean, which is passed as an
-argument.
-
-Parameter ``member``:
-    the single element to include in this set.)doc";
-
-// Docstring regina::python::doc::BoolSet_::BoolSet_3
-static const char *BoolSet_3 =
-R"doc(Creates a clone of the given set.
-
-Parameter ``src``:
-    the set to clone.)doc";
-
-// Docstring regina::python::doc::BoolSet_::BoolSet_4
-static const char *BoolSet_4 =
-R"doc(Creates a set specifying whether ``True`` and/or ``False`` should be a
-member.
-
-Parameter ``insertTrue``:
-    should the new set include the element ``True``?
-
-Parameter ``insertFalse``:
-    should the new set include the element ``False``?)doc";
-
 // Docstring regina::python::doc::BoolSet_::__band
 static const char *__band =
 R"doc(Returns the intersection of this set with the given set. The result is
@@ -138,6 +109,35 @@ Parameter ``other``:
 
 Returns:
     a reference to this set.)doc";
+
+// Docstring regina::python::doc::BoolSet_::__init
+static const char *__init = R"doc(Creates a new empty set.)doc";
+
+// Docstring regina::python::doc::BoolSet_::__init_2
+static const char *__init_2 =
+R"doc(Creates a set containing a single boolean, which is passed as an
+argument.
+
+Parameter ``member``:
+    the single element to include in this set.)doc";
+
+// Docstring regina::python::doc::BoolSet_::__init_3
+static const char *__init_3 =
+R"doc(Creates a clone of the given set.
+
+Parameter ``src``:
+    the set to clone.)doc";
+
+// Docstring regina::python::doc::BoolSet_::__init_4
+static const char *__init_4 =
+R"doc(Creates a set specifying whether ``True`` and/or ``False`` should be a
+member.
+
+Parameter ``insertTrue``:
+    should the new set include the element ``True``?
+
+Parameter ``insertFalse``:
+    should the new set include the element ``False``?)doc";
 
 // Docstring regina::python::doc::BoolSet_::__ior
 static const char *__ior =

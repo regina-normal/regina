@@ -145,8 +145,54 @@ Parameter ``rhs``:
 
 namespace NormalHypersurfaces_ {
 
-// Docstring regina::python::doc::NormalHypersurfaces_::NormalHypersurfaces
-static const char *NormalHypersurfaces =
+// Docstring regina::python::doc::NormalHypersurfaces_::__array
+static const char *__array =
+R"doc(Returns the hypersurface at the requested index in this list. This is
+identical to calling hypersurface().
+
+Parameter ``index``:
+    the index of the requested hypersurface in this list; this must be
+    between 0 and size()-1 inclusive.
+
+Returns:
+    the normal hypersurface at the requested index in this list.)doc";
+
+// Docstring regina::python::doc::NormalHypersurfaces_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given list contain the same set of
+normal hypersurfaces.
+
+The lists will be compared as multisets: the order of the
+hypersurfaces in each list does not matter; however, in the unusual
+scenario where a list the same hypersurface multiple times,
+multiplicity does matter.
+
+Like the comparison operators for NormalHypersurface, it does not
+matter whether the lists work with different triangulations, or
+different encodings, or if one but not the other supports non-compact
+hypersurfaces. The individual hypersurfaces will simply be compared by
+examining or computing the number of normal pieces of each type.
+
+In particular, this routine is safe to call even if this and the given
+list work with different triangulations:
+
+* If the two triangulations have the same size, then this routine will
+  compare hypersurfaces as though they were transplanted into the same
+  triangulation using the same pentachoron numbering and the same
+  normal piece types.
+
+* If the two triangulations have different sizes, then this comparison
+  will return ``False``.
+
+Parameter ``other``:
+    the list to be compared with this list.
+
+Returns:
+    ``True`` if both lists represent the same multiset of normal
+    hypersurfaces, or ``False`` if not.)doc";
+
+// Docstring regina::python::doc::NormalHypersurfaces_::__init
+static const char *__init =
 R"doc(A unified constructor for enumerating various classes of normal
 hypersurfaces within a given triangulation.
 
@@ -244,54 +290,8 @@ Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``null`` if no progress reporting is required.)doc";
 
-// Docstring regina::python::doc::NormalHypersurfaces_::NormalHypersurfaces_2
-static const char *NormalHypersurfaces_2 = R"doc(Constructs a new copy of the given list.)doc";
-
-// Docstring regina::python::doc::NormalHypersurfaces_::__array
-static const char *__array =
-R"doc(Returns the hypersurface at the requested index in this list. This is
-identical to calling hypersurface().
-
-Parameter ``index``:
-    the index of the requested hypersurface in this list; this must be
-    between 0 and size()-1 inclusive.
-
-Returns:
-    the normal hypersurface at the requested index in this list.)doc";
-
-// Docstring regina::python::doc::NormalHypersurfaces_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given list contain the same set of
-normal hypersurfaces.
-
-The lists will be compared as multisets: the order of the
-hypersurfaces in each list does not matter; however, in the unusual
-scenario where a list the same hypersurface multiple times,
-multiplicity does matter.
-
-Like the comparison operators for NormalHypersurface, it does not
-matter whether the lists work with different triangulations, or
-different encodings, or if one but not the other supports non-compact
-hypersurfaces. The individual hypersurfaces will simply be compared by
-examining or computing the number of normal pieces of each type.
-
-In particular, this routine is safe to call even if this and the given
-list work with different triangulations:
-
-* If the two triangulations have the same size, then this routine will
-  compare hypersurfaces as though they were transplanted into the same
-  triangulation using the same pentachoron numbering and the same
-  normal piece types.
-
-* If the two triangulations have different sizes, then this comparison
-  will return ``False``.
-
-Parameter ``other``:
-    the list to be compared with this list.
-
-Returns:
-    ``True`` if both lists represent the same multiset of normal
-    hypersurfaces, or ``False`` if not.)doc";
+// Docstring regina::python::doc::NormalHypersurfaces_::__init_2
+static const char *__init_2 = R"doc(Constructs a new copy of the given list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::__iter__
 static const char *__iter__ =

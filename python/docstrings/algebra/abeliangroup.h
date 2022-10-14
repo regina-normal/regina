@@ -42,21 +42,40 @@ Parameter ``rhs``:
 
 namespace AbelianGroup_ {
 
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup
-static const char *AbelianGroup = R"doc(Creates a new trivial group.)doc";
+// Docstring regina::python::doc::AbelianGroup_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given abelian group have identical
+presentations (which means they are isomorphic).
 
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_2
-static const char *AbelianGroup_2 = R"doc(Creates a clone of the given group.)doc";
+Since the AbelianGroup class stores *only* the invariants required to
+identify the isomorphism type, two groups will compare as equal if and
+only if they are isomorphic. This is in contrast to the comparisons
+for GroupPresentation (which tests for identical generators and
+relations), or for MarkedAbelianGroup (which tests for identical chain
+complex presentations).
 
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_3
-static const char *AbelianGroup_3 =
+Parameter ``other``:
+    the group with which this should be compared.
+
+Returns:
+    ``True`` if and only if the two groups have identical
+    presentations (i.e., they are isomorphic).)doc";
+
+// Docstring regina::python::doc::AbelianGroup_::__init
+static const char *__init = R"doc(Creates a new trivial group.)doc";
+
+// Docstring regina::python::doc::AbelianGroup_::__init_2
+static const char *__init_2 = R"doc(Creates a clone of the given group.)doc";
+
+// Docstring regina::python::doc::AbelianGroup_::__init_3
+static const char *__init_3 =
 R"doc(Creates a free abelian group of the given rank.
 
 Parameter ``rank``:
     the rank of the new group.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_4
-static const char *AbelianGroup_4 =
+// Docstring regina::python::doc::AbelianGroup_::__init_4
+static const char *__init_4 =
 R"doc(Creates a new group with the given rank and invariant factors.
 
 Exception ``InvalidArgument``:
@@ -78,8 +97,8 @@ Parameter ``invFac``:
     class notes, where each invariant factor is greater than 1 and
     divides the invariant factor after it.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_5
-static const char *AbelianGroup_5 =
+// Docstring regina::python::doc::AbelianGroup_::__init_5
+static const char *__init_5 =
 R"doc(Creates the abelian group defined by the given presentation matrix.
 
 Each column of the matrix represents a generator, and each row of the
@@ -88,8 +107,8 @@ matrix represents a relation.
 Parameter ``presentation``:
     a presentation matrix for the new group.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_6
-static const char *AbelianGroup_6 =
+// Docstring regina::python::doc::AbelianGroup_::__init_6
+static const char *__init_6 =
 R"doc(Creates an abelian group as the homology of a chain complex. The
 abelian group is the kernel of *M* modulo the image of *N*.
 
@@ -119,8 +138,8 @@ Parameter ``N``:
     the `left' matrix in the chain complex; that is, the matrix that
     one takes the image of when computing homology.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::AbelianGroup_7
-static const char *AbelianGroup_7 =
+// Docstring regina::python::doc::AbelianGroup_::__init_7
+static const char *__init_7 =
 R"doc(Creates an abelian group as the homology of a chain complex, using
 mod-*p* coefficients. The abelian group is the kernel of *M* modulo
 the image of *N*.
@@ -158,25 +177,6 @@ Parameter ``p``:
 
 Author:
     Ryan Budney)doc";
-
-// Docstring regina::python::doc::AbelianGroup_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given abelian group have identical
-presentations (which means they are isomorphic).
-
-Since the AbelianGroup class stores *only* the invariants required to
-identify the isomorphism type, two groups will compare as equal if and
-only if they are isomorphic. This is in contrast to the comparisons
-for GroupPresentation (which tests for identical generators and
-relations), or for MarkedAbelianGroup (which tests for identical chain
-complex presentations).
-
-Parameter ``other``:
-    the group with which this should be compared.
-
-Returns:
-    ``True`` if and only if the two groups have identical
-    presentations (i.e., they are isomorphic).)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__ne
 static const char *__ne =

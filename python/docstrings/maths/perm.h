@@ -96,41 +96,6 @@ namespace Perm_ {
 // Docstring regina::python::doc::Perm_::OrderedSnLookup
 static const char *OrderedSnLookup = R"doc(A lightweight array-like object used to implement Perm<n>::orderedSn.)doc";
 
-// Docstring regina::python::doc::Perm_::Perm
-static const char *Perm = R"doc(Creates the identity permutation.)doc";
-
-// Docstring regina::python::doc::Perm_::Perm_2
-static const char *Perm_2 =
-R"doc(Creates the transposition of *a* and *b*. Note that *a* and *b* need
-not be distinct.
-
-Precondition:
-    0 ≤ *a*,*b* < *n*.
-
-Parameter ``a``:
-    the element to switch with *b*.
-
-Parameter ``b``:
-    the element to switch with *a*.)doc";
-
-// Docstring regina::python::doc::Perm_::Perm_3
-static const char *Perm_3 =
-R"doc(Creates a permutation mapping *i* to *image*[*i*] for each 0 ≤ *i* <
-*n*.
-
-Precondition:
-    The elements of *image* are 0,...,*n*-1 in some order.
-
-Parameter ``image``:
-    the array of images.)doc";
-
-// Docstring regina::python::doc::Perm_::Perm_4
-static const char *Perm_4 =
-R"doc(Creates a permutation that is a clone of the given permutation.
-
-Parameter ``cloneMe``:
-    the permutation to clone.)doc";
-
 // Docstring regina::python::doc::Perm_::SnIndex
 static const char *SnIndex =
 R"doc(Returns the index of this permutation in the Perm<n>::Sn array.
@@ -166,6 +131,41 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if this and the given permutation are equal.)doc";
+
+// Docstring regina::python::doc::Perm_::__init
+static const char *__init = R"doc(Creates the identity permutation.)doc";
+
+// Docstring regina::python::doc::Perm_::__init_2
+static const char *__init_2 =
+R"doc(Creates the transposition of *a* and *b*. Note that *a* and *b* need
+not be distinct.
+
+Precondition:
+    0 ≤ *a*,*b* < *n*.
+
+Parameter ``a``:
+    the element to switch with *b*.
+
+Parameter ``b``:
+    the element to switch with *a*.)doc";
+
+// Docstring regina::python::doc::Perm_::__init_3
+static const char *__init_3 =
+R"doc(Creates a permutation mapping *i* to *image*[*i*] for each 0 ≤ *i* <
+*n*.
+
+Precondition:
+    The elements of *image* are 0,...,*n*-1 in some order.
+
+Parameter ``image``:
+    the array of images.)doc";
+
+// Docstring regina::python::doc::Perm_::__init_4
+static const char *__init_4 =
+R"doc(Creates a permutation that is a clone of the given permutation.
+
+Parameter ``cloneMe``:
+    the permutation to clone.)doc";
 
 // Docstring regina::python::doc::Perm_::__mul
 static const char *__mul =

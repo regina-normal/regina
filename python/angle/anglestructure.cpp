@@ -45,11 +45,11 @@ void addAngleStructure(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(AngleStructure)
 
     auto c = pybind11::class_<AngleStructure>(m, "AngleStructure", rdoc_scope)
-        .def(pybind11::init<const AngleStructure&>(), rdoc::AngleStructure)
+        .def(pybind11::init<const AngleStructure&>(), rdoc::__init)
         .def(pybind11::init<const AngleStructure&,
-            const regina::Triangulation<3>&>(), rdoc::AngleStructure_2)
+            const regina::Triangulation<3>&>(), rdoc::__init_2)
         .def(pybind11::init<const regina::Triangulation<3>&,
-            const regina::Vector<regina::Integer>&>(), rdoc::AngleStructure_3)
+            const regina::Vector<regina::Integer>&>(), rdoc::__init_3)
         .def(pybind11::init([](const regina::Triangulation<3>& t,
                 pybind11::list values) {
             regina::Vector<regina::Integer> v(3 * t.size() + 1);
@@ -64,7 +64,7 @@ void addAngleStructure(pybind11::module_& m) {
                     "List element not convertible to Integer");
             }
             return new AngleStructure(t, std::move(v));
-        }), rdoc::AngleStructure_3)
+        }), rdoc::__init_3)
         .def("swap", &AngleStructure::swap, rdoc::swap)
         .def("angle", &AngleStructure::angle, rdoc::angle)
         .def("triangulation", &AngleStructure::triangulation,

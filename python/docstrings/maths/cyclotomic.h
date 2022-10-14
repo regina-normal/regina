@@ -272,95 +272,6 @@ Parameter ``b``:
 
 namespace Cyclotomic_ {
 
-// Docstring regina::python::doc::Cyclotomic_::Cyclotomic
-static const char *Cyclotomic =
-R"doc(Creates an uninitialised field element.
-
-This element must be initialised using either init() or the assignment
-operator before it can be used.
-
-The underlying cyclotomic field is not yet known; this will also be
-specified during the call to init() or the assignment operator.)doc";
-
-// Docstring regina::python::doc::Cyclotomic_::Cyclotomic_2
-static const char *Cyclotomic_2 =
-R"doc(Creates the zero element of the given cyclotomic field.
-
-Parameter ``field``:
-    the order of the underlying cyclotomic field; this must be
-    strictly positive.)doc";
-
-// Docstring regina::python::doc::Cyclotomic_::Cyclotomic_3
-static const char *Cyclotomic_3 =
-R"doc(Creates the given integer element within the given cyclotomic field.
-
-The polynomial representation of this element will simply be an
-integer constant.
-
-Parameter ``field``:
-    the order of the underlying cyclotomic field; this must be
-    strictly positive.
-
-Parameter ``value``:
-    the value of this element; that is, the integer constant.)doc";
-
-// Docstring regina::python::doc::Cyclotomic_::Cyclotomic_4
-static const char *Cyclotomic_4 =
-R"doc(Creates the given rational element within the given cyclotomic field.
-
-The polynomial representation of this element will simply be a
-rational constant.
-
-Parameter ``field``:
-    the order of the underlying cyclotomic field; this must be
-    strictly positive.
-
-Parameter ``value``:
-    the value of this element; that is, the rational constant.)doc";
-
-// Docstring regina::python::doc::Cyclotomic_::Cyclotomic_5
-static const char *Cyclotomic_5 =
-R"doc(Creates a copy of the given field element, within the same cyclotomic
-field.
-
-This constructor induces a deep copy of *value*.
-
-Parameter ``value``:
-    the field element to copy.)doc";
-
-// Docstring regina::python::doc::Cyclotomic_::Cyclotomic_6
-static const char *Cyclotomic_6 =
-R"doc(Creates a new field element from the given sequence of coefficients.
-The coefficients should describe the field element's polynomial
-representation, and should be given in order from the constant
-coefficient upwards. See operator[] for details on what this
-polynomial representation means.
-
-There should be at most ``deg(Φ_n) = φ(n)`` coefficients in the list,
-where *n* is the given order of the underlying field; any missing
-coefficients are assumed to be zero. In particular, an empty sequence
-is allowed (and represents the zero field element).
-
-Precondition:
-    Rationals can be assigned values from dereferenced iterators of
-    type *iterator*.
-
-Python:
-    Instead of a pair of iterators, this routine takes a python list
-    of coefficients.
-
-Parameter ``field``:
-    the order of the underlying cyclotomic field; this must be
-    strictly positive.
-
-Parameter ``begin``:
-    the beginning of a sequence of at most ``φ(n)`` coefficients, as
-    described above.
-
-Parameter ``end``:
-    a past-the-end iterator indicating the end of the sequence of
-    coefficients.)doc";
-
 // Docstring regina::python::doc::Cyclotomic_::__array
 static const char *__array =
 R"doc(Returns an individual rational coefficient of the polynomial
@@ -503,6 +414,95 @@ Parameter ``other``:
 
 Returns:
     a reference to this field element.)doc";
+
+// Docstring regina::python::doc::Cyclotomic_::__init
+static const char *__init =
+R"doc(Creates an uninitialised field element.
+
+This element must be initialised using either init() or the assignment
+operator before it can be used.
+
+The underlying cyclotomic field is not yet known; this will also be
+specified during the call to init() or the assignment operator.)doc";
+
+// Docstring regina::python::doc::Cyclotomic_::__init_2
+static const char *__init_2 =
+R"doc(Creates the zero element of the given cyclotomic field.
+
+Parameter ``field``:
+    the order of the underlying cyclotomic field; this must be
+    strictly positive.)doc";
+
+// Docstring regina::python::doc::Cyclotomic_::__init_3
+static const char *__init_3 =
+R"doc(Creates the given integer element within the given cyclotomic field.
+
+The polynomial representation of this element will simply be an
+integer constant.
+
+Parameter ``field``:
+    the order of the underlying cyclotomic field; this must be
+    strictly positive.
+
+Parameter ``value``:
+    the value of this element; that is, the integer constant.)doc";
+
+// Docstring regina::python::doc::Cyclotomic_::__init_4
+static const char *__init_4 =
+R"doc(Creates the given rational element within the given cyclotomic field.
+
+The polynomial representation of this element will simply be a
+rational constant.
+
+Parameter ``field``:
+    the order of the underlying cyclotomic field; this must be
+    strictly positive.
+
+Parameter ``value``:
+    the value of this element; that is, the rational constant.)doc";
+
+// Docstring regina::python::doc::Cyclotomic_::__init_5
+static const char *__init_5 =
+R"doc(Creates a copy of the given field element, within the same cyclotomic
+field.
+
+This constructor induces a deep copy of *value*.
+
+Parameter ``value``:
+    the field element to copy.)doc";
+
+// Docstring regina::python::doc::Cyclotomic_::__init_6
+static const char *__init_6 =
+R"doc(Creates a new field element from the given sequence of coefficients.
+The coefficients should describe the field element's polynomial
+representation, and should be given in order from the constant
+coefficient upwards. See operator[] for details on what this
+polynomial representation means.
+
+There should be at most ``deg(Φ_n) = φ(n)`` coefficients in the list,
+where *n* is the given order of the underlying field; any missing
+coefficients are assumed to be zero. In particular, an empty sequence
+is allowed (and represents the zero field element).
+
+Precondition:
+    Rationals can be assigned values from dereferenced iterators of
+    type *iterator*.
+
+Python:
+    Instead of a pair of iterators, this routine takes a python list
+    of coefficients.
+
+Parameter ``field``:
+    the order of the underlying cyclotomic field; this must be
+    strictly positive.
+
+Parameter ``begin``:
+    the beginning of a sequence of at most ``φ(n)`` coefficients, as
+    described above.
+
+Parameter ``end``:
+    a past-the-end iterator indicating the end of the sequence of
+    coefficients.)doc";
 
 // Docstring regina::python::doc::Cyclotomic_::__isub
 static const char *__isub =

@@ -44,9 +44,8 @@ void addIntersectionForm(pybind11::module_& m) {
 
     auto c = pybind11::class_<IntersectionForm>(m, "IntersectionForm",
             rdoc_scope)
-        .def(pybind11::init<MatrixInt>(), rdoc::IntersectionForm)
-        .def(pybind11::init<const IntersectionForm&>(),
-            rdoc::IntersectionForm_2)
+        .def(pybind11::init<MatrixInt>(), rdoc::__init)
+        .def(pybind11::init<const IntersectionForm&>(), rdoc::__init_2)
         .def("swap", &IntersectionForm::swap, rdoc::swap)
         .def("matrix", &IntersectionForm::matrix, rdoc::matrix)
         .def("rank", &IntersectionForm::rank, rdoc::rank)

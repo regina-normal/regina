@@ -105,43 +105,35 @@ void addTreeDecomposition(pybind11::module_& m) {
 
     auto td = pybind11::class_<TreeDecomposition>(m, "TreeDecomposition",
             rdoc_scope)
-        .def(pybind11::init<const regina::TreeDecomposition&>(),
-            rdoc::TreeDecomposition)
-        .def(pybind11::init<const regina::Triangulation<2>&>(),
-            rdoc::TreeDecomposition_2)
+        .def(pybind11::init<const regina::TreeDecomposition&>(), rdoc::__init)
+        .def(pybind11::init<const regina::Triangulation<2>&>(), rdoc::__init_2)
         .def(pybind11::init<const regina::Triangulation<2>&,
-            regina::TreeDecompositionAlg>(), rdoc::TreeDecomposition_2)
-        .def(pybind11::init<const regina::Triangulation<3>&>(),
-            rdoc::TreeDecomposition_2)
+            regina::TreeDecompositionAlg>(), rdoc::__init_2)
+        .def(pybind11::init<const regina::Triangulation<3>&>(), rdoc::__init_2)
         .def(pybind11::init<const regina::Triangulation<3>&,
-            regina::TreeDecompositionAlg>(), rdoc::TreeDecomposition_2)
-        .def(pybind11::init<const regina::Triangulation<4>&>(),
-            rdoc::TreeDecomposition_2)
+            regina::TreeDecompositionAlg>(), rdoc::__init_2)
+        .def(pybind11::init<const regina::Triangulation<4>&>(), rdoc::__init_2)
         .def(pybind11::init<const regina::Triangulation<4>&,
-            regina::TreeDecompositionAlg>(), rdoc::TreeDecomposition_2)
-        .def(pybind11::init<const regina::FacetPairing<3>&>(),
-            rdoc::TreeDecomposition_3)
+            regina::TreeDecompositionAlg>(), rdoc::__init_2)
+        .def(pybind11::init<const regina::FacetPairing<3>&>(), rdoc::__init_3)
         .def(pybind11::init<const regina::FacetPairing<3>&,
-            regina::TreeDecompositionAlg>(), rdoc::TreeDecomposition_3)
-        .def(pybind11::init<const regina::FacetPairing<2>&>(),
-            rdoc::TreeDecomposition_3)
+            regina::TreeDecompositionAlg>(), rdoc::__init_3)
+        .def(pybind11::init<const regina::FacetPairing<2>&>(), rdoc::__init_3)
         .def(pybind11::init<const regina::FacetPairing<2>&,
-            regina::TreeDecompositionAlg>(), rdoc::TreeDecomposition_3)
-        .def(pybind11::init<const regina::FacetPairing<4>&>(),
-            rdoc::TreeDecomposition_3)
+            regina::TreeDecompositionAlg>(), rdoc::__init_3)
+        .def(pybind11::init<const regina::FacetPairing<4>&>(), rdoc::__init_3)
         .def(pybind11::init<const regina::FacetPairing<4>&,
-            regina::TreeDecompositionAlg>(), rdoc::TreeDecomposition_3)
-        .def(pybind11::init<const regina::Link&>(), rdoc::TreeDecomposition_4)
+            regina::TreeDecompositionAlg>(), rdoc::__init_3)
+        .def(pybind11::init<const regina::Link&>(), rdoc::__init_4)
         .def(pybind11::init<const regina::Link&,
-            regina::TreeDecompositionAlg>(), rdoc::TreeDecomposition_4)
-        .def(pybind11::init<const regina::Matrix<bool>&>(),
-            rdoc::TreeDecomposition_5)
+            regina::TreeDecompositionAlg>(), rdoc::__init_4)
+        .def(pybind11::init<const regina::Matrix<bool>&>(), rdoc::__init_5)
         .def(pybind11::init<const regina::Matrix<bool>&,
-            regina::TreeDecompositionAlg>(), rdoc::TreeDecomposition_5)
+            regina::TreeDecompositionAlg>(), rdoc::__init_5)
         .def(pybind11::init<const std::vector<std::vector<bool>>&>(),
-            rdoc::TreeDecomposition_6)
+            rdoc::__init_6)
         .def(pybind11::init<const std::vector<std::vector<bool>>&,
-            regina::TreeDecompositionAlg>(), rdoc::TreeDecomposition_6)
+            regina::TreeDecompositionAlg>(), rdoc::__init_6)
         .def("swap", &TreeDecomposition::swap, rdoc::swap)
         .def("width", &TreeDecomposition::width, rdoc::width)
         .def("size", &TreeDecomposition::size, rdoc::size)

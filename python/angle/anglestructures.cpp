@@ -57,8 +57,8 @@ void addAngleStructures(pybind11::module_& m) {
             pybind11::arg("algHints") = regina::AS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<GILScopedRelease>(),
-            rdoc::AngleStructures)
-        .def(pybind11::init<const AngleStructures&>(), rdoc::AngleStructures_2)
+            rdoc::__init)
+        .def(pybind11::init<const AngleStructures&>(), rdoc::__init_2)
         .def("swap", &AngleStructures::swap, rdoc::swap)
         .def("triangulation", &AngleStructures::triangulation,
             pybind11::return_value_policy::reference_internal,
@@ -91,7 +91,7 @@ void addAngleStructures(pybind11::module_& m) {
         pybind11::arg("algHints") = regina::AS_ALG_DEFAULT,
         pybind11::arg("tracker") = nullptr,
         pybind11::call_guard<GILScopedRelease>(),
-        rdoc::AngleStructures);
+        rdoc::__init);
 
     regina::python::add_global_swap<AngleStructures>(m, rdoc_global::swap);
 

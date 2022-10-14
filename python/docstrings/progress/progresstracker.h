@@ -199,8 +199,8 @@ This is typically called by the writing thread.
 
 namespace ProgressTrackerOpen_ {
 
-// Docstring regina::python::doc::ProgressTrackerOpen_::ProgressTrackerOpen
-static const char *ProgressTrackerOpen =
+// Docstring regina::python::doc::ProgressTrackerOpen_::__init
+static const char *__init =
 R"doc(Creates a new progress tracker. This sets a sensible state description
 (which declares that the operation is initialising), and marks the
 current progress as zero steps completed.
@@ -281,8 +281,8 @@ Returns:
 
 namespace ProgressTracker_ {
 
-// Docstring regina::python::doc::ProgressTracker_::ProgressTracker
-static const char *ProgressTracker =
+// Docstring regina::python::doc::ProgressTracker_::__init
+static const char *__init =
 R"doc(Creates a new progress tracker. This sets a sensible state description
 (which declares that the operation is initialising), and marks the
 current progress as zero percent complete.

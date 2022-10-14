@@ -102,8 +102,48 @@ Parameter ``rhs``:
 
 namespace AngleStructures_ {
 
-// Docstring regina::python::doc::AngleStructures_::AngleStructures
-static const char *AngleStructures =
+// Docstring regina::python::doc::AngleStructures_::__array
+static const char *__array =
+R"doc(Returns the angle structure at the requested index in this list. This
+is identical to calling structure().
+
+Parameter ``index``:
+    the index of the requested angle structure in this list; this must
+    be between 0 and size()-1 inclusive.
+
+Returns:
+    the angle structure at the requested index.)doc";
+
+// Docstring regina::python::doc::AngleStructures_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given list contain the same set of
+angle structures.
+
+The lists will be compared as multisets: the order of the angle
+structures in each list does not matter; however, in the unusual
+scenario where a list the same angle structure multiple times,
+multiplicity does matter.
+
+Like the comparison operators for AngleStructure, it does not matter
+whether the two lists work with different triangulations:
+
+* If the two triangulations have the same size, then this routine will
+  compare angle structures as though they were transplanted into the
+  same triangulation using the same tetrahedron numbering and the same
+  angle coordinates.
+
+* If the two triangulations have different sizes, then this comparison
+  will return ``False``.
+
+Parameter ``other``:
+    the list to be compared with this list.
+
+Returns:
+    ``True`` if both lists represent the same multiset of angle
+    structures, or ``False`` if not.)doc";
+
+// Docstring regina::python::doc::AngleStructures_::__init
+static const char *__init =
 R"doc(A unified constructor for enumerating various classes of angle
 structures on a given triangulation.
 
@@ -160,48 +200,8 @@ Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``null`` if no progress reporting is required.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::AngleStructures_2
-static const char *AngleStructures_2 = R"doc(Constructs a new copy of the given list.)doc";
-
-// Docstring regina::python::doc::AngleStructures_::__array
-static const char *__array =
-R"doc(Returns the angle structure at the requested index in this list. This
-is identical to calling structure().
-
-Parameter ``index``:
-    the index of the requested angle structure in this list; this must
-    be between 0 and size()-1 inclusive.
-
-Returns:
-    the angle structure at the requested index.)doc";
-
-// Docstring regina::python::doc::AngleStructures_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given list contain the same set of
-angle structures.
-
-The lists will be compared as multisets: the order of the angle
-structures in each list does not matter; however, in the unusual
-scenario where a list the same angle structure multiple times,
-multiplicity does matter.
-
-Like the comparison operators for AngleStructure, it does not matter
-whether the two lists work with different triangulations:
-
-* If the two triangulations have the same size, then this routine will
-  compare angle structures as though they were transplanted into the
-  same triangulation using the same tetrahedron numbering and the same
-  angle coordinates.
-
-* If the two triangulations have different sizes, then this comparison
-  will return ``False``.
-
-Parameter ``other``:
-    the list to be compared with this list.
-
-Returns:
-    ``True`` if both lists represent the same multiset of angle
-    structures, or ``False`` if not.)doc";
+// Docstring regina::python::doc::AngleStructures_::__init_2
+static const char *__init_2 = R"doc(Constructs a new copy of the given list.)doc";
 
 // Docstring regina::python::doc::AngleStructures_::__iter__
 static const char *__iter__ =

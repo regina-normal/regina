@@ -93,12 +93,12 @@ void addNormalSurfaces(pybind11::module_& m) {
             pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<GILScopedRelease>(),
-            rdoc::NormalSurfaces)
+            rdoc::__init)
         .def(pybind11::init<const NormalSurfaces&, regina::NormalTransform>(),
-            rdoc::NormalSurfaces_2)
+            rdoc::__init_2)
         .def(pybind11::init<const NormalSurfaces&, const SurfaceFilter&>(),
-            rdoc::NormalSurfaces_3)
-        .def(pybind11::init<const NormalSurfaces&>(), rdoc::NormalSurfaces_4)
+            rdoc::__init_3)
+        .def(pybind11::init<const NormalSurfaces&>(), rdoc::__init_4)
         .def("swap", &NormalSurfaces::swap, rdoc::swap)
         .def("coords", &NormalSurfaces::coords, rdoc::coords)
         .def("which", &NormalSurfaces::which, rdoc::which)
@@ -155,11 +155,11 @@ void addNormalSurfaces(pybind11::module_& m) {
         pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
         pybind11::arg("tracker") = nullptr,
         pybind11::call_guard<GILScopedRelease>(),
-        rdoc::NormalSurfaces);
+        rdoc::__init);
     regina::python::add_packet_constructor<const NormalSurfaces&,
-        regina::NormalTransform>(wrap, rdoc::NormalSurfaces_2);
+        regina::NormalTransform>(wrap, rdoc::__init_2);
     regina::python::add_packet_constructor<const NormalSurfaces&,
-        const SurfaceFilter&>(wrap, rdoc::NormalSurfaces_3);
+        const SurfaceFilter&>(wrap, rdoc::__init_3);
 
     regina::python::add_global_swap<NormalSurfaces>(m, rdoc_global::swap);
 

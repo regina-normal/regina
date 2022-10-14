@@ -46,10 +46,9 @@ void addDisc(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(DiscSpec)
 
     auto d = pybind11::class_<DiscSpec>(m, "DiscSpec", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::DiscSpec)
-        .def(pybind11::init<size_t, int, unsigned long>(),
-            rdoc::DiscSpec_2)
-        .def(pybind11::init<const DiscSpec&>(), rdoc::DiscSpec_3)
+        .def(pybind11::init<>(), rdoc::__init)
+        .def(pybind11::init<size_t, int, unsigned long>(), rdoc::__init_2)
+        .def(pybind11::init<const DiscSpec&>(), rdoc::__init_3)
         .def_readwrite("tetIndex", &DiscSpec::tetIndex)
         .def_readwrite("type", &DiscSpec::type)
         .def_readwrite("number", &DiscSpec::number)
@@ -68,7 +67,7 @@ void addDisc(pybind11::module_& m) {
 
     auto t = pybind11::class_<DiscSetTet>(m, "DiscSetTet", rdoc_scope)
         .def(pybind11::init<const regina::NormalSurface&, size_t>(),
-            rdoc::DiscSetTet)
+            rdoc::__init)
         .def(pybind11::init<unsigned long, unsigned long, unsigned long,
             unsigned long, unsigned long, unsigned long, unsigned long,
             unsigned long, unsigned long, unsigned long>(),
@@ -77,8 +76,8 @@ void addDisc(pybind11::module_& m) {
             pybind11::arg("quad1"), pybind11::arg("quad2"),
             pybind11::arg("oct0") = 0, pybind11::arg("oct1") = 0,
             pybind11::arg("oct2") = 0,
-            rdoc::DiscSetTet_2)
-        .def(pybind11::init<const DiscSetTet&>(), rdoc::DiscSetTet_3)
+            rdoc::__init_2)
+        .def(pybind11::init<const DiscSetTet&>(), rdoc::__init_3)
         .def("nDiscs", &DiscSetTet::nDiscs, rdoc::nDiscs)
         .def("arcFromDisc", &DiscSetTet::arcFromDisc, rdoc::arcFromDisc)
         .def("discFromArc", &DiscSetTet::discFromArc, rdoc::discFromArc)
@@ -95,10 +94,8 @@ void addDisc(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(DiscSetSurfaceDataImpl)
 
     auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface", rdoc_scope)
-        .def(pybind11::init<const regina::NormalSurface&>(),
-            rdoc::DiscSetSurfaceDataImpl)
-        .def(pybind11::init<const DiscSetSurface&>(),
-            rdoc::DiscSetSurfaceDataImpl_2)
+        .def(pybind11::init<const regina::NormalSurface&>(), rdoc::__init)
+        .def(pybind11::init<const DiscSetSurface&>(), rdoc::__init_2)
         .def("swap", &DiscSetSurface::swap, rdoc::swap)
         .def("nTets", &DiscSetSurface::nTets, rdoc::nTets)
         .def("nDiscs", &DiscSetSurface::nDiscs, rdoc::nDiscs)

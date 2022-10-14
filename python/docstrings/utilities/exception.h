@@ -124,18 +124,18 @@ ReginaException, and are not documented again here.)doc";
 
 namespace NoSolution_ {
 
-// Docstring regina::python::doc::NoSolution_::NoSolution
-static const char *NoSolution = R"doc(Creates a new exception with a stock error message.)doc";
+// Docstring regina::python::doc::NoSolution_::__init
+static const char *__init = R"doc(Creates a new exception with a stock error message.)doc";
 
-// Docstring regina::python::doc::NoSolution_::NoSolution_2
-static const char *NoSolution_2 = R"doc(Creates a new copy of the given exception.)doc";
+// Docstring regina::python::doc::NoSolution_::__init_2
+static const char *__init_2 = R"doc(Creates a new copy of the given exception.)doc";
 
 }
 
 namespace ReginaException_ {
 
-// Docstring regina::python::doc::ReginaException_::ReginaException
-static const char *ReginaException =
+// Docstring regina::python::doc::ReginaException_::__init
+static const char *__init =
 R"doc(Creates a new exception with the given error message.
 
 This constructor may throw std::bad_alloc.
@@ -143,8 +143,8 @@ This constructor may throw std::bad_alloc.
 Parameter ``msg``:
     a human-readable description of the error.)doc";
 
-// Docstring regina::python::doc::ReginaException_::ReginaException_2
-static const char *ReginaException_2 =
+// Docstring regina::python::doc::ReginaException_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new exception with the given error message.
 
 This constructor may throw std::bad_alloc.
@@ -152,15 +152,15 @@ This constructor may throw std::bad_alloc.
 Parameter ``msg``:
     a human-readable description of the error.)doc";
 
-// Docstring regina::python::doc::ReginaException_::ReginaException_3
-static const char *ReginaException_3 = R"doc(Creates a new copy of the given exception.)doc";
+// Docstring regina::python::doc::ReginaException_::__init_3
+static const char *__init_3 = R"doc(Creates a new copy of the given exception.)doc";
 
 }
 
 namespace SnapPeaIsNull_ {
 
-// Docstring regina::python::doc::SnapPeaIsNull_::SnapPeaIsNull
-static const char *SnapPeaIsNull =
+// Docstring regina::python::doc::SnapPeaIsNull_::__init
+static const char *__init =
 R"doc(Creates a new exception, and marks it as having occurred within the
 given Regina function.
 
@@ -170,8 +170,8 @@ Parameter ``fromFunction``:
     that would have been called as a result). An example might be
     "SnapPeaTriangulation::homologyFilled".)doc";
 
-// Docstring regina::python::doc::SnapPeaIsNull_::SnapPeaIsNull_2
-static const char *SnapPeaIsNull_2 = R"doc(Creates a new copy of the given exception.)doc";
+// Docstring regina::python::doc::SnapPeaIsNull_::__init_2
+static const char *__init_2 = R"doc(Creates a new copy of the given exception.)doc";
 
 }
 

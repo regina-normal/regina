@@ -435,8 +435,8 @@ Python:
 
 namespace TautEnumeration_ {
 
-// Docstring regina::python::doc::TautEnumeration_::TautEnumeration
-static const char *TautEnumeration =
+// Docstring regina::python::doc::TautEnumeration_::__init
+static const char *__init =
 R"doc(Creates a new object for running the tree traversal algorithm.
 
 This prepares the algorithm; in order to run the algorithm and
@@ -670,8 +670,8 @@ Returns:
 
 namespace TreeEnumeration_ {
 
-// Docstring regina::python::doc::TreeEnumeration_::TreeEnumeration
-static const char *TreeEnumeration =
+// Docstring regina::python::doc::TreeEnumeration_::__init
+static const char *__init =
 R"doc(Creates a new object for running the tree traversal algorithm.
 
 This prepares the algorithm; in order to run the algorithm and
@@ -915,8 +915,8 @@ Returns:
 
 namespace TreeSingleSoln_ {
 
-// Docstring regina::python::doc::TreeSingleSoln_::TreeSingleSoln
-static const char *TreeSingleSoln =
+// Docstring regina::python::doc::TreeSingleSoln_::__init
+static const char *__init =
 R"doc(Creates a new object for running the tree traversal / branching
 algorithm to locate a non-trivial surface that satisfies the chosen
 constraints.

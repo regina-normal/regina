@@ -272,88 +272,6 @@ Parameter ``b``:
 
 namespace Laurent2_ {
 
-// Docstring regina::python::doc::Laurent2_::Laurent2
-static const char *Laurent2 = R"doc(Creates the zero polynomial.)doc";
-
-// Docstring regina::python::doc::Laurent2_::Laurent2_2
-static const char *Laurent2_2 =
-R"doc(Creates the polynomial ``x^d y^e`` for the given exponents *d* and
-*e*.
-
-Parameter ``xExp``:
-    the exponent *d*, which is attached to *x*.
-
-Parameter ``yExp``:
-    the exponent *e*, which is attached to *y*.)doc";
-
-// Docstring regina::python::doc::Laurent2_::Laurent2_3
-static const char *Laurent2_3 =
-R"doc(Creates a new copy of the given polynomial.
-
-This constructor induces a deep copy of *value*.
-
-A note for developers: even though this routine is identical to the
-templated copy constructor, it must be declared and implemented
-separately. Otherwise the compiler might create its own (incorrect)
-copy constructor automatically.
-
-Parameter ``value``:
-    the polynomial to clone.)doc";
-
-// Docstring regina::python::doc::Laurent2_::Laurent2_4
-static const char *Laurent2_4 =
-R"doc(Creates a copy of the given polynomial with all terms multiplied by
-``x^d y^e`` for some integers *d* and *e*.
-
-This constructor induces a deep (and modified) copy of *value*.
-
-Parameter ``toShift``:
-    the polynomial to clone and shift.
-
-Parameter ``xShift``:
-    the integer *d*, which will be added to all exponents for *x*.
-
-Parameter ``yShift``:
-    the integer *e*, which will be added to all exponents for *y*.)doc";
-
-// Docstring regina::python::doc::Laurent2_::Laurent2_5
-static const char *Laurent2_5 =
-R"doc(Creates a new polynomial from the given collection of coefficients.
-
-The coefficients should be presented as a collection of tuples of the
-form (*d*, *e*, *v*), each representing a term of the form ``v x^d
-y^e``.
-
-The tuples may be given in any order. An empty sequence will be
-treated as the zero polynomial.
-
-Unlike the std::initializer_list constructor, zero coefficients are
-allowed (these will be silently ignored), and multiple coefficients
-with the same exponents are also allowed (these will be aggregated
-using the += operator).
-
-Python:
-    Instead of the iterators *begin* and *end*, this routine takes a
-    python list of tuples.
-
-Template parameter ``iterator``:
-    an iterator type which, when dereferenced, gives a std::tuple of
-    the form (*d*, *e*, *v*), where *d* and *e* can be assigned to
-    long integers, and where *v* can be assigned to type *T*.
-
-Template parameter ``deref``:
-    a dummy argument that should be ignored. This is present to ensure
-    that *iterator* can be dereferenced, so that a call such as
-    Laurent2(int, int) falls through to the (long, long) constructor,
-    and not this iterator-based constructor instead.
-
-Parameter ``begin``:
-    the beginning of the set of coefficients, as outlined above.
-
-Parameter ``end``:
-    a past-the-end iterator indicating the end of the set of
-    coefficients.)doc";
-
 // Docstring regina::python::doc::Laurent2_::__call
 static const char *__call =
 R"doc(Returns the given coefficient of this polynomial. There are no
@@ -474,6 +392,88 @@ Parameter ``other``:
 
 Returns:
     a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2_::__init
+static const char *__init = R"doc(Creates the zero polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2_::__init_2
+static const char *__init_2 =
+R"doc(Creates the polynomial ``x^d y^e`` for the given exponents *d* and
+*e*.
+
+Parameter ``xExp``:
+    the exponent *d*, which is attached to *x*.
+
+Parameter ``yExp``:
+    the exponent *e*, which is attached to *y*.)doc";
+
+// Docstring regina::python::doc::Laurent2_::__init_3
+static const char *__init_3 =
+R"doc(Creates a new copy of the given polynomial.
+
+This constructor induces a deep copy of *value*.
+
+A note for developers: even though this routine is identical to the
+templated copy constructor, it must be declared and implemented
+separately. Otherwise the compiler might create its own (incorrect)
+copy constructor automatically.
+
+Parameter ``value``:
+    the polynomial to clone.)doc";
+
+// Docstring regina::python::doc::Laurent2_::__init_4
+static const char *__init_4 =
+R"doc(Creates a copy of the given polynomial with all terms multiplied by
+``x^d y^e`` for some integers *d* and *e*.
+
+This constructor induces a deep (and modified) copy of *value*.
+
+Parameter ``toShift``:
+    the polynomial to clone and shift.
+
+Parameter ``xShift``:
+    the integer *d*, which will be added to all exponents for *x*.
+
+Parameter ``yShift``:
+    the integer *e*, which will be added to all exponents for *y*.)doc";
+
+// Docstring regina::python::doc::Laurent2_::__init_5
+static const char *__init_5 =
+R"doc(Creates a new polynomial from the given collection of coefficients.
+
+The coefficients should be presented as a collection of tuples of the
+form (*d*, *e*, *v*), each representing a term of the form ``v x^d
+y^e``.
+
+The tuples may be given in any order. An empty sequence will be
+treated as the zero polynomial.
+
+Unlike the std::initializer_list constructor, zero coefficients are
+allowed (these will be silently ignored), and multiple coefficients
+with the same exponents are also allowed (these will be aggregated
+using the += operator).
+
+Python:
+    Instead of the iterators *begin* and *end*, this routine takes a
+    python list of tuples.
+
+Template parameter ``iterator``:
+    an iterator type which, when dereferenced, gives a std::tuple of
+    the form (*d*, *e*, *v*), where *d* and *e* can be assigned to
+    long integers, and where *v* can be assigned to type *T*.
+
+Template parameter ``deref``:
+    a dummy argument that should be ignored. This is present to ensure
+    that *iterator* can be dereferenced, so that a call such as
+    Laurent2(int, int) falls through to the (long, long) constructor,
+    and not this iterator-based constructor instead.
+
+Parameter ``begin``:
+    the beginning of the set of coefficients, as outlined above.
+
+Parameter ``end``:
+    a past-the-end iterator indicating the end of the set of
+    coefficients.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__isub
 static const char *__isub =

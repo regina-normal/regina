@@ -103,7 +103,7 @@ void addListView(pybind11::module_& m) {
     // End users should not be constructing them anyway.
     auto c = pybind11::class_<T>(pybind11::handle(), "ListView",
             pybind11::module_local(), doc::ListView)
-        .def(pybind11::init<const T&>(), doc::ListView_::ListView)
+        .def(pybind11::init<const T&>(), doc::ListView_::__init)
         .def("__iter__", [](const T& view) {
             return pybind11::make_iterator<Policy>(view.begin(), view.end());
         }, pybind11::keep_alive<0, 1>(), // iterator keeps ListView alive

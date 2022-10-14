@@ -43,8 +43,8 @@ void addAttachment(pybind11::module_& m) {
 
     auto c = pybind11::class_<Attachment, regina::Packet,
             std::shared_ptr<Attachment>>(m, "Attachment", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::Attachment)
-        .def(pybind11::init<const char*>(), rdoc::Attachment_2)
+        .def(pybind11::init<>(), rdoc::__init)
+        .def(pybind11::init<const char*>(), rdoc::__init_2)
         .def(pybind11::init([](pybind11::bytes data, std::string filename) {
             char* in = nullptr;
             Py_ssize_t inlen = 0;
@@ -62,8 +62,8 @@ void addAttachment(pybind11::module_& m) {
             }
 
             return new Attachment(in, inlen, Attachment::DEEP_COPY, filename);
-        }), rdoc::Attachment_3)
-        .def(pybind11::init<const Attachment&>(), rdoc::Attachment_4)
+        }), rdoc::__init_3)
+        .def(pybind11::init<const Attachment&>(), rdoc::__init_4)
         .def("swap", &Attachment::swap, rdoc::swap)
         .def("isNull", &Attachment::isNull, rdoc::isNull)
         .def("data", [](const Attachment& a) -> pybind11::object {

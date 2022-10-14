@@ -68,31 +68,6 @@ Parameter ``b``:
 
 namespace Signature_ {
 
-// Docstring regina::python::doc::Signature_::Signature
-static const char *Signature =
-R"doc(Creates a new signature by parsing the given signature string.
-
-Punctuation characters in the given string will be interpreted as
-separating cycles. All whitespace will be ignored.
-
-Examples of valid signatures are ``"(ab)(bC)(Ca)"`` and ``"AAb-
-bc-C"``. See the class notes for further details on what constitutes a
-valid signature.
-
-Exception ``InvalidArgument``:
-    The given string was not a valid signature with a positive number
-    of letters.
-
-Parameter ``str``:
-    a string representation of a splitting surface signature.)doc";
-
-// Docstring regina::python::doc::Signature_::Signature_2
-static const char *Signature_2 =
-R"doc(Creates a new copy of the given signature.
-
-Parameter ``sig``:
-    the signature to copy.)doc";
-
 // Docstring regina::python::doc::Signature_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given signature are identical.
@@ -111,6 +86,31 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if this and *other* are identical.)doc";
+
+// Docstring regina::python::doc::Signature_::__init
+static const char *__init =
+R"doc(Creates a new signature by parsing the given signature string.
+
+Punctuation characters in the given string will be interpreted as
+separating cycles. All whitespace will be ignored.
+
+Examples of valid signatures are ``"(ab)(bC)(Ca)"`` and ``"AAb-
+bc-C"``. See the class notes for further details on what constitutes a
+valid signature.
+
+Exception ``InvalidArgument``:
+    The given string was not a valid signature with a positive number
+    of letters.
+
+Parameter ``str``:
+    a string representation of a splitting surface signature.)doc";
+
+// Docstring regina::python::doc::Signature_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new copy of the given signature.
+
+Parameter ``sig``:
+    the signature to copy.)doc";
 
 // Docstring regina::python::doc::Signature_::__ne
 static const char *__ne =

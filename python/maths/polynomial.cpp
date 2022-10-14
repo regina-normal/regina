@@ -48,12 +48,12 @@ void addPolynomial(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Polynomial)
 
     auto c = pybind11::class_<Polynomial<Rational>>(m, "Polynomial", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::Polynomial)
-        .def(pybind11::init<size_t>(), rdoc::Polynomial_2)
-        .def(pybind11::init<const Polynomial<Rational>&>(), rdoc::Polynomial_3)
+        .def(pybind11::init<>(), rdoc::__init)
+        .def(pybind11::init<size_t>(), rdoc::__init_2)
+        .def(pybind11::init<const Polynomial<Rational>&>(), rdoc::__init_3)
         .def(pybind11::init([](const std::vector<Rational>& coeffs) {
             return new Polynomial<Rational>(coeffs.begin(), coeffs.end());
-        }), rdoc::Polynomial_4)
+        }), rdoc::__init_4)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("init", static_cast<void (Polynomial<Rational>::*)()>(

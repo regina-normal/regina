@@ -397,7 +397,9 @@ def extract(filename, node, namespace, output):
             # constructors when we look at the corresponding CursorKind.
             if node.kind == CursorKind.CONSTRUCTOR or \
                     (node.kind == CursorKind.FUNCTION_TEMPLATE and \
-                    node.spelling == node.semantic_parent.spelling):
+                    (node.spelling == node.semantic_parent.spelling or
+                    node.spelling.startswith(node.semantic_parent.spelling + \
+                        '<'))):
                 name = '__init'
             else:
                 name = sanitize_name(d(node.spelling))

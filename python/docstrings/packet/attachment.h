@@ -54,15 +54,32 @@ Parameter ``b``:
 
 namespace Attachment_ {
 
-// Docstring regina::python::doc::Attachment_::Attachment
-static const char *Attachment =
+// Docstring regina::python::doc::Attachment_::__eq
+static const char *__eq =
+R"doc(Determines if this and the given attachment hold identical data.
+
+The filenames will not be compared.
+
+It is safe to call this operator if one or both attachments is empty
+(i.e., isNull() returns ``True``), in which case an empty attachment
+will compare as equal to any other empty attachment.
+
+Parameter ``other``:
+    the attachment to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given attachment contain
+    identical data.)doc";
+
+// Docstring regina::python::doc::Attachment_::__init
+static const char *__init =
 R"doc(Creates a packet with no attachment stored.
 
 Until some content is assigned (e.g., by the assignment operator, or
 by a non-trivial call to reset()), isNull() will return ``True``.)doc";
 
-// Docstring regina::python::doc::Attachment_::Attachment_2
-static const char *Attachment_2 =
+// Docstring regina::python::doc::Attachment_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new attachment containing the contents of the given file.
 
 The file will be read immediately, but no ongoing link will be
@@ -87,8 +104,8 @@ Internationalisation:
 Parameter ``pathname``:
     the full pathname of the attachment to read.)doc";
 
-// Docstring regina::python::doc::Attachment_::Attachment_3
-static const char *Attachment_3 =
+// Docstring regina::python::doc::Attachment_::__init_3
+static const char *__init_3 =
 R"doc(Creates a new attachment containing the given binary data.
 
 The *data* array must contain a block of binary data, of *size* bytes.
@@ -130,8 +147,8 @@ Parameter ``filename``:
     would be a filename only, with no directory prefixes. See
     filename() for details on how this string will be used.)doc";
 
-// Docstring regina::python::doc::Attachment_::Attachment_4
-static const char *Attachment_4 =
+// Docstring regina::python::doc::Attachment_::__init_4
+static const char *__init_4 =
 R"doc(Creates a new deep copy of the given attachment.
 
 Like all packet types, this only copies the content of the attachment,
@@ -144,23 +161,6 @@ attachment (i.e., if ``src.isNull()`` returns ``True``).
 
 Parameter ``src``:
     the attachment packet whose contents should be copied.)doc";
-
-// Docstring regina::python::doc::Attachment_::__eq
-static const char *__eq =
-R"doc(Determines if this and the given attachment hold identical data.
-
-The filenames will not be compared.
-
-It is safe to call this operator if one or both attachments is empty
-(i.e., isNull() returns ``True``), in which case an empty attachment
-will compare as equal to any other empty attachment.
-
-Parameter ``other``:
-    the attachment to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given attachment contain
-    identical data.)doc";
 
 // Docstring regina::python::doc::Attachment_::__ne
 static const char *__ne =

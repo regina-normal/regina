@@ -54,7 +54,7 @@ namespace regina::python::doc::common {
     const char* PacketData_anonID = regina::python::doc::PacketData_::anonID;
     const char* PacketData_packet = regina::python::doc::PacketData_::packet;
     const char* PacketOf = regina::python::doc::PacketOf;
-    const char* PacketOf_copy = regina::python::doc::PacketOf_::PacketOf_2;
+    const char* PacketOf_copy = regina::python::doc::PacketOf_::__init_2;
     const char* make_packet = regina::python::doc::make_packet;
     const char* make_packet_2 = regina::python::doc::make_packet_2;
 }
@@ -282,8 +282,8 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(PacketShell)
 
     auto s = pybind11::class_<PacketShell>(m, "PacketShell", rdoc_scope)
-        .def(pybind11::init<const Packet*>(), rdoc::PacketShell)
-        .def(pybind11::init<const PacketShell&>(), rdoc::PacketShell_2)
+        .def(pybind11::init<const Packet*>(), rdoc::__init)
+        .def(pybind11::init<const PacketShell&>(), rdoc::__init_2)
         .def("label", &PacketShell::label, rdoc::label)
         .def("humanLabel", &PacketShell::humanLabel, rdoc::humanLabel)
         .def("hasTag", &PacketShell::hasTag, rdoc::hasTag)

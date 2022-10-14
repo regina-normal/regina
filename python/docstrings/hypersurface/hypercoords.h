@@ -86,30 +86,6 @@ system.)doc";
 
 namespace HyperEncoding_ {
 
-// Docstring regina::python::doc::HyperEncoding_::HyperEncoding
-static const char *HyperEncoding =
-R"doc(Returns an encoding that precisely describes the given normal
-hypersurface coordinate system. This is the encoding that you would
-use with a "pen and paper" enumeration of hypersurfaces in the given
-coordinate system, with no further conversion, optimisation, or post-
-processing.
-
-Note that, when Regina enumerates hypersurfaces in the given
-coordinate system, it might choose to post-process the resulting
-vectors to use a different encoding. (In the 3-dimensional world, for
-example, normal surfaces enumerated in quad coordinates are post-
-processed and stored in standard coordinates.)
-
-If *coords* is not one of the coordinate systems that Regina can use
-to enumerate normal hypersurfaces, then the resulting encoding will be
-invalid, and valid() will return ``False``.
-
-Parameter ``coords``:
-    one of Regina's normal hypersurface coordinate systems.)doc";
-
-// Docstring regina::python::doc::HyperEncoding_::HyperEncoding_2
-static const char *HyperEncoding_2 = R"doc(Creates a new copy of the given encoding.)doc";
-
 // Docstring regina::python::doc::HyperEncoding_::__add
 static const char *__add =
 R"doc(Returns an encoding that could hold the sum of hypersurfaces that use
@@ -134,6 +110,30 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if both encodings are identical.)doc";
+
+// Docstring regina::python::doc::HyperEncoding_::__init
+static const char *__init =
+R"doc(Returns an encoding that precisely describes the given normal
+hypersurface coordinate system. This is the encoding that you would
+use with a "pen and paper" enumeration of hypersurfaces in the given
+coordinate system, with no further conversion, optimisation, or post-
+processing.
+
+Note that, when Regina enumerates hypersurfaces in the given
+coordinate system, it might choose to post-process the resulting
+vectors to use a different encoding. (In the 3-dimensional world, for
+example, normal surfaces enumerated in quad coordinates are post-
+processed and stored in standard coordinates.)
+
+If *coords* is not one of the coordinate systems that Regina can use
+to enumerate normal hypersurfaces, then the resulting encoding will be
+invalid, and valid() will return ``False``.
+
+Parameter ``coords``:
+    one of Regina's normal hypersurface coordinate systems.)doc";
+
+// Docstring regina::python::doc::HyperEncoding_::__init_2
+static const char *__init_2 = R"doc(Creates a new copy of the given encoding.)doc";
 
 // Docstring regina::python::doc::HyperEncoding_::__ne
 static const char *__ne =

@@ -37,25 +37,6 @@ Parameter ``b``:
 
 namespace Text_ {
 
-// Docstring regina::python::doc::Text_::Text
-static const char *Text = R"doc(Initialises the packet to the empty string.)doc";
-
-// Docstring regina::python::doc::Text_::Text_2
-static const char *Text_2 =
-R"doc(Initialises the packet to the given string.
-
-Parameter ``text``:
-    the new value for the packet.)doc";
-
-// Docstring regina::python::doc::Text_::Text_3
-static const char *Text_3 =
-R"doc(Creates a new copy of the given text packet.
-
-Like all packet types, this only copies the text content, not the
-packet infrastructure (e.g., it will not copy the packet label, it
-will not clone the given packet's children, and it will not insert the
-new packet into any packet tree).)doc";
-
 // Docstring regina::python::doc::Text_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given packet contain the same text.
@@ -66,6 +47,25 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given packet contain the same
     text.)doc";
+
+// Docstring regina::python::doc::Text_::__init
+static const char *__init = R"doc(Initialises the packet to the empty string.)doc";
+
+// Docstring regina::python::doc::Text_::__init_2
+static const char *__init_2 =
+R"doc(Initialises the packet to the given string.
+
+Parameter ``text``:
+    the new value for the packet.)doc";
+
+// Docstring regina::python::doc::Text_::__init_3
+static const char *__init_3 =
+R"doc(Creates a new copy of the given text packet.
+
+Like all packet types, this only copies the text content, not the
+packet infrastructure (e.g., it will not copy the packet label, it
+will not clone the given packet's children, and it will not insert the
+new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::Text_::__ne
 static const char *__ne =

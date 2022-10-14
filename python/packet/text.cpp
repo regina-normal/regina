@@ -43,9 +43,9 @@ void addText(pybind11::module_& m) {
 
     auto c = pybind11::class_<Text, regina::Packet, std::shared_ptr<Text>>(
             m, "Text", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::Text)
-        .def(pybind11::init<std::string>(), rdoc::Text_2)
-        .def(pybind11::init<const Text&>(), rdoc::Text_3)
+        .def(pybind11::init<>(), rdoc::__init)
+        .def(pybind11::init<std::string>(), rdoc::__init_2)
+        .def(pybind11::init<const Text&>(), rdoc::__init_3)
         .def("swap", &Text::swap, rdoc::swap)
         .def("text", &Text::text, rdoc::text)
         .def("setText", &Text::setText, rdoc::setText)

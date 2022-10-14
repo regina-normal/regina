@@ -42,28 +42,6 @@ functions.)doc";
 
 namespace DiscType_ {
 
-// Docstring regina::python::doc::DiscType_::DiscType
-static const char *DiscType = R"doc(Creates a new null disc type, as described in the class notes.)doc";
-
-// Docstring regina::python::doc::DiscType_::DiscType_2
-static const char *DiscType_2 =
-R"doc(Creates a new disc type initialised with the given values.
-
-Parameter ``newTetIndex``:
-    the index within the triangulation of the tetrahedron containing
-    this disc type.
-
-Parameter ``newType``:
-    the specific disc type within the given tetrahedron; see the class
-    notes for the meaning of this field.)doc";
-
-// Docstring regina::python::doc::DiscType_::DiscType_3
-static const char *DiscType_3 =
-R"doc(Creates a copy of the given disc type.
-
-Parameter ``cloneMe``:
-    the disc type to clone.)doc";
-
 // Docstring regina::python::doc::DiscType_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given disc type are identical.
@@ -76,6 +54,28 @@ other, and will not be equal to any "meaningful" disc type (where
 Returns:
     ``True`` if this and the given disc type are identical, or
     ``False`` if they are different.)doc";
+
+// Docstring regina::python::doc::DiscType_::__init
+static const char *__init = R"doc(Creates a new null disc type, as described in the class notes.)doc";
+
+// Docstring regina::python::doc::DiscType_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new disc type initialised with the given values.
+
+Parameter ``newTetIndex``:
+    the index within the triangulation of the tetrahedron containing
+    this disc type.
+
+Parameter ``newType``:
+    the specific disc type within the given tetrahedron; see the class
+    notes for the meaning of this field.)doc";
+
+// Docstring regina::python::doc::DiscType_::__init_3
+static const char *__init_3 =
+R"doc(Creates a copy of the given disc type.
+
+Parameter ``cloneMe``:
+    the disc type to clone.)doc";
 
 // Docstring regina::python::doc::DiscType_::__lt
 static const char *__lt =

@@ -42,7 +42,7 @@ void addFileInfo(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(FileInfo)
 
     auto c = pybind11::class_<FileInfo>(m, "FileInfo", rdoc_scope)
-        .def(pybind11::init<const FileInfo&>(), rdoc::FileInfo)
+        .def(pybind11::init<const FileInfo&>(), rdoc::__init)
         .def("pathname", &FileInfo::pathname, rdoc::pathname)
         .def("format", &FileInfo::format, rdoc::format)
         .def("formatDescription", &FileInfo::formatDescription,

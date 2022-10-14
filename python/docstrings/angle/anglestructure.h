@@ -41,11 +41,33 @@ Parameter ``b``:
 
 namespace AngleStructure_ {
 
-// Docstring regina::python::doc::AngleStructure_::AngleStructure
-static const char *AngleStructure = R"doc(Creates a new copy of the given angle structure.)doc";
+// Docstring regina::python::doc::AngleStructure_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given angle structure are identical.
 
-// Docstring regina::python::doc::AngleStructure_::AngleStructure_2
-static const char *AngleStructure_2 =
+This routine is safe to call even if this and the given angle
+structure do not belong to the same triangulation:
+
+* If the two triangulations have the same size, then this routine will
+  test whether this angle structure, if transplanted into the other
+  triangulation using the same tetrahedron numbering, would be the
+  same as *other*.
+
+* If the two triangulations have different sizes, then this routine
+  will return ``False``.
+
+Parameter ``other``:
+    the angle structure to be compared with this structure.
+
+Returns:
+    ``True`` if and only if this and the given structure are
+    identical.)doc";
+
+// Docstring regina::python::doc::AngleStructure_::__init
+static const char *__init = R"doc(Creates a new copy of the given angle structure.)doc";
+
+// Docstring regina::python::doc::AngleStructure_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new copy of the given angle structure, but relocated to the
 given triangulation.
 
@@ -66,8 +88,8 @@ Parameter ``triangulation``:
     the triangulation on which this new angle structure will be
     placed.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::AngleStructure_3
-static const char *AngleStructure_3 =
+// Docstring regina::python::doc::AngleStructure_::__init_3
+static const char *__init_3 =
 R"doc(Creates a new angle structure on the given triangulation with the
 given coordinate vector.
 
@@ -90,28 +112,6 @@ Parameter ``triang``:
 
 Parameter ``vector``:
     a vector containing the individual angles in the angle structure.)doc";
-
-// Docstring regina::python::doc::AngleStructure_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given angle structure are identical.
-
-This routine is safe to call even if this and the given angle
-structure do not belong to the same triangulation:
-
-* If the two triangulations have the same size, then this routine will
-  test whether this angle structure, if transplanted into the other
-  triangulation using the same tetrahedron numbering, would be the
-  same as *other*.
-
-* If the two triangulations have different sizes, then this routine
-  will return ``False``.
-
-Parameter ``other``:
-    the angle structure to be compared with this structure.
-
-Returns:
-    ``True`` if and only if this and the given structure are
-    identical.)doc";
 
 // Docstring regina::python::doc::AngleStructure_::__lt
 static const char *__lt =

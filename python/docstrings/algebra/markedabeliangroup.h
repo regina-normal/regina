@@ -145,8 +145,8 @@ Parameter ``rhs``:
 
 namespace HomMarkedAbelianGroup_ {
 
-// Docstring regina::python::doc::HomMarkedAbelianGroup_::HomMarkedAbelianGroup
-static const char *HomMarkedAbelianGroup =
+// Docstring regina::python::doc::HomMarkedAbelianGroup_::__init
+static const char *__init =
 R"doc(Constructs a homomorphism from two marked abelian groups and a matrix
 that indicates where the generators are sent. The roles of the two
 groups and the matrix are described in detail in the
@@ -178,8 +178,8 @@ Parameter ``codom``:
 Parameter ``mat``:
     the matrix that describes the homomorphism from *dom* to *ran*.)doc";
 
-// Docstring regina::python::doc::HomMarkedAbelianGroup_::HomMarkedAbelianGroup_2
-static const char *HomMarkedAbelianGroup_2 = R"doc(Creates a clone of the given homomorphism.)doc";
+// Docstring regina::python::doc::HomMarkedAbelianGroup_::__init_2
+static const char *__init_2 = R"doc(Creates a clone of the given homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::__mul
 static const char *__mul =
@@ -435,8 +435,24 @@ torsion subgroups.)doc";
 
 namespace MarkedAbelianGroup_ {
 
-// Docstring regina::python::doc::MarkedAbelianGroup_::MarkedAbelianGroup
-static const char *MarkedAbelianGroup =
+// Docstring regina::python::doc::MarkedAbelianGroup_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given group were formed from identical
+chain complex constructions.
+
+This is *not* an isomorphism test. For this comparison to return
+``True``, both groups must have been constructed from identical
+matrices *M* and *N*, using homology with the same coefficients.
+
+Parameter ``other``:
+    the group with which this should be compared.
+
+Returns:
+    ``True`` if and only if the this and the given group have
+    identical chain complex definitions.)doc";
+
+// Docstring regina::python::doc::MarkedAbelianGroup_::__init
+static const char *__init =
 R"doc(Creates a marked abelian group from a chain complex. This constructor
 assumes you are interested in homology with integer coefficents.
 
@@ -464,8 +480,8 @@ Parameter ``N``:
     the `left' matrix in the chain complex; that is, the matrix that
     one takes the image of when computing homology.)doc";
 
-// Docstring regina::python::doc::MarkedAbelianGroup_::MarkedAbelianGroup_2
-static const char *MarkedAbelianGroup_2 =
+// Docstring regina::python::doc::MarkedAbelianGroup_::__init_2
+static const char *__init_2 =
 R"doc(Creates a marked abelian group from a chain complex with coefficients
 in Z_p.
 
@@ -499,8 +515,8 @@ Parameter ``pcoeff``:
     coefficients (in which case it is more efficient to use the
     constructor that just takes two matrices).)doc";
 
-// Docstring regina::python::doc::MarkedAbelianGroup_::MarkedAbelianGroup_3
-static const char *MarkedAbelianGroup_3 =
+// Docstring regina::python::doc::MarkedAbelianGroup_::__init_3
+static const char *__init_3 =
 R"doc(Creates a free Z_p-module of a given rank using the direct sum of the
 standard chain complex ``0 --> Z --p--> Z --> 0``. This group is
 isomorphic to ``n Z_p``. Moreover, if constructed using the matrices-
@@ -515,24 +531,8 @@ Parameter ``p``:
     describes the type of ring that we use to talk about the "free"
     module.)doc";
 
-// Docstring regina::python::doc::MarkedAbelianGroup_::MarkedAbelianGroup_4
-static const char *MarkedAbelianGroup_4 = R"doc(Creates a clone of the given group.)doc";
-
-// Docstring regina::python::doc::MarkedAbelianGroup_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given group were formed from identical
-chain complex constructions.
-
-This is *not* an isomorphism test. For this comparison to return
-``True``, both groups must have been constructed from identical
-matrices *M* and *N*, using homology with the same coefficients.
-
-Parameter ``other``:
-    the group with which this should be compared.
-
-Returns:
-    ``True`` if and only if the this and the given group have
-    identical chain complex definitions.)doc";
+// Docstring regina::python::doc::MarkedAbelianGroup_::__init_4
+static const char *__init_4 = R"doc(Creates a clone of the given group.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::__ne
 static const char *__ne =

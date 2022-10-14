@@ -76,22 +76,6 @@ Parameter ``rhs``:
 
 namespace GroupExpressionTerm_ {
 
-// Docstring regina::python::doc::GroupExpressionTerm_::GroupExpressionTerm
-static const char *GroupExpressionTerm = R"doc(Creates a new uninitialised term.)doc";
-
-// Docstring regina::python::doc::GroupExpressionTerm_::GroupExpressionTerm_2
-static const char *GroupExpressionTerm_2 =
-R"doc(Creates a new term initialised to the given value.
-
-Parameter ``newGen``:
-    the number that identifies the generator in the new term.
-
-Parameter ``newExp``:
-    the exponent to which this generator is raised.)doc";
-
-// Docstring regina::python::doc::GroupExpressionTerm_::GroupExpressionTerm_3
-static const char *GroupExpressionTerm_3 = R"doc(Creates a new term initialised to the given value.)doc";
-
 // Docstring regina::python::doc::GroupExpressionTerm_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given term contain identical data.
@@ -118,6 +102,22 @@ Parameter ``other``:
 Returns:
     ``True`` if the two terms were merged into this term, or ``False``
     if the two terms have different generators.)doc";
+
+// Docstring regina::python::doc::GroupExpressionTerm_::__init
+static const char *__init = R"doc(Creates a new uninitialised term.)doc";
+
+// Docstring regina::python::doc::GroupExpressionTerm_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new term initialised to the given value.
+
+Parameter ``newGen``:
+    the number that identifies the generator in the new term.
+
+Parameter ``newExp``:
+    the exponent to which this generator is raised.)doc";
+
+// Docstring regina::python::doc::GroupExpressionTerm_::__init_3
+static const char *__init_3 = R"doc(Creates a new term initialised to the given value.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::__lt
 static const char *__lt =
@@ -157,71 +157,6 @@ Returns:
 
 namespace GroupExpression_ {
 
-// Docstring regina::python::doc::GroupExpression_::GroupExpression
-static const char *GroupExpression = R"doc(Creates a new expression with no terms.)doc";
-
-// Docstring regina::python::doc::GroupExpression_::GroupExpression_2
-static const char *GroupExpression_2 =
-R"doc(Creates a new expression containing a single term.
-
-Parameter ``term``:
-    the term to use as the new expression.)doc";
-
-// Docstring regina::python::doc::GroupExpression_::GroupExpression_3
-static const char *GroupExpression_3 =
-R"doc(Creates a new expression containing a single term.
-
-Parameter ``generator``:
-    the number of the generator to use in the term.
-
-Parameter ``exponent``:
-    the exponent to which the given generator is raised in the term.)doc";
-
-// Docstring regina::python::doc::GroupExpression_::GroupExpression_4
-static const char *GroupExpression_4 = R"doc(Creates a new expression that is a clone of the given expression.)doc";
-
-// Docstring regina::python::doc::GroupExpression_::GroupExpression_5
-static const char *GroupExpression_5 =
-R"doc(Attempts to interpret the given input string as a word in a group.
-Regina can recognise strings in the following four basic forms:
-
-* ``a^7b^-2``
-
-* ``aaaaaaaBB``
-
-* ``a^7B^2``
-
-* ``g0^7g1^-2``
-
-The string may contain whitespace, which will simply be ignored.
-
-Exception ``InvalidArgument``:
-    The given string could not be interpreted as a group expression.
-
-Parameter ``input``:
-    the input string that is to be interpreted.)doc";
-
-// Docstring regina::python::doc::GroupExpression_::GroupExpression_6
-static const char *GroupExpression_6 =
-R"doc(Attempts to interpret the given input string as a word in a group.
-Regina can recognise strings in the following four basic forms:
-
-* ``a^7b^-2``
-
-* ``aaaaaaaBB``
-
-* ``a^7B^2``
-
-* ``g0^7g1^-2``
-
-The string may contain whitespace, which will simply be ignored.
-
-Exception ``InvalidArgument``:
-    The given string could not be interpreted as a group expression.
-
-Parameter ``input``:
-    the input string that is to be interpreted.)doc";
-
 // Docstring regina::python::doc::GroupExpression_::__eq
 static const char *__eq =
 R"doc(Equality operator. Checks to see whether or not these two words
@@ -232,6 +167,71 @@ Parameter ``comp``:
 
 Returns:
     ``True`` if this and the given string literal are identical.)doc";
+
+// Docstring regina::python::doc::GroupExpression_::__init
+static const char *__init = R"doc(Creates a new expression with no terms.)doc";
+
+// Docstring regina::python::doc::GroupExpression_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new expression containing a single term.
+
+Parameter ``term``:
+    the term to use as the new expression.)doc";
+
+// Docstring regina::python::doc::GroupExpression_::__init_3
+static const char *__init_3 =
+R"doc(Creates a new expression containing a single term.
+
+Parameter ``generator``:
+    the number of the generator to use in the term.
+
+Parameter ``exponent``:
+    the exponent to which the given generator is raised in the term.)doc";
+
+// Docstring regina::python::doc::GroupExpression_::__init_4
+static const char *__init_4 = R"doc(Creates a new expression that is a clone of the given expression.)doc";
+
+// Docstring regina::python::doc::GroupExpression_::__init_5
+static const char *__init_5 =
+R"doc(Attempts to interpret the given input string as a word in a group.
+Regina can recognise strings in the following four basic forms:
+
+* ``a^7b^-2``
+
+* ``aaaaaaaBB``
+
+* ``a^7B^2``
+
+* ``g0^7g1^-2``
+
+The string may contain whitespace, which will simply be ignored.
+
+Exception ``InvalidArgument``:
+    The given string could not be interpreted as a group expression.
+
+Parameter ``input``:
+    the input string that is to be interpreted.)doc";
+
+// Docstring regina::python::doc::GroupExpression_::__init_6
+static const char *__init_6 =
+R"doc(Attempts to interpret the given input string as a word in a group.
+Regina can recognise strings in the following four basic forms:
+
+* ``a^7b^-2``
+
+* ``aaaaaaaBB``
+
+* ``a^7B^2``
+
+* ``g0^7g1^-2``
+
+The string may contain whitespace, which will simply be ignored.
+
+Exception ``InvalidArgument``:
+    The given string could not be interpreted as a group expression.
+
+Parameter ``input``:
+    the input string that is to be interpreted.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::__ne
 static const char *__ne =
@@ -622,25 +622,42 @@ Parameter ``out``:
 
 namespace GroupPresentation_ {
 
-// Docstring regina::python::doc::GroupPresentation_::GroupPresentation
-static const char *GroupPresentation = R"doc(Creates a new presentation with no generators and no relations.)doc";
+// Docstring regina::python::doc::GroupPresentation_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given group presentation are
+identical.
 
-// Docstring regina::python::doc::GroupPresentation_::GroupPresentation_2
-static const char *GroupPresentation_2 =
+This routine does *not* test for isomorphism (which in general is an
+undecidable problem). Instead it tests whether this and the given
+presentation use exactly the same generators and exactly the same
+relations, presented in exactly the same order.
+
+Parameter ``other``:
+    the group presentation to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given group presentation are
+    identical.)doc";
+
+// Docstring regina::python::doc::GroupPresentation_::__init
+static const char *__init = R"doc(Creates a new presentation with no generators and no relations.)doc";
+
+// Docstring regina::python::doc::GroupPresentation_::__init_2
+static const char *__init_2 =
 R"doc(Creates a clone of the given group presentation.
 
 Parameter ``src``:
     the group presentation to clone.)doc";
 
-// Docstring regina::python::doc::GroupPresentation_::GroupPresentation_3
-static const char *GroupPresentation_3 =
+// Docstring regina::python::doc::GroupPresentation_::__init_3
+static const char *__init_3 =
 R"doc(Creates the free group on the given number of generators.
 
 Parameter ``nGenerators``:
     the number of generators.)doc";
 
-// Docstring regina::python::doc::GroupPresentation_::GroupPresentation_4
-static const char *GroupPresentation_4 =
+// Docstring regina::python::doc::GroupPresentation_::__init_4
+static const char *__init_4 =
 R"doc(Constructor that allows you to directly pass an arbitrary number of
 relators in string format.
 
@@ -665,23 +682,6 @@ Parameter ``nGens``:
 Parameter ``rels``:
     a vector of relations each given in string form, as outlined
     above.)doc";
-
-// Docstring regina::python::doc::GroupPresentation_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given group presentation are
-identical.
-
-This routine does *not* test for isomorphism (which in general is an
-undecidable problem). Instead it tests whether this and the given
-presentation use exactly the same generators and exactly the same
-relations, presented in exactly the same order.
-
-Parameter ``other``:
-    the group presentation to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given group presentation are
-    identical.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::__ne
 static const char *__ne =

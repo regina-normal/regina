@@ -181,8 +181,53 @@ Parameter ``rhs``:
 
 namespace NormalSurfaces_ {
 
-// Docstring regina::python::doc::NormalSurfaces_::NormalSurfaces
-static const char *NormalSurfaces =
+// Docstring regina::python::doc::NormalSurfaces_::__array
+static const char *__array =
+R"doc(Returns the surface at the requested index in this list. This is
+identical to calling surface().
+
+Parameter ``index``:
+    the index of the requested surface in this list; this must be
+    between 0 and size()-1 inclusive.
+
+Returns:
+    the normal surface at the requested index in this list.)doc";
+
+// Docstring regina::python::doc::NormalSurfaces_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given list contain the same set of
+normal (or almost normal) surfaces.
+
+The lists will be compared as multisets: the order of the surfaces in
+each list does not matter; however, in the unusual scenario where a
+list the same surface multiple times, multiplicity does matter.
+
+Like the comparison operators for NormalSurface, it does not matter
+whether the lists work with different triangulations, or different
+encodings, or if one but not the other supports almost normal and/or
+spun-normal surfaces. The individual surfaces will simply be compared
+by examining or computing the number of discs of each type.
+
+In particular, this routine is safe to call even if this and the given
+list work with different triangulations:
+
+* If the two triangulations have the same size, then this routine will
+  compare surfaces as though they were transplanted into the same
+  triangulation using the same tetrahedron numbering and the same disc
+  types.
+
+* If the two triangulations have different sizes, then this comparison
+  will return ``False``.
+
+Parameter ``other``:
+    the list to be compared with this list.
+
+Returns:
+    ``True`` if both lists represent the same multiset of normal or
+    almost normal surfaces, or ``False`` if not.)doc";
+
+// Docstring regina::python::doc::NormalSurfaces_::__init
+static const char *__init =
 R"doc(A unified "enumeration constructor" for enumerating various classes of
 normal surfaces within a given triangulation.
 
@@ -280,8 +325,8 @@ Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``null`` if no progress reporting is required.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::NormalSurfaces_2
-static const char *NormalSurfaces_2 =
+// Docstring regina::python::doc::NormalSurfaces_::__init_2
+static const char *__init_2 =
 R"doc(A unified "transform constructor" for transforming one normal surface
 list into another.
 
@@ -315,8 +360,8 @@ Parameter ``src``:
 Parameter ``transform``:
     the specific transformation to apply.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::NormalSurfaces_3
-static const char *NormalSurfaces_3 =
+// Docstring regina::python::doc::NormalSurfaces_::__init_3
+static const char *__init_3 =
 R"doc(A "filter constructor" that creates a new list filled with those
 surfaces from the given list that pass the given filter.
 
@@ -333,53 +378,8 @@ Parameter ``src``:
 Parameter ``filter``:
     the filter to apply to the given list.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::NormalSurfaces_4
-static const char *NormalSurfaces_4 = R"doc(Constructs a new copy of the given list.)doc";
-
-// Docstring regina::python::doc::NormalSurfaces_::__array
-static const char *__array =
-R"doc(Returns the surface at the requested index in this list. This is
-identical to calling surface().
-
-Parameter ``index``:
-    the index of the requested surface in this list; this must be
-    between 0 and size()-1 inclusive.
-
-Returns:
-    the normal surface at the requested index in this list.)doc";
-
-// Docstring regina::python::doc::NormalSurfaces_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given list contain the same set of
-normal (or almost normal) surfaces.
-
-The lists will be compared as multisets: the order of the surfaces in
-each list does not matter; however, in the unusual scenario where a
-list the same surface multiple times, multiplicity does matter.
-
-Like the comparison operators for NormalSurface, it does not matter
-whether the lists work with different triangulations, or different
-encodings, or if one but not the other supports almost normal and/or
-spun-normal surfaces. The individual surfaces will simply be compared
-by examining or computing the number of discs of each type.
-
-In particular, this routine is safe to call even if this and the given
-list work with different triangulations:
-
-* If the two triangulations have the same size, then this routine will
-  compare surfaces as though they were transplanted into the same
-  triangulation using the same tetrahedron numbering and the same disc
-  types.
-
-* If the two triangulations have different sizes, then this comparison
-  will return ``False``.
-
-Parameter ``other``:
-    the list to be compared with this list.
-
-Returns:
-    ``True`` if both lists represent the same multiset of normal or
-    almost normal surfaces, or ``False`` if not.)doc";
+// Docstring regina::python::doc::NormalSurfaces_::__init_4
+static const char *__init_4 = R"doc(Constructs a new copy of the given list.)doc";
 
 // Docstring regina::python::doc::NormalSurfaces_::__iter__
 static const char *__iter__ =

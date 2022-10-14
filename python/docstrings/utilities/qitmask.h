@@ -85,16 +85,6 @@ Python:
 
 namespace Qitmask1_ {
 
-// Docstring regina::python::doc::Qitmask1_::Qitmask1
-static const char *Qitmask1 = R"doc(Creates a new qitmask with all qits set to 0.)doc";
-
-// Docstring regina::python::doc::Qitmask1_::Qitmask1_2
-static const char *Qitmask1_2 =
-R"doc(Creates a clone of the given qitmask.
-
-Parameter ``cloneMe``:
-    the qitmask to clone.)doc";
-
 // Docstring regina::python::doc::Qitmask1_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given qitmask are identical.
@@ -115,6 +105,16 @@ Parameter ``rhs``:
 
 Returns:
     a reference to this qitmask.)doc";
+
+// Docstring regina::python::doc::Qitmask1_::__init
+static const char *__init = R"doc(Creates a new qitmask with all qits set to 0.)doc";
+
+// Docstring regina::python::doc::Qitmask1_::__init_2
+static const char *__init_2 =
+R"doc(Creates a clone of the given qitmask.
+
+Parameter ``cloneMe``:
+    the qitmask to clone.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::__isub
 static const char *__isub =
@@ -208,16 +208,6 @@ Parameter ``value``:
 
 namespace Qitmask2_ {
 
-// Docstring regina::python::doc::Qitmask2_::Qitmask2
-static const char *Qitmask2 = R"doc(Creates a new qitmask with all qits set to 0.)doc";
-
-// Docstring regina::python::doc::Qitmask2_::Qitmask2_2
-static const char *Qitmask2_2 =
-R"doc(Creates a clone of the given qitmask.
-
-Parameter ``cloneMe``:
-    the qitmask to clone.)doc";
-
 // Docstring regina::python::doc::Qitmask2_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given qitmask are identical.
@@ -238,6 +228,16 @@ Parameter ``rhs``:
 
 Returns:
     a reference to this qitmask.)doc";
+
+// Docstring regina::python::doc::Qitmask2_::__init
+static const char *__init = R"doc(Creates a new qitmask with all qits set to 0.)doc";
+
+// Docstring regina::python::doc::Qitmask2_::__init_2
+static const char *__init_2 =
+R"doc(Creates a clone of the given qitmask.
+
+Parameter ``cloneMe``:
+    the qitmask to clone.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::__isub
 static const char *__isub =

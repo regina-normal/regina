@@ -62,7 +62,7 @@ void addProgressTracker(pybind11::module_& m) {
 
     auto c1 = pybind11::class_<ProgressTracker, ProgressTrackerBase>(
             m, "ProgressTracker", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::ProgressTracker)
+        .def(pybind11::init<>(), rdoc::__init)
         .def("percentChanged", &ProgressTracker::percentChanged,
             rdoc::percentChanged)
         .def("percent", &ProgressTracker::percent, rdoc::percent)
@@ -79,7 +79,7 @@ void addProgressTracker(pybind11::module_& m) {
 
     auto c2 = pybind11::class_<ProgressTrackerOpen, ProgressTrackerBase>(
             m, "ProgressTrackerOpen", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::ProgressTrackerOpen)
+        .def(pybind11::init<>(), rdoc::__init)
         .def("stepsChanged", &ProgressTrackerOpen::stepsChanged,
             rdoc::stepsChanged)
         .def("steps", &ProgressTrackerOpen::steps, rdoc::steps)

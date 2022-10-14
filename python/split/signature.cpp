@@ -43,8 +43,8 @@ void addSignature(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Signature)
 
     auto c = pybind11::class_<Signature>(m, "Signature", rdoc_scope)
-        .def(pybind11::init<const std::string&>(), rdoc::Signature)
-        .def(pybind11::init<const Signature&>(), rdoc::Signature_2)
+        .def(pybind11::init<const std::string&>(), rdoc::__init)
+        .def(pybind11::init<const Signature&>(), rdoc::__init_2)
         .def("swap", &Signature::swap, rdoc::swap)
         .def("order", &Signature::order, rdoc::order)
         .def("triangulate", &Signature::triangulate, rdoc::triangulate)

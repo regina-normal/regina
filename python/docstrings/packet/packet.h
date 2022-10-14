@@ -626,11 +626,11 @@ Returns:
 
 namespace PacketData_ {
 
-// Docstring regina::python::doc::PacketData_::PacketData
-static const char *PacketData = R"doc(Default constructor that sets *heldBy_* to HELD_BY_NONE.)doc";
+// Docstring regina::python::doc::PacketData_::__init
+static const char *__init = R"doc(Default constructor that sets *heldBy_* to HELD_BY_NONE.)doc";
 
-// Docstring regina::python::doc::PacketData_::PacketData_2
-static const char *PacketData_2 =
+// Docstring regina::python::doc::PacketData_::__init_2
+static const char *__init_2 =
 R"doc(Copy constructor that ignores its argument, and instead sets *heldBy_*
 to HELD_BY_NONE. This is because *heldBy_* stores information about
 the C++ type of *this* object, not the object being copied.
@@ -964,8 +964,8 @@ listening.)doc";
 
 namespace PacketOf_ {
 
-// Docstring regina::python::doc::PacketOf_::PacketOf
-static const char *PacketOf =
+// Docstring regina::python::doc::PacketOf_::__init
+static const char *__init =
 R"doc(Creates a new packet.
 
 The *Held* object that it contains will be constructed using the
@@ -974,8 +974,8 @@ default *Held* constructor.
 The packet will not be inserted into any packet tree, and will have an
 empty packet label.)doc";
 
-// Docstring regina::python::doc::PacketOf_::PacketOf_2
-static const char *PacketOf_2 =
+// Docstring regina::python::doc::PacketOf_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new packet containing a deep copy of the given data.
 
 The packet will not be inserted into any packet tree, and will have an
@@ -984,8 +984,8 @@ empty packet label.
 Parameter ``data``:
     the object to copy.)doc";
 
-// Docstring regina::python::doc::PacketOf_::PacketOf_3
-static const char *PacketOf_3 =
+// Docstring regina::python::doc::PacketOf_::__init_3
+static const char *__init_3 =
 R"doc(Moves the given data into this new packet. This will typically be much
 faster than a deep copy, since it uses the move constructor for
 *Held*.
@@ -998,8 +998,8 @@ The object that is passed (*data*) will no longer be usable.
 Parameter ``data``:
     the object to move.)doc";
 
-// Docstring regina::python::doc::PacketOf_::PacketOf_4
-static const char *PacketOf_4 =
+// Docstring regina::python::doc::PacketOf_::__init_4
+static const char *__init_4 =
 R"doc(Creates a new packet using one of *Held*'s own constructors.
 
 The given arguments *args* will be forwarded directly to the
@@ -1020,8 +1020,8 @@ Parameter ``args``:
     the arguments to be forwarded to the appropriate *Held*
     constructor.)doc";
 
-// Docstring regina::python::doc::PacketOf_::PacketOf_5
-static const char *PacketOf_5 =
+// Docstring regina::python::doc::PacketOf_::__init_5
+static const char *__init_5 =
 R"doc(Creates a new copy of the given packet.
 
 Like all packet types, this only copies the mathematical content, not
@@ -1035,21 +1035,6 @@ Parameter ``src``:
 }
 
 namespace PacketShell_ {
-
-// Docstring regina::python::doc::PacketShell_::PacketShell
-static const char *PacketShell =
-R"doc(Creates a new shell referring to the given packet.
-
-Parameter ``packet``:
-    the packet to refer to.)doc";
-
-// Docstring regina::python::doc::PacketShell_::PacketShell_2
-static const char *PacketShell_2 =
-R"doc(Creates a copy of the given shell. Both shells will refer to the same
-underlying packet.
-
-Parameter ``shell``:
-    the shell to clone.)doc";
 
 // Docstring regina::python::doc::PacketShell_::__eq
 static const char *__eq =
@@ -1074,6 +1059,21 @@ Parameter ``packet``:
 
 Returns:
     ``True`` if and only if this shell refers to the given packet.)doc";
+
+// Docstring regina::python::doc::PacketShell_::__init
+static const char *__init =
+R"doc(Creates a new shell referring to the given packet.
+
+Parameter ``packet``:
+    the packet to refer to.)doc";
+
+// Docstring regina::python::doc::PacketShell_::__init_2
+static const char *__init_2 =
+R"doc(Creates a copy of the given shell. Both shells will refer to the same
+underlying packet.
+
+Parameter ``shell``:
+    the shell to clone.)doc";
 
 // Docstring regina::python::doc::PacketShell_::__ne
 static const char *__ne =

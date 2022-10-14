@@ -57,59 +57,6 @@ Parameter ``rhs``:
 
 namespace HomGroupPresentation_ {
 
-// Docstring regina::python::doc::HomGroupPresentation_::HomGroupPresentation
-static const char *HomGroupPresentation =
-R"doc(Creates a new homomorphism from the given data.
-
-Parameter ``domain``:
-    the domain of the homomorphism.
-
-Parameter ``codomain``:
-    the codomain of the homomorphism.
-
-Parameter ``map``:
-    a vector of length *g*, where *g* is the number of generators of
-    the domain, and where this homomorphism sends the *i*th generator
-    of the domain to the element ``map[i]`` of the codomain.)doc";
-
-// Docstring regina::python::doc::HomGroupPresentation_::HomGroupPresentation_2
-static const char *HomGroupPresentation_2 =
-R"doc(Creates a declared isomorphism from the given data. Here you must
-provide both a map from the domain to codomain, and the inverse map
-from the codomain to domain.
-
-Precondition:
-    The argument *inv* is indeed the inverse of *map*.
-
-Parameter ``domain``:
-    the domain of the homomorphism.
-
-Parameter ``codomain``:
-    the codomain of the homomorphism.
-
-Parameter ``map``:
-    a vector of length *g*, where *g* is the number of generators of
-    the domain, and where this homomorphism sends the *i*th generator
-    of the domain to the element ``map[i]`` of the codomain.
-
-Parameter ``inv``:
-    a vector of length *k* where *k* is the number of generators of
-    the codomain, and where the inverse homomorphism sends the *i*th
-    generator of the codomain to the element ``inv[i]`` of the domain.)doc";
-
-// Docstring regina::python::doc::HomGroupPresentation_::HomGroupPresentation_3
-static const char *HomGroupPresentation_3 =
-R"doc(Creates a new identity homomorphism for the given group.
-
-This will be a declared isomorphism (see the HomGroupPresentation
-class notes for details).
-
-Parameter ``groupForIdentity``:
-    both the domain and codomain of the new identity homomorphism.)doc";
-
-// Docstring regina::python::doc::HomGroupPresentation_::HomGroupPresentation_4
-static const char *HomGroupPresentation_4 = R"doc(Creates a clone of the given homomorphism.)doc";
-
 // Docstring regina::python::doc::HomGroupPresentation_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given homomorphism have identical
@@ -136,6 +83,59 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given homomorphisms have
     identical presentations.)doc";
+
+// Docstring regina::python::doc::HomGroupPresentation_::__init
+static const char *__init =
+R"doc(Creates a new homomorphism from the given data.
+
+Parameter ``domain``:
+    the domain of the homomorphism.
+
+Parameter ``codomain``:
+    the codomain of the homomorphism.
+
+Parameter ``map``:
+    a vector of length *g*, where *g* is the number of generators of
+    the domain, and where this homomorphism sends the *i*th generator
+    of the domain to the element ``map[i]`` of the codomain.)doc";
+
+// Docstring regina::python::doc::HomGroupPresentation_::__init_2
+static const char *__init_2 =
+R"doc(Creates a declared isomorphism from the given data. Here you must
+provide both a map from the domain to codomain, and the inverse map
+from the codomain to domain.
+
+Precondition:
+    The argument *inv* is indeed the inverse of *map*.
+
+Parameter ``domain``:
+    the domain of the homomorphism.
+
+Parameter ``codomain``:
+    the codomain of the homomorphism.
+
+Parameter ``map``:
+    a vector of length *g*, where *g* is the number of generators of
+    the domain, and where this homomorphism sends the *i*th generator
+    of the domain to the element ``map[i]`` of the codomain.
+
+Parameter ``inv``:
+    a vector of length *k* where *k* is the number of generators of
+    the codomain, and where the inverse homomorphism sends the *i*th
+    generator of the codomain to the element ``inv[i]`` of the domain.)doc";
+
+// Docstring regina::python::doc::HomGroupPresentation_::__init_3
+static const char *__init_3 =
+R"doc(Creates a new identity homomorphism for the given group.
+
+This will be a declared isomorphism (see the HomGroupPresentation
+class notes for details).
+
+Parameter ``groupForIdentity``:
+    both the domain and codomain of the new identity homomorphism.)doc";
+
+// Docstring regina::python::doc::HomGroupPresentation_::__init_4
+static const char *__init_4 = R"doc(Creates a clone of the given homomorphism.)doc";
 
 // Docstring regina::python::doc::HomGroupPresentation_::__mul
 static const char *__mul =

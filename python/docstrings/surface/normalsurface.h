@@ -76,107 +76,6 @@ Parameter ``b``:
 
 namespace NormalSurface_ {
 
-// Docstring regina::python::doc::NormalSurface_::NormalSurface
-static const char *NormalSurface = R"doc(Creates a new copy of the given normal surface.)doc";
-
-// Docstring regina::python::doc::NormalSurface_::NormalSurface_2
-static const char *NormalSurface_2 =
-R"doc(Creates a new copy of the given normal surface, but relocated to the
-given triangulation.
-
-A snapshot will be taken of the given triangulation as it appears
-right now. You may change or even delete the triangulation later on;
-if so, then this normal surface will still refer to the frozen
-snapshot that was taken at the time of construction.
-
-Precondition:
-    The given triangulation is either the same as, or is
-    combinatorially identical to, the triangulation in which *src*
-    resides.
-
-Parameter ``src``:
-    the normal surface to copy.
-
-Parameter ``triangulation``:
-    the triangulation in which this new surface will reside.)doc";
-
-// Docstring regina::python::doc::NormalSurface_::NormalSurface_3
-static const char *NormalSurface_3 =
-R"doc(Creates a new normal surface inside the given triangulation with the
-given coordinate vector, using the given vector encoding.
-
-There is no guarantee that this surface will keep the given encoding:
-NormalSurface will sometimes convert the vector to use a different
-encoding for its own internal storage.
-
-Despite what is said in the class notes, it is okay if the given
-vector encoding does not include triangle coordinates. (If this is the
-case, the vector will be converted automatically.)
-
-A snapshot will be taken of the given triangulation as it appears
-right now. You may change or even delete the triangulation later on;
-if so, then this normal surface will still refer to the frozen
-snapshot that was taken at the time of construction.
-
-Precondition:
-    The given coordinate vector does indeed represent a normal surface
-    inside the given triangulation, using the given encoding. This
-    will not be checked!
-
-Python:
-    Instead of a Vector<LargeInteger>, you may (if you prefer) pass a
-    Python list of integers.
-
-Parameter ``triang``:
-    the triangulation in which this normal surface resides.
-
-Parameter ``enc``:
-    indicates precisely how the given vector encodes a normal surface.
-
-Parameter ``vector``:
-    a vector containing the coordinates of the normal surface.)doc";
-
-// Docstring regina::python::doc::NormalSurface_::NormalSurface_4
-static const char *NormalSurface_4 =
-R"doc(Creates a new normal surface inside the given triangulation with the
-given coordinate vector, using the given coordinate system.
-
-It is assumed that this surface uses the vector encoding described by
-``NormalEncoding(coords)``. Be careful with this if you are extracting
-the vector from some other normal surface, since Regina may internally
-convert to use a different encoding from whatever was used during
-enumeration and/or read from file. In the same spirit, there is no
-guarantee that this surface will use ``NormalEncoding(coords)`` as its
-internal encoding method.
-
-Despite what is said in the class notes, it is okay if the given
-coordinate system does not include triangle coordinates. (If this is
-the case, the vector will be converted automatically.)
-
-A snapshot will be taken of the given triangulation as it appears
-right now. You may change or even delete the triangulation later on;
-if so, then this normal surface will still refer to the frozen
-snapshot that was taken at the time of construction.
-
-Precondition:
-    The given coordinate vector does indeed represent a normal surface
-    inside the given triangulation, using the encoding
-    ``NormalEncoding(coords)``. This will not be checked!
-
-Python:
-    Instead of a Vector<LargeInteger>, you may (if you prefer) pass a
-    Python list of integers.
-
-Parameter ``triang``:
-    the triangulation in which this normal surface resides.
-
-Parameter ``coords``:
-    the coordinate system from which the vector encoding will be
-    deduced.
-
-Parameter ``vector``:
-    a vector containing the coordinates of the normal surface.)doc";
-
 // Docstring regina::python::doc::NormalSurface_::__add
 static const char *__add =
 R"doc(Returns the sum of this and the given surface. This will combine all
@@ -242,6 +141,107 @@ Parameter ``coeff``:
 
 Returns:
     a reference to this surface.)doc";
+
+// Docstring regina::python::doc::NormalSurface_::__init
+static const char *__init = R"doc(Creates a new copy of the given normal surface.)doc";
+
+// Docstring regina::python::doc::NormalSurface_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new copy of the given normal surface, but relocated to the
+given triangulation.
+
+A snapshot will be taken of the given triangulation as it appears
+right now. You may change or even delete the triangulation later on;
+if so, then this normal surface will still refer to the frozen
+snapshot that was taken at the time of construction.
+
+Precondition:
+    The given triangulation is either the same as, or is
+    combinatorially identical to, the triangulation in which *src*
+    resides.
+
+Parameter ``src``:
+    the normal surface to copy.
+
+Parameter ``triangulation``:
+    the triangulation in which this new surface will reside.)doc";
+
+// Docstring regina::python::doc::NormalSurface_::__init_3
+static const char *__init_3 =
+R"doc(Creates a new normal surface inside the given triangulation with the
+given coordinate vector, using the given vector encoding.
+
+There is no guarantee that this surface will keep the given encoding:
+NormalSurface will sometimes convert the vector to use a different
+encoding for its own internal storage.
+
+Despite what is said in the class notes, it is okay if the given
+vector encoding does not include triangle coordinates. (If this is the
+case, the vector will be converted automatically.)
+
+A snapshot will be taken of the given triangulation as it appears
+right now. You may change or even delete the triangulation later on;
+if so, then this normal surface will still refer to the frozen
+snapshot that was taken at the time of construction.
+
+Precondition:
+    The given coordinate vector does indeed represent a normal surface
+    inside the given triangulation, using the given encoding. This
+    will not be checked!
+
+Python:
+    Instead of a Vector<LargeInteger>, you may (if you prefer) pass a
+    Python list of integers.
+
+Parameter ``triang``:
+    the triangulation in which this normal surface resides.
+
+Parameter ``enc``:
+    indicates precisely how the given vector encodes a normal surface.
+
+Parameter ``vector``:
+    a vector containing the coordinates of the normal surface.)doc";
+
+// Docstring regina::python::doc::NormalSurface_::__init_4
+static const char *__init_4 =
+R"doc(Creates a new normal surface inside the given triangulation with the
+given coordinate vector, using the given coordinate system.
+
+It is assumed that this surface uses the vector encoding described by
+``NormalEncoding(coords)``. Be careful with this if you are extracting
+the vector from some other normal surface, since Regina may internally
+convert to use a different encoding from whatever was used during
+enumeration and/or read from file. In the same spirit, there is no
+guarantee that this surface will use ``NormalEncoding(coords)`` as its
+internal encoding method.
+
+Despite what is said in the class notes, it is okay if the given
+coordinate system does not include triangle coordinates. (If this is
+the case, the vector will be converted automatically.)
+
+A snapshot will be taken of the given triangulation as it appears
+right now. You may change or even delete the triangulation later on;
+if so, then this normal surface will still refer to the frozen
+snapshot that was taken at the time of construction.
+
+Precondition:
+    The given coordinate vector does indeed represent a normal surface
+    inside the given triangulation, using the encoding
+    ``NormalEncoding(coords)``. This will not be checked!
+
+Python:
+    Instead of a Vector<LargeInteger>, you may (if you prefer) pass a
+    Python list of integers.
+
+Parameter ``triang``:
+    the triangulation in which this normal surface resides.
+
+Parameter ``coords``:
+    the coordinate system from which the vector encoding will be
+    deduced.
+
+Parameter ``vector``:
+    a vector containing the coordinates of the normal surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::__lt
 static const char *__lt =

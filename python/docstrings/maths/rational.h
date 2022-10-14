@@ -54,80 +54,6 @@ Parameter ``b``:
 
 namespace Rational_ {
 
-// Docstring regina::python::doc::Rational_::Rational
-static const char *Rational = R"doc(Initialises to 0/1.)doc";
-
-// Docstring regina::python::doc::Rational_::Rational_2
-static const char *Rational_2 =
-R"doc(Initialises to the given rational value.
-
-Parameter ``value``:
-    the new rational value of this rational.)doc";
-
-// Docstring regina::python::doc::Rational_::Rational_3
-static const char *Rational_3 =
-R"doc(Initialises to the given integer value. The given integer may be
-infinite.
-
-Parameter ``value``:
-    the new integer value of this rational.)doc";
-
-// Docstring regina::python::doc::Rational_::Rational_4
-static const char *Rational_4 =
-R"doc(Initialises to the given integer value.
-
-Parameter ``value``:
-    the new integer value of this rational.)doc";
-
-// Docstring regina::python::doc::Rational_::Rational_5
-static const char *Rational_5 =
-R"doc(Initialises to *newNum*/*newDen*.
-
-Precondition:
-    gcd(*newNum*, *newDen*) = 1 or *newDen* = 0.
-
-Precondition:
-    *newDen* is non-negative.
-
-Precondition:
-    Neither of the given integers is infinite.
-
-.. warning::
-    Failing to meet the preconditions above can result in misleading
-    or even undefined behaviour. As an example, Rational(4,4) (which
-    breaks the gcd requirement) is considered different from
-    Rational(1,1) (a valid rational), which is different again from
-    Rational(-1,-1) (which breaks the non-negativity requirement).
-
-Parameter ``newNum``:
-    the new numerator.
-
-Parameter ``newDen``:
-    the new denominator.)doc";
-
-// Docstring regina::python::doc::Rational_::Rational_6
-static const char *Rational_6 =
-R"doc(Initialises to *newNum*/*newDen*.
-
-Precondition:
-    gcd(*newNum*, *newDen*) = 1 or *newDen* = 0.
-
-Precondition:
-    *newDen* is non-negative.
-
-.. warning::
-    Failing to meet the preconditions above can result in misleading
-    or even undefined behaviour. As an example, Rational(4,4) (which
-    breaks the gcd requirement) is considered different from
-    Rational(1,1) (a valid rational), which is different again from
-    Rational(-1,-1) (which breaks the non-negativity requirement).
-
-Parameter ``newNum``:
-    the new numerator.
-
-Parameter ``newDen``:
-    the new denominator.)doc";
-
 // Docstring regina::python::doc::Rational_::__add
 static const char *__add =
 R"doc(Calculates the sum of two rationals. This rational is not changed.
@@ -211,6 +137,80 @@ Parameter ``other``:
 
 Returns:
     a reference to this rational with its new value.)doc";
+
+// Docstring regina::python::doc::Rational_::__init
+static const char *__init = R"doc(Initialises to 0/1.)doc";
+
+// Docstring regina::python::doc::Rational_::__init_2
+static const char *__init_2 =
+R"doc(Initialises to the given rational value.
+
+Parameter ``value``:
+    the new rational value of this rational.)doc";
+
+// Docstring regina::python::doc::Rational_::__init_3
+static const char *__init_3 =
+R"doc(Initialises to the given integer value. The given integer may be
+infinite.
+
+Parameter ``value``:
+    the new integer value of this rational.)doc";
+
+// Docstring regina::python::doc::Rational_::__init_4
+static const char *__init_4 =
+R"doc(Initialises to the given integer value.
+
+Parameter ``value``:
+    the new integer value of this rational.)doc";
+
+// Docstring regina::python::doc::Rational_::__init_5
+static const char *__init_5 =
+R"doc(Initialises to *newNum*/*newDen*.
+
+Precondition:
+    gcd(*newNum*, *newDen*) = 1 or *newDen* = 0.
+
+Precondition:
+    *newDen* is non-negative.
+
+Precondition:
+    Neither of the given integers is infinite.
+
+.. warning::
+    Failing to meet the preconditions above can result in misleading
+    or even undefined behaviour. As an example, Rational(4,4) (which
+    breaks the gcd requirement) is considered different from
+    Rational(1,1) (a valid rational), which is different again from
+    Rational(-1,-1) (which breaks the non-negativity requirement).
+
+Parameter ``newNum``:
+    the new numerator.
+
+Parameter ``newDen``:
+    the new denominator.)doc";
+
+// Docstring regina::python::doc::Rational_::__init_6
+static const char *__init_6 =
+R"doc(Initialises to *newNum*/*newDen*.
+
+Precondition:
+    gcd(*newNum*, *newDen*) = 1 or *newDen* = 0.
+
+Precondition:
+    *newDen* is non-negative.
+
+.. warning::
+    Failing to meet the preconditions above can result in misleading
+    or even undefined behaviour. As an example, Rational(4,4) (which
+    breaks the gcd requirement) is considered different from
+    Rational(1,1) (a valid rational), which is different again from
+    Rational(-1,-1) (which breaks the non-negativity requirement).
+
+Parameter ``newNum``:
+    the new numerator.
+
+Parameter ``newDen``:
+    the new denominator.)doc";
 
 // Docstring regina::python::doc::Rational_::__isub
 static const char *__isub =

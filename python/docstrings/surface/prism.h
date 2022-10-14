@@ -29,28 +29,6 @@ Precondition:
 
 namespace PrismSpec_ {
 
-// Docstring regina::python::doc::PrismSpec_::PrismSpec
-static const char *PrismSpec = R"doc(Creates a new uninitialised prism specifier.)doc";
-
-// Docstring regina::python::doc::PrismSpec_::PrismSpec_2
-static const char *PrismSpec_2 =
-R"doc(Creates a new prism specifier containing the given values.
-
-Parameter ``newTetIndex``:
-    the index in the triangulation of the tetrahedron containing the
-    prism.
-
-Parameter ``newEdge``:
-    the edge of the tetrahedron that is contained in this prism; this
-    must be between 0 and 5 inclusive.)doc";
-
-// Docstring regina::python::doc::PrismSpec_::PrismSpec_3
-static const char *PrismSpec_3 =
-R"doc(Creates a new prism specifier that is a clone of the given specifier.
-
-Parameter ``cloneMe``:
-    the prism specifier to clone.)doc";
-
 // Docstring regina::python::doc::PrismSpec_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given prism specifier contain identical
@@ -62,6 +40,28 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given prism specifier contain
     identical information.)doc";
+
+// Docstring regina::python::doc::PrismSpec_::__init
+static const char *__init = R"doc(Creates a new uninitialised prism specifier.)doc";
+
+// Docstring regina::python::doc::PrismSpec_::__init_2
+static const char *__init_2 =
+R"doc(Creates a new prism specifier containing the given values.
+
+Parameter ``newTetIndex``:
+    the index in the triangulation of the tetrahedron containing the
+    prism.
+
+Parameter ``newEdge``:
+    the edge of the tetrahedron that is contained in this prism; this
+    must be between 0 and 5 inclusive.)doc";
+
+// Docstring regina::python::doc::PrismSpec_::__init_3
+static const char *__init_3 =
+R"doc(Creates a new prism specifier that is a clone of the given specifier.
+
+Parameter ``cloneMe``:
+    the prism specifier to clone.)doc";
 
 // Docstring regina::python::doc::PrismSpec_::__ne
 static const char *__ne =

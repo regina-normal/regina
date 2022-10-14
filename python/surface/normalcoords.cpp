@@ -63,8 +63,8 @@ void addNormalCoords(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(NormalEncoding)
 
     auto e = pybind11::class_<NormalEncoding>(m, "NormalEncoding", rdoc_scope)
-        .def(pybind11::init<NormalCoords>(), rdoc::NormalEncoding)
-        .def(pybind11::init<const NormalEncoding&>(), rdoc::NormalEncoding_2)
+        .def(pybind11::init<NormalCoords>(), rdoc::__init)
+        .def(pybind11::init<const NormalEncoding&>(), rdoc::__init_2)
         .def("valid", &NormalEncoding::valid, rdoc::valid)
         .def("block", &NormalEncoding::block, rdoc::block)
         .def("storesTriangles", &NormalEncoding::storesTriangles,

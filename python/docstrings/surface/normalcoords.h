@@ -232,8 +232,37 @@ surfaces.)doc";
 
 namespace NormalEncoding_ {
 
-// Docstring regina::python::doc::NormalEncoding_::NormalEncoding
-static const char *NormalEncoding =
+// Docstring regina::python::doc::NormalEncoding_::__add
+static const char *__add =
+R"doc(Returns an encoding that could hold the sum of surfaces that use this
+and the given encoding.
+
+More precisely, the encoding that is returned is the "simplest"
+possible encoding that is capable of holding the sum of two surfaces
+that use this and the given encoding respectively.
+
+Precondition:
+    Neither this encoding nor *rhs* is the special angle structure
+    encoding (see the class notes for details).
+
+Parameter ``rhs``:
+    the encoding to combine with this.
+
+Returns:
+    the "sum" of this and the given encoding, as defined above.)doc";
+
+// Docstring regina::python::doc::NormalEncoding_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given encoding are identical.
+
+Parameter ``other``:
+    the encoding to compare with this.
+
+Returns:
+    ``True`` if and only if both encodings are identical.)doc";
+
+// Docstring regina::python::doc::NormalEncoding_::__init
+static const char *__init =
 R"doc(Returns an encoding that precisely describes the given normal or
 almost normal coordinate system. This is the encoding that you would
 use with a "pen and paper" enumeration of surfaces in the given
@@ -264,37 +293,8 @@ allows it. See the class notes for further details.
 Parameter ``coords``:
     one of Regina's normal or almost normal coordinate systems.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::NormalEncoding_2
-static const char *NormalEncoding_2 = R"doc(Creates a new copy of the given encoding.)doc";
-
-// Docstring regina::python::doc::NormalEncoding_::__add
-static const char *__add =
-R"doc(Returns an encoding that could hold the sum of surfaces that use this
-and the given encoding.
-
-More precisely, the encoding that is returned is the "simplest"
-possible encoding that is capable of holding the sum of two surfaces
-that use this and the given encoding respectively.
-
-Precondition:
-    Neither this encoding nor *rhs* is the special angle structure
-    encoding (see the class notes for details).
-
-Parameter ``rhs``:
-    the encoding to combine with this.
-
-Returns:
-    the "sum" of this and the given encoding, as defined above.)doc";
-
-// Docstring regina::python::doc::NormalEncoding_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given encoding are identical.
-
-Parameter ``other``:
-    the encoding to compare with this.
-
-Returns:
-    ``True`` if and only if both encodings are identical.)doc";
+// Docstring regina::python::doc::NormalEncoding_::__init_2
+static const char *__init_2 = R"doc(Creates a new copy of the given encoding.)doc";
 
 // Docstring regina::python::doc::NormalEncoding_::__ne
 static const char *__ne =
