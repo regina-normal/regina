@@ -385,6 +385,9 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
         /**
          * Returns the number of hypersurfaces stored in this list.
          *
+         * \ifacespython This is also used to implement the Python special
+         * method __len__().
+         *
          * @return the number of hypersurfaces.
          */
         size_t size() const;

@@ -239,6 +239,9 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Returns the number of elements in the vector.
          *
+         * \ifacespython This is also used to implement the Python special
+         * method __len__().
+         *
          * @return the vector size.
          */
         inline size_t size() const {

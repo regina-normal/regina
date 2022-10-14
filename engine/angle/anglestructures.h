@@ -311,6 +311,9 @@ class AngleStructures :
         /**
          * Returns the number of angle structures stored in this list.
          *
+         * \ifacespython This is also used to implement the Python special
+         * method __len__().
+         *
          * @return the number of angle structures.
          */
         size_t size() const;

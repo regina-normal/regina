@@ -18,6 +18,12 @@ Version 7.2  [ (to be determined) ]
         - Updated the included pybind11 library from 2.8.1 to 2.10.0.
           This means we can now support Python 3.11, but no longer support
           Python 3.4 or 3.5.
+        - Several classes that provide array-like access (__getitem__) now
+          implement the special __len__() function also.  Note that this
+          affects how objects are evaluated in a boolean context.  Affected
+          classes: AngleStructures, Cyclotomic, FacetPairing<dim>,
+          Isomorphism<dim>, ListView, Matrix2, NormalHypersurfaces,
+          NormalSurfaces, Vector<T>.
     USER INTERFACE:
         - Fixed a deadlock that occurs in the Windows GUI when opening two
           Python consoles in quick succession (e.g., by a double-click).

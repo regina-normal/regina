@@ -566,6 +566,9 @@ class NormalSurfaces :
         /**
          * Returns the number of surfaces stored in this list.
          *
+         * \ifacespython This is also used to implement the Python special
+         * method __len__().
+         *
          * @return the number of surfaces.
          */
         size_t size() const;

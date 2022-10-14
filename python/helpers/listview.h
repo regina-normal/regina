@@ -115,6 +115,7 @@ void addListView(pybind11::module_& m) {
         }, Policy, doc::ListView_::__array)
         .def("empty", &T::empty, doc::ListView_::empty)
         .def("size", &T::size, doc::ListView_::size)
+        .def("__len__", &T::size, doc::ListView_::size)
         .def("front", [](const T& view) {
             if (view.empty())
                 throw pybind11::index_error("List is empty");
@@ -125,7 +126,6 @@ void addListView(pybind11::module_& m) {
                 throw pybind11::index_error("List is empty");
             return view.back();
         }, Policy, doc::ListView_::back)
-        .def("__len__", &T::size)
         ;
     regina::python::add_output_custom(c, [](const T& view, std::ostream& out) {
         out << "[ ";

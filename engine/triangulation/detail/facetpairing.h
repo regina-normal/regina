@@ -207,6 +207,9 @@ class FacetPairingBase :
          * Returns the number of simplices whose facets are described by
          * this facet pairing.
          *
+         * \ifacespython This is also used to implement the Python special
+         * method __len__().
+         *
          * @return the number of simplices under consideration.
          */
         size_t size() const;

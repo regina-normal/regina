@@ -250,6 +250,9 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * been initialised (for instance, it was created using the
          * default constructor).
          *
+         * \ifacespython This is also used to implement the Python special
+         * method __len__().
+         *
          * @return the degree of the polynomial that defines the
          * underlying field.
          */

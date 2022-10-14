@@ -207,6 +207,9 @@ class Isomorphism :
          * less than or equal to the number of simplices in the
          * destination triangulation.
          *
+         * \ifacespython This is also used to implement the Python special
+         * method __len__().
+         *
          * @return the number of simplices in the source triangulation.
          */
         size_t size() const;

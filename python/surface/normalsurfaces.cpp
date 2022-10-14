@@ -113,6 +113,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal,
             rdoc::triangulation)
         .def("size", &NormalSurfaces::size, rdoc::size)
+        .def("__len__", &NormalSurfaces::size, rdoc::size)
         .def("__iter__", [](const NormalSurfaces& list) {
             return pybind11::make_iterator(list);
         }, pybind11::keep_alive<0, 1>(), // iterator keeps list alive

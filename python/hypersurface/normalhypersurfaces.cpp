@@ -86,6 +86,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal,
             rdoc::triangulation)
         .def("size", &NormalHypersurfaces::size, rdoc::size)
+        .def("__len__", &NormalHypersurfaces::size, rdoc::size)
         .def("hypersurface", &NormalHypersurfaces::hypersurface,
             pybind11::return_value_policy::reference_internal,
             rdoc::hypersurface)

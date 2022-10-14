@@ -186,6 +186,9 @@ class ListView {
         /**
          * Returns the number of elements in this list.
          *
+         * \ifacespython This is also used to implement the Python special
+         * method __len__().
+         *
          * @return the number of elements.
          */
         size_type size() const;

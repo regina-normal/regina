@@ -46,6 +46,7 @@ void addIsomorphism3(pybind11::module_& m) {
         .def(pybind11::init<size_t>())
         .def("swap", &Isomorphism<3>::swap)
         .def("size", &Isomorphism<3>::size)
+        .def("__len__", &Isomorphism<3>::size)
         .def("simpImage", overload_cast<size_t>(
             &Isomorphism<3>::simpImage, pybind11::const_))
         .def("setSimpImage", [](Isomorphism<3>& iso, size_t s, ssize_t image) {

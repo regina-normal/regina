@@ -52,6 +52,7 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
         .def(pybind11::init<const Triangulation<dim>&>())
         .def("swap", &FacetPairing<dim>::swap)
         .def("size", &FacetPairing<dim>::size)
+        .def("__len__", &FacetPairing<dim>::size)
         // We do not ask dest() or operator[] to return by reference,
         // since FacetSpec is lightweight and we want to enforce constness.
         // Use the default policy for (const T&) which is to return by copy.

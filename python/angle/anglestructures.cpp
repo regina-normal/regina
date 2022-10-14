@@ -68,6 +68,7 @@ void addAngleStructures(pybind11::module_& m) {
         .def("isTautOnly", &AngleStructures::isTautOnly, rdoc::isTautOnly)
         .def("algorithm", &AngleStructures::algorithm, rdoc::algorithm)
         .def("size", &AngleStructures::size, rdoc::size)
+        .def("__len__", &AngleStructures::size, rdoc::size)
         .def("structure", &AngleStructures::structure,
             pybind11::return_value_policy::reference_internal,
             rdoc::structure)
