@@ -521,8 +521,8 @@ Python:
 
 namespace BanBoundary_ {
 
-// Docstring regina::python::doc::BanBoundary_::BanBoundary
-static const char *BanBoundary =
+// Docstring regina::python::doc::BanBoundary_::__init
+static const char *__init =
 R"doc(Constructs a new set of banning and marking constraints.
 
 This base class constructor will construct the *banned_* and *marked_*
@@ -540,23 +540,6 @@ Parameter ``init``:
 }
 
 namespace BanConstraintBase_ {
-
-// Docstring regina::python::doc::BanConstraintBase_::BanConstraintBase
-static const char *BanConstraintBase =
-R"doc(Constructs a new set of banning and marking constraints.
-
-This base class constructor will create *banned_* and *marked_* arrays
-of the correct size, and will initialise their contents to be entirely
-``False``. This means that there will be no banned or marked disc
-types at all.
-
-Subclass constructors should identify which coordinates to ban and
-mark, and adjust the contents of the *banned_* and *marked_* arrays
-accordingly.
-
-Parameter ``init``:
-    the original starting tableaux being used for this enumeration
-    task.)doc";
 
 // Docstring regina::python::doc::BanConstraintBase_::__eq
 static const char *__eq =
@@ -579,6 +562,23 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the object ban and mark the same
     tableaux coordinates, as described above.)doc";
+
+// Docstring regina::python::doc::BanConstraintBase_::__init
+static const char *__init =
+R"doc(Constructs a new set of banning and marking constraints.
+
+This base class constructor will create *banned_* and *marked_* arrays
+of the correct size, and will initialise their contents to be entirely
+``False``. This means that there will be no banned or marked disc
+types at all.
+
+Subclass constructors should identify which coordinates to ban and
+mark, and adjust the contents of the *banned_* and *marked_* arrays
+accordingly.
+
+Parameter ``init``:
+    the original starting tableaux being used for this enumeration
+    task.)doc";
 
 // Docstring regina::python::doc::BanConstraintBase_::__ne
 static const char *__ne =
@@ -658,8 +658,8 @@ Returns:
 
 namespace BanEdge_ {
 
-// Docstring regina::python::doc::BanEdge_::BanEdge
-static const char *BanEdge =
+// Docstring regina::python::doc::BanEdge_::__init
+static const char *__init =
 R"doc(Constructs a new set of banning and marking constraints.
 
 This base class constructor will construct the *banned_* and *marked_*
@@ -680,8 +680,8 @@ Parameter ``edge``:
 
 namespace BanTorusBoundary_ {
 
-// Docstring regina::python::doc::BanTorusBoundary_::BanTorusBoundary
-static const char *BanTorusBoundary =
+// Docstring regina::python::doc::BanTorusBoundary_::__init
+static const char *__init =
 R"doc(Constructs a new set of banning and marking constraints.
 
 This base class constructor will construct the *banned_* and *marked_*

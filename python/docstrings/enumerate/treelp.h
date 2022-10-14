@@ -389,8 +389,8 @@ Parameter ``b``:
 
 namespace LPData_ {
 
-// Docstring regina::python::doc::LPData_::LPData
-static const char *LPData =
+// Docstring regina::python::doc::LPData_::__init
+static const char *__init =
 R"doc(Constructs a new tableaux. You *must* call reserve() before doing
 anything else with this tableaux.)doc";
 
@@ -687,8 +687,8 @@ Parameter ``other``:
 
 namespace LPInitialTableaux_ {
 
-// Docstring regina::python::doc::LPInitialTableaux_::LPInitialTableaux
-static const char *LPInitialTableaux =
+// Docstring regina::python::doc::LPInitialTableaux_::__init
+static const char *__init =
 R"doc(Construts this adjusted sparse matrix of matching equations.
 
 Note that LPInitialTableaux does not copy the given triangulation; it
@@ -728,8 +728,8 @@ Parameter ``enumeration``:
     searching for a non-trivial normal disc or sphere, or a strict
     angle structure).)doc";
 
-// Docstring regina::python::doc::LPInitialTableaux_::LPInitialTableaux_2
-static const char *LPInitialTableaux_2 =
+// Docstring regina::python::doc::LPInitialTableaux_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new copy of the given matrix.
 
 Parameter ``src``:
@@ -949,30 +949,6 @@ Returns:
 
 namespace LPMatrix_ {
 
-// Docstring regina::python::doc::LPMatrix_::LPMatrix
-static const char *LPMatrix =
-R"doc(Creates an uninitialised matrix with no memory storage.
-
-You *must* call reserve() and then either initClone() or
-initIdentity() before this matrix will become initialised.)doc";
-
-// Docstring regina::python::doc::LPMatrix_::LPMatrix_2
-static const char *LPMatrix_2 =
-R"doc(Creates a fully initialised *rows* by *cols* matrix with all elements
-set to zero.
-
-This routine reserves space for precisely *rows* * *cols* elements. In
-other words, you may later re-initialise the matrix to become smaller
-if you like, but you cannot re-initialise the matrix to become larger.
-
-Parameter ``rows``:
-    the number of rows in the new matrix. This must be strictly
-    positive.
-
-Parameter ``cols``:
-    the number of columns in the new matrix. This must be strictly
-    positive.)doc";
-
 // Docstring regina::python::doc::LPMatrix_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given matrix are equal.
@@ -989,6 +965,30 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if the two matrices are equal.)doc";
+
+// Docstring regina::python::doc::LPMatrix_::__init
+static const char *__init =
+R"doc(Creates an uninitialised matrix with no memory storage.
+
+You *must* call reserve() and then either initClone() or
+initIdentity() before this matrix will become initialised.)doc";
+
+// Docstring regina::python::doc::LPMatrix_::__init_2
+static const char *__init_2 =
+R"doc(Creates a fully initialised *rows* by *cols* matrix with all elements
+set to zero.
+
+This routine reserves space for precisely *rows* * *cols* elements. In
+other words, you may later re-initialise the matrix to become smaller
+if you like, but you cannot re-initialise the matrix to become larger.
+
+Parameter ``rows``:
+    the number of rows in the new matrix. This must be strictly
+    positive.
+
+Parameter ``cols``:
+    the number of columns in the new matrix. This must be strictly
+    positive.)doc";
 
 // Docstring regina::python::doc::LPMatrix_::__ne
 static const char *__ne =
@@ -1234,19 +1234,6 @@ Parameter ``r2``:
 
 namespace LPSystem_ {
 
-// Docstring regina::python::doc::LPSystem_::LPSystem
-static const char *LPSystem =
-R"doc(Identifies which class of vector encodings the given encoding falls
-into.
-
-Parameter ``enc``:
-    a normal surface vector encoding; this may be any valid
-    NormalEncoding object, including the special angle structure
-    encoding.)doc";
-
-// Docstring regina::python::doc::LPSystem_::LPSystem_2
-static const char *LPSystem_2 = R"doc(Creates a new copy of the given class of vector encodings.)doc";
-
 // Docstring regina::python::doc::LPSystem_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given object represent the same class
@@ -1258,6 +1245,19 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if both objects represent the same class of
     encodings.)doc";
+
+// Docstring regina::python::doc::LPSystem_::__init
+static const char *__init =
+R"doc(Identifies which class of vector encodings the given encoding falls
+into.
+
+Parameter ``enc``:
+    a normal surface vector encoding; this may be any valid
+    NormalEncoding object, including the special angle structure
+    encoding.)doc";
+
+// Docstring regina::python::doc::LPSystem_::__init_2
+static const char *__init_2 = R"doc(Creates a new copy of the given class of vector encodings.)doc";
 
 // Docstring regina::python::doc::LPSystem_::__ne
 static const char *__ne =

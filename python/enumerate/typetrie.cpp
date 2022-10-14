@@ -43,8 +43,8 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TypeTrie)
 
     auto c = pybind11::class_<TypeTrie<nTypes>>(m, name, rdoc_scope)
-        .def(pybind11::init<>(), rdoc::TypeTrie)
-        .def(pybind11::init<const TypeTrie<nTypes>&>(), rdoc::TypeTrie_2)
+        .def(pybind11::init<>(), rdoc::__init)
+        .def(pybind11::init<const TypeTrie<nTypes>&>(), rdoc::__init_2)
         .def("swap", &TypeTrie<nTypes>::swap, rdoc::swap)
         .def("clear", &TypeTrie<nTypes>::clear, rdoc::clear)
         .def("insert", [](TypeTrie<nTypes>& t, pybind11::list arg) {

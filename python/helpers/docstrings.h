@@ -84,8 +84,12 @@ namespace regina::python::doc::common {
  * curly braces (in particular, local variables will go out of scope at the
  * end of the block).
  */
-#define RDOC_SCOPE_BEGIN(scope)  { const char* rdoc_scope = regina::python::doc::scope; namespace rdoc = regina::python::doc::scope ## _; namespace rdoc_global = regina::python::doc;
-#define RDOC_SCOPE_BEGIN_MAIN    { namespace rdoc = regina::python::doc;
+#define RDOC_SCOPE_BEGIN(scope)  { \
+    const char* rdoc_scope = regina::python::doc::scope; \
+    namespace rdoc = regina::python::doc::scope ## _; \
+    namespace rdoc_global = regina::python::doc;
+#define RDOC_SCOPE_BEGIN_MAIN    { \
+    namespace rdoc = regina::python::doc;
 #define RDOC_SCOPE_SWITCH(scope) } RDOC_SCOPE_BEGIN(scope)
 #define RDOC_SCOPE_SWITCH_MAIN   } RDOC_SCOPE_BEGIN_MAIN
 #define RDOC_SCOPE_END           }

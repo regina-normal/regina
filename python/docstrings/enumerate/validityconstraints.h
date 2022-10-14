@@ -91,8 +91,31 @@ Parameter ``b``:
 
 namespace ValidityConstraints_ {
 
-// Docstring regina::python::doc::ValidityConstraints_::ValidityConstraints
-static const char *ValidityConstraints =
+// Docstring regina::python::doc::ValidityConstraints_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given set contain the same
+constraints.
+
+This test compares the number of coordinates in each block, the total
+number of blocks, the set of local constraints, and the set of global
+constraints. The local and global constraints may appear in any order,
+and their individual coordinates may likewise appear in any order;
+such reorderings will not affect the outcome of this test.
+
+.. warning::
+    Because this test allows for reordering, the comparison is not
+    very efficient. It is assumed that this will not be a problem,
+    because typical constraint sets are extremely small.
+
+Parameter ``other``:
+    the constraint set to compare against this.
+
+Returns:
+    ``True`` if and only if this and the given set contain the same
+    constraints.)doc";
+
+// Docstring regina::python::doc::ValidityConstraints_::__init
+static const char *__init =
 R"doc(Creates an empty set of validity constraints for vectors with the
 given block structure.
 
@@ -124,31 +147,8 @@ Parameter ``reserveGlobal``:
     to addGlobal(). This is purely for optimisation; it is safe to
     leave this as 0 (the default).)doc";
 
-// Docstring regina::python::doc::ValidityConstraints_::ValidityConstraints_2
-static const char *ValidityConstraints_2 = R"doc(Creates a clone of the given constraint set.)doc";
-
-// Docstring regina::python::doc::ValidityConstraints_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given set contain the same
-constraints.
-
-This test compares the number of coordinates in each block, the total
-number of blocks, the set of local constraints, and the set of global
-constraints. The local and global constraints may appear in any order,
-and their individual coordinates may likewise appear in any order;
-such reorderings will not affect the outcome of this test.
-
-.. warning::
-    Because this test allows for reordering, the comparison is not
-    very efficient. It is assumed that this will not be a problem,
-    because typical constraint sets are extremely small.
-
-Parameter ``other``:
-    the constraint set to compare against this.
-
-Returns:
-    ``True`` if and only if this and the given set contain the same
-    constraints.)doc";
+// Docstring regina::python::doc::ValidityConstraints_::__init_2
+static const char *__init_2 = R"doc(Creates a clone of the given constraint set.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::__ne
 static const char *__ne =

@@ -35,17 +35,6 @@ swaps.)doc";
 
 namespace PosOrder_ {
 
-// Docstring regina::python::doc::PosOrder_::PosOrder
-static const char *PosOrder =
-R"doc(Creates a new helper object for comparing hyperplanes.
-
-Parameter ``matrix``:
-    the *subspace* matrix as passed to the normal surface enumeration
-    routine.)doc";
-
-// Docstring regina::python::doc::PosOrder_::PosOrder_2
-static const char *PosOrder_2 = R"doc(Creates a clone of the given helper objet.)doc";
-
 // Docstring regina::python::doc::PosOrder_::__call
 static const char *__call =
 R"doc(Determines whether the hyperplane described by row *i* of the matrix
@@ -64,6 +53,17 @@ Parameter ``j``:
 Returns:
     ``True`` if and only if the hyperplane described by row *i* is
     smaller than the hyperplane described by row *j*.)doc";
+
+// Docstring regina::python::doc::PosOrder_::__init
+static const char *__init =
+R"doc(Creates a new helper object for comparing hyperplanes.
+
+Parameter ``matrix``:
+    the *subspace* matrix as passed to the normal surface enumeration
+    routine.)doc";
+
+// Docstring regina::python::doc::PosOrder_::__init_2
+static const char *__init_2 = R"doc(Creates a clone of the given helper objet.)doc";
 
 }
 

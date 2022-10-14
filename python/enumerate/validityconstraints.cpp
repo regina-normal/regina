@@ -48,9 +48,8 @@ void addValidityConstraints(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("reserveLocal") = 0,
             pybind11::arg("reserveGlobal") = 0,
-            rdoc::ValidityConstraints)
-        .def(pybind11::init<const ValidityConstraints&>(),
-            rdoc::ValidityConstraints_2)
+            rdoc::__init)
+        .def(pybind11::init<const ValidityConstraints&>(), rdoc::__init_2)
         .def("addLocal", [](ValidityConstraints& v,
                 const std::vector<int>& pos) {
             v.addLocal(pos.begin(), pos.end());

@@ -393,7 +393,14 @@ def extract(filename, node, namespace, output):
                     node != node.canonical:
                 return
 
-            name = sanitize_name(d(node.spelling))
+            # Unfortunately templated constructors do not show up as
+            # constructors when we look at the corresponding CursorKind.
+            if node.kind == CursorKind.CONSTRUCTOR or \
+                    (node.kind == CursorKind.FUNCTION_TEMPLATE and \
+                    node.spelling == node.semantic_parent.spelling):
+                name = '__init'
+            else:
+                name = sanitize_name(d(node.spelling))
 
             fullname = 'regina::'
             if namespace:
