@@ -57,12 +57,12 @@ void addTreeTraversalBase(pybind11::module_& m, const char* name) {
 
     using Tree = regina::TreeTraversal<LPConstraint, BanConstraint, Integer>;
 
-    auto c = pybind11::class_<Tree>(m, name)
-        .def_static("supported", &Tree::supported)
-        .def("visited", &Tree::visited)
-        .def("typeString", &Tree::typeString)
-        .def("buildSurface", &Tree::buildSurface)
-        .def("buildStructure", &Tree::buildStructure)
+    auto c = pybind11::class_<Tree>(m, name, rdoc_scope)
+        .def_static("supported", &Tree::supported, rdoc::supported)
+        .def("visited", &Tree::visited, rdoc::visited)
+        .def("typeString", &Tree::typeString, rdoc::typeString)
+        .def("buildSurface", &Tree::buildSurface, rdoc::buildSurface)
+        .def("buildStructure", &Tree::buildStructure, rdoc::buildStructure)
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
@@ -79,16 +79,17 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
     using Action = const std::function<bool(const Tree&)>&;
 
     auto c = pybind11::class_<Tree, regina::TreeTraversal<
-            LPConstraint, BanConstraint, Integer>>(m, name)
+            LPConstraint, BanConstraint, Integer>>(m, name, rdoc_scope)
         .def(pybind11::init<const Triangulation<3>&, NormalEncoding,
-            BanArgs...>())
-        .def("solutions", &Tree::solutions)
-        .def("run", &Tree::template run<Action>)
+            BanArgs...>(), rdoc::__init)
+        .def("solutions", &Tree::solutions, rdoc::solutions)
+        .def("run", &Tree::template run<Action>, rdoc::run)
         .def("next", &Tree::next,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<regina::python::GILScopedRelease>())
-        .def_static("writeTypes", &Tree::writeTypes)
-        .def_static("writeSurface", &Tree::writeSurface)
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::next)
+        .def_static("writeTypes", &Tree::writeTypes, rdoc::writeTypes)
+        .def_static("writeSurface", &Tree::writeSurface, rdoc::writeSurface)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
@@ -104,15 +105,18 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
     using Action = const std::function<bool(const Tree&)>&;
 
     auto c = pybind11::class_<Tree, regina::TreeTraversal<
-            LPConstraint, BanConstraint, Integer>>(m, name)
-        .def(pybind11::init<const Triangulation<3>&, BanArgs...>())
-        .def("solutions", &Tree::solutions)
-        .def("run", &Tree::template run<Action>)
+            LPConstraint, BanConstraint, Integer>>(m, name, rdoc_scope)
+        .def(pybind11::init<const Triangulation<3>&, BanArgs...>(),
+            rdoc::__init)
+        .def("solutions", &Tree::solutions, rdoc::solutions)
+        .def("run", &Tree::template run<Action>, rdoc::run)
         .def("next", &Tree::next,
             pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<regina::python::GILScopedRelease>())
-        .def_static("writeTypes", &Tree::writeTypes)
-        .def_static("writeStructure", &Tree::writeStructure)
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::next)
+        .def_static("writeTypes", &Tree::writeTypes, rdoc::writeTypes)
+        .def_static("writeStructure", &Tree::writeStructure,
+            rdoc::writeStructure)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
@@ -127,11 +131,11 @@ void addTreeSingleSoln(pybind11::module_& m, const char* name) {
     using Tree = regina::TreeSingleSoln<LPConstraint, BanConstraint>;
 
     auto c = pybind11::class_<Tree, regina::TreeTraversal<
-            LPConstraint, BanConstraint, Integer>>(m, name)
+            LPConstraint, BanConstraint, Integer>>(m, name, rdoc_scope)
         .def(pybind11::init<const Triangulation<3>&, NormalEncoding,
-            BanArgs...>())
-        .def("find", &Tree::find)
-        .def("cancel", &Tree::cancel)
+            BanArgs...>(), rdoc::__init)
+        .def("find", &Tree::find, rdoc::find)
+        .def("cancel", &Tree::cancel, rdoc::cancel)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

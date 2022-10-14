@@ -57,18 +57,20 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
 
     using Tableaux = LPInitialTableaux<LPConstraint>;
 
-    auto c = pybind11::class_<Tableaux>(m, name)
+    auto c = pybind11::class_<Tableaux>(m, name, rdoc_scope)
         .def(pybind11::init<const Triangulation<3>&, NormalEncoding, bool>(),
             pybind11::arg(), pybind11::arg(),
-            pybind11::arg("enumeration") = true)
-        .def(pybind11::init<const Tableaux&>())
-        .def("swap", &Tableaux::swap)
+            pybind11::arg("enumeration") = true,
+            rdoc::__init)
+        .def(pybind11::init<const Tableaux&>(), rdoc::__init_2)
+        .def("swap", &Tableaux::swap, rdoc::swap)
         .def("tri", &Tableaux::tri,
-            pybind11::return_value_policy::reference_internal)
-        .def("system", &Tableaux::system)
-        .def("rank", &Tableaux::rank)
-        .def("columns", &Tableaux::columns)
-        .def("coordinateColumns", &Tableaux::coordinateColumns)
+            pybind11::return_value_policy::reference_internal, rdoc::tri)
+        .def("system", &Tableaux::system, rdoc::system)
+        .def("rank", &Tableaux::rank, rdoc::rank)
+        .def("columns", &Tableaux::columns, rdoc::columns)
+        .def("coordinateColumns", &Tableaux::coordinateColumns,
+            rdoc::coordinateColumns)
         .def("columnPerm", [](const Tableaux& t) {
             const size_t* perm = t.columnPerm();
 
@@ -76,18 +78,21 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
             for (size_t i = 0; i < t.columns(); ++i)
                 ans.append(perm[i]);
             return ans;
-        })
-        .def("multColByRow", &Tableaux::template multColByRow<Integer>)
-        .def("multColByRowOct", &Tableaux::template multColByRowOct<Integer>)
+        }, rdoc::columnPerm)
+        .def("multColByRow", &Tableaux::template multColByRow<Integer>,
+            rdoc::multColByRow)
+        .def("multColByRowOct", &Tableaux::template multColByRowOct<Integer>,
+            rdoc::multColByRowOct)
         .def("fillInitialTableaux",
-            &Tableaux::template fillInitialTableaux<Integer>)
+            &Tableaux::template fillInitialTableaux<Integer>,
+            rdoc::fillInitialTableaux)
         ;
     regina::python::add_output(c);
     // We need to think more about what a comparison between tableaux should
     // test.  In the meantime, don't make a decision we might regret later.
     regina::python::disable_eq_operators(c);
 
-    regina::python::add_global_swap<Tableaux>(m);
+    regina::python::add_global_swap<Tableaux>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }
@@ -98,20 +103,22 @@ void addLPData(pybind11::module_& m, const char* name) {
 
     using Data = LPData<LPConstraint, Integer>;
 
-    auto c = pybind11::class_<Data>(m, name)
-        .def(pybind11::init<>())
-        .def("swap", &Data::swap)
-        .def("reserve", &Data::reserve)
-        .def("initStart", &Data::initStart)
-        .def("initClone", &Data::initClone)
-        .def("columns", &Data::columns)
-        .def("coordinateColumns", &Data::coordinateColumns)
-        .def("isFeasible", &Data::isFeasible)
-        .def("isActive", &Data::isActive)
-        .def("sign", &Data::sign)
-        .def("constrainZero", &Data::constrainZero)
-        .def("constrainPositive", &Data::constrainPositive)
-        .def("constrainOct", &Data::constrainOct)
+    auto c = pybind11::class_<Data>(m, name, rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__init)
+        .def("swap", &Data::swap, rdoc::swap)
+        .def("reserve", &Data::reserve, rdoc::reserve)
+        .def("initStart", &Data::initStart, rdoc::initStart)
+        .def("initClone", &Data::initClone, rdoc::initClone)
+        .def("columns", &Data::columns, rdoc::columns)
+        .def("coordinateColumns", &Data::coordinateColumns,
+            rdoc::coordinateColumns)
+        .def("isFeasible", &Data::isFeasible, rdoc::isFeasible)
+        .def("isActive", &Data::isActive, rdoc::isActive)
+        .def("sign", &Data::sign, rdoc::sign)
+        .def("constrainZero", &Data::constrainZero, rdoc::constrainZero)
+        .def("constrainPositive", &Data::constrainPositive,
+            rdoc::constrainPositive)
+        .def("constrainOct", &Data::constrainOct, rdoc::constrainOct)
         .def("extractSolution", [](const Data& d, const std::vector<int>& t) {
             // Currently LPData does not give us an easy way to extract the
             // expected length of the type vector, and so we cannot sanity-check
@@ -122,7 +129,7 @@ void addLPData(pybind11::module_& m, const char* name) {
             auto ans = d.template extractSolution<regina::VectorInt>(types);
             delete[] types;
             return ans;
-        })
+        }, rdoc::extractSolution)
         ;
     regina::python::add_output(c);
     // We need to think more about what a comparison between tableaux should
@@ -130,7 +137,7 @@ void addLPData(pybind11::module_& m, const char* name) {
     // all the internal data?  Let's not force a decision right now.
     regina::python::disable_eq_operators(c);
 
-    regina::python::add_global_swap<Data>(m);
+    regina::python::add_global_swap<Data>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }
@@ -138,44 +145,46 @@ void addLPData(pybind11::module_& m, const char* name) {
 void addTreeLP(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LPMatrix)
 
-    auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix")
-        .def(pybind11::init<>())
-        .def(pybind11::init<size_t, size_t>())
-        .def("swap", &LPMatrix<Integer>::swap)
-        .def("reserve", &LPMatrix<Integer>::reserve)
-        .def("initClone", &LPMatrix<Integer>::initClone)
-        .def("initIdentity", &LPMatrix<Integer>::initIdentity)
+    auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__init)
+        .def(pybind11::init<size_t, size_t>(), rdoc::__init_2)
+        .def("swap", &LPMatrix<Integer>::swap, rdoc::swap)
+        .def("reserve", &LPMatrix<Integer>::reserve, rdoc::reserve)
+        .def("initClone", &LPMatrix<Integer>::initClone, rdoc::initClone)
+        .def("initIdentity", &LPMatrix<Integer>::initIdentity,
+            rdoc::initIdentity)
         .def("entry", overload_cast<size_t, size_t>(&LPMatrix<Integer>::entry),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::entry)
         .def("set", [](LPMatrix<Integer>& m, size_t row, size_t col,
                 const regina::Integer& value){
             m.entry(row, col) = value;
-        })
-        .def("rows", &LPMatrix<Integer>::rows)
-        .def("columns", &LPMatrix<Integer>::columns)
-        .def("swapRows", &LPMatrix<Integer>::swapRows)
-        .def("combRow", &LPMatrix<Integer>::combRow)
-        .def("combRowAndNorm", &LPMatrix<Integer>::combRowAndNorm)
-        .def("negateRow", &LPMatrix<Integer>::negateRow)
+        }, rdoc::entry)
+        .def("rows", &LPMatrix<Integer>::rows, rdoc::rows)
+        .def("columns", &LPMatrix<Integer>::columns, rdoc::columns)
+        .def("swapRows", &LPMatrix<Integer>::swapRows, rdoc::swapRows)
+        .def("combRow", &LPMatrix<Integer>::combRow, rdoc::combRow)
+        .def("combRowAndNorm", &LPMatrix<Integer>::combRowAndNorm,
+            rdoc::combRowAndNorm)
+        .def("negateRow", &LPMatrix<Integer>::negateRow, rdoc::negateRow)
         ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<LPMatrix<Integer>>(m);
+    regina::python::add_global_swap<LPMatrix<Integer>>(m, rdoc::global_swap);
 
     RDOC_SCOPE_SWITCH(LPSystem)
 
-    auto s = pybind11::class_<LPSystem>(m, "LPSystem")
-        .def(pybind11::init<regina::NormalEncoding>())
-        .def(pybind11::init<const LPSystem&>())
-        .def("normal", &LPSystem::normal)
-        .def("angle", &LPSystem::angle)
-        .def("standard", &LPSystem::standard)
-        .def("quad", &LPSystem::quad)
-        .def("coords", &LPSystem::coords)
+    auto s = pybind11::class_<LPSystem>(m, "LPSystem", rdoc_scope)
+        .def(pybind11::init<regina::NormalEncoding>(), rdoc::__init)
+        .def(pybind11::init<const LPSystem&>(), rdoc::__init_2)
+        .def("normal", &LPSystem::normal, rdoc::normal)
+        .def("angle", &LPSystem::angle, rdoc::angle)
+        .def("standard", &LPSystem::standard, rdoc::standard)
+        .def("quad", &LPSystem::quad, rdoc::quad)
+        .def("coords", &LPSystem::coords, rdoc::coords)
         ;
     regina::python::add_output(s);
-    regina::python::add_eq_operators(s);
+    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
 
     addLPInitialTableaux<LPConstraintNone>(m, "LPInitialTableaux");
     addLPInitialTableaux<LPConstraintEulerPositive>(m,
