@@ -1273,8 +1273,8 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  * We do not store the full tableaux (which is dense and slow to work
  * with).  Instead we store the matrix of row operations that were
  * applied to the original starting tableaux (in the notation of Burton
- * and Ozlen, we store the matrix M_beta^{-1}, where M is the original
- * matrix stored in the class LPInitialTableaux, and beta is the current
+ * and Ozlen, we store the matrix M_β^{-1}, where M is the original
+ * matrix stored in the class LPInitialTableaux, and β is the current
  * basis).
  *
  * If the system is infeasible (because the constraints on variables as
