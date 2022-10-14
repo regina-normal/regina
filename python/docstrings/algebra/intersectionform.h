@@ -28,20 +28,6 @@ computed by the class constructor, and so querying them via routines
 such as rank(), signature(), even() or odd() is essentially
 instantaneous.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given intersection forms.
-
-This global routine simply calls IntersectionForm::swap(); it is
-provided so that IntersectionForm meets the C++ Swappable
-requirements.
-
-Parameter ``lhs``:
-    the intersection form whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the intersection form whose contents should be swapped with *lhs*.)doc";
-
 namespace IntersectionForm_ {
 
 // Docstring regina::python::doc::IntersectionForm_::__eq
@@ -111,6 +97,20 @@ A form *Q* is *even* if and only if ``Q(x,x)`` is even for all *x*.
 Returns:
     ``True`` if this bilinear form is of even type, or ``False`` if it
     is of odd type.)doc";
+
+// Docstring regina::python::doc::IntersectionForm_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given intersection forms.
+
+This global routine simply calls IntersectionForm::swap(); it is
+provided so that IntersectionForm meets the C++ Swappable
+requirements.
+
+Parameter ``lhs``:
+    the intersection form whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the intersection form whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::IntersectionForm_::matrix
 static const char *matrix =

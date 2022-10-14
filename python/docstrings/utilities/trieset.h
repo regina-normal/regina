@@ -50,16 +50,6 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given collections.
-
-Parameter ``a``:
-    the first collection of sets whose contents should be swapped.
-
-Parameter ``b``:
-    the second collection of sets whose contents should be swapped.)doc";
-
 namespace TrieSet_ {
 
 // Docstring regina::python::doc::TrieSet_::__eq
@@ -95,6 +85,16 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if both collections do not store the same
     sets.)doc";
+
+// Docstring regina::python::doc::TrieSet_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given collections.
+
+Parameter ``a``:
+    the first collection of sets whose contents should be swapped.
+
+Parameter ``b``:
+    the second collection of sets whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TrieSet_::hasExtraSuperset
 static const char *hasExtraSuperset =

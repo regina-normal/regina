@@ -22,19 +22,6 @@ these operations only copy/swap the text content, not the packet
 infrastructure (e.g., they do not touch packet labels, or the packet
 tree, or event listeners).)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given text packets.
-
-This global routine simply calls Text::swap(); it is provided so that
-Text meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first text packet whose contents should be swapped.
-
-Parameter ``b``:
-    the second text packet whose contents should be swapped.)doc";
-
 namespace Text_ {
 
 // Docstring regina::python::doc::Text_::__eq
@@ -77,6 +64,19 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given packet do not contain
     the same text.)doc";
+
+// Docstring regina::python::doc::Text_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given text packets.
+
+This global routine simply calls Text::swap(); it is provided so that
+Text meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first text packet whose contents should be swapped.
+
+Parameter ``b``:
+    the second text packet whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Text_::setText
 static const char *setText =

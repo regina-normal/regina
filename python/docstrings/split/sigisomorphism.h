@@ -36,20 +36,6 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given partial isomorphisms.
-
-This global routine simply calls SigPartialIsomorphism::swap(); it is
-provided so that SigPartialIsomorphism meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first partial isomorphism whose contents should be swapped.
-
-Parameter ``b``:
-    the second partial isomorphism whose contents should be swapped.)doc";
-
 namespace SigPartialIsomorphism_ {
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::__eq
@@ -147,6 +133,20 @@ Returns:
     -1, 1 or 0 if the image of the given signature under this
     isomorphism is lexicographically less than, greater than or equal
     to its image under the identity isomorphism respectively.)doc";
+
+// Docstring regina::python::doc::SigPartialIsomorphism_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given partial isomorphisms.
+
+This global routine simply calls SigPartialIsomorphism::swap(); it is
+provided so that SigPartialIsomorphism meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first partial isomorphism whose contents should be swapped.
+
+Parameter ``b``:
+    the second partial isomorphism whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::makeCanonical
 static const char *makeCanonical =

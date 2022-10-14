@@ -183,7 +183,7 @@ void addNormalSurface(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<NormalSurface>(m, rdoc_global::swap);
+    regina::python::add_global_swap<NormalSurface>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 

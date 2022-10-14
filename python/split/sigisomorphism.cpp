@@ -60,7 +60,7 @@ void addSigIsomorphism(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
     regina::python::add_global_swap<SigPartialIsomorphism>(m,
-        rdoc_global::swap);
+        rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

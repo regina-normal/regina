@@ -41,20 +41,6 @@ possible, even when passing or returning objects by value.
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given homomorphisms.
-
-This global routine simply calls HomGroupPresentation::swap(); it is
-provided so that HomGroupPresentation meets the C++ Swappable
-requirements.
-
-Parameter ``lhs``:
-    the homomorphism whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the homomorphism whose contents should be swapped with *lhs*.)doc";
-
 namespace HomGroupPresentation_ {
 
 // Docstring regina::python::doc::HomGroupPresentation_::__eq
@@ -241,6 +227,20 @@ Parameter ``i``:
 
 Returns:
     the image of the *i*th generator in the codomain.)doc";
+
+// Docstring regina::python::doc::HomGroupPresentation_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given homomorphisms.
+
+This global routine simply calls HomGroupPresentation::swap(); it is
+provided so that HomGroupPresentation meets the C++ Swappable
+requirements.
+
+Parameter ``lhs``:
+    the homomorphism whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the homomorphism whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::HomGroupPresentation_::intelligentNielsen
 static const char *intelligentNielsen =

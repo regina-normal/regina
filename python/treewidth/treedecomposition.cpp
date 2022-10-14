@@ -211,7 +211,7 @@ void addTreeDecomposition(pybind11::module_& m) {
     regina::python::add_output(td);
     regina::python::add_eq_operators(td, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<TreeDecomposition>(m, rdoc_global::swap);
+    regina::python::add_global_swap<TreeDecomposition>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

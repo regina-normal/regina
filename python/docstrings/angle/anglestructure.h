@@ -26,19 +26,6 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given angle structures.
-
-This global routine simply calls AngleStructure::swap(); it is
-provided so that AngleStructure meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first angle structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second angle structure whose contents should be swapped.)doc";
-
 namespace AngleStructure_ {
 
 // Docstring regina::python::doc::AngleStructure_::__eq
@@ -181,6 +168,19 @@ Parameter ``edgePair``:
 
 Returns:
     the requested angle scaled down by *pi*.)doc";
+
+// Docstring regina::python::doc::AngleStructure_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given angle structures.
+
+This global routine simply calls AngleStructure::swap(); it is
+provided so that AngleStructure meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first angle structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second angle structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::AngleStructure_::isStrict
 static const char *isStrict =

@@ -161,7 +161,7 @@ void addNormalSurfaces(pybind11::module_& m) {
     regina::python::add_packet_constructor<const NormalSurfaces&,
         const SurfaceFilter&>(wrap, rdoc::__init_3);
 
-    regina::python::add_global_swap<NormalSurfaces>(m, rdoc_global::swap);
+    regina::python::add_global_swap<NormalSurfaces>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

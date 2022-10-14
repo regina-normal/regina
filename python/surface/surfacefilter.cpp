@@ -72,7 +72,7 @@ void addSurfaceFilter(pybind11::module_& m) {
     regina::python::packet_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
     regina::python::add_global_swap<SurfaceFilterCombination>(m,
-        rdoc_global::swap);
+        rdoc::global_swap);
 
     RDOC_SCOPE_SWITCH(SurfaceFilterProperties)
 
@@ -117,7 +117,7 @@ void addSurfaceFilter(pybind11::module_& m) {
     regina::python::packet_eq_operators(p, rdoc::__eq, rdoc::__ne);
 
     regina::python::add_global_swap<SurfaceFilterProperties>(m,
-        rdoc_global::swap_2);
+        rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

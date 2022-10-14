@@ -25,15 +25,6 @@ packet infrastructure (e.g., they do not touch packet labels, or the
 packet tree, or event listeners), and containers have no "real"
 content of their own.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swap function for container packets that does nothing.
-
-This is only here for consistency with the other packet types. For
-container packets, the swap operation does nothing since containers
-have no "real" content of their own. See the member function
-Container::swap() for further explanation.)doc";
-
 namespace Container_ {
 
 // Docstring regina::python::doc::Container_::__init
@@ -59,6 +50,15 @@ all packet types, this copy constructor does not copy any of the
 packet infrastructure (e.g., it will not copy the packet label, it
 will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
+
+// Docstring regina::python::doc::Container_::global_swap
+static const char *global_swap =
+R"doc(Swap function for container packets that does nothing.
+
+This is only here for consistency with the other packet types. For
+container packets, the swap operation does nothing since containers
+have no "real" content of their own. See the member function
+Container::swap() for further explanation.)doc";
 
 // Docstring regina::python::doc::Container_::swap
 static const char *swap =

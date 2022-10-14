@@ -116,19 +116,6 @@ Python:
     (where possible) or the C++ Bitmask2<T,U> template class (if
     necessary).)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given bitmasks.
-
-This global routine simply calls Bitmask::swap(); it is provided so
-that Bitmask meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first bitmask whose contents should be swapped.
-
-Parameter ``b``:
-    the second bitmask whose contents should be swapped.)doc";
-
 namespace Bitmask1_ {
 
 // Docstring regina::python::doc::Bitmask1_::__eq
@@ -963,6 +950,19 @@ Parameter ``index``:
 
 Returns:
     the value of the (*index*)th bit.)doc";
+
+// Docstring regina::python::doc::Bitmask_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given bitmasks.
+
+This global routine simply calls Bitmask::swap(); it is provided so
+that Bitmask meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first bitmask whose contents should be swapped.
+
+Parameter ``b``:
+    the second bitmask whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Bitmask_::inUnion
 static const char *inUnion =

@@ -47,33 +47,6 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given expressions.
-
-This global routine simply calls GroupExpression::swap(); it is
-provided so that GroupExpression meets the C++ Swappable requirements.
-
-Parameter ``lhs``:
-    the expression whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the expression whose contents should be swapped with *lhs*.)doc";
-
-// Docstring regina::python::doc::swap_2
-static const char *swap_2 =
-R"doc(Swaps the contents of the two given group presentations.
-
-This global routine simply calls GroupPresentation::swap(); it is
-provided so that GroupPresentation meets the C++ Swappable
-requirements.
-
-Parameter ``lhs``:
-    the presentation whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the presentation whose contents should be swapped with *lhs*.)doc";
-
 namespace GroupExpressionTerm_ {
 
 // Docstring regina::python::doc::GroupExpressionTerm_::__eq
@@ -358,6 +331,19 @@ Parameter ``index``:
 
 Returns:
     the number of the requested generator.)doc";
+
+// Docstring regina::python::doc::GroupExpression_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given expressions.
+
+This global routine simply calls GroupExpression::swap(); it is
+provided so that GroupExpression meets the C++ Swappable requirements.
+
+Parameter ``lhs``:
+    the expression whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the expression whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::inverse
 static const char *inverse =
@@ -888,6 +874,20 @@ Parameter ``groupVariable``:
 
 Returns:
     a sequence of commands to create this group in GAP.)doc";
+
+// Docstring regina::python::doc::GroupPresentation_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given group presentations.
+
+This global routine simply calls GroupPresentation::swap(); it is
+provided so that GroupPresentation meets the C++ Swappable
+requirements.
+
+Parameter ``lhs``:
+    the presentation whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the presentation whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::homologicalAlignment
 static const char *homologicalAlignment =

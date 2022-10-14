@@ -161,7 +161,7 @@ See the main class Matrix2 for further details.)doc")
             const Matrix2&, const Matrix2&>(
         &regina::simpler), rdoc_global::simpler_2);
 
-    regina::python::add_global_swap<Matrix2>(m, rdoc_global::swap);
+    regina::python::add_global_swap<Matrix2>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

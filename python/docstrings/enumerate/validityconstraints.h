@@ -75,20 +75,6 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given constraint sets.
-
-This global routine simply calls ValidityConstraints::swap(); it is
-provided so that ValidityConstraints meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first constraint set whose contents should be swapped.
-
-Parameter ``b``:
-    the second constraint set whose contents should be swapped.)doc";
-
 namespace ValidityConstraints_ {
 
 // Docstring regina::python::doc::ValidityConstraints_::__eq
@@ -309,6 +295,20 @@ Template parameter ``BitmaskType``:
 Returns:
     the list of bitmasks describing the full set of validity
     constraints.)doc";
+
+// Docstring regina::python::doc::ValidityConstraints_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given constraint sets.
+
+This global routine simply calls ValidityConstraints::swap(); it is
+provided so that ValidityConstraints meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first constraint set whose contents should be swapped.
+
+Parameter ``b``:
+    the second constraint set whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::swap
 static const char *swap =

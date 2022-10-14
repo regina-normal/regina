@@ -122,27 +122,6 @@ Parameter ``coords``:
 Returns:
     the resulting set of matching equations.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given lists.
-
-This global routine simply calls NormalHypersurfaces::swap(); it is
-provided so that NormalHypersurfaces meets the C++ Swappable
-requirements.
-
-See NormalHypersurfaces::swap() for more details.
-
-.. note::
-    This swap function is *not* marked ``noexcept``, since it fires
-    change events on both lists which may in turn call arbitrary code
-    via any registered packet listeners.
-
-Parameter ``lhs``:
-    the list whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the list whose contents should be swapped with *lhs*.)doc";
-
 namespace NormalHypersurfaces_ {
 
 // Docstring regina::python::doc::NormalHypersurfaces_::__array
@@ -376,6 +355,27 @@ the hypersurfaces in this list.
 
 Returns:
     the coordinate system used.)doc";
+
+// Docstring regina::python::doc::NormalHypersurfaces_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given lists.
+
+This global routine simply calls NormalHypersurfaces::swap(); it is
+provided so that NormalHypersurfaces meets the C++ Swappable
+requirements.
+
+See NormalHypersurfaces::swap() for more details.
+
+.. note::
+    This swap function is *not* marked ``noexcept``, since it fires
+    change events on both lists which may in turn call arbitrary code
+    via any registered packet listeners.
+
+Parameter ``lhs``:
+    the list whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the list whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::hypersurface
 static const char *hypersurface =

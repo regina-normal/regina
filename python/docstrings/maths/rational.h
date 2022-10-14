@@ -39,19 +39,6 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given rationals.
-
-This global routine simply calls Rational::swap(); it is provided so
-that Rational meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first rational whose contents should be swapped.
-
-Parameter ``b``:
-    the second rational whose contents should be swapped.)doc";
-
 namespace Rational_ {
 
 // Docstring regina::python::doc::Rational_::__add
@@ -322,6 +309,19 @@ Returns:
 
 Author:
     Ryan Budney, B.B.)doc";
+
+// Docstring regina::python::doc::Rational_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given rationals.
+
+This global routine simply calls Rational::swap(); it is provided so
+that Rational meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first rational whose contents should be swapped.
+
+Parameter ``b``:
+    the second rational whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Rational_::inverse
 static const char *inverse =

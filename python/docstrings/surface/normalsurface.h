@@ -60,20 +60,6 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given normal surfaces. This is a fast
-(constant time) operation.
-
-This global routine simply calls NormalSurface::swap(); it is provided
-so that NormalSurface meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first normal surface whose contents should be swapped.
-
-Parameter ``b``:
-    the second normal surface whose contents should be swapped.)doc";
-
 namespace NormalSurface_ {
 
 // Docstring regina::python::doc::NormalSurface_::__add
@@ -644,6 +630,20 @@ Precondition:
 
 Returns:
     the Euler characteristic.)doc";
+
+// Docstring regina::python::doc::NormalSurface_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given normal surfaces. This is a fast
+(constant time) operation.
+
+This global routine simply calls NormalSurface::swap(); it is provided
+so that NormalSurface meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first normal surface whose contents should be swapped.
+
+Parameter ``b``:
+    the second normal surface whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::hasMultipleOctDiscs
 static const char *hasMultipleOctDiscs =

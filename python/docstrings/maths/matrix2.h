@@ -71,19 +71,6 @@ Returns:
     second pair, or ``False`` if either the ordered pairs are equal or
     the second pair is more pleasing than the first.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given matrices.
-
-This global routine simply calls Matrix2::swap(); it is provided so
-that Matrix2 meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first matrix whose contents should be swapped.
-
-Parameter ``b``:
-    the second matrix whose contents should be swapped.)doc";
-
 namespace Matrix2_ {
 
 // Docstring regina::python::doc::Matrix2_::__add
@@ -256,6 +243,19 @@ R"doc(Returns the determinant of this matrix.
 
 Returns:
     the determinant of this matrix.)doc";
+
+// Docstring regina::python::doc::Matrix2_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given matrices.
+
+This global routine simply calls Matrix2::swap(); it is provided so
+that Matrix2 meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first matrix whose contents should be swapped.
+
+Parameter ``b``:
+    the second matrix whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Matrix2_::inverse
 static const char *inverse =

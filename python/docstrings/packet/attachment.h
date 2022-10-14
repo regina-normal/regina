@@ -39,19 +39,6 @@ packet tree, or event listeners).
 Until Regina 6.0.1, this class was called PDF. It was renamed and
 expanded in Regina 7.0 to allow for any kind of file to be attached.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given attachment packets.
-
-This global routine simply calls Attachment::swap(); it is provided so
-that Attachment meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first attachment packet whose contents should be swapped.
-
-Parameter ``b``:
-    the second attachment packet whose contents should be swapped.)doc";
-
 namespace Attachment_ {
 
 // Docstring regina::python::doc::Attachment_::__eq
@@ -232,6 +219,19 @@ the current platform.
 
 Returns:
     the filename associated with this attachment.)doc";
+
+// Docstring regina::python::doc::Attachment_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given attachment packets.
+
+This global routine simply calls Attachment::swap(); it is provided so
+that Attachment meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first attachment packet whose contents should be swapped.
+
+Parameter ``b``:
+    the second attachment packet whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Attachment_::isNull
 static const char *isNull =

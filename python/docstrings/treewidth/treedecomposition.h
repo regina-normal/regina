@@ -170,20 +170,6 @@ decomposition of a graph.
 Additional algorithms may be added to this list in future versions of
 Regina.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given tree decompositions.
-
-This global routine simply calls TreeDecomposition::swap(); it is
-provided so that TreeDecomposition meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first tree decomposition whose contents should be swapped.
-
-Parameter ``b``:
-    the second tree decomposition whose contents should be swapped.)doc";
-
 namespace BagComparison_ {
 
 // Docstring regina::python::doc::BagComparison_::BAG_EQUAL
@@ -836,6 +822,20 @@ Returns:
 
 See also:
     https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/)doc";
+
+// Docstring regina::python::doc::TreeDecomposition_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given tree decompositions.
+
+This global routine simply calls TreeDecomposition::swap(); it is
+provided so that TreeDecomposition meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first tree decomposition whose contents should be swapped.
+
+Parameter ``b``:
+    the second tree decomposition whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::makeNice
 static const char *makeNice =

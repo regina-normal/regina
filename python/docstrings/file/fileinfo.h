@@ -30,19 +30,6 @@ Swappable requirement, though it does not implement (or need) its own
 custom swap() function. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given file information objects.
-
-This global routine simply calls FileInfo::swap(); it is provided so
-that FileInfo meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the object whose contents should be swapped with *b*.
-
-Parameter ``b``:
-    the object whose contents should be swapped with *a*.)doc";
-
 namespace FileInfo_ {
 
 // Docstring regina::python::doc::FileInfo_::__eq
@@ -115,6 +102,19 @@ but not whether the XML is compressed.
 
 Returns:
     a description of the file format.)doc";
+
+// Docstring regina::python::doc::FileInfo_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given file information objects.
+
+This global routine simply calls FileInfo::swap(); it is provided so
+that FileInfo meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the object whose contents should be swapped with *b*.
+
+Parameter ``b``:
+    the object whose contents should be swapped with *a*.)doc";
 
 // Docstring regina::python::doc::FileInfo_::identify
 static const char *identify =

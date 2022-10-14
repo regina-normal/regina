@@ -93,7 +93,7 @@ void addAngleStructures(pybind11::module_& m) {
         pybind11::call_guard<GILScopedRelease>(),
         rdoc::__init);
 
-    regina::python::add_global_swap<AngleStructures>(m, rdoc_global::swap);
+    regina::python::add_global_swap<AngleStructures>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

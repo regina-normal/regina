@@ -27,19 +27,6 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given abelian groups.
-
-This global routine simply calls AbelianGroup::swap(); it is provided
-so that AbelianGroup meets the C++ Swappable requirements.
-
-Parameter ``lhs``:
-    the group whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the group whose contents should be swapped with *lhs*.)doc";
-
 namespace AbelianGroup_ {
 
 // Docstring regina::python::doc::AbelianGroup_::__eq
@@ -251,6 +238,19 @@ details.
 
 Returns:
     the number of invariant factors.)doc";
+
+// Docstring regina::python::doc::AbelianGroup_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given abelian groups.
+
+This global routine simply calls AbelianGroup::swap(); it is provided
+so that AbelianGroup meets the C++ Swappable requirements.
+
+Parameter ``lhs``:
+    the group whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the group whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::invariantFactor
 static const char *invariantFactor =

@@ -115,34 +115,6 @@ possible, even when passing or returning objects by value.
 Author:
     Ryan Budney and B.B.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given abelian groups.
-
-This global routine simply calls MarkedAbelianGroup::swap(); it is
-provided so that MarkedAbelianGroup meets the C++ Swappable
-requirements.
-
-Parameter ``lhs``:
-    the group whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the group whose contents should be swapped with *lhs*.)doc";
-
-// Docstring regina::python::doc::swap_2
-static const char *swap_2 =
-R"doc(Swaps the contents of the two given homomorphisms.
-
-This global routine simply calls HomMarkedAbelianGroup::swap(); it is
-provided so that HomMarkedAbelianGroup meets the C++ Swappable
-requirements.
-
-Parameter ``lhs``:
-    the homomorphism whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the homomorphism whose contents should be swapped with *lhs*.)doc";
-
 namespace HomMarkedAbelianGroup_ {
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::__init
@@ -279,6 +251,20 @@ Parameter ``input``:
 Returns:
     the image of this vector in the codomain chain complex's
     coordinates, of length codomain().snfRank().)doc";
+
+// Docstring regina::python::doc::HomMarkedAbelianGroup_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given homomorphisms.
+
+This global routine simply calls HomMarkedAbelianGroup::swap(); it is
+provided so that HomMarkedAbelianGroup meets the C++ Swappable
+requirements.
+
+Parameter ``lhs``:
+    the homomorphism whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the homomorphism whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::image
 static const char *image =
@@ -759,6 +745,20 @@ Parameter ``index``:
 Returns:
     the (*index*)th free generator, presented in chain complex
     coordinates.)doc";
+
+// Docstring regina::python::doc::MarkedAbelianGroup_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given abelian groups.
+
+This global routine simply calls MarkedAbelianGroup::swap(); it is
+provided so that MarkedAbelianGroup meets the C++ Swappable
+requirements.
+
+Parameter ``lhs``:
+    the group whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the group whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::invariantFactor
 static const char *invariantFactor =

@@ -257,19 +257,6 @@ Parameter ``rhs``:
 Returns:
     the first field element minus the second.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given field elements.
-
-This global routine simply calls Cyclotomic::swap(); it is provided so
-that Cyclotomic meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first field element whose contents should be swapped.
-
-Parameter ``b``:
-    the second field element whose contents should be swapped.)doc";
-
 namespace Cyclotomic_ {
 
 // Docstring regina::python::doc::Cyclotomic_::__array
@@ -629,6 +616,19 @@ constructor).
 
 Returns:
     the order of the underlying cyclotomic field.)doc";
+
+// Docstring regina::python::doc::Cyclotomic_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given field elements.
+
+This global routine simply calls Cyclotomic::swap(); it is provided so
+that Cyclotomic meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first field element whose contents should be swapped.
+
+Parameter ``b``:
+    the second field element whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Cyclotomic_::init
 static const char *init =

@@ -60,21 +60,6 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given normal hypersurfaces. This is a fast
-(constant time) operation.
-
-This global routine simply calls NormalHypersurface::swap(); it is
-provided so that NormalHypersurface meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first normal hypersurface whose contents should be swapped.
-
-Parameter ``b``:
-    the second normal hypersurface whose contents should be swapped.)doc";
-
 namespace NormalHypersurface_ {
 
 // Docstring regina::python::doc::NormalHypersurface_::__add
@@ -363,6 +348,21 @@ class constructor.
 
 Returns:
     the internal vector encoding.)doc";
+
+// Docstring regina::python::doc::NormalHypersurface_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given normal hypersurfaces. This is a fast
+(constant time) operation.
+
+This global routine simply calls NormalHypersurface::swap(); it is
+provided so that NormalHypersurface meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first normal hypersurface whose contents should be swapped.
+
+Parameter ``b``:
+    the second normal hypersurface whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::hasRealBoundary
 static const char *hasRealBoundary =

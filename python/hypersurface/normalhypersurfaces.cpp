@@ -116,7 +116,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         pybind11::call_guard<GILScopedRelease>(),
         rdoc::__init);
 
-    regina::python::add_global_swap<NormalHypersurfaces>(m, rdoc_global::swap);
+    regina::python::add_global_swap<NormalHypersurfaces>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

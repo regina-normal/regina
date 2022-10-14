@@ -65,19 +65,6 @@ these operations only copy/swap the mathematical content, not the
 packet infrastructure (e.g., they do not touch packet labels, or the
 packet tree, or event listeners).)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the given script packets.
-
-This global routine simply calls Script::swap(); it is provided so
-that Script meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first script packet whose contents should be swapped.
-
-Parameter ``b``:
-    the second script packet whose contents should be swapped.)doc";
-
 namespace Script_ {
 
 // Docstring regina::python::doc::Script_::__eq
@@ -192,6 +179,19 @@ R"doc(Returns the number of variables associated with this script.
 
 Returns:
     the number of variables.)doc";
+
+// Docstring regina::python::doc::Script_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the given script packets.
+
+This global routine simply calls Script::swap(); it is provided so
+that Script meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first script packet whose contents should be swapped.
+
+Parameter ``b``:
+    the second script packet whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Script_::listenVariables
 static const char *listenVariables =

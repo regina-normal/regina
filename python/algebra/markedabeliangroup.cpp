@@ -110,7 +110,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
     regina::python::add_output(c1);
     regina::python::add_eq_operators(c1, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<MarkedAbelianGroup>(m, rdoc_global::swap);
+    regina::python::add_global_swap<MarkedAbelianGroup>(m, rdoc::global_swap);
 
     RDOC_SCOPE_SWITCH(HomMarkedAbelianGroup)
 
@@ -159,7 +159,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
     regina::python::disable_eq_operators(c2);
 
     regina::python::add_global_swap<HomMarkedAbelianGroup>(m,
-        rdoc_global::swap_2);
+        rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

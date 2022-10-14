@@ -80,26 +80,6 @@ Parameter ``tri``:
 Returns:
     the resulting set of angle structure equations.)doc";
 
-// Docstring regina::python::doc::swap
-static const char *swap =
-R"doc(Swaps the contents of the two given lists.
-
-This global routine simply calls AngleStructures::swap(); it is
-provided so that AngleStructures meets the C++ Swappable requirements.
-
-See AngleStructures::swap() for more details.
-
-.. note::
-    This swap function is *not* marked ``noexcept``, since it fires
-    change events on both lists which may in turn call arbitrary code
-    via any registered packet listeners.
-
-Parameter ``lhs``:
-    the list whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the list whose contents should be swapped with *lhs*.)doc";
-
 namespace AngleStructures_ {
 
 // Docstring regina::python::doc::AngleStructures_::__array
@@ -259,6 +239,26 @@ replaced with whatever algorithm was actually used.
 
 Returns:
     details of the algorithm used to enumerate this list.)doc";
+
+// Docstring regina::python::doc::AngleStructures_::global_swap
+static const char *global_swap =
+R"doc(Swaps the contents of the two given lists.
+
+This global routine simply calls AngleStructures::swap(); it is
+provided so that AngleStructures meets the C++ Swappable requirements.
+
+See AngleStructures::swap() for more details.
+
+.. note::
+    This swap function is *not* marked ``noexcept``, since it fires
+    change events on both lists which may in turn call arbitrary code
+    via any registered packet listeners.
+
+Parameter ``lhs``:
+    the list whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the list whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::AngleStructures_::isTautOnly
 static const char *isTautOnly =

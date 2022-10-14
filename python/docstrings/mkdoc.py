@@ -422,7 +422,26 @@ def extract(filename, node, namespace, output):
 
             comment = d(node.raw_comment)
             comment = process_comment(comment)
-            output.append((sub_namespace, name, filename, comment))
+
+            special = False
+            if name == 'swap' and sub_namespace == '':
+                # There are *so* many global swap(T&, T&) functions that
+                # it will be helpful to name them according to the types
+                # that they swap.  Otherwise their dostrings will all be called
+                # regina::python::doc::swap, and there will be a risk of
+                # inadvertently confusing one for another.
+                args = [ i.type for i in node.get_arguments() ]
+                if len(args) == 2:
+                    arg = args[0].get_pointee().spelling
+                    if arg.startswith('regina::'):
+                        swapType = arg[8:]
+                        if swapType:
+                            output.append((swapType + '_', 'global_swap', \
+                                filename, comment))
+                            special = True
+            if not special:
+                output.append((sub_namespace, name, filename, comment))
+
             printed.append(node.canonical)
 
 
