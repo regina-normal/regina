@@ -494,7 +494,7 @@ class ListView<Element*> {
  *
  * \ingroup utilities
  */
-template <typename Element, int n>
+template <typename Element, size_t n>
 class ListView<Element[n]> {
     static_assert(! std::is_const_v<Element>,
         "When declaring a ListView<Element[n]>, the type Element should not "
@@ -661,7 +661,7 @@ ListView(const Element*, const Element*) -> ListView<Element*>;
 template <typename Element>
 ListView(const Element*, size_t) -> ListView<Element*>;
 
-template <typename Element, int n>
+template <typename Element, size_t n>
 ListView(const Element (&)[n]) -> ListView<Element[n]>;
 #endif
 
@@ -782,57 +782,57 @@ inline bool ListView<Element*>::operator != (const ListView& other) const {
     return (begin_ != other.begin_ || end_ != other.end_);
 }
 
-template <class Element, int n>
+template <class Element, size_t n>
 inline ListView<Element[n]>::ListView(const Element* array) : array_(array) {
 }
 
-template <class Element, int n>
+template <class Element, size_t n>
 inline bool ListView<Element[n]>::empty() const {
     return (n == 0);
 }
 
-template <class Element, int n>
+template <class Element, size_t n>
 inline typename ListView<Element[n]>::size_type ListView<Element[n]>::size()
         const {
     return n;
 }
 
-template <class Element, int n>
+template <class Element, size_t n>
 inline typename ListView<Element[n]>::const_reference ListView<Element[n]>::
         operator [](size_type index) const {
     return array_[index];
 }
 
-template <class Element, int n>
+template <class Element, size_t n>
 inline typename ListView<Element[n]>::const_reference ListView<Element[n]>::
         front() const {
     return *array_;
 }
 
-template <class Element, int n>
+template <class Element, size_t n>
 inline typename ListView<Element[n]>::const_reference ListView<Element[n]>::
         back() const {
     return *(array_ + n - 1);
 }
 
-template <class Element, int n>
+template <class Element, size_t n>
 inline typename ListView<Element[n]>::const_iterator ListView<Element[n]>::
         begin() const {
     return array_;
 }
 
-template <class Element, int n>
+template <class Element, size_t n>
 inline typename ListView<Element[n]>::const_iterator ListView<Element[n]>::end()
         const {
     return array_ + n;
 }
 
-template <class Element, int n>
+template <class Element, size_t n>
 inline bool ListView<Element[n]>::operator == (const ListView& other) const {
     return (array_ == other.array_);
 }
 
-template <class Element, int n>
+template <class Element, size_t n>
 inline bool ListView<Element[n]>::operator != (const ListView& other) const {
     return (array_ != other.array_);
 }
