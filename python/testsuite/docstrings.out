@@ -396,6 +396,10 @@ class ListView(pybind11_object)
  |      
  |      Returns the number of elements in this list.
  |      
+ |      Python:
+ |          This is also used to implement the Python special method
+ |          __len__().
+ |      
  |      Returns:
  |          the number of elements.
  |  
@@ -465,6 +469,10 @@ class ListView(pybind11_object)
  |      size(self: <internal>.ListView[regina.Vertex3]) -> int
  |      
  |      Returns the number of elements in this list.
+ |      
+ |      Python:
+ |          This is also used to implement the Python special method
+ |          __len__().
  |      
  |      Returns:
  |          the number of elements.
