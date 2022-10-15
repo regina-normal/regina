@@ -51,7 +51,7 @@ namespace regina {
  * The filter type will be determined by this class and an appropriate
  * subclassed filter reader will be used to process the type-specific details.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyFilterReader : public XMLPacketReader {
     private:
@@ -81,7 +81,7 @@ class XMLLegacyFilterReader : public XMLPacketReader {
 /**
  * An XML packet reader that reads a plain (non-subclassed) SurfaceFilter.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLPlainFilterReader : public XMLPacketReader {
     private:
@@ -104,7 +104,7 @@ class XMLPlainFilterReader : public XMLPacketReader {
 /**
  * An XML packet reader that reads a single SurfaceFilterCombination filter.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLCombinationFilterReader : public XMLPacketReader {
     private:
@@ -131,7 +131,7 @@ class XMLCombinationFilterReader : public XMLPacketReader {
  * An XML packet reader that reads a single SurfaceFilterCombination filter
  * using the older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyCombinationFilterReader : public XMLPacketReader {
     private:
@@ -156,7 +156,7 @@ class XMLLegacyCombinationFilterReader : public XMLPacketReader {
 /**
  * An XML packet reader that reads a single SurfaceFilterProperties filter.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLPropertiesFilterReader : public XMLPacketReader {
     private:
@@ -183,7 +183,7 @@ class XMLPropertiesFilterReader : public XMLPacketReader {
  * An XML packet reader that reads a single SurfaceFilterProperties filter
  * using the older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyPropertiesFilterReader : public XMLPacketReader {
     private:

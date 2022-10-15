@@ -49,7 +49,7 @@ namespace regina {
 /**
  * An XML element reader that reads a single angle structure.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLAngleStructureReader : public XMLElementReader {
     private:
@@ -84,7 +84,7 @@ class XMLAngleStructureReader : public XMLElementReader {
 /**
  * An XML packet reader that reads a single angle structure list.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLAngleStructuresReader : public XMLPacketReader {
     private:
@@ -118,7 +118,7 @@ class XMLAngleStructuresReader : public XMLPacketReader {
  * An XML packet reader that reads a single angle structure list using
  * the older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyAngleStructuresReader : public XMLPacketReader {
     private:

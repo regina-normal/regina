@@ -206,8 +206,8 @@ class FacePair {
          *
          * \pre This face pair is not currently past-the-end.
          *
-         * \ifacespython This routine is not available; however, the
-         * postincrement operator is available under the name inc().
+         * \nopython The postincrement operator is available in Python
+         * under the name inc().
          *
          * @return a reference to this object.
          */
@@ -237,8 +237,8 @@ class FacePair {
          *
          * \pre This face pair is not currently before-the-start.
          *
-         * \ifacespython This routine is not available; however, the
-         * postdecrement operator is available under the name dec().
+         * \nopython The postdecrement operator is available in Python
+         * under the name dec().
          *
          * @return a reference to this object.
          */

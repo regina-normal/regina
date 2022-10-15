@@ -49,7 +49,7 @@ namespace regina {
 /**
  * An XML element reader that reads a single normal surface.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLNormalSurfaceReader : public XMLElementReader {
     private:
@@ -96,7 +96,7 @@ class XMLNormalSurfaceReader : public XMLElementReader {
 /**
  * An XML packet reader that reads a single normal surface list.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLNormalSurfacesReader : public XMLPacketReader {
     private:
@@ -129,7 +129,7 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
  * An XML packet reader that reads a single normal surface list using
  * the older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyNormalSurfacesReader : public XMLPacketReader {
     private:

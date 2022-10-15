@@ -57,7 +57,7 @@ namespace regina {
  * with the assumption that it will be re-inserted when this anonref element
  * commits its packet.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLAnonRefReader : public XMLPacketReader {
     private:
@@ -91,7 +91,7 @@ class XMLAnonRefReader : public XMLPacketReader {
 /**
  * An XML packet reader that reads a single container.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLContainerReader : public XMLPacketReader {
     private:
@@ -114,7 +114,7 @@ class XMLContainerReader : public XMLPacketReader {
 /**
  * An XML packet reader that reads a single file attachment.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLAttachmentReader : public XMLPacketReader {
     private:
@@ -141,7 +141,7 @@ class XMLAttachmentReader : public XMLPacketReader {
  * An XML packet reader that reads a single PDF attachment using the
  * older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyPDFReader : public XMLPacketReader {
     private:
@@ -168,7 +168,7 @@ class XMLLegacyPDFReader : public XMLPacketReader {
 /**
  * An XML packet reader that reads a single script.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLScriptReader : public XMLPacketReader {
     private:
@@ -195,7 +195,7 @@ class XMLScriptReader : public XMLPacketReader {
 /**
  * An XML packet reader that reads a single text packet.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLTextReader : public XMLPacketReader {
     private:
@@ -220,7 +220,7 @@ class XMLTextReader : public XMLPacketReader {
  * An XML packet reader that reads a single text packet using the
  * older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyTextReader : public XMLPacketReader {
     private:

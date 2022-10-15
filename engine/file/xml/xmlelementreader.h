@@ -79,7 +79,7 @@ namespace regina {
  * usingParser() will be called on the top-level element reader, so that
  * it can gain direct access to the parser if required.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLElementReader {
     public:
@@ -196,7 +196,7 @@ class XMLElementReader {
  * Any XML subelements will be ignored (as will any characters occurring
  * after any subelements).
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLCharsReader : public XMLElementReader {
     private:

@@ -88,7 +88,7 @@ class XMLTreeResolver;
  * file has been read, XMLTreeResolver::resolve() will run all of its queued
  * tasks, at which point the new packet can resolve any dangling references.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLPacketReader : public XMLElementReader {
     private:

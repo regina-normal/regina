@@ -52,7 +52,7 @@ namespace regina {
  * An abelian group is generally contained within an
  * <tt>\<abeliangroup\></tt> ... <tt>\</abeliangroup\></tt> pair.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLAbelianGroupReader : public XMLElementReader {
     private:
@@ -85,7 +85,7 @@ class XMLAbelianGroupReader : public XMLElementReader {
  * A group presentation is generally contained within a
  * <tt>\<group\></tt> ... <tt>\</group\></tt> pair.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLGroupPresentationReader : public XMLElementReader {
     private:

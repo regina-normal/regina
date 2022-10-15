@@ -52,7 +52,7 @@ namespace regina {
  * See the XMLElementReader class notes for details of precisely how
  * processing will take place.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLCallback : public regina::xml::XMLParserCallback {
     public:

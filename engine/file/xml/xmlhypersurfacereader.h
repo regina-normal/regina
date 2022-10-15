@@ -50,7 +50,7 @@ namespace regina {
  * An XML element reader that reads a single normal hypersurface in a
  * 4-manifold triangulation.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLNormalHypersurfaceReader : public XMLElementReader {
     private:
@@ -97,7 +97,7 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
 /**
  * An XML packet reader that reads a single normal hypersurface list.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLNormalHypersurfacesReader : public XMLPacketReader {
     private:
@@ -130,7 +130,7 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
  * An XML packet reader that reads a single normal hypersurface list
  * using the older second-generation file format.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
     private:

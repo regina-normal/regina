@@ -58,7 +58,7 @@ class XMLParser;
 /**
  * Represents a map from property names to property values.
  *
- * \ifacespython Not present.
+ * \nopython
  */
 class XMLPropertyDict : private std::map<std::string, std::string> {
     public:
@@ -101,7 +101,7 @@ class XMLPropertyDict : private std::map<std::string, std::string> {
  * derived class that overrides some or all of these routines to do the
  * processing that you require.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * @author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
@@ -186,7 +186,7 @@ class XMLParserCallback {
  * XML file has been sent through parse_chunk(), routine finish() should
  * be called once to signal that processing is complete.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * @author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).

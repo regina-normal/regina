@@ -56,7 +56,7 @@ namespace regina {
  * old second-generation file format to describe top-dimensional simplices in a
  * <i>dim</i>-dimensional triangulation.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \tparam dim The dimension of the triangulation in question.
  */
@@ -108,7 +108,7 @@ struct XMLLegacyTriangulationTags<2> {
  * the "contents" of a single simplex; that is, the description of the
  * simplex and its gluings to adjacent simplices.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \tparam dim The dimension of the triangulation being read.
  */
@@ -160,7 +160,7 @@ class XMLSimplexReader : public XMLElementReader {
  * It is assumed that the underlying triangulation has already been created,
  * but its simplices have not.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \tparam dim The dimension of the triangulation being read.
  */
@@ -199,7 +199,7 @@ class XMLLegacySimplicesReader : public XMLElementReader {
  * An XML packet reader that reads a single <i>dim</i>-dimensional
  * triangulation.
  *
- * \ifacespython Not present.
+ * \nopython
  *
  * \tparam dim The dimension of the triangulation being read.
  * This must be between 2 and 15 inclusive.
