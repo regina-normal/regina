@@ -290,8 +290,8 @@ class TxICore : public Output<TxICore> {
          * <tt>T x I</tt> to the given output stream.  The name will be
          * written as a human-readable string.
          *
-         * \ifacespython Not present; instead use the variant name()
-         * that takes no arguments and returns a string.
+         * \nopython Instead use the variant name() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -302,8 +302,8 @@ class TxICore : public Output<TxICore> {
          * <tt>T x I</tt> in TeX format to the given output stream.
          * No leading or trailing dollar signs will be written.
          *
-         * \ifacespython Not present; instead use the variant texName()
-         * that takes no arguments and returns a string.
+         * \nopython Instead use the variant texName() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -314,7 +314,7 @@ class TxICore : public Output<TxICore> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -323,7 +323,7 @@ class TxICore : public Output<TxICore> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */

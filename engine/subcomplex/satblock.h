@@ -414,8 +414,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * and no newline should be written.  In TeX mode, no leading or
          * trailing dollar signs should be written.
          *
-         * \ifacespython Not present; instead use the variant abbr() that
-         * returns a string.
+         * \nopython Instead use the variant abbr() that returns a string.
          *
          * @param out the output stream to which to write.
          * @param tex \c true if the output should be formatted for TeX,
@@ -483,7 +482,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * This must be implemented by subclasses.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -887,7 +886,7 @@ class SatBlockModel : public ShortOutput<SatBlockModel> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */

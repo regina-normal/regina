@@ -178,8 +178,8 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Writes the name of this triangulation as a human-readable
          * string to the given output stream.
          *
-         * \ifacespython Not present; instead use the variant name() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant name() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -194,8 +194,8 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * \ifacespython Not present; instead use the variant texName() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant texName() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -210,7 +210,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * StandardTriangulation class offers a reasonable default
          * implementation based on writeName().
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -224,7 +224,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * StandardTriangulation class offers a reasonable default
          * implementation based on writeTextShort().
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */

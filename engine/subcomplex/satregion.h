@@ -198,7 +198,7 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -602,8 +602,7 @@ class SatRegion : public Output<SatRegion> {
          * is an arbitrary aesthetic decision on the part of the author,
          * and is subject to change in future versions of Regina.
          *
-         * \ifacespython Not present; instead use the variant blockAbbrs()
-         * that returns a string.
+         * \nopython Instead use the variant blockAbbrs() that returns a string.
          *
          * @param out the output stream to which to write.
          * @param tex \c true if the output should be formatted for TeX,
@@ -621,9 +620,9 @@ class SatRegion : public Output<SatRegion> {
          * a number of lines describing the individual blocks that make
          * up this region and the various adjacencies between them.
          *
-         * \ifacespython Not present; instead use detail(), which returns
-         * the same detailed information in string form (but without the
-         * option of using a custom title).
+         * \nopython Instead use detail(), which returns the same detailed
+         * information in string form (but without the option of using a
+         * custom title).
          *
          * @param out the output stream to which to write.
          * @param title the name of this region, to be written on the
@@ -635,7 +634,7 @@ class SatRegion : public Output<SatRegion> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -645,7 +644,7 @@ class SatRegion : public Output<SatRegion> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
