@@ -597,6 +597,10 @@ Returns:
 static const char *size =
 R"doc(Returns the number of surfaces stored in this list.
 
+Python:
+    This is also used to implement the Python special method
+    __len__().
+
 Returns:
     the number of surfaces.)doc";
 

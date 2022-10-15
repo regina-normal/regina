@@ -46,9 +46,9 @@ If *d* is the gcd of *a* and *b*, then this routine returns the tuple
 
 * ``u*a + v*b = d``;
 
-* ``-abs(a)/d < v*sign(b) <= 0``; and
+* ``-abs(a)/d < v*sign(b) ≤ 0``; and
 
-* ``1 <= u*sign(a) <= abs(b)/d``.
+* ``1 ≤ u*sign(a) ≤ abs(b)/d``.
 
 In the special case where one of the given integers is zero, the
 corresponding coefficient will also be zero and the other coefficient

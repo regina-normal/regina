@@ -25,6 +25,7 @@ from multiprocessing import cpu_count
 __version__ = "2.6.2.dev1.regina"
 
 INLINE_FILES = [
+    '../../engine/census/gluingperms.h',
     '../../engine/core/output.h',
     '../../engine/utilities/flags.h',
     '../../engine/utilities/listview.h'
@@ -55,6 +56,12 @@ PRINT_LIST = [
 
 PREFIX_BLACKLIST = [
     CursorKind.TRANSLATION_UNIT
+]
+
+INLINE_DUPLICATES = [
+    CursorKind.CXX_METHOD,
+    CursorKind.CONSTRUCTOR,
+    CursorKind.FUNCTION_TEMPLATE
 ]
 
 ACCESS_BLACKLIST = [
@@ -391,6 +398,15 @@ def extract(filename, node, namespace, output):
                 return
             if node.lexical_parent != node.semantic_parent and \
                     node != node.canonical:
+                if node.kind in INLINE_DUPLICATES:
+                    # This is probably an inline class method implementation
+                    # (which may show up in the global namespace, not the
+                    # class namespace, if the implementation happens outside
+                    # the class declaration).
+                    return
+            if (node.kind == CursorKind.CLASS_DECL or \
+                    node.kind == CursorKind.CLASS_TEMPLATE) and \
+                    not node.is_definition():
                 return
 
             # Unfortunately templated constructors do not show up as
@@ -417,7 +433,7 @@ def extract(filename, node, namespace, output):
                 # We do not want docs for std::ostream output operators.
                 # For now we skip *all* left shift operators; this may need to
                 # become more nuanced at a later date.
-                print('    Left shift:', fullname, '-- skipping')
+                # print('    Left shift:', fullname, '-- skipping')
                 return
 
             comment = d(node.raw_comment)
@@ -554,6 +570,11 @@ def read_args(args):
     parameters.append('-Wno-pragma-once-outside-header')
     parameters.append('-D__DOCSTRINGS')
     parameters.append('-D__APIDOCS')
+
+    # Sometimes header X includes Y which includes X, and we would like
+    # to pick up comments from this re-included copy of X.  (See
+    # engine/maths/spec/perm*.h for examples of this.)
+    parameters.append('-fretain-comments-from-system-headers')
 
     if platform.system() == 'Darwin':
         dev_path = '/Applications/Xcode.app/Contents/Developer/'

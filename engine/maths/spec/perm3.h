@@ -37,17 +37,11 @@
  *  end users to include this specialisation header explicitly.
  */
 
-#ifndef __DOCSTRINGS
 // We include perm.h before the header guard, to ensure that the
 // various permutation headers are processed in exactly the right order.
 // This specialisation header will be re-included at the beginning of
 // perm-impl.h.
 #include "maths/perm.h"
-#else
-// For generating docstrings, we *need* to see this file first, but also
-// we don't need any of the others.  Just use forward declarations.
-#include "maths/perm-prereq.h"
-#endif
 
 #ifndef __REGINA_PERM3_H
 #ifndef __DOXYGEN

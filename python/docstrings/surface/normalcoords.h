@@ -18,7 +18,7 @@ enumerating and/or displaying normal surfaces.
 
 IDs 0-9999 are reserved for future use by Regina. If you are extending
 Regina to include your own coordinate system, you should choose an ID
->= 10000.)doc";
+≥ 10000.)doc";
 
 // Docstring regina::python::doc::NormalEncoding
 static const char *NormalEncoding =

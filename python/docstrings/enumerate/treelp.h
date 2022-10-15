@@ -36,7 +36,7 @@ some variables:
 
 * Some variables have been constrained to be positive; as described in
   Burton and Ozlen, it is safe to do this using the non-strict
-  inequality x_i >= 1 (instead of the strict inequality x_i > 0, which
+  inequality x_i ≥ 1 (instead of the strict inequality x_i > 0, which
   is more difficult to enforce). We enforce this constraing using a
   change of variable: we replace the variable x_i with (x_i - 1),
   which is then constrained to be non-negative as usual. The new
@@ -49,8 +49,8 @@ some variables:
 We do not store the full tableaux (which is dense and slow to work
 with). Instead we store the matrix of row operations that were applied
 to the original starting tableaux (in the notation of Burton and
-Ozlen, we store the matrix M_beta^{-1}, where M is the original matrix
-stored in the class LPInitialTableaux, and beta is the current basis).
+Ozlen, we store the matrix M_β^{-1}, where M is the original matrix
+stored in the class LPInitialTableaux, and β is the current basis).
 
 If the system is infeasible (because the constraints on variables as
 described above are too severe), then the contents of the internal

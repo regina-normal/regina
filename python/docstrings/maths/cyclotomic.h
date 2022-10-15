@@ -565,6 +565,10 @@ A value of zero indicates that this field element has not yet been
 initialised (for instance, it was created using the default
 constructor).
 
+Python:
+    This is also used to implement the Python special method
+    __len__().
+
 Returns:
     the degree of the polynomial that defines the underlying field.)doc";
 

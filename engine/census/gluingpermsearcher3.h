@@ -251,12 +251,11 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present, since this constructor is fundamentally
-         * designed around working through a single input stream as we make
-         * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and fromTaggedData() instead,
-         * which incorporate this same text data as part of their richer text
-         * format.
+         * \nopython This constructor is fundamentally designed around working
+         * through a single input stream as we make our way from base class
+         * constructors down to subclass constructors.  Python users should
+         * use taggedData() and fromTaggedData() instead, which incorporate
+         * this same text data as part of their richer text format.
          *
          * @param in the input stream from which to read.
          */
@@ -381,8 +380,8 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \ifacespython Not present; instead use taggedData(), which
-         * returns this same information as a string.
+         * \nopython Instead use taggedData(), which returns this same
+         * information as a string.
          *
          * @param out the output stream to which the data should be
          * written.
@@ -435,8 +434,8 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \ifacespython Not present; instead use data(), which returns this
-         * same information as a string.  However, the matching input stream
+         * \nopython You can instead use data(), which returns this same
+         * information as a string.  However, the matching input stream
          * constructor is not available in Python either, so it is recommended
          * that Python users use taggedData() and fromTaggedData() instead.
          *
@@ -480,7 +479,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -565,8 +564,8 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * \exception InvalidInput The data found in the given input stream
          * is invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present; instead you can use the variant of
-         * fromTaggedData() that takes its input as a string.
+         * \nopython Instead use the variant of fromTaggedData() that takes
+         * its input as a string.
          *
          * @param in the input stream from which to read.
          * @return the new search manager, or \c null if the data in the
@@ -1233,12 +1232,11 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present, since this constructor is fundamentally
-         * designed around working through a single input stream as we make
-         * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and fromTaggedData() instead,
-         * which incorporate this same text data as part of their richer text
-         * format.
+         * \nopython This constructor is fundamentally designed around working
+         * through a single input stream as we make our way from base class
+         * constructors down to subclass constructors.  Python users should
+         * use taggedData() and fromTaggedData() instead, which incorporate
+         * this same text data as part of their richer text format.
          *
          * @param in the input stream from which to read.
          */
@@ -2029,12 +2027,11 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present, since this constructor is fundamentally
-         * designed around working through a single input stream as we make
-         * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and fromTaggedData() instead,
-         * which incorporate this same text data as part of their richer text
-         * format.
+         * \nopython This constructor is fundamentally designed around working
+         * through a single input stream as we make our way from base class
+         * constructors down to subclass constructors.  Python users should
+         * use taggedData() and fromTaggedData() instead, which incorporate
+         * this same text data as part of their richer text format.
          *
          * @param in the input stream from which to read.
          */
@@ -2550,12 +2547,11 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present, since this constructor is fundamentally
-         * designed around working through a single input stream as we make
-         * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and fromTaggedData() instead,
-         * which incorporate this same text data as part of their richer text
-         * format.
+         * \nopython This constructor is fundamentally designed around working
+         * through a single input stream as we make our way from base class
+         * constructors down to subclass constructors.  Python users should
+         * use taggedData() and fromTaggedData() instead, which incorporate
+         * this same text data as part of their richer text format.
          *
          * @param in the input stream from which to read.
          */
@@ -2694,12 +2690,11 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present, since this constructor is fundamentally
-         * designed around working through a single input stream as we make
-         * our way from base class constructors down to subclass constructors.
-         * Python users should use taggedData() and fromTaggedData() instead,
-         * which incorporate this same text data as part of their richer text
-         * format.
+         * \nopython This constructor is fundamentally designed around working
+         * through a single input stream as we make our way from base class
+         * constructors down to subclass constructors.  Python users should
+         * use taggedData() and fromTaggedData() instead, which incorporate
+         * this same text data as part of their richer text format.
          *
          * @param in the input stream from which to read.
          */

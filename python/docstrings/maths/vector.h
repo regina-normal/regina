@@ -365,6 +365,10 @@ Returns:
 static const char *size =
 R"doc(Returns the number of elements in the vector.
 
+Python:
+    This is also used to implement the Python special method
+    __len__().
+
 Returns:
     the vector size.)doc";
 
