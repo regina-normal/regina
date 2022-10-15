@@ -13,20 +13,13 @@ namespace regina::python::doc {
 
 // Docstring regina::python::doc::InfinityBase
 static const char *InfinityBase =
-R"doc(Internal base classes for use with IntegerBase, templated on whether
-we should support infinity as an allowed value.
-
-See the IntegerBase class notes for details.)doc";
-
-// Docstring regina::python::doc::InfinityBase_2
-static const char *InfinityBase_2 =
 R"doc(An internal base class inherited by LargeInteger, which provides
 support for infinity as an allowed value.
 
 End users should not use this class directly.)doc";
 
-// Docstring regina::python::doc::InfinityBase_3
-static const char *InfinityBase_3 =
+// Docstring regina::python::doc::InfinityBase_2
+static const char *InfinityBase_2 =
 R"doc(An empty internal base class inherited by Integer, which does not
 support infinity as an allowed value.)doc";
 
@@ -885,8 +878,8 @@ it expresses ``n = qd + r``, where *q* is the quotient and *r* is the
 remainder.
 
 The division algorithm is precise about which values of *q* and *r*
-are chosen; in particular it chooses the unique *r* in the range ``0
-<= r < |d|``.
+are chosen; in particular it chooses the unique *r* in the range ``0 ≤
+r < |d|``.
 
 Note that this differs from other division routines in this class, in
 that it always rounds to give a non-negative remainder. Thus
@@ -952,9 +945,9 @@ tuple (*d*, *u*, *v*), where *u* and *v* are coefficients for which:
 
 * ``u*this + v*other = d``;
 
-* ``-abs(this)/d < v*sign(other) <= 0``; and
+* ``-abs(this)/d < v*sign(other) ≤ 0``; and
 
-* ``1 <= u*sign(this) <= abs(other)/d``.
+* ``1 ≤ u*sign(this) ≤ abs(other)/d``.
 
 These equations are not satisfied when either of *this* or *other* are
 zero, but in this case *u* and *v* will both be 0, 1 or -1, using as
@@ -992,9 +985,9 @@ and *v* will be coefficients for which:
 
 * ``u*this + v*other = d``;
 
-* ``-abs(this)/d < v*sign(other) <= 0``; and
+* ``-abs(this)/d < v*sign(other) ≤ 0``; and
 
-* ``1 <= u*sign(this) <= abs(other)/d``.
+* ``1 ≤ u*sign(this) ≤ abs(other)/d``.
 
 These equations are not satisfied when either of *this* or *other* are
 zero, but in this case *u* and *v* will both be 0, 1 or -1, using as
