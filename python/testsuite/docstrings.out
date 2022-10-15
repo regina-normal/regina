@@ -280,6 +280,12 @@ class ListView(pybind11_object)
  |  A lightweight object that can be used for iteration and random access
  |  to all elements of a given list.
  |  
+ |  This access is read-only: both the list itself and the list elements
+ |  are read-only. (Of course, if the list elements are non-const pointers
+ |  then this means that the *pointers* cannot be reassigned to point to
+ |  different objects, but the objects they *point* to can still be
+ |  modified.)
+ |  
  |  Typically a ListView would be returned from a class member function to
  |  grant the user some basic read-only access to a much richer private
  |  data structure, in a way that allows the internal data structure to
@@ -296,11 +302,12 @@ class ListView(pybind11_object)
  |  
  |  * If your list is stored using a C-style array whose size is not known
  |    at compile-time, you can create a ListView using either the syntax
- |    ``ListView(array, size)`` or ``ListView(begin, end)``. Here *begin*
- |    and *end* are an iterator pair (that is, ``begin == array`` and
- |    ``end == array + size``). This syntax uses the specialised
- |    ListView<Element*> class template. Again, there is no need to
- |    explicitly specify the ListView template arguments.
+ |    ``ListView(array, size)`` or ``ListView(begin, end)``. Here *array*
+ |    is a pointer to the beginning of the array, and *begin* and *end*
+ |    behave as an iterator pair (so ``begin == array`` and ``end == array
+ |    + size``). This syntax uses the specialised ListView<Element*> class
+ |    template. Again, there is no need to explicitly specify the ListView
+ |    template arguments.
  |  
  |  * If your list is stored using a C-style array whose size is fixed at
  |    compile-time (i.e., the type is ``Element[n]`` for some constant
