@@ -436,6 +436,69 @@ Parameter ``facet``:
 Returns:
     a reference to the corresponding array index.)doc";
 
+// Docstring regina::python::doc::GluingPerms_::permIndex_3
+constexpr const char *permIndex_3 =
+R"doc(Offers write access to the index into array Perm<dim+1>::Sn_1
+describing how the the given facet is joined to its partner.
+
+Note that this is not the *S_n* index of the gluing permutation on
+(*dim* + 1) elements, but rather the index of a permutation on just
+*dim* elements. You can use indexToGluing() and gluingToIndex() to
+convert between these indices and gluing permutations, or you can call
+perm() for read-only access to the gluing permutation directly.
+
+As described in the class notes, this index can be a real permutation
+index between 0 and (dim!)-1 inclusive, or it may be the special value
+-1 indicating that the permutation has not yet been chosen.
+
+Precondition:
+    The given facet is a real simplex facet (not boundary, before-the-
+    start or past-the-end).
+
+Python:
+    Python users can only access the read-only version of this
+    function that returns by value: you cannot use permIndex() to edit
+    the gluing permutations. As an alternative however, you can call
+    ``setPermIndex(source, index)`` instead.
+
+Parameter ``source``:
+    the simplex facet under investigation.
+
+Returns:
+    a reference to the corresponding array index.)doc";
+
+// Docstring regina::python::doc::GluingPerms_::permIndex_4
+constexpr const char *permIndex_4 =
+R"doc(Offers write access to the index into array Perm<dim+1>::Sn_1
+describing how the the given facet is joined to its partner.
+
+Note that this is not the *S_n* index of the gluing permutation on
+(*dim* + 1) elements, but rather the index of a permutation on just
+*dim* elements. You can use indexToGluing() and gluingToIndex() to
+convert between these indices and gluing permutations, or you can call
+perm() for read-only access to the gluing permutation directly.
+
+As described in the class notes, this index can be a real permutation
+index between 0 and (dim!)-1 inclusive, or it may be the special value
+-1 indicating that the permutation has not yet been chosen.
+
+Python:
+    Python users can only access the read-only version of this
+    function that returns by value: you cannot use permIndex() to edit
+    the gluing permutations. As an alternative however, you can call
+    ``setPermIndex(simp, facet, index)`` instead.
+
+Parameter ``simp``:
+    the simplex under investigation (this must be strictly less than
+    the total number of simplices under consideration).
+
+Parameter ``facet``:
+    the facet of the given simplex under investigation (between 0 and
+    *dim* inclusive).
+
+Returns:
+    a reference to the corresponding array index.)doc";
+
 // Docstring regina::python::doc::GluingPerms_::size
 constexpr const char *size =
 R"doc(Returns the total number of simplices under consideration.
