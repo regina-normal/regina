@@ -258,8 +258,8 @@ class ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * postincrement operator is available under the name inc().
+         * \nopython The postincrement operator is available in Python
+         * under the name inc().
          *
          * @return a reference to this object.
          */
@@ -295,8 +295,8 @@ class ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * postdecrement operator is available under the name dec().
+         * \nopython The postdecrement operator is available in Python
+         * under the name dec().
          *
          * @return a reference to this object.
          */
@@ -419,7 +419,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * Writes a short text representation of this node to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -852,7 +852,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Writes a short text representation of this graph to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -861,7 +861,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Writes a detailed text representation of this graph to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1193,8 +1193,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present; Python users can iterate over
-         * arcs(\a cell) instead.
+         * \nopython Python users can iterate over arcs(\a cell) instead.
          *
          * @return the beginning of an iterator range for the boundary
          * of the given cell.
@@ -1223,8 +1222,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present; Python users can iterate over
-         * arcs(\a cell) instead.
+         * \nopython Python users can iterate over arcs(\a cell) instead.
          *
          * @return the end of an iterator range for the boundary
          * of the given cell.
@@ -1314,7 +1312,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1323,7 +1321,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */

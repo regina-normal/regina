@@ -651,7 +651,7 @@ class Tangle : public Output<Tangle> {
          * Writes a short text representation of this tangle to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -660,7 +660,7 @@ class Tangle : public Output<Tangle> {
          * Writes a detailed text representation of this tangle to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -738,8 +738,8 @@ class Tangle : public Output<Tangle> {
          *
          * See also brief(), which returns the brief format as a string.
          *
-         * \ifacespython Not present; instead use the variant
-         * brief() that takes no arguments and returns a string.
+         * \nopython Instead use the variant brief(), which takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -786,9 +786,8 @@ class Tangle : public Output<Tangle> {
          * \note There is another variant of this routine that, instead
          * of using an output stream, simply returns a string.
          *
-         * \ifacespython This routine is not available in Python.  Instead,
-         * Python users can use the variant orientedGauss(), which takes no
-         * arguments and returns the output as a string.
+         * \nopython Instead use the variant orientedGauss(), which takes no
+         * arguments and returns a string.
          *
          * @param out the output stream to which to write.
          */

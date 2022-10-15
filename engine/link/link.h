@@ -268,8 +268,8 @@ class StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * postincrement operator is available under the name inc().
+         * \nopython The postincrement operator is available in Python
+         * under the name inc().
          *
          * @return a reference to this object.
          */
@@ -303,8 +303,8 @@ class StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * postincrement operator is available under the name dec().
+         * \nopython The postincrement operator is available in Python
+         * under the name dec().
          *
          * @return a reference to this object.
          */
@@ -559,7 +559,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -2675,8 +2675,8 @@ class Link :
          *
          * See also brief(), which returns the brief format as a string.
          *
-         * \ifacespython Not present; instead use the variant
-         * brief() that takes no arguments and returns a string.
+         * \nopython Instead use the variant brief() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -2780,8 +2780,8 @@ class Link :
          * \exception NotImplemented This link is empty or has multiple
          * components.
          *
-         * \ifacespython Not present; instead use the variants
-         * gauss() or gaussData() that take no arguments.
+         * \nopython Instead use the variants gauss() or gaussData() that
+         * take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -2896,8 +2896,8 @@ class Link :
          * \exception NotImplemented This link is empty or has multiple
          * components.
          *
-         * \ifacespython Not present; instead use the variants
-         * orientedGauss() or orientedGaussData() that take no arguments.
+         * \nopython Instead use the variants orientedGauss() or
+         * orientedGaussData() that take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -3002,8 +3002,8 @@ class Link :
          * as a human-readable string, and jenkinsData(), which exports it
          * as a machine-readable sequence of integers.
          *
-         * \ifacespython Not present; instead use the variants
-         * jenkins() or jenkinsData() that take no arguments.
+         * \nopython Instead use the variants jenkins() or jenkinsData() that
+         * take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -3139,8 +3139,8 @@ class Link :
          * \exception NotImplemented Either this link is empty or has multiple
          * components, or \a alpha is true and it has more than 26 crossings.
          *
-         * \ifacespython Not present; instead use the variants
-         * dt(bool) or dtData() that take no arguments.
+         * \nopython Instead use the variants dt(bool) or dtData() that take
+         * no arguments.
          *
          * @param out the output stream to which to write.
          * @param alpha \c true to use alphabetical notation, or \c false
@@ -3265,8 +3265,8 @@ class Link :
          * human-readable string, and pdData(), which returns it
          * as a machine-readable sequence of 4-tuples of integers.
          *
-         * \ifacespython Not present; instead use the variants
-         * pd() or pdData() that take no arguments.
+         * \nopython Instead use the variants pd() or pdData() that take no
+         * arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -3304,11 +3304,8 @@ class Link :
            2 4
            \endverbatim
          *
-         * \ifacespython The \a out argument is not present; instead
-         * standard output is assumed.
-         *
-         * \ifacespython Not present; instead use the variant pace() that
-         * takes no arguments and returns a string.
+         * \nopython Instead use the variant pace() that takes no arguments
+         * and returns a string.
          *
          * @param out the output stream to which to write.
          *
@@ -3393,8 +3390,7 @@ class Link :
          * Writes the tight encoding of this link to the given output stream.
          * See the page on \ref tight "tight encodings" for details.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -3405,7 +3401,7 @@ class Link :
          * Writes a short text representation of this link to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -3414,7 +3410,7 @@ class Link :
          * Writes a detailed text representation of this link to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -3504,9 +3500,8 @@ class Link :
          * \exception InvalidArgument A link could not be reconstructed from
          * the given data.
          *
-         * \ifacespython Not available, but there is a variant of fromData()
-         * that takes the same data using two Python lists (which need not
-         * be constant).
+         * \nopython Instead, use the variant of fromData() that takes this
+         * same data using two Python lists (which need not be constant).
          *
          * @param crossingSigns a list containing the signs of the
          * crossings; each sign must be either +1 or -1.
@@ -3646,8 +3641,8 @@ class Link :
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a link.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for a link.
@@ -3977,8 +3972,7 @@ class Link :
          * encoding of a link in Jenkins' format.  As noted above, the
          * checks performed here are not exhaustive.
          *
-         * \ifacespython This routine is not available in Python.  Instead,
-         * Python users can use the variant fromJenkins(const std::string&),
+         * \nopython Instead use the variant fromJenkins(const std::string&),
          * which takes the input as a string.
          *
          * @param in an input stream that begins with a sequence of integers
