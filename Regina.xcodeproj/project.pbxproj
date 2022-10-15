@@ -2539,7 +2539,6 @@
 		05098AA328F44AAE005E4716 /* perm3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm3.h; sourceTree = "<group>"; };
 		05098AA428F44AAE005E4716 /* perm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm.h; sourceTree = "<group>"; };
 		05098AA528F44AAE005E4716 /* matrix2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = matrix2.h; sourceTree = "<group>"; };
-		05098AA628F44AAE005E4716 /* perm-prereq.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "perm-prereq.h"; sourceTree = "<group>"; };
 		05098AA728F44AAE005E4716 /* cyclotomic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cyclotomic.h; sourceTree = "<group>"; };
 		05098AA828F44AAE005E4716 /* perm2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm2.h; sourceTree = "<group>"; };
 		05098AA928F44AAE005E4716 /* rational.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rational.h; sourceTree = "<group>"; };
@@ -2600,6 +2599,18 @@
 		05098AEE28FA2D43005E4716 /* normalcoords.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = normalcoords.h; sourceTree = "<group>"; };
 		05098AEF28FA2D43005E4716 /* surfacefiltertype.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = surfacefiltertype.h; sourceTree = "<group>"; };
 		05098AF028FA2D43005E4716 /* prism.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prism.h; sourceTree = "<group>"; };
+		05098AF228FAFD4B005E4716 /* graphloop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = graphloop.h; sourceTree = "<group>"; };
+		05098AF328FAFD4B005E4716 /* sfs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sfs.h; sourceTree = "<group>"; };
+		05098AF428FAFD4B005E4716 /* lensspace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lensspace.h; sourceTree = "<group>"; };
+		05098AF528FAFD4B005E4716 /* graphpair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = graphpair.h; sourceTree = "<group>"; };
+		05098AF628FAFD4B005E4716 /* graphtriple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = graphtriple.h; sourceTree = "<group>"; };
+		05098AF728FAFD4B005E4716 /* sfsalt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sfsalt.h; sourceTree = "<group>"; };
+		05098AF828FAFD4B005E4716 /* manifold.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = manifold.h; sourceTree = "<group>"; };
+		05098AF928FAFD4B005E4716 /* notation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = notation.h; sourceTree = "<group>"; };
+		05098AFA28FAFD4B005E4716 /* simplesurfacebundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = simplesurfacebundle.h; sourceTree = "<group>"; };
+		05098AFB28FAFD4B005E4716 /* handlebody.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = handlebody.h; sourceTree = "<group>"; };
+		05098AFC28FAFD4B005E4716 /* snappeacensusmfd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = snappeacensusmfd.h; sourceTree = "<group>"; };
+		05098AFD28FAFD4B005E4716 /* torusbundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = torusbundle.h; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -4997,6 +5008,7 @@
 				05098AC228F62234005E4716 /* foreign */,
 				05098A9728F24D98005E4716 /* gendoc.sh */,
 				05098AD628F63250005E4716 /* hypersurface */,
+				05098AF128FAFD4B005E4716 /* manifold */,
 				05098A8F28F24D98005E4716 /* maths */,
 				05098AD828FA2CAE005E4716 /* mkdoc.py */,
 				05098AB128F44AF2005E4716 /* packet */,
@@ -5091,7 +5103,6 @@
 				05098AA228F44AAD005E4716 /* perm5.h */,
 				05098AA128F44AAD005E4716 /* perm6.h */,
 				05098AAB28F44AAF005E4716 /* perm7.h */,
-				05098AA628F44AAE005E4716 /* perm-prereq.h */,
 				05098A9228F24D98005E4716 /* polynomial.h */,
 				05098A9328F24D98005E4716 /* primes.h */,
 				05098AA928F44AAE005E4716 /* rational.h */,
@@ -5214,6 +5225,25 @@
 				05098ADF28FA2CEC005E4716 /* validityconstraints.h */,
 			);
 			path = enumerate;
+			sourceTree = "<group>";
+		};
+		05098AF128FAFD4B005E4716 /* manifold */ = {
+			isa = PBXGroup;
+			children = (
+				05098AF228FAFD4B005E4716 /* graphloop.h */,
+				05098AF528FAFD4B005E4716 /* graphpair.h */,
+				05098AF628FAFD4B005E4716 /* graphtriple.h */,
+				05098AFB28FAFD4B005E4716 /* handlebody.h */,
+				05098AF428FAFD4B005E4716 /* lensspace.h */,
+				05098AF828FAFD4B005E4716 /* manifold.h */,
+				05098AF928FAFD4B005E4716 /* notation.h */,
+				05098AF328FAFD4B005E4716 /* sfs.h */,
+				05098AF728FAFD4B005E4716 /* sfsalt.h */,
+				05098AFA28FAFD4B005E4716 /* simplesurfacebundle.h */,
+				05098AFC28FAFD4B005E4716 /* snappeacensusmfd.h */,
+				05098AFD28FAFD4B005E4716 /* torusbundle.h */,
+			);
+			path = manifold;
 			sourceTree = "<group>";
 		};
 		050F5CDE1B9BAAAA00C1F681 /* python */ = {
