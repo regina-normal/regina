@@ -48,6 +48,11 @@ namespace regina {
  * A lightweight object that can be used for iteration and random access
  * to all elements of a given list.
  *
+ * This access is read-only: both the list itself and the list elements are
+ * read-only.  (Of course, if the list elements are non-const pointers then
+ * this means that the \e pointers cannot be reassigned to point to different
+ * objects, but the objects they \e point to can still be modified.)
+ *
  * Typically a ListView would be returned from a class member function to
  * grant the user some basic read-only access to a much richer private
  * data structure, in a way that allows the internal data structure to
@@ -64,8 +69,9 @@ namespace regina {
  * - If your list is stored using a C-style array whose size is not known at
  *   compile-time, you can create a ListView using either the syntax
  *   <tt>ListView(array, size)</tt> or <tt>ListView(begin, end)</tt>.  Here
- *   \a begin and \a end are an iterator pair (that is, <tt>begin == array</tt>
- *   and <tt>end == array + size</tt>).  This syntax uses the specialised
+ *   \a array is a pointer to the beginning of the array, and \a begin and
+ *   \a end behave as an iterator pair (so <tt>begin == array</tt> and
+ *   <tt>end == array + size</tt>).  This syntax uses the specialised
  *   ListView<Element*> class template.  Again, there is no need to explicitly
  *   specify the ListView template arguments.
  *
@@ -295,11 +301,17 @@ class ListView {
  * class that supports both iteration and indexing at the Python level.
  *
  * \tparam Element the type of element stored in the C-style array.
+ * This should not be a \c const type; the \c const modifier will added
+ * automatically where necessary through the class interface.
  *
  * \ingroup utilities
  */
 template <typename Element>
 class ListView<Element*> {
+    static_assert(! std::is_const_v<Element>,
+        "When declaring a ListView<Element*>, the type Element should not "
+        "be const-qualified.  The constness will be added automatically.");
+
     private:
         const Element* begin_;
             /**< A pointer to beginning of the C-style array. */
@@ -477,11 +489,17 @@ class ListView<Element*> {
  * class that supports both iteration and indexing at the Python level.
  *
  * \tparam Element the type of element stored in the C-style array.
+ * This should not be a \c const type; the \c const modifier will added
+ * automatically where necessary through the class interface.
  *
  * \ingroup utilities
  */
 template <typename Element, int n>
 class ListView<Element[n]> {
+    static_assert(! std::is_const_v<Element>,
+        "When declaring a ListView<Element[n]>, the type Element should not "
+        "be const-qualified.  The constness will be added automatically.");
+
     private:
         const Element* array_;
             /**< A pointer to the beginning of the C-style array. */
