@@ -33,7 +33,6 @@ if (${REGINA_INSTALL_DEV})
     numbertheory.h
     perm.h
     perm-impl.h
-    perm-prereq.h
     polynomial.h
     primes.h
     rational.h

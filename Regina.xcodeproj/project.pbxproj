@@ -49,7 +49,6 @@
 		0507C5A81C54497200D1C86C /* eltmovedialog4.h in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A41C54494E00D1C86C /* eltmovedialog4.h */; };
 		05098A6628F24CBC005E4716 /* typeutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098A6528F24CBC005E4716 /* typeutils.cpp */; };
 		05098A6728F24CBC005E4716 /* typeutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098A6528F24CBC005E4716 /* typeutils.cpp */; };
-		05098AA028F44A05005E4716 /* perm-prereq.h in Headers */ = {isa = PBXBuildFile; fileRef = 05098A9F28F44A04005E4716 /* perm-prereq.h */; };
 		05098AB428F452C6005E4716 /* vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098AB328F452C6005E4716 /* vector.cpp */; };
 		05098AB528F452C6005E4716 /* vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098AB328F452C6005E4716 /* vector.cpp */; };
 		05098AB728F4C4CF005E4716 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05098AB628F4C4CF005E4716 /* matrix.cpp */; };
@@ -2535,7 +2534,6 @@
 		05098A9528F24D98005E4716 /* integer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = integer.h; sourceTree = "<group>"; };
 		05098A9628F24D98005E4716 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05098A9728F24D98005E4716 /* gendoc.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = gendoc.sh; sourceTree = "<group>"; };
-		05098A9F28F44A04005E4716 /* perm-prereq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-prereq.h"; sourceTree = "<group>"; };
 		05098AA128F44AAD005E4716 /* perm6.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm6.h; sourceTree = "<group>"; };
 		05098AA228F44AAD005E4716 /* perm5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm5.h; sourceTree = "<group>"; };
 		05098AA328F44AAE005E4716 /* perm3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perm3.h; sourceTree = "<group>"; };
@@ -6147,7 +6145,6 @@
 				052F9CF7180600FA00FAE4DF /* numbertheory.h */,
 				05431F2A1C40F2DB009BC072 /* perm.h */,
 				057EE4341C6009A700C4D155 /* perm-impl.h */,
-				05098A9F28F44A04005E4716 /* perm-prereq.h */,
 				0541AF4A1B8BE2F5002E166B /* polynomial.h */,
 				052F9CF0180600FA00FAE4DF /* primes.cpp */,
 				052F9CF1180600FA00FAE4DF /* primes.h */,
@@ -8475,7 +8472,6 @@
 				05A067231DFA68190047872E /* pillowtwosphere.h in Headers */,
 				0542087D1DF0D0B50018AB24 /* matcher.h in Headers */,
 				05431F6D1C40F3C9009BC072 /* full_cone.h in Headers */,
-				05098AA028F44A05005E4716 /* perm-prereq.h in Headers */,
 				052F9F8F180600FB00FAE4DF /* link_projection.h in Headers */,
 				054C6A7E1DCC20DA005373F0 /* example.h in Headers */,
 				05A067371DFA68190047872E /* snappedtwosphere.h in Headers */,

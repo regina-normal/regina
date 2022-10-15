@@ -38,7 +38,6 @@
 #include "../constarray.h"
 #include "../helpers.h"
 #include "../docstrings/maths/perm.h"
-#include "../docstrings/maths/perm-prereq.h"
 
 using regina::Perm;
 
