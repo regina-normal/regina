@@ -158,11 +158,11 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present; instead you can use fromTextRep(), which
-         * reads this same text format in string form.  The main differences
-         * between this constructor and fromTextRep() are: (i) fromTextRep()
-         * does not skip over initial whitespace; and (ii) fromTextRep()
-         * throws InvalidArgument exceptions on error (not InvalidInput).
+         * \nopython Instead use fromTextRep(), which reads this same text
+         * format in string form.  The main differences between this
+         * constructor and fromTextRep() are: (i) fromTextRep() does not
+         * skip over initial whitespace; and (ii) fromTextRep() throws
+         * InvalidArgument exceptions on error (not InvalidInput).
          *
          * @param in the input stream from which to read.
          */

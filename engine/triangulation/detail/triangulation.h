@@ -2544,9 +2544,8 @@ class TriangulationBase :
          * correctly describe a triangulation with \a size top-dimensional
          * simplices.
          *
-         * \ifacespython Not available, but there is a variant of fromGluings()
-         * that takes the same data using a Python list (which need not be
-         * constant).
+         * \nopython Instead, use the variant of fromGluings() that takes this
+         * same data using a Python list (which need not be constant).
          *
          * @param size the number of top-dimensional simplices in the
          * triangulation to construct.

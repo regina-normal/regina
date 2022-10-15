@@ -182,8 +182,8 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \pre This specifier is not past-the-end.
      *
-     * \ifacespython Not present, although the postincrement operator is
-     * present in python as the member function inc().
+     * \nopython The postincrement operator is present in Python as the
+     * member function inc().
      *
      * @return A reference to this specifier.
      */
@@ -212,8 +212,8 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \pre This specifier is not before-the-start.
      *
-     * \ifacespython Not present, although the postdecrement operator is
-     * present in python as the member function dec().
+     * \nopython The postdecrement operator is present in Python as the
+     * member function dec().
      *
      * @return A reference to this specifier.
      */
@@ -274,8 +274,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Before-the-start, past-the-end and boundary specifiers can all be
      * safely encoded.
      *
-     * \ifacespython Not present; use tightEncoding() instead, which
-     * returns a string.
+     * \nopython Use tightEncoding() instead, which returns a string.
      *
      * @param out the output stream to which the encoded string will be written.
      */
@@ -299,8 +298,8 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \exception InvalidInput The given input stream does not begin with
      * a tight encoding of a <i>dim</i>-dimensional facet specifier.
      *
-     * \ifacespython Not present; use tightDecoding() instead, which takes
-     * a string as its argument.
+     * \nopython Use tightDecoding() instead, which takes a string as
+     * its argument.
      *
      * @param input an input stream that begins with the tight encoding
      * for a <i>dim</i>-dimensional facet specifier.

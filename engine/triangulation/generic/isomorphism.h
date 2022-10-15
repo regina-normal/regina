@@ -528,7 +528,7 @@ class Isomorphism :
          * \pre The class Perm<dim+1> supports the preincrement operator;
          * currently this means that \a dim must be at most 6.
          *
-         * \ifacespython This routine is named inc() since python does
+         * \ifacespython This routine is named inc() since Python does
          * not support the increment operator.  Unlike other Regina
          * classes, here inc() wraps the preincrement operator (not the
          * postincrement operator), since the postincrement operator is
@@ -563,8 +563,10 @@ class Isomorphism :
          * \pre The class Perm<dim+1> supports the preincrement operator;
          * currently this means that \a dim must be at most 6.
          *
-         * \ifacespython Not present, although the preincrement operator is
-         * present in python as the member function inc().
+         * \nopython The preincrement operator is present in Python as the
+         * member function inc().  (Note that this is different from other
+         * Regina classes, where inc() typically wraps the postincrement
+         * operator instead.  See the preincrement documentation for details.)
          *
          * @return a copy of this isomorphism before the increment took place.
          */
@@ -574,8 +576,7 @@ class Isomorphism :
          * Writes the tight encoding of this isomorphism to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \ifacespython Not present; use tightEncoding() instead, which
-         * returns a string.
+         * \nopython Use tightEncoding() instead, which returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -598,8 +599,8 @@ class Isomorphism :
          * a tight encoding of an isomorphism on <i>dim</i>-dimensional
          * triangulations.
          *
-         * \ifacespython Not present; use tightDecoding() instead, which takes
-         * a string as its argument.
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for an isomorphism on <i>dim</i>-dimensional triangulations.
@@ -611,7 +612,7 @@ class Isomorphism :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -620,7 +621,7 @@ class Isomorphism :
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */

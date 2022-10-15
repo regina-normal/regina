@@ -279,7 +279,7 @@ class Cusp : public ShortOutput<Cusp> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -811,8 +811,8 @@ class SnapPeaTriangulation :
          * The given SnapPea kernel data may be \c null, in which case this
          * will become a null SnapPea triangulation.
          *
-         * \ifacespython Not present, since this talks directly to the
-         * SnapPea kernel.
+         * \nopython Regina's Python interface does not allow you to talk
+         * directly with the built-in copy of the SnapPea C kernel.
          *
          * @param data the raw SnapPea kernel data to use in this triangulation.
          */
@@ -2052,8 +2052,8 @@ class SnapPeaTriangulation :
          *
          * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * \ifacespython Not present; instead you can use the variant of
-         * snapPea() that takes no arguments and returns a string.
+         * \nopython Instead use the variant of snapPea() that takes no
+         * arguments and returns a string.
          *
          * @param out the output stream to which the SnapPea data file
          * will be written.
@@ -2093,7 +2093,7 @@ class SnapPeaTriangulation :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -2102,7 +2102,7 @@ class SnapPeaTriangulation :
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */

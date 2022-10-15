@@ -3420,8 +3420,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either empty,
          * invalid, or has boundary triangles.
          *
-         * \ifacespython Not present, but you can call snapPea() with
-         * no arguments which returns this data as a string.
+         * \nopython Instead call snapPea() with no arguments, which returns
+         * this data as a string.
          *
          * @param out the output stream to which the SnapPea data file
          * will be written.
@@ -3507,8 +3507,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either invalid
          * or has boundary triangles.
          *
-         * \ifacespython Not present, but you can call recogniser() with
-         * no arguments which returns this data as a string.
+         * \nopython Instead call recogniser() with no arguments, which
+         * returns this data as a string.
          *
          * @param out the output stream to which the recogniser data file
          * will be written.
@@ -3527,8 +3527,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either invalid
          * or has boundary triangles.
          *
-         * \ifacespython Not present, but you can call recognizer() with
-         * no arguments which returns this data as a string.
+         * \nopython Instead call recognizer() with no arguments, which
+         * returns this data as a string.
          *
          * @param out the output stream to which the recogniser data file
          * will be written.
@@ -3738,7 +3738,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
  * regina::static_triangulation3_cast on such a packet is allowed and
  * will return the expected Triangulation<3> reference.
  *
- * \ifacespython Not present, since casting is unnecessary in Python.
+ * \nopython Casting is unnecessary in Python.
  *
  * @param p a reference, presented as a packet.
  * @return the same reference, presented using the type \a Held.
@@ -3765,7 +3765,7 @@ Triangulation<3>& static_triangulation3_cast(Packet& p);
  * regina::static_triangulation3_cast on such a packet is allowed and
  * will return the expected Triangulation<3> reference.
  *
- * \ifacespython Not present, since casting is unnecessary in Python.
+ * \nopython Casting is unnecessary in Python.
  *
  * @param p a reference, presented as a packet.
  * @return the same reference, presented using the type \a Held.
