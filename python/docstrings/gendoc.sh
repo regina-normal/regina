@@ -2,7 +2,7 @@
 set -e
 
 if [ "$#" = 0 ]; then
-  dirs="algebra angle census core enumerate file foreign hypersurface maths packet progress python split surface treewidth utilities"
+  dirs="algebra angle census core enumerate file foreign hypersurface manifold maths packet progress python split surface treewidth utilities"
 else
   dirs="$@"
 fi
