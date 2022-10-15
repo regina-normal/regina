@@ -195,8 +195,8 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * \ifacespython Not present; instead you should call fromData(),
-         * which takes this same input data in string format.
+         * \nopython Instead call fromData(), which takes this same input data
+         * in string format.
          *
          * @param in the input stream from which to read.
          */
@@ -351,10 +351,10 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \pre The given facet is a real simplex
          * facet (not boundary, before-the-start or past-the-end).
          *
-         * \ifacespython Python users can only access the read-only version
+         * \nopython Python users can only access the read-only version
          * of this function that returns by value: you cannot use permIndex()
-         * to edit the gluing permutations.  As an alternative however, Python
-         * users can call <tt>setPermIndex(source, index)</tt> instead.
+         * to edit the gluing permutations.  As an alternative however, you
+         * can call <tt>setPermIndex(source, index)</tt> instead.
          *
          * @param source the simplex facet under investigation.
          * @return a reference to the corresponding array index.
@@ -377,10 +377,10 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * may be the special value -1 indicating that the permutation
          * has not yet been chosen.
          *
-         * \ifacespython Python users can only access the read-only version
+         * \nopython Python users can only access the read-only version
          * of this function that returns by value: you cannot use permIndex()
-         * to edit the gluing permutations.  As an alternative however, Python
-         * users can call <tt>setPermIndex(simp, facet, index)</tt> instead.
+         * to edit the gluing permutations.  As an alternative however, you
+         * can call <tt>setPermIndex(simp, facet, index)</tt> instead.
          *
          * @param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
@@ -424,8 +424,8 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * Regina releases.  Data in this format should be used on a
          * short-term temporary basis only.
          *
-         * \ifacespython Not present; instead use data(), which returns this
-         * same information as a string.  However, the matching input stream
+         * \nopython You can instead use data(), which returns this same
+         * information as a string.  However, the matching input stream
          * constructor is not available in Python either, so it is recommended
          * that Python users use fromData() instead.
          *
@@ -595,7 +595,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use str() instead.
+         * \nopython Use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -605,7 +605,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present; use detail() instead.
+         * \nopython Use detail() instead.
          *
          * @param out the output stream to which to write.
          */

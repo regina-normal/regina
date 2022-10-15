@@ -25,6 +25,7 @@ from multiprocessing import cpu_count
 __version__ = "2.6.2.dev1.regina"
 
 INLINE_FILES = [
+    '../../engine/census/gluingperms.h',
     '../../engine/core/output.h',
     '../../engine/utilities/flags.h',
     '../../engine/utilities/listview.h'
