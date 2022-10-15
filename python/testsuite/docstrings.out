@@ -393,6 +393,11 @@ class ListView(pybind11_object)
  |  
  |  __len__(...)
  |      __len__(self: <internal>.ListView[regina.Vertex3]) -> int
+ |      
+ |      Returns the number of elements in this list.
+ |      
+ |      Returns:
+ |          the number of elements.
  |  
  |  __ne__(...)
  |      __ne__(*args, **kwargs)
