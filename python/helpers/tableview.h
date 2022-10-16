@@ -35,6 +35,7 @@
  *  template class.
  */
 
+#include "../pybind11/stl.h"
 #include "utilities/tableview.h"
 #include "../docstrings/utilities/tableview.h"
 
