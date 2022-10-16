@@ -101,8 +101,8 @@ void addTableView(pybind11::module_& m) {
             pybind11::module_local(), rdoc_scope)
         .def(pybind11::init<const T&>(), rdoc::__init)
         .def("size", &T::size, rdoc::size)
-        .def("__len__", [](const T&) {
-            return T::size().front();
+        .def("__len__", [](const T& view) {
+            return view.size().front();
         }, rdoc::size)
         .def("__getitem__", [](const T& view, size_t index) {
             if (index >= view.size().front())
