@@ -250,7 +250,7 @@ class TableView {
          *
          * @return the size of this array, across all of the array dimensions.
          */
-        static constexpr std::array<size_t, dimension> size() {
+        constexpr std::array<size_t, dimension> size() const {
             return { dim1, dim... };
         }
 
