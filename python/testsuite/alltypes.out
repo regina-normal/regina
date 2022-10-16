@@ -499,42 +499,6 @@ Exception type
 FileInfo : class
 Equality type : EqualityType.BY_VALUE
 
-GlobalArray2D_Perm4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray2D_Perm5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray2D_int : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray3D_Perm5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray3D_int : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_Perm2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_Perm3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_Perm4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_Perm5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_char_string : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_int : class
-Equality type : EqualityType.BY_REFERENCE
-
-GlobalArray_unsigned : class
-Equality type : EqualityType.BY_REFERENCE
-
 GlobalDirs : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 

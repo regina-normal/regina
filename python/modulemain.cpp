@@ -130,8 +130,6 @@ R"doc(Disabled in Regina.
 Objects of this type cannot be created, and so cannot be compared.)doc";
 }
 
-void addGlobalArray(pybind11::module_& m);
-
 void addAlgebraClasses(pybind11::module_& m);
 void addAngleClasses(pybind11::module_& m);
 void addCensusClasses(pybind11::module_& m);
@@ -195,8 +193,6 @@ a new Python session.)doc");
             rdoc::NEVER_INSTANTIATED)
         .value("DISABLED", regina::python::DISABLED, rdoc::DISABLED)
         ;
-
-    addGlobalArray(m);
 
     // Core engine routines:
 
