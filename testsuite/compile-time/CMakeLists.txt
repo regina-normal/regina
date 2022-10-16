@@ -10,6 +10,7 @@ SET ( FILES
   link.cpp
   perm.cpp
   snappea.cpp
+  tableview.cpp
   triangulation.cpp
   )
 
