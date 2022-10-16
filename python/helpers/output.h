@@ -274,4 +274,35 @@ void add_output_custom(pybind11::class_<C, options...>& c,
     });
 }
 
+/**
+ * Casts the given C++ object to Python and writes its __repr__ to
+ * the given C++ output stream.
+ *
+ * It is assumed that this process will succeed.  That is, we assume that
+ * type \a T either maps to one of the standard Python types (e.g., is
+ * \c int or std::string), or else is wrapped (or will be wrapped) in Python,
+ * with an appropriate __repr__ function.  If this assumption fails,
+ * then this routine will almost certainly throw an exception.
+ */
+template <typename T>
+void writeRepr(std::ostream& out, const T& obj) {
+    out << static_cast<std::string>(pybind11::str(
+        pybind11::cast(obj).attr("__repr__")()));
+}
+
+/**
+ * Casts the given C++ object to Python and writes its __str__ to
+ * the given C++ output stream.
+ *
+ * It is assumed that this process will succeed.  That is, we assume that
+ * type \a T either maps to one of the standard Python types (e.g., is
+ * \c int or std::string), or else is wrapped (or will be wrapped) in Python,
+ * with an appropriate __str__ function.  If this assumption fails,
+ * then this routine will almost certainly throw an exception.
+ */
+template <typename T>
+void writeStr(std::ostream& out, const T& obj) {
+    out << static_cast<std::string>(pybind11::str(pybind11::cast(obj)));
+}
+
 } // namespace regina::python
