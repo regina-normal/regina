@@ -59,6 +59,7 @@
 #include "helpers/output.h"
 #include "helpers/listview.h"
 #include "helpers/packet.h"
+#include "helpers/tableview.h"
 #include "helpers/tightencoding.h"
 
 #endif

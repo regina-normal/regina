@@ -37,27 +37,12 @@
 #include "maths/matrix.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
-#include "../globalarray.h"
 #include "../helpers.h"
 #include "../docstrings/surface/normalsurface.h"
 
-using regina::ListView;
 using regina::NormalSurface;
 using regina::Triangulation;
-using regina::python::GlobalArray;
-using regina::python::GlobalArray2D;
-using regina::python::GlobalArray3D;
-using regina::python::wrapListView;
-
-namespace {
-    GlobalArray2D<int> quadSeparating_arr(regina::quadSeparating, 4);
-    GlobalArray3D<int> quadMeeting_arr(regina::quadMeeting, 4);
-    GlobalArray2D<int> quadDefn_arr(regina::quadDefn, 3);
-    GlobalArray2D<int> quadPartner_arr(regina::quadPartner, 3);
-    GlobalArray2D<regina::Perm<4>> triDiscArcs_arr(regina::triDiscArcs, 4);
-    GlobalArray2D<regina::Perm<4>> quadDiscArcs_arr(regina::quadDiscArcs, 3);
-    GlobalArray2D<regina::Perm<4>> octDiscArcs_arr(regina::octDiscArcs, 3);
-}
+using regina::python::wrapTableView;
 
 void addNormalSurface(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(NormalSurface)
@@ -188,13 +173,17 @@ void addNormalSurface(pybind11::module_& m) {
     RDOC_SCOPE_END
 
     // Global arrays:
-    m.attr("quadSeparating") = &quadSeparating_arr;
-    m.attr("quadMeeting") = &quadMeeting_arr;
-    m.attr("quadDefn") = &quadDefn_arr;
-    m.attr("quadPartner") = &quadPartner_arr;
-    m.attr("quadString") = wrapListView(m, regina::quadString);
-    m.attr("triDiscArcs") = &triDiscArcs_arr;
-    m.attr("quadDiscArcs") = &quadDiscArcs_arr;
-    m.attr("octDiscArcs") = &octDiscArcs_arr;
+    m.attr("quadSeparating") = wrapTableView(m, regina::quadSeparating);
+    m.attr("quadMeeting") = wrapTableView(m, regina::quadMeeting);
+    m.attr("quadDefn") = wrapTableView(m, regina::quadDefn);
+    m.attr("quadPartner") = wrapTableView(m, regina::quadPartner);
+    m.attr("triDiscArcs") = wrapTableView(m, regina::triDiscArcs);
+    m.attr("quadDiscArcs") = wrapTableView(m, regina::quadDiscArcs);
+    m.attr("octDiscArcs") = wrapTableView(m, regina::octDiscArcs);
+
+    // Make sure that quadString is treated as a 1-D array of strings, not
+    // a 2-D array of chars.
+    regina::python::addTableView<char[6], 3>(m);
+    m.attr("quadString") = regina::TableView<char[6], 3>(regina::quadString);
 }
 

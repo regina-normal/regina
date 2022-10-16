@@ -238,3 +238,9 @@ s = ExampleSnapPea.whiteheadLink()
 for c in s.cusps():
 	print(c.str())
 
+# While we're here, test TableView also.
+
+print(Edge3.edgeNumber)
+print(quadDefn)
+print(quadString)
+

@@ -48,10 +48,11 @@ namespace regina {
  * A lightweight object that can be used for iteration and random access
  * to all elements of a given list.
  *
- * This access is read-only: both the list itself and the list elements are
- * read-only.  (Of course, if the list elements are non-const pointers then
- * this means that the \e pointers cannot be reassigned to point to different
- * objects, but the objects they \e point to can still be modified.)
+ * This access is read-only, in the sense that both the list itself and the
+ * list elements are read-only.  (Of course, if the list elements are
+ * non-const pointers then this means that the \e pointers cannot be reassigned
+ * to point to different objects, but the objects they \e point to can still
+ * be modified.)
  *
  * Typically a ListView would be returned from a class member function to
  * grant the user some basic read-only access to a much richer private

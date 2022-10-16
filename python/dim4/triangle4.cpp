@@ -32,7 +32,6 @@
 
 #include "../pybind11/pybind11.h"
 #include "triangulation/dim4.h"
-#include "../globalarray.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
 
@@ -40,13 +39,7 @@ using regina::Triangle;
 using regina::TriangleEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
-
-namespace {
-    regina::python::GlobalArray3D<int> Triangle4_triangleNumber(
-        Triangle<4>::triangleNumber, 5);
-    regina::python::GlobalArray2D<int> Triangle4_triangleVertex(
-        Triangle<4>::triangleVertex, 10);
-}
+using regina::python::wrapTableView;
 
 void addTriangle4(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<4, 2>>(m, "FaceEmbedding4_2")
@@ -92,14 +85,16 @@ void addTriangle4(pybind11::module_& m) {
         .def_static("ordering", &Triangle<4>::ordering)
         .def_static("faceNumber", &Triangle<4>::faceNumber)
         .def_static("containsVertex", &Triangle<4>::containsVertex)
-        .def_readonly_static("triangleNumber", &Triangle4_triangleNumber)
-        .def_readonly_static("triangleVertex", &Triangle4_triangleVertex)
         .def_readonly_static("nFaces", &Triangle<4>::nFaces)
         .def_readonly_static("lexNumbering", &Triangle<4>::lexNumbering)
         .def_readonly_static("oppositeDim", &Triangle<4>::oppositeDim)
         .def_readonly_static("dimension", &Triangle<4>::dimension)
         .def_readonly_static("subdimension", &Triangle<4>::subdimension)
     ;
+
+    c.attr("triangleNumber") = wrapTableView(m, Triangle<4>::triangleNumber);
+    c.attr("triangleVertex") = wrapTableView(m, Triangle<4>::triangleVertex);
+
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 

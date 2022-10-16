@@ -37,24 +37,8 @@
 
 #include "utilities/listview.h"
 #include "../docstrings/utilities/listview.h"
-#include <cxxabi.h>
 
 namespace regina::python {
-
-namespace detail {
-    /**
-     * Casts the given C++ object to Python and writes its __repr__ to
-     * the given C++ output stream.
-     *
-     * For the moment this should only be used with objects where we
-     * know in advance that this process will succeed.
-     */
-    template <typename T>
-    void writeRepr(std::ostream& out, const T& obj) {
-        out << static_cast<std::string>(pybind11::str(
-            pybind11::cast(obj).attr("__repr__")()));
-    }
-}
 
 /**
  * Adds Python bindings for one of Regina's ListView classes, given the
@@ -71,6 +55,11 @@ namespace detail {
  * The Python class corresponding to \a T will not be given a unique name;
  * instead all such types will be called \c ListView, and will be put into
  * their own unique namespaces to avoid clashes.
+ *
+ * It is assumed that the ListView type \a T has not yet been wrapped in
+ * Python.  If it has, then this routine will throw an exception.
+ * Note that this behaviour is different from addTableView, which detects
+ * and gracefully avoids attempts to bind the same type multiple times.
  *
  * Return value policies work as follows:
  *
@@ -140,72 +129,22 @@ void addListView(pybind11::module_& m) {
                     out << ", ";
                 else
                     started = true;
-                detail::writeRepr(out, i);
+                regina::python::writeRepr(out, i);
             }
             out << ' ';
         } else {
             for (int i = 0; i < 3; ++i) {
-                detail::writeRepr(out, view[i]);
+                regina::python::writeRepr(out, view[i]);
                 out << ", ";
             }
             out << "..., ";
-            detail::writeRepr(out, view.back());
+            regina::python::writeRepr(out, view.back());
             out << ' ';
         }
         out << ']';
     });
     regina::python::add_eq_operators(c,
         doc::ListView_::__eq, doc::ListView_::__ne);
-}
-
-/**
- * Adds Python bindings for one of Regina's ListView classes, given an
- * object of that type.
- *
- * The type \a T must be of the form regina::ListView<T>.  Typically
- * this type would be deduced automatically, and you would not need to
- * supply any template arguments with this function call.
- *
- * This routine has the effect of (i) calling addListView<T>(m) to wrap the
- * C++ class corresponding to \a view, and then (ii) returning \a view itself.
- * This is simply a convenience that allows you to wrap a ListView class
- * and set a class attribute or global constant, all in a single function call.
- *
- * The default return value policies supplied by addListView() will be used,
- * and it is not possible to override them here.  See addListView() for
- * further details.
- */
-template <typename T>
-regina::ListView<T> wrapListView(pybind11::module_& m,
-        regina::ListView<T> view) {
-    addListView<regina::ListView<T>>(m);
-    // Remember: ListView is lightweight and cheap to pass by value.
-    return view;
-}
-
-/**
- * Adds Python bindings for one of Regina's ListView classes, and wraps the
- * given fixed-size C-style array in such a ListView.
- *
- * The given array should be a C-style array whose elements are of type \a T,
- * and whose size \a n is known at compile-time.  Typically both \a T and \a n
- * would be deduced automatically, and you would not need to supply any
- * template arguments with this function call.
- *
- * This routine has the effect of (i) creating a ListView of the appropriate
- * type to wrap \a array; (ii) calling addListView<T>(m) to wrap this
- * ListView class in Python; and (iii) returning this ListView object
- * so that it can be set as a class attribute or global constant.
- *
- * The default return value policies supplied by addListView() will be used,
- * and it is not possible to override them here.  See addListView() for
- * further details.
- */
-template <typename T, int n>
-regina::ListView<T[n]> wrapListView(pybind11::module_& m, const T (&array)[n]) {
-    addListView<regina::ListView<T[n]>>(m);
-    // Remember: ListView is lightweight and cheap to pass by value.
-    return regina::ListView(array);
 }
 
 } // namespace regina::python

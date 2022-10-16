@@ -32,7 +32,6 @@
 
 #include "../pybind11/pybind11.h"
 #include "triangulation/dim3.h"
-#include "../globalarray.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
 
@@ -40,11 +39,7 @@ using regina::Edge;
 using regina::EdgeEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
-
-namespace {
-    regina::python::GlobalArray2D<int> Edge3_edgeNumber(Edge<3>::edgeNumber, 4);
-    regina::python::GlobalArray2D<int> Edge3_edgeVertex(Edge<3>::edgeVertex, 6);
-}
+using regina::python::wrapTableView;
 
 void addEdge3(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<3, 1>>(m, "FaceEmbedding3_1")
@@ -87,8 +82,6 @@ void addEdge3(pybind11::module_& m) {
         .def_static("ordering", &Edge<3>::ordering)
         .def_static("faceNumber", &Edge<3>::faceNumber)
         .def_static("containsVertex", &Edge<3>::containsVertex)
-        .def_readonly_static("edgeNumber", &Edge3_edgeNumber)
-        .def_readonly_static("edgeVertex", &Edge3_edgeVertex)
         .def_readonly_static("nFaces", &Edge<3>::nFaces)
         .def_readonly_static("lexNumbering", &Edge<3>::lexNumbering)
         .def_readonly_static("oppositeDim", &Edge<3>::oppositeDim)
@@ -116,6 +109,9 @@ void addEdge3(pybind11::module_& m) {
             return uintptr_t(std::addressof(e));
         })
     ;
+    c.attr("edgeNumber") = wrapTableView(m, Edge<3>::edgeNumber);
+    c.attr("edgeVertex") = wrapTableView(m, Edge<3>::edgeVertex);
+
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
