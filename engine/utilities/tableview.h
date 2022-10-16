@@ -46,6 +46,47 @@
 
 namespace regina {
 
+template <typename Element, size_t dim1, size_t... dim>
+class TableView;
+
+namespace detail {
+    /**
+     * Provides some implementation details for TableView.
+     *
+     * This helper struct exists so that we do not need to specialise the
+     * entire TableView class template.
+     *
+     * It provides two type aliases: \a type and \a view.
+     *
+     * If the dimension pack \a dim contains some positive number of dimensions
+     * \a d1, ..., \a dk, then:
+     *
+     * - \a type represents <tt>const T[d1]...[dk]</tt>;
+     * - \a view represents <tt>TableView<T, d1, ..., dk></tt>.
+     *
+     * If the dimension pack \a dim is empty, then:
+     *
+     * - \a type represents <tt>const T</tt>;
+     * - \a view represents <tt>const T&</tt>.
+     */
+    template <typename T, size_t... dim>
+    struct ConstArrayOf;
+
+#ifndef __DOXYGEN
+    template <typename T>
+    struct ConstArrayOf<T> {
+        using type = const T;
+        using view = const T&;
+    };
+
+    template <typename T, size_t dim1, size_t... dim>
+    struct ConstArrayOf<T, dim1, dim...> {
+        using type = typename ConstArrayOf<T, dim...>::type[dim1];
+        using view = TableView<T, dim1, dim...>;
+    };
+#endif // __DOXYGEN
+}
+
 /**
  * A lightweight object that can be used for random access
  * to all elements of a given multi-dimensional table.
@@ -105,38 +146,35 @@ namespace regina {
  *
  * \ingroup utilities
  */
-template <typename Element, size_t... dim>
-class TableView;
-
-/**
- * A specialisation of TableView for arrays of dimension two or higher.
- */
-template <typename Element, size_t dim1, size_t dim2, size_t... dim>
-class TableView<Element, dim1, dim2, dim...> {
+template <typename Element, size_t dim1, size_t... dim>
+class TableView {
     static_assert(! std::is_const_v<Element>,
         "When declaring a TableView<Element, ...>, the type Element should not "
         "be const-qualified.  The constness will be added automatically.");
 
     public:
         /**
-         * The TableView type that is returned by the square bracket operator.
-         * This corresponds to a slice of the overall table obtained when
-         * the first array index is specified.
+         * The type returned by the square bracket operator.  For an array
+         * with multiple dimensions, this is a TableView of smaller dimension.
+         * For a one-dimensional array, this is a const reference to \a Element.
          *
-         * If this array has dimension \a d, then Subarray will be a TableView
-         * of dimension (\a d - 1).
-         *
-         * Note that the one-dimensional TableView class does not have a
-         * Subarray type, since its square bracket operator returns a single
-         * element (not a smaller TableView).
+         * See the square bracket operator for further details.
          */
-        using Subarray = typename TableView<Element, dim2, dim...>::Array;
+        using Subview = typename detail::ConstArrayOf<Element, dim...>::view;
+
+        /**
+         * The type of a slice of the underlying C-style array, when the
+         * first array index is fixed.  If this array is one-dimensional,
+         * then this is simply <tt>const Element</tt>.
+         */
+        using Subarray = typename detail::ConstArrayOf<Element, dim...>::type;
 
         /**
          * The type of the underlying C-style array, with all compile-time
          * constant dimensions specified.
          */
-        using Array = Subarray[dim1];
+        using Array = typename detail::ConstArrayOf<Element, dim1, dim...>::
+            type;
 
         /**
          * The native integer type used for array indexing.
@@ -149,7 +187,7 @@ class TableView<Element, dim1, dim2, dim...> {
          * This is the number of subscripts required to access an
          * individual array element.
          */
-        static constexpr int dimension = 2 + sizeof...(dim);
+        static constexpr int dimension = 1 + sizeof...(dim);
 
         /**
          * The type of element that is stored in this array.
@@ -173,7 +211,7 @@ class TableView<Element, dim1, dim2, dim...> {
         using const_reference = const Element&;
 
     private:
-        const Subarray* array_;
+        Subarray* array_;
             /**< The underlying C-style array. */
 
     public:
@@ -184,7 +222,7 @@ class TableView<Element, dim1, dim2, dim...> {
          *
          * @param array the pointer to the C-style array.
          */
-        constexpr TableView(const Subarray* array) : array_(array) {
+        constexpr TableView(Subarray* array) : array_(array) {
         }
 
         /**
@@ -213,168 +251,31 @@ class TableView<Element, dim1, dim2, dim...> {
          * @return the size of this array, across all of the array dimensions.
          */
         static constexpr std::array<size_t, dimension> size() {
-            return { dim1, dim2, dim... };
+            return { dim1, dim... };
         }
 
         /**
-         * Returns the requested sub-array.
+         * Returns the requested sub-array of a multi-dimensional array,
+         * or the requested element of a one-dimensional array.
          *
-         * This returns a table view of smaller dimension, representing
-         * the slice of the overall table obtained when the first array
-         * index is set to the given value.
+         * If this array is one-dimensional, then this operator simply
+         * returns the (\a index)th element (as a const reference).
+         *
+         * If this array has more than one dimension, then this operator
+         * returns a TableView of smaller dimension, representing the slice
+         * of the overall table obtained when the first array index is set
+         * to the given value.
          *
          * Typically this operator would just be used to access an
          * individual element using the syntax
          * <tt>array[index_1][index_2]...[index_dim]</tt>, where
          * \a dim is the dimension of this array.
          *
-         * @param index indicates which sub-array to return; this must be
-         * between 0 and (\a dim1-1) inclusive.
+         * @param index indicates which element or sub-array to return;
+         * this must be between 0 and (\a dim1-1) inclusive.
          * @return the (\a index)th sub-array.
          */
-        constexpr TableView<Element, dim2, dim...> operator [](size_type index)
-                const {
-            return array_[index];
-        }
-
-        /**
-         * Determines whether this and the given table view are accessing
-         * the same underlying C-style array.
-         *
-         * To be considered the same array, the two arrays must have the same
-         * location in memory (i.e., the pointers that define the C-style arrays
-         * must be equal).  In particular, it is not enough for the two arrays
-         * just to have identical contents.
-         *
-         * @param other the table view to compare with this.
-         * @return \c true if and only if this and the given table use
-         * the same underlying C-style array.
-         */
-        constexpr bool operator == (const TableView& other) const {
-            return (array_ == other.array_);
-        }
-
-        /**
-         * Determines whether this and the given table view are accessing
-         * different underlying C-style arrays.
-         *
-         * To be considered the same array, the two arrays must have the same
-         * location in memory (i.e., the pointers that define the C-style arrays
-         * must be equal).  In particular, it is not enough for the two arrays
-         * just to have identical contents.
-         *
-         * @param other the table view to compare with this.
-         * @return \c true if and only if this and the given table use
-         * different underlying C-style arrays.
-         */
-        constexpr bool operator != (const TableView& other) const {
-            return (array_ != other.array_);
-        }
-};
-
-/**
- * A specialisation of TableView for one-dimensional arrays.
- */
-template <typename Element, size_t dim>
-class TableView<Element, dim> {
-    static_assert(! std::is_const_v<Element>,
-        "When declaring a TableView<Element, ...>, the type Element should not "
-        "be const-qualified.  The constness will be added automatically.");
-
-    public:
-        /**
-         * The type of the underlying C-style array, with all compile-time
-         * constant dimensions specified.
-         */
-        using Array = const Element[dim];
-
-        /**
-         * The native integer type used for array indexing.
-         */
-        using size_type = size_t;
-
-        /**
-         * The dimension of the underlying C-style array.
-         *
-         * This is the number of subscripts required to access an
-         * individual array element.
-         */
-        static constexpr int dimension = 1;
-
-        /**
-         * The type of element that is stored in this array.
-         */
-        using value_type = Element;
-
-        /**
-         * A reference to a single array element.
-         *
-         * Both \a reference and \a const_reference are the same, since
-         * this class only offers read-only access to the underlying array.
-         */
-        using reference = const Element&;
-
-        /**
-         * A reference to a single array element.
-         *
-         * Both \a reference and \a const_reference are the same, since
-         * this class only offers read-only access to the underlying array.
-         */
-        using const_reference = const Element&;
-
-    private:
-        const Element* array_;
-            /**< The underlying C-style array. */
-
-    public:
-        /**
-         * Returns a view for the given C-style array.
-         *
-         * \nopython
-         *
-         * @param array the pointer to the C-style array.
-         */
-        constexpr TableView(const Element* array) : array_(array) {
-        }
-
-        /**
-         * Creates a new copy of the given table view.
-         */
-        constexpr TableView(const TableView&) = default;
-
-        /**
-         * Sets this to be a copy of the given table view.
-         *
-         * @return a reference to this table view.
-         */
-        TableView& operator = (const TableView&) = default;
-
-        /**
-         * Returns the size of this one-dimensional array.
-         *
-         * For multi-dimensional arrays, size() returns a sequence
-         * (covering all of the array dimensions).  Therefore this
-         * routine returns a sequence of length one, for consistency
-         * with the general case.
-         *
-         * \ifacespython In Python, the special method __len__() returns
-         * <tt>size()[0]</tt>.  In other words, it returns the length of
-         * the array as an integer, without the sequence wrapper.
-         *
-         * @return the size of this array.
-         */
-        static constexpr std::array<size_t, 1> size() {
-            return { dim };
-        }
-
-        /**
-         * Returns the requested element of this one-dimensional array.
-         *
-         * @param index indicates which element to return; this must be
-         * between 0 and (\a dim-1) inclusive.
-         * @return the (\a index)th element in this array.
-         */
-        constexpr const Element& operator [](size_t index) const {
+        constexpr Subview operator [](size_t index) const {
             return array_[index];
         }
 
