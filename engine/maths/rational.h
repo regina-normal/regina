@@ -150,10 +150,10 @@ class Rational {
          */
         Rational(long value);
         /**
-         * Initialises to <i>newNum</i>/<i>newDen</i>.
+         * Initialises to <i>num</i>/<i>den</i>.
          *
-         * \pre gcd(<i>newNum</i>, <i>newDen</i>) = 1 or <i>newDen</i> = 0.
-         * \pre \a newDen is non-negative.
+         * \pre gcd(<i>num</i>, <i>den</i>) = 1 or <i>den</i> = 0.
+         * \pre \a den is non-negative.
          *
          * \pre Neither of the given integers is infinite.
          *
@@ -164,17 +164,17 @@ class Rational {
          * which is different again from Rational(-1,-1) (which breaks
          * the non-negativity requirement).
          *
-         * @param newNum the new numerator.
-         * @param newDen the new denominator.
+         * @param num the new numerator.
+         * @param den the new denominator.
          */
         template <bool supportInfinity>
-        Rational(const IntegerBase<supportInfinity>& newNum,
-                  const IntegerBase<supportInfinity>& newDen);
+        Rational(const IntegerBase<supportInfinity>& num,
+                  const IntegerBase<supportInfinity>& den);
         /**
-         * Initialises to <i>newNum</i>/<i>newDen</i>.
+         * Initialises to <i>num</i>/<i>den</i>.
          *
-         * \pre gcd(<i>newNum</i>, <i>newDen</i>) = 1 or <i>newDen</i> = 0.
-         * \pre \a newDen is non-negative.
+         * \pre gcd(<i>num</i>, <i>den</i>) = 1 or <i>den</i> = 0.
+         * \pre \a den is non-negative.
          *
          * \warning Failing to meet the preconditions above can result
          * in misleading or even undefined behaviour.  As an example,
@@ -183,10 +183,10 @@ class Rational {
          * which is different again from Rational(-1,-1) (which breaks
          * the non-negativity requirement).
          *
-         * @param newNum the new numerator.
-         * @param newDen the new denominator.
+         * @param num the new numerator.
+         * @param den the new denominator.
          */
-        Rational(long newNum, unsigned long newDen);
+        Rational(long num, unsigned long den);
         /**
          * Destroys this rational.
          */
@@ -512,31 +512,31 @@ inline Rational::Rational(long value) : flavour(f_normal) {
     mpq_set_si(data, value, 1);
 }
 template <bool supportInfinity>
-Rational::Rational(const IntegerBase<supportInfinity>& newNum,
-                     const IntegerBase<supportInfinity>& newDen) {
+Rational::Rational(const IntegerBase<supportInfinity>& num,
+                     const IntegerBase<supportInfinity>& den) {
     mpq_init(data);
-    if (newDen.isZero()) {
-        if (newNum.isZero())
+    if (den.isZero()) {
+        if (num.isZero())
             flavour = f_undefined;
         else
             flavour = f_infinity;
     } else {
         flavour = f_normal;
-        if (newNum.isNative() && newDen.isNative())
-            mpq_set_si(data, newNum.longValue(), newDen.longValue());
-        else if (newNum.isNative()) {
-            // Avoid bloating newNum with a GMP representation.
-            IntegerBase<supportInfinity> tmp(newNum);
+        if (num.isNative() && den.isNative())
+            mpq_set_si(data, num.longValue(), den.longValue());
+        else if (num.isNative()) {
+            // Avoid bloating num with a GMP representation.
+            IntegerBase<supportInfinity> tmp(num);
             mpz_set(mpq_numref(data), tmp.rawData());
-            mpz_set(mpq_denref(data), newDen.rawData());
-        } else if (newDen.isNative()) {
-            // Avoid bloating newDen with a GMP representation.
-            IntegerBase<supportInfinity> tmp(newDen);
-            mpz_set(mpq_numref(data), newNum.rawData());
+            mpz_set(mpq_denref(data), den.rawData());
+        } else if (den.isNative()) {
+            // Avoid bloating den with a GMP representation.
+            IntegerBase<supportInfinity> tmp(den);
+            mpz_set(mpq_numref(data), num.rawData());
             mpz_set(mpq_denref(data), tmp.rawData());
         } else {
-            mpz_set(mpq_numref(data), newNum.rawData());
-            mpz_set(mpq_denref(data), newDen.rawData());
+            mpz_set(mpq_numref(data), num.rawData());
+            mpz_set(mpq_denref(data), den.rawData());
         }
     }
 }

@@ -82,10 +82,10 @@ struct GroupExpressionTerm {
     /**
      * Creates a new term initialised to the given value.
      *
-     * @param newGen the number that identifies the generator in the new term.
-     * @param newExp the exponent to which this generator is raised.
+     * @param gen the number that identifies the generator in the new term.
+     * @param exp the exponent to which this generator is raised.
      */
-    GroupExpressionTerm(unsigned long newGen, long newExp);
+    GroupExpressionTerm(unsigned long gen, long exp);
     /**
      * Creates a new term initialised to the given value.
      */
@@ -1749,8 +1749,8 @@ void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept;
 
 // Inline functions for GroupExpressionTerm
 
-inline GroupExpressionTerm::GroupExpressionTerm(unsigned long newGen,
-        long newExp) : generator(newGen), exponent(newExp) {
+inline GroupExpressionTerm::GroupExpressionTerm(unsigned long gen, long exp) :
+        generator(gen), exponent(exp) {
 }
 
 inline bool GroupExpressionTerm::operator == (

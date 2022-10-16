@@ -71,16 +71,16 @@ class XMLCallback : public regina::xml::XMLParserCallback {
         };
 
     private:
-        XMLElementReader& topReader;
+        XMLElementReader& topReader_;
             /**< The top-level element reader. */
-        std::stack<XMLElementReader*> readers;
+        std::stack<XMLElementReader*> readers_;
             /**< A stack of all currently active element readers. */
-        std::ostream& errStream;
+        std::ostream& errStream_;
             /**< The output stream to use for warning or error messages. */
-        std::string currChars;
+        std::string currChars_;
             /**< The initial characters that have currently been received
                  for the current deepest-level XML element. */
-        bool charsAreInitial;
+        bool charsAreInitial_;
             /**< \c true if and only if we have not yet finished
                  receiving initial characters for the current deepest-level
                  XML element. */
@@ -154,12 +154,12 @@ class XMLCallback : public regina::xml::XMLParserCallback {
 // Inline functions for XMLCallback
 
 inline XMLCallback::XMLCallback(XMLElementReader& newTopReader,
-        std::ostream& newErrStream) : topReader(newTopReader),
-        errStream(newErrStream), charsAreInitial(true), state_(WAITING) {
+        std::ostream& newErrStream) : topReader_(newTopReader),
+        errStream_(newErrStream), charsAreInitial_(true), state_(WAITING) {
 }
 
 inline XMLElementReader* XMLCallback::currentReader() {
-    return (readers.empty() ? &topReader : readers.top());
+    return (readers_.empty() ? std::addressof(topReader_) : readers_.top());
 }
 
 inline XMLCallback::State XMLCallback::state() const {

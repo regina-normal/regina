@@ -36,20 +36,20 @@
 namespace regina {
 
 XMLCallback::~XMLCallback() {
-    if (! readers.empty())
+    if (! readers_.empty())
         abort();
 }
 
 void XMLCallback::start_document(regina::xml::XMLParser* parser) {
-    topReader.usingParser(parser);
+    topReader_.usingParser(parser);
 }
 
 void XMLCallback::end_document() {
     if (state_ == WAITING) {
-        errStream << "XML Fatal Error: File contains no tags." << std::endl;
+        errStream_ << "XML Fatal Error: File contains no tags." << std::endl;
         abort();
-    } else if (state_ == WORKING || ! readers.empty()) {
-        errStream << "XML Fatal Error: Unfinished file." << std::endl;
+    } else if (state_ == WORKING || ! readers_.empty()) {
+        errStream_ << "XML Fatal Error: Unfinished file." << std::endl;
         abort();
     }
 }
@@ -57,24 +57,24 @@ void XMLCallback::end_document() {
 void XMLCallback::start_element(const std::string& n,
         const regina::xml::XMLPropertyDict& p) {
     if (state_ == DONE) {
-        errStream << "XML Fatal Error: File contains multiple top-level tags."
+        errStream_ << "XML Fatal Error: File contains multiple top-level tags."
             << std::endl;
         abort();
     } else if (state_ == WAITING) {
         currentReader()->startElement(n, p, nullptr);
-        currChars = "";
-        charsAreInitial = true;
+        currChars_ = "";
+        charsAreInitial_ = true;
         state_ = WORKING;
     } else if (state_ == WORKING) {
         XMLElementReader* current = currentReader();
-        if (charsAreInitial)
-            current->initialChars(currChars);
+        if (charsAreInitial_)
+            current->initialChars(currChars_);
 
         XMLElementReader* child = current->startSubElement(n, p);
-        readers.push(child);
+        readers_.push(child);
         child->startElement(n, p, current);
-        currChars = "";
-        charsAreInitial = true;
+        currChars_ = "";
+        charsAreInitial_ = true;
     }
 }
 
@@ -82,18 +82,18 @@ void XMLCallback::end_element(const std::string& n) {
     if (state_ == WORKING) {
         XMLElementReader* current = currentReader();
 
-        if (charsAreInitial) {
-            charsAreInitial = false;
-            current->initialChars(currChars);
+        if (charsAreInitial_) {
+            charsAreInitial_ = false;
+            current->initialChars(currChars_);
         }
         current->endElement();
 
-        if (readers.empty()) {
+        if (readers_.empty()) {
             // In this case, current is the top-level reader.
             state_ = DONE;
         } else {
             // In this case, current is at the top of the stack.
-            readers.pop();
+            readers_.pop();
             currentReader()->endSubElement(n, current);
             delete current;
         }
@@ -102,21 +102,21 @@ void XMLCallback::end_element(const std::string& n) {
 
 void XMLCallback::characters(const std::string& s) {
     if (state_ == WORKING)
-        if (charsAreInitial)
-            currChars += s;
+        if (charsAreInitial_)
+            currChars_ += s;
 }
 
 void XMLCallback::warning(const std::string& s) {
-    errStream << "XML Warning: " << s << std::endl;
+    errStream_ << "XML Warning: " << s << std::endl;
 }
 
 void XMLCallback::error(const std::string& s) {
-    errStream << "XML Error: " << s << std::endl;
+    errStream_ << "XML Error: " << s << std::endl;
     abort();
 }
 
 void XMLCallback::fatal_error(const std::string& s) {
-    errStream << "XML Fatal Error: " << s << std::endl;
+    errStream_ << "XML Fatal Error: " << s << std::endl;
     abort();
 }
 
@@ -128,16 +128,16 @@ void XMLCallback::abort() {
     // Make sure we don't delete a child reader until we've called
     // abortElement() on its parent.
     XMLElementReader* child = nullptr;
-    while (! readers.empty()) {
-        readers.top()->abort(child);
+    while (! readers_.empty()) {
+        readers_.top()->abort(child);
         if (child)
             delete child;
 
-        child = readers.top();
-        readers.pop();
+        child = readers_.top();
+        readers_.pop();
     }
 
-    topReader.abort(child);
+    topReader_.abort(child);
     if (child)
         delete child;
 }

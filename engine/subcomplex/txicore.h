@@ -462,8 +462,7 @@ class TxIDiagonalCore : public TxICore {
          * @param size the number of tetrahedra in this
          * triangulation.  This must be at least 6.
          * @param k the additional parameter \a k as described in the
-         * class notes.  This must be between 1 and (\a newSize - 5)
-         * inclusive.
+         * class notes.  This must be between 1 and (\a size - 5) inclusive.
          */
         TxIDiagonalCore(size_t size, size_t k);
 

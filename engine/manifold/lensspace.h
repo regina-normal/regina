@@ -79,12 +79,12 @@ class LensSpace : public Manifold {
          *
          * \pre The two given parameters are coprime (have a gcd of 1).
          *
-         * @param newP the first parameter \a p of the lens space L(p,q).
-         * @param newQ the second parameter \a q of the lens space L(p,q).
+         * @param p the first parameter \a p of the lens space L(p,q).
+         * @param q the second parameter \a q of the lens space L(p,q).
          * Note that there are no range restrictions whatsoever on this
          * parameter.
          */
-        LensSpace(unsigned long newP, unsigned long newQ);
+        LensSpace(unsigned long p, unsigned long q);
         /**
          * Creates a new copy of the given lens space.
          */
@@ -183,8 +183,7 @@ void swap(LensSpace& a, LensSpace& b) noexcept;
 
 // Inline functions for LensSpace
 
-inline LensSpace::LensSpace(unsigned long newP, unsigned long newQ) :
-        p_(newP), q_(newQ) {
+inline LensSpace::LensSpace(unsigned long p, unsigned long q) : p_(p), q_(q) {
     reduce();
 }
 inline unsigned long LensSpace::p() const {

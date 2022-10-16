@@ -118,16 +118,16 @@ class SnapPeaCensusManifold : public Manifold {
         /**
          * Creates a new SnapPea census manifold with the given parameters.
          *
-         * @param newSection the section of the SnapPea census to which
+         * @param section the section of the SnapPea census to which
          * this manifold belongs.  This must be one of the section
          * constants defined in this class.
-         * @param newIndex specifies which particular manifold within the
+         * @param index specifies which particular manifold within the
          * given section is represented.  The indices for each section
          * begin counting at zero, and so this index
          * must be between 0 and <i>k</i>-1, where <i>k</i> is the total
          * number of manifolds in the given section.
          */
-        SnapPeaCensusManifold(char newSection, unsigned long newIndex);
+        SnapPeaCensusManifold(char section, unsigned long index);
         /**
          * Creates a new copy of the given SnapPea census manifold.
          */
@@ -216,9 +216,8 @@ void swap(SnapPeaCensusManifold& a, SnapPeaCensusManifold& b) noexcept;
 
 // Inline functions for SnapPeaCensusManifold
 
-inline SnapPeaCensusManifold::SnapPeaCensusManifold(char newSection,
-        unsigned long newIndex) :
-        section_(newSection), index_(newIndex) {
+inline SnapPeaCensusManifold::SnapPeaCensusManifold(char section,
+        unsigned long index) : section_(section), index_(index) {
 }
 inline char SnapPeaCensusManifold::section() const {
     return section_;

@@ -47,16 +47,16 @@ const Rational Rational::undefined(0, 0);
 const Rational Rational::maxDouble(0, 0);
 const Rational Rational::minDouble(0, 0);
 
-Rational::Rational(long newNum, unsigned long newDen) {
+Rational::Rational(long num, unsigned long den) {
     mpq_init(data);
-    if (newDen == 0) {
-        if (newNum == 0)
+    if (den == 0) {
+        if (num == 0)
             flavour = f_undefined;
         else
             flavour = f_infinity;
     } else {
         flavour = f_normal;
-        mpq_set_si(data, newNum, newDen);
+        mpq_set_si(data, num, den);
     }
 }
 

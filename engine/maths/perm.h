@@ -450,6 +450,7 @@ class Perm {
          * permutation code.  Valid permutation codes can be passed to
          * setPermCode() or fromPermCode(), and are returned by permCode().
          *
+         * @param code the permutation code to test.
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */

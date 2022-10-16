@@ -64,7 +64,7 @@ class XMLAngleStructureReader : public XMLElementReader {
         /**
          * Creates a new angle structure reader.
          *
-         * @param newTri the triangulation on which this angle structure lies.
+         * @param tri the triangulation on which this angle structure lies.
          */
         XMLAngleStructureReader(const SnapshotRef<Triangulation<3>>& tri);
 

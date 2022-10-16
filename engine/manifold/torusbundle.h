@@ -95,10 +95,10 @@ class TorusBundle : public Manifold {
          *
          * \pre The given matrix has determinant +1 or -1.
          *
-         * @param newMonodromy describes precisely how the upper and lower
+         * @param monodromy describes precisely how the upper and lower
          * torus boundaries are identified.  See the class notes for details.
          */
-        TorusBundle(const Matrix2& newMonodromy);
+        TorusBundle(const Matrix2& monodromy);
         /**
          * Creates a new torus bundle over the circle using the given
          * monodromy.  The four elements of the monodromy matrix are
@@ -275,8 +275,8 @@ inline TorusBundle::TorusBundle() :
         monodromy_(1, 0, 0, 1) {
 }
 
-inline TorusBundle::TorusBundle(const Matrix2& newMonodromy) :
-        monodromy_(newMonodromy) {
+inline TorusBundle::TorusBundle(const Matrix2& monodromy) :
+        monodromy_(monodromy) {
     reduce();
 }
 

@@ -84,11 +84,11 @@ class SimpleSurfaceBundle : public Manifold {
         /**
          * Creates a new surface bundle of the given type.
          *
-         * @param newType the specific type of surface bundle to
+         * @param bundleType the specific type of surface bundle to
          * represent.  This must be one of the 3-manifold constants
          * defined in this class.
          */
-        SimpleSurfaceBundle(int newType);
+        SimpleSurfaceBundle(int bundleType);
         /**
          * Creates a new copy of the given surface bundle.
          */
@@ -156,8 +156,8 @@ void swap(SimpleSurfaceBundle& a, SimpleSurfaceBundle& b) noexcept;
 
 // Inline functions for SimpleSurfaceBundle
 
-inline SimpleSurfaceBundle::SimpleSurfaceBundle(
-        int newType) : type_(newType) {
+inline SimpleSurfaceBundle::SimpleSurfaceBundle(int bundleType) :
+        type_(bundleType) {
 }
 inline int SimpleSurfaceBundle::type() const {
     return type_;

@@ -152,21 +152,20 @@ class Vector : public ShortOutput<Vector<T>> {
          * or \c long), then the elements will not be initialised
          * to any particular value.
          *
-         * @param newVectorSize the number of elements in the new vector.
+         * @param size the number of elements in the new vector.
          */
-        inline Vector(size_t newVectorSize) :
-                elts_(new T[newVectorSize]), end_(elts_ + newVectorSize) {
+        inline Vector(size_t size) : elts_(new T[size]), end_(elts_ + size) {
         }
         /**
          * Creates a new vector and initialises every element to the
          * given value.
          *
-         * @param newVectorSize the number of elements in the new vector.
+         * @param size the number of elements in the new vector.
          * @param initValue the value to assign to every element of the
          * vector.
          */
-        inline Vector(size_t newVectorSize, const T& initValue) :
-                elts_(new T[newVectorSize]), end_(elts_ + newVectorSize) {
+        inline Vector(size_t size, const T& initValue) :
+                elts_(new T[size]), end_(elts_ + size) {
             std::fill(elts_, end_, initValue);
         }
         /**
