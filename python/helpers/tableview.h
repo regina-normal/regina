@@ -36,6 +36,7 @@
  */
 
 #include "utilities/tableview.h"
+#include "../docstrings/utilities/tableview.h"
 
 namespace regina::python {
 
@@ -91,21 +92,23 @@ void addTableView(pybind11::module_& m) {
     if constexpr (T::dimension > 1)
         addTableView<Element, dim...>(m);
 
+    RDOC_SCOPE_BEGIN(TableView)
+
     // Instead of naming these classes uniquely, just call them all TableView
     // and make them all local to their own unique Python namespaces.
     // End users should not be constructing them anyway.
     auto c = pybind11::class_<T>(pybind11::handle(), "TableView",
-            pybind11::module_local())
-        .def(pybind11::init<const T&>())
-        .def("size", &T::size)
+            pybind11::module_local(), rdoc_scope)
+        .def(pybind11::init<const T&>(), rdoc::__init)
+        .def("size", &T::size, rdoc::size)
         .def("__len__", [](const T&) {
             return T::size().front();
-        })
+        }, rdoc::size)
         .def("__getitem__", [](const T& view, size_t index) {
             if (index >= view.size().front())
                 throw pybind11::index_error("TableView index out of range");
             return view[index];
-        }, Policy)
+        }, Policy, rdoc::__array)
         ;
     c.attr("dimension") = T::dimension;
     regina::python::add_output_custom(c, [](const T& view, std::ostream& out) {
@@ -135,7 +138,9 @@ void addTableView(pybind11::module_& m) {
         }
         out << ']';
     });
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 
 /**
