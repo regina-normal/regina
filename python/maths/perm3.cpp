@@ -36,7 +36,7 @@
 #include "maths/perm.h"
 #include "utilities/typeutils.h"
 #include "../helpers.h"
-#include "../helpers/constarray.h"
+#include "../helpers/arraylike.h"
 #include "../docstrings/maths/perm3.h"
 
 using regina::Perm;
