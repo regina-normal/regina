@@ -97,7 +97,7 @@ void addTableView(pybind11::module_& m) {
     auto c = pybind11::class_<T>(pybind11::handle(), "TableView",
             pybind11::module_local())
         .def(pybind11::init<const T&>())
-        .def("size", &T::size)
+        .def_static("size", &T::size)
         .def("__len__", [](const T&) {
             return T::size().front();
         })
@@ -107,6 +107,7 @@ void addTableView(pybind11::module_& m) {
             return view[index];
         }, Policy)
         ;
+    c.attr("dimension") = T::dimension;
     regina::python::add_output_custom(c, [](const T& view, std::ostream& out) {
         out << "[ ";
         // For very small arrays, output the entire array.
