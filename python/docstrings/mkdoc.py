@@ -28,7 +28,8 @@ INLINE_FILES = [
     '../../engine/census/gluingperms.h',
     '../../engine/core/output.h',
     '../../engine/utilities/flags.h',
-    '../../engine/utilities/listview.h'
+    '../../engine/utilities/listview.h',
+    '../../engine/utilities/tableview.h'
 ]
 
 RECURSE_LIST = [

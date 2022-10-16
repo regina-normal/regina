@@ -40,6 +40,7 @@
 #endif
 
 #include <cstddef>
+#include <type_traits>
 #include "regina-core.h"
 
 namespace regina {

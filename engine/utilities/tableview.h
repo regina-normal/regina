@@ -39,7 +39,9 @@
 #define __REGINA_TABLEVIEW_H
 #endif
 
+#include <array>
 #include <cstddef>
+#include <type_traits>
 #include "regina-core.h"
 
 namespace regina {
@@ -98,9 +100,8 @@ namespace regina {
  * This should not be a \c const type; the \c const modifier will be added
  * automatically where necessary through the class interface.
  *
- * \tparam dim the dimensions of the C-style array.  There should be at
- * least one dimension supplied: this template class is declared but never
- * implemented for zero-dimensional arrays.
+ * \tparam dim the dimensions of the C-style array.  There must always be at
+ * least one dimension supplied.
  *
  * \ingroup utilities
  */
