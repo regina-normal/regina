@@ -33,8 +33,12 @@
 /*! \file python/helpers/listview.h
  *  \brief Assists with wrapping instances of Regina's lightweight ListView
  *  template class.
+ *
+ *  This header is \e not included automatically by python/helpers.h.
+ *  If you need it, you will need to include it yourself.
  */
 
+#include "../helpers.h"
 #include "../pybind11/stl.h"
 #include "utilities/tableview.h"
 #include "../docstrings/utilities/tableview.h"

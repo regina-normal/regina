@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "surface/normalflags.h"
 #include "../helpers.h"
-#include "../flags.h"
+#include "../helpers/flags.h"
 #include "../docstrings/surface/normalflags.h"
 
 using pybind11::overload_cast;

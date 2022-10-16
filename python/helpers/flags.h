@@ -30,16 +30,20 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file python/flags.h
+/*! \file python/helpers/flags.h
  *  \brief Assists with wrapping Regina's flag constants and related classes.
+ *
+ *  This header is \e not included automatically by python/helpers.h.
+ *  If you need it, you will need to include it yourself.
  */
 
 #include <iomanip>
 #include <sstream>
+#include "../helpers.h"
+#include "../pybind11/operators.h"
 #include "utilities/flags.h"
-#include "pybind11/operators.h"
-#include "helpers/docstrings.h"
-#include "docstrings/utilities/flags.h"
+#include "../helpers/docstrings.h"
+#include "../docstrings/utilities/flags.h"
 
 namespace regina::python {
 

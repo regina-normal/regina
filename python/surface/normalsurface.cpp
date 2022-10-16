@@ -38,6 +38,7 @@
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../helpers/tableview.h"
 #include "../docstrings/surface/normalsurface.h"
 
 using regina::NormalSurface;

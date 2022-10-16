@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "hypersurface/hyperflags.h"
 #include "../helpers.h"
-#include "../flags.h"
+#include "../helpers/flags.h"
 #include "../docstrings/hypersurface/hyperflags.h"
 
 void addHyperFlags(pybind11::module_& m) {

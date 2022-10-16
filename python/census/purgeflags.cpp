@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "census/purgeflags.h"
 #include "../helpers.h"
-#include "../flags.h"
+#include "../helpers/flags.h"
 #include "../docstrings/census/purgeflags.h"
 
 void addPurgeFlags(pybind11::module_& m) {

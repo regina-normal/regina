@@ -35,8 +35,8 @@
 #include "../pybind11/stl.h"
 #include "maths/perm.h"
 #include "utilities/typeutils.h"
-#include "../constarray.h"
 #include "../helpers.h"
+#include "../helpers/constarray.h"
 #include "../docstrings/maths/perm7.h"
 
 using pybind11::overload_cast;

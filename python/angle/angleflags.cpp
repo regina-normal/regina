@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "angle/angleflags.h"
 #include "../helpers.h"
-#include "../flags.h"
+#include "../helpers/flags.h"
 #include "../docstrings/angle/angleflags.h"
 
 void addAngleFlags(pybind11::module_& m) {

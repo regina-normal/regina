@@ -30,8 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file python/constarray.h
+/*! \file python/helpers/constarray.h
  *  \brief Allows lightweight array-like objects to be wrapped neatly in Python.
+ *
+ *  This header is \e not included automatically by python/helpers.h.
+ *  If you need it, you will need to include it yourself.
  */
 
 #ifndef __CONSTARRAY_H
@@ -39,8 +42,7 @@
 #define __CONSTARRAY_H
 #endif
 
-#include "pybind11/pybind11.h"
-#include "helpers.h"
+#include "../helpers.h"
 
 /**
  * Utility classes and routines to assist with Python bindings for

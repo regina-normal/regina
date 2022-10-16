@@ -39,7 +39,7 @@
 #include "surface/surfacefilter.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
-#include "../flags.h"
+#include "../helpers/flags.h"
 #include "../docstrings/surface/normalsurfaces.h"
 
 using namespace regina::python;

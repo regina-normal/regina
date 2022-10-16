@@ -33,6 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
+#include "../helpers/tableview.h"
 #include "../generic/facehelper.h"
 
 using regina::Triangle;
