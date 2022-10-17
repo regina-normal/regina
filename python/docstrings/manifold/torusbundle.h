@@ -24,7 +24,7 @@ that *a* and *p* are parallel and *b* and *q* are parallel). Then we
 identify the torus boundaries so that, in additive terms:
 
 ```
-[a]       [p]
+    [a]       [p]
     [ ] = M * [ ]
     [b]       [q]
 ```
@@ -83,7 +83,7 @@ The four elements of the monodromy matrix are passed separately. They
 combine to give the full monodromy matrix *M* as follows:
 
 ```
-[ mon00  mon01 ]
+          [ mon00  mon01 ]
     M  =  [              ]
           [ mon10  mon11 ]
 ```

@@ -33,7 +33,7 @@ of the base orbifold. Then the tori are joined together so that the
 curves *f0*, *o0*, *f1* and *o1* become related as follows:
 
 ```
-[f1]       [f0]
+    [f1]       [f0]
     [  ] = M * [  ]
     [o1]       [o0]
 ```
@@ -82,7 +82,7 @@ space. The bounded Seifert fibred space and the four elements of the
 matching matrix combine to give the full matrix *M* as follows:
 
 ```
-[ mat00  mat01 ]
+          [ mat00  mat01 ]
     M  =  [              ]
           [ mat10  mat11 ]
 ```

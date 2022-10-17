@@ -33,7 +33,7 @@ orbifold of the second Seifert fibred space. Then the curves *f0*,
 *o0*, *f1* and *o1* are related as follows:
 
 ```
-[f1]       [f0]
+    [f1]       [f0]
     [  ] = M * [  ]
     [o1]       [o0]
 ```
@@ -82,7 +82,7 @@ the 2-by-2 matching matrix are all passed separately. The elements of
 the matching matrix combine to give the full matrix *M* as follows:
 
 ```
-[ mat00  mat01 ]
+          [ mat00  mat01 ]
     M  =  [              ]
           [ mat10  mat11 ]
 ```

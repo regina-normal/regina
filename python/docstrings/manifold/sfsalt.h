@@ -42,7 +42,7 @@ be directed curves on this same boundary representing the fibre and
 base orbifold of the new alternative space. Then
 
 ```
-[f_alt]         [f_old]
+    [f_alt]         [f_old]
     [     ]  =  M * [     ].
     [o_alt]         [o_old]
 ```

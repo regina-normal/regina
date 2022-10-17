@@ -29,7 +29,7 @@ boxes represent the bounded Seifert fibred spaces, and the small
 tunnels show how their boundaries are joined.
 
 ```
-/---------------\   /-----------------\   /---------------\
+    /---------------\   /-----------------\   /---------------\
     |               |   |                 |   |               |
     |  End space 0   ---   Central space   ---   End space 1  |
     |                ---                   ---                |
@@ -54,7 +54,7 @@ the first end space. Then the curves *f*, *o*, *f0* and *o0* are
 related as follows:
 
 ```
-[f0]       [f ]
+    [f0]       [f ]
     [  ] = M * [  ]
     [o0]       [o ]
 ```
@@ -68,7 +68,7 @@ base orbifold of the second end space. Then the curves *f*', *o*',
 *f1* and *o1* are related as follows:
 
 ```
-[f1]        [f']
+    [f1]        [f']
     [  ] = M' * [  ]
     [o1]        [o']
 ```

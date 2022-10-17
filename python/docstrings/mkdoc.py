@@ -269,7 +269,10 @@ def process_comment(comment):
                 result += '\n```\n\n'
             in_code_segment = not in_code_segment
         elif in_code_segment:
-            result += x.strip()
+            # Preformatted text could begin with whitespace that must be kept.
+            # Only strip off the leading and trailing newlines that we added in
+            # the regexes above, not all whitespace.
+            result += x.strip('\n')
         else:
             # Split into paragraphs.
             for y in re.split(r'(?: *\n *){2,}', x):
