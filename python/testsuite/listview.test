@@ -240,7 +240,14 @@ for c in s.cusps():
 
 # While we're here, test TableView also.
 
-print(Edge3.edgeNumber)
-print(quadDefn)
-print(quadString)
+print()
+print(Edge3.edgeNumber, Edge3.edgeNumber.size(), len(Edge3.edgeNumber))
+print(quadDefn, quadDefn.size(), len(quadDefn))
+print(quadString, quadString.size(), len(quadString))
+print()
 
+for i in quadString:
+	print(i)
+
+for i in quadDefn:
+	print(i, [j for j in i])
