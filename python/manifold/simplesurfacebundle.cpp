@@ -34,24 +34,29 @@
 #include "../pybind11/stl.h"
 #include "manifold/simplesurfacebundle.h"
 #include "../helpers.h"
+#include "../docstrings/manifold/simplesurfacebundle.h"
 
 using regina::SimpleSurfaceBundle;
 
 void addSimpleSurfaceBundle(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SimpleSurfaceBundle)
+
     auto c = pybind11::class_<SimpleSurfaceBundle, regina::Manifold>
-            (m, "SimpleSurfaceBundle")
-        .def(pybind11::init<int>())
-        .def(pybind11::init<const SimpleSurfaceBundle&>())
-        .def("swap", &SimpleSurfaceBundle::swap)
-        .def("type", &SimpleSurfaceBundle::type)
+            (m, "SimpleSurfaceBundle", rdoc_scope)
+        .def(pybind11::init<int>(), rdoc::__init)
+        .def(pybind11::init<const SimpleSurfaceBundle&>(), rdoc::__copy)
+        .def("swap", &SimpleSurfaceBundle::swap, rdoc::swap)
+        .def("type", &SimpleSurfaceBundle::type, rdoc::type)
         .def_readonly_static("S2xS1", &SimpleSurfaceBundle::S2xS1)
         .def_readonly_static("S2xS1_TWISTED",
             &SimpleSurfaceBundle::S2xS1_TWISTED)
         .def_readonly_static("RP2xS1", &SimpleSurfaceBundle::RP2xS1)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<SimpleSurfaceBundle>(m);
+    regina::python::add_global_swap<SimpleSurfaceBundle>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

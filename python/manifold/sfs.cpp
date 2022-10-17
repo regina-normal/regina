@@ -37,12 +37,15 @@
 #include "manifold/lensspace.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
+#include "../docstrings/manifold/sfs.h"
 
 using pybind11::overload_cast;
 using regina::SFSFibre;
 using regina::SFSpace;
 
 void addSFSpace(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SFSFibre)
+
     auto f = pybind11::class_<SFSFibre>(m, "SFSFibre")
         .def(pybind11::init<>())
         .def(pybind11::init<long, long>())
@@ -53,6 +56,8 @@ void addSFSpace(pybind11::module_& m) {
     ;
     regina::python::add_output_ostream(f);
     regina::python::add_eq_operators(f);
+
+    RDOC_SCOPE_SWITCH(SFSpace)
 
     auto s = pybind11::class_<SFSpace, regina::Manifold>(m, "SFSpace")
         .def(pybind11::init<>())
@@ -121,5 +126,7 @@ void addSFSpace(pybind11::module_& m) {
         .value("bn3", SFSpace::bn3)
         .export_values()
         ;
+
+    RDOC_SCOPE_END
 }
 

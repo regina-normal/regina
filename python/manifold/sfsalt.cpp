@@ -34,12 +34,15 @@
 #include "../pybind11/stl.h"
 #include "manifold/sfsalt.h"
 #include "../helpers.h"
+#include "../docstrings/manifold/sfsalt.h"
 
 using pybind11::overload_cast;
 using regina::SFSAlt;
 using regina::SFSpace;
 
 void addSFSAlt(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SFSAlt)
+
     auto s = pybind11::class_<SFSAlt>(m, "SFSAlt")
         .def(pybind11::init<const SFSpace&>())
         .def(pybind11::init<const SFSAlt&, bool, bool>(),
@@ -57,5 +60,7 @@ void addSFSAlt(pybind11::module_& m) {
     regina::python::add_eq_operators(s);
 
     regina::python::add_global_swap<SFSAlt>(m);
+
+    RDOC_SCOPE_END
 }
 

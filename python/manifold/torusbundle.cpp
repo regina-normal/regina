@@ -35,23 +35,29 @@
 #include "algebra/abeliangroup.h"
 #include "manifold/torusbundle.h"
 #include "../helpers.h"
+#include "../docstrings/manifold/torusbundle.h"
 
 using regina::Matrix2;
 using regina::TorusBundle;
 
 void addTorusBundle(pybind11::module_& m) {
-    auto c = pybind11::class_<TorusBundle, regina::Manifold>(m, "TorusBundle")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const Matrix2&>())
-        .def(pybind11::init<long, long, long, long>())
-        .def(pybind11::init<const TorusBundle&>())
-        .def("swap", &TorusBundle::swap)
+    RDOC_SCOPE_BEGIN(TorusBundle)
+
+    auto c = pybind11::class_<TorusBundle, regina::Manifold>(m, "TorusBundle",
+            rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const Matrix2&>(), rdoc::__init)
+        .def(pybind11::init<long, long, long, long>(), rdoc::__init_2)
+        .def(pybind11::init<const TorusBundle&>(), rdoc::__copy)
+        .def("swap", &TorusBundle::swap, rdoc::swap)
         .def("monodromy", &TorusBundle::monodromy,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::monodromy)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<TorusBundle>(m);
+    regina::python::add_global_swap<TorusBundle>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 
