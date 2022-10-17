@@ -168,7 +168,7 @@ R"doc(A lightweight object that gives access to all immediate children of a
 given packet.
 
 The purpose of this class is to support iteration through all children
-of a packet *p* using C++11 range-based ``for`` loops:
+of a packet *p* using range-based ``for`` loops:
 
 ```
 std::shared_ptr<Packet> parent = ...;
@@ -234,7 +234,7 @@ R"doc(A lightweight object that gives access to all strict descendants of a
 given packet.
 
 The purpose of this class is to support iteration through all strict
-descendants of a packet *p* using C++11 range-based ``for`` loops:
+descendants of a packet *p* using range-based ``for`` loops:
 
 ```
 std::shared_ptr<Packet> parent = ...;
@@ -1292,7 +1292,7 @@ R"doc(Returns a lightweight object for iterating through the immediate
 children of this packet.
 
 This routine allows you to iterate through the immediate children of a
-given packet using C++11 range-based ``for`` loops:
+given packet using range-based ``for`` loops:
 
 ```
 std::shared_ptr<Packet> parent = ...;
@@ -1328,7 +1328,7 @@ R"doc(Returns a lightweight object for iterating through the immediate
 children of this packet.
 
 This routine allows you to iterate through the immediate children of a
-given packet using C++11 range-based ``for`` loops:
+given packet using range-based ``for`` loops:
 
 ```
 std::shared_ptr<const Packet> parent = ...;
@@ -1418,7 +1418,7 @@ itself. In particular, the iteration is depth-first, and each packet
 in the subtree is processed before its own descendants.
 
 This routine allows you to iterate through all strict descendants of a
-given packet using C++11 range-based ``for`` loops:
+given packet using range-based ``for`` loops:
 
 ```
 std::shared_ptr<Packet> parent = ...;
@@ -1462,7 +1462,7 @@ itself. In particular, the iteration is depth-first, and each packet
 in the subtree is processed before its own descendants.
 
 This routine allows you to iterate through all strict descendants of a
-given packet using C++11 range-based ``for`` loops:
+given packet using range-based ``for`` loops:
 
 ```
 std::shared_ptr<const Packet> parent = ...;

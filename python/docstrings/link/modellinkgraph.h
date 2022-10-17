@@ -384,8 +384,8 @@ by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
 The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports C++11
-range-based ``for`` loops. The elements of the list will be read-only
+means it offers basic container-like functions and supports range-
+based ``for`` loops. The elements of the list will be read-only
 objects of type ModelLinkGraphArc, and so your code might look like:
 
 ```
@@ -941,8 +941,8 @@ by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
 The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports C++11
-range-based ``for`` loops. Note that the elements of the list will be
+means it offers basic container-like functions and supports range-
+based ``for`` loops. Note that the elements of the list will be
 pointers, so your code might look like:
 
 ```

@@ -573,8 +573,8 @@ by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
 The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports C++11
-range-based ``for`` loops. Each element of the list will be a starting
+means it offers basic container-like functions and supports range-
+based ``for`` loops. Each element of the list will be a starting
 strand for some components; more precisely, iterating through this
 list is equivalent to calling ``component(0)``, ``component(1)``, ...,
 ``component(countComponents()-1)`` in turn. As an example, your code
@@ -685,8 +685,8 @@ by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
 The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports C++11
-range-based ``for`` loops. Note that the elements of the list will be
+means it offers basic container-like functions and supports range-
+based ``for`` loops. Note that the elements of the list will be
 pointers, so your code might look like:
 
 ```
@@ -814,7 +814,7 @@ static const char *dumpConstruction =
 R"doc(Returns C++ code that can be used to reconstruct this link.
 
 This code will call Link::fromData(), passing a series of hard-coded
-C++11 initialiser lists.
+C++ initialiser lists.
 
 The main purpose of this routine is to generate these hard-coded
 initialiser lists, which can be tedious and error-prone to write by
@@ -967,9 +967,9 @@ R"doc(Creates a new link from information about its crossings and
 components.
 
 This routine is an analogue to the variant of fromData() that takes
-C++11 initialiser lists; however, here the input data may be
-constructed at runtime (which makes it accessible to Python, amongst
-other things).
+C++ initialiser lists; however, here the input data may be constructed
+at runtime (which makes it accessible to Python, amongst other
+things).
 
 For the purposes of this routine, we number the crossings 1, 2, ...,
 *n*. The information that you must pass to this routine is the
@@ -983,7 +983,7 @@ following:
   identifies the individual components of the link. Each iterator in
   this range must dereference to a container that has a size()
   function and supports range-based ``for`` loops (so standard C++
-  container classes such as std::vector<int> and std::list<int> are be
+  container classes such as std::vector<int> and std::list<int> are
   fine).
 
 * The container for each component must be filled with integers, which
@@ -2439,8 +2439,8 @@ Returns:
 static const char *pace =
 R"doc(Returns a text representation of the underlying planar 4-valent
 multigraph, using the PACE text format. The text format is described
-in detail at https://pacechallenge.wordpress.com/pace-2016/track-a-
-treewidth/ , and is documented in detail by the routine writePACE().
+in detail at <https://pacechallenge.wordpress.com/pace-2016/track-a-
+treewidth/>, and is documented in detail by the routine writePACE().
 
 This routine simply returns the output of writePACE() as a string,
 instead of writing it to an output stream.
@@ -2504,7 +2504,7 @@ diagrams, you can always use Jenkins' format instead.
 Regina adheres to a tight specification for the planar diagram codes
 that it outputs, in order to ensure compatibility with other software.
 In particular, Regina's codes are compatible with the Knot Atlas, as
-seen at http://katlas.org/wiki/Planar_Diagrams .
+seen at <http://katlas.org/wiki/Planar_Diagrams>.
 
 In detail: a planar diagram code for an *n*-crossing link is formed
 from a sequence of *n* 4-tuples of integers. Regina constructs this
@@ -2543,7 +2543,7 @@ Some points to be aware of:
 
 This routine formats the list of 4-tuples as a string, in a way that
 is consistent with the description in the Knot Atlas at
-http://katlas.org/wiki/Planar_Diagrams .
+<http://katlas.org/wiki/Planar_Diagrams>.
 
 In particular, each 4-tuple will be formatted with square brackets,
 commas, and the prefix ``X``, and the main list will be formatted with
