@@ -427,7 +427,7 @@ def extract(filename, node, namespace, output):
             fullname += name
 
             if node.raw_comment is None:
-                print('    Undocumented:', fullname, '-- skipping')
+                # print('    Undocumented:', fullname, '-- skipping')
                 return
 
             if node.spelling == 'operator<<':
