@@ -487,7 +487,7 @@ fibre (*alpha* = 1). If it is a regular fibre, the obstruction
 constant *b* will be adjusted according to the value of *beta*.
 
 Note that there is no restriction on the range of the second parameter
-*beta*. If it is out of the usual range 0 <= *beta* < *alpha*, it will
+*beta*. If it is out of the usual range 0 ≤ *beta* < *alpha*, it will
 be pulled back into this range and the excess will be pushed into the
 obstruction constant *b*.
 
@@ -508,7 +508,7 @@ fibre (*alpha* = 1). If it is a regular fibre, the obstruction
 constant *b* will be adjusted according to the value of *beta*.
 
 Note that there is no restriction on the range of the second parameter
-*beta*. If it is out of the usual range 0 <= *beta* < *alpha*, it will
+*beta*. If it is out of the usual range 0 ≤ *beta* < *alpha*, it will
 be pulled back into this range and the excess will be pushed into the
 obstruction constant *b*.
 
@@ -538,8 +538,8 @@ R"doc(Returns the obstruction constant *b* for this Seifert fibred space.
 The obstruction constant corresponds to the insertion of an additional
 (1,*b*) fibre. It can be modified by calling insertFibre() with a
 value of *alpha* = 1. It will also be modified whenever insertFibre()
-is called with *beta* out of range (*beta* < 0 or *beta* >= *alpha*),
-since each exceptional fibre must be stored in standard form (0 <=
+is called with *beta* out of range (*beta* < 0 or *beta* ≥ *alpha*),
+since each exceptional fibre must be stored in standard form (0 ≤
 *beta* < *alpha*).
 
 Returns:
@@ -613,7 +613,7 @@ static const char *reflect =
 R"doc(Replaces this space with its mirror image. Specifically, all
 exceptional fibres and the obstruction constant *b* will be negated.
 Note that the obstruction constant will generally undergo further
-change as the exceptional fibres are standardised into the usual 0 <=
+change as the exceptional fibres are standardised into the usual 0 ≤
 *beta* < *alpha* form.
 
 This routine will not change the curves made by the fibres and the
@@ -655,6 +655,79 @@ R"doc(Swaps the contents of this and the given Seifert fibred space.
 
 Parameter ``other``:
     the space whose contents should be swapped with this.)doc";
+
+}
+
+namespace SFSpace_::ClassType_ {
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::bn1
+static const char *bn1 =
+R"doc(Indicates that the base orbifold contains punctures and/or reflector
+boundaries, that it is non-orientable, and that it contains no fibre-
+reversing paths.)doc";
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::bn2
+static const char *bn2 =
+R"doc(Indicates that the base orbifold contains punctures and/or reflector
+boundaries, that it is non-orientable, and that its fibre-reversing
+paths correspond precisely to its orientation-reversing paths.)doc";
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::bn3
+static const char *bn3 =
+R"doc(Indicates that the base orbifold contains punctures and/or reflector
+boundaries, that it is non-orientable, that it contains at least one
+fibre-reversing path, and that its fibre-reversing paths do not
+correspond precisely to its orientation-reversing paths.)doc";
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::bo1
+static const char *bo1 =
+R"doc(Indicates that the base orbifold contains punctures and/or reflector
+boundaries, that it is orientable, and that it contains no fibre-
+reversing paths.)doc";
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::bo2
+static const char *bo2 =
+R"doc(Indicates that the base orbifold contains punctures and/or reflector
+boundaries, that it is orientable, and that it contains at least one
+fibre-reversing path.)doc";
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::n1
+static const char *n1 =
+R"doc(Indicates that the base orbifold is non-orientable with no punctures
+or reflector boundaries, and that none of its generators give fibre-
+reversing paths.)doc";
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::n2
+static const char *n2 =
+R"doc(Indicates that the base orbifold is non-orientable with no punctures
+or reflector boundaries, and that all of its generators give fibre-
+reversing paths.)doc";
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::n3
+static const char *n3 =
+R"doc(Indicates that the base orbifold is non-orientable with no punctures
+or reflector boundaries, that it has non-orientable genus at least
+two, and that precisely one of its generators gives a fibre-reversing
+path.)doc";
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::n4
+static const char *n4 =
+R"doc(Indicates that the base orbifold is non-orientable with no punctures
+or reflector boundaries, that it has non-orientable genus at least
+three, and that precisely two of its generators give fibre-reversing
+paths.)doc";
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::o1
+static const char *o1 =
+R"doc(Indicates that the base orbifold is orientable with no punctures or
+reflector boundaries, and that none of its generators give fibre-
+reversing paths.)doc";
+
+// Docstring regina::python::doc::SFSpace_::ClassType_::o2
+static const char *o2 =
+R"doc(Indicates that the base orbifold is orientable with no punctures or
+reflector boundaries, and that all of its generators give fibre-
+reversing paths.)doc";
 
 }
 

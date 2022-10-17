@@ -220,56 +220,78 @@ class SFSpace : public Manifold {
          * with boundaries.
          */
         enum ClassType {
+            /**
+             * Indicates that the base orbifold is orientable with
+             * no punctures or reflector boundaries, and that none
+             * of its generators give fibre-reversing paths.
+             */
             o1 = 101,
-                /**< Indicates that the base orbifold is orientable with
-                     no punctures or reflector boundaries, and that none
-                     of its generators give fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold is orientable with
+             * no punctures or reflector boundaries, and that all
+             * of its generators give fibre-reversing paths.
+             */
             o2 = 102,
-                /**< Indicates that the base orbifold is orientable with
-                     no punctures or reflector boundaries, and that all
-                     of its generators give fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold is non-orientable with
+             * no punctures or reflector boundaries, and that none
+             * of its generators give fibre-reversing paths.
+             */
             n1 = 201,
-                /**< Indicates that the base orbifold is non-orientable with
-                     no punctures or reflector boundaries, and that none
-                     of its generators give fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold is non-orientable with
+             * no punctures or reflector boundaries, and that all of
+             * its generators give fibre-reversing paths.
+             */
             n2 = 202,
-                /**< Indicates that the base orbifold is non-orientable with
-                     no punctures or reflector boundaries, and that all of
-                     its generators give fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold is non-orientable with
+             * no punctures or reflector boundaries, that it has
+             * non-orientable genus at least two, and that precisely
+             * one of its generators gives a fibre-reversing path.
+             */
             n3 = 203,
-                /**< Indicates that the base orbifold is non-orientable with
-                     no punctures or reflector boundaries, that it has
-                     non-orientable genus at least two, and that precisely
-                     one of its generators gives a fibre-reversing path. */
+            /**
+             * Indicates that the base orbifold is non-orientable with
+             * no punctures or reflector boundaries, that it has
+             * non-orientable genus at least three, and that precisely
+             * two of its generators give fibre-reversing paths.
+             */
             n4 = 204,
-                /**< Indicates that the base orbifold is non-orientable with
-                     no punctures or reflector boundaries, that it has
-                     non-orientable genus at least three, and that precisely
-                     two of its generators give fibre-reversing paths. */
 
+            /**
+             * Indicates that the base orbifold contains punctures
+             * and/or reflector boundaries, that it is orientable,
+             * and that it contains no fibre-reversing paths.
+             */
             bo1 = 301,
-                /**< Indicates that the base orbifold contains punctures
-                     and/or reflector boundaries, that it is orientable,
-                     and that it contains no fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold contains punctures
+             * and/or reflector boundaries, that it is orientable,
+             * and that it contains at least one fibre-reversing path.
+             */
             bo2 = 302,
-                /**< Indicates that the base orbifold contains punctures
-                     and/or reflector boundaries, that it is orientable,
-                     and that it contains at least one fibre-reversing path. */
+            /**
+             * Indicates that the base orbifold contains punctures
+             * and/or reflector boundaries, that it is non-orientable,
+             * and that it contains no fibre-reversing paths.
+             */
             bn1 = 401,
-                /**< Indicates that the base orbifold contains punctures
-                     and/or reflector boundaries, that it is non-orientable,
-                     and that it contains no fibre-reversing paths. */
+            /**
+             * Indicates that the base orbifold contains punctures
+             * and/or reflector boundaries, that it is non-orientable,
+             * and that its fibre-reversing paths correspond precisely
+             * to its orientation-reversing paths.
+             */
             bn2 = 402,
-                /**< Indicates that the base orbifold contains punctures
-                     and/or reflector boundaries, that it is non-orientable,
-                     and that its fibre-reversing paths correspond precisely
-                     to its orientation-reversing paths. */
+            /**
+             * Indicates that the base orbifold contains punctures
+             * and/or reflector boundaries, that it is non-orientable,
+             * that it contains at least one fibre-reversing path,
+             * and that its fibre-reversing paths do not correspond
+             * precisely to its orientation-reversing paths.
+             */
             bn3 = 403
-                /**< Indicates that the base orbifold contains punctures
-                     and/or reflector boundaries, that it is non-orientable,
-                     that it contains at least one fibre-reversing path,
-                     and that its fibre-reversing paths do not correspond
-                     precisely to its orientation-reversing paths. */
         };
 
     private:
