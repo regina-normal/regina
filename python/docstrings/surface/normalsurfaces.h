@@ -534,10 +534,10 @@ surface's name`` would be stored as ``"my ""normal"" surface's
 name"``.
 
 Internationalisation:
-    This routine makes no assumptions about the i18n "character
-    encoding" used in the given file *name*, and simply passes it
-    through unchanged to low-level C/C++ file I/O routines. Any user
-    strings such as surface names will be written in UTF-8.
+    This routine makes no assumptions about the character encoding
+    used in the given file *name*, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines. Any user strings
+    such as surface names will be written in UTF-8.
 
 Parameter ``filename``:
     the name of the CSV file to export to.
@@ -577,10 +577,10 @@ surface's name`` would be stored as ``"my ""normal"" surface's
 name"``.
 
 Internationalisation:
-    This routine makes no assumptions about the i18n "character
-    encoding" used in the given file *name*, and simply passes it
-    through unchanged to low-level C/C++ file I/O routines. Any user
-    strings such as surface names will be written in UTF-8.
+    This routine makes no assumptions about the character encoding
+    used in the given file *name*, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines. Any user strings
+    such as surface names will be written in UTF-8.
 
 Parameter ``filename``:
     the name of the CSV file to export to.

@@ -92,7 +92,7 @@ Returns:
 // Docstring regina::python::doc::tightEncoding
 static const char *tightEncoding =
 R"doc(Returns the tight encoding of the given arbitrary precision integer.
-See the page on tight "tight encodings" for details.
+See the page on tight encodings for details.
 
 This global function does the same thing as the member function
 IntegerBase::tightEncoding(). However, this global function is more
@@ -1271,7 +1271,7 @@ Parameter ``other``:
 // Docstring regina::python::doc::IntegerBase_::tightDecoding
 static const char *tightDecoding =
 R"doc(Reconstructs an integer from its given tight encoding. See the page on
-tight "tight encodings" for details.
+tight encodings for details.
 
 The tight encoding will be given as a string. If this string contains
 leading whitespace or any trailing characters at all (including
@@ -1297,7 +1297,7 @@ Returns:
 // Docstring regina::python::doc::IntegerBase_::tightEncoding
 static const char *tightEncoding =
 R"doc(Returns the tight encoding of this integer. See the page on tight
-"tight encodings" for details.
+encodings for details.
 
 There is also a corresponding global regina::tightEncoding() function,
 for better compatibility with native C++ integer types. The global

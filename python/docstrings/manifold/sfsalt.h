@@ -55,8 +55,8 @@ directed curve representing the base orbifold is reversed if and only
 if a reflection was used in creating the alternative space, as
 returned by reflected().
 
-See the page on sfsnotation for details on some of the terminology
-used above.
+See the page on notation for Seifert fibred spaces for details on some
+of the terminology used above.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever

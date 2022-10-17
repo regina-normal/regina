@@ -73,8 +73,8 @@ base orbifold of the second end space. Then the curves *f*', *o*',
     [o1]        [o']
 ```
 
-See the page on sfsnotation for details on some of the terminology
-used above.
+See the page on notation for Seifert fibred spaces for details on some
+of the terminology used above.
 
 The optional Manifold routine homology() is implemented, but the
 optional routine construct() is not.

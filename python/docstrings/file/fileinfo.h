@@ -121,11 +121,11 @@ static const char *identify =
 R"doc(Return information about the given Regina data file.
 
 Internationalisation:
-    This routine makes no assumptions about the i18n "character
-    encoding" used in the given path *name*, and simply passes it
-    through unchanged to low-level C/C++ file I/O routines. If a
-    FileInfo structure is returned, its pathname() routine will use
-    the same encoding that is passed here.
+    This routine makes no assumptions about the character encoding
+    used in the given path *name*, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines. If a FileInfo
+    structure is returned, its pathname() routine will use the same
+    encoding that is passed here.
 
 Parameter ``idPathname``:
     the pathname of the data file to be examined.
@@ -154,10 +154,10 @@ static const char *pathname =
 R"doc(Returns the pathname of the data file being described.
 
 Internationalisation:
-    The i18n "character encoding" used in the pathname will be
-    whatever was originally passed to identify(). This might or might
-    not be UTF-8, since it needs to be understood by the low-level
-    C/C++ file I/O routines.
+    The character encoding used in the pathname will be whatever was
+    originally passed to identify(). This might or might not be UTF-8,
+    since it needs to be understood by the low-level C/C++ file I/O
+    routines.
 
 Returns:
     the pathname.)doc";

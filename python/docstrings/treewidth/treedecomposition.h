@@ -524,7 +524,7 @@ dimensional simplices of the given triangulation.
 
 Python:
     This constructor is only available in Python when *dim* is one of
-    Regina's stddim "standard dimensions".
+    Regina's standard dimensions.
 
 Parameter ``triangulation``:
     the triangulation whose facet pairing graph we are working with.
@@ -543,7 +543,7 @@ dimensional simplices of the given triangulation.
 
 Python:
     This constructor is only available in Python when *dim* is one of
-    Regina's stddim "standard dimensions".
+    Regina's standard dimensions.
 
 Parameter ``pairing``:
     the facet pairing graph that we are working with.

@@ -99,9 +99,9 @@ component). If an error occurs when attempting to remove directory
 prefixes, the filename will be the empty string.
 
 Internationalisation:
-    This routine makes no assumptions about the i18n "character
-    encoding" used in the given file *name*, and simply passes it
-    through unchanged to low-level C/C++ file I/O routines.
+    This routine makes no assumptions about the character encoding
+    used in the given file *name*, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines.
 
 Parameter ``pathname``:
     the full pathname of the attachment to read.)doc";
@@ -295,9 +295,9 @@ if isNull() returns ``True``), then this routine will do nothing and
 simply return ``False``.
 
 Internationalisation:
-    This routine makes no assumptions about the i18n "character
-    encoding" used in the given file *name*, and simply passes it
-    unchanged to low-level C/C++ file I/O routines.
+    This routine makes no assumptions about the character encoding
+    used in the given file *name*, and simply passes it unchanged to
+    low-level C/C++ file I/O routines.
 
 Parameter ``pathname``:
     the full pathname of the file to write.

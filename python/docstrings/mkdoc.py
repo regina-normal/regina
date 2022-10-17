@@ -192,6 +192,14 @@ def process_comment(comment):
     s = re.sub(r'[\\@]details\s*', r'\n\n', s)
     s = re.sub(r'[\\@]brief\s*', r'', s)
     s = re.sub(r'[\\@]short\s*', r'', s)
+
+    # If a \ref comes with a custom name, use it.  If not, see if the
+    # tag is one that is known to us, and if not, just use the tag itself.
+    s = re.sub(r'[\\@]ref\s+(\S+)\s+"([^"]+)"', r'\2', s)
+    s = re.sub(r'[\\@]ref\s+sfsnotation(\s)',
+               r'notation for Seifert fibred spaces\1', s)
+    s = re.sub(r'[\\@]ref\s+pachner(\s)',
+               r'Pachner moves on triangulations\1', s)
     s = re.sub(r'[\\@]ref\s*', r'', s)
 
     s = re.sub(r'[\\@]code\s?({\.[a-z]+}\s?)?(.*?)\s?[\\@]endcode',

@@ -548,9 +548,9 @@ deeper within the tree could not be read then that particular packet
 (and its descendants, if any) will simply be ignored.
 
 Internationalisation:
-    This routine makes no assumptions about the i18n "character
-    encoding" used in the given file *name*, and simply passes it
-    through unchanged to low-level C/C++ file I/O routines.
+    This routine makes no assumptions about the character encoding
+    used in the given file *name*, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines.
 
 Python:
     This function is not automatically imported into the global
@@ -2151,10 +2151,10 @@ Precondition:
     The given packet does not depend on its parent.
 
 Internationalisation:
-    This routine makes no assumptions about the i18n "character
-    encoding" used in the given file *name*, and simply passes it
-    through unchanged to low-level C/C++ file I/O routines. The
-    *contents* of the file will be written using UTF-8.
+    This routine makes no assumptions about the character encoding
+    used in the given file *name*, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines. The *contents* of
+    the file will be written using UTF-8.
 
 Parameter ``filename``:
     the pathname of the file to write to.

@@ -67,7 +67,7 @@ Python:
 // Docstring regina::python::doc::tightDecoding
 static const char *tightDecoding =
 R"doc(Reconstructs an integer or boolean from its given tight encoding. See
-the page on tight "tight encodings" for details.
+the page on tight encodings for details.
 
 The tight encoding should be given as a string. If this string
 contains leading whitespace or any trailing characters at all
@@ -114,7 +114,7 @@ Returns:
 // Docstring regina::python::doc::tightEncoding
 static const char *tightEncoding =
 R"doc(Returns the tight encoding of the given signed integer. See the page
-on tight "tight encodings" for details.
+on tight encodings for details.
 
 Parameter ``value``:
     the integer to encode.
@@ -125,7 +125,7 @@ Returns:
 // Docstring regina::python::doc::tightEncoding_2
 static const char *tightEncoding_2 =
 R"doc(Returns the tight encoding of the given signed long integer. See the
-page on tight "tight encodings" for details.
+page on tight encodings for details.
 
 Parameter ``value``:
     the integer to encode.
@@ -136,7 +136,7 @@ Returns:
 // Docstring regina::python::doc::tightEncoding_3
 static const char *tightEncoding_3 =
 R"doc(Returns the tight encoding of the given signed long long integer. See
-the page on tight "tight encodings" for details.
+the page on tight encodings for details.
 
 Parameter ``value``:
     the integer to encode.
@@ -147,7 +147,7 @@ Returns:
 // Docstring regina::python::doc::tightEncoding_4
 static const char *tightEncoding_4 =
 R"doc(Returns the tight encoding of the given unsigned integer. See the page
-on tight "tight encodings" for details.
+on tight encodings for details.
 
 Parameter ``value``:
     the integer to encode.
@@ -158,7 +158,7 @@ Returns:
 // Docstring regina::python::doc::tightEncoding_5
 static const char *tightEncoding_5 =
 R"doc(Returns the tight encoding of the given unsigned long integer. See the
-page on tight "tight encodings" for details.
+page on tight encodings for details.
 
 Parameter ``value``:
     the integer to encode.
@@ -169,7 +169,7 @@ Returns:
 // Docstring regina::python::doc::tightEncoding_6
 static const char *tightEncoding_6 =
 R"doc(Returns the tight encoding of the given unsigned long long integer.
-See the page on tight "tight encodings" for details.
+See the page on tight encodings for details.
 
 Parameter ``value``:
     the integer to encode.
@@ -180,7 +180,7 @@ Returns:
 // Docstring regina::python::doc::tightEncoding_7
 static const char *tightEncoding_7 =
 R"doc(Returns the tight encoding of the given boolean. See the page on tight
-"tight encodings" for details.
+encodings for details.
 
 The booleans ``True`` and ``False`` are guaranteed to have the same
 tight encodings as the integers 1 and 0 respectively.
@@ -196,7 +196,7 @@ namespace TightEncodable_ {
 // Docstring regina::python::doc::TightEncodable_::tightDecoding
 static const char *tightDecoding =
 R"doc(Reconstructs an object of type *T* from its given tight encoding. See
-the page on tight "tight encodings" for details.
+the page on tight encodings for details.
 
 The tight encoding should be given as a string. If this string
 contains leading whitespace or any trailing characters at all
@@ -215,7 +215,7 @@ Returns:
 // Docstring regina::python::doc::TightEncodable_::tightEncoding
 static const char *tightEncoding =
 R"doc(Returns the tight encoding of this object. See the page on tight
-"tight encodings" for details.
+encodings for details.
 
 Exception ``FailedPrecondition``:
     This may be thrown for some classes *T* if the object is in an

@@ -29,8 +29,8 @@ NormalAlgFlags.)doc";
 
 // Docstring regina::python::doc::standardDim
 static const char *standardDim =
-R"doc(Indicates whether the given dimension is one of Regina's stddim
-"standard dimensions". Standard dimensions offer significantly richer
+R"doc(Indicates whether the given dimension is one of Regina's standard
+dimensions. Standard dimensions offer significantly richer
 functionality for triangulations than generic dimensions.
 
 Parameter ``dim``:

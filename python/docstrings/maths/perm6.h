@@ -813,7 +813,7 @@ Returns:
 // Docstring regina::python::doc::Perm_::tightDecoding
 static const char *tightDecoding =
 R"doc(Reconstructs a permutation from its given tight encoding. See the page
-on tight "tight encodings" for details.
+on tight encodings for details.
 
 The tight encoding will be given as a string. If this string contains
 leading whitespace or any trailing characters at all (including
@@ -837,7 +837,7 @@ Returns:
 // Docstring regina::python::doc::Perm_::tightEncoding
 static const char *tightEncoding =
 R"doc(Returns the tight encoding of this permutation. See the page on tight
-"tight encodings" for details.
+encodings for details.
 
 For all permutation classes Perm<n>, the tight encoding is based on
 the index into the full permutation group *S_n*. For smaller
