@@ -32,6 +32,9 @@ manifold classes.)doc";
 
 namespace LensSpace_ {
 
+// Docstring regina::python::doc::LensSpace_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given lens space.)doc";
+
 // Docstring regina::python::doc::LensSpace_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given lens space have the same
@@ -59,15 +62,12 @@ notes for details.
 Precondition:
     The two given parameters are coprime (have a gcd of 1).
 
-Parameter ``newP``:
+Parameter ``p``:
     the first parameter *p* of the lens space L(p,q).
 
-Parameter ``newQ``:
+Parameter ``q``:
     the second parameter *q* of the lens space L(p,q). Note that there
     are no range restrictions whatsoever on this parameter.)doc";
-
-// Docstring regina::python::doc::LensSpace_::__init_2
-static const char *__init_2 = R"doc(Creates a new copy of the given lens space.)doc";
 
 // Docstring regina::python::doc::LensSpace_::__ne
 static const char *__ne =

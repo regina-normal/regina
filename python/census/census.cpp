@@ -50,7 +50,7 @@ void addCensus(pybind11::module_& m) {
     auto db = pybind11::class_<CensusDB>(m, "CensusDB", rdoc_scope)
         .def(pybind11::init<const std::string&, const std::string&>(),
             rdoc::__init)
-        .def(pybind11::init<const CensusDB&>(), rdoc::__init_2)
+        .def(pybind11::init<const CensusDB&>(), rdoc::__copy)
         .def("filename", &CensusDB::filename, rdoc::filename)
         .def("desc", &CensusDB::desc, rdoc::desc)
         .def("swap", &CensusDB::swap, rdoc::swap)
@@ -68,7 +68,7 @@ void addCensus(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(CensusHit)
 
     auto h = pybind11::class_<CensusHit>(m, "CensusHit", rdoc_scope)
-        .def(pybind11::init<const CensusHit&>(), rdoc::__init)
+        .def(pybind11::init<const CensusHit&>(), rdoc::__copy)
         .def("swap", &CensusDB::swap, rdoc::swap)
         .def("name", &CensusHit::name, rdoc::name)
         .def("db", &CensusHit::db,

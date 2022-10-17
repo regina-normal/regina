@@ -83,6 +83,9 @@ Parameter ``rhs``:
 Returns:
     the sum of both normal hypersurfaces.)doc";
 
+// Docstring regina::python::doc::NormalHypersurface_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given normal hypersurface.)doc";
+
 // Docstring regina::python::doc::NormalHypersurface_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given hypersurface in fact represent
@@ -130,10 +133,7 @@ Returns:
     a reference to this hypersurface.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__init
-static const char *__init = R"doc(Creates a new copy of the given normal hypersurface.)doc";
-
-// Docstring regina::python::doc::NormalHypersurface_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates a new copy of the given normal hypersurface, but relocated to
 the given triangulation.
 
@@ -153,8 +153,8 @@ Parameter ``src``:
 Parameter ``triangulation``:
     the triangulation in which this new hypersurface will reside.)doc";
 
-// Docstring regina::python::doc::NormalHypersurface_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::NormalHypersurface_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new normal hypersurface inside the given triangulation with
 the given coordinate vector, using the given vector encoding.
 
@@ -190,8 +190,8 @@ Parameter ``enc``:
 Parameter ``vector``:
     a vector containing the coordinates of the normal hypersurface.)doc";
 
-// Docstring regina::python::doc::NormalHypersurface_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::NormalHypersurface_::__init_3
+static const char *__init_3 =
 R"doc(Creates a new normal hypersurface inside the given triangulation with
 the given coordinate vector, using the given coordinate system.
 

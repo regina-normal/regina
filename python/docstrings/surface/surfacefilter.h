@@ -80,6 +80,15 @@ packet tree, or event listeners).)doc";
 
 namespace SurfaceFilterCombination_ {
 
+// Docstring regina::python::doc::SurfaceFilterCombination_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given filter.
+
+Like all packet types, this only copies the filter content, not the
+packet infrastructure (e.g., it will not copy the packet label, it
+will not clone the given packet's children, and it will not insert the
+new packet into any packet tree).)doc";
+
 // Docstring regina::python::doc::SurfaceFilterCombination_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given filter use the same boolean
@@ -96,15 +105,6 @@ Returns:
 static const char *__init =
 R"doc(Creates a new surface filter that accepts all normal surfaces. This
 will be an *and* filter.)doc";
-
-// Docstring regina::python::doc::SurfaceFilterCombination_::__init_2
-static const char *__init_2 =
-R"doc(Creates a new copy of the given filter.
-
-Like all packet types, this only copies the filter content, not the
-packet infrastructure (e.g., it will not copy the packet label, it
-will not clone the given packet's children, and it will not insert the
-new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::SurfaceFilterCombination_::__ne
 static const char *__ne =
@@ -163,6 +163,15 @@ Returns:
 
 namespace SurfaceFilterProperties_ {
 
+// Docstring regina::python::doc::SurfaceFilterProperties_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given filter.
+
+Like all packet types, this only copies the filter content, not the
+packet infrastructure (e.g., it will not copy the packet label, it
+will not clone the given packet's children, and it will not insert the
+new packet into any packet tree).)doc";
+
 // Docstring regina::python::doc::SurfaceFilterProperties_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given filter are configured to filter on
@@ -182,15 +191,6 @@ Returns:
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::__init
 static const char *__init = R"doc(Creates a new surface filter that accepts all normal surfaces.)doc";
-
-// Docstring regina::python::doc::SurfaceFilterProperties_::__init_2
-static const char *__init_2 =
-R"doc(Creates a new copy of the given filter.
-
-Like all packet types, this only copies the filter content, not the
-packet infrastructure (e.g., it will not copy the packet label, it
-will not clone the given packet's children, and it will not insert the
-new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::__ne
 static const char *__ne =

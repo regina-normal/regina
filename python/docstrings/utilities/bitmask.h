@@ -118,6 +118,13 @@ Python:
 
 namespace Bitmask1_ {
 
+// Docstring regina::python::doc::Bitmask1_::__copy
+static const char *__copy =
+R"doc(Creates a clone of the given bitmask.
+
+Parameter ``src``:
+    the bitmask to clone.)doc";
+
 // Docstring regina::python::doc::Bitmask1_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given bitmask are identical.
@@ -152,13 +159,6 @@ constructor, and will be ignored.
 .. warning::
     This is *not* a constructor that initialises the bitmask to a
     given pattern.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__init_3
-static const char *__init_3 =
-R"doc(Creates a clone of the given bitmask.
-
-Parameter ``src``:
-    the bitmask to clone.)doc";
 
 // Docstring regina::python::doc::Bitmask1_::__ior
 static const char *__ior =
@@ -423,6 +423,13 @@ Parameter ``numBits``:
 
 namespace Bitmask2_ {
 
+// Docstring regina::python::doc::Bitmask2_::__copy
+static const char *__copy =
+R"doc(Creates a clone of the given bitmask.
+
+Parameter ``src``:
+    the bitmask to clone.)doc";
+
 // Docstring regina::python::doc::Bitmask2_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given bitmask are identical.
@@ -457,13 +464,6 @@ constructor, and will be ignored.
 .. warning::
     This is *not* a constructor that initialises the bitmask to a
     given pattern.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__init_3
-static const char *__init_3 =
-R"doc(Creates a clone of the given bitmask.
-
-Parameter ``src``:
-    the bitmask to clone.)doc";
 
 // Docstring regina::python::doc::Bitmask2_::__ior
 static const char *__ior =
@@ -728,6 +728,17 @@ Parameter ``numBits``:
 
 namespace Bitmask_ {
 
+// Docstring regina::python::doc::Bitmask_::__copy
+static const char *__copy =
+R"doc(Creates a clone of the given bitmask.
+
+It is fine if the given bitmask is invalid (but in this case, the new
+bitmask will be invalid also). Invalid bitmasks must be assigned a
+length using reset(size_t) or the assignment operator.
+
+Parameter ``src``:
+    the bitmask to clone.)doc";
+
 // Docstring regina::python::doc::Bitmask_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given bitmask are identical.
@@ -785,17 +796,6 @@ R"doc(Creates a new bitmask of the given length with all bits set to
 Parameter ``length``:
     the number of bits stored in this bitmask; this must be at least
     one.)doc";
-
-// Docstring regina::python::doc::Bitmask_::__init_3
-static const char *__init_3 =
-R"doc(Creates a clone of the given bitmask.
-
-It is fine if the given bitmask is invalid (but in this case, the new
-bitmask will be invalid also). Invalid bitmasks must be assigned a
-length using reset(size_t) or the assignment operator.
-
-Parameter ``src``:
-    the bitmask to clone.)doc";
 
 // Docstring regina::python::doc::Bitmask_::__ior
 static const char *__ior =

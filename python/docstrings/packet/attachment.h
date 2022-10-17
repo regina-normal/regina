@@ -41,6 +41,21 @@ expanded in Regina 7.0 to allow for any kind of file to be attached.)doc";
 
 namespace Attachment_ {
 
+// Docstring regina::python::doc::Attachment_::__copy
+static const char *__copy =
+R"doc(Creates a new deep copy of the given attachment.
+
+Like all packet types, this only copies the content of the attachment,
+not the packet infrastructure (e.g., it will not copy the packet
+label, it will not clone the given packet's children, and it will not
+insert the new packet into any packet tree).
+
+This is safe to call even if *src* does not contain a non-empty
+attachment (i.e., if ``src.isNull()`` returns ``True``).
+
+Parameter ``src``:
+    the attachment packet whose contents should be copied.)doc";
+
 // Docstring regina::python::doc::Attachment_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given attachment hold identical data.
@@ -133,21 +148,6 @@ Parameter ``filename``:
     the filename to associated with this attachment; typically this
     would be a filename only, with no directory prefixes. See
     filename() for details on how this string will be used.)doc";
-
-// Docstring regina::python::doc::Attachment_::__init_4
-static const char *__init_4 =
-R"doc(Creates a new deep copy of the given attachment.
-
-Like all packet types, this only copies the content of the attachment,
-not the packet infrastructure (e.g., it will not copy the packet
-label, it will not clone the given packet's children, and it will not
-insert the new packet into any packet tree).
-
-This is safe to call even if *src* does not contain a non-empty
-attachment (i.e., if ``src.isNull()`` returns ``True``).
-
-Parameter ``src``:
-    the attachment packet whose contents should be copied.)doc";
 
 // Docstring regina::python::doc::Attachment_::__ne
 static const char *__ne =

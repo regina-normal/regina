@@ -104,7 +104,7 @@ void addTableView(pybind11::module_& m) {
     // End users should not be constructing them anyway.
     auto c = pybind11::class_<T>(pybind11::handle(), "TableView",
             pybind11::module_local(), rdoc_scope)
-        .def(pybind11::init<const T&>(), rdoc::__init)
+        .def(pybind11::init<const T&>(), rdoc::__copy)
         .def("size", &T::size, rdoc::size)
         .def("__len__", [](const T& view) {
             return view.size().front();

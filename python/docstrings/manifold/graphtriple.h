@@ -102,6 +102,9 @@ sized) amount of data to be copied even in a move operation.
 
 namespace GraphTriple_ {
 
+// Docstring regina::python::doc::GraphTriple_::__copy
+static const char *__copy = R"doc(Creates a clone of the given graph manifold.)doc";
+
 // Docstring regina::python::doc::GraphTriple_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given object contain precisely the
@@ -189,9 +192,6 @@ Parameter ``matchingReln0``:
 Parameter ``matchingReln1``:
     the 2-by-2 matching matrix that specifies how spaces *end1* and
     *centre* are joined.)doc";
-
-// Docstring regina::python::doc::GraphTriple_::__init_3
-static const char *__init_3 = R"doc(Creates a clone of the given graph manifold.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::__lt
 static const char *__lt =

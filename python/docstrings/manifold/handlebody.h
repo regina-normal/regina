@@ -25,6 +25,9 @@ manifold classes.)doc";
 
 namespace Handlebody_ {
 
+// Docstring regina::python::doc::Handlebody_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given handlebody.)doc";
+
 // Docstring regina::python::doc::Handlebody_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given handlebody have the same genus.
@@ -44,9 +47,6 @@ R"doc(Creates a new orientable handlebody of the given genus.
 
 Parameter ``genus``:
     the number of handles.)doc";
-
-// Docstring regina::python::doc::Handlebody_::__init_2
-static const char *__init_2 = R"doc(Creates a new copy of the given handlebody.)doc";
 
 // Docstring regina::python::doc::Handlebody_::__ne
 static const char *__ne =

@@ -54,6 +54,9 @@ Returns:
     ``True`` if and only if the hyperplane described by row *i* is
     smaller than the hyperplane described by row *j*.)doc";
 
+// Docstring regina::python::doc::PosOrder_::__copy
+static const char *__copy = R"doc(Creates a clone of the given helper objet.)doc";
+
 // Docstring regina::python::doc::PosOrder_::__init
 static const char *__init =
 R"doc(Creates a new helper object for comparing hyperplanes.
@@ -61,9 +64,6 @@ R"doc(Creates a new helper object for comparing hyperplanes.
 Parameter ``matrix``:
     the *subspace* matrix as passed to the normal surface enumeration
     routine.)doc";
-
-// Docstring regina::python::doc::PosOrder_::__init_2
-static const char *__init_2 = R"doc(Creates a clone of the given helper objet.)doc";
 
 }
 

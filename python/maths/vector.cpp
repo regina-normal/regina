@@ -51,7 +51,7 @@ void addVectorOf(pybind11::module_& m, const char* className) {
         .def(pybind11::init([](const std::vector<T> v) {
             return new Vec(v.begin(), v.end());
         }), rdoc::__init_3)
-        .def(pybind11::init<const Vec&>(), rdoc::__init_4)
+        .def(pybind11::init<const Vec&>(), rdoc::__copy)
         .def("size", &Vec::size, rdoc::size)
         .def("__len__", &Vec::size, rdoc::size)
         .def("__getitem__", [](Vec& v, size_t index) -> T& {

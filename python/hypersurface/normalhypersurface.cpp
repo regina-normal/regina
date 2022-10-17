@@ -48,13 +48,13 @@ void addNormalHypersurface(pybind11::module_& m) {
 
     auto c = pybind11::class_<NormalHypersurface>(m, "NormalHypersurface",
             rdoc_scope)
-        .def(pybind11::init<const NormalHypersurface&>(), rdoc::__init)
+        .def(pybind11::init<const NormalHypersurface&>(), rdoc::__copy)
         .def(pybind11::init<const NormalHypersurface&,
-            const Triangulation<4>&>(), rdoc::__init_2)
+            const Triangulation<4>&>(), rdoc::__init)
         .def(pybind11::init<const Triangulation<4>&, regina::HyperEncoding,
-            const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_3)
+            const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_2)
         .def(pybind11::init<const Triangulation<4>&, regina::HyperCoords,
-            const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_4)
+            const regina::Vector<regina::LargeInteger>&>(), rdoc::__init_3)
         .def(pybind11::init([](const Triangulation<4>& t,
                 regina::HyperEncoding enc, pybind11::list values) {
             regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
@@ -69,7 +69,7 @@ void addNormalHypersurface(pybind11::module_& m) {
                     "List element not convertible to LargeInteger");
             }
             return new NormalHypersurface(t, enc, std::move(v));
-        }), rdoc::__init_3)
+        }), rdoc::__init_2)
         .def(pybind11::init([](const Triangulation<4>& t,
                 regina::HyperCoords coords, pybind11::list values) {
             regina::HyperEncoding enc(coords);
@@ -85,7 +85,7 @@ void addNormalHypersurface(pybind11::module_& m) {
                     "List element not convertible to LargeInteger");
             }
             return new NormalHypersurface(t, enc, std::move(v));
-        }), rdoc::__init_4)
+        }), rdoc::__init_3)
         .def("swap", &NormalHypersurface::swap, rdoc::swap)
         .def("doubleHypersurface", [](const NormalHypersurface& s) {
             // This is deprecated, so we reimplement it ourselves.

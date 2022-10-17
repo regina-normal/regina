@@ -27,6 +27,9 @@ manifold classes.)doc";
 
 namespace SimpleSurfaceBundle_ {
 
+// Docstring regina::python::doc::SimpleSurfaceBundle_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given surface bundle.)doc";
+
 // Docstring regina::python::doc::SimpleSurfaceBundle_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given surface bundle are of the same
@@ -43,12 +46,9 @@ Returns:
 static const char *__init =
 R"doc(Creates a new surface bundle of the given type.
 
-Parameter ``newType``:
+Parameter ``bundleType``:
     the specific type of surface bundle to represent. This must be one
     of the 3-manifold constants defined in this class.)doc";
-
-// Docstring regina::python::doc::SimpleSurfaceBundle_::__init_2
-static const char *__init_2 = R"doc(Creates a new copy of the given surface bundle.)doc";
 
 // Docstring regina::python::doc::SimpleSurfaceBundle_::__ne
 static const char *__ne =

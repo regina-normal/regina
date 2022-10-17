@@ -101,6 +101,13 @@ Parameter ``source``:
 Returns:
     the image of *source*.)doc";
 
+// Docstring regina::python::doc::Perm_::__copy
+static const char *__copy =
+R"doc(Creates a permutation that is a clone of the given permutation.
+
+Parameter ``cloneMe``:
+    the permutation to clone.)doc";
+
 // Docstring regina::python::doc::Perm_::__eq
 static const char *__eq =
 R"doc(Determines if this is equal to the given permutation. This is true if
@@ -225,13 +232,6 @@ Parameter ``e1``:
 
 Parameter ``f1``:
     the desired image of *f0*.)doc";
-
-// Docstring regina::python::doc::Perm_::__init_6
-static const char *__init_6 =
-R"doc(Creates a permutation that is a clone of the given permutation.
-
-Parameter ``cloneMe``:
-    the permutation to clone.)doc";
 
 // Docstring regina::python::doc::Perm_::__lt
 static const char *__lt =

@@ -487,6 +487,16 @@ the setting of face pairing graphs of 3-manifold triangulations.)doc";
 
 namespace TreeDecomposition_ {
 
+// Docstring regina::python::doc::TreeDecomposition_::__copy
+static const char *__copy =
+R"doc(Builds a new copy of the given tree decomposition.
+
+This will be a deep copy, in the sense that all of the bags of *src*
+will be cloned also.
+
+Parameter ``src``:
+    the tree decomposition to clone.)doc";
+
 // Docstring regina::python::doc::TreeDecomposition_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given tree decomposition are
@@ -506,16 +516,6 @@ Returns:
 
 // Docstring regina::python::doc::TreeDecomposition_::__init
 static const char *__init =
-R"doc(Builds a new copy of the given tree decomposition.
-
-This will be a deep copy, in the sense that all of the bags of *src*
-will be cloned also.
-
-Parameter ``src``:
-    the tree decomposition to clone.)doc";
-
-// Docstring regina::python::doc::TreeDecomposition_::__init_2
-static const char *__init_2 =
 R"doc(Builds a tree decomposition of the facet pairing graph of the given
 triangulation.
 
@@ -534,8 +534,8 @@ Parameter ``alg``:
     decomposition; in particular, this specifies whether to use a slow
     exact algorithm or a fast greedy algorithm.)doc";
 
-// Docstring regina::python::doc::TreeDecomposition_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::TreeDecomposition_::__init_2
+static const char *__init_2 =
 R"doc(Builds a tree decomposition of the given facet pairing graph.
 
 The nodes of the graph will be numbered in the same way as the top-
@@ -553,8 +553,8 @@ Parameter ``alg``:
     decomposition; in particular, this specifies whether to use a slow
     exact algorithm or a fast greedy algorithm.)doc";
 
-// Docstring regina::python::doc::TreeDecomposition_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::TreeDecomposition_::__init_3
+static const char *__init_3 =
 R"doc(Builds a tree decomposition of the planar multigraph corresponding to
 the given knot or link diagram.
 
@@ -569,8 +569,8 @@ Parameter ``alg``:
     decomposition; in particular, this specifies whether to use a slow
     exact algorithm or a fast greedy algorithm.)doc";
 
-// Docstring regina::python::doc::TreeDecomposition_::__init_5
-static const char *__init_5 =
+// Docstring regina::python::doc::TreeDecomposition_::__init_4
+static const char *__init_4 =
 R"doc(Builds a tree decomposition of an arbitrary graph. The graph may be
 directed or undirected.
 
@@ -596,8 +596,8 @@ Parameter ``alg``:
     decomposition; in particular, this specifies whether to use a slow
     exact algorithm or a fast greedy algorithm.)doc";
 
-// Docstring regina::python::doc::TreeDecomposition_::__init_6
-static const char *__init_6 =
+// Docstring regina::python::doc::TreeDecomposition_::__init_5
+static const char *__init_5 =
 R"doc(Builds a tree decomposition of an arbitrary graph. The graph may be
 directed or undirected.
 

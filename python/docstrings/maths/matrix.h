@@ -77,6 +77,18 @@ Template parameter ``ring``:
 
 namespace Matrix_ {
 
+// Docstring regina::python::doc::Matrix_::__copy
+static const char *__copy =
+R"doc(Creates a new matrix that is a clone of the given matrix.
+
+This constructor induces a deep copy of *src*.
+
+This routine is safe to call even if *src* is uninitialised (in which
+case this matrix will become uninitialised also).
+
+Parameter ``src``:
+    the matrix to clone.)doc";
+
 // Docstring regina::python::doc::Matrix_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given matrix are identical.
@@ -167,18 +179,6 @@ Python:
 
 Parameter ``data``:
     the rows of the matrix, each given as a list of elements.)doc";
-
-// Docstring regina::python::doc::Matrix_::__init_4
-static const char *__init_4 =
-R"doc(Creates a new matrix that is a clone of the given matrix.
-
-This constructor induces a deep copy of *src*.
-
-This routine is safe to call even if *src* is uninitialised (in which
-case this matrix will become uninitialised also).
-
-Parameter ``src``:
-    the matrix to clone.)doc";
 
 // Docstring regina::python::doc::Matrix_::__mul
 static const char *__mul =

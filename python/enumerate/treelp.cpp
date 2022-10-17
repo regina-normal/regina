@@ -62,7 +62,7 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("enumeration") = true,
             rdoc::__init)
-        .def(pybind11::init<const Tableaux&>(), rdoc::__init_2)
+        .def(pybind11::init<const Tableaux&>(), rdoc::__copy)
         .def("swap", &Tableaux::swap, rdoc::swap)
         .def("tri", &Tableaux::tri,
             pybind11::return_value_policy::reference_internal, rdoc::tri)
@@ -176,7 +176,7 @@ void addTreeLP(pybind11::module_& m) {
 
     auto s = pybind11::class_<LPSystem>(m, "LPSystem", rdoc_scope)
         .def(pybind11::init<regina::NormalEncoding>(), rdoc::__init)
-        .def(pybind11::init<const LPSystem&>(), rdoc::__init_2)
+        .def(pybind11::init<const LPSystem&>(), rdoc::__copy)
         .def("normal", &LPSystem::normal, rdoc::normal)
         .def("angle", &LPSystem::angle, rdoc::angle)
         .def("standard", &LPSystem::standard, rdoc::standard)

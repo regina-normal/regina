@@ -24,6 +24,15 @@ tree, or event listeners).)doc";
 
 namespace Text_ {
 
+// Docstring regina::python::doc::Text_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given text packet.
+
+Like all packet types, this only copies the text content, not the
+packet infrastructure (e.g., it will not copy the packet label, it
+will not clone the given packet's children, and it will not insert the
+new packet into any packet tree).)doc";
+
 // Docstring regina::python::doc::Text_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given packet contain the same text.
@@ -44,15 +53,6 @@ R"doc(Initialises the packet to the given string.
 
 Parameter ``text``:
     the new value for the packet.)doc";
-
-// Docstring regina::python::doc::Text_::__init_3
-static const char *__init_3 =
-R"doc(Creates a new copy of the given text packet.
-
-Like all packet types, this only copies the text content, not the
-packet infrastructure (e.g., it will not copy the packet label, it
-will not clone the given packet's children, and it will not insert the
-new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::Text_::__ne
 static const char *__ne =

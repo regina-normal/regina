@@ -27,6 +27,16 @@ content of their own.)doc";
 
 namespace Container_ {
 
+// Docstring regina::python::doc::Container_::__copy
+static const char *__copy =
+R"doc(Copy constructor that does nothing.
+
+This is only here for consistency with the other packet types. Like
+all packet types, this copy constructor does not copy any of the
+packet infrastructure (e.g., it will not copy the packet label, it
+will not clone the given packet's children, and it will not insert the
+new packet into any packet tree).)doc";
+
 // Docstring regina::python::doc::Container_::__init
 static const char *__init = R"doc(Default constructor.)doc";
 
@@ -40,16 +50,6 @@ containers to organise the data in this tree.
 
 Parameter ``label``:
     the packet label for this new container.)doc";
-
-// Docstring regina::python::doc::Container_::__init_3
-static const char *__init_3 =
-R"doc(Copy constructor that does nothing.
-
-This is only here for consistency with the other packet types. Like
-all packet types, this copy constructor does not copy any of the
-packet infrastructure (e.g., it will not copy the packet label, it
-will not clone the given packet's children, and it will not insert the
-new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::Container_::global_swap
 static const char *global_swap =

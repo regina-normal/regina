@@ -57,7 +57,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def_readwrite("exponent", &GroupExpressionTerm::exponent)
         .def(pybind11::init<>(), rdoc::__init)
         .def(pybind11::init<unsigned long, long>(), rdoc::__init_2)
-        .def(pybind11::init<const GroupExpressionTerm&>(), rdoc::__init_3)
+        .def(pybind11::init<const GroupExpressionTerm&>(), rdoc::__copy)
         .def(pybind11::self < pybind11::self, rdoc::__lt)
         .def("inverse", &GroupExpressionTerm::inverse, rdoc::inverse)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
@@ -72,8 +72,8 @@ void addGroupPresentation(pybind11::module_& m) {
         .def(pybind11::init<>(), rdoc::__init)
         .def(pybind11::init<const GroupExpressionTerm&>(), rdoc::__init_2)
         .def(pybind11::init<unsigned long, long>(), rdoc::__init_3)
-        .def(pybind11::init<const GroupExpression&>(), rdoc::__init_4)
-        .def(pybind11::init<const std::string&>(), rdoc::__init_5)
+        .def(pybind11::init<const GroupExpression&>(), rdoc::__copy)
+        .def(pybind11::init<const std::string&>(), rdoc::__init_4)
         .def("swap", &GroupExpression::swap, rdoc::swap)
         .def("terms", overload_cast<>(&GroupExpression::terms),
             pybind11::return_value_policy::reference_internal, rdoc::terms)
@@ -136,10 +136,10 @@ void addGroupPresentation(pybind11::module_& m) {
     auto c3 = pybind11::class_<GroupPresentation>(m, "GroupPresentation",
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
-        .def(pybind11::init<const GroupPresentation&>(), rdoc::__init_2)
-        .def(pybind11::init<unsigned long>(), rdoc::__init_3)
+        .def(pybind11::init<const GroupPresentation&>(), rdoc::__copy)
+        .def(pybind11::init<unsigned long>(), rdoc::__init_2)
         .def(pybind11::init<unsigned long, const std::vector<std::string>&>(),
-            rdoc::__init_4)
+            rdoc::__init_3)
         .def("swap", &GroupPresentation::swap, rdoc::swap)
         .def("addGenerator", &GroupPresentation::addGenerator,
             pybind11::arg("numToAdd") = 1, rdoc::addGenerator)

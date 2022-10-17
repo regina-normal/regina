@@ -175,6 +175,16 @@ Returns:
 
 namespace DiscSetSurfaceDataImpl_ {
 
+// Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given set of normal discs.
+
+The data for each disc will be copied using the copy assignment
+operator for type *T*.
+
+Parameter ``src``:
+    the disc set to copy.)doc";
+
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given set have the same number of
@@ -209,16 +219,6 @@ absolutely necessary).
 
 Parameter ``surface``:
     the normal surface whose discs we shall use.)doc";
-
-// Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__init_2
-static const char *__init_2 =
-R"doc(Creates a new copy of the given set of normal discs.
-
-The data for each disc will be copied using the copy assignment
-operator for type *T*.
-
-Parameter ``src``:
-    the disc set to copy.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__iter__
 static const char *__iter__ =
@@ -339,6 +339,13 @@ Returns:
 
 namespace DiscSetTet_ {
 
+// Docstring regina::python::doc::DiscSetTet_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given set of normal discs.
+
+Parameter ``src``:
+    the disc set to copy.)doc";
+
 // Docstring regina::python::doc::DiscSetTet_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given set have the same number of
@@ -399,13 +406,6 @@ Parameter ``oct1``:
 
 Parameter ``oct2``:
     the number of octahedral discs of type 2.)doc";
-
-// Docstring regina::python::doc::DiscSetTet_::__init_3
-static const char *__init_3 =
-R"doc(Creates a new copy of the given set of normal discs.
-
-Parameter ``src``:
-    the disc set to copy.)doc";
 
 // Docstring regina::python::doc::DiscSetTet_::__ne
 static const char *__ne =
@@ -543,6 +543,13 @@ Returns:
 
 namespace DiscSpec_ {
 
+// Docstring regina::python::doc::DiscSpec_::__copy
+static const char *__copy =
+R"doc(Creates a new disc specifier that is a clone of the given specifier.
+
+Parameter ``cloneMe``:
+    the disc specifier to clone.)doc";
+
 // Docstring regina::python::doc::DiscSpec_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given disc specifier contain identical
@@ -574,13 +581,6 @@ Parameter ``newNumber``:
     specifies which disc of the particular type in the particular
     tetrahedron is being referred to; discs are numbered as described
     in the *DiscSpec* class notes.)doc";
-
-// Docstring regina::python::doc::DiscSpec_::__init_3
-static const char *__init_3 =
-R"doc(Creates a new disc specifier that is a clone of the given specifier.
-
-Parameter ``cloneMe``:
-    the disc specifier to clone.)doc";
 
 // Docstring regina::python::doc::DiscSpec_::__ne
 static const char *__ne =

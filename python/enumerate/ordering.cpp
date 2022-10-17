@@ -44,7 +44,7 @@ void addOrdering(pybind11::module_& m) {
 
     auto c = pybind11::class_<PosOrder>(m, "PosOrder", rdoc_scope)
         .def(pybind11::init<const MatrixInt&>(), rdoc::__init)
-        .def(pybind11::init<const PosOrder&>(), rdoc::__init_2)
+        .def(pybind11::init<const PosOrder&>(), rdoc::__copy)
         .def("__call__", [](const PosOrder& p, long i, long j) {
             return p(i, j);
         }, rdoc::__call)

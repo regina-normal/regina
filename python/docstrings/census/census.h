@@ -65,6 +65,9 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace CensusDB_ {
 
+// Docstring regina::python::doc::CensusDB_::__copy
+static const char *__copy = R"doc(Creates a new clone of the given database reference.)doc";
+
 // Docstring regina::python::doc::CensusDB_::__eq
 static const char *__eq =
 R"doc(Tests whether this and the given object represent the same database.
@@ -96,9 +99,6 @@ Parameter ``desc``:
     a human-readable description of the database. See the desc()
     routine for further information on how this description might be
     used.)doc";
-
-// Docstring regina::python::doc::CensusDB_::__init_2
-static const char *__init_2 = R"doc(Creates a new clone of the given database reference.)doc";
 
 // Docstring regina::python::doc::CensusDB_::__ne
 static const char *__ne =
@@ -198,6 +198,9 @@ Parameter ``other``:
 
 namespace CensusHit_ {
 
+// Docstring regina::python::doc::CensusHit_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given census hit.)doc";
+
 // Docstring regina::python::doc::CensusHit_::__eq
 static const char *__eq =
 R"doc(Tests whether this and the given object represent the same census hit.
@@ -211,9 +214,6 @@ Parameter ``rhs``:
 
 Returns:
     ``True`` if and only if this and the given hit are the same.)doc";
-
-// Docstring regina::python::doc::CensusHit_::__init
-static const char *__init = R"doc(Creates a new copy of the given census hit.)doc";
 
 // Docstring regina::python::doc::CensusHit_::__ne
 static const char *__ne =

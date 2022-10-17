@@ -110,7 +110,7 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
 
             return m;
         }), rdoc::__init_3)
-        .def(pybind11::init<const Matrix&>(), rdoc::__init_4)
+        .def(pybind11::init<const Matrix&>(), rdoc::__copy)
         .def("initialise", &Matrix::initialise, rdoc::initialise)
         .def("swap", &Matrix::swap, rdoc::swap)
         .def("rows", &Matrix::rows, rdoc::rows)

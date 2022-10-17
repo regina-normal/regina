@@ -156,6 +156,13 @@ Parameter ``source``:
 Returns:
     the image of *source*.)doc";
 
+// Docstring regina::python::doc::Perm_::__copy
+static const char *__copy =
+R"doc(Creates a permutation that is a clone of the given permutation.
+
+Parameter ``cloneMe``:
+    the permutation to clone.)doc";
+
 // Docstring regina::python::doc::Perm_::__eq
 static const char *__eq =
 R"doc(Determines if this is equal to the given permutation. This is true if
@@ -195,13 +202,6 @@ Precondition:
 
 Parameter ``image``:
     the array of images.)doc";
-
-// Docstring regina::python::doc::Perm_::__init_4
-static const char *__init_4 =
-R"doc(Creates a permutation that is a clone of the given permutation.
-
-Parameter ``cloneMe``:
-    the permutation to clone.)doc";
 
 // Docstring regina::python::doc::Perm_::__mul
 static const char *__mul =
@@ -380,6 +380,9 @@ static const char *isPermCode =
 R"doc(Determines whether the given integer is a valid internal permutation
 code. Valid permutation codes can be passed to setPermCode() or
 fromPermCode(), and are returned by permCode().
+
+Parameter ``code``:
+    the permutation code to test.
 
 Returns:
     ``True`` if and only if the given code is a valid internal

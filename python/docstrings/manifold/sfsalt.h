@@ -66,6 +66,9 @@ amount of data to be copied even in a move operation.)doc";
 
 namespace SFSAlt_ {
 
+// Docstring regina::python::doc::SFSAlt_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given alternative.)doc";
+
 // Docstring regina::python::doc::SFSAlt_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given alternative representation have
@@ -153,9 +156,6 @@ Parameter ``reflect``:
 Parameter ``negate``:
     ``True`` if we should attempt to negate all exceptional fibres
     without reflecting, as described above.)doc";
-
-// Docstring regina::python::doc::SFSAlt_::__init_3
-static const char *__init_3 = R"doc(Creates a new copy of the given alternative.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::__ne
 static const char *__ne =

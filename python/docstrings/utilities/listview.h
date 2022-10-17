@@ -90,6 +90,9 @@ Parameter ``index``:
 Returns:
     the (*index*)th element in this list.)doc";
 
+// Docstring regina::python::doc::ListView_::__copy
+constexpr const char *__copy = R"doc(Creates a new copy of the given list view.)doc";
+
 // Docstring regina::python::doc::ListView_::__eq
 constexpr const char *__eq =
 R"doc(Determines whether this and the given list view are accessing the same
@@ -105,9 +108,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given list use the same
     underlying container.)doc";
-
-// Docstring regina::python::doc::ListView_::__init
-constexpr const char *__init = R"doc(Creates a new copy of the given list view.)doc";
 
 // Docstring regina::python::doc::ListView_::__iter__
 constexpr const char *__iter__ =

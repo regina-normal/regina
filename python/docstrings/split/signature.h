@@ -55,6 +55,13 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace Signature_ {
 
+// Docstring regina::python::doc::Signature_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given signature.
+
+Parameter ``sig``:
+    the signature to copy.)doc";
+
 // Docstring regina::python::doc::Signature_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given signature are identical.
@@ -91,13 +98,6 @@ Exception ``InvalidArgument``:
 
 Parameter ``str``:
     a string representation of a splitting surface signature.)doc";
-
-// Docstring regina::python::doc::Signature_::__init_2
-static const char *__init_2 =
-R"doc(Creates a new copy of the given signature.
-
-Parameter ``sig``:
-    the signature to copy.)doc";
 
 // Docstring regina::python::doc::Signature_::__ne
 static const char *__ne =

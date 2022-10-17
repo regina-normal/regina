@@ -115,6 +115,13 @@ Parameter ``index``:
 Returns:
     a reference to the vector element at the given index.)doc";
 
+// Docstring regina::python::doc::Vector_::__copy
+static const char *__copy =
+R"doc(Creates a new vector that is a clone of the given vector.
+
+Parameter ``src``:
+    the vector to clone.)doc";
+
 // Docstring regina::python::doc::Vector_::__eq
 static const char *__eq =
 R"doc(Determines if this vector is equal to the given vector.
@@ -167,14 +174,14 @@ zero.
     If *T* is a native C++ integer type (such as ``int`` or ``long``),
     then the elements will not be initialised to any particular value.
 
-Parameter ``newVectorSize``:
+Parameter ``size``:
     the number of elements in the new vector.)doc";
 
 // Docstring regina::python::doc::Vector_::__init_2
 static const char *__init_2 =
 R"doc(Creates a new vector and initialises every element to the given value.
 
-Parameter ``newVectorSize``:
+Parameter ``size``:
     the number of elements in the new vector.
 
 Parameter ``initValue``:
@@ -206,13 +213,6 @@ Parameter ``begin``:
 Parameter ``end``:
     a past-the-end iterator indicating the end of the sequence of
     elements.)doc";
-
-// Docstring regina::python::doc::Vector_::__init_4
-static const char *__init_4 =
-R"doc(Creates a new vector that is a clone of the given vector.
-
-Parameter ``src``:
-    the vector to clone.)doc";
 
 // Docstring regina::python::doc::Vector_::__isub
 static const char *__isub =

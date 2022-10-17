@@ -52,6 +52,9 @@ sized) amount of data to be copied even in a move operation.)doc";
 
 namespace GraphPair_ {
 
+// Docstring regina::python::doc::GraphPair_::__copy
+static const char *__copy = R"doc(Creates a clone of the given graph manifold.)doc";
+
 // Docstring regina::python::doc::GraphPair_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given object contain precisely the
@@ -193,9 +196,6 @@ Parameter ``sfs1``:
 
 Parameter ``matchingReln``:
     the 2-by-2 matching matrix.)doc";
-
-// Docstring regina::python::doc::GraphPair_::__init_5
-static const char *__init_5 = R"doc(Creates a clone of the given graph manifold.)doc";
 
 // Docstring regina::python::doc::GraphPair_::__lt
 static const char *__lt =

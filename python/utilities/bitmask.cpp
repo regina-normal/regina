@@ -51,7 +51,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<B>(m, name, rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
         .def(pybind11::init<size_t>(), rdoc::__init_2)
-        .def(pybind11::init<const B&>(), rdoc::__init_3)
+        .def(pybind11::init<const B&>(), rdoc::__copy)
         .def("reset", pybind11::overload_cast<>(&B::reset), rdoc::reset)
         .def("reset", pybind11::overload_cast<size_t>(&B::reset), rdoc::reset_2)
         .def("truncate", &B::truncate, rdoc::truncate)
@@ -96,7 +96,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
     auto c = pybind11::class_<Bitmask>(m, "Bitmask", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
         .def(pybind11::init<size_t>(), rdoc::__init_2)
-        .def(pybind11::init<const Bitmask&>(), rdoc::__init_3)
+        .def(pybind11::init<const Bitmask&>(), rdoc::__copy)
         .def("get", &Bitmask::get, rdoc::get)
         .def("set", static_cast<void (Bitmask::*)(size_t, bool)>(&Bitmask::set),
             rdoc::set)

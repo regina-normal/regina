@@ -45,7 +45,7 @@ void addText(pybind11::module_& m) {
             m, "Text", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
         .def(pybind11::init<std::string>(), rdoc::__init_2)
-        .def(pybind11::init<const Text&>(), rdoc::__init_3)
+        .def(pybind11::init<const Text&>(), rdoc::__copy)
         .def("swap", &Text::swap, rdoc::swap)
         .def("text", &Text::text, rdoc::text)
         .def("setText", &Text::setText, rdoc::setText)

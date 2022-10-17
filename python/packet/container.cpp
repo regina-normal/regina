@@ -43,7 +43,7 @@ void addContainer(pybind11::module_& m) {
             std::shared_ptr<Container>>(m, "Container", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
         .def(pybind11::init<const std::string&>(), rdoc::__init_2)
-        .def(pybind11::init<const Container&>(), rdoc::__init_3)
+        .def(pybind11::init<const Container&>(), rdoc::__copy)
         .def("swap", &Container::swap, rdoc::swap)
         .def_readonly_static("typeID", &Container::typeID)
     ;

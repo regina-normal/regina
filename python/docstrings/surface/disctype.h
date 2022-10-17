@@ -42,6 +42,13 @@ functions.)doc";
 
 namespace DiscType_ {
 
+// Docstring regina::python::doc::DiscType_::__copy
+static const char *__copy =
+R"doc(Creates a copy of the given disc type.
+
+Parameter ``cloneMe``:
+    the disc type to clone.)doc";
+
 // Docstring regina::python::doc::DiscType_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given disc type are identical.
@@ -69,13 +76,6 @@ Parameter ``newTetIndex``:
 Parameter ``newType``:
     the specific disc type within the given tetrahedron; see the class
     notes for the meaning of this field.)doc";
-
-// Docstring regina::python::doc::DiscType_::__init_3
-static const char *__init_3 =
-R"doc(Creates a copy of the given disc type.
-
-Parameter ``cloneMe``:
-    the disc type to clone.)doc";
 
 // Docstring regina::python::doc::DiscType_::__lt
 static const char *__lt =

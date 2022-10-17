@@ -124,15 +124,18 @@ ReginaException, and are not documented again here.)doc";
 
 namespace NoSolution_ {
 
+// Docstring regina::python::doc::NoSolution_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
+
 // Docstring regina::python::doc::NoSolution_::__init
 static const char *__init = R"doc(Creates a new exception with a stock error message.)doc";
-
-// Docstring regina::python::doc::NoSolution_::__init_2
-static const char *__init_2 = R"doc(Creates a new copy of the given exception.)doc";
 
 }
 
 namespace ReginaException_ {
+
+// Docstring regina::python::doc::ReginaException_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
 
 // Docstring regina::python::doc::ReginaException_::__init
 static const char *__init =
@@ -152,12 +155,12 @@ This constructor may throw std::bad_alloc.
 Parameter ``msg``:
     a human-readable description of the error.)doc";
 
-// Docstring regina::python::doc::ReginaException_::__init_3
-static const char *__init_3 = R"doc(Creates a new copy of the given exception.)doc";
-
 }
 
 namespace SnapPeaIsNull_ {
+
+// Docstring regina::python::doc::SnapPeaIsNull_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
 
 // Docstring regina::python::doc::SnapPeaIsNull_::__init
 static const char *__init =
@@ -169,9 +172,6 @@ Parameter ``fromFunction``:
     particular, this is not the name of the SnapPea kernel function
     that would have been called as a result). An example might be
     "SnapPeaTriangulation::homologyFilled".)doc";
-
-// Docstring regina::python::doc::SnapPeaIsNull_::__init_2
-static const char *__init_2 = R"doc(Creates a new copy of the given exception.)doc";
 
 }
 

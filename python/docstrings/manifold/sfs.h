@@ -94,6 +94,13 @@ sized) amount of data to be copied even in a move operation.
 
 namespace SFSFibre_ {
 
+// Docstring regina::python::doc::SFSFibre_::__copy
+static const char *__copy =
+R"doc(Creates a new exceptional fibre that is a clone of the given fibre.
+
+Parameter ``cloneMe``:
+    the exceptional fibre to clone.)doc";
+
 // Docstring regina::python::doc::SFSFibre_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given exceptional fibre are identical. This
@@ -120,13 +127,6 @@ Parameter ``newAlpha``:
 Parameter ``newBeta``:
     the second parameter of this exceptional fibre; this must have no
     common factors with the first parameter *newAlpha*.)doc";
-
-// Docstring regina::python::doc::SFSFibre_::__init_3
-static const char *__init_3 =
-R"doc(Creates a new exceptional fibre that is a clone of the given fibre.
-
-Parameter ``cloneMe``:
-    the exceptional fibre to clone.)doc";
 
 // Docstring regina::python::doc::SFSFibre_::__lt
 static const char *__lt =
@@ -160,6 +160,9 @@ static const char *ClassType =
 R"doc(Lists the six classes ``o1``, ``o2``, ``n1``, ``n2``, ``n3``, ``n4``
 for base orbifolds without boundaries, plus five classes ``bo1``,
 ``b02``, ``bn1``, ``bn2``, ``bn3`` for base orbifolds with boundaries.)doc";
+
+// Docstring regina::python::doc::SFSpace_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::SFSpace_::__eq
 static const char *__eq =
@@ -233,9 +236,6 @@ Parameter ``reflectorsTwisted``:
     the number of twisted reflector boundary components of the base
     orbifold. These are in addition to the ordinary boundary
     components described by *puncturesTwisted*.)doc";
-
-// Docstring regina::python::doc::SFSpace_::__init_3
-static const char *__init_3 = R"doc(Creates a new copy of the given Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::SFSpace_::__lt
 static const char *__lt =

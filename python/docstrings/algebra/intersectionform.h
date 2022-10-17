@@ -30,6 +30,9 @@ instantaneous.)doc";
 
 namespace IntersectionForm_ {
 
+// Docstring regina::python::doc::IntersectionForm_::__copy
+static const char *__copy = R"doc(Creates a clone of the given intersection form.)doc";
+
 // Docstring regina::python::doc::IntersectionForm_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given bilinear form are represented by the
@@ -67,9 +70,6 @@ Exception ``InvalidArgument``:
 Parameter ``form``:
     a symmetric square integer matrix that describes this bilinear
     form.)doc";
-
-// Docstring regina::python::doc::IntersectionForm_::__init_2
-static const char *__init_2 = R"doc(Creates a clone of the given intersection form.)doc";
 
 // Docstring regina::python::doc::IntersectionForm_::__ne
 static const char *__ne =

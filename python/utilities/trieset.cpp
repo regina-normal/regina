@@ -53,7 +53,7 @@ void addTrieSet(pybind11::module_& m) {
 
     auto c = pybind11::class_<TrieSet>(m, "TrieSet", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
-        .def(pybind11::init<const TrieSet&>(), rdoc::__init_2)
+        .def(pybind11::init<const TrieSet&>(), rdoc::__copy)
         .def("swap", &TrieSet::swap, rdoc::swap)
 
         .def("insert", &TrieSet::insert<Bitmask>, rdoc::insert)

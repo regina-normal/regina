@@ -659,6 +659,13 @@ Parameter ``other``:
 
 namespace LPInitialTableaux_ {
 
+// Docstring regina::python::doc::LPInitialTableaux_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given matrix.
+
+Parameter ``src``:
+    the matrix to copy.)doc";
+
 // Docstring regina::python::doc::LPInitialTableaux_::__init
 static const char *__init =
 R"doc(Construts this adjusted sparse matrix of matching equations.
@@ -699,13 +706,6 @@ Parameter ``enumeration``:
     should optimise the tableaux for an existence test (such as
     searching for a non-trivial normal disc or sphere, or a strict
     angle structure).)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::__init_2
-static const char *__init_2 =
-R"doc(Creates a new copy of the given matrix.
-
-Parameter ``src``:
-    the matrix to copy.)doc";
 
 // Docstring regina::python::doc::LPInitialTableaux_::columnPerm
 static const char *columnPerm =
@@ -1234,6 +1234,9 @@ Parameter ``r2``:
 
 namespace LPSystem_ {
 
+// Docstring regina::python::doc::LPSystem_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given class of vector encodings.)doc";
+
 // Docstring regina::python::doc::LPSystem_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given object represent the same class
@@ -1255,9 +1258,6 @@ Parameter ``enc``:
     a normal surface vector encoding; this may be any valid
     NormalEncoding object, including the special angle structure
     encoding.)doc";
-
-// Docstring regina::python::doc::LPSystem_::__init_2
-static const char *__init_2 = R"doc(Creates a new copy of the given class of vector encodings.)doc";
 
 // Docstring regina::python::doc::LPSystem_::__ne
 static const char *__ne =

@@ -283,6 +283,20 @@ Parameter ``yExp``:
 Returns:
     the coefficient of the term with the given exponents.)doc";
 
+// Docstring regina::python::doc::Laurent2_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given polynomial.
+
+This constructor induces a deep copy of *value*.
+
+A note for developers: even though this routine is identical to the
+templated copy constructor, it must be declared and implemented
+separately. Otherwise the compiler might create its own (incorrect)
+copy constructor automatically.
+
+Parameter ``value``:
+    the polynomial to clone.)doc";
+
 // Docstring regina::python::doc::Laurent2_::__eq
 static const char *__eq =
 R"doc(Tests whether this and the given polynomial are equal.
@@ -396,20 +410,6 @@ Parameter ``yExp``:
 
 // Docstring regina::python::doc::Laurent2_::__init_3
 static const char *__init_3 =
-R"doc(Creates a new copy of the given polynomial.
-
-This constructor induces a deep copy of *value*.
-
-A note for developers: even though this routine is identical to the
-templated copy constructor, it must be declared and implemented
-separately. Otherwise the compiler might create its own (incorrect)
-copy constructor automatically.
-
-Parameter ``value``:
-    the polynomial to clone.)doc";
-
-// Docstring regina::python::doc::Laurent2_::__init_4
-static const char *__init_4 =
 R"doc(Creates a copy of the given polynomial with all terms multiplied by
 ``x^d y^e`` for some integers *d* and *e*.
 
@@ -424,8 +424,8 @@ Parameter ``xShift``:
 Parameter ``yShift``:
     the integer *e*, which will be added to all exponents for *y*.)doc";
 
-// Docstring regina::python::doc::Laurent2_::__init_5
-static const char *__init_5 =
+// Docstring regina::python::doc::Laurent2_::__init_4
+static const char *__init_4 =
 R"doc(Creates a new polynomial from the given collection of coefficients.
 
 The coefficients should be presented as a collection of tuples of the

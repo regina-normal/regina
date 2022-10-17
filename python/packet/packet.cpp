@@ -285,7 +285,7 @@ void addPacket(pybind11::module_& m) {
 
     auto s = pybind11::class_<PacketShell>(m, "PacketShell", rdoc_scope)
         .def(pybind11::init<const Packet*>(), rdoc::__init)
-        .def(pybind11::init<const PacketShell&>(), rdoc::__init_2)
+        .def(pybind11::init<const PacketShell&>(), rdoc::__copy)
         .def("label", &PacketShell::label, rdoc::label)
         .def("humanLabel", &PacketShell::humanLabel, rdoc::humanLabel)
         .def("hasTag", &PacketShell::hasTag, rdoc::hasTag)

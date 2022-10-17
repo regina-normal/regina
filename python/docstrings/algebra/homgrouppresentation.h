@@ -43,6 +43,9 @@ possible, even when passing or returning objects by value.
 
 namespace HomGroupPresentation_ {
 
+// Docstring regina::python::doc::HomGroupPresentation_::__copy
+static const char *__copy = R"doc(Creates a clone of the given homomorphism.)doc";
+
 // Docstring regina::python::doc::HomGroupPresentation_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given homomorphism have identical
@@ -119,9 +122,6 @@ class notes for details).
 
 Parameter ``groupForIdentity``:
     both the domain and codomain of the new identity homomorphism.)doc";
-
-// Docstring regina::python::doc::HomGroupPresentation_::__init_4
-static const char *__init_4 = R"doc(Creates a clone of the given homomorphism.)doc";
 
 // Docstring regina::python::doc::HomGroupPresentation_::__mul
 static const char *__mul =

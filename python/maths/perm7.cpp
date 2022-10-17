@@ -54,7 +54,7 @@ void addPerm7(pybind11::module_& m) {
         .def(pybind11::init<int, int, int, int, int, int, int,
                             int, int, int, int, int, int, int>(),
             rdoc::__init_5)
-        .def(pybind11::init<const Perm<7>&>(), rdoc::__init_6)
+        .def(pybind11::init<const Perm<7>&>(), rdoc::__copy)
         .def_static("precompute", &Perm<7>::precompute, rdoc::precompute)
         .def("permCode1", &Perm<7>::permCode1, rdoc::permCode1)
         .def("permCode2", &Perm<7>::permCode2, rdoc::permCode2)

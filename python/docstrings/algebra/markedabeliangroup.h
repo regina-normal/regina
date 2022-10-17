@@ -117,6 +117,9 @@ Author:
 
 namespace HomMarkedAbelianGroup_ {
 
+// Docstring regina::python::doc::HomMarkedAbelianGroup_::__copy
+static const char *__copy = R"doc(Creates a clone of the given homomorphism.)doc";
+
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::__init
 static const char *__init =
 R"doc(Constructs a homomorphism from two marked abelian groups and a matrix
@@ -149,9 +152,6 @@ Parameter ``codom``:
 
 Parameter ``mat``:
     the matrix that describes the homomorphism from *dom* to *ran*.)doc";
-
-// Docstring regina::python::doc::HomMarkedAbelianGroup_::__init_2
-static const char *__init_2 = R"doc(Creates a clone of the given homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::__mul
 static const char *__mul =
@@ -421,6 +421,9 @@ torsion subgroups.)doc";
 
 namespace MarkedAbelianGroup_ {
 
+// Docstring regina::python::doc::MarkedAbelianGroup_::__copy
+static const char *__copy = R"doc(Creates a clone of the given group.)doc";
+
 // Docstring regina::python::doc::MarkedAbelianGroup_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given group were formed from identical
@@ -516,9 +519,6 @@ Parameter ``rank``:
 Parameter ``p``:
     describes the type of ring that we use to talk about the "free"
     module.)doc";
-
-// Docstring regina::python::doc::MarkedAbelianGroup_::__init_4
-static const char *__init_4 = R"doc(Creates a clone of the given group.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::__ne
 static const char *__ne =

@@ -50,7 +50,7 @@ void addGluingPerms(pybind11::module_& m, const char* name) {
 
     auto c = pybind11::class_<GluingPerms<dim>>(m, name, rdoc_scope)
         .def(pybind11::init<const FacetPairing<dim>&>(), rdoc::__init)
-        .def(pybind11::init<const GluingPerms<dim>&>(), rdoc::__init_3)
+        .def(pybind11::init<const GluingPerms<dim>&>(), rdoc::__copy)
         .def("swap", &GluingPerms<dim>::swap, rdoc::swap)
         .def("size", &GluingPerms<dim>::size, rdoc::size)
         .def("pairing", &GluingPerms<dim>::pairing,

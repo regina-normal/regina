@@ -59,6 +59,7 @@ for dir in $dirs; do
       header=`basename "$i"`
       case "$dir/$header" in
         *-impl.h ) ;;
+        manifold/notation.h ) ;;
         utilities/markedvector.h ) ;;
         utilities/memstream.h ) ;;
         utilities/sequence.h ) ;;

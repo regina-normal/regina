@@ -45,7 +45,7 @@ void addPrism(pybind11::module_& m) {
     auto c = pybind11::class_<PrismSpec>(m, "PrismSpec", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
         .def(pybind11::init<size_t, int>(), rdoc::__init_2)
-        .def(pybind11::init<const PrismSpec&>(), rdoc::__init_3)
+        .def(pybind11::init<const PrismSpec&>(), rdoc::__copy)
         .def_readwrite("tetIndex", &PrismSpec::tetIndex)
         .def_readwrite("edge", &PrismSpec::edge)
     ;

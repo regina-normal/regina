@@ -66,6 +66,13 @@ Parameter ``other``:
 Returns:
     the symmetric difference of this and the given set.)doc";
 
+// Docstring regina::python::doc::BoolSet_::__copy
+static const char *__copy =
+R"doc(Creates a clone of the given set.
+
+Parameter ``src``:
+    the set to clone.)doc";
+
 // Docstring regina::python::doc::BoolSet_::__eq
 static const char *__eq =
 R"doc(Determines if this set is equal to the given set.
@@ -123,13 +130,6 @@ Parameter ``member``:
 
 // Docstring regina::python::doc::BoolSet_::__init_3
 static const char *__init_3 =
-R"doc(Creates a clone of the given set.
-
-Parameter ``src``:
-    the set to clone.)doc";
-
-// Docstring regina::python::doc::BoolSet_::__init_4
-static const char *__init_4 =
 R"doc(Creates a set specifying whether ``True`` and/or ``False`` should be a
 member.
 

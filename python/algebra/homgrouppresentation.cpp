@@ -56,7 +56,7 @@ void addHomGroupPresentation(pybind11::module_& m) {
             std::vector<GroupExpression>, std::vector<GroupExpression>>(),
             rdoc::__init_2)
         .def(pybind11::init<const GroupPresentation&>(), rdoc::__init_3)
-        .def(pybind11::init<const HomGroupPresentation&>(), rdoc::__init_4)
+        .def(pybind11::init<const HomGroupPresentation&>(), rdoc::__copy)
         .def("swap", &HomGroupPresentation::swap, rdoc::swap)
         .def("domain", &HomGroupPresentation::domain,
             pybind11::return_value_policy::reference_internal, rdoc::domain)

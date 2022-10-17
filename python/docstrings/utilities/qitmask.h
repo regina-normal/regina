@@ -85,6 +85,13 @@ Python:
 
 namespace Qitmask1_ {
 
+// Docstring regina::python::doc::Qitmask1_::__copy
+static const char *__copy =
+R"doc(Creates a clone of the given qitmask.
+
+Parameter ``cloneMe``:
+    the qitmask to clone.)doc";
+
 // Docstring regina::python::doc::Qitmask1_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given qitmask are identical.
@@ -108,13 +115,6 @@ Returns:
 
 // Docstring regina::python::doc::Qitmask1_::__init
 static const char *__init = R"doc(Creates a new qitmask with all qits set to 0.)doc";
-
-// Docstring regina::python::doc::Qitmask1_::__init_2
-static const char *__init_2 =
-R"doc(Creates a clone of the given qitmask.
-
-Parameter ``cloneMe``:
-    the qitmask to clone.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::__isub
 static const char *__isub =
@@ -208,6 +208,13 @@ Parameter ``value``:
 
 namespace Qitmask2_ {
 
+// Docstring regina::python::doc::Qitmask2_::__copy
+static const char *__copy =
+R"doc(Creates a clone of the given qitmask.
+
+Parameter ``cloneMe``:
+    the qitmask to clone.)doc";
+
 // Docstring regina::python::doc::Qitmask2_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given qitmask are identical.
@@ -231,13 +238,6 @@ Returns:
 
 // Docstring regina::python::doc::Qitmask2_::__init
 static const char *__init = R"doc(Creates a new qitmask with all qits set to 0.)doc";
-
-// Docstring regina::python::doc::Qitmask2_::__init_2
-static const char *__init_2 =
-R"doc(Creates a clone of the given qitmask.
-
-Parameter ``cloneMe``:
-    the qitmask to clone.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::__isub
 static const char *__isub =

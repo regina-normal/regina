@@ -66,8 +66,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<GILScopedRelease>(),
             rdoc::__init)
-        .def(pybind11::init<const NormalHypersurfaces&>(),
-            rdoc::__init_2)
+        .def(pybind11::init<const NormalHypersurfaces&>(), rdoc::__copy)
         .def("swap", &NormalHypersurfaces::swap, rdoc::swap)
         .def("sort", &NormalHypersurfaces::sort<const std::function<
             bool(const NormalHypersurface&, const NormalHypersurface&)>&>,

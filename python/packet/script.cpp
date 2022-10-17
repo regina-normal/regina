@@ -44,7 +44,7 @@ void addScript(pybind11::module_& m) {
     auto c = pybind11::class_<Script, regina::Packet, std::shared_ptr<Script>>(
             m, "Script", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
-        .def(pybind11::init<const Script&>(), rdoc::__init_2)
+        .def(pybind11::init<const Script&>(), rdoc::__copy)
         .def("swap", &Script::swap, rdoc::swap)
         .def("text", &Script::text, rdoc::text)
         .def("setText", &Script::setText, rdoc::setText)

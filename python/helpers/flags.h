@@ -89,7 +89,7 @@ void add_flags(pybind11::module_& m,
     auto f = pybind11::class_<Flags>(m, flagsName, rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
         .def(pybind11::init<Enum>(), rdoc::__init_2)
-        .def(pybind11::init<const Flags&>(), rdoc::__init_3)
+        .def(pybind11::init<const Flags&>(), rdoc::__copy)
         .def("has", pybind11::overload_cast<const Flags&>(
             &Flags::has, pybind11::const_), rdoc::has_2)
         .def("intValue", &Flags::intValue, rdoc::intValue)

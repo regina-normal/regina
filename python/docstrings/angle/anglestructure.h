@@ -28,6 +28,9 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace AngleStructure_ {
 
+// Docstring regina::python::doc::AngleStructure_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given angle structure.)doc";
+
 // Docstring regina::python::doc::AngleStructure_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given angle structure are identical.
@@ -51,10 +54,7 @@ Returns:
     identical.)doc";
 
 // Docstring regina::python::doc::AngleStructure_::__init
-static const char *__init = R"doc(Creates a new copy of the given angle structure.)doc";
-
-// Docstring regina::python::doc::AngleStructure_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates a new copy of the given angle structure, but relocated to the
 given triangulation.
 
@@ -75,8 +75,8 @@ Parameter ``triangulation``:
     the triangulation on which this new angle structure will be
     placed.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::AngleStructure_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new angle structure on the given triangulation with the
 given coordinate vector.
 

@@ -173,6 +173,9 @@ Parameter ``index``:
 Returns:
     the normal surface at the requested index in this list.)doc";
 
+// Docstring regina::python::doc::NormalSurfaces_::__copy
+static const char *__copy = R"doc(Constructs a new copy of the given list.)doc";
+
 // Docstring regina::python::doc::NormalSurfaces_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given list contain the same set of
@@ -357,9 +360,6 @@ Parameter ``src``:
 
 Parameter ``filter``:
     the filter to apply to the given list.)doc";
-
-// Docstring regina::python::doc::NormalSurfaces_::__init_4
-static const char *__init_4 = R"doc(Constructs a new copy of the given list.)doc";
 
 // Docstring regina::python::doc::NormalSurfaces_::__iter__
 static const char *__iter__ =

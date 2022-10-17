@@ -53,7 +53,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def(pybind11::init<const MatrixInt&, const MatrixInt&,
             const Integer&>(), rdoc::__init_2)
         .def(pybind11::init<size_t, const Integer&>(), rdoc::__init_3)
-        .def(pybind11::init<const MarkedAbelianGroup&>(), rdoc::__init_4)
+        .def(pybind11::init<const MarkedAbelianGroup&>(), rdoc::__copy)
         .def("swap", &MarkedAbelianGroup::swap, rdoc::swap)
         .def("rank", &MarkedAbelianGroup::rank, rdoc::rank)
         .def("torsionRank", overload_cast<const regina::Integer&>(
@@ -118,7 +118,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
             "HomMarkedAbelianGroup", rdoc_scope)
         .def(pybind11::init<const MarkedAbelianGroup&,
                 const MarkedAbelianGroup&, const MatrixInt&>(), rdoc::__init)
-        .def(pybind11::init<const HomMarkedAbelianGroup&>(), rdoc::__init_2)
+        .def(pybind11::init<const HomMarkedAbelianGroup&>(), rdoc::__copy)
         .def("swap", &HomMarkedAbelianGroup::swap, rdoc::swap)
         .def("isChainMap", &HomMarkedAbelianGroup::isChainMap, rdoc::isChainMap)
         .def("isCycleMap", &HomMarkedAbelianGroup::isCycleMap, rdoc::isCycleMap)

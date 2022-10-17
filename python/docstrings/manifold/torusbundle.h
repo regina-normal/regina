@@ -40,6 +40,9 @@ manifold classes.)doc";
 
 namespace TorusBundle_ {
 
+// Docstring regina::python::doc::TorusBundle_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given torus bundle.)doc";
+
 // Docstring regina::python::doc::TorusBundle_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given object contain precisely the
@@ -69,7 +72,7 @@ R"doc(Creates a new torus bundle over the circle using the given monodromy.
 Precondition:
     The given matrix has determinant +1 or -1.
 
-Parameter ``newMonodromy``:
+Parameter ``monodromy``:
     describes precisely how the upper and lower torus boundaries are
     identified. See the class notes for details.)doc";
 
@@ -100,9 +103,6 @@ Parameter ``mon10``:
 
 Parameter ``mon11``:
     the (1,1) element of the monodromy matrix.)doc";
-
-// Docstring regina::python::doc::TorusBundle_::__init_4
-static const char *__init_4 = R"doc(Creates a new copy of the given torus bundle.)doc";
 
 // Docstring regina::python::doc::TorusBundle_::__ne
 static const char *__ne =

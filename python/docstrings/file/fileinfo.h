@@ -32,6 +32,9 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace FileInfo_ {
 
+// Docstring regina::python::doc::FileInfo_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given file information.)doc";
+
 // Docstring regina::python::doc::FileInfo_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given file information describe the
@@ -51,9 +54,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given file information
     describe the same format and version, as described above.)doc";
-
-// Docstring regina::python::doc::FileInfo_::__init
-static const char *__init = R"doc(Creates a new copy of the given file information.)doc";
 
 // Docstring regina::python::doc::FileInfo_::__ne
 static const char *__ne =

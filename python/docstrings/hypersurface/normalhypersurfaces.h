@@ -136,6 +136,9 @@ Parameter ``index``:
 Returns:
     the normal hypersurface at the requested index in this list.)doc";
 
+// Docstring regina::python::doc::NormalHypersurfaces_::__copy
+static const char *__copy = R"doc(Constructs a new copy of the given list.)doc";
+
 // Docstring regina::python::doc::NormalHypersurfaces_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given list contain the same set of
@@ -268,9 +271,6 @@ Parameter ``algHints``:
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``null`` if no progress reporting is required.)doc";
-
-// Docstring regina::python::doc::NormalHypersurfaces_::__init_2
-static const char *__init_2 = R"doc(Constructs a new copy of the given list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::__iter__
 static const char *__iter__ =

@@ -310,6 +310,16 @@ Parameter ``exp``:
 Returns:
     a reference to the corresponding rational coefficient.)doc";
 
+// Docstring regina::python::doc::Cyclotomic_::__copy
+static const char *__copy =
+R"doc(Creates a copy of the given field element, within the same cyclotomic
+field.
+
+This constructor induces a deep copy of *value*.
+
+Parameter ``value``:
+    the field element to copy.)doc";
+
 // Docstring regina::python::doc::Cyclotomic_::__eq
 static const char *__eq =
 R"doc(Tests whether or not this and the given argument are the same element
@@ -450,16 +460,6 @@ Parameter ``value``:
 
 // Docstring regina::python::doc::Cyclotomic_::__init_5
 static const char *__init_5 =
-R"doc(Creates a copy of the given field element, within the same cyclotomic
-field.
-
-This constructor induces a deep copy of *value*.
-
-Parameter ``value``:
-    the field element to copy.)doc";
-
-// Docstring regina::python::doc::Cyclotomic_::__init_6
-static const char *__init_6 =
 R"doc(Creates a new field element from the given sequence of coefficients.
 The coefficients should describe the field element's polynomial
 representation, and should be given in order from the constant

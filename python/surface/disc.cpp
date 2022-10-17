@@ -48,7 +48,7 @@ void addDisc(pybind11::module_& m) {
     auto d = pybind11::class_<DiscSpec>(m, "DiscSpec", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
         .def(pybind11::init<size_t, int, unsigned long>(), rdoc::__init_2)
-        .def(pybind11::init<const DiscSpec&>(), rdoc::__init_3)
+        .def(pybind11::init<const DiscSpec&>(), rdoc::__copy)
         .def_readwrite("tetIndex", &DiscSpec::tetIndex)
         .def_readwrite("type", &DiscSpec::type)
         .def_readwrite("number", &DiscSpec::number)
@@ -77,7 +77,7 @@ void addDisc(pybind11::module_& m) {
             pybind11::arg("oct0") = 0, pybind11::arg("oct1") = 0,
             pybind11::arg("oct2") = 0,
             rdoc::__init_2)
-        .def(pybind11::init<const DiscSetTet&>(), rdoc::__init_3)
+        .def(pybind11::init<const DiscSetTet&>(), rdoc::__copy)
         .def("nDiscs", &DiscSetTet::nDiscs, rdoc::nDiscs)
         .def("arcFromDisc", &DiscSetTet::arcFromDisc, rdoc::arcFromDisc)
         .def("discFromArc", &DiscSetTet::discFromArc, rdoc::discFromArc)
@@ -95,7 +95,7 @@ void addDisc(pybind11::module_& m) {
 
     auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface", rdoc_scope)
         .def(pybind11::init<const regina::NormalSurface&>(), rdoc::__init)
-        .def(pybind11::init<const DiscSetSurface&>(), rdoc::__init_2)
+        .def(pybind11::init<const DiscSetSurface&>(), rdoc::__copy)
         .def("swap", &DiscSetSurface::swap, rdoc::swap)
         .def("nTets", &DiscSetSurface::nTets, rdoc::nTets)
         .def("nDiscs", &DiscSetSurface::nDiscs, rdoc::nDiscs)

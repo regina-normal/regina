@@ -43,7 +43,7 @@ void addSigIsomorphism(pybind11::module_& m) {
     auto c = pybind11::class_<SigPartialIsomorphism>(m, "SigPartialIsomorphism",
             rdoc_scope)
         .def(pybind11::init<int>(), rdoc::__init)
-        .def(pybind11::init<const SigPartialIsomorphism&>(), rdoc::__init_2)
+        .def(pybind11::init<const SigPartialIsomorphism&>(), rdoc::__copy)
         .def("swap", &SigPartialIsomorphism::swap, rdoc::swap)
         .def("makeCanonical", &SigPartialIsomorphism::makeCanonical,
             pybind11::arg(), pybind11::arg("fromCycleGroup") = 0,

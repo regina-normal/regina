@@ -60,7 +60,7 @@ void addAngleStructures(pybind11::module_& m) {
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<GILScopedRelease>(),
             rdoc::__init)
-        .def(pybind11::init<const AngleStructures&>(), rdoc::__init_2)
+        .def(pybind11::init<const AngleStructures&>(), rdoc::__copy)
         .def("swap", &AngleStructures::swap, rdoc::swap)
         .def("triangulation", &AngleStructures::triangulation,
             pybind11::return_value_policy::reference_internal,

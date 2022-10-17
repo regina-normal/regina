@@ -98,7 +98,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             rdoc::__init_2)
         .def(pybind11::init<const NormalSurfaces&, const SurfaceFilter&>(),
             rdoc::__init_3)
-        .def(pybind11::init<const NormalSurfaces&>(), rdoc::__init_4)
+        .def(pybind11::init<const NormalSurfaces&>(), rdoc::__copy)
         .def("swap", &NormalSurfaces::swap, rdoc::swap)
         .def("coords", &NormalSurfaces::coords, rdoc::coords)
         .def("which", &NormalSurfaces::which, rdoc::which)

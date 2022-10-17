@@ -133,6 +133,13 @@ Parameter ``other``:
 Returns:
     the sum *this* plus *other*.)doc";
 
+// Docstring regina::python::doc::IntegerBase_::__copy
+static const char *__copy =
+R"doc(Initialises this integer to the given value.
+
+Parameter ``value``:
+    the new value of this integer.)doc";
+
 // Docstring regina::python::doc::IntegerBase_::__dec
 static const char *__dec =
 R"doc(The postdecrement operator. This operator decrements this integer by
@@ -440,21 +447,14 @@ Parameter ``value``:
 static const char *__init_3 =
 R"doc(Initialises this integer to the given value.
 
-Parameter ``value``:
-    the new value of this integer.)doc";
-
-// Docstring regina::python::doc::IntegerBase_::__init_4
-static const char *__init_4 =
-R"doc(Initialises this integer to the given value.
-
 Precondition:
     The given integer is not infinite.
 
 Parameter ``value``:
     the new value of this integer.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::__init_5
-static const char *__init_5 =
+// Docstring regina::python::doc::IntegerBase_::__init_4
+static const char *__init_4 =
 R"doc(Moves the given integer into this new integer. This is a fast
 (constant time) operation.
 
@@ -466,8 +466,8 @@ Precondition:
 Parameter ``src``:
     the integer to move.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::__init_6
-static const char *__init_6 =
+// Docstring regina::python::doc::IntegerBase_::__init_5
+static const char *__init_5 =
 R"doc(Initialises this to the given Python arbitrary-precision integer.
 
 The argument is of the Python type ``long``, which Python uses to
@@ -477,15 +477,15 @@ Integer and LargeInteger classes).
 Parameter ``value``:
     the new value of this integer.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::__init_7
-static const char *__init_7 =
+// Docstring regina::python::doc::IntegerBase_::__init_6
+static const char *__init_6 =
 R"doc(Initialises this integer to the truncation of the given real number.
 
 Parameter ``value``:
     the real number to be truncated.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::__init_8
-static const char *__init_8 =
+// Docstring regina::python::doc::IntegerBase_::__init_7
+static const char *__init_7 =
 R"doc(Initialises this integer to the given value which is represented as a
 string of digits in a given base.
 
@@ -522,8 +522,8 @@ Parameter ``value``:
 Parameter ``base``:
     the base in which *value* is given.)doc";
 
-// Docstring regina::python::doc::IntegerBase_::__init_9
-static const char *__init_9 =
+// Docstring regina::python::doc::IntegerBase_::__init_8
+static const char *__init_8 =
 R"doc(Initialises this integer to the given value which is represented as a
 string of digits in a given base.
 

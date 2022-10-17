@@ -77,6 +77,9 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace ValidityConstraints_ {
 
+// Docstring regina::python::doc::ValidityConstraints_::__copy
+static const char *__copy = R"doc(Creates a clone of the given constraint set.)doc";
+
 // Docstring regina::python::doc::ValidityConstraints_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given set contain the same
@@ -132,9 +135,6 @@ Parameter ``reserveGlobal``:
     indicates that we should reserve space for *reserveGlobal* calls
     to addGlobal(). This is purely for optimisation; it is safe to
     leave this as 0 (the default).)doc";
-
-// Docstring regina::python::doc::ValidityConstraints_::__init_2
-static const char *__init_2 = R"doc(Creates a clone of the given constraint set.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::__ne
 static const char *__ne =

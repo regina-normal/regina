@@ -53,6 +53,9 @@ manifold classes.)doc";
 
 namespace SnapPeaCensusManifold_ {
 
+// Docstring regina::python::doc::SnapPeaCensusManifold_::__copy
+static const char *__copy = R"doc(Creates a new copy of the given SnapPea census manifold.)doc";
+
 // Docstring regina::python::doc::SnapPeaCensusManifold_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given structure represent the same
@@ -74,18 +77,15 @@ Returns:
 static const char *__init =
 R"doc(Creates a new SnapPea census manifold with the given parameters.
 
-Parameter ``newSection``:
+Parameter ``section``:
     the section of the SnapPea census to which this manifold belongs.
     This must be one of the section constants defined in this class.
 
-Parameter ``newIndex``:
+Parameter ``index``:
     specifies which particular manifold within the given section is
     represented. The indices for each section begin counting at zero,
     and so this index must be between 0 and *k*-1, where *k* is the
     total number of manifolds in the given section.)doc";
-
-// Docstring regina::python::doc::SnapPeaCensusManifold_::__init_2
-static const char *__init_2 = R"doc(Creates a new copy of the given SnapPea census manifold.)doc";
 
 // Docstring regina::python::doc::SnapPeaCensusManifold_::__ne
 static const char *__ne =

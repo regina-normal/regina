@@ -100,6 +100,9 @@ Parameter ``index``:
 Returns:
     the (*index*)th sub-array.)doc";
 
+// Docstring regina::python::doc::TableView_::__copy
+constexpr const char *__copy = R"doc(Creates a new copy of the given table view.)doc";
+
 // Docstring regina::python::doc::TableView_::__eq
 constexpr const char *__eq =
 R"doc(Determines whether this and the given table view are accessing the
@@ -116,9 +119,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given table use the same
     underlying C-style array.)doc";
-
-// Docstring regina::python::doc::TableView_::__init
-constexpr const char *__init = R"doc(Creates a new copy of the given table view.)doc";
 
 // Docstring regina::python::doc::TableView_::__ne
 constexpr const char *__ne =

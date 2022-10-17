@@ -100,6 +100,13 @@ Parameter ``rhs``:
 Returns:
     the combination of this and the given flag set.)doc";
 
+// Docstring regina::python::doc::Flags_::__copy
+constexpr const char *__copy =
+R"doc(Creates a clone of the given flag set.
+
+Parameter ``init``:
+    the flag set to clone.)doc";
+
 // Docstring regina::python::doc::Flags_::__eq
 constexpr const char *__eq =
 R"doc(Determines whether this set is precisely equal to the given flag.
@@ -149,13 +156,6 @@ R"doc(Creates a flag set initialised to the given value.
 
 Parameter ``init``:
     the initial value of this flag set.)doc";
-
-// Docstring regina::python::doc::Flags_::__init_3
-constexpr const char *__init_3 =
-R"doc(Creates a clone of the given flag set.
-
-Parameter ``init``:
-    the flag set to clone.)doc";
 
 // Docstring regina::python::doc::Flags_::__ior
 constexpr const char *__ior =

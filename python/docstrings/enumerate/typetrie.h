@@ -56,6 +56,14 @@ Python:
 
 namespace TypeTrie_ {
 
+// Docstring regina::python::doc::TypeTrie_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given trie. This will induce a deep copy of
+*src*.
+
+Parameter ``src``:
+    the trie to copy.)doc";
+
 // Docstring regina::python::doc::TypeTrie_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given trie store exactly the same type
@@ -69,14 +77,6 @@ Returns:
 
 // Docstring regina::python::doc::TypeTrie_::__init
 static const char *__init = R"doc(Creates an empty trie.)doc";
-
-// Docstring regina::python::doc::TypeTrie_::__init_2
-static const char *__init_2 =
-R"doc(Creates a new copy of the given trie. This will induce a deep copy of
-*src*.
-
-Parameter ``src``:
-    the trie to copy.)doc";
 
 // Docstring regina::python::doc::TypeTrie_::__ne
 static const char *__ne =

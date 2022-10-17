@@ -52,6 +52,14 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace TrieSet_ {
 
+// Docstring regina::python::doc::TrieSet_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given collection. This will induce a deep
+copy of *src*.
+
+Parameter ``src``:
+    the collection of sets to copy.)doc";
+
 // Docstring regina::python::doc::TrieSet_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given collection store exactly the
@@ -65,14 +73,6 @@ Returns:
 
 // Docstring regina::python::doc::TrieSet_::__init
 static const char *__init = R"doc(Constructs an empty collection of sets.)doc";
-
-// Docstring regina::python::doc::TrieSet_::__init_2
-static const char *__init_2 =
-R"doc(Creates a new copy of the given collection. This will induce a deep
-copy of *src*.
-
-Parameter ``src``:
-    the collection of sets to copy.)doc";
 
 // Docstring regina::python::doc::TrieSet_::__ne
 static const char *__ne =

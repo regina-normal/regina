@@ -63,7 +63,7 @@ void addAttachment(pybind11::module_& m) {
 
             return new Attachment(in, inlen, Attachment::DEEP_COPY, filename);
         }), rdoc::__init_3)
-        .def(pybind11::init<const Attachment&>(), rdoc::__init_4)
+        .def(pybind11::init<const Attachment&>(), rdoc::__copy)
         .def("swap", &Attachment::swap, rdoc::swap)
         .def("isNull", &Attachment::isNull, rdoc::isNull)
         .def("data", [](const Attachment& a) -> pybind11::object {

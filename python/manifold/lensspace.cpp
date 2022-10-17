@@ -44,7 +44,7 @@ void addLensSpace(pybind11::module_& m) {
     auto c = pybind11::class_<LensSpace, regina::Manifold>(m, "LensSpace",
             rdoc_scope)
         .def(pybind11::init<unsigned long, unsigned long>(), rdoc::__init)
-        .def(pybind11::init<const LensSpace&>(), rdoc::__init_2)
+        .def(pybind11::init<const LensSpace&>(), rdoc::__copy)
         .def("swap", &LensSpace::swap, rdoc::swap)
         .def("p", &LensSpace::p, rdoc::p)
         .def("q", &LensSpace::q, rdoc::q)

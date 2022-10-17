@@ -62,6 +62,13 @@ Template parameter ``dim``:
 
 namespace GluingPerms_ {
 
+// Docstring regina::python::doc::GluingPerms_::__copy
+constexpr const char *__copy =
+R"doc(Creates a new copy of the given gluing permutation set.
+
+Parameter ``src``:
+    the gluing permutations to copy.)doc";
+
 // Docstring regina::python::doc::GluingPerms_::__eq
 constexpr const char *__eq =
 R"doc(Determines if this and the given gluing permutation set are identical.
@@ -121,13 +128,6 @@ Precondition:
 Parameter ``pairing``:
     the specific pairing of simplex facets that this permutation set
     will complement.)doc";
-
-// Docstring regina::python::doc::GluingPerms_::__init_3
-constexpr const char *__init_3 =
-R"doc(Creates a new copy of the given gluing permutation set.
-
-Parameter ``src``:
-    the gluing permutations to copy.)doc";
 
 // Docstring regina::python::doc::GluingPerms_::__ne
 constexpr const char *__ne =

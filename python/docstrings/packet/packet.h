@@ -626,17 +626,17 @@ Returns:
 
 namespace PacketData_ {
 
-// Docstring regina::python::doc::PacketData_::__init
-static const char *__init = R"doc(Default constructor that sets *heldBy_* to HELD_BY_NONE.)doc";
-
-// Docstring regina::python::doc::PacketData_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::PacketData_::__copy
+static const char *__copy =
 R"doc(Copy constructor that ignores its argument, and instead sets *heldBy_*
 to HELD_BY_NONE. This is because *heldBy_* stores information about
 the C++ type of *this* object, not the object being copied.
 
 This constructor is provided so that *Held* can (if it wants) use an
 implicitly-declared copy or move constructor.)doc";
+
+// Docstring regina::python::doc::PacketData_::__init
+static const char *__init = R"doc(Default constructor that sets *heldBy_* to HELD_BY_NONE.)doc";
 
 // Docstring regina::python::doc::PacketData_::anonID
 static const char *anonID =
@@ -964,6 +964,18 @@ listening.)doc";
 
 namespace PacketOf_ {
 
+// Docstring regina::python::doc::PacketOf_::__copy
+static const char *__copy =
+R"doc(Creates a new copy of the given packet.
+
+Like all packet types, this only copies the mathematical content, not
+the packet infrastructure (e.g., it will not copy the packet label, it
+will not clone the given packet's children, and it will not insert the
+new packet into any packet tree).
+
+Parameter ``src``:
+    the packet whose contents should be copied.)doc";
+
 // Docstring regina::python::doc::PacketOf_::__init
 static const char *__init =
 R"doc(Creates a new packet.
@@ -1020,21 +1032,17 @@ Parameter ``args``:
     the arguments to be forwarded to the appropriate *Held*
     constructor.)doc";
 
-// Docstring regina::python::doc::PacketOf_::__init_5
-static const char *__init_5 =
-R"doc(Creates a new copy of the given packet.
-
-Like all packet types, this only copies the mathematical content, not
-the packet infrastructure (e.g., it will not copy the packet label, it
-will not clone the given packet's children, and it will not insert the
-new packet into any packet tree).
-
-Parameter ``src``:
-    the packet whose contents should be copied.)doc";
-
 }
 
 namespace PacketShell_ {
+
+// Docstring regina::python::doc::PacketShell_::__copy
+static const char *__copy =
+R"doc(Creates a copy of the given shell. Both shells will refer to the same
+underlying packet.
+
+Parameter ``shell``:
+    the shell to clone.)doc";
 
 // Docstring regina::python::doc::PacketShell_::__eq
 static const char *__eq =
@@ -1066,14 +1074,6 @@ R"doc(Creates a new shell referring to the given packet.
 
 Parameter ``packet``:
     the packet to refer to.)doc";
-
-// Docstring regina::python::doc::PacketShell_::__init_2
-static const char *__init_2 =
-R"doc(Creates a copy of the given shell. Both shells will refer to the same
-underlying packet.
-
-Parameter ``shell``:
-    the shell to clone.)doc";
 
 // Docstring regina::python::doc::PacketShell_::__ne
 static const char *__ne =

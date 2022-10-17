@@ -111,6 +111,9 @@ Parameter ``row``:
 Returns:
     a two-integer array containing the elements of the requested row.)doc";
 
+// Docstring regina::python::doc::Matrix2_::__copy
+static const char *__copy = R"doc(Initialises to a copy of the given matrix.)doc";
+
 // Docstring regina::python::doc::Matrix2_::__eq
 static const char *__eq =
 R"doc(Determines if this is equal to the given matrix.
@@ -158,10 +161,7 @@ Returns:
 static const char *__init = R"doc(Initialises to the zero matrix.)doc";
 
 // Docstring regina::python::doc::Matrix2_::__init_2
-static const char *__init_2 = R"doc(Initialises to a copy of the given matrix.)doc";
-
-// Docstring regina::python::doc::Matrix2_::__init_3
-static const char *__init_3 =
+static const char *__init_2 =
 R"doc(Initialises to the given integer values.
 
 Parameter ``val00``:

@@ -50,7 +50,7 @@ void addPerm3(pybind11::module_& m) {
         .def(pybind11::init<int, int, int>(), rdoc::__init_3)
         .def(pybind11::init<const std::array<int, 3>&>(), rdoc::__init_4)
         .def(pybind11::init<int, int, int, int, int, int>(), rdoc::__init_5)
-        .def(pybind11::init<const Perm<3>&>(), rdoc::__init_6)
+        .def(pybind11::init<const Perm<3>&>(), rdoc::__copy)
         .def("permCode", &Perm<3>::permCode, rdoc::permCode)
         .def("setPermCode", &Perm<3>::setPermCode, rdoc::setPermCode)
         .def_static("fromPermCode", &Perm<3>::fromPermCode, rdoc::fromPermCode)

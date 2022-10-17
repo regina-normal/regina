@@ -38,6 +38,13 @@ possible, even when passing or returning objects by value.)doc";
 
 namespace SigPartialIsomorphism_ {
 
+// Docstring regina::python::doc::SigPartialIsomorphism_::__copy
+static const char *__copy =
+R"doc(Creates a copy of the given partial isomorphism.
+
+Parameter ``iso``:
+    the partial isomorphism to copy.)doc";
+
 // Docstring regina::python::doc::SigPartialIsomorphism_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given partial isomorphism are
@@ -58,13 +65,6 @@ Parameter ``newDir``:
     positive if this isomorphism specifies that all cycles are
     reversed, or negative if this isomorphism specifies that all
     cycles keep their original direction.)doc";
-
-// Docstring regina::python::doc::SigPartialIsomorphism_::__init_2
-static const char *__init_2 =
-R"doc(Creates a copy of the given partial isomorphism.
-
-Parameter ``iso``:
-    the partial isomorphism to copy.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::__ne
 static const char *__ne =

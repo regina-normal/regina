@@ -51,6 +51,13 @@ Parameter ``r``:
 Returns:
     the sum *this* + *r*.)doc";
 
+// Docstring regina::python::doc::Rational_::__copy
+static const char *__copy =
+R"doc(Initialises to the given rational value.
+
+Parameter ``value``:
+    the new rational value of this rational.)doc";
+
 // Docstring regina::python::doc::Rational_::__div
 static const char *__div =
 R"doc(Calculates the ratio of two rationals. This rational is not changed.
@@ -130,35 +137,28 @@ static const char *__init = R"doc(Initialises to 0/1.)doc";
 
 // Docstring regina::python::doc::Rational_::__init_2
 static const char *__init_2 =
-R"doc(Initialises to the given rational value.
-
-Parameter ``value``:
-    the new rational value of this rational.)doc";
-
-// Docstring regina::python::doc::Rational_::__init_3
-static const char *__init_3 =
 R"doc(Initialises to the given integer value. The given integer may be
 infinite.
 
 Parameter ``value``:
     the new integer value of this rational.)doc";
 
-// Docstring regina::python::doc::Rational_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::Rational_::__init_3
+static const char *__init_3 =
 R"doc(Initialises to the given integer value.
 
 Parameter ``value``:
     the new integer value of this rational.)doc";
 
-// Docstring regina::python::doc::Rational_::__init_5
-static const char *__init_5 =
-R"doc(Initialises to *newNum*/*newDen*.
+// Docstring regina::python::doc::Rational_::__init_4
+static const char *__init_4 =
+R"doc(Initialises to *num*/*den*.
 
 Precondition:
-    gcd(*newNum*, *newDen*) = 1 or *newDen* = 0.
+    gcd(*num*, *den*) = 1 or *den* = 0.
 
 Precondition:
-    *newDen* is non-negative.
+    *den* is non-negative.
 
 Precondition:
     Neither of the given integers is infinite.
@@ -170,21 +170,21 @@ Precondition:
     Rational(1,1) (a valid rational), which is different again from
     Rational(-1,-1) (which breaks the non-negativity requirement).
 
-Parameter ``newNum``:
+Parameter ``num``:
     the new numerator.
 
-Parameter ``newDen``:
+Parameter ``den``:
     the new denominator.)doc";
 
-// Docstring regina::python::doc::Rational_::__init_6
-static const char *__init_6 =
-R"doc(Initialises to *newNum*/*newDen*.
+// Docstring regina::python::doc::Rational_::__init_5
+static const char *__init_5 =
+R"doc(Initialises to *num*/*den*.
 
 Precondition:
-    gcd(*newNum*, *newDen*) = 1 or *newDen* = 0.
+    gcd(*num*, *den*) = 1 or *den* = 0.
 
 Precondition:
-    *newDen* is non-negative.
+    *den* is non-negative.
 
 .. warning::
     Failing to meet the preconditions above can result in misleading
@@ -193,10 +193,10 @@ Precondition:
     Rational(1,1) (a valid rational), which is different again from
     Rational(-1,-1) (which breaks the non-negativity requirement).
 
-Parameter ``newNum``:
+Parameter ``num``:
     the new numerator.
 
-Parameter ``newDen``:
+Parameter ``den``:
     the new denominator.)doc";
 
 // Docstring regina::python::doc::Rational_::__isub

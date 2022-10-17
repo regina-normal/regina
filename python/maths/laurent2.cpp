@@ -48,13 +48,13 @@ void addLaurent2(pybind11::module_& m) {
             rdoc_scope)
         .def(pybind11::init<>(), rdoc::__init)
         .def(pybind11::init<long, long>(), rdoc::__init_2)
-        .def(pybind11::init<const Laurent2<regina::Integer>&>(), rdoc::__init_3)
+        .def(pybind11::init<const Laurent2<regina::Integer>&>(), rdoc::__copy)
         .def(pybind11::init<const Laurent2<regina::Integer>&, long, long>(),
-            rdoc::__init_4)
+            rdoc::__init_3)
         .def(pybind11::init([](const std::vector<
                 std::tuple<long, long, regina::Integer>>& coeffs) {
             return new Laurent2<regina::Integer>(coeffs.begin(), coeffs.end());
-        }), rdoc::__init_5)
+        }), rdoc::__init_4)
         .def("init", overload_cast<>(
             &Laurent2<regina::Integer>::init), rdoc::init)
         .def("init", overload_cast<long, long>(
