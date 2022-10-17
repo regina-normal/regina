@@ -42,6 +42,16 @@ functions.)doc";
 
 namespace DiscType_ {
 
+// Docstring regina::python::doc::DiscType_::__bool
+static const char *__bool =
+R"doc(Returns ``True`` if this disc type is non-null.
+
+The implementation will assume that a non-null disc type has non-
+negative *type* (as explained in the class notes).
+
+Returns:
+    ``True`` if and only if this is not a null disc type.)doc";
+
 // Docstring regina::python::doc::DiscType_::__copy
 static const char *__copy =
 R"doc(Creates a copy of the given disc type.
@@ -97,16 +107,6 @@ details.
 Returns:
     ``True`` if this and the given disc type are different, or
     ``False`` if they are identical.)doc";
-
-// Docstring regina::python::doc::DiscType_::operator_bool
-static const char *operator_bool =
-R"doc(Returns ``True`` if this disc type is non-null.
-
-The implementation will assume that a non-null disc type has non-
-negative *type* (as explained in the class notes).
-
-Returns:
-    ``True`` if and only if this is not a null disc type.)doc";
 
 }
 

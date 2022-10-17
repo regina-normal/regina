@@ -3603,6 +3603,15 @@ Returns:
 
 namespace StrandRef_ {
 
+// Docstring regina::python::doc::StrandRef_::__bool
+static const char *__bool =
+R"doc(Tests whether this is a non-null reference.
+
+Returns:
+    ``True`` if this is not a null reference (i.e., crossing() does
+    not return a null pointer), or ``False`` if this is a null
+    reference.)doc";
+
 // Docstring regina::python::doc::StrandRef_::__copy
 static const char *__copy = R"doc(Default copy constructor.)doc";
 
@@ -3747,15 +3756,6 @@ Precondition:
 
 Returns:
     the crossing reference that follows this.)doc";
-
-// Docstring regina::python::doc::StrandRef_::operator_bool
-static const char *operator_bool =
-R"doc(Tests whether this is a non-null reference.
-
-Returns:
-    ``True`` if this is not a null reference (i.e., crossing() does
-    not return a null pointer), or ``False`` if this is a null
-    reference.)doc";
 
 // Docstring regina::python::doc::StrandRef_::prev
 static const char *prev =

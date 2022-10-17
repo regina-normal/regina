@@ -99,7 +99,8 @@ CPP_OPERATORS = {
     '>>=': 'irshift', '++': 'inc', '--': 'dec', '<<': 'lshift', '>>':
     'rshift', '&&': 'land', '||': 'lor', '!': 'lnot', '~': 'bnot', '&': 'band',
     '|': 'bor', '^': 'bxor', '+': 'add', '-': 'sub', '*': 'mul', '/':
-    'div', '%': 'mod', '<': 'lt', '>': 'gt', '=': 'assign', '()': 'call'
+    'div', '%': 'mod', '<': 'lt', '>': 'gt', '=': 'assign', '()': 'call',
+    ' bool' : 'bool'
 }
 
 CPP_OPERATORS = OrderedDict(

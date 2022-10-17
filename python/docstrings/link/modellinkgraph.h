@@ -89,6 +89,14 @@ of by the ModelLinkGraph to which they belong.)doc";
 
 namespace ModelLinkGraphArc_ {
 
+// Docstring regina::python::doc::ModelLinkGraphArc_::__bool
+static const char *__bool =
+R"doc(Tests whether this is a non-null arc.
+
+Returns:
+    ``True`` if this is not a null arc (i.e., node() does not return a
+    null pointer), or ``False`` if this is a null arc.)doc";
+
 // Docstring regina::python::doc::ModelLinkGraphArc_::__copy
 static const char *__copy = R"doc(Default copy constructor.)doc";
 
@@ -230,14 +238,6 @@ R"doc(The node of the model graph from which this arc exits.
 
 Returns:
     the corresponding node, or ``null`` if this is a null arc.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::operator_bool
-static const char *operator_bool =
-R"doc(Tests whether this is a non-null arc.
-
-Returns:
-    ``True`` if this is not a null arc (i.e., node() does not return a
-    null pointer), or ``False`` if this is a null arc.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraphArc_::opposite
 static const char *opposite =
