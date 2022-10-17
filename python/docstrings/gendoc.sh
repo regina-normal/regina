@@ -2,7 +2,7 @@
 set -e
 
 if [ "$#" = 0 ]; then
-  dirs="algebra angle census core enumerate file foreign hypersurface manifold maths packet progress python split surface treewidth utilities"
+  dirs="algebra angle census core enumerate file foreign hypersurface link manifold maths packet progress python split surface treewidth utilities"
 else
   dirs="$@"
 fi
@@ -59,7 +59,9 @@ for dir in $dirs; do
       header=`basename "$i"`
       case "$dir/$header" in
         *-impl.h ) ;;
+        link/graph.h ) ;;
         manifold/notation.h ) ;;
+        triangulation/graph.h ) ;;
         utilities/markedvector.h ) ;;
         utilities/memstream.h ) ;;
         utilities/sequence.h ) ;;
