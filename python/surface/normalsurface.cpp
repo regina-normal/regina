@@ -50,6 +50,7 @@ void addNormalSurface(pybind11::module_& m) {
 
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface", rdoc_scope)
         .def(pybind11::init<const NormalSurface&>(), rdoc::__copy)
+        .def(pybind11::init<const Triangulation<3>&>())
         .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>(),
             rdoc::__init)
         .def(pybind11::init<const Triangulation<3>&, regina::NormalEncoding,

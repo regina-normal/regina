@@ -87,6 +87,7 @@ void addNormalCoords(pybind11::module_& m) {
         .def_static("fromIntValue", &NormalEncoding::fromIntValue,
             rdoc::fromIntValue)
         .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def_static("empty", &NormalEncoding::empty)
         .def("__str__", [](NormalEncoding e) {
             std::ostringstream out;
             out << "0x" << std::hex << std::setw(4) << std::setfill('0')

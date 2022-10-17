@@ -38,6 +38,19 @@
 
 namespace regina {
 
+NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri) :
+        enc_(HyperEncoding::empty()),
+        vector_(tri.size() * enc_.block()),
+        triangulation_(tri) {
+}
+
+NormalHypersurface::NormalHypersurface(
+        const SnapshotRef<Triangulation<4>>& tri) :
+        enc_(HyperEncoding::empty()),
+        vector_(tri->size() * enc_.block()),
+        triangulation_(tri) {
+}
+
 LargeInteger NormalHypersurface::edgeWeight(size_t edgeIndex) const {
     // Find a pentachoron next to the edge in question.
     const EdgeEmbedding<4>& emb = triangulation_->edge(edgeIndex)->front();

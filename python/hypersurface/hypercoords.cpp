@@ -70,6 +70,7 @@ void addHyperCoords(pybind11::module_& m) {
         .def_static("fromIntValue", &HyperEncoding::fromIntValue,
             rdoc::fromIntValue)
         .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def_static("empty", &HyperEncoding::empty)
         .def("__str__", [](HyperEncoding e) {
             std::ostringstream out;
             out << "0x" << std::hex << std::setw(4) << std::setfill('0')

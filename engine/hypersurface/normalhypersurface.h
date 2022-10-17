@@ -206,6 +206,28 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         NormalHypersurface(NormalHypersurface&&) noexcept = default;
 
         /**
+         * Create the empty hypersurface within the given triangulation.
+         *
+         * All normal coordinates will be zero.
+         *
+         * @param triang the triangulation in which this normal hypersurface
+         * resides.
+         */
+        NormalHypersurface(const Triangulation<4>& triang);
+
+        /**
+         * Create the empty hypersurface within the given triangulation.
+         *
+         * All normal coordinates will be zero.
+         *
+         * \nopython Instead use the version that takes a "pure" triangulation.
+         *
+         * @param triang a snapshot, frozen in time, of the
+         * triangulation in which this normal hypersurface resides.
+         */
+        NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang);
+
+        /**
          * Creates a new normal hypersurface inside the given triangulation
          * with the given coordinate vector, using the given vector encoding.
          *

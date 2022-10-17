@@ -10,10 +10,18 @@ Regina - A Normal Surface Theory Calculator
 Version 7.2  [ (to be determined) ]
 
     ENGINE:
+        Class HyperEncoding:
+            - New static function empty().
         Class ListView<...>:
             - Added equality operators (== and !=).
             - Added a specialisation for fixed-size C-style arrays:
               ListView<Element[n]>.
+        Class NormalEncoding:
+            - New static function empty().
+        Class NormalHypersurface:
+            - New constructor to build the empty surface.
+        Class NormalSurface:
+            - New constructor to build the empty surface.
     PYTHON:
         - Updated the included pybind11 library from 2.8.1 to 2.10.0.
           This means we can now support Python 3.11, but no longer support

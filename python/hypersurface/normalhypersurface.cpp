@@ -49,6 +49,7 @@ void addNormalHypersurface(pybind11::module_& m) {
     auto c = pybind11::class_<NormalHypersurface>(m, "NormalHypersurface",
             rdoc_scope)
         .def(pybind11::init<const NormalHypersurface&>(), rdoc::__copy)
+        .def(pybind11::init<const Triangulation<4>&>())
         .def(pybind11::init<const NormalHypersurface&,
             const Triangulation<4>&>(), rdoc::__init)
         .def(pybind11::init<const Triangulation<4>&, regina::HyperEncoding,

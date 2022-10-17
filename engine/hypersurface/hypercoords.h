@@ -330,6 +330,15 @@ class HyperEncoding {
             return HyperEncoding(propFlags | blockSize);
         }
         /**
+         * Returns an encoding that is suitable for representing the empty
+         * hypersurface, whose normal coordinates are all zero.
+         *
+         * @return a suitable encoding for the empty hypersurface.
+         */
+        static constexpr HyperEncoding empty() {
+            return { 15 | STORES_TETRAHEDRA };
+        }
+        /**
          * Exports this encoding as an integer.
          *
          * The exact value of the integer is meant to be opaque, in the sense

@@ -39,6 +39,18 @@
 
 namespace regina {
 
+NormalSurface::NormalSurface(const Triangulation<3>& tri) :
+        enc_(NormalEncoding::empty()),
+        vector_(tri.size() * enc_.block()),
+        triangulation_(tri) {
+}
+
+NormalSurface::NormalSurface(const SnapshotRef<Triangulation<3>>& tri) :
+        enc_(NormalEncoding::empty()),
+        vector_(tri->size() * enc_.block()),
+        triangulation_(tri) {
+}
+
 LargeInteger NormalSurface::edgeWeight(size_t edgeIndex) const {
     // Find a tetrahedron next to the edge in question.
     const EdgeEmbedding<3>& emb = triangulation_->edge(edgeIndex)->front();

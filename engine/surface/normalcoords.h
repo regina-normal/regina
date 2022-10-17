@@ -619,6 +619,15 @@ class NormalEncoding {
             return NormalEncoding(propFlags | blockSize);
         }
         /**
+         * Returns an encoding that is suitable for representing the
+         * empty surface, whose normal coordinates are all zero.
+         *
+         * @return a suitable encoding for the empty surface.
+         */
+        static constexpr NormalEncoding empty() {
+            return { 7 | STORES_TRIANGLES };
+        }
+        /**
          * Exports this encoding as an integer.
          *
          * The exact value of the integer is meant to be opaque, in the sense
