@@ -937,19 +937,15 @@ class NormalSurfaces :
 
                 /**
                  * Creates a copy of the given iterator.
-                 *
-                 * @param cloneMe the iterator to clone.
                  */
-                VectorIterator(const VectorIterator& cloneMe) = default;
+                VectorIterator(const VectorIterator&) = default;
 
                 /**
                  * Makes this a copy of the given iterator.
                  *
-                 * @param cloneMe the iterator to clone.
                  * @return a reference to this iterator.
                  */
-                VectorIterator& operator = (const VectorIterator& cloneMe) =
-                    default;
+                VectorIterator& operator = (const VectorIterator&) = default;
 
                 /**
                  * Compares this with the given iterator for equality.

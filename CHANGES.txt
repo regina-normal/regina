@@ -22,6 +22,8 @@ Version 7.2  [ (to be determined) ]
             - New constructor to build the empty surface.
         Class NormalSurface:
             - New constructor to build the empty surface.
+        Class TableView:
+            - New class to help wrap read-only multi-dimensional arrays.
     PYTHON:
         - Updated the included pybind11 library from 2.8.1 to 2.10.0.
           This means we can now support Python 3.11, but no longer support

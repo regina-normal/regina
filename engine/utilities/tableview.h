@@ -210,6 +210,180 @@ class TableView {
          */
         using const_reference = const Element&;
 
+    public:
+        /**
+         * The iterator type for this table view.
+         *
+         * For a TableView \a t, an iterator of this type runs through the
+         * subarrays/elements <tt>t[0]</tt>, <tt>t[1]</tt>, ..., in order
+         * from first to last.  See TableView::begin() for further details.
+         *
+         * This iterator is, in spirit, a bidirectional multipass iterator.
+         * However, we declare it using std::input_iterator_tag here because
+         * it does not necessarily return by reference (a requirement of
+         * forward and bidirectional iterators in the C++ standard library).
+         * In particular:
+         *
+         * - For a table with more than one dimension, the dereference
+         *   operator returns a TableView of smaller dimension, by value.
+         *   As a result, the \a reference type is identical to \a value_type
+         *   (i.e., a smaller-dimensional TableView).
+         *
+         * - For a one-dimensional table, the deference operator returns
+         *   by reference as usual: \a value_type is Element, and
+         *   \a reference_type is <tt>const Element&</tt>.
+         *
+         * Both \a iterator and \a const_iterator are the same type, since
+         * TableView only offers read-only access to the underlying data.
+         *
+         * \nopython TableView is an iterable type, but its __iter__()
+         * function returns an object of a different (hidden) iterator class.
+         */
+        class iterator {
+            public:
+                using value_type = std::remove_reference_t<Subview>;
+                    /**< Indicates what type the iterator points to. */
+                using iterator_category = std::input_iterator_tag;
+                    /**< Declares this to be an input iterator type. */
+                using difference_type = ptrdiff_t;
+                    /**< The type obtained by subtracting iterators. */
+                using pointer = const value_type*;
+                    /**< A pointer to \a value_type. */
+                using reference = Subview;
+                    /**< The type returned by the dereference operator,
+                         which could be by value (for a multi-dimensional
+                         table) or by reference (for a one-dimensional table).
+                         See the iterator class notes for details. */
+
+            private:
+                Subarray* current_ { nullptr };
+                    /**< The subarray/element that this iterator is currently
+                         pointing to. */
+
+            public:
+                /**
+                 * Creates a new uninitialised iterator.
+                 */
+                iterator() = default;
+                /**
+                 * Creates a copy of the given iterator.
+                 */
+                iterator(const iterator&) = default;
+
+                /**
+                 * Makes this a copy of the given iterator.
+                 *
+                 * @return a reference to this iterator.
+                 */
+                iterator& operator = (const iterator&) = default;
+
+                /**
+                 * Compares this with the given iterator for equality.
+                 *
+                 * @param rhs the iterator to compare this with.
+                 * @return \c true if the iterators point to the same
+                 * subarray/element of the underlying table, or \c false
+                 * if they do not.
+                 */
+                bool operator == (const iterator& rhs) const {
+                    return current_ == rhs.current_;
+                }
+                /**
+                 * Compares this with the given iterator for equality.
+                 *
+                 * @param rhs the iterator to compare this with.
+                 * @return \c false if the iterators point to the same
+                 * subarray/element of the underlying table, or \c true
+                 * if they do not.
+                 */
+                bool operator != (const iterator& rhs) const {
+                    return current_ != rhs.current_;
+                }
+
+                /**
+                 * The preincrement operator.
+                 *
+                 * @return a reference to this iterator after the increment.
+                 */
+                iterator& operator ++ () {
+                    ++current_;
+                    return *this;
+                }
+                /**
+                 * The postincrement operator.
+                 *
+                 * @return a copy of this iterator before the increment took
+                 * place.
+                 */
+                iterator operator ++ (int) {
+                    iterator prev(*this);
+                    ++current_;
+                    return prev;
+                }
+                /**
+                 * The predecrement operator.
+                 *
+                 * @return a reference to this iterator after the decrement.
+                 */
+                iterator& operator -- () {
+                    --current_;
+                    return *this;
+                }
+                /**
+                 * The postdecrement operator.
+                 *
+                 * @return a copy of this iterator before the decrement took
+                 * place.
+                 */
+                iterator operator -- (int) {
+                    iterator prev(*this);
+                    --current_;
+                    return prev;
+                }
+
+                /**
+                 * Returns the subarray or element of the underlying
+                 * table that this iterator is currently pointing to.
+                 *
+                 * The return type follows the same design as
+                 * TableView::operator[].  For a one-dimensional table
+                 * it returns the current table element, by const reference.
+                 * For a multi-dimensional table it returns a TableView of
+                 * of smaller dimension, by value, representing the slice of
+                 * the overall table that is obtained when the first array
+                 * index is fixed at the current iterator position.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * @return the corresponding subarray or table element.
+                 */
+                Subview operator * () const {
+                    return *current_;
+                }
+
+            private:
+                /**
+                 * Creates a new iterator pointing to the given
+                 * subarray/element of the underlying table.
+                 */
+                iterator(Subarray* s) : current_(s) {}
+
+            friend class TableView;
+        };
+
+        /**
+         * The iterator type for this table view.
+         *
+         * Both \a iterator and \a const_iterator are the same type, since
+         * TableView only offers read-only access to the underlying data.
+         * See the TableView::iterator class for further details.
+         *
+         * \nopython TableView is an iterable type, but its __iter__()
+         * function returns an object of a different (hidden) iterator class.
+         */
+        using const_iterator = iterator;
+
     private:
         Subarray* array_;
             /**< The underlying C-style array. */
@@ -258,13 +432,13 @@ class TableView {
          * Returns the requested sub-array of a multi-dimensional array,
          * or the requested element of a one-dimensional array.
          *
-         * If this array is one-dimensional, then this operator simply
-         * returns the (\a index)th element (as a const reference).
+         * If this array is one-dimensional then this operator simply
+         * returns the (\a index)th element, as a const reference.
          *
-         * If this array has more than one dimension, then this operator
-         * returns a TableView of smaller dimension, representing the slice
-         * of the overall table obtained when the first array index is set
-         * to the given value.
+         * If this array has more than one dimension then this operator
+         * returns a TableView of smaller dimension, by value, representing
+         * the slice of the overall table obtained when the first array index
+         * is set to the given value.
          *
          * Typically this operator would just be used to access an
          * individual element using the syntax
@@ -279,6 +453,73 @@ class TableView {
             return array_[index];
         }
 
+        /**
+         * Returns a C++ iterator pointing to the first sub-array (for a
+         * multi-dimensional array), or the first element (for a
+         * one-dimensional array).
+         *
+         * For a TableView \a t, the iterator range from <tt>t.begin()</tt>
+         * to <tt>t.end()</tt> runs through the subarrays/elements
+         * <tt>t[0]</tt>, <tt>t[1]</tt>, ..., in order from first to last.
+         *
+         * In particular, for a multi-dimensional array, a single iterator
+         * will not run through the individual array elements; for this you
+         * will need <tt>t.dimension</tt> nested iterations.
+         *
+         * \nopython For Python users, TableView implements the Python iterable
+         * interface.  You can iterate over the subarrays or elements of this
+         * table in the same way that you would iterate over any native Python
+         * container.
+         *
+         * @return an iterator at the beginning of this table.
+         */
+        const_iterator begin() const {
+            return iterator(array_);
+        }
+        /**
+         * Returns a C++ iterator pointing beyond the last sub-array (for a
+         * multi-dimensional array), or the last element (for a one-dimensional
+         * array).
+         *
+         * For a TableView \a t, the iterator range from <tt>t.begin()</tt>
+         * to <tt>t.end()</tt> runs through the subarrays/elements
+         * <tt>t[0]</tt>, <tt>t[1]</tt>, ..., in order from first to last.
+         *
+         * See begin() for further details.
+         *
+         * \nopython For Python users, TableView implements the Python iterable
+         * interface.  You can iterate over the subarrays or elements of this
+         * table in the same way that you would iterate over any native Python
+         * container.
+         *
+         * @return an iterator beyond the end of this table.
+         */
+        const_iterator end() const {
+            return array_ + dim1;
+        }
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over all sub-arrays (for a
+         * multi-dimensional array), or all elements (for a one-dimensional
+         * array).
+         *
+         * For a TableView \a t, this iterator will run through the
+         * subarrays/elements <tt>t[0]</tt>, <tt>t[1]</tt>, ..., in order
+         * from first to last.
+         *
+         * In particular, for a multi-dimensional array, a single iterator
+         * will not run through the individual array elements; for this you
+         * will need <tt>t.dimension</tt> nested iterations.
+         *
+         * \nocpp For C++ users, TableView provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over the
+         * subarrays or elements of this table in the usual way using a
+         * range-based \c for loop.
+         *
+         * @return an iterator over the subarrays or elements of this table.
+         */
+        auto __iter__() const;
+#endif
         /**
          * Determines whether this and the given table view are accessing
          * the same underlying C-style array.

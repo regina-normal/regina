@@ -114,6 +114,10 @@ void addTableView(pybind11::module_& m) {
                 throw pybind11::index_error("TableView index out of range");
             return view[index];
         }, Policy, rdoc::__array)
+        .def("__iter__", [](const T& view) {
+            return pybind11::make_iterator<Policy>(view.begin(), view.end());
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps ListView alive
+            rdoc::__iter)
         ;
     c.attr("dimension") = T::dimension;
     regina::python::add_output_custom(c, [](const T& view, std::ostream& out) {
