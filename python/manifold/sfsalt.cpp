@@ -43,23 +43,24 @@ using regina::SFSpace;
 void addSFSAlt(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SFSAlt)
 
-    auto s = pybind11::class_<SFSAlt>(m, "SFSAlt")
-        .def(pybind11::init<const SFSpace&>())
+    auto s = pybind11::class_<SFSAlt>(m, "SFSAlt", rdoc_scope)
+        .def(pybind11::init<const SFSpace&>(), rdoc::__init)
         .def(pybind11::init<const SFSAlt&, bool, bool>(),
-            pybind11::arg(), pybind11::arg(), pybind11::arg("negate") = false)
-        .def(pybind11::init<const SFSAlt&>())
-        .def("swap", &SFSAlt::swap)
-        .def_static("altSet", &SFSAlt::altSet)
-        .def_static("canNegate", &SFSAlt::canNegate)
+            pybind11::arg(), pybind11::arg(), pybind11::arg("negate") = false,
+            rdoc::__init_2)
+        .def(pybind11::init<const SFSAlt&>(), rdoc::__copy)
+        .def("swap", &SFSAlt::swap, rdoc::swap)
+        .def_static("altSet", &SFSAlt::altSet, rdoc::altSet)
+        .def_static("canNegate", &SFSAlt::canNegate, rdoc::canNegate)
         .def("alt", static_cast<const SFSpace& (SFSAlt::*)() const&>(
-            &SFSAlt::alt))
-        .def("conversion", &SFSAlt::conversion)
-        .def("reflected", &SFSAlt::reflected)
+            &SFSAlt::alt), rdoc::alt)
+        .def("conversion", &SFSAlt::conversion, rdoc::conversion)
+        .def("reflected", &SFSAlt::reflected, rdoc::reflected)
     ;
     regina::python::add_output(s);
-    regina::python::add_eq_operators(s);
+    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<SFSAlt>(m);
+    regina::python::add_global_swap<SFSAlt>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

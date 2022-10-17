@@ -302,7 +302,7 @@ class SFSpace : public Manifold {
         std::list<SFSFibre> fibres_;
             /**< The exceptional fibres.  This list will be sorted, and will
                  only contain fibres for which \a alpha and \a beta are
-                 coprime and <tt>0 <= beta < alpha > 1</tt>. */
+                 coprime and <tt>0 ≤ beta < alpha > 1</tt>. */
         unsigned long nFibres_;
             /**< The size of the \a fibres_ list, used to avoid calling
                  the linear time fibres_.size(). */
@@ -545,8 +545,8 @@ class SFSpace : public Manifold {
          * additional (1,\a b) fibre.  It can be modified by calling
          * insertFibre() with a value of \a alpha = 1.  It will also be
          * modified whenever insertFibre() is called with \a beta out of
-         * range (\a beta < 0 or \a beta >= \a alpha), since each exceptional
-         * fibre must be stored in standard form (0 <= \a beta < \a alpha).
+         * range (\a beta < 0 or \a beta ≥ \a alpha), since each exceptional
+         * fibre must be stored in standard form (0 ≤ \a beta < \a alpha).
          *
          * @return the obstruction constant \a b.
          */
@@ -643,7 +643,7 @@ class SFSpace : public Manifold {
          *
          * Note that there is no restriction on the range of the second
          * parameter \a beta.  If it is out of the usual range
-         * 0 <= \a beta < \a alpha, it will be pulled back into this
+         * 0 ≤ \a beta < \a alpha, it will be pulled back into this
          * range and the excess will be pushed into the obstruction
          * constant \a b.
          *
@@ -665,7 +665,7 @@ class SFSpace : public Manifold {
          *
          * Note that there is no restriction on the range of the second
          * parameter \a beta.  If it is out of the usual range
-         * 0 <= \a beta < \a alpha, it will be pulled back into this
+         * 0 ≤ \a beta < \a alpha, it will be pulled back into this
          * range and the excess will be pushed into the obstruction
          * constant \a b.
          *
@@ -683,7 +683,7 @@ class SFSpace : public Manifold {
          * exceptional fibres and the obstruction constant \a b will be
          * negated.  Note that the obstruction constant will generally
          * undergo further change as the exceptional fibres are
-         * standardised into the usual 0 <= \a beta < \a alpha form.
+         * standardised into the usual 0 ≤ \a beta < \a alpha form.
          *
          * This routine will not change the curves made by the fibres
          * and the base orbifold on any boundary components (i.e.,
