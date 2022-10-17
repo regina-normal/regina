@@ -479,7 +479,7 @@ class FaceBase :
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  The elements of the list will be
+         * range-based \c for loops.  The elements of the list will be
          * read-only objects of type FaceEmbedding<dim, subdim>.  For
          * example, your code might look like:
          *

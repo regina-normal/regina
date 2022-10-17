@@ -329,7 +329,7 @@ class TriangulationBase :
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -666,7 +666,7 @@ class TriangulationBase :
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -700,7 +700,7 @@ class TriangulationBase :
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -729,7 +729,7 @@ class TriangulationBase :
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -2477,7 +2477,7 @@ class TriangulationBase :
          * Returns C++ code that can be used to reconstruct this triangulation.
          *
          * This code will call Triangulation<dim>::fromGluings(), passing
-         * a hard-coded C++11 initialiser list.
+         * a hard-coded C++ initialiser list.
          *
          * The main purpose of this routine is to generate this hard-coded
          * initialiser list, which can be tedious and error-prone to write
@@ -2500,7 +2500,7 @@ class TriangulationBase :
         /**
          * Creates a triangulation from a hard-coded list of gluings.
          *
-         * This routine takes a C++11 initialiser list, which makes it useful
+         * This routine takes a C++ initialiser list, which makes it useful
          * for creating hard-coded examples directly in C++ code without
          * needing to write a tedious sequence of calls to Simplex<dim>::join().
          *
@@ -2561,7 +2561,7 @@ class TriangulationBase :
          * Creates a triangulation from a list of gluings.
          *
          * This routine is an analogue to the variant of fromGluings() that
-         * takes a C++11 initialiser list; however, here the input data may be
+         * takes a C++ initialiser list; however, here the input data may be
          * constructed at runtime (which makes it accessible to Python,
          * amongst other things).
          *

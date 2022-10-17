@@ -118,7 +118,7 @@ class Component<4> : public detail::ComponentBase<4> {
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}

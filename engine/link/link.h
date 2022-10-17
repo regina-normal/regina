@@ -898,7 +898,7 @@ class Link :
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
+         * range-based \c for loops.  Note that the elements of the list
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
@@ -946,7 +946,7 @@ class Link :
          *
          * The returned object is guaranteed to be an instance of ListView,
          * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Each element of the list will be
+         * range-based \c for loops.  Each element of the list will be
          * a starting strand for some components; more precisely, iterating
          * through this list is equivalent to calling <tt>component(0)</tt>,
          * <tt>component(1)</tt>, ..., <tt>component(countComponents()-1)</tt>
@@ -3334,7 +3334,7 @@ class Link :
          * Returns C++ code that can be used to reconstruct this link.
          *
          * This code will call Link::fromData(), passing a series of
-         * hard-coded C++11 initialiser lists.
+         * hard-coded C++ initialiser lists.
          *
          * The main purpose of this routine is to generate these hard-coded
          * initialiser lists, which can be tedious and error-prone to write
@@ -3452,7 +3452,7 @@ class Link :
          * Creates a link from hard-coded information about its crossings
          * and components.
          *
-         * This routine takes a series of C++11 initialiser lists
+         * This routine takes a series of C++ initialiser lists
          * (each a list of integers), which makes it useful for creating
          * hard-coded examples directly in C++ code.
          *
@@ -3519,7 +3519,7 @@ class Link :
          * components.
          *
          * This routine is an analogue to the variant of fromData() that
-         * takes C++11 initialiser lists; however, here the input data may be
+         * takes C++ initialiser lists; however, here the input data may be
          * constructed at runtime (which makes it accessible to Python,
          * amongst other things).
          *

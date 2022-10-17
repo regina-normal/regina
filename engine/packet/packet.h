@@ -981,7 +981,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * returned by begin() will always point to this packet itself.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using C++11 range-based \c for loops:
+         * an entire packet subtree using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> subtree = ...;
@@ -1012,7 +1012,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * packets in the subtree rooted at this packet.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using C++11 range-based \c for loops.
+         * an entire packet subtree using range-based \c for loops.
          *
          * See the begin() documentation for further details.
          *
@@ -1034,7 +1034,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * returned by begin() will always point to this packet itself.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using C++11 range-based \c for loops:
+         * an entire packet subtree using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> subtree = ...;
@@ -1065,7 +1065,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * in the subtree rooted at this packet.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using C++11 range-based \c for loops.
+         * an entire packet subtree using range-based \c for loops.
          *
          * See the begin() documentation for further details.
          *
@@ -1128,7 +1128,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * before its own descendants.
          *
          * This routine allows you to iterate through all strict descendants
-         * of a given packet using C++11 range-based \c for loops:
+         * of a given packet using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> parent = ...;
@@ -1174,7 +1174,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * before its own descendants.
          *
          * This routine allows you to iterate through all strict descendants
-         * of a given packet using C++11 range-based \c for loops:
+         * of a given packet using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> parent = ...;
@@ -1205,7 +1205,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * immediate children of this packet.
          *
          * This routine allows you to iterate through the immediate children
-         * of a given packet using C++11 range-based \c for loops:
+         * of a given packet using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> parent = ...;
@@ -1243,7 +1243,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * immediate children of this packet.
          *
          * This routine allows you to iterate through the immediate children
-         * of a given packet using C++11 range-based \c for loops:
+         * of a given packet using range-based \c for loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> parent = ...;
@@ -2975,7 +2975,7 @@ class SubtreeIterator {
  * given packet.
  *
  * The purpose of this class is to support iteration through all children of a
- * packet \a p using C++11 range-based \c for loops:
+ * packet \a p using range-based \c for loops:
  *
  * \code{.cpp}
  * std::shared_ptr<Packet> parent = ...;
@@ -3117,7 +3117,7 @@ class PacketChildren {
  * given packet.
  *
  * The purpose of this class is to support iteration through all strict
- * descendants of a packet \a p using C++11 range-based \c for loops:
+ * descendants of a packet \a p using range-based \c for loops:
  *
  * \code{.cpp}
  * std::shared_ptr<Packet> parent = ...;
