@@ -38,6 +38,7 @@
 #include "maths/laurent2.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/link/link.h"
 
 using pybind11::overload_cast;
 using regina::python::GILCallbackManager;
@@ -46,47 +47,57 @@ using regina::StrandRef;
 using regina::Link;
 
 void addLink(pybind11::module_& m) {
-    pybind11::enum_<regina::Framing>(m, "Framing")
-        .value("FRAMING_SEIFERT", regina::FRAMING_SEIFERT)
-        .value("FRAMING_BLACKBOARD", regina::FRAMING_BLACKBOARD)
+    RDOC_SCOPE_BEGIN(Framing)
+
+    pybind11::enum_<regina::Framing>(m, "Framing", rdoc_scope)
+        .value("FRAMING_SEIFERT", regina::FRAMING_SEIFERT,
+            rdoc::FRAMING_SEIFERT)
+        .value("FRAMING_BLACKBOARD", regina::FRAMING_BLACKBOARD,
+            rdoc::FRAMING_BLACKBOARD)
         .export_values()
         ;
 
-    auto s = pybind11::class_<StrandRef>(m, "StrandRef")
-        .def(pybind11::init<>())
-        .def(pybind11::init<Crossing*, int>())
-        .def(pybind11::init<const StrandRef&>())
+    RDOC_SCOPE_SWITCH(StrandRef)
+
+    auto s = pybind11::class_<StrandRef>(m, "StrandRef", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<Crossing*, int>(), rdoc::__init)
+        .def(pybind11::init<const StrandRef&>(), rdoc::__copy)
         .def("crossing", &StrandRef::crossing,
-            pybind11::return_value_policy::reference)
-        .def("strand", &StrandRef::strand)
-        .def("id", &StrandRef::id)
+            pybind11::return_value_policy::reference, rdoc::crossing)
+        .def("strand", &StrandRef::strand, rdoc::strand)
+        .def("id", &StrandRef::id, rdoc::id)
         .def("inc", [](StrandRef& s) {
            return s++;
-        })
+        }, rdoc::__inc)
         .def("dec", [](StrandRef& s) {
            return s--;
-        })
-        .def("next", &StrandRef::next)
-        .def("prev", &StrandRef::prev)
-        .def("jump", &StrandRef::jump)
-        .def("__bool__", &StrandRef::operator bool)
+        }, rdoc::__dec)
+        .def("next", &StrandRef::next, rdoc::next)
+        .def("prev", &StrandRef::prev, rdoc::prev)
+        .def("jump", &StrandRef::jump, rdoc::jump)
+        .def("__bool__", &StrandRef::operator bool, rdoc::operator_bool)
     ;
     regina::python::add_output_ostream(s);
-    regina::python::add_eq_operators(s);
+    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
 
-    auto c = pybind11::class_<Crossing>(m, "Crossing")
-        .def("index", &Crossing::index)
-        .def("sign", &Crossing::sign)
-        .def("upper", &Crossing::upper)
-        .def("lower", &Crossing::lower)
-        .def("over", &Crossing::over)
-        .def("under", &Crossing::under)
-        .def("strand", &Crossing::strand)
-        .def("next", &Crossing::next)
-        .def("prev", &Crossing::prev)
+    RDOC_SCOPE_SWITCH(Crossing)
+
+    auto c = pybind11::class_<Crossing>(m, "Crossing", rdoc_scope)
+        .def("index", &Crossing::index, rdoc::index)
+        .def("sign", &Crossing::sign, rdoc::strand)
+        .def("upper", &Crossing::upper, rdoc::upper)
+        .def("lower", &Crossing::lower, rdoc::lower)
+        .def("over", &Crossing::over, rdoc::over)
+        .def("under", &Crossing::under, rdoc::under)
+        .def("strand", &Crossing::strand, rdoc::strand)
+        .def("next", &Crossing::next, rdoc::next)
+        .def("prev", &Crossing::prev, rdoc::prev)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_SWITCH(Link)
 
     auto l = pybind11::class_<Link, std::shared_ptr<Link>>(m, "Link")
         .def(pybind11::init<>())
@@ -342,4 +353,6 @@ void addLink(pybind11::module_& m) {
     regina::python::add_packet_constructor<const std::string&>(wrap);
 
     regina::python::add_global_swap<Link>(m);
+
+    RDOC_SCOPE_END
 }
