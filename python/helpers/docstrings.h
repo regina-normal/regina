@@ -80,6 +80,14 @@ namespace regina::python::doc::common {
  * and rdoc_scope is an alias for the docstring for s itself (which has
  * no trailing underscore).
  *
+ * If you have an inner class/enum/etc. that is declared within some outer
+ * class/struct, then you can use RDOC_SCOPE_INNER_BEGIN(s) and
+ * RDOC_SCOPE_INNER_END.  This must be placed inside the outer BEGIN ... END
+ * block: it will preserve the outer \a rdoc namespace and \a rdoc_scope
+ * string declarations, and will declare a new namespace alias \a rdoc_inner
+ * and string \a rdoc_inner_scope for working with \a s.  Such inner scopes
+ * can (at present) only be nested one level deep.
+ *
  * Each BEGIN ... SWITCH or BEGIN ... END block will be contained within
  * curly braces (in particular, local variables will go out of scope at the
  * end of the block).
@@ -94,3 +102,7 @@ namespace regina::python::doc::common {
 #define RDOC_SCOPE_SWITCH_MAIN   } RDOC_SCOPE_BEGIN_MAIN
 #define RDOC_SCOPE_END           }
 
+#define RDOC_SCOPE_INNER_BEGIN(scope)  { \
+    const char* rdoc_inner_scope = rdoc::scope; \
+    namespace rdoc_inner = rdoc::scope ## _;
+#define RDOC_SCOPE_INNER_END           }

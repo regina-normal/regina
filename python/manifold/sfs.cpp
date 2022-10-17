@@ -123,21 +123,24 @@ void addSFSpace(pybind11::module_& m) {
 
     regina::python::add_global_swap<SFSpace>(m, rdoc::global_swap);
 
-    pybind11::enum_<SFSpace::ClassType>(s, "ClassType", rdoc::ClassType)
-        .value("o1", SFSpace::o1)
-        .value("o2", SFSpace::o2)
-        .value("n1", SFSpace::n1)
-        .value("n2", SFSpace::n2)
-        .value("n3", SFSpace::n3)
-        .value("n4", SFSpace::n4)
-        .value("bo1", SFSpace::bo1)
-        .value("bo2", SFSpace::bo2)
-        .value("bn1", SFSpace::bn1)
-        .value("bn2", SFSpace::bn2)
-        .value("bn3", SFSpace::bn3)
+    RDOC_SCOPE_INNER_BEGIN(ClassType)
+
+    pybind11::enum_<SFSpace::ClassType>(s, "ClassType", rdoc_inner_scope)
+        .value("o1", SFSpace::o1, rdoc_inner::o1)
+        .value("o2", SFSpace::o2, rdoc_inner::o2)
+        .value("n1", SFSpace::n1, rdoc_inner::n1)
+        .value("n2", SFSpace::n2, rdoc_inner::n2)
+        .value("n3", SFSpace::n3, rdoc_inner::n3)
+        .value("n4", SFSpace::n4, rdoc_inner::n4)
+        .value("bo1", SFSpace::bo1, rdoc_inner::bo1)
+        .value("bo2", SFSpace::bo2, rdoc_inner::bo2)
+        .value("bn1", SFSpace::bn1, rdoc_inner::bn1)
+        .value("bn2", SFSpace::bn2, rdoc_inner::bn2)
+        .value("bn3", SFSpace::bn3, rdoc_inner::bn3)
         .export_values()
         ;
 
+    RDOC_SCOPE_INNER_END
     RDOC_SCOPE_END
 }
 
