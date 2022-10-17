@@ -154,6 +154,15 @@ Parameter ``triangulation``:
 
 // Docstring regina::python::doc::NormalSurface_::__init_2
 static const char *__init_2 =
+R"doc(Create the empty surface within the given triangulation.
+
+All normal coordinates will be zero.
+
+Parameter ``triang``:
+    the triangulation in which this normal surface resides.)doc";
+
+// Docstring regina::python::doc::NormalSurface_::__init_3
+static const char *__init_3 =
 R"doc(Creates a new normal surface inside the given triangulation with the
 given coordinate vector, using the given vector encoding.
 
@@ -188,8 +197,8 @@ Parameter ``enc``:
 Parameter ``vector``:
     a vector containing the coordinates of the normal surface.)doc";
 
-// Docstring regina::python::doc::NormalSurface_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::NormalSurface_::__init_4
+static const char *__init_4 =
 R"doc(Creates a new normal surface inside the given triangulation with the
 given coordinate vector, using the given coordinate system.
 

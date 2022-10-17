@@ -190,6 +190,14 @@ Returns:
     ``True`` if it is possible that the hypersurface might contain one
     or more vertex linking components.)doc";
 
+// Docstring regina::python::doc::HyperEncoding_::empty
+static const char *empty =
+R"doc(Returns an encoding that is suitable for representing the empty
+hypersurface, whose normal coordinates are all zero.
+
+Returns:
+    a suitable encoding for the empty hypersurface.)doc";
+
 // Docstring regina::python::doc::HyperEncoding_::fromIntValue
 static const char *fromIntValue =
 R"doc(Reconstructs an encoding from an integer value.

@@ -356,6 +356,14 @@ Returns:
     ``True`` if it is possible that the surface might contain one or
     more vertex linking components.)doc";
 
+// Docstring regina::python::doc::NormalEncoding_::empty
+static const char *empty =
+R"doc(Returns an encoding that is suitable for representing the empty
+surface, whose normal coordinates are all zero.
+
+Returns:
+    a suitable encoding for the empty surface.)doc";
+
 // Docstring regina::python::doc::NormalEncoding_::fromIntValue
 static const char *fromIntValue =
 R"doc(Reconstructs an encoding from an integer value.
