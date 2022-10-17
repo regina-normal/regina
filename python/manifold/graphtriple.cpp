@@ -35,27 +35,36 @@
 #include "manifold/graphtriple.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
+#include "../docstrings/manifold/graphtriple.h"
 
 using regina::GraphTriple;
 using regina::Matrix2;
 using regina::SFSpace;
 
 void addGraphTriple(pybind11::module_& m) {
-    auto c = pybind11::class_<GraphTriple, regina::Manifold>(m, "GraphTriple")
+    RDOC_SCOPE_BEGIN(GraphTriple)
+
+    auto c = pybind11::class_<GraphTriple, regina::Manifold>(m, "GraphTriple",
+            rdoc_scope)
         .def(pybind11::init<const SFSpace&, const SFSpace&, const SFSpace&,
-            const Matrix2&, const Matrix2&>())
-        .def(pybind11::init<const GraphTriple&>())
+            const Matrix2&, const Matrix2&>(), rdoc::__init)
+        .def(pybind11::init<const GraphTriple&>(), rdoc::__copy)
         .def("end", &GraphTriple::end,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::end)
         .def("centre", &GraphTriple::centre,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::centre)
         .def("matchingReln", &GraphTriple::matchingReln,
-            pybind11::return_value_policy::reference_internal)
-        .def("swap", &GraphTriple::swap)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::matchingReln)
+        .def("swap", &GraphTriple::swap, rdoc::swap)
+        // Do not bind <, since this is already inherited from Manifold
+        // and we do not want to hide that more general version.
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<GraphTriple>(m);
+    regina::python::add_global_swap<GraphTriple>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

@@ -35,25 +35,35 @@
 #include "manifold/graphloop.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
+#include "../docstrings/manifold/graphloop.h"
 
 using regina::GraphLoop;
 using regina::Matrix2;
 using regina::SFSpace;
 
 void addGraphLoop(pybind11::module_& m) {
-    auto c = pybind11::class_<GraphLoop, regina::Manifold>(m, "GraphLoop")
-        .def(pybind11::init<const SFSpace&, long, long, long, long>())
-        .def(pybind11::init<const SFSpace&, const Matrix2&>())
-        .def(pybind11::init<const GraphLoop&>())
+    RDOC_SCOPE_BEGIN(GraphLoop)
+
+    auto c = pybind11::class_<GraphLoop, regina::Manifold>(m, "GraphLoop",
+            rdoc_scope)
+        .def(pybind11::init<const SFSpace&, long, long, long, long>(),
+            rdoc::__init)
+        .def(pybind11::init<const SFSpace&, const Matrix2&>(), rdoc::__init_3)
+        .def(pybind11::init<const GraphLoop&>(), rdoc::__copy)
         .def("sfs", &GraphLoop::sfs,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::sfs)
         .def("matchingReln", &GraphLoop::matchingReln,
-            pybind11::return_value_policy::reference_internal)
-        .def("swap", &GraphLoop::swap)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::matchingReln)
+        .def("swap", &GraphLoop::swap, rdoc::swap)
+        // Do not bind <, since this is already inherited from Manifold
+        // and we do not want to hide that more general version.
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<GraphLoop>(m);
+    regina::python::add_global_swap<GraphLoop>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

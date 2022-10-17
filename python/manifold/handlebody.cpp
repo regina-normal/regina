@@ -34,19 +34,25 @@
 #include "../pybind11/stl.h"
 #include "manifold/handlebody.h"
 #include "../helpers.h"
+#include "../docstrings/manifold/handlebody.h"
 
 using regina::Handlebody;
 
 void addHandlebody(pybind11::module_& m) {
-    auto c = pybind11::class_<Handlebody, regina::Manifold>(m, "Handlebody")
-        .def(pybind11::init<size_t>())
-        .def(pybind11::init<const Handlebody&>())
-        .def("swap", &Handlebody::swap)
-        .def("genus", &Handlebody::genus)
+    RDOC_SCOPE_BEGIN(Handlebody)
+
+    auto c = pybind11::class_<Handlebody, regina::Manifold>(m, "Handlebody",
+            rdoc_scope)
+        .def(pybind11::init<size_t>(), rdoc::__init)
+        .def(pybind11::init<const Handlebody&>(), rdoc::__copy)
+        .def("swap", &Handlebody::swap, rdoc::swap)
+        .def("genus", &Handlebody::genus, rdoc::genus)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<Handlebody>(m);
+    regina::python::add_global_swap<Handlebody>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 
