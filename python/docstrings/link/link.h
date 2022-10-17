@@ -26,7 +26,7 @@ negative (denoted by -1):
 
 ```
 -----\ /----->
-\
+      \
 -----/ \----->
 ```
 
@@ -35,7 +35,7 @@ negative (denoted by -1):
 
 ```
 -----\ /----->
-/
+      /
 -----/ \----->
 ```
 
@@ -1477,13 +1477,13 @@ any combination of the following:
 
 * any whitespace;
 
-  * commas;
+* commas;
 
-  * open or close round brackets, square brackets and/or braces;
+* open or close round brackets, square brackets and/or braces;
 
-  * the special symbols ``PD``, ``X``, ``Xp``, ``Xm`` and ``P``, which
-    are used by other sources (such as the Knot Atlas), but which are
-    ignored here.
+* the special symbols ``PD``, ``X``, ``Xp``, ``Xm`` and ``P``, which
+  are used by other sources (such as the Knot Atlas), but which are
+  ignored here.
 
 Thus the following strings all describe the same sequence:
 

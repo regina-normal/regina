@@ -134,8 +134,11 @@ def process_comment(comment):
 
     # Remove C++ comment syntax
     leading_spaces = float('inf')
+    verb_indent = None
     for s in comment.expandtabs(tabsize=4).splitlines():
+        init_len = len(s)
         s = s.strip()
+        ignore_indent = False
         if s.startswith('/*'):
             s = s[2:].lstrip('*')
         elif s.endswith('*/'):
@@ -144,8 +147,27 @@ def process_comment(comment):
             s = s[3:]
         if s.startswith('*'):
             s = s[1:]
-        if len(s) > 0:
-            leading_spaces = min(leading_spaces, len(s) - len(s.lstrip()))
+        if s.startswith('\\verbatim'):
+            verb_indent = init_len - len(s)
+            ignore_indent = True
+        elif s.startswith('\\endverbatim'):
+            verb_indent = None
+            ignore_indent = True
+        elif verb_indent != None:
+            # The leading spaces might be deliberate.
+            # Put them back, but only as far as needed to align with the
+            # \verbatim command.
+            ignore_indent = True
+            if len(s) + verb_indent < init_len:
+                s = (' ' * (init_len - len(s) - verb_indent)) + s
+        if ignore_indent:
+            # We are going to strip off leading spaces shortly, so put
+            # them back for now.
+            if leading_spaces != float('inf'):
+                s = (' ' * leading_spaces) + s
+        else:
+            if len(s) > 0:
+                leading_spaces = min(leading_spaces, len(s) - len(s.lstrip()))
         result += s + '\n'
 
     if leading_spaces != float('inf'):

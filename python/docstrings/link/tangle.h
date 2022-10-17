@@ -224,13 +224,13 @@ The five tangles will be connected as shown, with this tangle in the
 centre:
 
 ```
-\     /
-O---O
-/ \ / \
-|  O  |
-\ / \ /
-O---O
-/     \
+ \     /
+  O---O
+ / \ / \
+ |  O  |
+ \ / \ /
+  O---O
+ /     \
 ```
 
 The top-left corner of the argument *topLeft* will become the top-left
@@ -278,7 +278,7 @@ ensure that tangles with being created and/or manipulated correctly.
 The output will contain the following elements, separated by single
 spaces:
 
-* one of the symbols \c -, \c | or ``x``, indicating that the tangle
+* one of the symbols ``-``, ``|`` or ``x``, indicating that the tangle
   is of horizontal, vertical or diagonal type respectively (as
   described in the class notes);
 
@@ -410,7 +410,7 @@ The format works as follows:
 
 * Label the crossings arbitrarily as 1, 2, ..., *n*.
 
-* Write one of the tokens \c -, \c | or ``x`` to represent a
+* Write one of the tokens ``-``, ``|`` or ``x`` to represent a
   horizontal, vertical or diagonal tangle respectively.
 
 * Start at the top-left endpoint and follow this string to its other
@@ -789,7 +789,7 @@ Parameter ``sign``:
 static const char *type =
 R"doc(Returns the type of this tangle.
 
-This will be one of the characters \c -, \c | or ``x``, indicating a
+This will be one of the characters ``-``, ``|`` or ``x``, indicating a
 horizontal, vertical or diagonal type as described in the class notes.
 
 Returns:

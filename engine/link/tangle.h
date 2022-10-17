@@ -87,9 +87,9 @@ class Tangle : public Output<Tangle> {
     private:
         char type_;
             /**< Indicates how the four endpoints connect; this will be
-                 one of the symbols \c -, \c | or \c x, representing a
-                 horizontal, vertical or diagonal type as described in
-                 the class notes. */
+                 one of the symbols <tt>-</tt>, <tt>|</tt> or <tt>x</tt>,
+                 representing a horizontal, vertical or diagonal type as
+                 described in the class notes. */
         MarkedVector<Crossing> crossings_;
             /**< The crossings in this tangle. */
         StrandRef end_[2][2];
@@ -207,8 +207,8 @@ class Tangle : public Output<Tangle> {
         /**
          * Returns the type of this tangle.
          *
-         * This will be one of the characters \c -, \c | or \c x,
-         * indicating a horizontal, vertical or diagonal type as
+         * This will be one of the characters <tt>-</tt>, <tt>|</tt> or
+         * <tt>x</tt>, indicating a horizontal, vertical or diagonal type as
          * described in the class notes.
          *
          * @return the type of this crossing.
@@ -687,9 +687,9 @@ class Tangle : public Output<Tangle> {
          * The output will contain the following elements, separated by
          * single spaces:
          *
-         * - one of the symbols \c -, \c | or \c x, indicating that the
-         *   tangle is of horizontal, vertical or diagonal type respectively
-         *   (as described in the class notes);
+         * - one of the symbols <tt>-</tt>, <tt>|</tt> or <tt>x</tt>,
+         *   indicating that the tangle is of horizontal, vertical or
+         *   diagonal type respectively (as described in the class notes);
          *
          * - a sequence of signs (<tt>+</tt> or <tt>-</tt>), concatenated
          *   together, giving the signs of the crossings in order from
@@ -812,8 +812,8 @@ class Tangle : public Output<Tangle> {
          *
          * - Label the crossings arbitrarily as 1, 2, ..., \a n.
          *
-         * - Write one of the tokens \c -, \c | or \c x to represent a
-         *   horizontal, vertical or diagonal tangle respectively.
+         * - Write one of the tokens <tt>-</tt>, <tt>|</tt> or <tt>x</tt> to
+         *   represent a horizontal, vertical or diagonal tangle respectively.
          *
          * - Start at the top-left endpoint and follow this string to
          *   its other endpoint.  At every crossing that you pass, write a
@@ -828,7 +828,7 @@ class Tangle : public Output<Tangle> {
          *       the crossing passes from right to left, and <tt>&gt;</tt>
          *       indicates that the other strand passes from left to right.
          *
-         * - Write the token \c _ to indicate that the first string has
+         * - Write the token <tt>_</tt> to indicate that the first string has
          *   finished.
          *
          * - Start at the beginning of the other string (for horizontal

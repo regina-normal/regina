@@ -743,24 +743,24 @@ static const char *flype =
 R"doc(TODO: Document.
 
 ```
-Cell A
+       Cell A
 
-__   __
-\ /                    ----> left
-X         Cell B
-__/ \__from              ----> right
+    __   __
+      \ /                    ----> left
+       X         Cell B
+    __/ \__from              ----> right
 
-Cell C
+       Cell C
 ```
 
 Conditions that explicitly throw exceptions:
 
 * Neither left nor right ends at from.node().
 
-  * The upper and lower bounding cells are distinct,
+* The upper and lower bounding cells are distinct,
 
-  * The cell between left and right is not the inside cell where the
-    flype begins from from.node().
+* The cell between left and right is not the inside cell where the
+  flype begins from from.node().
 
 Even if the arguments are a (non-null) result of findFlype(), this
 routine could still throw an exception, but only for graphs that model
@@ -810,7 +810,7 @@ alphabetical strings. So, for example, to construct the graph
 corresponding to the second line of output above, you could call:
 
 ```
- fromPlantri("bcdd,aeec,abfd,acfa,bffb,ceed");
+fromPlantri("bcdd,aeec,abfd,acfa,bffb,ceed");
 ```
 
 Regina can only recognise graphs in this format with up to 26 nodes.
