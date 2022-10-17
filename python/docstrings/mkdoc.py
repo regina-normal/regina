@@ -147,6 +147,10 @@ def process_comment(comment):
             s = s[3:]
         if s.startswith('*'):
             s = s[1:]
+        # This code assumes that verbatim blocks, *including* the
+        # \verbatim and \endverbatim lines, will not contain the leading '*'
+        # in their comment lines.  This messes with our indent calculations,
+        # and so we work our way around that here.
         if s.startswith('\\verbatim'):
             verb_indent = init_len - len(s)
             ignore_indent = True
