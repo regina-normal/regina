@@ -25,18 +25,18 @@ negative (denoted by -1):
   strand from left to right:
 
 ```
------\ /----->
-      \
------/ \----->
+  -----\ /----->
+        \
+  -----/ \----->
 ```
 
 * In a negative crossing, the upper strand passes over the lower
   strand from right to left:
 
 ```
------\ /----->
-      /
------/ \----->
+  -----\ /----->
+        /
+  -----/ \----->
 ```
 
 If a link has *n* crossings, then these are numbered 0,...,*n*-1. The

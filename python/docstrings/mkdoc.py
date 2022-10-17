@@ -293,7 +293,14 @@ def process_comment(comment):
     wrapper.drop_whitespace = True
     wrapper.width = docstring_width
     wrapper.initial_indent = wrapper.subsequent_indent = ''
+    last_indent = ''
 
+    # TODO: In the following loop, any preformatted text *within* a list
+    # will lose all indent information afterwards (i.e., it will effectively
+    # end the list).  This should probably be fixed, though it does not yet
+    # affect Regina's docs - at the time of writing, the only instance of
+    # preformatted text within a list is in the Crossing class notes,
+    # and here it happens at the end of each list item (so no problem).
     result = ''
     in_code_segment = False
     for x in re.split(r'(```)', s):
@@ -307,7 +314,16 @@ def process_comment(comment):
             # Preformatted text could begin with whitespace that must be kept.
             # Only strip off the leading and trailing newlines that we added in
             # the regexes above, not all whitespace.
-            result += x.strip('\n')
+            preformatted = x.strip('\n')
+
+            # However, we *do* indent this preformatted text to match
+            # the (non-preformatted) text above it.  This means things
+            # look correct if (for example) we have code blocks within a list.
+            if last_indent:
+                preformatted = last_indent + \
+                    preformatted.replace('\n', '\n' + last_indent)
+
+            result += preformatted
         else:
             # Split into paragraphs.
             for y in re.split(r'(?: *\n *){2,}', x):
@@ -371,6 +387,7 @@ def process_comment(comment):
                             z = str(list_index[-1]) + '. ' + z
 
                     wrapped = wrapper.fill(re.sub(r'\s+', ' ', z).strip())
+                    last_indent = wrapper.subsequent_indent
 
                     if len(wrapped) > 0 and wrapped[0] == '$':
                         # TODO: Maybe it would be nice to verify that
