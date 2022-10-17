@@ -117,7 +117,7 @@ void addTableView(pybind11::module_& m) {
         .def("__iter__", [](const T& view) {
             return pybind11::make_iterator<Policy>(view.begin(), view.end());
         }, pybind11::keep_alive<0, 1>(), // iterator keeps ListView alive
-            rdoc::__iter)
+            rdoc::__iter__)
         ;
     c.attr("dimension") = T::dimension;
     regina::python::add_output_custom(c, [](const T& view, std::ostream& out) {

@@ -81,13 +81,13 @@ constexpr const char *__array =
 R"doc(Returns the requested sub-array of a multi-dimensional array, or the
 requested element of a one-dimensional array.
 
-If this array is one-dimensional, then this operator simply returns
-the (*index*)th element (as a const reference).
+If this array is one-dimensional then this operator simply returns the
+(*index*)th element, as a const reference.
 
-If this array has more than one dimension, then this operator returns
-a TableView of smaller dimension, representing the slice of the
-overall table obtained when the first array index is set to the given
-value.
+If this array has more than one dimension then this operator returns a
+TableView of smaller dimension, by value, representing the slice of
+the overall table obtained when the first array index is set to the
+given value.
 
 Typically this operator would just be used to access an individual
 element using the syntax ``array[index_1][index_2]...[index_dim]``,
@@ -119,6 +119,22 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given table use the same
     underlying C-style array.)doc";
+
+// Docstring regina::python::doc::TableView_::__iter__
+constexpr const char *__iter__ =
+R"doc(Returns a Python iterator over all sub-arrays (for a multi-dimensional
+array), or all elements (for a one-dimensional array).
+
+For a TableView *t*, this iterator will run through the
+subarrays/elements ``t[0]``, ``t[1]``, ..., in order from first to
+last.
+
+In particular, for a multi-dimensional array, a single iterator will
+not run through the individual array elements; for this you will need
+``t.dimension`` nested iterations.
+
+Returns:
+    an iterator over the subarrays or elements of this table.)doc";
 
 // Docstring regina::python::doc::TableView_::__ne
 constexpr const char *__ne =
