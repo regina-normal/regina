@@ -34,26 +34,33 @@
 #include "link/examplelink.h"
 #include "link/link.h"
 #include "../helpers.h"
+#include "../docstrings/link/examplelink.h"
 
 using regina::ExampleLink;
 
 void addExampleLink(pybind11::module_& m) {
-    auto c = pybind11::class_<ExampleLink>(m, "ExampleLink")
-        .def_static("unknot", &ExampleLink::unknot)
-        .def_static("gordian", &ExampleLink::gordian)
-        .def_static("trefoilLeft", &ExampleLink::trefoilLeft)
-        .def_static("trefoilRight", &ExampleLink::trefoilRight)
-        .def_static("trefoil", &ExampleLink::trefoil)
-        .def_static("figureEight", &ExampleLink::figureEight)
-        .def_static("hopf", &ExampleLink::hopf)
-        .def_static("whitehead", &ExampleLink::whitehead)
-        .def_static("borromean", &ExampleLink::borromean)
-        .def_static("monster", &ExampleLink::monster)
-        .def_static("conway", &ExampleLink::conway)
-        .def_static("kinoshitaTerasaka", &ExampleLink::kinoshitaTerasaka)
-        .def_static("torus", &ExampleLink::torus)
-        .def_static("gst", &ExampleLink::gst)
+    RDOC_SCOPE_BEGIN(ExampleLink)
+
+    auto c = pybind11::class_<ExampleLink>(m, "ExampleLink", rdoc_scope)
+        .def_static("unknot", &ExampleLink::unknot, rdoc::unknot)
+        .def_static("gordian", &ExampleLink::gordian, rdoc::gordian)
+        .def_static("trefoilLeft", &ExampleLink::trefoilLeft, rdoc::trefoilLeft)
+        .def_static("trefoilRight", &ExampleLink::trefoilRight,
+            rdoc::trefoilRight)
+        .def_static("trefoil", &ExampleLink::trefoil, rdoc::trefoil)
+        .def_static("figureEight", &ExampleLink::figureEight, rdoc::figureEight)
+        .def_static("hopf", &ExampleLink::hopf, rdoc::hopf)
+        .def_static("whitehead", &ExampleLink::whitehead, rdoc::whitehead)
+        .def_static("borromean", &ExampleLink::borromean, rdoc::borromean)
+        .def_static("monster", &ExampleLink::monster, rdoc::monster)
+        .def_static("conway", &ExampleLink::conway, rdoc::conway)
+        .def_static("kinoshitaTerasaka", &ExampleLink::kinoshitaTerasaka,
+            rdoc::kinoshitaTerasaka)
+        .def_static("torus", &ExampleLink::torus, rdoc::torus)
+        .def_static("gst", &ExampleLink::gst, rdoc::gst)
     ;
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 
