@@ -417,7 +417,12 @@ def extract(filename, node, namespace, output):
                     (node.spelling == node.semantic_parent.spelling or
                     node.spelling.startswith(node.semantic_parent.spelling + \
                         '<'))):
-                name = ('__copy' if node.is_copy_constructor() else '__init')
+                if node.is_copy_constructor():
+                    name = '__copy'
+                elif node.is_default_constructor():
+                    name = '__default'
+                else:
+                    name = '__init'
             else:
                 name = sanitize_name(d(node.spelling))
 

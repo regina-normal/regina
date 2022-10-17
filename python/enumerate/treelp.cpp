@@ -104,7 +104,7 @@ void addLPData(pybind11::module_& m, const char* name) {
     using Data = LPData<LPConstraint, Integer>;
 
     auto c = pybind11::class_<Data>(m, name, rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
+        .def(pybind11::init<>(), rdoc::__default)
         .def("swap", &Data::swap, rdoc::swap)
         .def("reserve", &Data::reserve, rdoc::reserve)
         .def("initStart", &Data::initStart, rdoc::initStart)
@@ -146,8 +146,8 @@ void addTreeLP(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LPMatrix)
 
     auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
-        .def(pybind11::init<size_t, size_t>(), rdoc::__init_2)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<size_t, size_t>(), rdoc::__init)
         .def("swap", &LPMatrix<Integer>::swap, rdoc::swap)
         .def("reserve", &LPMatrix<Integer>::reserve, rdoc::reserve)
         .def("initClone", &LPMatrix<Integer>::initClone, rdoc::initClone)

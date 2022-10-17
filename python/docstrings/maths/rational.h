@@ -58,6 +58,9 @@ R"doc(Initialises to the given rational value.
 Parameter ``value``:
     the new rational value of this rational.)doc";
 
+// Docstring regina::python::doc::Rational_::__default
+static const char *__default = R"doc(Initialises to 0/1.)doc";
+
 // Docstring regina::python::doc::Rational_::__div
 static const char *__div =
 R"doc(Calculates the ratio of two rationals. This rational is not changed.
@@ -133,25 +136,22 @@ Returns:
     a reference to this rational with its new value.)doc";
 
 // Docstring regina::python::doc::Rational_::__init
-static const char *__init = R"doc(Initialises to 0/1.)doc";
-
-// Docstring regina::python::doc::Rational_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Initialises to the given integer value. The given integer may be
 infinite.
 
 Parameter ``value``:
     the new integer value of this rational.)doc";
 
-// Docstring regina::python::doc::Rational_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::Rational_::__init_2
+static const char *__init_2 =
 R"doc(Initialises to the given integer value.
 
 Parameter ``value``:
     the new integer value of this rational.)doc";
 
-// Docstring regina::python::doc::Rational_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::Rational_::__init_3
+static const char *__init_3 =
 R"doc(Initialises to *num*/*den*.
 
 Precondition:
@@ -176,8 +176,8 @@ Parameter ``num``:
 Parameter ``den``:
     the new denominator.)doc";
 
-// Docstring regina::python::doc::Rational_::__init_5
-static const char *__init_5 =
+// Docstring regina::python::doc::Rational_::__init_4
+static const char *__init_4 =
 R"doc(Initialises to *num*/*den*.
 
 Precondition:

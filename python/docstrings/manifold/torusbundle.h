@@ -43,6 +43,11 @@ namespace TorusBundle_ {
 // Docstring regina::python::doc::TorusBundle_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given torus bundle.)doc";
 
+// Docstring regina::python::doc::TorusBundle_::__default
+static const char *__default =
+R"doc(Creates a new trivial torus bundle over the circle. In other words,
+this routine creates a torus bundle with the identity monodromy.)doc";
+
 // Docstring regina::python::doc::TorusBundle_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given object contain precisely the
@@ -62,11 +67,6 @@ Returns:
 
 // Docstring regina::python::doc::TorusBundle_::__init
 static const char *__init =
-R"doc(Creates a new trivial torus bundle over the circle. In other words,
-this routine creates a torus bundle with the identity monodromy.)doc";
-
-// Docstring regina::python::doc::TorusBundle_::__init_2
-static const char *__init_2 =
 R"doc(Creates a new torus bundle over the circle using the given monodromy.
 
 Precondition:
@@ -76,8 +76,8 @@ Parameter ``monodromy``:
     describes precisely how the upper and lower torus boundaries are
     identified. See the class notes for details.)doc";
 
-// Docstring regina::python::doc::TorusBundle_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::TorusBundle_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new torus bundle over the circle using the given monodromy.
 The four elements of the monodromy matrix are passed separately. They
 combine to give the full monodromy matrix *M* as follows:

@@ -347,8 +347,8 @@ functions.)doc";
 
 namespace LPData_ {
 
-// Docstring regina::python::doc::LPData_::__init
-static const char *__init =
+// Docstring regina::python::doc::LPData_::__default
+static const char *__default =
 R"doc(Constructs a new tableaux. You *must* call reserve() before doing
 anything else with this tableaux.)doc";
 
@@ -935,6 +935,13 @@ Returns:
 
 namespace LPMatrix_ {
 
+// Docstring regina::python::doc::LPMatrix_::__default
+static const char *__default =
+R"doc(Creates an uninitialised matrix with no memory storage.
+
+You *must* call reserve() and then either initClone() or
+initIdentity() before this matrix will become initialised.)doc";
+
 // Docstring regina::python::doc::LPMatrix_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given matrix are equal.
@@ -954,13 +961,6 @@ Returns:
 
 // Docstring regina::python::doc::LPMatrix_::__init
 static const char *__init =
-R"doc(Creates an uninitialised matrix with no memory storage.
-
-You *must* call reserve() and then either initClone() or
-initIdentity() before this matrix will become initialised.)doc";
-
-// Docstring regina::python::doc::LPMatrix_::__init_2
-static const char *__init_2 =
 R"doc(Creates a fully initialised *rows* by *cols* matrix with all elements
 set to zero.
 

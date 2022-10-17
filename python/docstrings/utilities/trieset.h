@@ -60,6 +60,9 @@ copy of *src*.
 Parameter ``src``:
     the collection of sets to copy.)doc";
 
+// Docstring regina::python::doc::TrieSet_::__default
+static const char *__default = R"doc(Constructs an empty collection of sets.)doc";
+
 // Docstring regina::python::doc::TrieSet_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given collection store exactly the
@@ -70,9 +73,6 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if both collections store the same sets.)doc";
-
-// Docstring regina::python::doc::TrieSet_::__init
-static const char *__init = R"doc(Constructs an empty collection of sets.)doc";
 
 // Docstring regina::python::doc::TrieSet_::__ne
 static const char *__ne =

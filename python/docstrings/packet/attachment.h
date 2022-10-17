@@ -56,6 +56,13 @@ attachment (i.e., if ``src.isNull()`` returns ``True``).
 Parameter ``src``:
     the attachment packet whose contents should be copied.)doc";
 
+// Docstring regina::python::doc::Attachment_::__default
+static const char *__default =
+R"doc(Creates a packet with no attachment stored.
+
+Until some content is assigned (e.g., by the assignment operator, or
+by a non-trivial call to reset()), isNull() will return ``True``.)doc";
+
 // Docstring regina::python::doc::Attachment_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given attachment hold identical data.
@@ -75,13 +82,6 @@ Returns:
 
 // Docstring regina::python::doc::Attachment_::__init
 static const char *__init =
-R"doc(Creates a packet with no attachment stored.
-
-Until some content is assigned (e.g., by the assignment operator, or
-by a non-trivial call to reset()), isNull() will return ``True``.)doc";
-
-// Docstring regina::python::doc::Attachment_::__init_2
-static const char *__init_2 =
 R"doc(Creates a new attachment containing the contents of the given file.
 
 The file will be read immediately, but no ongoing link will be
@@ -106,8 +106,8 @@ Internationalisation:
 Parameter ``pathname``:
     the full pathname of the attachment to read.)doc";
 
-// Docstring regina::python::doc::Attachment_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::Attachment_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new attachment containing the given binary data.
 
 The *data* array must contain a block of binary data, of *size* bytes.

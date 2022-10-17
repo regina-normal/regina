@@ -49,6 +49,9 @@ R"doc(Creates a copy of the given disc type.
 Parameter ``cloneMe``:
     the disc type to clone.)doc";
 
+// Docstring regina::python::doc::DiscType_::__default
+static const char *__default = R"doc(Creates a new null disc type, as described in the class notes.)doc";
+
 // Docstring regina::python::doc::DiscType_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given disc type are identical.
@@ -63,10 +66,7 @@ Returns:
     ``False`` if they are different.)doc";
 
 // Docstring regina::python::doc::DiscType_::__init
-static const char *__init = R"doc(Creates a new null disc type, as described in the class notes.)doc";
-
-// Docstring regina::python::doc::DiscType_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates a new disc type initialised with the given values.
 
 Parameter ``newTetIndex``:

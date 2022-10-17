@@ -635,8 +635,8 @@ the C++ type of *this* object, not the object being copied.
 This constructor is provided so that *Held* can (if it wants) use an
 implicitly-declared copy or move constructor.)doc";
 
-// Docstring regina::python::doc::PacketData_::__init
-static const char *__init = R"doc(Default constructor that sets *heldBy_* to HELD_BY_NONE.)doc";
+// Docstring regina::python::doc::PacketData_::__default
+static const char *__default = R"doc(Default constructor that sets *heldBy_* to HELD_BY_NONE.)doc";
 
 // Docstring regina::python::doc::PacketData_::anonID
 static const char *anonID =
@@ -976,8 +976,8 @@ new packet into any packet tree).
 Parameter ``src``:
     the packet whose contents should be copied.)doc";
 
-// Docstring regina::python::doc::PacketOf_::__init
-static const char *__init =
+// Docstring regina::python::doc::PacketOf_::__default
+static const char *__default =
 R"doc(Creates a new packet.
 
 The *Held* object that it contains will be constructed using the
@@ -986,8 +986,8 @@ default *Held* constructor.
 The packet will not be inserted into any packet tree, and will have an
 empty packet label.)doc";
 
-// Docstring regina::python::doc::PacketOf_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::PacketOf_::__init
+static const char *__init =
 R"doc(Creates a new packet containing a deep copy of the given data.
 
 The packet will not be inserted into any packet tree, and will have an
@@ -996,8 +996,8 @@ empty packet label.
 Parameter ``data``:
     the object to copy.)doc";
 
-// Docstring regina::python::doc::PacketOf_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::PacketOf_::__init_2
+static const char *__init_2 =
 R"doc(Moves the given data into this new packet. This will typically be much
 faster than a deep copy, since it uses the move constructor for
 *Held*.
@@ -1010,8 +1010,8 @@ The object that is passed (*data*) will no longer be usable.
 Parameter ``data``:
     the object to move.)doc";
 
-// Docstring regina::python::doc::PacketOf_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::PacketOf_::__init_3
+static const char *__init_3 =
 R"doc(Creates a new packet using one of *Held*'s own constructors.
 
 The given arguments *args* will be forwarded directly to the

@@ -46,15 +46,15 @@ void addLaurent2(pybind11::module_& m) {
 
     auto c = pybind11::class_<Laurent2<regina::Integer>>(m, "Laurent2",
             rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
-        .def(pybind11::init<long, long>(), rdoc::__init_2)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<long, long>(), rdoc::__init)
         .def(pybind11::init<const Laurent2<regina::Integer>&>(), rdoc::__copy)
         .def(pybind11::init<const Laurent2<regina::Integer>&, long, long>(),
-            rdoc::__init_3)
+            rdoc::__init_2)
         .def(pybind11::init([](const std::vector<
                 std::tuple<long, long, regina::Integer>>& coeffs) {
             return new Laurent2<regina::Integer>(coeffs.begin(), coeffs.end());
-        }), rdoc::__init_4)
+        }), rdoc::__init_3)
         .def("init", overload_cast<>(
             &Laurent2<regina::Integer>::init), rdoc::init)
         .def("init", overload_cast<long, long>(

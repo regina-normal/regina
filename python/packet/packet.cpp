@@ -54,7 +54,7 @@ namespace regina::python::doc::common {
     const char* PacketData_anonID = regina::python::doc::PacketData_::anonID;
     const char* PacketData_packet = regina::python::doc::PacketData_::packet;
     const char* PacketOf = regina::python::doc::PacketOf;
-    const char* PacketOf_copy = regina::python::doc::PacketOf_::__init_2;
+    const char* PacketOf_copy = regina::python::doc::PacketOf_::__init;
     const char* make_packet = regina::python::doc::make_packet;
     const char* make_packet_2 = regina::python::doc::make_packet_2;
 }

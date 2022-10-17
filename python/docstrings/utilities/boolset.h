@@ -73,6 +73,9 @@ R"doc(Creates a clone of the given set.
 Parameter ``src``:
     the set to clone.)doc";
 
+// Docstring regina::python::doc::BoolSet_::__default
+static const char *__default = R"doc(Creates a new empty set.)doc";
+
 // Docstring regina::python::doc::BoolSet_::__eq
 static const char *__eq =
 R"doc(Determines if this set is equal to the given set.
@@ -118,18 +121,15 @@ Returns:
     a reference to this set.)doc";
 
 // Docstring regina::python::doc::BoolSet_::__init
-static const char *__init = R"doc(Creates a new empty set.)doc";
-
-// Docstring regina::python::doc::BoolSet_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates a set containing a single boolean, which is passed as an
 argument.
 
 Parameter ``member``:
     the single element to include in this set.)doc";
 
-// Docstring regina::python::doc::BoolSet_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::BoolSet_::__init_2
+static const char *__init_2 =
 R"doc(Creates a set specifying whether ``True`` and/or ``False`` should be a
 member.
 

@@ -89,6 +89,11 @@ packet infrastructure (e.g., it will not copy the packet label, it
 will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
+// Docstring regina::python::doc::SurfaceFilterCombination_::__default
+static const char *__default =
+R"doc(Creates a new surface filter that accepts all normal surfaces. This
+will be an *and* filter.)doc";
+
 // Docstring regina::python::doc::SurfaceFilterCombination_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given filter use the same boolean
@@ -100,11 +105,6 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given filter use the same
     boolean operation.)doc";
-
-// Docstring regina::python::doc::SurfaceFilterCombination_::__init
-static const char *__init =
-R"doc(Creates a new surface filter that accepts all normal surfaces. This
-will be an *and* filter.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterCombination_::__ne
 static const char *__ne =
@@ -172,6 +172,9 @@ packet infrastructure (e.g., it will not copy the packet label, it
 will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
+// Docstring regina::python::doc::SurfaceFilterProperties_::__default
+static const char *__default = R"doc(Creates a new surface filter that accepts all normal surfaces.)doc";
+
 // Docstring regina::python::doc::SurfaceFilterProperties_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given filter are configured to filter on
@@ -188,9 +191,6 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if this and the given filters are identical.)doc";
-
-// Docstring regina::python::doc::SurfaceFilterProperties_::__init
-static const char *__init = R"doc(Creates a new surface filter that accepts all normal surfaces.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::__ne
 static const char *__ne =

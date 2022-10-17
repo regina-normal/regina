@@ -321,6 +321,9 @@ copy constructor automatically.
 Parameter ``value``:
     the polynomial to clone.)doc";
 
+// Docstring regina::python::doc::Polynomial_::__default
+static const char *__default = R"doc(Creates the zero polynomial.)doc";
+
 // Docstring regina::python::doc::Polynomial_::__eq
 static const char *__eq =
 R"doc(Tests whether this and the given polynomial are equal.
@@ -422,17 +425,14 @@ Returns:
     a reference to this polynomial.)doc";
 
 // Docstring regina::python::doc::Polynomial_::__init
-static const char *__init = R"doc(Creates the zero polynomial.)doc";
-
-// Docstring regina::python::doc::Polynomial_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates the polynomial ``x^d`` for the given degree *d*.
 
 Parameter ``degree``:
     the degree of the new polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::Polynomial_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new polynomial from the given sequence of coefficients. The
 coefficients should be given in order from the constant coefficient to
 the leading coefficient.

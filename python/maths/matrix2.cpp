@@ -90,9 +90,9 @@ void addMatrix2(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Matrix2)
 
     auto c = pybind11::class_<Matrix2>(m, "Matrix2", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
+        .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Matrix2&>(), rdoc::__copy)
-        .def(pybind11::init<long, long, long, long>(), rdoc::__init_2)
+        .def(pybind11::init<long, long, long, long>(), rdoc::__init)
         .def("swap", &Matrix2::swap, rdoc::swap)
         .def("__getitem__", [](Matrix2& m, int row) {
             if (row < 0 || row > 1)

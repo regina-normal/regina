@@ -76,6 +76,9 @@ packet infrastructure (e.g., it will not copy the packet label, it
 will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
+// Docstring regina::python::doc::Script_::__default
+static const char *__default = R"doc(Initialises to a script with no text and no variables.)doc";
+
 // Docstring regina::python::doc::Script_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given script are identical.
@@ -91,9 +94,6 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if this and the given script are identical.)doc";
-
-// Docstring regina::python::doc::Script_::__init
-static const char *__init = R"doc(Initialises to a script with no text and no variables.)doc";
 
 // Docstring regina::python::doc::Script_::__ne
 static const char *__ne =

@@ -320,6 +320,16 @@ This constructor induces a deep copy of *value*.
 Parameter ``value``:
     the field element to copy.)doc";
 
+// Docstring regina::python::doc::Cyclotomic_::__default
+static const char *__default =
+R"doc(Creates an uninitialised field element.
+
+This element must be initialised using either init() or the assignment
+operator before it can be used.
+
+The underlying cyclotomic field is not yet known; this will also be
+specified during the call to init() or the assignment operator.)doc";
+
 // Docstring regina::python::doc::Cyclotomic_::__eq
 static const char *__eq =
 R"doc(Tests whether or not this and the given argument are the same element
@@ -414,24 +424,14 @@ Returns:
 
 // Docstring regina::python::doc::Cyclotomic_::__init
 static const char *__init =
-R"doc(Creates an uninitialised field element.
-
-This element must be initialised using either init() or the assignment
-operator before it can be used.
-
-The underlying cyclotomic field is not yet known; this will also be
-specified during the call to init() or the assignment operator.)doc";
-
-// Docstring regina::python::doc::Cyclotomic_::__init_2
-static const char *__init_2 =
 R"doc(Creates the zero element of the given cyclotomic field.
 
 Parameter ``field``:
     the order of the underlying cyclotomic field; this must be
     strictly positive.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::Cyclotomic_::__init_2
+static const char *__init_2 =
 R"doc(Creates the given integer element within the given cyclotomic field.
 
 The polynomial representation of this element will simply be an
@@ -444,8 +444,8 @@ Parameter ``field``:
 Parameter ``value``:
     the value of this element; that is, the integer constant.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::Cyclotomic_::__init_3
+static const char *__init_3 =
 R"doc(Creates the given rational element within the given cyclotomic field.
 
 The polynomial representation of this element will simply be a
@@ -458,8 +458,8 @@ Parameter ``field``:
 Parameter ``value``:
     the value of this element; that is, the rational constant.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__init_5
-static const char *__init_5 =
+// Docstring regina::python::doc::Cyclotomic_::__init_4
+static const char *__init_4 =
 R"doc(Creates a new field element from the given sequence of coefficients.
 The coefficients should describe the field element's polynomial
 representation, and should be given in order from the constant

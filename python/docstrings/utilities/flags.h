@@ -107,6 +107,9 @@ R"doc(Creates a clone of the given flag set.
 Parameter ``init``:
     the flag set to clone.)doc";
 
+// Docstring regina::python::doc::Flags_::__default
+constexpr const char *__default = R"doc(Creates an empty flag set, with no flags set at all.)doc";
+
 // Docstring regina::python::doc::Flags_::__eq
 constexpr const char *__eq =
 R"doc(Determines whether this set is precisely equal to the given flag.
@@ -148,10 +151,7 @@ Returns:
     a reference to this flag set.)doc";
 
 // Docstring regina::python::doc::Flags_::__init
-constexpr const char *__init = R"doc(Creates an empty flag set, with no flags set at all.)doc";
-
-// Docstring regina::python::doc::Flags_::__init_2
-constexpr const char *__init_2 =
+constexpr const char *__init =
 R"doc(Creates a flag set initialised to the given value.
 
 Parameter ``init``:

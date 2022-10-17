@@ -64,6 +64,9 @@ R"doc(Creates a new copy of the given trie. This will induce a deep copy of
 Parameter ``src``:
     the trie to copy.)doc";
 
+// Docstring regina::python::doc::TypeTrie_::__default
+static const char *__default = R"doc(Creates an empty trie.)doc";
+
 // Docstring regina::python::doc::TypeTrie_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given trie store exactly the same type
@@ -74,9 +77,6 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if both tries store the same type vectors.)doc";
-
-// Docstring regina::python::doc::TypeTrie_::__init
-static const char *__init = R"doc(Creates an empty trie.)doc";
 
 // Docstring regina::python::doc::TypeTrie_::__ne
 static const char *__ne =

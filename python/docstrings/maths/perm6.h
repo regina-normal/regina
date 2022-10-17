@@ -108,6 +108,9 @@ R"doc(Creates a permutation that is a clone of the given permutation.
 Parameter ``cloneMe``:
     the permutation to clone.)doc";
 
+// Docstring regina::python::doc::Perm_::__default
+static const char *__default = R"doc(Creates the identity permutation.)doc";
+
 // Docstring regina::python::doc::Perm_::__eq
 static const char *__eq =
 R"doc(Determines if this is equal to the given permutation. This is true if
@@ -135,10 +138,7 @@ Returns:
     a copy of this permutation before the increment took place.)doc";
 
 // Docstring regina::python::doc::Perm_::__init
-static const char *__init = R"doc(Creates the identity permutation.)doc";
-
-// Docstring regina::python::doc::Perm_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates the transposition of *a* and *b*. Note that *a* and *b* need
 not be distinct.
 
@@ -151,8 +151,8 @@ Parameter ``a``:
 Parameter ``b``:
     the element to switch with *a*.)doc";
 
-// Docstring regina::python::doc::Perm_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::Perm_::__init_2
+static const char *__init_2 =
 R"doc(Creates a permutation mapping (0,1,2,3,4,5) to
 (*a*,*b*,*c*,*d*,*e*,*f*) respectively.
 
@@ -177,8 +177,8 @@ Parameter ``e``:
 Parameter ``f``:
     the desired image of 5.)doc";
 
-// Docstring regina::python::doc::Perm_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::Perm_::__init_3
+static const char *__init_3 =
 R"doc(Creates a permutation mapping *i* to *image*[i] for each *i* =
 0,1,2,3,4,5.
 
@@ -188,8 +188,8 @@ Precondition:
 Parameter ``image``:
     the array of images.)doc";
 
-// Docstring regina::python::doc::Perm_::__init_5
-static const char *__init_5 =
+// Docstring regina::python::doc::Perm_::__init_4
+static const char *__init_4 =
 R"doc(Creates a permutation mapping (*a0*,*b0*,*c0*,*d0*,*e0*,*f0*) to
 (*a1*,*b1*,*c1*,*d1*,*e1*,*f1*) respectively.
 

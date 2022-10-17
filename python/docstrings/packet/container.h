@@ -37,11 +37,11 @@ packet infrastructure (e.g., it will not copy the packet label, it
 will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
-// Docstring regina::python::doc::Container_::__init
-static const char *__init = R"doc(Default constructor.)doc";
+// Docstring regina::python::doc::Container_::__default
+static const char *__default = R"doc(Default constructor.)doc";
 
-// Docstring regina::python::doc::Container_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::Container_::__init
+static const char *__init =
 R"doc(Constructs a new container with the given packet label.
 
 This constructor is (for example) helpful when you are building a

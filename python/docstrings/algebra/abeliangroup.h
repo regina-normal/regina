@@ -32,6 +32,9 @@ namespace AbelianGroup_ {
 // Docstring regina::python::doc::AbelianGroup_::__copy
 static const char *__copy = R"doc(Creates a clone of the given group.)doc";
 
+// Docstring regina::python::doc::AbelianGroup_::__default
+static const char *__default = R"doc(Creates a new trivial group.)doc";
+
 // Docstring regina::python::doc::AbelianGroup_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given abelian group have identical
@@ -52,17 +55,14 @@ Returns:
     presentations (i.e., they are isomorphic).)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__init
-static const char *__init = R"doc(Creates a new trivial group.)doc";
-
-// Docstring regina::python::doc::AbelianGroup_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates a free abelian group of the given rank.
 
 Parameter ``rank``:
     the rank of the new group.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::AbelianGroup_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new group with the given rank and invariant factors.
 
 Exception ``InvalidArgument``:
@@ -84,8 +84,8 @@ Parameter ``invFac``:
     class notes, where each invariant factor is greater than 1 and
     divides the invariant factor after it.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::AbelianGroup_::__init_3
+static const char *__init_3 =
 R"doc(Creates the abelian group defined by the given presentation matrix.
 
 Each column of the matrix represents a generator, and each row of the
@@ -94,8 +94,8 @@ matrix represents a relation.
 Parameter ``presentation``:
     a presentation matrix for the new group.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::__init_5
-static const char *__init_5 =
+// Docstring regina::python::doc::AbelianGroup_::__init_4
+static const char *__init_4 =
 R"doc(Creates an abelian group as the homology of a chain complex. The
 abelian group is the kernel of *M* modulo the image of *N*.
 
@@ -125,8 +125,8 @@ Parameter ``N``:
     the `left' matrix in the chain complex; that is, the matrix that
     one takes the image of when computing homology.)doc";
 
-// Docstring regina::python::doc::AbelianGroup_::__init_6
-static const char *__init_6 =
+// Docstring regina::python::doc::AbelianGroup_::__init_5
+static const char *__init_5 =
 R"doc(Creates an abelian group as the homology of a chain complex, using
 mod-*p* coefficients. The abelian group is the kernel of *M* modulo
 the image of *N*.

@@ -114,6 +114,9 @@ Returns:
 // Docstring regina::python::doc::Matrix2_::__copy
 static const char *__copy = R"doc(Initialises to a copy of the given matrix.)doc";
 
+// Docstring regina::python::doc::Matrix2_::__default
+static const char *__default = R"doc(Initialises to the zero matrix.)doc";
+
 // Docstring regina::python::doc::Matrix2_::__eq
 static const char *__eq =
 R"doc(Determines if this is equal to the given matrix.
@@ -158,10 +161,7 @@ Returns:
     a reference to this matrix with its new value.)doc";
 
 // Docstring regina::python::doc::Matrix2_::__init
-static const char *__init = R"doc(Initialises to the zero matrix.)doc";
-
-// Docstring regina::python::doc::Matrix2_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Initialises to the given integer values.
 
 Parameter ``val00``:

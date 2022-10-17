@@ -101,6 +101,9 @@ R"doc(Creates a new exceptional fibre that is a clone of the given fibre.
 Parameter ``cloneMe``:
     the exceptional fibre to clone.)doc";
 
+// Docstring regina::python::doc::SFSFibre_::__default
+static const char *__default = R"doc(Creates a new uninitialised exceptional fibre.)doc";
+
 // Docstring regina::python::doc::SFSFibre_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given exceptional fibre are identical. This
@@ -114,10 +117,7 @@ Returns:
     ``True`` if and only if this and the given fibre are identical.)doc";
 
 // Docstring regina::python::doc::SFSFibre_::__init
-static const char *__init = R"doc(Creates a new uninitialised exceptional fibre.)doc";
-
-// Docstring regina::python::doc::SFSFibre_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates a new exceptional fibre with the given parameters.
 
 Parameter ``newAlpha``:
@@ -164,6 +164,11 @@ for base orbifolds without boundaries, plus five classes ``bo1``,
 // Docstring regina::python::doc::SFSpace_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given Seifert fibred space.)doc";
 
+// Docstring regina::python::doc::SFSpace_::__default
+static const char *__default =
+R"doc(Creates a new Seifert fibred space with base orbifold the 2-sphere and
+no exceptional fibres.)doc";
+
 // Docstring regina::python::doc::SFSpace_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given object contain precisely the
@@ -185,11 +190,6 @@ Returns:
 
 // Docstring regina::python::doc::SFSpace_::__init
 static const char *__init =
-R"doc(Creates a new Seifert fibred space with base orbifold the 2-sphere and
-no exceptional fibres.)doc";
-
-// Docstring regina::python::doc::SFSpace_::__init_2
-static const char *__init_2 =
 R"doc(Creates a new Seifert fibred space of the given class with the given
 base orbifold and no exceptional fibres.
 

@@ -127,8 +127,8 @@ namespace NoSolution_ {
 // Docstring regina::python::doc::NoSolution_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
 
-// Docstring regina::python::doc::NoSolution_::__init
-static const char *__init = R"doc(Creates a new exception with a stock error message.)doc";
+// Docstring regina::python::doc::NoSolution_::__default
+static const char *__default = R"doc(Creates a new exception with a stock error message.)doc";
 
 }
 

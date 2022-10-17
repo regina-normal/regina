@@ -47,17 +47,17 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
     RDOC_SCOPE_BEGIN(IntegerBase)
 
     auto c = pybind11::class_<Int>(m, className, rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
-        .def(pybind11::init<long>(), rdoc::__init_2)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<long>(), rdoc::__init)
         .def(pybind11::init<const Int&>(), rdoc::__copy)
-        .def(pybind11::init<const AltInt&>(), rdoc::__init_3)
+        .def(pybind11::init<const AltInt&>(), rdoc::__init_2)
         .def(pybind11::init([](pybind11::int_ l){
             return new Int(pybind11::cast<std::string>(pybind11::str(l)));
-        }), rdoc::__init_5)
-        .def(pybind11::init<double>(), rdoc::__init_6)
+        }), rdoc::__init_4)
+        .def(pybind11::init<double>(), rdoc::__init_5)
         .def(pybind11::init<const char*, int>(),
             pybind11::arg(), pybind11::arg("base") = 10,
-            rdoc::__init_7)
+            rdoc::__init_6)
         .def("isNative", &Int::isNative, rdoc::isNative)
         .def("isZero", &Int::isZero, rdoc::isZero)
         .def("sign", &Int::sign, rdoc::sign)

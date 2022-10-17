@@ -550,6 +550,9 @@ R"doc(Creates a new disc specifier that is a clone of the given specifier.
 Parameter ``cloneMe``:
     the disc specifier to clone.)doc";
 
+// Docstring regina::python::doc::DiscSpec_::__default
+static const char *__default = R"doc(Creates a new uninitialised disc specifier.)doc";
+
 // Docstring regina::python::doc::DiscSpec_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given disc specifier contain identical
@@ -563,10 +566,7 @@ Returns:
     identical information.)doc";
 
 // Docstring regina::python::doc::DiscSpec_::__init
-static const char *__init = R"doc(Creates a new uninitialised disc specifier.)doc";
-
-// Docstring regina::python::doc::DiscSpec_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates a new disc specifier containing the given values.
 
 Parameter ``newTetIndex``:

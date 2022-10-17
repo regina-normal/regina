@@ -46,8 +46,8 @@ void addDisc(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(DiscSpec)
 
     auto d = pybind11::class_<DiscSpec>(m, "DiscSpec", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
-        .def(pybind11::init<size_t, int, unsigned long>(), rdoc::__init_2)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<size_t, int, unsigned long>(), rdoc::__init)
         .def(pybind11::init<const DiscSpec&>(), rdoc::__copy)
         .def_readwrite("tetIndex", &DiscSpec::tetIndex)
         .def_readwrite("type", &DiscSpec::type)

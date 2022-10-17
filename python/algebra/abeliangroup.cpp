@@ -47,16 +47,16 @@ void addAbelianGroup(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(AbelianGroup)
 
     auto c = pybind11::class_<AbelianGroup>(m, "AbelianGroup", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
+        .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const AbelianGroup&>(), rdoc::__copy)
-        .def(pybind11::init<size_t>(), rdoc::__init_2)
-        .def(pybind11::init<size_t, const std::vector<int>&>(), rdoc::__init_3)
+        .def(pybind11::init<size_t>(), rdoc::__init)
+        .def(pybind11::init<size_t, const std::vector<int>&>(), rdoc::__init_2)
         .def(pybind11::init<size_t, const std::vector<Integer>&>(),
-            rdoc::__init_3)
-        .def(pybind11::init<MatrixInt>(), rdoc::__init_4)
-        .def(pybind11::init<MatrixInt, MatrixInt>(), rdoc::__init_5)
+            rdoc::__init_2)
+        .def(pybind11::init<MatrixInt>(), rdoc::__init_3)
+        .def(pybind11::init<MatrixInt, MatrixInt>(), rdoc::__init_4)
         .def(pybind11::init<MatrixInt, MatrixInt, const Integer&>(),
-            rdoc::__init_6)
+            rdoc::__init_5)
         .def("swap", &AbelianGroup::swap, rdoc::swap)
         .def("addRank", &AbelianGroup::addRank,
             pybind11::arg("extraRank") = 1, rdoc::addRank)

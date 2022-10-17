@@ -52,6 +52,9 @@ namespace GroupExpressionTerm_ {
 // Docstring regina::python::doc::GroupExpressionTerm_::__copy
 static const char *__copy = R"doc(Creates a new term initialised to the given value.)doc";
 
+// Docstring regina::python::doc::GroupExpressionTerm_::__default
+static const char *__default = R"doc(Creates a new uninitialised term.)doc";
+
 // Docstring regina::python::doc::GroupExpressionTerm_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given term contain identical data.
@@ -80,10 +83,7 @@ Returns:
     if the two terms have different generators.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::__init
-static const char *__init = R"doc(Creates a new uninitialised term.)doc";
-
-// Docstring regina::python::doc::GroupExpressionTerm_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates a new term initialised to the given value.
 
 Parameter ``gen``:
@@ -133,6 +133,9 @@ namespace GroupExpression_ {
 // Docstring regina::python::doc::GroupExpression_::__copy
 static const char *__copy = R"doc(Creates a new expression that is a clone of the given expression.)doc";
 
+// Docstring regina::python::doc::GroupExpression_::__default
+static const char *__default = R"doc(Creates a new expression with no terms.)doc";
+
 // Docstring regina::python::doc::GroupExpression_::__eq
 static const char *__eq =
 R"doc(Equality operator. Checks to see whether or not these two words
@@ -145,17 +148,14 @@ Returns:
     ``True`` if this and the given string literal are identical.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::__init
-static const char *__init = R"doc(Creates a new expression with no terms.)doc";
-
-// Docstring regina::python::doc::GroupExpression_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates a new expression containing a single term.
 
 Parameter ``term``:
     the term to use as the new expression.)doc";
 
-// Docstring regina::python::doc::GroupExpression_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::GroupExpression_::__init_2
+static const char *__init_2 =
 R"doc(Creates a new expression containing a single term.
 
 Parameter ``generator``:
@@ -164,8 +164,8 @@ Parameter ``generator``:
 Parameter ``exponent``:
     the exponent to which the given generator is raised in the term.)doc";
 
-// Docstring regina::python::doc::GroupExpression_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::GroupExpression_::__init_3
+static const char *__init_3 =
 R"doc(Attempts to interpret the given input string as a word in a group.
 Regina can recognise strings in the following four basic forms:
 
@@ -185,8 +185,8 @@ Exception ``InvalidArgument``:
 Parameter ``input``:
     the input string that is to be interpreted.)doc";
 
-// Docstring regina::python::doc::GroupExpression_::__init_5
-static const char *__init_5 =
+// Docstring regina::python::doc::GroupExpression_::__init_4
+static const char *__init_4 =
 R"doc(Attempts to interpret the given input string as a word in a group.
 Regina can recognise strings in the following four basic forms:
 
@@ -615,6 +615,9 @@ R"doc(Creates a clone of the given group presentation.
 Parameter ``src``:
     the group presentation to clone.)doc";
 
+// Docstring regina::python::doc::GroupPresentation_::__default
+static const char *__default = R"doc(Creates a new presentation with no generators and no relations.)doc";
+
 // Docstring regina::python::doc::GroupPresentation_::__eq
 static const char *__eq =
 R"doc(Determines whether this and the given group presentation are
@@ -633,17 +636,14 @@ Returns:
     identical.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::__init
-static const char *__init = R"doc(Creates a new presentation with no generators and no relations.)doc";
-
-// Docstring regina::python::doc::GroupPresentation_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates the free group on the given number of generators.
 
 Parameter ``nGenerators``:
     the number of generators.)doc";
 
-// Docstring regina::python::doc::GroupPresentation_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::GroupPresentation_::__init_2
+static const char *__init_2 =
 R"doc(Constructor that allows you to directly pass an arbitrary number of
 relators in string format.
 

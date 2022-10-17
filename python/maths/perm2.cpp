@@ -45,9 +45,9 @@ void addPerm2(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Perm)
 
     auto c = pybind11::class_<Perm<2>>(m, "Perm2", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
-        .def(pybind11::init<int, int>(), rdoc::__init_2)
-        .def(pybind11::init<const std::array<int, 2>&>(), rdoc::__init_3)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<int, int>(), rdoc::__init)
+        .def(pybind11::init<const std::array<int, 2>&>(), rdoc::__init_2)
         .def(pybind11::init<const Perm<2>&>(), rdoc::__copy)
         .def("permCode", &Perm<2>::permCode, rdoc::permCode)
         .def("setPermCode", &Perm<2>::setPermCode, rdoc::setPermCode)

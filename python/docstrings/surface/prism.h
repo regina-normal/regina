@@ -36,6 +36,9 @@ R"doc(Creates a new prism specifier that is a clone of the given specifier.
 Parameter ``cloneMe``:
     the prism specifier to clone.)doc";
 
+// Docstring regina::python::doc::PrismSpec_::__default
+static const char *__default = R"doc(Creates a new uninitialised prism specifier.)doc";
+
 // Docstring regina::python::doc::PrismSpec_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given prism specifier contain identical
@@ -49,10 +52,7 @@ Returns:
     identical information.)doc";
 
 // Docstring regina::python::doc::PrismSpec_::__init
-static const char *__init = R"doc(Creates a new uninitialised prism specifier.)doc";
-
-// Docstring regina::python::doc::PrismSpec_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates a new prism specifier containing the given values.
 
 Parameter ``newTetIndex``:

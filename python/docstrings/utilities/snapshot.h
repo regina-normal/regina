@@ -22,8 +22,8 @@ namespace SnapshotWriteError_ {
 // Docstring regina::python::doc::SnapshotWriteError_::__copy
 static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
 
-// Docstring regina::python::doc::SnapshotWriteError_::__init
-static const char *__init = R"doc(Creates a new exception.)doc";
+// Docstring regina::python::doc::SnapshotWriteError_::__default
+static const char *__default = R"doc(Creates a new exception.)doc";
 
 // Docstring regina::python::doc::SnapshotWriteError_::what
 static const char *what = R"doc(Returns a human-readable description of the error that occurred.)doc";

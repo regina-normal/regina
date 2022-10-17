@@ -47,7 +47,7 @@ void addQitmaskOpt(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(Qitmask1)
 
     auto c = pybind11::class_<Q>(m, name, rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
+        .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Q&>(), rdoc::__copy)
         .def("reset", &Q::reset, rdoc::reset)
         .def("get", &Q::get, rdoc::get)

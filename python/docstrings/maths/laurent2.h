@@ -297,6 +297,9 @@ copy constructor automatically.
 Parameter ``value``:
     the polynomial to clone.)doc";
 
+// Docstring regina::python::doc::Laurent2_::__default
+static const char *__default = R"doc(Creates the zero polynomial.)doc";
+
 // Docstring regina::python::doc::Laurent2_::__eq
 static const char *__eq =
 R"doc(Tests whether this and the given polynomial are equal.
@@ -395,10 +398,7 @@ Returns:
     a reference to this polynomial.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__init
-static const char *__init = R"doc(Creates the zero polynomial.)doc";
-
-// Docstring regina::python::doc::Laurent2_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Creates the polynomial ``x^d y^e`` for the given exponents *d* and
 *e*.
 
@@ -408,8 +408,8 @@ Parameter ``xExp``:
 Parameter ``yExp``:
     the exponent *e*, which is attached to *y*.)doc";
 
-// Docstring regina::python::doc::Laurent2_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::Laurent2_::__init_2
+static const char *__init_2 =
 R"doc(Creates a copy of the given polynomial with all terms multiplied by
 ``x^d y^e`` for some integers *d* and *e*.
 
@@ -424,8 +424,8 @@ Parameter ``xShift``:
 Parameter ``yShift``:
     the integer *e*, which will be added to all exponents for *y*.)doc";
 
-// Docstring regina::python::doc::Laurent2_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::Laurent2_::__init_3
+static const char *__init_3 =
 R"doc(Creates a new polynomial from the given collection of coefficients.
 
 The coefficients should be presented as a collection of tuples of the

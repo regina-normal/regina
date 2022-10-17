@@ -42,8 +42,8 @@ void addDiscType(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(DiscType)
 
     auto c = pybind11::class_<DiscType>(m, "DiscType", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
-        .def(pybind11::init<size_t, int>(), rdoc::__init_2)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<size_t, int>(), rdoc::__init)
         .def(pybind11::init<const DiscType&>(), rdoc::__copy)
         .def(pybind11::self < pybind11::self, rdoc::__lt)
         .def("__bool__", &DiscType::operator bool, rdoc::operator_bool)

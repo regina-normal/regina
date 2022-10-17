@@ -33,6 +33,9 @@ packet infrastructure (e.g., it will not copy the packet label, it
 will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
+// Docstring regina::python::doc::Text_::__default
+static const char *__default = R"doc(Initialises the packet to the empty string.)doc";
+
 // Docstring regina::python::doc::Text_::__eq
 static const char *__eq =
 R"doc(Determines if this and the given packet contain the same text.
@@ -45,10 +48,7 @@ Returns:
     text.)doc";
 
 // Docstring regina::python::doc::Text_::__init
-static const char *__init = R"doc(Initialises the packet to the empty string.)doc";
-
-// Docstring regina::python::doc::Text_::__init_2
-static const char *__init_2 =
+static const char *__init =
 R"doc(Initialises the packet to the given string.
 
 Parameter ``text``:

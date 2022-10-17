@@ -42,10 +42,10 @@ void addBoolSet(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BoolSet)
 
     auto c = pybind11::class_<BoolSet>(m, "BoolSet", rdoc_scope)
-        .def(pybind11::init<>(), rdoc::__init)
-        .def(pybind11::init<bool>(), rdoc::__init_2)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<bool>(), rdoc::__init)
         .def(pybind11::init<const BoolSet&>(), rdoc::__copy)
-        .def(pybind11::init<bool, bool>(), rdoc::__init_3)
+        .def(pybind11::init<bool, bool>(), rdoc::__init_2)
         .def("hasTrue", &BoolSet::hasTrue, rdoc::hasTrue)
         .def("hasFalse", &BoolSet::hasFalse, rdoc::hasFalse)
         .def("contains", &BoolSet::contains, rdoc::contains)
