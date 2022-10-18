@@ -510,9 +510,12 @@ scope of this API documentation.
 
 .. warning::
     This routine can have unintended topological side-effects, as
-    described above. \warning In exceptional cases with non-orientable
-    3-manifolds, these side-effects might lead to invalid edges (edges
-    whose midpoints are projective plane cusps).
+    described above.
+
+.. warning::
+    In exceptional cases with non-orientable 3-manifolds, these side-
+    effects might lead to invalid edges (edges whose midpoints are
+    projective plane cusps).
 
 Precondition:
     This normal surface is compact and embedded.

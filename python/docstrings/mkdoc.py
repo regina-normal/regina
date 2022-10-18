@@ -212,6 +212,7 @@ def process_comment(comment):
         'extends': 'Extends',
         'pre': 'Precondition',
         'ifacespython': 'Python',
+        'snappy': 'SnapPy',
         'i18n': 'Internationalisation'
     }.items():
         s = re.sub(r'[\\@]%s\s*' % in_, r'\n\n$%s:\n\n' % out_, s)

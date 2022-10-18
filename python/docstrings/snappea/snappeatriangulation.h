@@ -295,8 +295,9 @@ Returns:
 static const char *complete =
 R"doc(Returns whether this cusp is complete.
 
-\snappy In SnapPy, this field corresponds to querying
-``Manifold.cusp_info('is_complete')[cusp_number]``.
+SnapPy:
+    In SnapPy, this field corresponds to querying
+    ``Manifold.cusp_info('is_complete')[cusp_number]``.
 
 Returns:
     ``True`` if this cusp is complete, or ``False`` if it is filled.)doc";
@@ -306,8 +307,9 @@ static const char *l =
 R"doc(Returns the second (longitude) filling coefficient on this cusp, or 0
 if this cusp is complete.
 
-\snappy In SnapPy, this field corresponds to querying
-``Manifold.cusp_info('filling')[cusp_number][1]``.
+SnapPy:
+    In SnapPy, this field corresponds to querying
+    ``Manifold.cusp_info('filling')[cusp_number][1]``.
 
 Returns:
     the second filling coefficient.)doc";
@@ -317,8 +319,9 @@ static const char *m =
 R"doc(Returns the first (meridian) filling coefficient on this cusp, or 0 if
 this cusp is complete.
 
-\snappy In SnapPy, this field corresponds to querying
-``Manifold.cusp_info('filling')[cusp_number][0]``.
+SnapPy:
+    In SnapPy, this field corresponds to querying
+    ``Manifold.cusp_info('filling')[cusp_number][0]``.
 
 Returns:
     the first filling coefficient.)doc";
@@ -687,14 +690,16 @@ SnapPea is not always able to compute the canonical cell
 decomposition: if it fails then then this routine will throw an
 exception (see below for details).
 
-\snappy The function ``canonise()`` means different things for SnapPy
-versus the SnapPea kernel. Here Regina follows the naming convention
-used in the SnapPea kernel. Specifically: Regina's routine
-SnapPeaTriangulation::protoCanonise() corresponds to SnapPy's
-``Manifold.canonize()`` and the SnapPea kernel's
-``proto_canonize(manifold)``. Regina's routine
-SnapPeaTriangulation::canonise() corresponds to the SnapPea kernel's
-``canonize(manifold)``, and is not available through SnapPy at all.
+SnapPy:
+    The function ``canonise()`` means different things for SnapPy
+    versus the SnapPea kernel. Here Regina follows the naming
+    convention used in the SnapPea kernel. Specifically: Regina's
+    routine SnapPeaTriangulation::protoCanonise() corresponds to
+    SnapPy's ``Manifold.canonize()`` and the SnapPea kernel's
+    ``proto_canonize(manifold)``. Regina's routine
+    SnapPeaTriangulation::canonise() corresponds to the SnapPea
+    kernel's ``canonize(manifold)``, and is not available through
+    SnapPy at all.
 
 .. warning::
     The SnapPea kernel does not always compute the canonical cell
@@ -741,9 +746,10 @@ R"doc(Returns the total number of complete cusps (that is, unfilled cusps).
 It is always true that ``countCompleteCusps() + countFilledCusps() ==
 countCusps()``.
 
-\snappy This has no corresponding routine in SnapPy, though the
-information is easily acessible via
-``Manifold.cusp_info('is_complete')``.
+SnapPy:
+    This has no corresponding routine in SnapPy, though the
+    information is easily acessible via
+    ``Manifold.cusp_info('is_complete')``.
 
 Returns:
     the total number of complete cusps.)doc";
@@ -755,8 +761,9 @@ R"doc(Returns the total number of cusps (both filled and complete).
 This returns the same value as the inherited function
 Triangulation<3>::countBoundaryComponents().
 
-\snappy In SnapPy, this routine corresponds to calling
-``Manifold.num_cusps()``.
+SnapPy:
+    In SnapPy, this routine corresponds to calling
+    ``Manifold.num_cusps()``.
 
 Returns:
     the total number of cusps.)doc";
@@ -768,9 +775,10 @@ R"doc(Returns the total number of filled cusps.
 It is always true that ``countCompleteCusps() + countFilledCusps() ==
 countCusps()``.
 
-\snappy This has no corresponding routine in SnapPy, though the
-information is easily acessible via
-``Manifold.cusp_info('is_complete')``.
+SnapPy:
+    This has no corresponding routine in SnapPy, though the
+    information is easily acessible via
+    ``Manifold.cusp_info('is_complete')``.
 
 Returns:
     the total number of filled cusps.)doc";
@@ -781,9 +789,10 @@ R"doc(Returns information about the given cusp of this manifold. This
 information includes the filling coefficients (if any), along with
 other combinatorial information.
 
-\snappy In SnapPy, this routine corresponds to calling
-``Manifold.cusp_info()[c]``, though the set of information returned
-about each cusp is different.
+SnapPy:
+    In SnapPy, this routine corresponds to calling
+    ``Manifold.cusp_info()[c]``, though the set of information
+    returned about each cusp is different.
 
 These Cusp objects should be considered temporary only; you should not
 hold onto references or pointers to them. If you need to hold on to
@@ -1288,8 +1297,9 @@ log((z0-1)/z) + d * log(z1) + ... = 2 pi i``, and with right hand side
 See also gluingEquationsRect(), which returns the gluing equations in
 a more streamlined form.
 
-\snappy In SnapPy, this routine corresponds to calling
-``Manifold.gluing_equations()``.
+SnapPy:
+    In SnapPy, this routine corresponds to calling
+    ``Manifold.gluing_equations()``.
 
 Precondition:
     This is not a null triangulation.
@@ -1320,8 +1330,9 @@ will always be 1 or -1.
 See also gluingEquations(), which returns the gluing equations in a
 more transparent term-by-term form.
 
-\snappy In SnapPy, this routine corresponds to calling
-``Manifold.gluing_equations(form='rect')``.
+SnapPy:
+    In SnapPy, this routine corresponds to calling
+    ``Manifold.gluing_equations(form='rect')``.
 
 Precondition:
     This is not a null triangulation.
@@ -1417,9 +1428,10 @@ If this is a null triangulation, or if solutionType() is no_solution
 or not_attempted (i.e., we did not or could not solve for a hyperbolic
 structure), then this routine will simply return zero.
 
-\snappy This has no corresponding routine in SnapPy, though the
-information is easily acessible via
-``Manifold.tetrahedra_shapes(part='rect')``.
+SnapPy:
+    This has no corresponding routine in SnapPy, though the
+    information is easily acessible via
+    ``Manifold.tetrahedra_shapes(part='rect')``.
 
 Returns:
     the minimum imaginary part amongst all tetrahedron shapes.)doc";
@@ -1434,8 +1446,9 @@ typically different from the packet label assigned by Regina.
 If this is a null triangulation then the empty string will be
 returned.
 
-\snappy In SnapPy, this routine corresponds to calling
-``Manifold.name()``.
+SnapPy:
+    In SnapPy, this routine corresponds to calling
+    ``Manifold.name()``.
 
 Returns:
     SnapPea's name for this triangulation.)doc";
@@ -1467,14 +1480,16 @@ SnapPea is not always able to triangulate the canonical cell
 decomposition: if it fails then then this routine will throw an
 exception (see below for details).
 
-\snappy The function ``canonise()`` means different things for SnapPy
-versus the SnapPea kernel. Here Regina follows the naming convention
-used in the SnapPea kernel. Specifically: Regina's routine
-SnapPeaTriangulation::protoCanonise() corresponds to SnapPy's
-``Manifold.canonize()`` and the SnapPea kernel's
-``proto_canonize(manifold)``. Regina's routine
-SnapPeaTriangulation::canonise() corresponds to the SnapPea kernel's
-``canonize(manifold)``, and is not available through SnapPy at all.
+SnapPy:
+    The function ``canonise()`` means different things for SnapPy
+    versus the SnapPea kernel. Here Regina follows the naming
+    convention used in the SnapPea kernel. Specifically: Regina's
+    routine SnapPeaTriangulation::protoCanonise() corresponds to
+    SnapPy's ``Manifold.canonize()`` and the SnapPea kernel's
+    ``proto_canonize(manifold)``. Regina's routine
+    SnapPeaTriangulation::canonise() corresponds to the SnapPea
+    kernel's ``canonize(manifold)``, and is not available through
+    SnapPy at all.
 
 .. warning::
     The SnapPea kernel does not always compute the canonical cell
@@ -1527,8 +1542,9 @@ find a hyperbolic structure.
 
 If this is a null SnapPea triangulation, this routine does nothing.
 
-\snappy In SnapPy, this routine corresponds to calling
-``Manifold.randomize()``.)doc";
+SnapPy:
+    In SnapPy, this routine corresponds to calling
+    ``Manifold.randomize()``.)doc";
 
 // Docstring regina::python::doc::SnapPeaTriangulation_::randomize
 static const char *randomize =
@@ -1581,8 +1597,9 @@ corresponding routine *get_tet_shape* takes linear time). Therefore
 you can happily call this routine repeatedly without a significant
 performance penalty.
 
-\snappy In SnapPy, this routine corresponds to calling
-``Manifold.tetrahedra_shapes(part='rect')[tet]``.
+SnapPy:
+    In SnapPy, this routine corresponds to calling
+    ``Manifold.tetrahedra_shapes(part='rect')[tet]``.
 
 Parameter ``tet``:
     the index of a tetrahedron; this must be between 0 and size()-1
@@ -1622,7 +1639,8 @@ vieved from the cusp, then as one travels along an oriented boundary
 curve, the spun-normal surface spirals into the cusp to one's right
 and down into the manifold to one's left.
 
-\snappy This has no corresponding routine in SnapPy.
+SnapPy:
+    This has no corresponding routine in SnapPy.
 
 Precondition:
     All vertex links in this triangulation must be tori.
@@ -1675,8 +1693,9 @@ static const char *solutionType =
 R"doc(Returns the type of solution found when solving for a hyperbolic
 structure, with respect to the current Dehn filling (if any).
 
-\snappy In SnapPy, this routine corresponds to calling
-``Manifold.solution_type()``.
+SnapPy:
+    In SnapPy, this routine corresponds to calling
+    ``Manifold.solution_type()``.
 
 Returns:
     the solution type.)doc";
@@ -1740,8 +1759,9 @@ R"doc(Computes the volume of the current solution to the hyperbolic gluing
 equations. This will be with respect to the current Dehn filling (if
 any).
 
-\snappy In SnapPy, this routine corresponds to calling
-``Manifold.volume()``.
+SnapPy:
+    In SnapPy, this routine corresponds to calling
+    ``Manifold.volume()``.
 
 Exception ``SnapPeaIsNull``:
     This is a null SnapPea triangulation.
@@ -1755,8 +1775,9 @@ R"doc(Computes the volume of the current solution to the hyperbolic gluing
 equations, and estimates the accuracy of the answer. This will be with
 respect to the current Dehn filling (if any).
 
-\snappy In SnapPy, this routine corresponds to calling
-``Manifold.volume(accuracy=True)``.
+SnapPy:
+    In SnapPy, this routine corresponds to calling
+    ``Manifold.volume(accuracy=True)``.
 
 Exception ``SnapPeaIsNull``:
     This is a null SnapPea triangulation.
