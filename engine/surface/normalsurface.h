@@ -1454,6 +1454,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \warning This routine can have unintended topological
          * side-effects, as described above.
+         *
          * \warning In exceptional cases with non-orientable
          * 3-manifolds, these side-effects might lead to invalid edges
          * (edges whose midpoints are projective plane cusps).
