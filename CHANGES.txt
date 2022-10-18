@@ -53,6 +53,23 @@ Version 7.2  [ (to be determined) ]
           classes: AngleStructures, Cyclotomic, FacetPairing<dim>,
           Isomorphism<dim>, ListView, Matrix2, NormalHypersurfaces,
           NormalSurfaces, Vector<T>.
+        - A few omissions in the Python bindings were fixed.  Other than
+          giving Python users access to more functions, two of these fixes
+          mean a change in behaviour for Python users: these are the
+          newly-added bindings for SnapPeaTriangulation::snapPea() and
+          SnapPeaTriangulation::saveSnapPea().  Previously if Python users
+          called these functions they would fall back to the inherited
+          versions from Triangulation<3>, which behave differently.
+        - A couple of errors in the Python bindings were also fixed:
+          + Cyclotomic.negate() in Python was incorrectly bound to
+            Cyclotomic::invert in C++;
+          + regina.swap(BitmaskN, BitmaskN) in Python (for fixed-width
+            bitmask types Bitmask8, Bitmask16, etc.) was incorrectly bound to
+            regina::swap(Bitmask&, Bitmask&) in C++ (i.e., the swap function
+            for the main Bitmask class).  Any attempt to call this function
+            in Python would have resulted in undefined behaviour.
+          See https://regina-normal.github.io/bugs.html for further discussion
+          of how these issues might have affected you.
     USER INTERFACE:
         - Fixed a deadlock that occurs in the Windows GUI when opening two
           Python consoles in quick succession (e.g., by a double-click).
