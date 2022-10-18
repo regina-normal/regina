@@ -53,6 +53,9 @@ Version 7.2  [ (to be determined) ]
     USER INTERFACE:
         - Fixed a deadlock that occurs in the Windows GUI when opening two
           Python consoles in quick succession (e.g., by a double-click).
+    UTILITIES:
+        - All command-line utilities now support -? / --help, as well as
+          a new -v / --version option to show the current verson of Regina.
 
 Version 7.1  [ 30 September, 2022 ]
 

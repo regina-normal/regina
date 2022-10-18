@@ -29,7 +29,8 @@ IF(NOT BUILD_INFO)
     "Optional additional information about this specific build.  Examples might be: \"Official macOS build\", or \"Debian/Ubuntu package build\"."
   FORCE)
 ENDIF(NOT BUILD_INFO)
-MESSAGE (STATUS "Build info: ${BUILD_INFO}")
+SET (PACKAGE_BUILD_STRING "${PACKAGE_STRING} (${BUILD_INFO})")
+MESSAGE (STATUS "Detailed version: ${PACKAGE_BUILD_STRING}")
 
 # Make a release build by default.
 IF(NOT CMAKE_BUILD_TYPE)

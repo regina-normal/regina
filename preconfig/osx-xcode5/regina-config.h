@@ -105,6 +105,9 @@
 /* Optional additional information about this specific build. */
 #define BUILD_INFO "Custom build"
 
+/* A nicely formatted combination of PACKAGE_STRING and BUILD_INFO. */
+#define PACKAGE_BUILD_STRING "Regina 7.1 (Custom build)"
+
 /* Define to the version of SnapPy that is bundled with Regina. */
 #define SNAPPY_VERSION "2.8"
 
