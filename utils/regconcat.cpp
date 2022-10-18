@@ -46,10 +46,10 @@ void usage(const char* progName, const std::string& error = std::string()) {
     std::cerr << std::endl;
     std::cerr << "    -o <output-file> : Write to the given data file "
         "(otherwise standard\n";
-    std::cerr << "                       output is used)\n";
-    std::cerr << "    -v, --version    : Show which version of Regina "
+    std::cerr << "                       output is used)\n\n";
+    std::cerr << "    -v, --version : Show which version of Regina "
         "is being used\n";
-    std::cerr << "    -?, --help       : Display this help\n";
+    std::cerr << "    -?, --help    : Display this help\n";
     exit(1);
 }
 
