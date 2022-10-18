@@ -43,6 +43,26 @@
    of &regina;; see the <link linkend='acknowledgements'>acknowledgements
    page</link> for a full list of credits.">
 
+  <!ENTITY versionhelpopts
+   "<group choice='req'>
+     <arg choice='req'><option>-v, --version</option></arg>
+     <arg choice='req'><option>-?, --help</option></arg>
+    </group>">
+  <!ENTITY versionhelpdesc
+   "<varlistentry>
+     <term><option>-v, --version</option></term>
+     <listitem>
+      <para>Show which version of &regina; is being used, and exit
+      immediately.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-?, --help</option></term>
+     <listitem>
+      <para>Display brief usage information, and exit immediately.</para>
+     </listitem>
+    </varlistentry>">
+
   <!-- Menu items are formatted differently between index.docbook and
        manonly.docbook. -->
   <!ENTITY menuapidocs "<menuchoice><guimenu>Help</guimenu><guimenuitem>&python;

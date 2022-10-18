@@ -3,13 +3,16 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGCONCAT" "1" "11 September 2022" "" "The Regina Handbook"
+.TH "REGCONCAT" "1" "19 October 2022" "" "The Regina Handbook"
 
 .SH NAME
 regconcat \- Combine several Regina data files
 .SH SYNOPSIS
 
 \fBregconcat\fR [ \fB-o \fIoutput-file\fB\fR ] \fB\fIinput-file\fB\fR\fI ...\fR
+
+
+\fBregconcat\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
@@ -27,6 +30,13 @@ standard output.
 \fB-o \fIoutput-file\fB\fR
 Specifies that the new combined data file should be written
 as compressed XML to the given output file.
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "MACOS USERS"
 .PP
 If you downloaded a drag-and-drop app bundle, this utility is
