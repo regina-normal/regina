@@ -771,6 +771,10 @@
     <command>regfiletype</command>
     <arg choice="req" rep="repeat"><replaceable>file</replaceable></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>regfiletype</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -791,6 +795,13 @@
     If you still need to recognise and/or read files in this ancient binary
     format, you will need to download &regina;&nbsp;4.93.
    </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    &versionhelpdesc;
+   </variablelist>
   </refsect1>
 
   <refsect1>

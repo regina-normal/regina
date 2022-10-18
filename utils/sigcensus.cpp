@@ -36,7 +36,15 @@
 
 #define MAXORDER 20
 
-void usage(const char* progName) {
+// Stringification of MAXORDER requires several layers of macros.
+#define ORDER_STR(order) #order
+#define ORDER_XSTR(order) ORDER_STR(order)
+#define MAXORDER_STR ORDER_XSTR(MAXORDER)
+
+void usage(const char* progName, const std::string& error = std::string()) {
+    if (! error.empty())
+        std::cerr << error << "\n\n";
+
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName << " <order>\n";
     std::cerr << "    " << progName
@@ -49,7 +57,7 @@ void usage(const char* progName) {
 
 int main(int argc, char* argv[]) {
     if (argc != 2)
-        usage(argv[0]);
+        usage(argv[0], "Please specify exactly one order.");
 
     // Check for standard arguments:
     if (strcmp(argv[1], "-?") == 0 || strcmp(argv[1], "--help") == 0)
@@ -61,11 +69,10 @@ int main(int argc, char* argv[]) {
 
     int order;
     bool valid = regina::valueOf(argv[1], order);
-    if ((! valid) || order < 1 || order > MAXORDER) {
-        std::cerr << "Only numerical orders between 1 and " << MAXORDER
-            << " inclusive are accepted.\n";
-        usage(argv[0]);
-    }
+    if ((! valid) || order < 1 || order > MAXORDER)
+        usage(argv[0],
+            "Only numerical orders between 1 and " MAXORDER_STR
+            " inclusive are accepted.");
 
     size_t result = regina::SigCensus::formCensus(order,
             [](const regina::Signature& sig,
