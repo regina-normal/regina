@@ -63,7 +63,7 @@ std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraph::findFlype(
         // Following upper must return back to from.
         // This means that the crossing (X) is redundant, and can be
         // undone by twisting everything from upper around to from.
-        return std::make_pair(ModelLinkGraphArc(), ModelLinkGraphArc());
+        return {};
     }
 
     // For each cell adjacent to C, we identify the first arc of C in a
@@ -100,18 +100,18 @@ std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraph::findFlype(
     if (a == upper) {
         // The strand upper comes straight back to (X), with no
         // crossings in between.  In other words, cell A is a 1-gon.
-        return std::make_pair(ModelLinkGraphArc(), ModelLinkGraphArc());
+        return {};
     } else if (right == from) {
         // The common cell is in fact the cell immediately between the
         // arcs upper and from (i.e., immediately to the right of (X)).
         // The flype() routine will refuse to work with this, so return
         // null now.
-        return std::make_pair(ModelLinkGraphArc(), ModelLinkGraphArc());
+        return {};
     } else if (a.traverse().node() == from.node() ||
             right.traverse().node() == from.node()) {
         // One of the two return arcs ends at (X).  Again, flype() will
         // refuse to work with this, so return null now.
-        return std::make_pair(ModelLinkGraphArc(), ModelLinkGraphArc());
+        return {};
     } else
         return std::make_pair(a, right);
 }
