@@ -82,9 +82,9 @@ class ExampleSnapPea {
         static SnapPeaTriangulation whiteheadLink();
 
         /**
-         * Returns a new triangulation of the census manifold \c x101.
+         * Returns a new triangulation of the SnapPea census manifold \c x101.
          *
-         * @return the census manifold \c x101.
+         * @return the SnapPea census manifold \c x101.
          */
         static SnapPeaTriangulation x101();
 

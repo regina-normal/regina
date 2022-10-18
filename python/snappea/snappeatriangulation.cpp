@@ -38,6 +38,7 @@
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "../helpers.h"
+#include "../docstrings/snappea/snappeatriangulation.h"
 
 using pybind11::overload_cast;
 using regina::Cusp;
@@ -45,10 +46,16 @@ using regina::SnapPeaTriangulation;
 using regina::Triangulation;
 
 void addSnapPeaTriangulation(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN_MAIN
+
     pybind11::register_exception<regina::SnapPeaFatalError>(m,
-        "SnapPeaFatalError", PyExc_RuntimeError);
+        "SnapPeaFatalError", PyExc_RuntimeError)
+        .doc() = rdoc::SnapPeaFatalError;
     pybind11::register_exception<regina::SnapPeaMemoryFull>(m,
-        "SnapPeaMemoryFull", PyExc_RuntimeError);
+        "SnapPeaMemoryFull", PyExc_RuntimeError)
+        .doc() = rdoc::SnapPeaMemoryFull;
+
+    RDOC_SCOPE_SWITCH(Cusp)
 
     auto c1 = pybind11::class_<Cusp>(m, "Cusp")
         .def("vertex", &Cusp::vertex,
@@ -59,6 +66,8 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     ;
     regina::python::add_output(c1);
     regina::python::add_eq_operators(c1);
+
+    RDOC_SCOPE_SWITCH(SnapPeaTriangulation)
 
     auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,
             std::shared_ptr<SnapPeaTriangulation>>(
@@ -191,6 +200,8 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     ;
 
     regina::python::add_global_swap<SnapPeaTriangulation>(m);
+
+    RDOC_SCOPE_END
 
     // Now we can define the global swap for the parent Triangulation<3> class.
     // See the notes beneath the Triangulation<3> bindings as to why this had

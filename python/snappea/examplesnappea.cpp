@@ -34,18 +34,25 @@
 #include "snappea/examplesnappea.h"
 #include "snappea/snappeatriangulation.h"
 #include "../helpers.h"
+#include "../docstrings/snappea/examplesnappea.h"
 
 using namespace regina::python;
 using regina::ExampleSnapPea;
 
 void addExampleSnapPea(pybind11::module_& m) {
-    auto c = pybind11::class_<ExampleSnapPea>(m, "ExampleSnapPea")
-        .def_static("figureEight", &ExampleSnapPea::figureEight)
-        .def_static("trefoil", &ExampleSnapPea::trefoil)
-        .def_static("whiteheadLink", &ExampleSnapPea::whiteheadLink)
-        .def_static("gieseking", &ExampleSnapPea::gieseking)
-        .def_static("x101", &ExampleSnapPea::x101)
+    RDOC_SCOPE_BEGIN(ExampleSnapPea)
+
+    auto c = pybind11::class_<ExampleSnapPea>(m, "ExampleSnapPea", rdoc_scope)
+        .def_static("figureEight", &ExampleSnapPea::figureEight,
+            rdoc::figureEight)
+        .def_static("trefoil", &ExampleSnapPea::trefoil, rdoc::trefoil)
+        .def_static("whiteheadLink", &ExampleSnapPea::whiteheadLink,
+            rdoc::whiteheadLink)
+        .def_static("gieseking", &ExampleSnapPea::gieseking, rdoc::gieseking)
+        .def_static("x101", &ExampleSnapPea::x101, rdoc::x101)
     ;
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 
