@@ -39,13 +39,17 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName << " [ -2 | -3 ] [ -x | -u ]"
-        << " <old-file> [ <new-file> ]\n";
+        << " <old-file> [ <new-file> ]\n"
+        "    " << progName << " [ -v, --version | -?, --help ]\n";
     std::cerr << std::endl;
     std::cerr << "    -2 : Convert to the old second-generation format used by Regina 3.0-6.0.1\n";
     std::cerr << "    -3 : Convert to the current third-generation file format (default)\n";
     std::cerr << std::endl;
     std::cerr << "    -x : Convert to compressed XML (default)\n";
-    std::cerr << "    -u : Convert to uncompressed XML\n";
+    std::cerr << "    -u : Convert to uncompressed XML\n\n";
+    std::cerr << "    -v, --version : Show which version of Regina "
+        "is being used\n";
+    std::cerr << "    -?, --help    : Display this help\n";
     std::cerr << std::endl;
     std::cerr << "    <new-file> may be the same as <old-file>.\n";
     std::cerr << "    <new-file> defaults to standard output (implies -u).\n";
@@ -61,6 +65,18 @@ int main(int argc, char* argv[]) {
     char optChar;
     for (int i = 1; i < argc; i++) {
         if (*argv[i] == '-') {
+            // Standard arguments:
+            if (strcmp(argv[i], "-?") == 0 || strcmp(argv[i], "--help") == 0)
+                usage(argv[0]);
+            if (strcmp(argv[i], "-v") == 0 ||
+                    strcmp(argv[i], "--version") == 0) {
+                if (argc != 2)
+                    usage(argv[0], "Option --version cannot be "
+                        "used with any other arguments.");
+                std::cout << PACKAGE_BUILD_STRING << std::endl;
+                exit(0);
+            }
+
             // Option.
             if (! argv[i][1])
                 usage(argv[0], std::string("Invalid option: ") + argv[i]);

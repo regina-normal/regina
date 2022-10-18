@@ -499,6 +499,10 @@
     <arg choice="req"><replaceable>old-file</replaceable></arg>
     <arg><replaceable>new-file</replaceable></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>regconvert</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -584,6 +588,7 @@
       <para>Write the output as uncompressed (plain text) &xml;.</para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 
