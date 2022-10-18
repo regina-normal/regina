@@ -279,7 +279,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         /**
          * Returns the requested angle in this angle structure.
          * The angle returned will be scaled down; the actual angle is
-         * the returned value multiplied by <i>pi</i>.
+         * the returned value multiplied by π.
          *
          * Within a tetrahedron, the three angles are indexed 0, 1 and 2.
          * Angle \a i appears on edge \a i of the tetrahedron as well as
@@ -291,7 +291,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * inclusive.
          * @param edgePair the number representing the pair of edges holding
          * the requested angle, as described above; this should be 0, 1 or 2.
-         * @return the requested angle scaled down by <i>pi</i>.
+         * @return the requested angle scaled down by π.
          */
         Rational angle(size_t tetIndex, int edgePair) const;
 
@@ -324,7 +324,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         /**
          * Determines whether this is a strict angle structure.
          * A strict angle structure has all angles strictly between (not
-         * including) 0 and <i>pi</i>.
+         * including) 0 and π.
          *
          * @return \c true if and only if this is a strict angle structure.
          */
@@ -332,7 +332,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
 
         /**
          * Determines whether this is a taut angle structure.
-         * A taut angle structure contains only angles 0 and <i>pi</i>.
+         * A taut angle structure contains only angles 0 and π.
          *
          * Here we use the Kang-Rubinstein definition of a taut
          * angle structure [1], which is based on the angles alone.
@@ -384,7 +384,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * This vector contains one member per angle plus a final scaling
          * member; to obtain the actual angle in the angle structure one should
          * divide the corresonding angle member by the scaling member and then
-         * multiply by <i>pi</i>.
+         * multiply by π.
          *
          * If there are \a t tetrahedra in the underlying triangulation, there
          * will be precisely 3<i>t</i>+1 elements in this vector.  The first

@@ -875,7 +875,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * The argument \a whichRoot specifies which root of unity is
          * used for \a q0.  Specifically, \a q0 will be the root of unity
-         * <tt>e^(2i * Pi * whichRoot / 2r)</tt>.  There are additional
+         * <tt>e^(2πi * whichRoot / 2r)</tt>.  There are additional
          * preconditions on \a whichRoot to ensure that \a q0^2 is a
          * \e primitive root of unity of degree \a r; see below for details.
          *
@@ -1278,7 +1278,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Returns a strict angle structure on this triangulation, if one
          * exists.  Recall that a \e strict angle structure is one in which
-         * every angle is strictly between 0 and &pi;.  If a strict angle
+         * every angle is strictly between 0 and π.  If a strict angle
          * structure does exist, then this routine is guaranteed to return one.
          *
          * This routine is designed for scenarios where you already know
@@ -1317,7 +1317,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Determines whether this triangulation supports a strict angle
          * structure.  Recall that a \e strict angle structure is one
-         * in which every angle is strictly between 0 and &pi;.
+         * in which every angle is strictly between 0 and π.
          *
          * This routine returns \c false if and only if strictAngleStructure()
          * throws an exception.  However, if you do not \e know whether a

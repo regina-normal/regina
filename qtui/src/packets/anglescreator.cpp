@@ -57,7 +57,7 @@ AngleStructureCreator::AngleStructureCreator(ReginaMain*) {
     tautOnly->setChecked(ReginaPrefSet::global().anglesCreationTaut);
     tautOnly->setWhatsThis(ui->tr("If you check this box, only "
         "taut angle structures will be enumerated (that is, angle structures "
-        "in which every angle is 0 or Pi).  "
+        "in which every angle is 0 or π).  "
         "This is typically much faster than a full enumeration of all "
         "vertex angle structures."));
     layout->addWidget(tautOnly);

@@ -93,7 +93,7 @@ class ProgressTracker;
  * - In angle structure coordinates, this class identifies taut angle
  *   structures only.  Here the type vector is a sequence of \a n integers,
  *   each equal to 1, 2 or 3, where the <i>i</i>th integer describes the
- *   location of the two &pi; angles in the <i>i</i>th tetrahedron.
+ *   location of the two π angles in the <i>i</i>th tetrahedron.
  *
  * In the original Algorithmica paper, we choose types in the order
  * type_[0], type_[1] and so on, working from the root of the tree down

@@ -1115,8 +1115,8 @@ class SnapPeaTriangulation :
          * More specifically, a row of the form <tt>a b c d e f ...</tt>
          * describes an equation with left hand side
          * <tt>a * log(z0) + b * log(1/(1-z0)) + c * log((z0-1)/z) +
-         * d * log(z1) + ... = 2 pi i</tt>,
-         * and with right hand side <tt>2 pi i</tt> for an edge equation
+         * d * log(z1) + ... = 2πi</tt>,
+         * and with right hand side <tt>2πi</tt> for an edge equation
          * or 0 for a cusp equation.
          *
          * See also gluingEquationsRect(), which returns the gluing
