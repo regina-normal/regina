@@ -43,6 +43,7 @@
 #include "core/output.h"
 #include <cstring>
 #include <stack>
+#include <vector>
 
 namespace regina {
 
