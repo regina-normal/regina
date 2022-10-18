@@ -644,9 +644,9 @@ Returns:
 
 // Docstring regina::python::doc::ModelLinkGraph_::canonicalPlantri
 static const char *canonicalPlantri =
-R"doc(Outputs a text representation of this graph in the *plantri* ASCII
-format, using a canonical relabelling of nodes and arcs, and with
-optional compression.
+R"doc(Outputs a text representation of this graph in a variant of the
+*plantri* ASCII format, using a canonical relabelling of nodes and
+arcs, and with optional compression.
 
 This routine is similar to plantri(), but with two significant
 differences:
@@ -674,7 +674,9 @@ resulting graph might be a relabelling of the original (and might even
 be a reflection of the original, if *useReflection* was passed as
 ``True``).
 
-See plantri() for further details on the ASCII format itself.
+See plantri() for further details on the ASCII format itself,
+including the ways in which Regina's implementation of this format
+differs from *plantri*'s for graphs with more than 26 nodes.
 
 The running time for this routine is quadratic in the size of the
 graph.
@@ -683,13 +685,16 @@ Precondition:
     This graph is connected.
 
 Precondition:
-    This graph has between 1 and 26 nodes inclusive.
+    This graph has between 1 and 52 nodes inclusive.
 
 Precondition:
     The dual to this graph is a *simple* quadrangulation of the
     sphere. In particular, the dual must not have any parallel edges.
     Note that any graph that fails this condition will the model graph
     for a link diagram that is an "obvious" connected sum.
+
+Exception ``FailedPrecondition``:
+    This graph has more than 52 nodes.
 
 Parameter ``useReflection``:
     ``True`` if a graph and its reflection should be considered the
@@ -928,19 +933,22 @@ Returns:
 
 // Docstring regina::python::doc::ModelLinkGraph_::fromPlantri
 static const char *fromPlantri =
-R"doc(Builds a graph from a line of *plantri* output.
+R"doc(Builds a graph from a line of *plantri* output, using Regina's variant
+of the *plantri* ASCII format.
 
 The software *plantri*, by Gunnar Brinkmann and Brendan McKay, can be
 used to enumerate 4-valent planar graphs (amongst many other things).
-This routine converts a piece of output from *plantri* into a
-ModelLinkGraph object that Regina can work with directly.
+This routine converts a piece of output from *plantri*, or the
+encoding of a graph using Regina's own plantri() or canonicalPlantri()
+functions, into a ModelLinkGraph object that Regina can work with
+directly.
 
-The output from *plantri* must be in ASCII format, and must be the
-dual graph of a simple quadrangulation of the sphere. The
-corresponding flags that must be passed to *plantri* to obtain such
-output are ``-adq`` (although you will may wish to pass additional
-flags to expand or restrict the classes of graphs that *plantri*
-builds).
+If you are converting output from *plantri*, this output must be in
+ASCII format, and must be the dual graph of a simple quadrangulation
+of the sphere. The corresponding flags that must be passed to
+*plantri* to obtain such output are ``-adq`` (although you will may
+wish to pass additional flags to expand or restrict the classes of
+graphs that *plantri* builds).
 
 When run with these flags, *plantri* produces output in the following
 form:
@@ -963,23 +971,38 @@ corresponding to the second line of output above, you could call:
 fromPlantri("bcdd,aeec,abfd,acfa,bffb,ceed");
 ```
 
-Regina can only recognise graphs in this format with up to 26 nodes.
-If the graph contains more than 27 nodes then the *plantri* output
-will contain punctuation, Regina will not be able to parse it, and
-this function will return ``null``.
+Regina uses its own variant of *plantri*'s output format, which is
+identical for smaller graphs but which differs from *plantri*'s own
+output format for larger graphs. In particular:
 
-The given string does not *need* to be come from the program *plantri*
-itself. Whereas *plantri* always outputs graphs with a particular
-canonical labelling, this function can accept an arbitrary ordering of
-nodes and arcs - in particular, it can accept the string
-``g.plantri()`` for any graph *g* that meets the preconditions below.
-Nevertheless, the graph must still meet these preconditions, since
-otherwise the *plantri* format might not be enough to uniquely
-reconstruct the graph and its planar embedding.
+* For graphs with ≤ 26 nodes, Regina and *plantri* use identical
+  formats. Here Regina can happily recognise the output from *plantri*
+  as described above, as well as the output from Regina's own
+  plantri() and canonicalPlantri() functions.
 
-This routine can also interpret the "tight" format that is output by
-the member function canonicalPlantri() (even though such output would
-certainly *not* be produced by the program *plantri*).
+* For graphs with 27-52 nodes, Regina's and *plantri*'s formats
+  differ: whereas *plantri* uses punctuation for higher-index nodes,
+  Regina uses the upper-case letters ``A``,...,``Z``. For these larger
+  graphs, Regina can only recognise Regina's own plantri() and
+  canonicalPlantri() output, not *plantri*'s punctuation-based
+  encodings.
+
+* For graphs with 53 nodes or more, Regina cannot encode or decode
+  such graphs using *plantri* format at all.
+
+Even for graphs with at most 26 nodes, the given string does not
+*need* to be come from the program *plantri* itself. Whereas *plantri*
+always outputs graphs with a particular canonical labelling, this
+function can accept an arbitrary ordering of nodes and arcs - in
+particular, it can accept the string ``g.plantri()`` for any graph *g*
+that meets the preconditions below. Nevertheless, the graph must still
+meet these preconditions, since otherwise the *plantri* format might
+not be enough to uniquely reconstruct the graph and its planar
+embedding.
+
+This routine can also interpret the "tight" format that is optionally
+produced by the member function canonicalPlantri() (even though such
+output would certainly *not* be produced by the program *plantri*).
 
 .. warning::
     While this routine does some basic error checking on the input,
@@ -991,9 +1014,6 @@ certainly *not* be produced by the program *plantri*).
 
 Precondition:
     The graph being described is connected.
-
-Precondition:
-    The graph being described has between 1 and 26 nodes inclusive.
 
 Precondition:
     The graph being described is dual to a *simple* quadrangulation of
@@ -1008,7 +1028,7 @@ Exception ``InvalidArgument``:
 
 Parameter ``plantri``:
     a string containing the comma-separated sequence of alphabetical
-    strings output by *plantri*, as described above.
+    strings in *plantri* format, as described above.
 
 Returns:
     the resulting graph.)doc";
@@ -1151,7 +1171,8 @@ Returns:
 
 // Docstring regina::python::doc::ModelLinkGraph_::plantri
 static const char *plantri =
-R"doc(Outputs this graph in the ASCII text format used by *plantri*.
+R"doc(Outputs this graph in a variant of the ASCII text format used by
+*plantri*.
 
 The software *plantri*, by Gunnar Brinkmann and Brendan McKay, can be
 used to enumerate 4-valent planar graphs (amongst many other things).
@@ -1161,14 +1182,20 @@ run with the flags ``-adq``).
 
 Specifically, the output will be a comma-separated sequence of
 alphabetical strings. The *i*th such string will consist of four
-lower-case letters, encoding the endpoints of the four edges in
-clockwise order that leave node *i*. The letters ``a``,``b``,``c``,...
-represent nodes 0,1,2,... respectively. An example of such a string
-is:
+letters, encoding the endpoints of the four edges in clockwise order
+that leave node *i*. The lower-case letters ``a``,``b``,...,``z``
+represent nodes 0,1,...,25 respectively, and the upper-case letters
+``A``,``B``,...,``Z`` represent nodes 26,27,...,51 respectively. An
+example of such a string is:
 
 ```
 bcdd,aeec,abfd,acfa,bffb,ceed
 ```
+
+For graphs with at most 26 nodes, this is identical to *plantri*'s own
+dual ASCII format. For larger graphs, this format differs: *plantri*
+uses punctuation to represent higher-index nodes, whereas Regina uses
+upper-case letters.
 
 This routine is an inverse to fromPlantri(): for any graph *g* that
 satisfies the preconditions below, ``fromPlantri(g.plantri())`` is
@@ -1184,23 +1211,27 @@ reconstructed from their *plantri* output.
 
 .. note::
     The output of this function might not correspond to any possible
-    output from the program *plantri* itself. This is because
-    *plantri* only outputs graphs with a certain canonical labelling.
-    In contrast, plantri() can be called on any graph that satisfies
-    the preconditions below, and it will preserve the labels of the
-    nodes and the order of the arcs around each node.
+    output from the program *plantri* itself, even if only lower-case
+    letters are used. This is because *plantri* only outputs graphs
+    with a certain canonical labelling. In contrast, plantri() can be
+    called on any graph that satisfies the preconditions below, and it
+    will preserve the labels of the nodes and the order of the arcs
+    around each node.
 
 Precondition:
     This graph is connected.
 
 Precondition:
-    This graph has between 1 and 26 nodes inclusive.
+    This graph has between 1 and 52 nodes inclusive.
 
 Precondition:
     The dual to this graph is a *simple* quadrangulation of the
     sphere. In particular, the dual must not have any parallel edges.
     Note that any graph that fails this condition will the model graph
     for a link diagram that is an "obvious" connected sum.
+
+Exception ``FailedPrecondition``:
+    This graph has more than 52 nodes.
 
 Returns:
     a *plantri* format ASCII representation of this graph.)doc";
