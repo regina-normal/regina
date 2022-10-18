@@ -71,7 +71,7 @@ namespace {
     }
 
     // PRE: nodes <= 52
-    inline bool encOutOfRange(char c, size_t nodes) {
+    inline bool encInRange(char c, size_t nodes) {
         if (nodes <= 26)
             return (c >= 'a' && c < static_cast<char>('a' + nodes));
         else
@@ -384,7 +384,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
             if (plantri[i] != ',')
                 throw InvalidArgument("fromPlantri(): missing comma");
         } else {
-            if (encOutOfRange(plantri[i], n))
+            if (! encInRange(plantri[i], n))
                 throw InvalidArgument("fromPlantri(): invalid node letter");
         }
 

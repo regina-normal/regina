@@ -41,7 +41,7 @@ def looksIsomorphic(g, h):
 def test(g):
 	a = g.plantri()
 	b = g.canonicalPlantri()
-	c = g.canonicalPlantri(True)
+	c = g.canonicalPlantri(True, True)
 	
 	print(a)
 	print(b)
@@ -57,3 +57,4 @@ def test(g):
 test(ExampleLink.trefoil().graph())
 test(ExampleLink.figureEight().graph())
 test(ExampleLink.whitehead().graph())
+test(ExampleLink.gst().graph())
