@@ -2798,7 +2798,7 @@ class Link :
          * reconstruction procedure for classical Gauss codes.
          *
          * This "oriented" format is described at
-         * <http://www.javaview.de/services/knots/doc/description.html#gc>,
+         * http://www.javaview.de/services/knots/doc/description.html#gc,
          * and it works as follows:
          *
          * - Label the crossings arbitrarily as 1, 2, ..., \a n.
@@ -2915,7 +2915,7 @@ class Link :
          *
          * Jenkins' format is described in his HOMFLY polynomial software,
          * which is available online from
-         * <http://burtleburtle.net/bob/knot/homfly.html>.
+         * http://burtleburtle.net/bob/knot/homfly.html.
          * The format consists of a sequence of integers separated by
          * whitespace, constructed as follows:
          *
@@ -3173,7 +3173,7 @@ class Link :
          * Regina adheres to a tight specification for the planar diagram codes
          * that it outputs, in order to ensure compatibility with other
          * software.  In particular, Regina's codes are compatible with the
-         * Knot Atlas, as seen at <http://katlas.org/wiki/Planar_Diagrams>.
+         * Knot Atlas, as seen at http://katlas.org/wiki/Planar_Diagrams.
          *
          * In detail: a planar diagram code for an <i>n</i>-crossing link
          * is formed from a sequence of <i>n</i> 4-tuples of integers.
@@ -3212,7 +3212,7 @@ class Link :
          *
          * This routine formats the list of 4-tuples as a string, in a way
          * that is consistent with the description in the Knot Atlas at
-         * <http://katlas.org/wiki/Planar_Diagrams>.
+         * http://katlas.org/wiki/Planar_Diagrams.
          *
          * In particular, each 4-tuple will be formatted with square
          * brackets, commas, and the prefix \c X, and the main list will
@@ -3276,7 +3276,7 @@ class Link :
          * Outputs the underlying planar 4-valent multigraph using the
          * PACE text format.
          * The text format is described in detail at
-         * <https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/>.
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/.
          *
          * In summary, the output will consist of several lines of text:
          *
@@ -3316,7 +3316,7 @@ class Link :
          * Returns a text representation of the underlying planar
          * 4-valent multigraph, using the PACE text format.
          * The text format is described in detail at
-         * <https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/>,
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/,
          * and is documented in detail by the routine writePACE().
          *
          * This routine simply returns the output of writePACE() as a
