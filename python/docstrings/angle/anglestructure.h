@@ -151,7 +151,7 @@ Returns:
 static const char *angle =
 R"doc(Returns the requested angle in this angle structure. The angle
 returned will be scaled down; the actual angle is the returned value
-multiplied by *pi*.
+multiplied by π.
 
 Within a tetrahedron, the three angles are indexed 0, 1 and 2. Angle
 *i* appears on edge *i* of the tetrahedron as well as its opposite
@@ -167,7 +167,7 @@ Parameter ``edgePair``:
     angle, as described above; this should be 0, 1 or 2.
 
 Returns:
-    the requested angle scaled down by *pi*.)doc";
+    the requested angle scaled down by π.)doc";
 
 // Docstring regina::python::doc::AngleStructure_::global_swap
 static const char *global_swap =
@@ -185,7 +185,7 @@ Parameter ``b``:
 // Docstring regina::python::doc::AngleStructure_::isStrict
 static const char *isStrict =
 R"doc(Determines whether this is a strict angle structure. A strict angle
-structure has all angles strictly between (not including) 0 and *pi*.
+structure has all angles strictly between (not including) 0 and π.
 
 Returns:
     ``True`` if and only if this is a strict angle structure.)doc";
@@ -193,7 +193,7 @@ Returns:
 // Docstring regina::python::doc::AngleStructure_::isTaut
 static const char *isTaut =
 R"doc(Determines whether this is a taut angle structure. A taut angle
-structure contains only angles 0 and *pi*.
+structure contains only angles 0 and π.
 
 Here we use the Kang-Rubinstein definition of a taut angle structure
 [1], which is based on the angles alone. In his original paper [2],
@@ -282,7 +282,7 @@ internally to represent this angle structure.
 This vector contains one member per angle plus a final scaling member;
 to obtain the actual angle in the angle structure one should divide
 the corresonding angle member by the scaling member and then multiply
-by *pi*.
+by π.
 
 If there are *t* tetrahedra in the underlying triangulation, there
 will be precisely 3*t*+1 elements in this vector. The first three

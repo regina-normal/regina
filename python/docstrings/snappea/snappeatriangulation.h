@@ -1291,8 +1291,8 @@ corresponds to edges 2 and 3 of the tetrahedron.
 
 More specifically, a row of the form ``a b c d e f ...`` describes an
 equation with left hand side ``a * log(z0) + b * log(1/(1-z0)) + c *
-log((z0-1)/z) + d * log(z1) + ... = 2 pi i``, and with right hand side
-``2 pi i`` for an edge equation or 0 for a cusp equation.
+log((z0-1)/z) + d * log(z1) + ... = 2πi``, and with right hand side
+``2πi`` for an edge equation or 0 for a cusp equation.
 
 See also gluingEquationsRect(), which returns the gluing equations in
 a more streamlined form.
