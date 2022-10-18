@@ -832,7 +832,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         void generateMinimalLinks(Action&& action, Args&&... args) const;
 
         /**
-         * Outputs this graph in the ASCII text format used by \e plantri.
+         * Outputs this graph in a variant of the ASCII text format used
+         * by \e plantri.
          *
          * The software \e plantri, by Gunnar Brinkmann and Brendan McKay,
          * can be used to enumerate 4-valent planar graphs (amongst many
@@ -842,14 +843,20 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * Specifically, the output will be a comma-separated sequence
          * of alphabetical strings.  The <i>i</i>th such string will consist
-         * of four lower-case letters, encoding the endpoints of the four
-         * edges in clockwise order that leave node <i>i</i>.  The letters
-         * \c a,\c b,\c c,... represent nodes 0,1,2,... respectively.
-         * An example of such a string is:
+         * of four letters, encoding the endpoints of the four edges in
+         * clockwise order that leave node <i>i</i>.  The lower-case letters
+         * \c a,\c b,...,\c z represent nodes 0,1,...,25 respectively,
+         * and the upper-case letters \c A,\c B,...,\c Z represent nodes
+         * 26,27,...,51 respectively.  An example of such a string is:
          *
            \verbatim
            bcdd,aeec,abfd,acfa,bffb,ceed
            \endverbatim
+         *
+         * For graphs with at most 26 nodes, this is identical to
+         * \e plantri's own dual ASCII format.  For larger graphs, this
+         * format differs: \e plantri uses punctuation to represent
+         * higher-index nodes, whereas Regina uses upper-case letters.
          *
          * This routine is an inverse to fromPlantri(): for any graph \a g
          * that satisfies the preconditions below,
@@ -865,27 +872,30 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * always be uniquely reconstructed from their \e plantri output.
          *
          * \note The output of this function might not correspond to any
-         * possible output from the program \e plantri itself.  This is
-         * because \e plantri only outputs graphs with a certain canonical
-         * labelling.  In contrast, plantri() can be called on any graph
-         * that satisfies the preconditions below, and it will preserve
-         * the labels of the nodes and the order of the arcs around each node.
+         * possible output from the program \e plantri itself, even if only
+         * lower-case letters are used.  This is because \e plantri only
+         * outputs graphs with a certain canonical labelling.  In contrast,
+         * plantri() can be called on any graph that satisfies the
+         * preconditions below, and it will preserve the labels of the nodes
+         * and the order of the arcs around each node.
          *
          * \pre This graph is connected.
-         * \pre This graph has between 1 and 26 nodes inclusive.
+         * \pre This graph has between 1 and 52 nodes inclusive.
          * \pre The dual to this graph is a \e simple quadrangulation of the
          * sphere.  In particular, the dual must not have any parallel edges.
          * Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
+         *
+         * \exception FailedPrecondition This graph has more than 52 nodes.
          *
          * @return a \e plantri format ASCII representation of this graph.
          */
         std::string plantri() const;
 
         /**
-         * Outputs a text representation of this graph in the \e plantri
-         * ASCII format, using a canonical relabelling of nodes and arcs,
-         * and with optional compression.
+         * Outputs a text representation of this graph in a variant of the
+         * \e plantri ASCII format, using a canonical relabelling of nodes
+         * and arcs, and with optional compression.
          *
          * This routine is similar to plantri(), but with two
          * significant differences:
@@ -914,17 +924,21 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * relabelling of the original (and might even be a reflection
          * of the original, if \a useReflection was passed as \c true).
          *
-         * See plantri() for further details on the ASCII format itself.
+         * See plantri() for further details on the ASCII format itself,
+         * including the ways in which Regina's implementation of this format
+         * differs from \e plantri's for graphs with more than 26 nodes.
          *
          * The running time for this routine is quadratic in the size of
          * the graph.
          *
          * \pre This graph is connected.
-         * \pre This graph has between 1 and 26 nodes inclusive.
+         * \pre This graph has between 1 and 52 nodes inclusive.
          * \pre The dual to this graph is a \e simple quadrangulation of the
          * sphere.  In particular, the dual must not have any parallel edges.
          * Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
+         *
+         * \exception FailedPrecondition This graph has more than 52 nodes.
          *
          * @param useReflection \c true if a graph and its reflection
          * should be considered the same (i.e., produce the same canonical
@@ -961,20 +975,22 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         void writeTextLong(std::ostream& out) const;
 
         /**
-         * Builds a graph from a line of \e plantri output.
+         * Builds a graph from a line of \e plantri output, using
+         * Regina's variant of the \e plantri ASCII format.
          *
          * The software \e plantri, by Gunnar Brinkmann and Brendan McKay,
          * can be used to enumerate 4-valent planar graphs (amongst many
          * other things).  This routine converts a piece of output from
-         * \e plantri into a ModelLinkGraph object that Regina can work
-         * with directly.
+         * \e plantri, or the encoding of a graph using Regina's own plantri()
+         * or canonicalPlantri() functions, into a ModelLinkGraph object
+         * that Regina can work with directly.
          *
-         * The output from \e plantri must be in ASCII format, and must
-         * be the dual graph of a simple quadrangulation of the sphere.  The
-         * corresponding flags that must be passed to \e plantri to
-         * obtain such output are <tt>-adq</tt> (although you will
-         * may wish to pass additional flags to expand or restrict
-         * the classes of graphs that \e plantri builds).
+         * If you are converting output from \e plantri, this output must be
+         * in ASCII format, and must be the dual graph of a simple
+         * quadrangulation of the sphere.  The corresponding flags that must
+         * be passed to \e plantri to obtain such output are <tt>-adq</tt>
+         * (although you will may wish to pass additional flags to expand or
+         * restrict the classes of graphs that \e plantri builds).
          *
          * When run with these flags, \e plantri produces output in the
          * following form:
@@ -997,24 +1013,39 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * fromPlantri("bcdd,aeec,abfd,acfa,bffb,ceed");
          * \endcode
          *
-         * Regina can only recognise graphs in this format with up to 26
-         * nodes.  If the graph contains more than 27 nodes then the
-         * \e plantri output will contain punctuation, Regina will not
-         * be able to parse it, and this function will return \c null.
+         * Regina uses its own variant of \e plantri's output format, which is
+         * identical for smaller graphs but which differs from \e plantri's
+         * own output format for larger graphs.  In particular:
          *
-         * The given string does not \e need to be come from the program
-         * \e plantri itself.  Whereas \e plantri always outputs graphs
-         * with a particular canonical labelling, this function can
-         * accept an arbitrary ordering of nodes and arcs - in particular,
-         * it can accept the string <tt>g.plantri()</tt> for any graph
-         * \a g that meets the preconditions below.  Nevertheless, the graph
-         * must still meet these preconditions, since otherwise the \e plantri
-         * format might not be enough to uniquely reconstruct the graph and
-         * its planar embedding.
+         * - For graphs with ≤ 26 nodes, Regina and \e plantri use identical
+         *   formats.  Here Regina can happily recognise the output from
+         *   \e plantri as described above, as well as the output from
+         *   Regina's own plantri() and canonicalPlantri() functions.
          *
-         * This routine can also interpret the "tight" format that is output
-         * by the member function canonicalPlantri() (even though such output
-         * would certainly \e not be produced by the program \e plantri).
+         * - For graphs with 27-52 nodes, Regina's and \e plantri's formats
+         *   differ: whereas \e plantri uses punctuation for higher-index
+         *   nodes, Regina uses the upper-case letters \c A,...,\c Z.
+         *   For these larger graphs, Regina can only recognise Regina's own
+         *   plantri() and canonicalPlantri() output, not \e plantri's
+         *   punctuation-based encodings.
+         *
+         * - For graphs with 53 nodes or more, Regina cannot encode or
+         *   decode such graphs using \e plantri format at all.
+         *
+         * Even for graphs with at most 26 nodes, the given string does not
+         * \e need to be come from the program \e plantri itself.  Whereas
+         * \e plantri always outputs graphs with a particular canonical
+         * labelling, this function can accept an arbitrary ordering of nodes
+         * and arcs - in particular, it can accept the string
+         * <tt>g.plantri()</tt> for any graph \a g that meets the preconditions
+         * below.  Nevertheless, the graph must still meet these preconditions,
+         * since otherwise the \e plantri format might not be enough to
+         * uniquely reconstruct the graph and its planar embedding.
+         *
+         * This routine can also interpret the "tight" format that is
+         * optionally produced by the member function canonicalPlantri()
+         * (even though such output would certainly \e not be produced by
+         * the program \e plantri).
          *
          * \warning While this routine does some basic error checking on the
          * input, these checks are not exhaustive.  In particular, it does
@@ -1024,7 +1055,6 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * resulting behaviour is undefined.)
          *
          * \pre The graph being described is connected.
-         * \pre The graph being described has between 1 and 26 nodes inclusive.
          * \pre The graph being described is dual to a \e simple quadrangulation
          * of the sphere.  In particular, the dual must not have any parallel
          * edges.  Note that any graph that fails this condition will the model
@@ -1034,9 +1064,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * representation of a graph using the \e plantri output format.
          * As noted above, the checks performed here are not exhaustive.
          *
-         * @param plantri a string containing the comma-separated
-         * sequence of alphabetical strings output by \e plantri, as
-         * described above.
+         * @param plantri a string containing the comma-separated sequence of
+         * alphabetical strings in \e plantri format, as described above.
          * @return the resulting graph.
          */
         static ModelLinkGraph fromPlantri(const std::string& plantri);

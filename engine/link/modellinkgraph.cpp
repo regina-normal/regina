@@ -35,6 +35,56 @@
 #include <iomanip>
 #include <sstream>
 
+namespace {
+    // These routines support plantri encoding/decoding.
+
+    // These encLess() routines compare case-sensitive letters in the order:
+    // a < b < ... < z < A < B < ... < Z.
+    // The awkwardness here of course comes from the fact that lower-case
+    // letters have higher integer ASCII values than upper-case letters.
+
+    // PRE: a, b both in [a..zA..Z]
+    inline bool encLess(char a, char b) {
+        if (a >= 'a') {
+            // a is lower-case
+            return (b > a || b < 'a');
+        } else {
+            // a is upper-case
+            return (b > a && b < 'a');
+        }
+    }
+
+    // PRE: all characters of a, b in [a..zA..Z]
+    inline bool encLess(const char* a, const char* b) {
+        while (true) {
+            if (! (*b))
+                return false;
+            if (! (*a))
+                return true;
+            if ((*a) == (*b)) {
+                ++a;
+                ++b;
+                continue;
+            }
+            return encLess(*a, *b);
+        }
+    }
+
+    // PRE: nodes <= 52
+    inline bool encOutOfRange(char c, size_t nodes) {
+        if (nodes <= 26)
+            return (c >= 'a' && c < static_cast<char>('a' + nodes));
+        else
+            return ((c >= 'a' && c <= 'z') ||
+                (c >= 'A' && c < static_cast<char>('A' + nodes - 26)));
+    }
+
+    // PRE: c in [a..zA..Z]
+    inline int encToIndex(char c) {
+        return (c >= 'a' ? c - 'a' : c - 'A' + 26);
+    }
+}
+
 namespace regina {
 
 ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& copy) : cells_(nullptr) {
@@ -184,18 +234,31 @@ void ModelLinkGraph::writeTextLong(std::ostream& out) const {
 }
 
 std::string ModelLinkGraph::plantri() const {
+    if (size() > 52)
+        throw FailedPrecondition("plantri() can only work with "
+            "graphs with at most 52 nodes");
+
     std::string ans;
     for (auto it = nodes_.begin(); it != nodes_.end(); ++it) {
         if (it != nodes_.begin())
             ans += ',';
-        for (const auto& arc : (*it)->adj_)
-            ans += static_cast<char>('a' + arc.node()->index());
+        for (const auto& arc : (*it)->adj_) {
+            auto idx = arc.node()->index();
+            if (idx < 26)
+                ans += static_cast<char>('a' + idx);
+            else
+                ans += static_cast<char>('A' + idx - 26);
+        }
     }
     return ans;
 }
 
 std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
         bool tight) const {
+    if (size() > 52)
+        throw FailedPrecondition("canonicalPlantri() can only work with "
+            "graphs with at most 52 nodes");
+
     std::string best;
 
     // The image and preimage for each node, and the image of arc 0
@@ -257,15 +320,19 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
                             continue;
                         }
 
-                        curr += static_cast<char>('a' + image[adjSrcNode]);
+                        if (image[adjSrcNode] < 26)
+                            curr += static_cast<char>('a' + image[adjSrcNode]);
+                        else
+                            curr += static_cast<char>('A' + image[adjSrcNode]
+                                - 26);
 
                         if (! currBetter) {
                             // curr == best for the characters seen so far.
-                            if (curr[curr.length() - 1] <
-                                    best[curr.length() - 1])
+                            if (encLess(curr[curr.length() - 1],
+                                    best[curr.length() - 1]))
                                 currBetter = true;
-                            else if (curr[curr.length() - 1] >
-                                    best[curr.length() - 1]) {
+                            else if (encLess(best[curr.length() - 1],
+                                    curr[curr.length() - 1])) {
                                 // There is no chance of this being canonical.
                                 goto noncanonical;
                             }
@@ -273,7 +340,7 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
                     }
                 }
 
-                if (best.empty() || curr < best)
+                if (best.empty() || encLess(curr.c_str(), best.c_str()))
                     best.swap(curr);
 
                 noncanonical:
@@ -308,8 +375,8 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
                 "invalid string length for a standard encoding");
         n = (plantri.size() + 1) / 5;
     }
-    if (n > 26)
-        throw InvalidArgument("fromPlantri(): more than 26 nodes");
+    if (n > 52)
+        throw InvalidArgument("fromPlantri(): more than 52 nodes");
 
     size_t i;
     for (i = 0; i < plantri.size(); ++i)
@@ -317,7 +384,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
             if (plantri[i] != ',')
                 throw InvalidArgument("fromPlantri(): missing comma");
         } else {
-            if (plantri[i] < 'a' || plantri[i] >= static_cast<char>('a' + n))
+            if (encOutOfRange(plantri[i], n))
                 throw InvalidArgument("fromPlantri(): invalid node letter");
         }
 
@@ -344,7 +411,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
         for (i = 0; i < n; ++i)
             for (int j = 1; j < 4; ++j) {
                 g.nodes_[i]->adj_[j].node_ =
-                    g.nodes_[plantri[3 * i + j - 1] - 'a'];
+                    g.nodes_[encToIndex(plantri[3 * i + j - 1])];
                 if (! g.nodes_[i]->adj_[j].node_->adj_[0].node_) {
                     // This is the first time we've seen this adjacent node.
                     // Make the link in the reverse direction also.
@@ -357,7 +424,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
         for (i = 0; i < n; ++i)
             for (int j = 0; j < 4; ++j) {
                 g.nodes_[i]->adj_[j].node_ =
-                    g.nodes_[plantri[5 * i + j] - 'a'];
+                    g.nodes_[encToIndex(plantri[5 * i + j])];
                 g.nodes_[i]->adj_[j].arc_ = -1;
             }
     }

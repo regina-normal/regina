@@ -19,6 +19,13 @@ Version 7.2  [ (to be determined) ]
         Class ModelLinkGraph:
             - Routine generateMinimalLinks() now throws an exception if its
               precondition is not met.
+            - Routines plantri(), canonicalPlantri() and fromPlantri() can
+              now work with graphs with up to 52 nodes (instead of 26).
+              Beyond 26 nodes, Regina's format differs from plantri's own.
+            - Routines plantri() and canonicalPlantri() now throw an
+              exception if the graph has more than 52 nodes.
+            - Routine fromPlantri() has dropped the precondition on the size
+              of the graph, since this is explicitly checked.
         Class NormalEncoding:
             - New static function empty().
         Class NormalHypersurface:
