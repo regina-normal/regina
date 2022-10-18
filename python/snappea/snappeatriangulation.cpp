@@ -175,18 +175,26 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
 
     auto st = pybind11::enum_<SnapPeaTriangulation::SolutionType>(
             c2, "SolutionType", rdoc_inner_scope)
-        .value("not_attempted", SnapPeaTriangulation::not_attempted)
+        .value("not_attempted", SnapPeaTriangulation::not_attempted,
+            rdoc_inner::not_attempted)
         .value("geometric_solution",
-            SnapPeaTriangulation::geometric_solution)
+            SnapPeaTriangulation::geometric_solution,
+                rdoc_inner::geometric_solution)
         .value("nongeometric_solution",
-            SnapPeaTriangulation::nongeometric_solution)
-        .value("flat_solution", SnapPeaTriangulation::flat_solution)
+            SnapPeaTriangulation::nongeometric_solution,
+                rdoc_inner::nongeometric_solution)
+        .value("flat_solution", SnapPeaTriangulation::flat_solution,
+            rdoc_inner::flat_solution)
         .value("degenerate_solution",
-            SnapPeaTriangulation::degenerate_solution)
-        .value("other_solution", SnapPeaTriangulation::other_solution)
-        .value("no_solution", SnapPeaTriangulation::no_solution)
+            SnapPeaTriangulation::degenerate_solution,
+                rdoc_inner::degenerate_solution)
+        .value("other_solution", SnapPeaTriangulation::other_solution,
+            rdoc_inner::other_solution)
+        .value("no_solution", SnapPeaTriangulation::no_solution,
+            rdoc_inner::no_solution)
         .value("externally_computed",
-            SnapPeaTriangulation::externally_computed)
+            SnapPeaTriangulation::externally_computed,
+                rdoc_inner::externally_computed)
         .export_values()
     ;
 
@@ -197,8 +205,10 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
 
     auto cet = pybind11::enum_<SnapPeaTriangulation::CoverEnumerationType>(
             c2, "CoverEnumerationType", rdoc_inner_scope)
-        .value("cyclic_covers", SnapPeaTriangulation::cyclic_covers)
-        .value("all_covers", SnapPeaTriangulation::all_covers)
+        .value("cyclic_covers", SnapPeaTriangulation::cyclic_covers,
+            rdoc_inner::cyclic_covers)
+        .value("all_covers", SnapPeaTriangulation::all_covers,
+            rdoc_inner::all_covers)
         .export_values()
     ;
 
@@ -206,10 +216,14 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
 
     auto ct = pybind11::enum_<SnapPeaTriangulation::CoverType>(c2, "CoverType",
             rdoc_inner_scope)
-        .value("unknown_cover", SnapPeaTriangulation::unknown_cover)
-        .value("irregular_cover", SnapPeaTriangulation::irregular_cover)
-        .value("regular_cover", SnapPeaTriangulation::regular_cover)
-        .value("cyclic_cover", SnapPeaTriangulation::cyclic_cover)
+        .value("unknown_cover", SnapPeaTriangulation::unknown_cover,
+            rdoc_inner::unknown_cover)
+        .value("irregular_cover", SnapPeaTriangulation::irregular_cover,
+            rdoc_inner::irregular_cover)
+        .value("regular_cover", SnapPeaTriangulation::regular_cover,
+            rdoc_inner::regular_cover)
+        .value("cyclic_cover", SnapPeaTriangulation::cyclic_cover,
+            rdoc_inner::cyclic_cover)
         .export_values()
     ;
 
