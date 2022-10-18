@@ -16,6 +16,9 @@ Version 7.2  [ (to be determined) ]
             - Added equality operators (== and !=).
             - Added a specialisation for fixed-size C-style arrays:
               ListView<Element[n]>.
+        Class ModelLinkGraph:
+            - Routine generateMinimalLinks() now throws an exception if its
+              precondition is not met.
         Class NormalEncoding:
             - New static function empty().
         Class NormalHypersurface:

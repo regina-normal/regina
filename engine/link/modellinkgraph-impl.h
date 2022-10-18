@@ -70,9 +70,9 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     } while (a.node()->index() != 0 || a.arc() != 0);
 
     if (steps != 2 * size()) {
-        std::cerr << "ERROR: Not a knot graph!" << std::endl;
         delete[] dir;
-        return;
+        throw FailedPrecondition("generateMinimalLinks() cannot work with "
+            "a graph that models multiple-component links");
     }
 
     // Next work out which relationships we may assume between different
