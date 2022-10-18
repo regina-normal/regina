@@ -5,12 +5,16 @@ No files have been specified.
 
 Usage:
     regconvert [ -2 | -3 ] [ -x | -u ] <old-file> [ <new-file> ]
+    regconvert [ -v, --version | -?, --help ]
 
     -2 : Convert to the old second-generation format used by Regina 3.0-6.0.1
     -3 : Convert to the current third-generation file format (default)
 
     -x : Convert to compressed XML (default)
     -u : Convert to uncompressed XML
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 
     <new-file> may be the same as <old-file>.
     <new-file> defaults to standard output (implies -u).
@@ -23,12 +27,16 @@ More than one file type has been specified.
 
 Usage:
     regconvert [ -2 | -3 ] [ -x | -u ] <old-file> [ <new-file> ]
+    regconvert [ -v, --version | -?, --help ]
 
     -2 : Convert to the old second-generation format used by Regina 3.0-6.0.1
     -3 : Convert to the current third-generation file format (default)
 
     -x : Convert to compressed XML (default)
     -u : Convert to uncompressed XML
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 
     <new-file> may be the same as <old-file>.
     <new-file> defaults to standard output (implies -u).
@@ -41,12 +49,16 @@ Invalid option: -f
 
 Usage:
     regconvert [ -2 | -3 ] [ -x | -u ] <old-file> [ <new-file> ]
+    regconvert [ -v, --version | -?, --help ]
 
     -2 : Convert to the old second-generation format used by Regina 3.0-6.0.1
     -3 : Convert to the current third-generation file format (default)
 
     -x : Convert to compressed XML (default)
     -u : Convert to uncompressed XML
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 
     <new-file> may be the same as <old-file>.
     <new-file> defaults to standard output (implies -u).
@@ -59,12 +71,16 @@ Empty arguments are not allowed.
 
 Usage:
     regconvert [ -2 | -3 ] [ -x | -u ] <old-file> [ <new-file> ]
+    regconvert [ -v, --version | -?, --help ]
 
     -2 : Convert to the old second-generation format used by Regina 3.0-6.0.1
     -3 : Convert to the current third-generation file format (default)
 
     -x : Convert to compressed XML (default)
     -u : Convert to uncompressed XML
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 
     <new-file> may be the same as <old-file>.
     <new-file> defaults to standard output (implies -u).
@@ -77,12 +93,16 @@ No files have been specified.
 
 Usage:
     regconvert [ -2 | -3 ] [ -x | -u ] <old-file> [ <new-file> ]
+    regconvert [ -v, --version | -?, --help ]
 
     -2 : Convert to the old second-generation format used by Regina 3.0-6.0.1
     -3 : Convert to the current third-generation file format (default)
 
     -x : Convert to compressed XML (default)
     -u : Convert to uncompressed XML
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 
     <new-file> may be the same as <old-file>.
     <new-file> defaults to standard output (implies -u).
@@ -95,12 +115,16 @@ Only uncompressed XML can be written to standard output.
 
 Usage:
     regconvert [ -2 | -3 ] [ -x | -u ] <old-file> [ <new-file> ]
+    regconvert [ -v, --version | -?, --help ]
 
     -2 : Convert to the old second-generation format used by Regina 3.0-6.0.1
     -3 : Convert to the current third-generation file format (default)
 
     -x : Convert to compressed XML (default)
     -u : Convert to uncompressed XML
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 
     <new-file> may be the same as <old-file>.
     <new-file> defaults to standard output (implies -u).
@@ -113,12 +137,16 @@ More than two files have been specified.
 
 Usage:
     regconvert [ -2 | -3 ] [ -x | -u ] <old-file> [ <new-file> ]
+    regconvert [ -v, --version | -?, --help ]
 
     -2 : Convert to the old second-generation format used by Regina 3.0-6.0.1
     -3 : Convert to the current third-generation file format (default)
 
     -x : Convert to compressed XML (default)
     -u : Convert to uncompressed XML
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 
     <new-file> may be the same as <old-file>.
     <new-file> defaults to standard output (implies -u).

@@ -1,39 +1,66 @@
 ============================================================
 TEST: sigcensus
 --------------------
+Please specify exactly one order.
+
 Usage:
     sigcensus <order>
+    sigcensus [ -v, --version | -?, --help ]
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
 TEST: sigcensus 0
 --------------------
 Only numerical orders between 1 and 20 inclusive are accepted.
+
 Usage:
     sigcensus <order>
+    sigcensus [ -v, --version | -?, --help ]
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
 TEST: sigcensus hello
 --------------------
 Only numerical orders between 1 and 20 inclusive are accepted.
+
 Usage:
     sigcensus <order>
+    sigcensus [ -v, --version | -?, --help ]
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
 TEST: sigcensus 100
 --------------------
 Only numerical orders between 1 and 20 inclusive are accepted.
+
 Usage:
     sigcensus <order>
+    sigcensus [ -v, --version | -?, --help ]
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
 TEST: sigcensus 2 3
 --------------------
+Please specify exactly one order.
+
 Usage:
     sigcensus <order>
+    sigcensus [ -v, --version | -?, --help ]
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================

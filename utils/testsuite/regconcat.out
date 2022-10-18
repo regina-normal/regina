@@ -5,9 +5,13 @@ No data files have been supplied.
 
 Usage:
     regconcat [ -o <output-file> ] <data-file> ...
+    regconcat [ -v, --version | -?, --help ]
 
     -o <output-file> : Write to the given data file (otherwise standard
                        output is used)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -17,9 +21,13 @@ Option -o is missing an output filename.
 
 Usage:
     regconcat [ -o <output-file> ] <data-file> ...
+    regconcat [ -v, --version | -?, --help ]
 
     -o <output-file> : Write to the given data file (otherwise standard
                        output is used)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -29,9 +37,13 @@ No data files have been supplied.
 
 Usage:
     regconcat [ -o <output-file> ] <data-file> ...
+    regconcat [ -v, --version | -?, --help ]
 
     -o <output-file> : Write to the given data file (otherwise standard
                        output is used)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -41,9 +53,13 @@ Option -o is missing an output filename.
 
 Usage:
     regconcat [ -o <output-file> ] <data-file> ...
+    regconcat [ -v, --version | -?, --help ]
 
     -o <output-file> : Write to the given data file (otherwise standard
                        output is used)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -53,9 +69,13 @@ More than one output filename has been supplied.
 
 Usage:
     regconcat [ -o <output-file> ] <data-file> ...
+    regconcat [ -v, --version | -?, --help ]
 
     -o <output-file> : Write to the given data file (otherwise standard
                        output is used)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -65,9 +85,13 @@ Invalid option: -x
 
 Usage:
     regconcat [ -o <output-file> ] <data-file> ...
+    regconcat [ -v, --version | -?, --help ]
 
     -o <output-file> : Write to the given data file (otherwise standard
                        output is used)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -77,9 +101,13 @@ Empty arguments are not allowed.
 
 Usage:
     regconcat [ -o <output-file> ] <data-file> ...
+    regconcat [ -v, --version | -?, --help ]
 
     -o <output-file> : Write to the given data file (otherwise standard
                        output is used)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -89,9 +117,13 @@ Empty arguments are not allowed.
 
 Usage:
     regconcat [ -o <output-file> ] <data-file> ...
+    regconcat [ -v, --version | -?, --help ]
 
     -o <output-file> : Write to the given data file (otherwise standard
                        output is used)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
