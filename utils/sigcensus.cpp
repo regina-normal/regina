@@ -39,12 +39,25 @@
 void usage(const char* progName) {
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName << " <order>\n";
+    std::cerr << "    " << progName
+        << " [ -v, --version | -?, --help ]\n\n";
+    std::cerr << "    -v, --version : Show which version of Regina "
+        "is being used\n";
+    std::cerr << "    -?, --help    : Display this help\n";
     exit(1);
 }
 
 int main(int argc, char* argv[]) {
     if (argc != 2)
         usage(argv[0]);
+
+    // Check for standard arguments:
+    if (strcmp(argv[1], "-?") == 0 || strcmp(argv[1], "--help") == 0)
+        usage(argv[0]);
+    if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
+        std::cout << PACKAGE_BUILD_STRING << std::endl;
+        exit(0);
+    }
 
     int order;
     bool valid = regina::valueOf(argv[1], order);

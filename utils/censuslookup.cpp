@@ -58,9 +58,9 @@ int main(int argc, char* argv[]) {
 
     // Check for standard arguments:
     for (int i = 1; i < argc; ++i) {
-        if (strcmp(argv[1], "-?") == 0 || strcmp(argv[1], "--help") == 0)
+        if (strcmp(argv[i], "-?") == 0 || strcmp(argv[i], "--help") == 0)
             usage(argv[0]);
-        if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
+        if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
             if (argc != 2)
                 usage(argv[0],
                     "Option --version cannot be used with "
