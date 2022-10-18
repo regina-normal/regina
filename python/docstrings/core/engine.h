@@ -11,6 +11,19 @@
 namespace regina::python::doc {
 
 
+// Docstring regina::python::doc::buildInfo
+static const char *buildInfo =
+R"doc(Returns any additional information about this specific build of
+Regina. For instance, an official download from the Regina website
+might return "Official macOS build", and a package from the official
+Debian servers might return "Debian package build".
+
+This information is supplied at build time by passing the option
+``-DBUILD_INFO=...`` to CMake.
+
+Returns:
+    any additional information supplied at build time.)doc";
+
 // Docstring regina::python::doc::hasInt128
 static const char *hasInt128 =
 R"doc(Does this particular build of Regina support native 128-bit
