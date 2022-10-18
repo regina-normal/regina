@@ -50,6 +50,10 @@ int versionMinor() {
     return PACKAGE_VERSION_MINOR;
 }
 
+const char* buildInfo() {
+    return BUILD_INFO;
+}
+
 bool versionUsesUTF8(const char* version) {
     // No version is fine.
     // Also any version that does not begin with 0-4 is fine.

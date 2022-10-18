@@ -205,6 +205,7 @@ a new Python session.)doc");
     m.def("versionString", regina::versionString, rdoc::versionString);
     m.def("versionMajor", regina::versionMajor, rdoc::versionMajor);
     m.def("versionMinor", regina::versionMinor, rdoc::versionMinor);
+    m.def("buildInfo", regina::buildInfo);
     m.def("versionUsesUTF8", regina::versionUsesUTF8, rdoc::versionUsesUTF8);
     m.def("versionSnapPy", regina::versionSnapPy, rdoc::versionSnapPy);
     m.def("versionSnapPea", regina::versionSnapPea, rdoc::versionSnapPea);

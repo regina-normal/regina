@@ -83,6 +83,21 @@ int versionMajor();
 int versionMinor();
 
 /**
+ * Returns any additional information about this specific build of Regina.
+ * For instance, an official download from the Regina website might return
+ * "Official macOS build", and a package from the official Debian servers
+ * might return "Debian package build".
+ *
+ * This information is supplied at build time by passing the option
+ * <tt>-DBUILD_INFO=...</tt> to CMake.
+ *
+ * @return any additional information supplied at build time.
+ *
+ * \ingroup engine
+ */
+const char* buildInfo();
+
+/**
  * Did the given version of Regina consistently use UTF-8 in its data
  * files?
  *
