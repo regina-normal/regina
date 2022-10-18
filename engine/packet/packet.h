@@ -2677,7 +2677,7 @@ class ChildIterator {
          */
         ChildIterator() = default;
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given iterator.
          *
          * \nopython The only way to create a ChildIterator is via
          * Packet::children().
@@ -2695,7 +2695,9 @@ class ChildIterator {
         ChildIterator(std::shared_ptr<value_type> current);
 
         /**
-         * Default copy assignment operator.
+         * Sets this to be a copy of the given iterator.
+         *
+         * @return a reference to this iterator.
          */
         ChildIterator& operator = (const ChildIterator&) = default;
 
@@ -2828,7 +2830,7 @@ class SubtreeIterator {
          */
         SubtreeIterator() = default;
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given iterator.
          *
          * \nopython The only way to create a SubtreeIterator is via
          * Packet::subtree() or Packet::descendants(), or by iterating
@@ -2870,7 +2872,9 @@ class SubtreeIterator {
             std::shared_ptr<value_type> current);
 
         /**
-         * Default copy assignment operator.
+         * Sets this to be a copy of the given iterator.
+         *
+         * @return a reference to this iterator.
          */
         SubtreeIterator& operator = (const SubtreeIterator&) = default;
 
@@ -3028,7 +3032,8 @@ class PacketChildren {
 
     public:
         /**
-         * Default copy constructor.
+         * Creates a new object for iterating through the children
+         * of the same packet as the given object.
          *
          * \nopython The only way to create a PacketChildren object is via
          * Packet::children().
@@ -3046,7 +3051,10 @@ class PacketChildren {
         PacketChildren(std::shared_ptr<packet_type> parent);
 
         /**
-         * Default copy assignment operator.
+         * Sets this object to iterate over the children of the same packet
+         * as the given object.
+         *
+         * @return a reference to this object.
          */
         PacketChildren& operator = (const PacketChildren&) = default;
 
@@ -3170,7 +3178,8 @@ class PacketDescendants {
 
     public:
         /**
-         * Default copy constructor.
+         * Creates a new object for iterating through the strict descendants
+         * of the same packet as the given object.
          *
          * \nopython The only way to create a PacketDescendants object is via
          * Packet::descendants().
@@ -3189,9 +3198,10 @@ class PacketDescendants {
         PacketDescendants(std::shared_ptr<packet_type> subtree);
 
         /**
-         * Default copy assignment operator.
+         * Sets this object to iterate over the strict descendants of the
+         * same packet as the given object.
          *
-         * \nopython
+         * @return a reference to this object.
          */
         PacketDescendants& operator = (const PacketDescendants&) = default;
 

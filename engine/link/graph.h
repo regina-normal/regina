@@ -93,7 +93,7 @@ class CrossingIterator {
          */
         CrossingIterator();
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given iterator.
          */
         CrossingIterator(const CrossingIterator&) = default;
 
@@ -132,7 +132,7 @@ class CrossingIterator {
         Crossing* operator * () const;
 
         /**
-         * Default assignment operator.
+         * Sets this to be a copy of the given iterator.
          *
          * @return a reference to this iterator.
          */
@@ -211,7 +211,7 @@ class ArcIterator {
          */
         ArcIterator();
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given iterator.
          */
         ArcIterator(const ArcIterator&) = default;
 
@@ -257,7 +257,7 @@ class ArcIterator {
         StrandRef operator * () const;
 
         /**
-         * Default assignment operator.
+         * Sets this to be a copy of the given iterator.
          *
          * @return a reference to this iterator.
          */
@@ -354,7 +354,7 @@ class ArcIterator {
              */
             IncidentArcIterator(Crossing* crossing, int strand = 0);
             /**
-             * Default copy constructor.
+             * Creates a new copy of the given iterator.
              */
             IncidentArcIterator(const IncidentArcIterator&) = default;
 
@@ -384,7 +384,7 @@ class ArcIterator {
             StrandRef operator * () const;
 
             /**
-             * Default assignment operator.
+             * Sets this to be a copy of the given iterator.
              *
              * @return a reference to this iterator.
              */
@@ -474,7 +474,7 @@ class ArcIterator {
              */
             AdjacentCrossingIterator(Crossing* crossing, int strand = 0);
             /**
-             * Default copy constructor.
+             * Creates a new copy of the given iterator.
              */
             AdjacentCrossingIterator(const AdjacentCrossingIterator&) = default;
 
@@ -501,7 +501,7 @@ class ArcIterator {
             Crossing* operator * () const;
 
             /**
-             * Default assignment operator.
+             * Sets this to be a copy of the given iterator.
              *
              * @return a reference to this iterator.
              */

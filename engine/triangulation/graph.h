@@ -108,11 +108,13 @@ namespace graph {
         DualEdge(const Face<dim, dim-1>* face_ = nullptr, bool forward_ = true);
 
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given dual edge object.
          */
         DualEdge(const DualEdge&) = default;
         /**
-         * Default assignment operator.
+         * Sets this to be a copy of the given dual edge object.
+         *
+         * @return a reference to this object.
          */
         DualEdge& operator = (const DualEdge&) = default;
 
@@ -246,7 +248,7 @@ namespace graph {
              */
             DualEdgeIterator() = default;
             /**
-             * Default copy constructor.
+             * Creates a new copy of the given iterator.
              */
             DualEdgeIterator(const DualEdgeIterator&) = default;
 
@@ -301,7 +303,7 @@ namespace graph {
             DualEdge<dim> operator * () const;
 
             /**
-             * Default assignment operator.
+             * Sets this to be a copy of the given iterator.
              *
              * @return a reference to this iterator.
              */
@@ -415,7 +417,7 @@ namespace graph {
              */
             IncidentDualEdgeIterator(Simplex<dim>* simp, unsigned facet = 0);
             /**
-             * Default copy constructor.
+             * Creates a new copy of the given iterator.
              */
             IncidentDualEdgeIterator(const IncidentDualEdgeIterator&) = default;
 
@@ -449,7 +451,7 @@ namespace graph {
             DualEdge<dim> operator * () const;
 
             /**
-             * Default assignment operator.
+             * Sets this to be a copy of the given iterator.
              *
              * @return a reference to this iterator.
              */
@@ -556,7 +558,7 @@ namespace graph {
             AdjacentDualVertexIterator(
                 Simplex<dim>* source, unsigned facet = 0);
             /**
-             * Default copy constructor.
+             * Creates a new copy of the given iterator.
              */
             AdjacentDualVertexIterator(const AdjacentDualVertexIterator&) =
                 default;
@@ -585,7 +587,7 @@ namespace graph {
             Simplex<dim>* operator * () const;
 
             /**
-             * Default assignment operator.
+             * Sets this to be a copy of the given iterator.
              *
              * @return a reference to this iterator.
              */

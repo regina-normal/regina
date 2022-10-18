@@ -110,7 +110,7 @@ class ModelLinkGraphArc {
         ModelLinkGraphArc(ModelLinkGraphNode* node, int arc);
 
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given arc reference.
          */
         ModelLinkGraphArc(const ModelLinkGraphArc&) = default;
 
@@ -164,7 +164,7 @@ class ModelLinkGraphArc {
          */
         bool operator != (const ModelLinkGraphArc& rhs) const;
         /**
-         * Default assignment operator.
+         * Sets this to be a copy of the given arc reference.
          *
          * @return a reference to this object.
          */

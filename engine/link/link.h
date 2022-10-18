@@ -177,7 +177,7 @@ class StrandRef {
         StrandRef(Crossing* crossing, int strand);
 
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given strand reference.
          */
         StrandRef(const StrandRef&) = default;
 
@@ -250,7 +250,7 @@ class StrandRef {
          */
         bool operator != (const StrandRef& rhs) const;
         /**
-         * Default assignment operator.
+         * Sets this to be a copy of the given strand reference.
          *
          * @return a reference to this object.
          */

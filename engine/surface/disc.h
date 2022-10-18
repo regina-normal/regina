@@ -573,6 +573,7 @@ class DiscSetTetData : public DiscSetTet {
          * The disc set that was passed (\a src) will no longer be usable.
          *
          * @param src the disc set to move from.
+         * @return a reference to this disc set.
          */
         DiscSetTetData& operator = (DiscSetTetData&& src) noexcept {
             // Swap the data arrays, and leave the originals for src to destroy:
@@ -866,6 +867,7 @@ class DiscSetSurfaceDataImpl {
          * The disc set that was passed (\a src) will no longer be usable.
          *
          * @param src the disc set to move from.
+         * @return a reference to this disc set.
          */
         DiscSetSurfaceDataImpl& operator = (DiscSetSurfaceDataImpl&& src)
                 noexcept {
@@ -1224,7 +1226,7 @@ class DiscSpecIterator {
             makeValid();
         }
         /**
-         * Default copy constructor.
+         * Creates a new copy of the given iterator.
          *
          * \nopython The only way to create a DiscSpecIterator is to iterate
          * over a DiscSetSurface.
@@ -1247,7 +1249,9 @@ class DiscSpecIterator {
         }
 
         /**
-         * Default copy assignment operator.
+         * Sets this to be a copy of the given iterator.
+         *
+         * @return a reference to this iterator.
          */
         DiscSpecIterator& operator = (const DiscSpecIterator&) = default;
 
