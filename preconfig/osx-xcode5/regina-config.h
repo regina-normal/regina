@@ -102,6 +102,9 @@
 /* Minor version number of the package. */
 #define PACKAGE_VERSION_MINOR 1
 
+/* Optional additional information about this specific build. */
+#define BUILD_INFO "Custom build"
+
 /* Define to the version of SnapPy that is bundled with Regina. */
 #define SNAPPY_VERSION "2.8"
 
