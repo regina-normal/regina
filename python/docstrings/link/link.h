@@ -3613,7 +3613,7 @@ Returns:
     reference.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__copy
-static const char *__copy = R"doc(Default copy constructor.)doc";
+static const char *__copy = R"doc(Creates a new copy of the given strand reference.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__dec
 static const char *__dec =

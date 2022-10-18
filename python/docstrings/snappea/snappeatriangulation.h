@@ -1782,6 +1782,74 @@ Returns:
 
 }
 
+namespace SnapPeaTriangulation_::CoverEnumerationType_ {
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumerationType_::all_covers
+static const char *all_covers =
+R"doc(Indicates that all covers should be enumerated. This corresponds to
+the SnapPea constant *permutation_subgroup_Sn*.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumerationType_::cyclic_covers
+static const char *cyclic_covers =
+R"doc(Indicates that only cyclic covers should be enumerated. This
+corresponds to the SnapPea constant *permutation_subgroup_Zn*.)doc";
+
+}
+
+namespace SnapPeaTriangulation_::CoverType_ {
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::CoverType_::cyclic_cover
+static const char *cyclic_cover = R"doc(Indicates a cyclic covering.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::CoverType_::irregular_cover
+static const char *irregular_cover =
+R"doc(Indicates a covering where there exist two lifts of a point in the
+base manifold with no covering transformation that takes one to the
+other.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::CoverType_::regular_cover
+static const char *regular_cover =
+R"doc(Indicates a covering that is not cyclic, and where for any two lifts
+of a point in the base manfiold, there is a covering transformation
+taking one to the other.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::CoverType_::unknown_cover
+static const char *unknown_cover = R"doc(Indicates that SnapPea has not yet computed the covering type.)doc";
+
+}
+
+namespace SnapPeaTriangulation_::SolutionType_ {
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::degenerate_solution
+static const char *degenerate_solution = R"doc(At least one tetrahedron has shape 0, 1 or infinity.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::externally_computed
+static const char *externally_computed = R"doc(Tetrahedron shapes were inserted into the triangulation.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::flat_solution
+static const char *flat_solution = R"doc(All tetrahedra are flat, but none have shape 0, 1 or infinity.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::geometric_solution
+static const char *geometric_solution = R"doc(All tetrahedra are positively oriented.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::no_solution
+static const char *no_solution = R"doc(The gluing equations could not be solved.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::nongeometric_solution
+static const char *nongeometric_solution =
+R"doc(The overall volume is positive, but some tetrahedra are flat or
+negatively oriented. No tetrahedra have shape 0, 1 or infinity.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::not_attempted
+static const char *not_attempted = R"doc(A solution has not been attempted.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation_::SolutionType_::other_solution
+static const char *other_solution =
+R"doc(The volume is zero or negative, but the solution is neither flat nor
+degenerate.)doc";
+
+}
+
 } // namespace regina::python::doc
 
 #if defined(__GNUG__)

@@ -49,10 +49,10 @@ Returns:
 
 // Docstring regina::python::doc::ExampleSnapPea_::x101
 static const char *x101 =
-R"doc(Returns a new triangulation of the census manifold ``x101``.
+R"doc(Returns a new triangulation of the SnapPea census manifold ``x101``.
 
 Returns:
-    the census manifold ``x101``.)doc";
+    the SnapPea census manifold ``x101``.)doc";
 
 }
 
