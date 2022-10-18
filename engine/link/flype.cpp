@@ -63,7 +63,7 @@ std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraph::findFlype(
         // Following upper must return back to from.
         // This means that the crossing (X) is redundant, and can be
         // undone by twisting everything from upper around to from.
-        return std::make_pair(ModelLinkGraphArc(), ModelLinkGraphArc());
+        return {};
     }
 
     // For each cell adjacent to C, we identify the first arc of C in a
@@ -100,18 +100,18 @@ std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraph::findFlype(
     if (a == upper) {
         // The strand upper comes straight back to (X), with no
         // crossings in between.  In other words, cell A is a 1-gon.
-        return std::make_pair(ModelLinkGraphArc(), ModelLinkGraphArc());
+        return {};
     } else if (right == from) {
         // The common cell is in fact the cell immediately between the
         // arcs upper and from (i.e., immediately to the right of (X)).
         // The flype() routine will refuse to work with this, so return
         // null now.
-        return std::make_pair(ModelLinkGraphArc(), ModelLinkGraphArc());
+        return {};
     } else if (a.traverse().node() == from.node() ||
             right.traverse().node() == from.node()) {
         // One of the two return arcs ends at (X).  Again, flype() will
         // refuse to work with this, so return null now.
-        return std::make_pair(ModelLinkGraphArc(), ModelLinkGraphArc());
+        return {};
     } else
         return std::make_pair(a, right);
 }
@@ -133,6 +133,17 @@ ModelLinkGraph ModelLinkGraph::flype(const ModelLinkGraphArc& from,
     size_t upper = cells_->cell(left);
     size_t centre = cells_->cell(right);
     size_t lower = cells_->cell(right.traverse());
+
+    // More sanity checking.
+    if (cells_->cell(from.traverse()) != lower)
+        throw InvalidArgument("flype(): the entry arc and the right "
+            "exit arc do not share the same right-hand cell");
+    if (cells_->cell(left.traverse()) != centre)
+        throw InvalidArgument("flype(): the two exit arcs do not "
+            "have a common cell between them");
+    if (cells_->cell(--ModelLinkGraphArc(from)) != upper)
+        throw InvalidArgument("flype(): the arc above the entry arc and the "
+            "left exit arc do not share the same left-hand cell");
 
     // The cell from which we start the depth-first search:
     size_t inner = cells_->cell(from);

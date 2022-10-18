@@ -17,6 +17,8 @@ Version 7.2  [ (to be determined) ]
             - Added a specialisation for fixed-size C-style arrays:
               ListView<Element[n]>.
         Class ModelLinkGraph:
+            - Routine flype() now throws an exception if the given arcs
+              are not laid out on the plane in the expected manner.
             - Routine generateMinimalLinks() now throws an exception if its
               precondition is not met.
             - Routines plantri(), canonicalPlantri() and fromPlantri() can

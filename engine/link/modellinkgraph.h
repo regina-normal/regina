@@ -655,17 +655,57 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         const ModelLinkGraphCells& cells() const;
 
         /**
-         * TODO: Flype is between arc-- and arc, i.e., over the region
-         * defined by cell(arc).  Returns (null, null) iff flype() will
-         * refuse to work with this.
-         * Otherwise returns (left outgoing arc, right outgoing arc).
+         * Identifies the smallest flype that can be performed on this
+         * graph from the given starting location.
          *
-         * Conditions that explicitly return \c null:
+         * Here we use the same notation as in the three-argument flype()
+         * function, where you perform a flype by passing three arcs
+         * \a from, \a left and \a right.  Read the flype() documentation
+         * now if you have not done so already; this includes a full
+         * description of the flype operation as well as diagrams with
+         * the arcs \a from, \a left and \a right clearly marked.
          *
-         * - The upper and lower cells are the same.
-         * - The common cell is the inside cell at from.node().
+         * The given arc \a from identifies the node to the left of the flype
+         * disc.  The aim of this routine is to identify two suitable arcs
+         * \a left and \a right that exit through the right of the flype
+         * disc.  Together, these three arcs uniquely identify the entire
+         * flype disc, and therefore prescribe the operation precisely.
          *
-         * \pre This graph is connected and TODO: valid.
+         * Here, by "suitable arcs", we mean a pair of arcs (\a left, \a right)
+         * for which the three arcs (\a from, \a left, \a right) together
+         * satisfy the preconditions for the flype() routine.
+         *
+         * There are several possible outcomes:
+         *
+         * - It is possible that there are \e no suitable arcs \a left and
+         *   \a right.  In this case, this routine returns a pair of null arcs.
+         *
+         * - It is possible that there is exactly one pair of suitable arcs
+         *   (\a left, \a right).  In this case, this pair will be returned.
+         *
+         * - It is possible that there are \e many pairs of suitable arcs.
+         *   In this case, it can be shown that the suitable pairs have an
+         *   ordering \a P_1, ..., \a P_k in which the flype disc for \a P_i
+         *   is completely contained within the flype disc for \a P_j whenever
+         *   \a i < \a j.  In this case, this routine returns the \e smallest
+         *   pair \a P_1; that is, the pair (\a left, \a right) that gives
+         *   the smallest possible flype disc.
+         *
+         * It should be noted that choosing only the smallest flype is not
+         * a serious restriction: assuming the graph does not model a
+         * composition of non-trivial knot diagrams, \e any suitable flype
+         * can be expressed as a composition of minimal flypes in this sense.
+         *
+         * \pre This graph is connected.
+         *
+         * @param from the arc that indicates where the flype disc should
+         * begin.  This is the arc labelled \a from in the diagrams for the
+         * three-argument flype() function: it is the lower of the two arcs
+         * that enter the flype disc from the node \a X to the left of the
+         * disc.  This should be presented as an arc of the node \a X.
+         * @return the pair (\a left, \a right) representing the smallest
+         * suitable flype beginning at \a from, or a pair of null arcs
+         * if there are no suitable pairs (\a left, \a right).
          */
         std::pair<ModelLinkGraphArc, ModelLinkGraphArc> findFlype(
             const ModelLinkGraphArc& from) const;
@@ -733,35 +773,77 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \a left and \a right must be given as arcs of their respective
          * nodes \a inside the disc.
          *
+         * \pre This graph is connected.
+         *
+         * \pre The arcs \a from, \a left and \a right are laid out as
+         * in the diagram above.  In particular: \a from and \a right
+         * have the same cell to their right (cell \a C); \a left and the
+         * arc to the left of \a from have the same cell to their left
+         * (cell \a A); and \a left and \a right have the same cell between
+         * them (cell \a D).
+         *
          * \pre Neither of the arcs \a left or \a right, when followed in the
          * direction away from the disc, end back at the node on the left of
          * the diagram.  That is, neither <tt>left.traverse().node()</tt> nor
          * <tt>right.traverse().node()</tt> is equal to <tt>from.node()</tt>.
+         * (If this fails, then either the flype simply reflects the entire
+         * graph, or else the graph models a composition of two non-trivial
+         * knot diagrams.)
          *
          * \pre Cells \a A and \a C are distinct (that is, the node on
          * the left of the diagram is not a cut-vertex of the graph).
          *
          * \pre Cells \a B and \a D are distinct (that is, the disc actually
          * contains one or more nodes, and the graph does not model a
-         * composition of two knot diagrams).
+         * composition of two non-trivial knot diagrams).
          *
-         * TODO: Document.
+         * \exception InvalidArgument One or more of the preconditions
+         * above fails to hold.  Be warned that the connectivity precondition
+         * will not be checked - this is the user's responsibility - but all
+         * other preconditions \e will be checked, and an exception will
+         * be thrown if any of them fails.
          *
-         * Even if the arguments are a (non-null) result of findFlype(),
-         * this routine could still throw an exception, but only for graphs
-         * that model non-minimal and/or composite link diagrams.
-         *
-         * \exception InvalidArgument TODO.
+         * @param from the first arc that indicates where the flype should
+         * take place, as labelled on the diagram above.  This should be
+         * presented as an arc of the node outside the disc, to the left.
+         * @param left the second arc that indicates where the flype should
+         * take place, as labelled on the diagram above.  This should be
+         * presented as an arc of the node that it meets inside the disc.
+         * @param right the third arc that indicates where the flype should
+         * take place, as labelled on the diagram above.  This should be
+         * presented as an arc of the node that it meets inside the disc.
+         * @return the graph obtained by performing the flype.
          */
         ModelLinkGraph flype(const ModelLinkGraphArc& from,
             const ModelLinkGraphArc& left, const ModelLinkGraphArc& right)
             const;
 
         /**
-         * TODO: Document.
+         * Performs the smallest possible flype on this graph from the given
+         * starting location.
          *
-         * \exception InvalidArgument There is no flype available from
-         * the given starting arc.
+         * This is a convenience routine that simply calls findFlype() to
+         * identify the smallest possible flype from the given starting
+         * location, and then calls the three-argument flype() to actually
+         * perform it.  If there is no possible flype from the given starting
+         * location then this routine throws an exception.
+         *
+         * See the documentation for the three-argument flype() for further
+         * details on the flype operation, and see findFlype() for a
+         * discussion on what is meant by "smallest possible".
+         *
+         * \pre This graph is connected.
+         *
+         * \exception InvalidArgument There is no suitable flype on this
+         * graph from the given starting location (that is, findFlype()
+         * returns a pair of null arcs).
+         *
+         * @param from the arc that indicates where the flype disc should
+         * begin.  This is the arc labelled \a from in the diagrams for the
+         * three-argument flype() function: it is the lower of the two arcs
+         * that enter the flype disc from the node \a X to the left of the
+         * disc.  This should be presented as an arc of the node \a X.
+         * @return the graph obtained by performing the flype.
          */
         ModelLinkGraph flype(const ModelLinkGraphArc& from) const;
 
