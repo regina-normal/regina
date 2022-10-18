@@ -72,6 +72,15 @@ class SnapPeaTriangulation;
 
 template <int> class XMLTriangulationReader;
 
+#ifdef __DOCSTRINGS
+// Declare SnapPy types that appear in the Python-only functions below,
+// so that the docstring generator does not complain.
+namespace snappy {
+    class Manifold;
+    class Triangulation;
+}
+#endif
+
 /**
  * \defgroup dim3 3-Manifold Triangulations
  * Details for implementing triangulations of 3-manifolds.
@@ -320,7 +329,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * @param m a SnapPy object of type snappy.Manifold.
          */
-        Triangulation(snappy.Manifold m);
+        Triangulation(snappy::Manifold m);
         /**
          * Python-only constructor that copies the given SnapPy triangulation.
          *
@@ -333,7 +342,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * @param t a SnapPy object of type snappy.Triangulation.
          */
-        Triangulation(snappy.Triangulation t);
+        Triangulation(snappy::Triangulation t);
 #endif
         /**
          * Destroys this triangulation.
