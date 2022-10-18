@@ -712,8 +712,10 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * You will need to pass arguments to indicate where the flype should
          * take place.  For this, we will label some of the features of the
          * initial diagram (before the move takes place): see the diagram below.
-         * Here the labels \a from, \a left and \a right all refer to arcs,
-         * and \a A, \a B, \a C and \a D all refer to dual 2-cells in the plane.
+         * Here the labels \a from, \a left and \a right all refer to arcs.
+         * The labels \a A, \a B, \a C and \a D all refer to dual 2-cells in
+         * the plane; these are not passed as arguments, but they do appear
+         * in the list of preconditions for this routine.
          *
            \verbatim
                             ______
@@ -726,14 +728,24 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
            Cell C          \______/
            \endverbatim
          *
+         * The arc \a from must be given as an arc of the node \a outside
+         * the disc (i.e., the node to the left of cell \a B).  The arcs
+         * \a left and \a right must be given as arcs of their respective
+         * nodes \a inside the disc.
+         *
+         * \pre Neither of the arcs \a left or \a right, when followed in the
+         * direction away from the disc, end back at the node on the left of
+         * the diagram.  That is, neither <tt>left.traverse().node()</tt> nor
+         * <tt>right.traverse().node()</tt> is equal to <tt>from.node()</tt>.
+         *
+         * \pre Cells \a A and \a C are distinct (that is, the node on
+         * the left of the diagram is not a cut-vertex of the graph).
+         *
+         * \pre Cells \a B and \a D are distinct (that is, the disc actually
+         * contains one or more nodes, and the graph does not model a
+         * composition of two knot diagrams).
+         *
          * TODO: Document.
-         *
-         * Conditions that explicitly throw exceptions:
-         *
-         * - Neither left nor right ends at from.node().
-         * - The upper and lower bounding cells are distinct,
-         * - The cell between left and right is not the inside cell
-         * where the flype begins from from.node().
          *
          * Even if the arguments are a (non-null) result of findFlype(),
          * this routine could still throw an exception, but only for graphs
