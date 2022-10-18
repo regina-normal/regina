@@ -57,27 +57,29 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(Cusp)
 
-    auto c1 = pybind11::class_<Cusp>(m, "Cusp")
+    auto c1 = pybind11::class_<Cusp>(m, "Cusp", rdoc_scope)
+        .def(pybind11::init<const Cusp&>(), rdoc::__copy)
         .def("vertex", &Cusp::vertex,
-            pybind11::return_value_policy::reference)
-        .def("complete", &Cusp::complete)
-        .def("m", &Cusp::m)
-        .def("l", &Cusp::l)
+            pybind11::return_value_policy::reference, rdoc::vertex)
+        .def("complete", &Cusp::complete, rdoc::complete)
+        .def("m", &Cusp::m, rdoc::m)
+        .def("l", &Cusp::l, rdoc::l)
     ;
     regina::python::add_output(c1);
-    regina::python::add_eq_operators(c1);
+    regina::python::add_eq_operators(c1, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_SWITCH(SnapPeaTriangulation)
 
     auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,
             std::shared_ptr<SnapPeaTriangulation>>(
-            m, "SnapPeaTriangulation")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const std::string&>())
-        .def(pybind11::init<const SnapPeaTriangulation&>())
+            m, "SnapPeaTriangulation", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const std::string&>(), rdoc::__init)
+        .def(pybind11::init<const SnapPeaTriangulation&>(), rdoc::__copy)
         .def(pybind11::init<const Triangulation<3>&, bool>(),
-            pybind11::arg(), pybind11::arg("ignored") = false)
-        .def(pybind11::init<const regina::Link&>())
+            pybind11::arg(), pybind11::arg("ignored") = false,
+            rdoc::__init_2)
+        .def(pybind11::init<const regina::Link&>(), rdoc::__init_3)
         .def("swap", &SnapPeaTriangulation::swap)
         .def("nullify", &SnapPeaTriangulation::nullify)
         .def("isNull", &SnapPeaTriangulation::isNull)
@@ -104,10 +106,12 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg(), pybind11::arg("whichCusp")= 0)
         .def("unfill", &SnapPeaTriangulation::unfill,
             pybind11::arg("whichCusp")= 0)
-        .def("filledPartial", overload_cast<>(
-            &SnapPeaTriangulation::filledPartial, pybind11::const_))
         .def("filledPartial", overload_cast<unsigned>(
-            &SnapPeaTriangulation::filledPartial, pybind11::const_))
+            &SnapPeaTriangulation::filledPartial, pybind11::const_),
+            rdoc::filledPartial)
+        .def("filledPartial", overload_cast<>(
+            &SnapPeaTriangulation::filledPartial, pybind11::const_),
+            rdoc::filledPartial_2)
         .def("filledAll", &SnapPeaTriangulation::filledAll)
         .def("slopeEquations", &SnapPeaTriangulation::slopeEquations)
         .def("fundamentalGroupFilled",
@@ -152,20 +156,25 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     // get left with the inherited versions from Triangulation<3>.
     regina::python::add_output(c2);
     regina::python::add_packet_data(c2);
-    regina::python::packet_eq_operators(c2);
+    regina::python::packet_eq_operators(c2, rdoc::__eq, rdoc::__ne);
 
     regina::python::addListView<decltype(SnapPeaTriangulation().cusps())>(m);
 
     auto wrap = regina::python::add_packet_wrapper<SnapPeaTriangulation>(
         m, "PacketOfSnapPeaTriangulation");
-    regina::python::add_packet_constructor<>(wrap);
-    regina::python::add_packet_constructor<const std::string&>(wrap);
+    regina::python::add_packet_constructor<>(wrap, rdoc::__default);
+    regina::python::add_packet_constructor<const std::string&>(wrap,
+        rdoc::__init);
     regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap,
-        pybind11::arg(), pybind11::arg("ignored") = false);
-    regina::python::add_packet_constructor<const regina::Link&>(wrap);
+        pybind11::arg(), pybind11::arg("ignored") = false,
+        rdoc::__init_2);
+    regina::python::add_packet_constructor<const regina::Link&>(wrap,
+        rdoc::__init_3);
+
+    RDOC_SCOPE_INNER_BEGIN(SolutionType)
 
     auto st = pybind11::enum_<SnapPeaTriangulation::SolutionType>(
-            c2, "SolutionType")
+            c2, "SolutionType", rdoc_inner_scope)
         .value("not_attempted", SnapPeaTriangulation::not_attempted)
         .value("geometric_solution",
             SnapPeaTriangulation::geometric_solution)
@@ -184,14 +193,19 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     // For backward compatibility with the old boost.python bindings:
     m.attr("SolutionType") = st;
 
+    RDOC_SCOPE_INNER_SWITCH(CoverEnumerationType)
+
     auto cet = pybind11::enum_<SnapPeaTriangulation::CoverEnumerationType>(
-            c2, "CoverEnumerationType")
+            c2, "CoverEnumerationType", rdoc_inner_scope)
         .value("cyclic_covers", SnapPeaTriangulation::cyclic_covers)
         .value("all_covers", SnapPeaTriangulation::all_covers)
         .export_values()
     ;
 
-    auto ct = pybind11::enum_<SnapPeaTriangulation::CoverType>(c2, "CoverType")
+    RDOC_SCOPE_INNER_SWITCH(CoverType)
+
+    auto ct = pybind11::enum_<SnapPeaTriangulation::CoverType>(c2, "CoverType",
+            rdoc_inner_scope)
         .value("unknown_cover", SnapPeaTriangulation::unknown_cover)
         .value("irregular_cover", SnapPeaTriangulation::irregular_cover)
         .value("regular_cover", SnapPeaTriangulation::regular_cover)
@@ -199,7 +213,9 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .export_values()
     ;
 
-    regina::python::add_global_swap<SnapPeaTriangulation>(m);
+    RDOC_SCOPE_INNER_END
+
+    regina::python::add_global_swap<SnapPeaTriangulation>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 
