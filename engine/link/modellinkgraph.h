@@ -671,18 +671,62 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
             const ModelLinkGraphArc& from) const;
 
         /**
-         * TODO: Document.
+         * Performs a flype on this graph at the given location.
+         *
+         * A \e flype is an operation on a disc in the plane.  The boundary
+         * of the disc must cut through four arcs of the graph (and otherwise
+         * must not meet the graph at all), as indicated in the diagram below.
+         * Moreover, the two arcs that exit the disc on the left must meet at
+         * a common node just outside the disc.  (The punctuation symbols
+         * drawn inside the disc are just to help illustrate how the
+         * transformation works.)
          *
            \verbatim
-                  Cell A
-          
-               __   __
-                 \ /                    ----> left
-                  X         Cell B
-               __/ \__from              ----> right
-          
-                  Cell C
+                    ______                       ______
+                   /      \                     /      \
+           __   __| ##  ** |_______     _______| ::  <> |__   __
+             \ /  |        |                   |        |  \ /
+              X   |  Disc  |        ==>        |        |   X
+           __/ \__|        |_______     _______|        |__/ \__
+                  | ::  <> |                   | ##  ** |
+                   \______/                     \______/
            \endverbatim
+         *
+         * The operation involves:
+         *
+         * - reflecting this disc in a horizontal axis (so the two arcs
+         *   on the left switch places, and the two arcs on the right
+         *   switch places);
+         *
+         * - removing the node outside the disc on the left, where the
+         *   two arcs meet;
+         *
+         * - introducing a new node on the right instead, where the two
+         *   arcs on the right will now meet.
+         *
+         * The equivalent operation on a knot diagram involves twisting the
+         * entire region inside the disc about a horizontal axis, in a way
+         * that undoes the crossing on the left but introduces a new crossing
+         * on the right instead.
+         *
+         * You will need to pass arguments to indicate where the flype should
+         * take place.  For this, we will label some of the features of the
+         * initial diagram (before the move takes place): see the diagram below.
+         * Here the labels \a from, \a left and \a right all refer to arcs,
+         * and \a A, \a B, \a C and \a D all refer to dual 2-cells in the plane.
+         *
+           \verbatim
+                            ______
+           Cell A          /      \
+           __   __________|        |_________ left
+             \ /          |        |
+              X   Cell B  |        |  Cell D
+           __/ \__________|        |_________ right
+                    from  |        |
+           Cell C          \______/
+           \endverbatim
+         *
+         * TODO: Document.
          *
          * Conditions that explicitly throw exceptions:
          *
