@@ -725,21 +725,61 @@ Returns:
 
 // Docstring regina::python::doc::ModelLinkGraph_::findFlype
 static const char *findFlype =
-R"doc(TODO: Flype is between arc-- and arc, i.e., over the region defined by
-cell(arc). Returns (null, null) iff flype() will refuse to work with
-this. Otherwise returns (left outgoing arc, right outgoing arc).
+R"doc(Identifies the smallest flype that can be performed on this graph from
+the given starting location.
 
-Conditions that explicitly return ``null:``
+Here we use the same notation as in the three-argument flype()
+function, where you perform a flype by passing three arcs *from*,
+*left* and *right*. Read the flype() documentation now if you have not
+done so already; this includes a full description of the flype
+operation as well as diagrams with the arcs *from*, *left* and *right*
+clearly marked.
 
-* The upper and lower cells are the same.
+The given arc *from* identifies the node to the left of the flype
+disc. The aim of this routine is to identify two suitable arcs *left*
+and *right* that exit through the right of the flype disc. Together,
+these three arcs uniquely identify the entire flype disc, and
+therefore prescribe the operation precisely.
 
-* The common cell is the inside cell at from.node().
+Here, by "suitable arcs", we mean a pair of arcs (*left*, *right*) for
+which the three arcs (*from*, *left*, *right*) together satisfy the
+preconditions for the flype() routine.
 
-Note the circumstances in which a non-null result could still not work
-with flype().
+There are several possible outcomes:
+
+* It is possible that there are *no* suitable arcs *left* and *right*.
+  In this case, this routine returns a pair of null arcs.
+
+* It is possible that there is exactly one pair of suitable arcs
+  (*left*, *right*). In this case, this pair will be returned.
+
+* It is possible that there are *many* pairs of suitable arcs. In this
+  case, it can be shown that the suitable pairs have an ordering
+  *P_1*, ..., *P_k* in which the flype disc for *P_i* is completely
+  contained within the flype disc for *P_j* whenever *i* < *j*. In
+  this case, this routine returns the *smallest* pair *P_1*; that is,
+  the pair (*left*, *right*) that gives the smallest possible flype
+  disc.
+
+It should be noted that choosing only the smallest flype is not a
+serious restriction: assuming the graph does not model a composition
+of non-trivial knot diagrams, *any* suitable flype can be expressed as
+a composition of minimal flypes in this sense.
 
 Precondition:
-    This graph is connected and TODO: valid.)doc";
+    This graph is connected.
+
+Parameter ``from``:
+    the arc that indicates where the flype disc should begin. This is
+    the arc labelled *from* in the diagrams for the three-argument
+    flype() function: it is the lower of the two arcs that enter the
+    flype disc from the node *X* to the left of the disc. This should
+    be presented as an arc of the node *X*.
+
+Returns:
+    the pair (*left*, *right*) representing the smallest suitable
+    flype beginning at *from*, or a pair of null arcs if there are no
+    suitable pairs (*left*, *right*).)doc";
 
 // Docstring regina::python::doc::ModelLinkGraph_::flype
 static const char *flype =
@@ -803,6 +843,9 @@ The arc *from* must be given as an arc of the node *outside* the disc
 must be given as arcs of their respective nodes *inside* the disc.
 
 Precondition:
+    This graph is connected.
+
+Precondition:
     The arcs *from*, *left* and *right* are laid out as in the diagram
     above. In particular: *from* and *right* have the same cell to
     their right (cell *C*); *left* and the arc to the left of *from*
@@ -828,7 +871,10 @@ Precondition:
     composition of two non-trivial knot diagrams).
 
 Exception ``InvalidArgument``:
-    One or more of the preconditions above fails to hold.
+    One or more of the preconditions above fails to hold. Be warned
+    that the connectivity precondition will not be checked - this is
+    the user's responsibility - but all other preconditions *will* be
+    checked, and an exception will be thrown if any of them fails.
 
 Parameter ``from``:
     the first arc that indicates where the flype should take place, as
@@ -850,10 +896,35 @@ Returns:
 
 // Docstring regina::python::doc::ModelLinkGraph_::flype_2
 static const char *flype_2 =
-R"doc(TODO: Document. Basically just calls flype() from findFlype().
+R"doc(Performs the smallest possible flype on this graph from the given
+starting location.
+
+This is a convenience routine that simply calls findFlype() to
+identify the smallest possible flype from the given starting location,
+and then calls the three-argument flype() to actually perform it. If
+there is no possible flype from the given starting location then this
+routine throws an exception.
+
+See the documentation for the three-argument flype() for further
+details on the flype operation, and see findFlype() for a discussion
+on what is meant by "smallest possible".
+
+Precondition:
+    This graph is connected.
 
 Exception ``InvalidArgument``:
-    There is no flype available from the given starting arc.)doc";
+    There is no suitable flype on this graph from the given starting
+    location (that is, findFlype() returns a pair of null arcs).
+
+Parameter ``from``:
+    the arc that indicates where the flype disc should begin. This is
+    the arc labelled *from* in the diagrams for the three-argument
+    flype() function: it is the lower of the two arcs that enter the
+    flype disc from the node *X* to the left of the disc. This should
+    be presented as an arc of the node *X*.
+
+Returns:
+    the graph obtained by performing the flype.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraph_::fromPlantri
 static const char *fromPlantri =
