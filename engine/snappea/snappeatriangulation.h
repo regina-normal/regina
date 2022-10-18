@@ -489,26 +489,40 @@ class SnapPeaTriangulation :
          * SnapPea's own SolutionType enumeration.
          */
         enum SolutionType {
+            /**
+             * A solution has not been attempted.
+             */
             not_attempted,
-                /**< A solution has not been attempted. */
+            /**
+             * All tetrahedra are positively oriented.
+             */
             geometric_solution,
-                /**< All tetrahedra are positively oriented. */
+            /**
+             * The overall volume is positive, but some tetrahedra are flat or
+             * negatively oriented.  No tetrahedra have shape 0, 1 or infinity.
+             */
             nongeometric_solution,
-                /**< The overall volume is positive, but some tetrahedra are
-                     flat or negatively oriented.  No tetrahedra have
-                     shape 0, 1 or infinity. */
+            /**
+             * All tetrahedra are flat, but none have shape 0, 1 or infinity.
+             */
             flat_solution,
-                /**< All tetrahedra are flat, but none have shape 0, 1 or
-                     infinity. */
+            /**
+             * At least one tetrahedron has shape 0, 1 or infinity.
+             */
             degenerate_solution,
-                /**< At least one tetrahedron has shape 0, 1 or infinity. */
+            /**
+             * The volume is zero or negative, but the solution is neither
+             * flat nor degenerate.
+             */
             other_solution,
-                /**< The volume is zero or negative, but the solution is
-                     neither flat nor degenerate. */
+            /**
+             * The gluing equations could not be solved.
+             */
             no_solution,
-                /**< The gluing equations could not be solved. */
+            /**
+             * Tetrahedron shapes were inserted into the triangulation.
+             */
             externally_computed
-                /**< Tetrahedron shapes were inserted into the triangulation. */
         };
 
         /**
@@ -526,14 +540,16 @@ class SnapPeaTriangulation :
          * SnapPea's PermutationSubgroup enumeration.
          */
         enum CoverEnumerationType {
+            /**
+             * Indicates that only cyclic covers should be enumerated.  This
+             * corresponds to the SnapPea constant \a permutation_subgroup_Zn.
+             */
             cyclic_covers,
-                /**< Indicates that only cyclic covers should be enumerated.
-                     This corresponds to the SnapPea constant
-                     \a permutation_subgroup_Zn. */
+            /**
+             * Indicates that all covers should be enumerated.  This
+             * corresponds to the SnapPea constant \a permutation_subgroup_Sn.
+             */
             all_covers
-                /**< Indicates that all covers should be enumerated.
-                     This corresponds to the SnapPea constant
-                     \a permutation_subgroup_Sn. */
         };
 
         /**
@@ -550,19 +566,26 @@ class SnapPeaTriangulation :
          * SnapPea's own CoveringType enumeration.
          */
         enum CoverType {
+            /**
+             * Indicates that SnapPea has not yet computed the covering type.
+             */
             unknown_cover,
-                /**< Indicates that SnapPea has not yet computed the covering
-                     type. */
+            /**
+             * Indicates a covering where there exist two lifts of a point in
+             * the base manifold with no covering transformation that takes
+             * one to the other.
+             */
             irregular_cover,
-                /**< Indicates a covering where there exist two lifts of a
-                     point in the base manifold with no covering transformation
-                     that takes one to the other. */
+            /**
+             * Indicates a covering that is not cyclic, and where for
+             * any two lifts of a point in the base manfiold, there is a
+             * covering transformation taking one to the other.
+             */
             regular_cover,
-                /**< Indicates a covering that is not cyclic, and where for
-                     any two lifts of a point in the base manfiold, there is a
-                     covering transformation taking one to the other. */
+            /**
+             * Indicates a cyclic covering.
+             */
             cyclic_cover
-                /**< Indicates a cyclic covering. */
         };
 
     private:
