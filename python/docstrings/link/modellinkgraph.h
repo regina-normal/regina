@@ -735,6 +735,9 @@ Conditions that explicitly return ``null:``
 
 * The common cell is the inside cell at from.node().
 
+Note the circumstances in which a non-null result could still not work
+with flype().
+
 Precondition:
     This graph is connected and TODO: valid.)doc";
 
@@ -779,8 +782,10 @@ right instead.
 You will need to pass arguments to indicate where the flype should
 take place. For this, we will label some of the features of the
 initial diagram (before the move takes place): see the diagram below.
-Here the labels *from*, *left* and *right* all refer to arcs, and *A*,
-*B*, *C* and *D* all refer to dual 2-cells in the plane.
+Here the labels *from*, *left* and *right* all refer to arcs. The
+labels *A*, *B*, *C* and *D* all refer to dual 2-cells in the plane;
+these are not passed as arguments, but they do appear in the list of
+preconditions for this routine.
 
 ```
                  ______
@@ -793,27 +798,59 @@ __/ \__________|        |_________ right
 Cell C          \______/
 ```
 
-TODO: Document.
+The arc *from* must be given as an arc of the node *outside* the disc
+(i.e., the node to the left of cell *B*). The arcs *left* and *right*
+must be given as arcs of their respective nodes *inside* the disc.
 
-Conditions that explicitly throw exceptions:
+Precondition:
+    The arcs *from*, *left* and *right* are laid out as in the diagram
+    above. In particular: *from* and *right* have the same cell to
+    their right (cell *C*); *left* and the arc to the left of *from*
+    have the same cell to their left (cell *A*); and *left* and
+    *right* have the same cell between them (cell *D*).
 
-* Neither left nor right ends at from.node().
+Precondition:
+    Neither of the arcs *left* or *right*, when followed in the
+    direction away from the disc, end back at the node on the left of
+    the diagram. That is, neither ``left.traverse().node()`` nor
+    ``right.traverse().node()`` is equal to ``from.node()``. (If this
+    fails, then either the flype simply reflects the entire graph, or
+    else the graph models a composition of two non-trivial knot
+    diagrams.)
 
-* The upper and lower bounding cells are distinct,
+Precondition:
+    Cells *A* and *C* are distinct (that is, the node on the left of
+    the diagram is not a cut-vertex of the graph).
 
-* The cell between left and right is not the inside cell where the
-  flype begins from from.node().
-
-Even if the arguments are a (non-null) result of findFlype(), this
-routine could still throw an exception, but only for graphs that model
-non-minimal and/or composite link diagrams.
+Precondition:
+    Cells *B* and *D* are distinct (that is, the disc actually
+    contains one or more nodes, and the graph does not model a
+    composition of two non-trivial knot diagrams).
 
 Exception ``InvalidArgument``:
-    TODO.)doc";
+    One or more of the preconditions above fails to hold.
+
+Parameter ``from``:
+    the first arc that indicates where the flype should take place, as
+    labelled on the diagram above. This should be presented as an arc
+    of the node outside the disc, to the left.
+
+Parameter ``left``:
+    the second arc that indicates where the flype should take place,
+    as labelled on the diagram above. This should be presented as an
+    arc of the node that it meets inside the disc.
+
+Parameter ``right``:
+    the third arc that indicates where the flype should take place, as
+    labelled on the diagram above. This should be presented as an arc
+    of the node that it meets inside the disc.
+
+Returns:
+    the graph obtained by performing the flype.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraph_::flype_2
 static const char *flype_2 =
-R"doc(TODO: Document.
+R"doc(TODO: Document. Basically just calls flype() from findFlype().
 
 Exception ``InvalidArgument``:
     There is no flype available from the given starting arc.)doc";

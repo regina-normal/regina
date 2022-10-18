@@ -134,6 +134,17 @@ ModelLinkGraph ModelLinkGraph::flype(const ModelLinkGraphArc& from,
     size_t centre = cells_->cell(right);
     size_t lower = cells_->cell(right.traverse());
 
+    // More sanity checking.
+    if (cells_->cell(from.traverse()) != lower)
+        throw InvalidArgument("flype(): the entry arc and the right "
+            "exit arc do not share the same right-hand cell");
+    if (cells_->cell(left.traverse()) != centre)
+        throw InvalidArgument("flype(): the two exit arcs do not "
+            "have a common cell between them");
+    if (cells_->cell(--ModelLinkGraphArc(from)) != upper)
+        throw InvalidArgument("flype(): the arc above the entry arc and the "
+            "left exit arc do not share the same left-hand cell");
+
     // The cell from which we start the depth-first search:
     size_t inner = cells_->cell(from);
 

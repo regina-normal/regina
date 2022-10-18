@@ -665,6 +665,9 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * - The upper and lower cells are the same.
          * - The common cell is the inside cell at from.node().
          *
+         * Note the circumstances in which a non-null result could still
+         * not work with flype().
+         *
          * \pre This graph is connected and TODO: valid.
          */
         std::pair<ModelLinkGraphArc, ModelLinkGraphArc> findFlype(
@@ -733,32 +736,48 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \a left and \a right must be given as arcs of their respective
          * nodes \a inside the disc.
          *
+         * \pre The arcs \a from, \a left and \a right are laid out as
+         * in the diagram above.  In particular: \a from and \a right
+         * have the same cell to their right (cell \a C); \a left and the
+         * arc to the left of \a from have the same cell to their left
+         * (cell \a A); and \a left and \a right have the same cell between
+         * them (cell \a D).
+         *
          * \pre Neither of the arcs \a left or \a right, when followed in the
          * direction away from the disc, end back at the node on the left of
          * the diagram.  That is, neither <tt>left.traverse().node()</tt> nor
          * <tt>right.traverse().node()</tt> is equal to <tt>from.node()</tt>.
+         * (If this fails, then either the flype simply reflects the entire
+         * graph, or else the graph models a composition of two non-trivial
+         * knot diagrams.)
          *
          * \pre Cells \a A and \a C are distinct (that is, the node on
          * the left of the diagram is not a cut-vertex of the graph).
          *
          * \pre Cells \a B and \a D are distinct (that is, the disc actually
          * contains one or more nodes, and the graph does not model a
-         * composition of two knot diagrams).
+         * composition of two non-trivial knot diagrams).
          *
-         * TODO: Document.
+         * \exception InvalidArgument One or more of the preconditions
+         * above fails to hold.
          *
-         * Even if the arguments are a (non-null) result of findFlype(),
-         * this routine could still throw an exception, but only for graphs
-         * that model non-minimal and/or composite link diagrams.
-         *
-         * \exception InvalidArgument TODO.
+         * @param from the first arc that indicates where the flype should
+         * take place, as labelled on the diagram above.  This should be
+         * presented as an arc of the node outside the disc, to the left.
+         * @param left the second arc that indicates where the flype should
+         * take place, as labelled on the diagram above.  This should be
+         * presented as an arc of the node that it meets inside the disc.
+         * @param right the third arc that indicates where the flype should
+         * take place, as labelled on the diagram above.  This should be
+         * presented as an arc of the node that it meets inside the disc.
+         * @return the graph obtained by performing the flype.
          */
         ModelLinkGraph flype(const ModelLinkGraphArc& from,
             const ModelLinkGraphArc& left, const ModelLinkGraphArc& right)
             const;
 
         /**
-         * TODO: Document.
+         * TODO: Document.  Basically just calls flype() from findFlype().
          *
          * \exception InvalidArgument There is no flype available from
          * the given starting arc.
