@@ -24,6 +24,13 @@ STRING(REGEX MATCH "^([0-9]+).([0-9]+)" PACKAGE_VERSION_MAJOR "${PACKAGE_VERSION
 SET (PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1} )
 SET (PACKAGE_VERSION_MINOR ${CMAKE_MATCH_2} )
 
+IF(NOT BUILD_INFO)
+  SET(BUILD_INFO "Custom build" CACHE STRING
+    "Optional additional information about this specific build.  Examples might be: \"Official macOS build\", or \"Debian/Ubuntu package build\"."
+  FORCE)
+ENDIF(NOT BUILD_INFO)
+MESSAGE (STATUS "Build info: ${BUILD_INFO}")
+
 # Make a release build by default.
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release CACHE STRING
