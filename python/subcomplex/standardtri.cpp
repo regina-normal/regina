@@ -45,17 +45,18 @@ using regina::StandardTriangulation;
 void addStandardTriangulation(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(StandardTriangulation)
 
-    auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation")
-        .def("name", &StandardTriangulation::name)
-        .def("texName", &StandardTriangulation::texName)
-        .def("manifold", &StandardTriangulation::manifold)
-        .def("homology", &StandardTriangulation::homology)
+    auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation",
+            rdoc_scope)
+        .def("name", &StandardTriangulation::name, rdoc::name)
+        .def("texName", &StandardTriangulation::texName, rdoc::texName)
+        .def("manifold", &StandardTriangulation::manifold, rdoc::manifold)
+        .def("homology", &StandardTriangulation::homology, rdoc::homology)
         .def_static("recognise",
             overload_cast<regina::Component<3>*>(
-            &StandardTriangulation::recognise))
+            &StandardTriangulation::recognise), rdoc::recognise)
         .def_static("recognise",
             overload_cast<const regina::Triangulation<3>&>(
-            &StandardTriangulation::recognise))
+            &StandardTriangulation::recognise), rdoc::recognise_2)
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
