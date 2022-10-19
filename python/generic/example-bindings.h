@@ -47,22 +47,19 @@ void addExample(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BASE_2(detail::ExampleBase, detail::ExampleFromLowDim)
 
     auto c = pybind11::class_<Example<dim>>(m, name, rdoc::Example)
-        .def_static("sphere", &Example<dim>::sphere, rdoc_base::sphere)
+        .def_static("sphere", &Example<dim>::sphere, rbase::sphere)
         .def_static("simplicialSphere", &Example<dim>::simplicialSphere,
-            rdoc_base::simplicialSphere)
+            rbase::simplicialSphere)
         .def_static("sphereBundle", &Example<dim>::sphereBundle,
-            rdoc_base::sphereBundle)
+            rbase::sphereBundle)
         .def_static("twistedSphereBundle", &Example<dim>::twistedSphereBundle,
-            rdoc_base::twistedSphereBundle)
-        .def_static("ball", &Example<dim>::ball, rdoc_base::ball)
-        .def_static("ballBundle", &Example<dim>::ballBundle,
-            rdoc_base::ballBundle)
+            rbase::twistedSphereBundle)
+        .def_static("ball", &Example<dim>::ball, rbase::ball)
+        .def_static("ballBundle", &Example<dim>::ballBundle, rbase::ballBundle)
         .def_static("twistedBallBundle", &Example<dim>::twistedBallBundle,
-            rdoc_base::twistedBallBundle)
-        .def_static("doubleCone", &Example<dim>::doubleCone,
-            rdoc_base2::doubleCone)
-        .def_static("singleCone", &Example<dim>::singleCone,
-            rdoc_base2::singleCone)
+            rbase::twistedBallBundle)
+        .def_static("doubleCone", &Example<dim>::doubleCone, rbase2::doubleCone)
+        .def_static("singleCone", &Example<dim>::singleCone, rbase2::singleCone)
     ;
     regina::python::no_eq_static(c);
 

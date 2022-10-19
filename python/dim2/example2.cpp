@@ -34,29 +34,43 @@
 #include "triangulation/example2.h"
 #include "triangulation/dim2.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/example2.h"
+#include "../docstrings/triangulation/detail/example.h"
 
 using regina::Example;
 
 void addExample2(pybind11::module_& m) {
-    auto c = pybind11::class_<Example<2>>(m, "Example2")
-        .def_static("sphere", &Example<2>::sphere)
-        .def_static("simplicialSphere", &Example<2>::simplicialSphere)
-        .def_static("sphereBundle", &Example<2>::sphereBundle)
-        .def_static("twistedSphereBundle", &Example<2>::twistedSphereBundle)
-        .def_static("ball", &Example<2>::ball)
-        .def_static("ballBundle", &Example<2>::ballBundle)
-        .def_static("twistedBallBundle", &Example<2>::twistedBallBundle)
-        .def_static("orientable", &Example<2>::orientable)
-        .def_static("nonOrientable", &Example<2>::nonOrientable)
-        .def_static("sphereTetrahedron", &Example<2>::sphereTetrahedron)
-        .def_static("sphereOctahedron", &Example<2>::sphereOctahedron)
-        .def_static("disc", &Example<2>::disc)
-        .def_static("annulus", &Example<2>::annulus)
-        .def_static("mobius", &Example<2>::mobius)
-        .def_static("torus", &Example<2>::torus)
-        .def_static("rp2", &Example<2>::rp2)
-        .def_static("kb", &Example<2>::kb)
+    RDOC_SCOPE_BEGIN(Example)
+    RDOC_SCOPE_BASE(detail::ExampleBase)
+
+    auto c = pybind11::class_<Example<2>>(m, "Example2", rdoc_scope)
+        .def_static("sphere", &Example<2>::sphere, rbase::sphere)
+        .def_static("simplicialSphere", &Example<2>::simplicialSphere,
+            rbase::simplicialSphere)
+        .def_static("sphereBundle", &Example<2>::sphereBundle,
+            rbase::sphereBundle)
+        .def_static("twistedSphereBundle", &Example<2>::twistedSphereBundle,
+            rbase::twistedSphereBundle)
+        .def_static("ball", &Example<2>::ball, rbase::ball)
+        .def_static("ballBundle", &Example<2>::ballBundle, rbase::ballBundle)
+        .def_static("twistedBallBundle", &Example<2>::twistedBallBundle,
+            rbase::twistedBallBundle)
+        .def_static("orientable", &Example<2>::orientable, rdoc::orientable)
+        .def_static("nonOrientable", &Example<2>::nonOrientable,
+            rdoc::nonOrientable)
+        .def_static("sphereTetrahedron", &Example<2>::sphereTetrahedron,
+            rdoc::sphereTetrahedron)
+        .def_static("sphereOctahedron", &Example<2>::sphereOctahedron,
+            rdoc::sphereOctahedron)
+        .def_static("disc", &Example<2>::disc, rdoc::disc)
+        .def_static("annulus", &Example<2>::annulus, rdoc::annulus)
+        .def_static("mobius", &Example<2>::mobius, rdoc::mobius)
+        .def_static("torus", &Example<2>::torus, rdoc::torus)
+        .def_static("rp2", &Example<2>::rp2, rdoc::rp2)
+        .def_static("kb", &Example<2>::kb, rdoc::kb)
     ;
     regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_END
 }
 
