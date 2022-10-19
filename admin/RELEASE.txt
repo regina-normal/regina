@@ -7,7 +7,6 @@ Program version:
     CMakeLists.txt (PACKAGE_VERSION)
     docs/man/*.1 (windows executable path)
     engine/regina-engine-config.1 (date)
-    qtui/src/reginaabout.cpp (regReleased)
     qtui/src/regina.metainfo.xml (version, date in <release>)
     qtui/doc/regina/about.docbook (plain citation, bibTeX citation)
     qtui/doc/regina/index.docbook (&regversion;, &regdate;, copyrightyears)

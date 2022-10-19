@@ -65,9 +65,6 @@ const QString ReginaAbout::regCopyright(
 const QString ReginaAbout::regDescription(
     tr("Software for low-dimensional topology"));
 
-const QString ReginaAbout::regReleased(
-    tr("Released %1").arg(QDate(2022, 9, 30).toString(Qt::TextDate)));
-
 const QString ReginaAbout::regWebsite("http://regina-normal.github.io/");
 
 const QString ReginaAbout::regLicense( tr( 
@@ -236,10 +233,16 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     auto* tabs = new QTabWidget;
 
+#ifdef BUILD_INFO
+    QString aboutText = (QString("<qt>") + regDescription +
+        "<p>%1<p>" + regCopyright +
+        "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>")
+        .arg(BUILD_INFO);
+#else
     QString aboutText = QString("<qt>") + regDescription +
-        "<p>" + regReleased +
         "<p>" + regCopyright +
         "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>";
+#endif
     auto* aboutLabel = new QLabel(aboutText);
     aboutLabel->setWordWrap(true);
     aboutLabel->setOpenExternalLinks(true);
