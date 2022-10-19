@@ -47,7 +47,7 @@ function recognise().)doc";
 namespace LayeredTorusBundle_ {
 
 // Docstring regina::python::doc::LayeredTorusBundle_::__copy
-static const char *__copy = R"doc(Creates a new copy of this structure.)doc";
+static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::__eq
 static const char *__eq =
@@ -158,23 +158,22 @@ static const char *layeringReln =
 R"doc(Returns a 2-by-2 matrix describing how the layering of tetrahedra
 relates curves on the two torus boundaries of the core ``T x I``.
 
-The TxICore class documentation describes generating *alpha* and
-*beta* curves on the two torus boundaries of the core ``T x I`` (which
-are referred to as the *upper* and *lower* boundaries). The two
-boundary tori are parallel in two directions: through the core, and
-through the layering. It is desirable to know the parallel
-relationship between the two sets of boundary curves in each
-direction.
+The TxICore class documentation describes generating α and β curves on
+the two torus boundaries of the core ``T x I`` (which are referred to
+as the *upper* and *lower* boundaries). The two boundary tori are
+parallel in two directions: through the core, and through the
+layering. It is desirable to know the parallel relationship between
+the two sets of boundary curves in each direction.
 
 The relationship through the core is already described by
 TxICore::parallelReln(). This routine describes the relationship
 through the layering.
 
-Let *a_u* and *b_u* be the *alpha* and *beta* curves on the upper
-boundary torus, and let *a_l* and *b_l* be the *alpha* and *beta*
-curves on the lower boundary torus. Suppose that the upper *alpha* is
-parallel to *w*.*a_l* + *x*.*b_l*, and that the upper *beta* is
-parallel to *y*.*a_l* + *z*.*b_l*. Then the matrix returned will be
+Let *a_u* and *b_u* be the α and β curves on the upper boundary torus,
+and let *a_l* and *b_l* be the α and β curves on the lower boundary
+torus. Suppose that the upper α is parallel to *w*.*a_l* + *x*.*b_l*,
+and that the upper β is parallel to *y*.*a_l* + *z*.*b_l*. Then the
+matrix returned will be
 
 ```
     [ w  x ]

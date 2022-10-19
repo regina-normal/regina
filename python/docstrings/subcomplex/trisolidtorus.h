@@ -57,7 +57,7 @@ function recognise().)doc";
 namespace TriSolidTorus_ {
 
 // Docstring regina::python::doc::TriSolidTorus_::__copy
-static const char *__copy = R"doc(Creates a new copy of this structure.)doc";
+static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::__eq
 static const char *__eq =

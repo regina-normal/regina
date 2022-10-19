@@ -82,7 +82,7 @@ namespace Layering_ {
 
 // Docstring regina::python::doc::Layering_::__copy
 static const char *__copy =
-R"doc(Creates a new copy of this layering structure.
+R"doc(Creates a new copy of the given layering structure.
 
 The new structure will describe the same layering within the same
 underlying triangulation.)doc";

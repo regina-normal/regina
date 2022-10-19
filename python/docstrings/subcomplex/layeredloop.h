@@ -50,7 +50,7 @@ function recognise().)doc";
 namespace LayeredLoop_ {
 
 // Docstring regina::python::doc::LayeredLoop_::__copy
-static const char *__copy = R"doc(Creates a new copy of this structure.)doc";
+static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::LayeredLoop_::__eq
 static const char *__eq =

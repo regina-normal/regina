@@ -71,8 +71,8 @@ namespace BlockedSFSLoop_ {
 
 // Docstring regina::python::doc::BlockedSFSLoop_::__copy
 static const char *__copy =
-R"doc(Creates a new copy of this structure. This will induce a deep copy of
-*src*.
+R"doc(Creates a new copy of the given structure. This will induce a deep
+copy of *src*.
 
 Parameter ``src``:
     the structure to copy.)doc";

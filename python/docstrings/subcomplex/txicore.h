@@ -27,11 +27,11 @@ on the upper and lower boundaries, as well as mappings from boundary
 curves to specific tetrahedron edges.
 
 For each of the two torus boundaries, two curves are chosen as
-generators of the fundamental group; these curves are called *alpha*
-and *beta*. Note that there is no requirement that the upper *alpha*
-and *beta* be parallel to the lower *alpha* and *beta*. The
-parallelReln() routine can be called to establish the precise
-relationship between these upper and lower curves.
+generators of the fundamental group; these curves are called α and β.
+Note that there is no requirement that the upper α and β be parallel
+to the lower α and β. The parallelReln() routine can be called to
+establish the precise relationship between these upper and lower
+curves.
 
 Every object of this class contains a full copy of the triangulation
 that it describes (so you should not create excessive objects of this
@@ -51,8 +51,8 @@ triangulations producing more complicated relationships between the
 upper and lower boundary curves.
 
 Members of this family are parameterised by their size (the number of
-tetrahedra) and an additional integer *k*, where 1 <= *k* <= *size* -
-5. Note that this means we must have *size* >= 6. The member of this
+tetrahedra) and an additional integer *k*, where 1 ≤ *k* ≤ *size* - 5.
+Note that this means we must have *size* ≥ 6. The member of this
 family of size *n* with additional parameter *k* is labelled
 ``T_n:k``.
 
@@ -93,8 +93,8 @@ tetrahedra in the triangulation that provide the boundary triangles.
 The upper boundary is coned out from triangles *u0* and *u1*, and the
 lower boundary is coned out from triangles *w0* and *w1*. In each
 boundary, *u0* or *w0* gives the first boundary triangle and *u1* or
-*w1* gives the second. The directions of the corresponding *alpha* and
-*beta* curves are illustrated below.
+*w1* gives the second. The directions of the corresponding α and β
+curves are illustrated below.
 
 (Image available in HTML docs)
 
@@ -121,8 +121,8 @@ name ``T_6*``, to avoid confusion with the different TxIDiagonalCore
 triangulation ``T_6:1``.
 
 The triangulations of the upper and lower boundary tori are completely
-parallel (and in particular, the upper and lower *alpha* curves are
-parallel, as are the upper and lower *beta* curves).
+parallel (and in particular, the upper and lower α curves are
+parallel, as are the upper and lower β curves).
 
 For reference, the central torus of this triangulation is depicted
 below. The left and right sides of the diagram are identified, as are
@@ -131,8 +131,8 @@ provide the boundary triangles of the overall triangulation, with the
 upper boundary coned out from triangles *u0* and *u1* and the lower
 boundary coned out from triangles *w0* and *w1*. In each boundary,
 *u0* or *w0* gives the first boundary triangle and *u1* or *w1* gives
-the second. The directions of the corresponding *alpha* and *beta*
-curves are are also included.
+the second. The directions of the corresponding α and β curves are are
+also included.
 
 (Image available in HTML docs)
 
@@ -175,8 +175,8 @@ Returns:
 
 // Docstring regina::python::doc::TxICore_::bdryReln
 static const char *bdryReln =
-R"doc(Returns a 2-by-2 matrix describing the *alpha* and *beta* curves on a
-torus boundary in terms of specific tetrahedron edges.
+R"doc(Returns a 2-by-2 matrix describing the α and β curves on a torus
+boundary in terms of specific tetrahedron edges.
 
 Consider the first triangle of the given boundary. Let *t* be the
 tetrahedron returned by bdryTet(*whichBdry*, 0) and let *p* be the
@@ -186,12 +186,12 @@ Let *edge01* be the directed edge from vertex *p*[0] to *p*[1] of
 tetrahedron *t*, and let *edge02* be the directed edge from vertex
 *p*[0] to *p*[2] of tetrahedron *t*. Then the matrix returned by this
 routine describes how the directed edges *edge01* and *edge02* relate
-to the *alpha* and *beta* curves on the given boundary. Specifically:
+to the α and β curves on the given boundary. Specifically:
 
 ```
-    [ alpha ]                  [ edge01 ]
-    [       ]  =  bdryReln() * [        ] .
-    [ beta  ]                  [ edge02 ]
+    [ α ]                  [ edge01 ]
+    [   ]  =  bdryReln() * [        ] .
+    [ β ]                  [ edge02 ]
 ```
 
 It is guaranteed that this matrix has determinant +1 or -1.
@@ -300,10 +300,9 @@ static const char *parallelReln =
 R"doc(Returns a 2-by-2 matrix describing the parallel relationship between
 the upper and lower boundary curves.
 
-Let *a_u* and *b_u* be the upper *alpha* and *beta* boundary curves.
-Suppose that the lower *alpha* is parallel to *w*.*a_u* + *x*.*b_u*,
-and that the lower *beta* is parallel to *y*.*a_u* + *z*.*b_u*. Then
-the matrix returned will be
+Let *a_u* and *b_u* be the upper α and β boundary curves. Suppose that
+the lower α is parallel to *w*.*a_u* + *x*.*b_u*, and that the lower β
+is parallel to *y*.*a_u* + *z*.*b_u*. Then the matrix returned will be
 
 ```
     [ w  x ]
@@ -311,8 +310,8 @@ the matrix returned will be
     [ y  z ]
 ```
 
-In other words, if *a_l* and *b_l* are the lower *alpha* and *beta*
-curves respectively, we have
+In other words, if *a_l* and *b_l* are the lower α and β curves
+respectively, we have
 
 ```
     [ a_l ]                      [ a_u ]
