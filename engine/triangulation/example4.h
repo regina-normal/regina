@@ -97,8 +97,8 @@ class Example<4> : public detail::ExampleBase<4> {
          * complex projective plane.  This triangulation is minimal.
          *
          * Under the orientation convention that we use for intersection
-         * forms, this triangulation gives the "plain" <tt>CP^2</tt> with
-         * intersection form [1], not the reflected <tt>CP^2</tt> with
+         * forms, this triangulation gives the "plain" <tt>CP²</tt> with
+         * intersection form [1], not the reflected <tt>CP²</tt> with
          * intersection form [-1].
          *
          * @return the standard complex projective plane.
@@ -107,7 +107,7 @@ class Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a six-pentachoron triangulation of the standard product
-         * <tt>S^2 x S^2</tt>.  This triangulation is minimal.
+         * <tt>S² x S²</tt>.  This triangulation is minimal.
          *
          * @return the standard product of two 2-spheres.
          */
@@ -115,9 +115,9 @@ class Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a six-pentachoron triangulation of the twisted product
-         * <tt>S^2 x~ S^2</tt>.
-         * This manifold is diffeomorphic to <tt>CP^2 # -CP^2</tt>, where
-         * <tt>-CP^2</tt> denotes <tt>CP^2</tt> with its orientation reversed.
+         * <tt>S² x~ S²</tt>.
+         * This manifold is diffeomorphic to <tt>CP² # -CP²</tt>, where
+         * <tt>-CP²</tt> denotes <tt>CP²</tt> with its orientation reversed.
          * This triangulation is minimal.
          *
          * @return the twisted product of two 2-spheres.
@@ -126,19 +126,19 @@ class Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a two-pentachoron triangulation of the product space
-         * <tt>S^3 x S^1</tt>.  This is identical to calling the
+         * <tt>S³ x S¹</tt>.  This is identical to calling the
          * generic routine sphereBundle().
          *
-         * @return the product <tt>S^3 x S^1</tt>.
+         * @return the product <tt>S³ x S¹</tt>.
          */
         static Triangulation<4> s3xs1();
 
         /**
          * Returns a two-pentachoron triangulation of the twisted product
-         * space <tt>S^3 x~ S^1</tt>.  This is identical to calling the
+         * space <tt>S³ x~ S¹</tt>.  This is identical to calling the
          * generic routine twistedSphereBundle().
          *
-         * @return the twisted product <tt>S^3 x~ S^1</tt>.
+         * @return the twisted product <tt>S³ x~ S¹</tt>.
          */
         static Triangulation<4> s3xs1Twisted();
 

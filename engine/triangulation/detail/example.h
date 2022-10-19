@@ -187,17 +187,17 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
 
         /**
          * Returns a two-simplex triangulation of the product space
-         * <tt>S^(<i>dim</i>-1) x S^1</tt>.
+         * <tt>S^(<i>dim</i>-1) x S¹</tt>.
          *
-         * @return the product <tt>S^(<i>dim</i>-1) x S^1</tt>.
+         * @return the product <tt>S^(<i>dim</i>-1) x S¹</tt>.
          */
         static Triangulation<dim> sphereBundle();
 
         /**
          * Returns a two-simplex triangulation of the twisted product
-         * space <tt>S^(<i>dim</i>-1) x~ S^1</tt>.
+         * space <tt>S^(<i>dim</i>-1) x~ S¹</tt>.
          *
-         * @return the twisted product <tt>S^(<i>dim</i>-1) x~ S^1</tt>.
+         * @return the twisted product <tt>S^(<i>dim</i>-1) x~ S¹</tt>.
          */
         static Triangulation<dim> twistedSphereBundle();
 
@@ -216,21 +216,21 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
 
         /**
          * Returns a triangulation of the product space
-         * <tt>B^(<i>dim</i>-1) x S^1</tt>.
+         * <tt>B^(<i>dim</i>-1) x S¹</tt>.
          * This will use one simplex in odd dimensions, or two simplices
          * in even dimensions.
          *
-         * @return the product <tt>B^(<i>dim</i>-1) x S^1</tt>.
+         * @return the product <tt>B^(<i>dim</i>-1) x S¹</tt>.
          */
         static Triangulation<dim> ballBundle();
 
         /**
          * Returns a triangulation of the twisted product
-         * space <tt>B^(<i>dim</i>-1) x~ S^1</tt>.
+         * space <tt>B^(<i>dim</i>-1) x~ S¹</tt>.
          * This will use one simplex in even dimensions, or two simplices
          * in odd dimensions.
          *
-         * @return the twisted product <tt>B^(<i>dim</i>-1) x~ S^1</tt>.
+         * @return the twisted product <tt>B^(<i>dim</i>-1) x~ S¹</tt>.
          */
         static Triangulation<dim> twistedBallBundle();
 

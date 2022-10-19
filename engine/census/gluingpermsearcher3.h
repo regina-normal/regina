@@ -54,7 +54,7 @@
  * Specifies whether the ClosedPrimeMinSearcher census generation code
  * should prune on high-degree edges.
  *
- * It is well known that a closed prime minimal P^2-irreducible triangulation
+ * It is well known that a closed prime minimal P²-irreducible triangulation
  * formed from at least three tetrahedra can never have an edge of degree
  * one or two.  Combining this with the fact that such a triangulation
  * must always have one vertex, a simple Euler characteristic

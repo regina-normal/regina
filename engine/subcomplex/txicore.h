@@ -543,7 +543,7 @@ void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs);
  *
  * This triangulation contains the fewest possible number of tetrahedra
  * (TxICore triangulations are not seen below six tetrahedra).  It is
- * referred to as <tt>T_6^1</tt> in the paper "Structures of small closed
+ * referred to as <tt>T_6¹</tt> in the paper "Structures of small closed
  * non-orientable 3-manifold triangulations", Benjamin A. Burton,
  * J. Knot Theory Ramifications 16 (2007), 545--574.
  * In Regina it is given the name <tt>T_6*</tt>, to avoid confusion with

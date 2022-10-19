@@ -107,7 +107,7 @@ class Manifold : public Output<Manifold> {
         /**
          * Returns details of the structure of this 3-manifold that
          * might not be evident from its common name.  For instance, for
-         * an orbit space S^3/G this routine might return the full
+         * an orbit space S³/G this routine might return the full
          * Seifert structure.
          *
          * This routine may return the empty string if no additional
@@ -228,7 +228,7 @@ class Manifold : public Output<Manifold> {
         /**
          * Writes details of the structure of this 3-manifold that
          * might not be evident from its common name to the given output
-         * stream.  For instance, for an orbit space S^3/G this routine
+         * stream.  For instance, for an orbit space S³/G this routine
          * might write the full Seifert structure.
          *
          * This routine may write nothing if no additional

@@ -91,26 +91,26 @@ class Example<3> : public detail::ExampleBase<3> {
 
         /**
          * Returns a two-tetrahedron triangulation of the product space
-         * <tt>S^2 x S^1</tt>.
+         * <tt>S² x S¹</tt>.
          * This is identical to calling the generic routine sphereBundle().
          *
-         * @return the product space <tt>S^2 x S^1</tt>.
+         * @return the product space <tt>S² x S¹</tt>.
          */
         static Triangulation<3> s2xs1();
 
         /**
          * Returns a three-tetrahedron triangulation of the non-orientable
-         * product space <tt>RP^2 x S^1</tt>.
+         * product space <tt>RP² x S¹</tt>.
          *
-         * @return the product space <tt>RP^2 x S^1</tt>.
+         * @return the product space <tt>RP² x S¹</tt>.
          */
         static Triangulation<3> rp2xs1();
 
         /**
          * Returns a triangulation of the connected sum
-         * <tt>RP^3 # RP^3</tt>.
+         * <tt>RP³ # RP³</tt>.
          *
-         * @return the connected sum <tt>RP^3 # RP^3</tt>.
+         * @return the connected sum <tt>RP³ # RP³</tt>.
          */
         static Triangulation<3> rp3rp3();
 

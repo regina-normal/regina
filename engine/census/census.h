@@ -366,7 +366,7 @@ class Census {
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
         static CensusDB* closedNor_;
-            /**< The census of closed non-orientable P^2-irreducible 3-manifold
+            /**< The census of closed non-orientable P²-irreducible 3-manifold
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
         static CensusDB* closedHyp_;
