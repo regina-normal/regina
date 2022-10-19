@@ -32,6 +32,7 @@
 
 #include "packet/packet.h"
 #include <cstdlib>
+#include <cstring>
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
