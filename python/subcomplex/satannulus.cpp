@@ -52,16 +52,16 @@ void addSatAnnulus(pybind11::module_& m) {
             Tetrahedron<3>*, Perm<4>>(), rdoc::__init)
         .def("tet", [](SatAnnulus& a, int which) {
             return a.tet[which];
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::reference_internal, rdoc::tet)
         .def("roles", [](SatAnnulus& a, int which) {
             return a.roles[which];
-        })
+        }, rdoc::roles)
         .def("setTet", [](SatAnnulus& a, int which, Tetrahedron<3>* value) {
             a.tet[which] = value;
-        })
+        }, rdoc::setTet)
         .def("setRoles", [](SatAnnulus& a, int which, Perm<4> value) {
             a.roles[which] = value;
-        })
+        }, rdoc::setRoles)
         .def("meetsBoundary", &SatAnnulus::meetsBoundary,
             rdoc::meetsBoundary)
         .def("switchSides", &SatAnnulus::switchSides, rdoc::switchSides)
