@@ -50,6 +50,6 @@ void addExample(pybind11::module_& m, const char* name) {
         .def_static("doubleCone", &Example<dim>::doubleCone)
         .def_static("singleCone", &Example<dim>::singleCone)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 }
 

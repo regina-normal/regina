@@ -47,7 +47,7 @@ void addSigCensus(pybind11::module_& m) {
             void(const regina::Signature&, const SigCensus::IsoList&)>&>,
             rdoc::formCensus)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

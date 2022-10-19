@@ -124,10 +124,17 @@ can only be used to compare two packets of the same type.
 To test whether two Python objects refer to the same underlying packet,
 use Packet.samePacket() instead.)doc";
 
-    const char* eq_never_instantiated =
+    const char* eq_none_static =
 R"doc(Disabled in Regina.
 
 Objects of this type cannot be created, and so cannot be compared.)doc";
+
+    const char* eq_none_abstract =
+R"doc(Disabled in Regina.
+
+This is an abstract base class, and so objects of this base class
+cannot be created directly. Instead its various subclasses are
+responsible for providing their own comparison operators == and !=.)doc";
 }
 
 void addAlgebraClasses(pybind11::module_& m);

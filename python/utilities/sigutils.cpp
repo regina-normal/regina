@@ -73,7 +73,7 @@ void addSigUtils(pybind11::module_& m) {
                 Base64SigEncoding::decodeTrits),
             rdoc::decodeTrits)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

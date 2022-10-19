@@ -70,7 +70,7 @@ void addHilbertPrimal(pybind11::module_& m) {
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::enumerate)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

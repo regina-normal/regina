@@ -91,7 +91,7 @@ void addCensus(pybind11::module_& m) {
         .def_static("lookup",
             overload_cast<const std::string&>(&Census::lookup), rdoc::lookup_2)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

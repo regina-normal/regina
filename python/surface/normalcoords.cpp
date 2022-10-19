@@ -108,7 +108,7 @@ void addNormalCoords(pybind11::module_& m) {
     auto i = pybind11::class_<NormalInfo>(m, "NormalInfo", rdoc_scope)
         .def_static("name", &NormalInfo::name, rdoc::name)
         ;
-    regina::python::no_eq_operators(i);
+    regina::python::no_eq_static(i);
 
     RDOC_SCOPE_END
 

@@ -195,13 +195,13 @@ void packet_disasble_eq_operators(pybind11::class_<C, options...>& c);
  * Indicates that a C++ class is never instantiated, and that its python
  * wrapper class should not support the operators == or !=.
  *
- * This should only be used with C++ classes that are never instantiated (such
- * as Example<dim>, which consists entirely of static methods, or Manifold,
- * which is an abstract base class).  As such, it should be impossible to
- * even call the == and != operators under python.
+ * This should only be used with C++ classes that are never instantiated,
+ * and (at least from the user's point of view) are only ever accessed
+ * through static methods (e.g., Example<dim> or Primes).  As such, it should
+ * be impossible to even call the == and != operators under python.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::no_eq_operators(c)</t>, where \a c is the
+ * <t>regina::python::no_eq_static(c)</t>, where \a c is the
  * pybind11::class_ object that wraps \a T.  The effect will be as follows:
  *
  * - Placeholder operators == and != will be added to the python wrapper class
@@ -211,9 +211,40 @@ void packet_disasble_eq_operators(pybind11::class_<C, options...>& c);
  *
  * - The attribute \a equalityType will be added to the python wrapper class.
  *   Its value will be the EqualityType enum constant \a NEVER_INSTANTIATED.
+ *
+ * This is similar in effect to no_eq_abstract(); the main difference here
+ * is that different docstrings will be supplied.
  */
 template <class C, typename... options>
-void no_eq_operators(pybind11::class_<C, options...>& c);
+void no_eq_static(pybind11::class_<C, options...>& c);
+
+/**
+ * Indicates that a C++ class is an abstract base class, and that its
+ * subclasses are responsible for providing operators == and != in Python.
+ *
+ * This should only be used with C++ abstract base classes whose subclasses
+ * provide their own equality tests (e.g., Manifold or StandardTriangulation).
+ * Under normal circumstances (i.e., unless the user is deliberately trying
+ * to do this), it would be impossible for Python users to call the == or !=
+ * operators from the base class.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>regina::python::no_eq_abstract(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.  The effect will be as follows:
+ *
+ * - Placeholder operators == and != will be added to the python wrapper class
+ *   (thus overriding any default provided by pybind11).  These operators will
+ *   throw python exceptions if they are ever called.  Sensible docstrings
+ *   for these operators will be provided.
+ *
+ * - The attribute \a equalityType will be added to the python wrapper class.
+ *   Its value will be the EqualityType enum constant \a NEVER_INSTANTIATED.
+ *
+ * This is similar in effect to no_eq_static(); the main difference here
+ * is that different docstrings will be supplied.
+ */
+template <class C, typename... options>
+void no_eq_abstract(pybind11::class_<C, options...>& c);
 
 /**
  * Explicitly disables the == and != operators for a C++ class.
@@ -414,11 +445,20 @@ inline void add_eq_operators(pybind11::class_<C, options...>& c) {
 }
 
 template <class C, typename... options>
-inline void no_eq_operators(pybind11::class_<C, options...>& c) {
+inline void no_eq_static(pybind11::class_<C, options...>& c) {
     c.def("__eq__", &add_eq_operators_detail::no_equality_operators<C>,
-        doc::common::eq_never_instantiated);
+        doc::common::eq_none_static);
     c.def("__ne__", &add_eq_operators_detail::no_equality_operators<C>,
-        doc::common::eq_never_instantiated);
+        doc::common::eq_none_static);
+    c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
+}
+
+template <class C, typename... options>
+inline void no_eq_abstract(pybind11::class_<C, options...>& c) {
+    c.def("__eq__", &add_eq_operators_detail::no_equality_operators<C>,
+        doc::common::eq_none_abstract);
+    c.def("__ne__", &add_eq_operators_detail::no_equality_operators<C>,
+        doc::common::eq_none_abstract);
     c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
 }
 

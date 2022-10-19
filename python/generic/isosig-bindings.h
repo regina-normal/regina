@@ -49,7 +49,7 @@ void addIsoSigClassic(pybind11::module_& m, const char* name) {
         .def("perm", &Type::perm)
         .def("next", &Type::next)
         ;
-    regina::python::no_eq_operators(s);
+    regina::python::disable_eq_operators(s);
 }
 
 template <int dim>
@@ -61,7 +61,7 @@ void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
         .def("perm", &Type::perm)
         .def("next", &Type::next)
         ;
-    regina::python::no_eq_operators(s);
+    regina::python::disable_eq_operators(s);
 }
 
 template <int dim>
@@ -73,7 +73,7 @@ void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
         .def("perm", &Type::perm)
         .def("next", &Type::next)
         ;
-    regina::python::no_eq_operators(s);
+    regina::python::disable_eq_operators(s);
 }
 
 template <int dim>
@@ -95,6 +95,6 @@ void addIsoSigPrintable(pybind11::module_& m, const char* name) {
                 joinGluing.data());
         })
         ;
-    regina::python::no_eq_operators(s);
+    regina::python::no_eq_static(s);
 }
 

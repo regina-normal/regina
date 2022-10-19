@@ -59,7 +59,7 @@ void addExampleLink(pybind11::module_& m) {
         .def_static("torus", &ExampleLink::torus, rdoc::torus)
         .def_static("gst", &ExampleLink::gst, rdoc::gst)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

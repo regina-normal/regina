@@ -91,7 +91,7 @@ void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
             &LPConstraint::verify), rdoc::verify_2)
         .def_static("supported", &LPConstraint::supported, rdoc::supported)
         ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

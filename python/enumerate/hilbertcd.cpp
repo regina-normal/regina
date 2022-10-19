@@ -55,7 +55,7 @@ void addHilbertCD(pybind11::module_& m) {
             return ans;
         }, rdoc::enumerate)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

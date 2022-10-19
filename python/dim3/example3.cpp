@@ -78,6 +78,6 @@ void addExample3(pybind11::module_& m) {
         .def_static("cuspedGenusTwoTorus",
             &Example<3>::cuspedGenusTwoTorus)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 }
 

@@ -76,7 +76,7 @@ void addPacketType(pybind11::module_& m) {
     auto i = pybind11::class_<regina::PacketInfo>(m, "PacketInfo", rdoc_scope)
         .def_static("name", &regina::PacketInfo::name, rdoc::name)
         ;
-    regina::python::no_eq_operators(i);
+    regina::python::no_eq_static(i);
 
     RDOC_SCOPE_END
 }

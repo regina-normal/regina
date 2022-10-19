@@ -44,7 +44,7 @@ void addBitManipulator(pybind11::module_& m) {
         .def_static("lastBit", &BitManip::lastBit, rdoc::lastBit)
         .def_readonly_static("specialised", &BitManip::specialised)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

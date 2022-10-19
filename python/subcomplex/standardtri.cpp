@@ -63,7 +63,7 @@ void addStandardTriangulation(pybind11::module_& m) {
     // Also leave the equality operators for subclasses to wrap, since
     // each subclass of StandardTriangulation provides its own custom
     // == and != operators.
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_abstract(c);
 
     RDOC_SCOPE_END
 }

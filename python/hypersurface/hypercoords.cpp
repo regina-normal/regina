@@ -91,7 +91,7 @@ void addHyperCoords(pybind11::module_& m) {
     auto i = pybind11::class_<HyperInfo>(m, "HyperInfo", rdoc_scope)
         .def_static("name", &HyperInfo::name, rdoc::name)
         ;
-    regina::python::no_eq_operators(i);
+    regina::python::no_eq_static(i);
 
     RDOC_SCOPE_END
 }

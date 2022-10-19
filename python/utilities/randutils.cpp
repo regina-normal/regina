@@ -47,7 +47,7 @@ void addRandUtils(pybind11::module_& m) {
         .def_static("reseedWithDefault", &RandomEngine::reseedWithDefault,
             rdoc::reseedWithDefault)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

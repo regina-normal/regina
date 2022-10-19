@@ -64,6 +64,6 @@ void addExample4(pybind11::module_& m) {
         .def_static("s1Bundle", &Example<4>::s1Bundle)
         .def_static("bundleWithMonodromy", &Example<4>::bundleWithMonodromy)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 }
 

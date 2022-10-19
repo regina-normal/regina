@@ -51,7 +51,7 @@ void addExampleSnapPea(pybind11::module_& m) {
         .def_static("gieseking", &ExampleSnapPea::gieseking, rdoc::gieseking)
         .def_static("x101", &ExampleSnapPea::x101, rdoc::x101)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }

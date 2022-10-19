@@ -57,6 +57,6 @@ void addExample2(pybind11::module_& m) {
         .def_static("rp2", &Example<2>::rp2)
         .def_static("kb", &Example<2>::kb)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 }
 

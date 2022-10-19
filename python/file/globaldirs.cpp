@@ -57,7 +57,7 @@ void addGlobalDirs(pybind11::module_& m) {
             rdoc::setDirs)
         .def_static("deduceDirs", &GlobalDirs::deduceDirs, rdoc::deduceDirs)
     ;
-    regina::python::no_eq_operators(c);
+    regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
 }
