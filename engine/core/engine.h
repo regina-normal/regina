@@ -91,6 +91,9 @@ int versionMinor();
  * This information is supplied at build time by passing the option
  * <tt>-DBUILD_INFO=...</tt> to CMake.
  *
+ * If no such information was supplied at build time, then this string
+ * will be empty.
+ *
  * @return any additional information supplied at build time.
  *
  * \ingroup engine
