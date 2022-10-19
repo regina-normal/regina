@@ -35,10 +35,13 @@
 #include "subcomplex/snappeacensustri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/snappeacensustri.h"
 
 using regina::SnapPeaCensusTri;
 
 void addSnapPeaCensusTri(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SnapPeaCensusTri)
+
     auto c = pybind11::class_<SnapPeaCensusTri, regina::StandardTriangulation>
             (m, "SnapPeaCensusTri")
         .def(pybind11::init<const SnapPeaCensusTri&>())
@@ -56,5 +59,7 @@ void addSnapPeaCensusTri(pybind11::module_& m) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<SnapPeaCensusTri>(m);
+
+    RDOC_SCOPE_END
 }
 

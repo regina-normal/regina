@@ -35,10 +35,13 @@
 #include "subcomplex/spiralsolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/spiralsolidtorus.h"
 
 using regina::SpiralSolidTorus;
 
 void addSpiralSolidTorus(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SpiralSolidTorus)
+
     auto c = pybind11::class_<SpiralSolidTorus, regina::StandardTriangulation>
             (m, "SpiralSolidTorus")
         .def(pybind11::init<const SpiralSolidTorus&>())
@@ -57,5 +60,7 @@ void addSpiralSolidTorus(pybind11::module_& m) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<SpiralSolidTorus>(m);
+
+    RDOC_SCOPE_END
 }
 

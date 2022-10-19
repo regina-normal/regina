@@ -36,10 +36,13 @@
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/blockedsfspair.h"
 
 using regina::BlockedSFSPair;
 
 void addBlockedSFSPair(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(BlockedSFSPair)
+
     auto c = pybind11::class_<BlockedSFSPair, regina::StandardTriangulation>
             (m, "BlockedSFSPair")
         .def(pybind11::init<const BlockedSFSPair&>())
@@ -54,5 +57,7 @@ void addBlockedSFSPair(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
 
     regina::python::add_global_swap<BlockedSFSPair>(m);
+
+    RDOC_SCOPE_END
 }
 

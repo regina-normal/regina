@@ -35,10 +35,13 @@
 #include "subcomplex/layeredchain.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/layeredchain.h"
 
 using regina::LayeredChain;
 
 void addLayeredChain(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(LayeredChain)
+
     auto c = pybind11::class_<LayeredChain, regina::StandardTriangulation>
             (m, "LayeredChain")
         .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())
@@ -61,5 +64,7 @@ void addLayeredChain(pybind11::module_& m) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<LayeredChain>(m);
+
+    RDOC_SCOPE_END
 }
 

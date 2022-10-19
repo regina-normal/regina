@@ -37,11 +37,14 @@
 #include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/standardtri.h"
 
 using pybind11::overload_cast;
 using regina::StandardTriangulation;
 
 void addStandardTriangulation(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(StandardTriangulation)
+
     auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation")
         .def("name", &StandardTriangulation::name)
         .def("texName", &StandardTriangulation::texName)
@@ -60,5 +63,7 @@ void addStandardTriangulation(pybind11::module_& m) {
     // each subclass of StandardTriangulation provides its own custom
     // == and != operators.
     regina::python::no_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

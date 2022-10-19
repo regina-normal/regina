@@ -36,10 +36,13 @@
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/blockedsfs.h"
 
 using regina::BlockedSFS;
 
 void addBlockedSFS(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(BlockedSFS)
+
     auto c = pybind11::class_<BlockedSFS, regina::StandardTriangulation>(
             m, "BlockedSFS")
         .def(pybind11::init<const BlockedSFS&>())
@@ -53,5 +56,7 @@ void addBlockedSFS(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
 
     regina::python::add_global_swap<BlockedSFS>(m);
+
+    RDOC_SCOPE_END
 }
 

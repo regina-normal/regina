@@ -35,10 +35,13 @@
 #include "subcomplex/layeredlensspace.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/layeredlensspace.h"
 
 using regina::LayeredLensSpace;
 
 void addLayeredLensSpace(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(LayeredLensSpace)
+
     auto c = pybind11::class_<LayeredLensSpace, regina::StandardTriangulation>
             (m, "LayeredLensSpace")
         .def(pybind11::init<const LayeredLensSpace&>())
@@ -56,5 +59,7 @@ void addLayeredLensSpace(pybind11::module_& m) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<LayeredLensSpace>(m);
+
+    RDOC_SCOPE_END
 }
 

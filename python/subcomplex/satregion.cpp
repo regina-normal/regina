@@ -37,6 +37,7 @@
 #include "subcomplex/satregion-impl.h"
 #include <iostream>
 #include "../helpers.h"
+#include "../docstrings/subcomplex/satregion.h"
 
 using regina::SatBlock;
 using regina::SatBlockSpec;
@@ -46,6 +47,8 @@ namespace {
 }
 
 void addSatRegion(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SatBlockSpec)
+
     auto s = pybind11::class_<SatBlockSpec>(m, "SatBlockSpec")
         .def("block", &SatBlockSpec::block,
             pybind11::return_value_policy::reference_internal)
@@ -56,6 +59,8 @@ void addSatRegion(pybind11::module_& m) {
     regina::python::add_eq_operators(s);
 
     regina::python::add_global_swap<SatBlockSpec>(m);
+
+    RDOC_SCOPE_SWITCH(SatRegion)
 
     auto r = pybind11::class_<SatRegion>(m, "SatRegion")
         .def(pybind11::init<const SatRegion&>())
@@ -87,5 +92,7 @@ void addSatRegion(pybind11::module_& m) {
     regina::python::add_eq_operators(r);
 
     regina::python::add_global_swap<SatRegion>(m);
+
+    RDOC_SCOPE_END
 }
 

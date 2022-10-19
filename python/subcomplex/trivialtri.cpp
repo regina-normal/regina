@@ -35,10 +35,13 @@
 #include "subcomplex/trivialtri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/trivialtri.h"
 
 using regina::TrivialTri;
 
 void addTrivialTri(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(TrivialTri)
+
     auto c = pybind11::class_<TrivialTri, regina::StandardTriangulation>(
             m, "TrivialTri")
         .def(pybind11::init<const TrivialTri&>())
@@ -57,5 +60,7 @@ void addTrivialTri(pybind11::module_& m) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<TrivialTri>(m);
+
+    RDOC_SCOPE_END
 }
 

@@ -35,10 +35,13 @@
 #include "subcomplex/layeredsolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/layeredsolidtorus.h"
 
 using regina::LayeredSolidTorus;
 
 void addLayeredSolidTorus(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(LayeredSolidTorus)
+
     auto c = pybind11::class_<LayeredSolidTorus, regina::StandardTriangulation>
             (m, "LayeredSolidTorus")
         .def(pybind11::init<const LayeredSolidTorus&>())
@@ -65,5 +68,7 @@ void addLayeredSolidTorus(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
 
     regina::python::add_global_swap<LayeredSolidTorus>(m);
+
+    RDOC_SCOPE_END
 }
 

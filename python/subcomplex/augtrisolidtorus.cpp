@@ -36,10 +36,13 @@
 #include "subcomplex/augtrisolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/augtrisolidtorus.h"
 
 using regina::AugTriSolidTorus;
 
 void addAugTriSolidTorus(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(AugTriSolidTorus)
+
     auto c = pybind11::class_<AugTriSolidTorus, regina::StandardTriangulation>
             (m, "AugTriSolidTorus")
         .def(pybind11::init<const AugTriSolidTorus&>())
@@ -62,5 +65,7 @@ void addAugTriSolidTorus(pybind11::module_& m) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<AugTriSolidTorus>(m);
+
+    RDOC_SCOPE_END
 }
 

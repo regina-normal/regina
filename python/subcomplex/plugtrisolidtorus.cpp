@@ -35,10 +35,13 @@
 #include "subcomplex/plugtrisolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/plugtrisolidtorus.h"
 
 using regina::PlugTriSolidTorus;
 
 void addPlugTriSolidTorus(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(PlugTriSolidTorus)
+
     auto c = pybind11::class_<PlugTriSolidTorus, regina::StandardTriangulation>
             (m, "PlugTriSolidTorus")
         .def(pybind11::init<const PlugTriSolidTorus&>())
@@ -60,5 +63,7 @@ void addPlugTriSolidTorus(pybind11::module_& m) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<PlugTriSolidTorus>(m);
+
+    RDOC_SCOPE_END
 }
 

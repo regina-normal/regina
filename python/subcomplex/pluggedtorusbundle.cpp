@@ -37,10 +37,13 @@
 #include "subcomplex/txicore.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/pluggedtorusbundle.h"
 
 using regina::PluggedTorusBundle;
 
 void addPluggedTorusBundle(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(PluggedTorusBundle)
+
     auto c = pybind11::class_<PluggedTorusBundle, regina::StandardTriangulation>
             (m, "PluggedTorusBundle")
         .def(pybind11::init<const PluggedTorusBundle&>())
@@ -59,5 +62,7 @@ void addPluggedTorusBundle(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
 
     regina::python::add_global_swap<PluggedTorusBundle>(m);
+
+    RDOC_SCOPE_END
 }
 

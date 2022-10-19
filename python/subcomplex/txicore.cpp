@@ -33,12 +33,15 @@
 #include "../pybind11/pybind11.h"
 #include "subcomplex/txicore.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/txicore.h"
 
 using regina::TxICore;
 using regina::TxIDiagonalCore;
 using regina::TxIParallelCore;
 
 void addTxICore(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(TxICore)
+
     auto c = pybind11::class_<TxICore>(m, "TxICore")
         .def("core", &TxICore::core,
             pybind11::return_value_policy::reference_internal)
@@ -55,6 +58,8 @@ void addTxICore(pybind11::module_& m) {
     // will include the (derived) class name.
     regina::python::add_eq_operators(c);
 
+    RDOC_SCOPE_SWITCH(TxIDiagonalCore)
+
     auto d = pybind11::class_<TxIDiagonalCore, regina::TxICore>(
             m, "TxIDiagonalCore")
         .def(pybind11::init<size_t, size_t>())
@@ -67,6 +72,8 @@ void addTxICore(pybind11::module_& m) {
 
     regina::python::add_global_swap<TxIDiagonalCore>(m);
 
+    RDOC_SCOPE_SWITCH(TxIParallelCore)
+
     auto p = pybind11::class_<TxIParallelCore, regina::TxICore>(
             m, "TxIParallelCore")
         .def(pybind11::init<>())
@@ -76,5 +83,7 @@ void addTxICore(pybind11::module_& m) {
     regina::python::add_output(p);
 
     regina::python::add_global_swap<TxIParallelCore>(m);
+
+    RDOC_SCOPE_END
 }
 

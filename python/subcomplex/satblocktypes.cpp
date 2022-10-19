@@ -35,6 +35,7 @@
 #include "subcomplex/satblocktypes.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/satblocktypes.h"
 
 using regina::SatBlock;
 using regina::SatCube;
@@ -45,10 +46,14 @@ using regina::SatReflectorStrip;
 using regina::SatTriPrism;
 
 void addSatBlockTypes(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SatMobius)
+
     auto mob = pybind11::class_<SatMobius, regina::SatBlock>(m, "SatMobius")
         .def("position", &SatMobius::position)
     ;
     regina::python::add_output(mob);
+
+    RDOC_SCOPE_SWITCH(SatLST)
 
     auto lst = pybind11::class_<SatLST, regina::SatBlock>(m, "SatLST")
         .def("lst", &SatLST::lst,
@@ -57,16 +62,22 @@ void addSatBlockTypes(pybind11::module_& m) {
     ;
     regina::python::add_output(lst);
 
+    RDOC_SCOPE_SWITCH(SatTriPrism)
+
     auto tri = pybind11::class_<SatTriPrism, regina::SatBlock>(m, "SatTriPrism")
         .def("isMajor", &SatTriPrism::isMajor)
         .def_static("model", &SatTriPrism::model)
     ;
     regina::python::add_output(tri);
 
+    RDOC_SCOPE_SWITCH(SatCube)
+
     auto cube = pybind11::class_<SatCube, regina::SatBlock>(m, "SatCube")
         .def_static("model", &SatCube::model)
     ;
     regina::python::add_output(cube);
+
+    RDOC_SCOPE_SWITCH(SatReflectorStrip)
 
     auto ref = pybind11::class_<SatReflectorStrip, regina::SatBlock>(
             m, "SatReflectorStrip")
@@ -74,9 +85,13 @@ void addSatBlockTypes(pybind11::module_& m) {
     ;
     regina::python::add_output(ref);
 
+    RDOC_SCOPE_SWITCH(SatLayering)
+
     auto l = pybind11::class_<SatLayering, regina::SatBlock>(m, "SatLayering")
         .def("overHorizontal", &SatLayering::overHorizontal)
     ;
     regina::python::add_output(l);
+
+    RDOC_SCOPE_END
 }
 

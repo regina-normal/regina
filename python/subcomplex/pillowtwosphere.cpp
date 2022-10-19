@@ -35,10 +35,13 @@
 #include "subcomplex/pillowtwosphere.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/pillowtwosphere.h"
 
 using regina::PillowTwoSphere;
 
 void addPillowTwoSphere(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(PillowTwoSphere)
+
     auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere")
         .def(pybind11::init<const PillowTwoSphere&>())
         .def("triangle", &PillowTwoSphere::triangle,
@@ -48,5 +51,7 @@ void addPillowTwoSphere(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

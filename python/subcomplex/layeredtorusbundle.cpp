@@ -35,10 +35,13 @@
 #include "subcomplex/layeredtorusbundle.h"
 #include "subcomplex/txicore.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/layeredtorusbundle.h"
 
 using regina::LayeredTorusBundle;
 
 void addLayeredTorusBundle(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(LayeredTorusBundle)
+
     auto c = pybind11::class_<LayeredTorusBundle, regina::StandardTriangulation>
             (m, "LayeredTorusBundle")
         .def(pybind11::init<const LayeredTorusBundle&>())
@@ -55,5 +58,7 @@ void addLayeredTorusBundle(pybind11::module_& m) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<LayeredTorusBundle>(m);
+
+    RDOC_SCOPE_END
 }
 

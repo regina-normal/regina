@@ -36,12 +36,15 @@
 #include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/satannulus.h"
 
 using regina::Perm;
 using regina::SatAnnulus;
 using regina::Tetrahedron;
 
 void addSatAnnulus(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SatAnnulus)
+
     auto c = pybind11::class_<SatAnnulus>(m, "SatAnnulus")
         .def(pybind11::init<>())
         .def(pybind11::init<const SatAnnulus&>())
@@ -81,5 +84,7 @@ void addSatAnnulus(pybind11::module_& m) {
             << a.tet[1]->index() << " (" << a.roles[1].trunc(3) << ')';
     });
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

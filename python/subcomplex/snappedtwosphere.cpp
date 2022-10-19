@@ -36,12 +36,15 @@
 #include "subcomplex/snappedtwosphere.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/snappedtwosphere.h"
 
 using pybind11::overload_cast;
 using regina::SnappedBall;
 using regina::SnappedTwoSphere;
 
 void addSnappedTwoSphere(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SnappedTwoSphere)
+
     auto c = pybind11::class_<SnappedTwoSphere>(m, "SnappedTwoSphere")
         .def(pybind11::init<const SnappedTwoSphere&>())
         .def("snappedBall", &SnappedTwoSphere::snappedBall,
@@ -55,5 +58,7 @@ void addSnappedTwoSphere(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

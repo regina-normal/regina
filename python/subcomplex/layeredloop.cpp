@@ -35,10 +35,13 @@
 #include "subcomplex/layeredloop.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/layeredloop.h"
 
 using regina::LayeredLoop;
 
 void addLayeredLoop(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(LayeredLoop)
+
     auto c = pybind11::class_<LayeredLoop, regina::StandardTriangulation>
             (m, "LayeredLoop")
         .def(pybind11::init<const LayeredLoop&>())
@@ -53,5 +56,7 @@ void addLayeredLoop(pybind11::module_& m) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<LayeredLoop>(m);
+
+    RDOC_SCOPE_END
 }
 

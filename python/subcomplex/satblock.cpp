@@ -37,11 +37,14 @@
 #include "subcomplex/satblock.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/satblock.h"
 
 using regina::SatBlock;
 using regina::SatBlockModel;
 
 void addSatBlock(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SatBlock)
+
     auto c = pybind11::class_<SatBlock>(m, "SatBlock")
         .def("countAnnuli", &SatBlock::countAnnuli)
         .def("annulus", &SatBlock::annulus,
@@ -68,6 +71,8 @@ void addSatBlock(pybind11::module_& m) {
     // will include the (derived) class name.
     regina::python::add_eq_operators(c);
 
+    RDOC_SCOPE_SWITCH(SatBlockModel)
+
     auto d = pybind11::class_<SatBlockModel>(m, "SatBlockModel")
         .def(pybind11::init<const SatBlockModel&>())
         .def("swap", &SatBlockModel::swap)
@@ -78,5 +83,7 @@ void addSatBlock(pybind11::module_& m) {
     regina::python::add_eq_operators(d);
 
     regina::python::add_global_swap<SatBlockModel>(m);
+
+    RDOC_SCOPE_END
 }
 

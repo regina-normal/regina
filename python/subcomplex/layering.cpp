@@ -34,12 +34,15 @@
 #include "subcomplex/layering.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/layering.h"
 
 using regina::Layering;
 using regina::Perm;
 using regina::Tetrahedron;
 
 void addLayering(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(Layering)
+
     auto c = pybind11::class_<Layering>(m, "Layering")
         .def(pybind11::init<Tetrahedron<3>*, Perm<4>,
             Tetrahedron<3>*, Perm<4>>())
@@ -59,5 +62,7 @@ void addLayering(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 }
 

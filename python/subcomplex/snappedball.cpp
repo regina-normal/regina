@@ -35,10 +35,13 @@
 #include "subcomplex/snappedball.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/subcomplex/snappedball.h"
 
 using regina::SnappedBall;
 
 void addSnappedBall(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(SnappedBall)
+
     auto c = pybind11::class_<SnappedBall, regina::StandardTriangulation>
             (m, "SnappedBall")
         .def(pybind11::init<const SnappedBall&>())
@@ -55,5 +58,7 @@ void addSnappedBall(pybind11::module_& m) {
     regina::python::add_output(c);
 
     regina::python::add_global_swap<SnappedBall>(m);
+
+    RDOC_SCOPE_END
 }
 
