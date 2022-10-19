@@ -2622,6 +2622,92 @@
 		05098B0928FECBD9005E4716 /* plantri.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = plantri.test; sourceTree = "<group>"; };
 		05098B0A28FECBD9005E4716 /* flype.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = flype.out; sourceTree = "<group>"; };
 		05098B0B28FECBD9005E4716 /* special.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = special.test; sourceTree = "<group>"; };
+		05098B0E2900186E005E4716 /* triangle4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangle4.h; sourceTree = "<group>"; };
+		05098B0F2900186E005E4716 /* tetrahedron4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tetrahedron4.h; sourceTree = "<group>"; };
+		05098B102900186E005E4716 /* pentachoron4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pentachoron4.h; sourceTree = "<group>"; };
+		05098B112900186E005E4716 /* component4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component4.h; sourceTree = "<group>"; };
+		05098B122900186E005E4716 /* triangulation4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation4.h; sourceTree = "<group>"; };
+		05098B132900186E005E4716 /* edge4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = edge4.h; sourceTree = "<group>"; };
+		05098B142900186E005E4716 /* vertex4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex4.h; sourceTree = "<group>"; };
+		05098B162900186E005E4716 /* component3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component3.h; sourceTree = "<group>"; };
+		05098B172900186E005E4716 /* tetrahedron3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tetrahedron3.h; sourceTree = "<group>"; };
+		05098B182900186E005E4716 /* triangulation3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation3.h; sourceTree = "<group>"; };
+		05098B192900186E005E4716 /* homologicaldata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
+		05098B1A2900186E005E4716 /* triangle3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangle3.h; sourceTree = "<group>"; };
+		05098B1B2900186E005E4716 /* vertex3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex3.h; sourceTree = "<group>"; };
+		05098B1C2900186E005E4716 /* edge3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = edge3.h; sourceTree = "<group>"; };
+		05098B1D2900186E005E4716 /* example.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
+		05098B1F2900186E005E4716 /* triangle2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangle2.h; sourceTree = "<group>"; };
+		05098B202900186E005E4716 /* component2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component2.h; sourceTree = "<group>"; };
+		05098B212900186E005E4716 /* triangulation2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation2.h; sourceTree = "<group>"; };
+		05098B232900186E005E4716 /* isomorphism.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
+		05098B242900186E005E4716 /* facenumber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facenumber.h; sourceTree = "<group>"; };
+		05098B252900186E005E4716 /* face.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
+		05098B262900186E005E4716 /* example4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example4.h; sourceTree = "<group>"; };
+		05098B272900186E005E4716 /* facetpairing3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
+		05098B282900186E005E4716 /* isosigencoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isosigencoding.h; sourceTree = "<group>"; };
+		05098B292900186E005E4716 /* example3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example3.h; sourceTree = "<group>"; };
+		05098B2A2900186E005E4716 /* cut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cut.h; sourceTree = "<group>"; };
+		05098B2B2900186E005E4716 /* example2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example2.h; sourceTree = "<group>"; };
+		05098B372900186E005E4716 /* isomorphism.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
+		05098B382900186E005E4716 /* boundarycomponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = boundarycomponent.h; sourceTree = "<group>"; };
+		05098B392900186E005E4716 /* simplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
+		05098B3A2900186E005E4716 /* component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
+		05098B3B2900186E005E4716 /* facetpairing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
+		05098B3C2900186E005E4716 /* triangulation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation.h; sourceTree = "<group>"; };
+		05098B3D2900186E005E4716 /* face.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
+		05098B3E2900186E005E4716 /* facepair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facepair.h; sourceTree = "<group>"; };
+		05098B3F2900186E005E4716 /* facenumbering.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facenumbering.h; sourceTree = "<group>"; };
+		05098B402900186E005E4716 /* isosigtype.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isosigtype.h; sourceTree = "<group>"; };
+		05098B412900186E005E4716 /* facetspec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
+		05098B432900186E005E4716 /* tangle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tangle.h; sourceTree = "<group>"; };
+		05098B442900186E005E4716 /* link.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = link.h; sourceTree = "<group>"; };
+		05098B452900186E005E4716 /* examplelink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = examplelink.h; sourceTree = "<group>"; };
+		05098B462900186E005E4716 /* modellinkgraph.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = modellinkgraph.h; sourceTree = "<group>"; };
+		05098B482900186E005E4716 /* examplesnappea.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = examplesnappea.h; sourceTree = "<group>"; };
+		05098B492900186E005E4716 /* snappeatriangulation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = snappeatriangulation.h; sourceTree = "<group>"; };
+		05098B4A29001898005E4716 /* gluingpermsearcher2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gluingpermsearcher2.h; sourceTree = "<group>"; };
+		05098B4B29001898005E4716 /* gluingperms.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gluingperms.h; sourceTree = "<group>"; };
+		05098B4C29001898005E4716 /* gluingpermsearcher4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gluingpermsearcher4.h; sourceTree = "<group>"; };
+		05098B4D29001898005E4716 /* gluingpermsearcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gluingpermsearcher.h; sourceTree = "<group>"; };
+		05098B4E29001898005E4716 /* census.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = census.h; sourceTree = "<group>"; };
+		05098B4F29001899005E4716 /* gluingpermsearcher3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gluingpermsearcher3.h; sourceTree = "<group>"; };
+		05098B51290018C7005E4716 /* snappedtwosphere.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = snappedtwosphere.h; sourceTree = "<group>"; };
+		05098B52290018C7005E4716 /* pluggedtorusbundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pluggedtorusbundle.h; sourceTree = "<group>"; };
+		05098B53290018C7005E4716 /* augtrisolidtorus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = augtrisolidtorus.h; sourceTree = "<group>"; };
+		05098B54290018C7005E4716 /* blockedsfspair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blockedsfspair.h; sourceTree = "<group>"; };
+		05098B55290018C7005E4716 /* layeredchainpair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = layeredchainpair.h; sourceTree = "<group>"; };
+		05098B56290018C7005E4716 /* blockedsfsloop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blockedsfsloop.h; sourceTree = "<group>"; };
+		05098B57290018C7005E4716 /* layeredsolidtorus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = layeredsolidtorus.h; sourceTree = "<group>"; };
+		05098B58290018C7005E4716 /* satannulus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = satannulus.h; sourceTree = "<group>"; };
+		05098B59290018C7005E4716 /* blockedsfstriple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blockedsfstriple.h; sourceTree = "<group>"; };
+		05098B5A290018C7005E4716 /* satregion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = satregion.h; sourceTree = "<group>"; };
+		05098B5B290018C7005E4716 /* layeredtorusbundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = layeredtorusbundle.h; sourceTree = "<group>"; };
+		05098B5C290018C7005E4716 /* trivialtri.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trivialtri.h; sourceTree = "<group>"; };
+		05098B5D290018C7005E4716 /* layering.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = layering.h; sourceTree = "<group>"; };
+		05098B5E290018C7005E4716 /* standardtri.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = standardtri.h; sourceTree = "<group>"; };
+		05098B5F290018C7005E4716 /* pillowtwosphere.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pillowtwosphere.h; sourceTree = "<group>"; };
+		05098B60290018C7005E4716 /* snappedball.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = snappedball.h; sourceTree = "<group>"; };
+		05098B61290018C7005E4716 /* satblocktypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = satblocktypes.h; sourceTree = "<group>"; };
+		05098B62290018C7005E4716 /* layeredloop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = layeredloop.h; sourceTree = "<group>"; };
+		05098B63290018C7005E4716 /* trisolidtorus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trisolidtorus.h; sourceTree = "<group>"; };
+		05098B64290018C7005E4716 /* blockedsfs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blockedsfs.h; sourceTree = "<group>"; };
+		05098B65290018C7005E4716 /* snappeacensustri.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = snappeacensustri.h; sourceTree = "<group>"; };
+		05098B66290018C7005E4716 /* satblock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = satblock.h; sourceTree = "<group>"; };
+		05098B67290018C7005E4716 /* spiralsolidtorus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spiralsolidtorus.h; sourceTree = "<group>"; };
+		05098B68290018C7005E4716 /* plugtrisolidtorus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = plugtrisolidtorus.h; sourceTree = "<group>"; };
+		05098B69290018C7005E4716 /* layeredlensspace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = layeredlensspace.h; sourceTree = "<group>"; };
+		05098B6A290018C7005E4716 /* txicore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = txicore.h; sourceTree = "<group>"; };
+		05098B6B290018C7005E4716 /* layeredchain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = layeredchain.h; sourceTree = "<group>"; };
+		05098B6D290019DF005E4716 /* example.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
+		05098B6E290019DF005E4716 /* boundarycomponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = boundarycomponent.h; sourceTree = "<group>"; };
+		05098B6F290019DF005E4716 /* simplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
+		05098B70290019DF005E4716 /* strings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = strings.h; sourceTree = "<group>"; };
+		05098B71290019DF005E4716 /* component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
+		05098B72290019DF005E4716 /* facetpairing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
+		05098B73290019DF005E4716 /* facenumbering.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facenumbering.h; sourceTree = "<group>"; };
+		05098B74290019DF005E4716 /* triangulation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation.h; sourceTree = "<group>"; };
+		05098B75290019DF005E4716 /* face.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -5015,6 +5101,7 @@
 				05098AC228F62234005E4716 /* foreign */,
 				05098A9728F24D98005E4716 /* gendoc.sh */,
 				05098AD628F63250005E4716 /* hypersurface */,
+				05098B422900186E005E4716 /* link */,
 				05098AF128FAFD4B005E4716 /* manifold */,
 				05098A8F28F24D98005E4716 /* maths */,
 				05098AD828FA2CAE005E4716 /* mkdoc.py */,
@@ -5022,9 +5109,12 @@
 				05098A7528F24D98005E4716 /* progress */,
 				05098A7B28F24D98005E4716 /* python */,
 				05098A9628F24D98005E4716 /* README.txt */,
+				05098B472900186E005E4716 /* snappea */,
 				05098AC628F62234005E4716 /* split */,
+				05098B50290018C7005E4716 /* subcomplex */,
 				05098AD128F63250005E4716 /* surface */,
 				05098AC028F62233005E4716 /* treewidth */,
+				05098B0C2900186E005E4716 /* triangulation */,
 				05098A7E28F24D98005E4716 /* utilities */,
 			);
 			path = docstrings;
@@ -5175,6 +5265,12 @@
 		05098ACF28F63250005E4716 /* census */ = {
 			isa = PBXGroup;
 			children = (
+				05098B4E29001898005E4716 /* census.h */,
+				05098B4B29001898005E4716 /* gluingperms.h */,
+				05098B4D29001898005E4716 /* gluingpermsearcher.h */,
+				05098B4A29001898005E4716 /* gluingpermsearcher2.h */,
+				05098B4F29001899005E4716 /* gluingpermsearcher3.h */,
+				05098B4C29001898005E4716 /* gluingpermsearcher4.h */,
 				05098AD028F63250005E4716 /* purgeflags.h */,
 			);
 			path = census;
@@ -5252,6 +5348,162 @@
 				05098AFD28FAFD4B005E4716 /* torusbundle.h */,
 			);
 			path = manifold;
+			sourceTree = "<group>";
+		};
+		05098B0C2900186E005E4716 /* triangulation */ = {
+			isa = PBXGroup;
+			children = (
+				05098B222900186E005E4716 /* alias */,
+				05098B2A2900186E005E4716 /* cut.h */,
+				05098B6C290019DF005E4716 /* detail */,
+				05098B1E2900186E005E4716 /* dim2 */,
+				05098B152900186E005E4716 /* dim3 */,
+				05098B0D2900186E005E4716 /* dim4 */,
+				05098B1D2900186E005E4716 /* example.h */,
+				05098B2B2900186E005E4716 /* example2.h */,
+				05098B292900186E005E4716 /* example3.h */,
+				05098B262900186E005E4716 /* example4.h */,
+				05098B3F2900186E005E4716 /* facenumbering.h */,
+				05098B3E2900186E005E4716 /* facepair.h */,
+				05098B272900186E005E4716 /* facetpairing3.h */,
+				05098B412900186E005E4716 /* facetspec.h */,
+				05098B362900186E005E4716 /* generic */,
+				05098B282900186E005E4716 /* isosigencoding.h */,
+				05098B402900186E005E4716 /* isosigtype.h */,
+			);
+			path = triangulation;
+			sourceTree = "<group>";
+		};
+		05098B0D2900186E005E4716 /* dim4 */ = {
+			isa = PBXGroup;
+			children = (
+				05098B112900186E005E4716 /* component4.h */,
+				05098B132900186E005E4716 /* edge4.h */,
+				05098B102900186E005E4716 /* pentachoron4.h */,
+				05098B0F2900186E005E4716 /* tetrahedron4.h */,
+				05098B0E2900186E005E4716 /* triangle4.h */,
+				05098B122900186E005E4716 /* triangulation4.h */,
+				05098B142900186E005E4716 /* vertex4.h */,
+			);
+			path = dim4;
+			sourceTree = "<group>";
+		};
+		05098B152900186E005E4716 /* dim3 */ = {
+			isa = PBXGroup;
+			children = (
+				05098B162900186E005E4716 /* component3.h */,
+				05098B1C2900186E005E4716 /* edge3.h */,
+				05098B192900186E005E4716 /* homologicaldata.h */,
+				05098B172900186E005E4716 /* tetrahedron3.h */,
+				05098B1A2900186E005E4716 /* triangle3.h */,
+				05098B182900186E005E4716 /* triangulation3.h */,
+				05098B1B2900186E005E4716 /* vertex3.h */,
+			);
+			path = dim3;
+			sourceTree = "<group>";
+		};
+		05098B1E2900186E005E4716 /* dim2 */ = {
+			isa = PBXGroup;
+			children = (
+				05098B202900186E005E4716 /* component2.h */,
+				05098B1F2900186E005E4716 /* triangle2.h */,
+				05098B212900186E005E4716 /* triangulation2.h */,
+			);
+			path = dim2;
+			sourceTree = "<group>";
+		};
+		05098B222900186E005E4716 /* alias */ = {
+			isa = PBXGroup;
+			children = (
+				05098B252900186E005E4716 /* face.h */,
+				05098B242900186E005E4716 /* facenumber.h */,
+				05098B232900186E005E4716 /* isomorphism.h */,
+			);
+			path = alias;
+			sourceTree = "<group>";
+		};
+		05098B362900186E005E4716 /* generic */ = {
+			isa = PBXGroup;
+			children = (
+				05098B382900186E005E4716 /* boundarycomponent.h */,
+				05098B3A2900186E005E4716 /* component.h */,
+				05098B3D2900186E005E4716 /* face.h */,
+				05098B3B2900186E005E4716 /* facetpairing.h */,
+				05098B372900186E005E4716 /* isomorphism.h */,
+				05098B392900186E005E4716 /* simplex.h */,
+				05098B3C2900186E005E4716 /* triangulation.h */,
+			);
+			path = generic;
+			sourceTree = "<group>";
+		};
+		05098B422900186E005E4716 /* link */ = {
+			isa = PBXGroup;
+			children = (
+				05098B452900186E005E4716 /* examplelink.h */,
+				05098B442900186E005E4716 /* link.h */,
+				05098B462900186E005E4716 /* modellinkgraph.h */,
+				05098B432900186E005E4716 /* tangle.h */,
+			);
+			path = link;
+			sourceTree = "<group>";
+		};
+		05098B472900186E005E4716 /* snappea */ = {
+			isa = PBXGroup;
+			children = (
+				05098B482900186E005E4716 /* examplesnappea.h */,
+				05098B492900186E005E4716 /* snappeatriangulation.h */,
+			);
+			path = snappea;
+			sourceTree = "<group>";
+		};
+		05098B50290018C7005E4716 /* subcomplex */ = {
+			isa = PBXGroup;
+			children = (
+				05098B53290018C7005E4716 /* augtrisolidtorus.h */,
+				05098B64290018C7005E4716 /* blockedsfs.h */,
+				05098B56290018C7005E4716 /* blockedsfsloop.h */,
+				05098B54290018C7005E4716 /* blockedsfspair.h */,
+				05098B59290018C7005E4716 /* blockedsfstriple.h */,
+				05098B6B290018C7005E4716 /* layeredchain.h */,
+				05098B55290018C7005E4716 /* layeredchainpair.h */,
+				05098B69290018C7005E4716 /* layeredlensspace.h */,
+				05098B62290018C7005E4716 /* layeredloop.h */,
+				05098B57290018C7005E4716 /* layeredsolidtorus.h */,
+				05098B5B290018C7005E4716 /* layeredtorusbundle.h */,
+				05098B5D290018C7005E4716 /* layering.h */,
+				05098B5F290018C7005E4716 /* pillowtwosphere.h */,
+				05098B52290018C7005E4716 /* pluggedtorusbundle.h */,
+				05098B68290018C7005E4716 /* plugtrisolidtorus.h */,
+				05098B58290018C7005E4716 /* satannulus.h */,
+				05098B66290018C7005E4716 /* satblock.h */,
+				05098B61290018C7005E4716 /* satblocktypes.h */,
+				05098B5A290018C7005E4716 /* satregion.h */,
+				05098B65290018C7005E4716 /* snappeacensustri.h */,
+				05098B60290018C7005E4716 /* snappedball.h */,
+				05098B51290018C7005E4716 /* snappedtwosphere.h */,
+				05098B67290018C7005E4716 /* spiralsolidtorus.h */,
+				05098B5E290018C7005E4716 /* standardtri.h */,
+				05098B63290018C7005E4716 /* trisolidtorus.h */,
+				05098B5C290018C7005E4716 /* trivialtri.h */,
+				05098B6A290018C7005E4716 /* txicore.h */,
+			);
+			path = subcomplex;
+			sourceTree = "<group>";
+		};
+		05098B6C290019DF005E4716 /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				05098B6E290019DF005E4716 /* boundarycomponent.h */,
+				05098B71290019DF005E4716 /* component.h */,
+				05098B6D290019DF005E4716 /* example.h */,
+				05098B75290019DF005E4716 /* face.h */,
+				05098B73290019DF005E4716 /* facenumbering.h */,
+				05098B72290019DF005E4716 /* facetpairing.h */,
+				05098B6F290019DF005E4716 /* simplex.h */,
+				05098B70290019DF005E4716 /* strings.h */,
+				05098B74290019DF005E4716 /* triangulation.h */,
+			);
+			path = detail;
 			sourceTree = "<group>";
 		};
 		050F5CDE1B9BAAAA00C1F681 /* python */ = {
