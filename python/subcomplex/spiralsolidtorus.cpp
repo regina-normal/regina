@@ -43,23 +43,24 @@ void addSpiralSolidTorus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SpiralSolidTorus)
 
     auto c = pybind11::class_<SpiralSolidTorus, regina::StandardTriangulation>
-            (m, "SpiralSolidTorus")
-        .def(pybind11::init<const SpiralSolidTorus&>())
-        .def("swap", &SpiralSolidTorus::swap)
-        .def("size", &SpiralSolidTorus::size)
+            (m, "SpiralSolidTorus", rdoc_scope)
+        .def(pybind11::init<const SpiralSolidTorus&>(), rdoc::__copy)
+        .def("swap", &SpiralSolidTorus::swap, rdoc::swap)
+        .def("size", &SpiralSolidTorus::size, rdoc::size)
         .def("tetrahedron", &SpiralSolidTorus::tetrahedron,
-            pybind11::return_value_policy::reference)
-        .def("vertexRoles", &SpiralSolidTorus::vertexRoles)
-        .def("reverse", &SpiralSolidTorus::reverse)
-        .def("cycle", &SpiralSolidTorus::cycle)
-        .def("makeCanonical", &SpiralSolidTorus::makeCanonical)
-        .def("isCanonical", &SpiralSolidTorus::isCanonical)
-        .def_static("recognise", &SpiralSolidTorus::recognise)
+            pybind11::return_value_policy::reference, rdoc::tetrahedron)
+        .def("vertexRoles", &SpiralSolidTorus::vertexRoles, rdoc::vertexRoles)
+        .def("reverse", &SpiralSolidTorus::reverse, rdoc::reverse)
+        .def("cycle", &SpiralSolidTorus::cycle, rdoc::cycle)
+        .def("makeCanonical", &SpiralSolidTorus::makeCanonical,
+            rdoc::makeCanonical)
+        .def("isCanonical", &SpiralSolidTorus::isCanonical, rdoc::isCanonical)
+        .def_static("recognise", &SpiralSolidTorus::recognise, rdoc::recognise)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<SpiralSolidTorus>(m);
+    regina::python::add_global_swap<SpiralSolidTorus>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

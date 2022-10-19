@@ -43,21 +43,21 @@ void addSnappedBall(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SnappedBall)
 
     auto c = pybind11::class_<SnappedBall, regina::StandardTriangulation>
-            (m, "SnappedBall")
-        .def(pybind11::init<const SnappedBall&>())
-        .def("swap", &SnappedBall::swap)
+            (m, "SnappedBall", rdoc_scope)
+        .def(pybind11::init<const SnappedBall&>(), rdoc::__copy)
+        .def("swap", &SnappedBall::swap, rdoc::swap)
         .def("tetrahedron", &SnappedBall::tetrahedron,
-            pybind11::return_value_policy::reference)
-        .def("boundaryFace", &SnappedBall::boundaryFace)
-        .def("internalFace", &SnappedBall::internalFace)
-        .def("equatorEdge", &SnappedBall::equatorEdge)
-        .def("internalEdge", &SnappedBall::internalEdge)
-        .def_static("recognise", &SnappedBall::recognise)
+            pybind11::return_value_policy::reference, rdoc::tetrahedron)
+        .def("boundaryFace", &SnappedBall::boundaryFace, rdoc::boundaryFace)
+        .def("internalFace", &SnappedBall::internalFace, rdoc::internalFace)
+        .def("equatorEdge", &SnappedBall::equatorEdge, rdoc::equatorEdge)
+        .def("internalEdge", &SnappedBall::internalEdge, rdoc::internalEdge)
+        .def_static("recognise", &SnappedBall::recognise, rdoc::recognise)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<SnappedBall>(m);
+    regina::python::add_global_swap<SnappedBall>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }
