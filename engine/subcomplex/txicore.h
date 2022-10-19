@@ -385,8 +385,8 @@ class TxICore : public Output<TxICore> {
  *
  * Members of this family are parameterised by their size (the number of
  * tetrahedra) and an additional integer \a k, where
- * 1 <= \a k <= \a size - 5.  Note that this means we must have
- * \a size >= 6.  The member of this family of size \a n with additional
+ * 1 ≤ \a k ≤ \a size - 5.  Note that this means we must have
+ * \a size ≥ 6.  The member of this family of size \a n with additional
  * parameter \a k is labelled <tt>T_n:k</tt>.
  *
  * It is worth noting that <tt>T_n:k</tt> is isomorphic to
