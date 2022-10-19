@@ -353,14 +353,20 @@ class FaceBase :
          * These can be combined using bitwise OR.
          */
         enum Validity {
+            /**
+             * Signifies that this face is valid.
+             */
             VALID = 0,
-                /**< Signifies that this face is valid. */
+            /**
+             * Signifies that the face is identified with itself under a
+             * non-identity permutation.
+             */
             INVALID_IDENTIFICATION = 1,
-                /**< Signifies that the face is identified with itself
-                     under a non-identity permutation. */
+            /**
+             * Signifies that the link of the face does not obey the rules
+             * laid out by isValid().
+             */
             INVALID_LINK = 2
-                /**< Signifies that the link of the face does not obey
-                     the rules laid out by isValid(). */
         };
 
         typename FaceEmbeddingsList<dim, dim - subdim>::type embeddings_;

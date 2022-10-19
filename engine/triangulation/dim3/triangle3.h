@@ -80,32 +80,47 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * @see type
          */
         enum Type {
+            /**
+             * Indicates that the triangle type has not yet been determined.
+             */
             UNKNOWN_TYPE = 0,
-                /**< Indicates that the triangle type has not yet been
-                     determined. */
+            /**
+             * Specifies a triangle with no identified vertices or edges.
+             */
             TRIANGLE = 1,
-                /**< Specifies a triangle with no identified vertices or
-                     edges. */
+            /**
+             * Specifies a triangle with two identified vertices.
+             */
             SCARF = 2,
-                /**< Specifies a triangle with two identified vertices. */
+            /**
+             * Specifies a triangle with three identified vertices.
+             */
             PARACHUTE = 3,
-                /**< Specifies a triangle with three identified vertices. */
+            /**
+             * Specifies a triangle with two edges identified to form a cone.
+             */
             CONE = 4,
-                /**< Specifies a triangle with two edges identified to form a
-                     cone. */
+            /**
+             * Specifies a triangle with two edges identified to form a
+             * Mobius band.
+             */
             MOBIUS = 5,
-                /**< Specifies a triangle with two edges identified to form a
-                     mobius band. */
+            /**
+             * Specifies a triangle with two edges identified to form a cone
+             * with all three vertices identified.
+             */
             HORN = 6,
-                /**< Specifies a triangle with two edges identified to form a
-                     cone with all three vertices identified. */
+            /**
+             * Specifies a triangle with all three edges identified, some via
+             * orientable and some via non-orientable gluings.
+             */
             DUNCEHAT = 7,
-                /**< Specifies a triangle with all three edges identified, some
-                     via orientable and some via non-orientable gluings. */
+            /**
+             * Specifies a triangle with all three edges identified using
+             * non-orientable gluings.  Note that this forms a spine for the
+             * lens space L(3,1).
+             */
             L31 = 8
-                /**< Specifies a triangle with all three edges identified using
-                     non-orientable gluings.  Note that this forms a spine for
-                     the Lens space L(3,1). */
         };
 
     private:

@@ -79,30 +79,37 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * @see link
          */
         enum LinkType {
+            /**
+             * Specifies a vertex link that is a sphere.  In other words, the
+             * vertex is internal.
+             */
             SPHERE = 1,
-                /**< Specifies a vertex link that is a sphere.
-                     In other words, the vertex is internal. */
+            /**
+             * Specifies a vertex link that is a disc.  In other words, the
+             * vertex lies on a real boundary component.
+             */
             DISC = 2,
-                /**< Specifies a vertex link that is a disc.
-                     In other words, the vertex lies on a real boundary
-                     component. */
+            /**
+             * Specifies a vertex link that is a torus.  In other words, this
+             * is an ideal vertex representing a torus cusp.
+             */
             TORUS = 3,
-                /**< Specifies a vertex link that is a torus.
-                     In other words, this is an ideal vertex
-                     representing a torus cusp. */
+            /**
+             * Specifies a vertex link that is a Klein bottle.  In other words,
+             * this is an ideal vertex representing a Klein bottle cusp.
+             */
             KLEIN_BOTTLE = 4,
-                /**< Specifies a vertex link that is a Klein bottle.
-                     In other words, this is an ideal vertex
-                     representing a Klein bottle cusp. */
+            /**
+             * Specifies a vertex link that is closed and is not a sphere,
+             * torus or Klein bottle.  In other words, this is an ideal vertex
+             * but not one of the standard ideal vertex types.
+             */
             NON_STANDARD_CUSP = 5,
-                /**< Specifies a vertex link that is closed and is not a
-                     sphere, torus or Klein bottle.
-                     In other words, this is an ideal vertex but not one
-                     of the standard ideal vertex types. */
+            /**
+             * Specifies a vertex link that has boundary and is not a disc.
+             * In other words, this vertex makes the triangulation invalid.
+             */
             INVALID = 6
-                /**< Specifies a vertex link that has boundary and is not a
-                     disc.  In other words, this vertex makes the
-                     triangulation invalid. */
         };
     private:
         LinkType link_;
