@@ -43,11 +43,11 @@ void addTrivialTri(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TrivialTri)
 
     auto c = pybind11::class_<TrivialTri, regina::StandardTriangulation>(
-            m, "TrivialTri")
-        .def(pybind11::init<const TrivialTri&>())
-        .def("swap", &TrivialTri::swap)
-        .def("type", &TrivialTri::type)
-        .def_static("recognise", &TrivialTri::recognise)
+            m, "TrivialTri", rdoc_scope)
+        .def(pybind11::init<const TrivialTri&>(), rdoc::__copy)
+        .def("swap", &TrivialTri::swap, rdoc::swap)
+        .def("type", &TrivialTri::type, rdoc::type)
+        .def_static("recognise", &TrivialTri::recognise, rdoc::recognise)
         .def_readonly_static("SPHERE_4_VERTEX", &TrivialTri::SPHERE_4_VERTEX)
         .def_readonly_static("BALL_3_VERTEX", &TrivialTri::BALL_3_VERTEX)
         .def_readonly_static("BALL_4_VERTEX", &TrivialTri::BALL_4_VERTEX)
@@ -56,10 +56,10 @@ void addTrivialTri(pybind11::module_& m) {
         .def_readonly_static("N3_1", &TrivialTri::N3_1)
         .def_readonly_static("N3_2", &TrivialTri::N3_2)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<TrivialTri>(m);
+    regina::python::add_global_swap<TrivialTri>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

@@ -42,47 +42,48 @@ using regina::TxIParallelCore;
 void addTxICore(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TxICore)
 
-    auto c = pybind11::class_<TxICore>(m, "TxICore")
+    auto c = pybind11::class_<TxICore>(m, "TxICore", rdoc_scope)
         .def("core", &TxICore::core,
-            pybind11::return_value_policy::reference_internal)
-        .def("bdryTet", &TxICore::bdryTet)
-        .def("bdryRoles", &TxICore::bdryRoles)
+            pybind11::return_value_policy::reference_internal, rdoc::core)
+        .def("bdryTet", &TxICore::bdryTet, rdoc::bdryTet)
+        .def("bdryRoles", &TxICore::bdryRoles, rdoc::bdryRoles)
         .def("bdryReln", &TxICore::bdryReln,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::bdryReln)
         .def("parallelReln", &TxICore::parallelReln,
-            pybind11::return_value_policy::reference_internal)
-        .def("name", &TxICore::name)
-        .def("texName", &TxICore::texName)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::parallelReln)
+        .def("name", &TxICore::name, rdoc::name)
+        .def("texName", &TxICore::texName, rdoc::texName)
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_SWITCH(TxIDiagonalCore)
 
     auto d = pybind11::class_<TxIDiagonalCore, regina::TxICore>(
-            m, "TxIDiagonalCore")
-        .def(pybind11::init<size_t, size_t>())
-        .def(pybind11::init<const TxIDiagonalCore&>())
-        .def("swap", &TxIDiagonalCore::swap)
-        .def("size", &TxIDiagonalCore::size)
-        .def("k", &TxIDiagonalCore::k)
+            m, "TxIDiagonalCore", rdoc_scope)
+        .def(pybind11::init<size_t, size_t>(), rdoc::__init)
+        .def(pybind11::init<const TxIDiagonalCore&>(), rdoc::__copy)
+        .def("swap", &TxIDiagonalCore::swap, rdoc::swap)
+        .def("size", &TxIDiagonalCore::size, rdoc::size)
+        .def("k", &TxIDiagonalCore::k, rdoc::k)
     ;
     regina::python::add_output(d);
 
-    regina::python::add_global_swap<TxIDiagonalCore>(m);
+    regina::python::add_global_swap<TxIDiagonalCore>(m, rdoc::global_swap);
 
     RDOC_SCOPE_SWITCH(TxIParallelCore)
 
     auto p = pybind11::class_<TxIParallelCore, regina::TxICore>(
-            m, "TxIParallelCore")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const TxIParallelCore&>())
-        .def("swap", &TxIParallelCore::swap)
+            m, "TxIParallelCore", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const TxIParallelCore&>(), rdoc::__copy)
+        .def("swap", &TxIParallelCore::swap, rdoc::swap)
     ;
     regina::python::add_output(p);
 
-    regina::python::add_global_swap<TxIParallelCore>(m);
+    regina::python::add_global_swap<TxIParallelCore>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }
