@@ -159,6 +159,73 @@ struct SatAnnulus {
      */
     SatAnnulus& operator = (const SatAnnulus&) = default;
 
+#ifdef __APIDOCS
+    /**
+     * A Python-only routine that allows you to query the \a tet field.
+     *
+     * The \a tet field describes which two tetrahedra provide the two
+     * triangles that make up this annulus.  See the class notes for details.
+     *
+     * \nocpp This is only for Python users, who cannot access the
+     * \a tet and \a roles fields directly.
+     *
+     * @param which identifies whether we are querying information for
+     * the first or second triangle of this annulus.  This argument
+     * must be 0 or 1 respectively.
+     * @return the tetrahedron that provides the given triangle.
+     */
+    const Tetrahedron<3>* tet(int which) const;
+    /**
+     * A Python-only routine that allows you to query the \a roles field.
+     *
+     * The \a roles field describes how the two triangles that make up this
+     * match up with the individual vertices of their corresponding tetrahedra.
+     * See the class notes for details.
+     *
+     * \nocpp This is only for Python users, who cannot access the
+     * \a tet and \a roles fields directly.
+     *
+     * @param which identifies whether we are querying information for
+     * the first or second triangle of this annulus.  This argument
+     * must be 0 or 1 respectively.
+     * @return the permutation that describes how the given triangle matches
+     * up with the individual vertices of its corresponding tetrahedron.
+     */
+    Perm<4> roles(int which) const;
+    /**
+     * A Python-only routine that allows you to set the \a tet field.
+     *
+     * The \a tet field describes which two tetrahedra provide the two
+     * triangles that make up this annulus.  See the class notes for details.
+     *
+     * \nocpp This is only for Python users, who cannot access the
+     * \a tet and \a roles fields directly.
+     *
+     * @param which identifies whether we are setting information for
+     * the first or second triangle of this annulus.  This argument
+     * must be 0 or 1 respectively.
+     * @param value the tetrahedron that provides the given triangle.
+     */
+    void setTet(int which, const Tetrahedron<3>* value);
+    /**
+     * A Python-only routine that allows you to set the \a roles field.
+     *
+     * The \a roles field describes how the two triangles that make up this
+     * match up with the individual vertices of their corresponding tetrahedra.
+     * See the class notes for details.
+     *
+     * \nocpp This is only for Python users, who cannot access the
+     * \a tet and \a roles fields directly.
+     *
+     * @param which identifies whether we are setting information for
+     * the first or second triangle of this annulus.  This argument
+     * must be 0 or 1 respectively.
+     * @param value the permutation that describes how the given triangle
+     * matches up with the individual vertices of its corresponding tetrahedron.
+     */
+    void setRoles(int which, Perm<4> value);
+#endif // __APIDOCS
+
     /**
      * Determines whether or not this and the given structure describe
      * the same specific presentation of a saturated annulus.
