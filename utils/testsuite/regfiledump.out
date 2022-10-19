@@ -5,6 +5,7 @@ No file has been specified.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -14,6 +15,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -23,6 +27,7 @@ More than one detail level has been specified.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -32,6 +37,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -41,6 +49,7 @@ More than one detail level has been specified.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -50,6 +59,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -59,6 +71,7 @@ More than one detail level has been specified.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -68,6 +81,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -77,6 +93,7 @@ Invalid option: -z
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -86,6 +103,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -95,6 +115,7 @@ Empty arguments are not allowed.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -104,6 +125,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
@@ -127,6 +151,7 @@ You cannot specify individual packets if packets are not to be displayed.
 
 Usage:
     regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+    regfiledump [ -v, --version | -?, --help ]
 
     -f : Display full packet details (default)
     -l : Only display packet labels and types
@@ -136,6 +161,9 @@ Usage:
 
     <packet-label> ... : Only display the listed packets (otherwise all
                          packets are displayed)
+
+    -v, --version : Show which version of Regina is being used
+    -?, --help    : Display this help
 --------------------
 Exit code: 1
 ============================================================
