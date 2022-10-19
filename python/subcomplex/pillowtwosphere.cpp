@@ -42,15 +42,16 @@ using regina::PillowTwoSphere;
 void addPillowTwoSphere(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PillowTwoSphere)
 
-    auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere")
-        .def(pybind11::init<const PillowTwoSphere&>())
+    auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere", rdoc_scope)
+        .def(pybind11::init<const PillowTwoSphere&>(), rdoc::__copy)
         .def("triangle", &PillowTwoSphere::triangle,
-            pybind11::return_value_policy::reference)
-        .def("triangleMapping", &PillowTwoSphere::triangleMapping)
-        .def_static("recognise", &PillowTwoSphere::recognise)
+            pybind11::return_value_policy::reference, rdoc::triangle)
+        .def("triangleMapping", &PillowTwoSphere::triangleMapping,
+            rdoc::triangleMapping)
+        .def_static("recognise", &PillowTwoSphere::recognise, rdoc::recognise)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
     RDOC_SCOPE_END
 }

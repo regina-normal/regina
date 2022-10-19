@@ -43,31 +43,36 @@ void addLayeredSolidTorus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredSolidTorus)
 
     auto c = pybind11::class_<LayeredSolidTorus, regina::StandardTriangulation>
-            (m, "LayeredSolidTorus")
-        .def(pybind11::init<const LayeredSolidTorus&>())
-        .def("swap", &LayeredSolidTorus::swap)
-        .def("size", &LayeredSolidTorus::size)
+            (m, "LayeredSolidTorus", rdoc_scope)
+        .def(pybind11::init<const LayeredSolidTorus&>(), rdoc::__copy)
+        .def("swap", &LayeredSolidTorus::swap, rdoc::swap)
+        .def("size", &LayeredSolidTorus::size, rdoc::size)
         .def("base", &LayeredSolidTorus::base,
-            pybind11::return_value_policy::reference)
-        .def("baseEdge", &LayeredSolidTorus::baseEdge)
-        .def("baseEdgeGroup", &LayeredSolidTorus::baseEdgeGroup)
-        .def("baseFace", &LayeredSolidTorus::baseFace)
+            pybind11::return_value_policy::reference, rdoc::base)
+        .def("baseEdge", &LayeredSolidTorus::baseEdge, rdoc::baseEdge)
+        .def("baseEdgeGroup", &LayeredSolidTorus::baseEdgeGroup,
+            rdoc::baseEdgeGroup)
+        .def("baseFace", &LayeredSolidTorus::baseFace, rdoc::baseFace)
         .def("topLevel", &LayeredSolidTorus::topLevel,
-            pybind11::return_value_policy::reference)
-        .def("meridinalCuts", &LayeredSolidTorus::meridinalCuts)
-        .def("topEdge", &LayeredSolidTorus::topEdge)
-        .def("topEdgeGroup", &LayeredSolidTorus::topEdgeGroup)
-        .def("topFace", &LayeredSolidTorus::topFace)
-        .def("flatten", &LayeredSolidTorus::flatten)
-        .def("transform", &LayeredSolidTorus::transform)
-        .def_static("recogniseFromBase", &LayeredSolidTorus::recogniseFromBase)
-        .def_static("recogniseFromTop", &LayeredSolidTorus::recogniseFromTop)
-        .def_static("recognise", &LayeredSolidTorus::recognise)
+            pybind11::return_value_policy::reference, rdoc::topLevel)
+        .def("meridinalCuts", &LayeredSolidTorus::meridinalCuts,
+            rdoc::meridinalCuts)
+        .def("topEdge", &LayeredSolidTorus::topEdge, rdoc::topEdge)
+        .def("topEdgeGroup", &LayeredSolidTorus::topEdgeGroup,
+            rdoc::topEdgeGroup)
+        .def("topFace", &LayeredSolidTorus::topFace, rdoc::topFace)
+        .def("flatten", &LayeredSolidTorus::flatten, rdoc::flatten)
+        .def("transform", &LayeredSolidTorus::transform, rdoc::transform)
+        .def_static("recogniseFromBase", &LayeredSolidTorus::recogniseFromBase,
+            rdoc::recogniseFromBase)
+        .def_static("recogniseFromTop", &LayeredSolidTorus::recogniseFromTop,
+            rdoc::recogniseFromTop)
+        .def_static("recognise", &LayeredSolidTorus::recognise, rdoc::recognise)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<LayeredSolidTorus>(m);
+    regina::python::add_global_swap<LayeredSolidTorus>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

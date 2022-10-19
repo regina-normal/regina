@@ -45,23 +45,25 @@ void addPluggedTorusBundle(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PluggedTorusBundle)
 
     auto c = pybind11::class_<PluggedTorusBundle, regina::StandardTriangulation>
-            (m, "PluggedTorusBundle")
-        .def(pybind11::init<const PluggedTorusBundle&>())
-        .def("swap", &PluggedTorusBundle::swap)
+            (m, "PluggedTorusBundle", rdoc_scope)
+        .def(pybind11::init<const PluggedTorusBundle&>(), rdoc::__copy)
+        .def("swap", &PluggedTorusBundle::swap, rdoc::swap)
         .def("bundle", &PluggedTorusBundle::bundle,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rdoc::bundle)
         .def("bundleIso", &PluggedTorusBundle::bundleIso,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::bundleIso)
         .def("region", &PluggedTorusBundle::region,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::region)
         .def("matchingReln", &PluggedTorusBundle::matchingReln,
-            pybind11::return_value_policy::reference_internal)
-        .def_static("recognise", &PluggedTorusBundle::recognise)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::matchingReln)
+        .def_static("recognise", &PluggedTorusBundle::recognise,
+            rdoc::recognise)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<PluggedTorusBundle>(m);
+    regina::python::add_global_swap<PluggedTorusBundle>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }
