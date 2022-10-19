@@ -43,7 +43,8 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName << " [ -f | -l | -n ] [ -c ]"
-        << " <file> [ <packet-label> ... ]\n";
+        " <file> [ <packet-label> ... ]\n"
+        "    " << progName << " [ -v, --version | -?, --help ]\n";
     std::cerr << std::endl;
     std::cerr << "    -f : Display full packet details (default)\n";
     std::cerr << "    -l : Only display packet labels and types\n";
@@ -52,8 +53,12 @@ void usage(const char* progName, const std::string& error = std::string()) {
     std::cerr << "    -c : Finish with a count of all packets in the file\n";
     std::cerr << std::endl;
     std::cerr << "    <packet-label> ... : Only display the listed packets"
-        << " (otherwise all\n";
+        " (otherwise all\n";
     std::cerr << "                         packets are displayed)\n";
+    std::cerr << std::endl;
+    std::cerr << "    -v, --version : Show which version of Regina "
+        "is being used\n";
+    std::cerr << "    -?, --help    : Display this help\n";
     exit(1);
 }
 
@@ -117,6 +122,18 @@ int main(int argc, char* argv[]) {
     char optChar;
     for (int i = 1; i < argc; i++) {
         if (*argv[i] == '-') {
+            // Standard arguments:
+            if (strcmp(argv[i], "-?") == 0 || strcmp(argv[i], "--help") == 0)
+                usage(argv[0]);
+            if (strcmp(argv[i], "-v") == 0 ||
+                    strcmp(argv[i], "--version") == 0) {
+                if (argc != 2)
+                    usage(argv[0], "Option --version cannot be "
+                        "used with any other arguments.");
+                std::cout << PACKAGE_BUILD_STRING << std::endl;
+                exit(0);
+            }
+
             // Option.
             if (! argv[i][1])
                 usage(argv[0], std::string("Invalid option: ") + argv[i]);

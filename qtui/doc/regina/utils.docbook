@@ -657,6 +657,10 @@
     <arg choice="req"><replaceable>file</replaceable></arg>
     <arg rep="repeat"><replaceable>packet-label</replaceable></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>regfiledump</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -709,6 +713,7 @@
        file.</para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 
@@ -2129,6 +2134,10 @@
     <arg choice="req"><replaceable>file1</replaceable></arg>
     <arg choice="req"><replaceable>file2</replaceable></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>trisetcmp</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2210,6 +2219,7 @@
       </para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 
