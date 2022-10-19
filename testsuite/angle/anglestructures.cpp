@@ -659,7 +659,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         void copyMove() {
             testCopyMove(triGieseking, "Gieseking");
             testCopyMove(triFigure8, "Figure Eight");
-            testCopyMove(Example<3>::whiteheadLink(), "Whitehead");
+            testCopyMove(Example<3>::whitehead(), "Whitehead");
         }
 };
 

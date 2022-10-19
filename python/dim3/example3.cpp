@@ -90,7 +90,8 @@ void addExample3(pybind11::module_& m) {
             rdoc::solidKleinBottle)
         .def_static("figureEight", &Example<3>::figureEight, rdoc::figureEight)
         .def_static("trefoil", &Example<3>::trefoil, rdoc::trefoil)
-        .def_static("whiteheadLink", &Example<3>::whiteheadLink,
+        .def_static("whitehead", &Example<3>::whitehead, rdoc::whitehead)
+        .def_static("whiteheadLink", &Example<3>::whitehead, // deprecated
             rdoc::whiteheadLink)
         .def_static("gieseking", &Example<3>::gieseking, rdoc::gieseking)
         .def_static("cuspedGenusTwoTorus",

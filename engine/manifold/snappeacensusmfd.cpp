@@ -84,7 +84,7 @@ Triangulation<3> SnapPeaCensusManifold::construct() const {
         } else if (index_ == 4) {
             return Example<3>::figureEight();
         } else if (index_ == 129) {
-            return Example<3>::whiteheadLink();
+            return Example<3>::whitehead();
         }
     }
 

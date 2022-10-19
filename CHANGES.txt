@@ -10,6 +10,9 @@ Regina - A Normal Surface Theory Calculator
 Version 7.2  [ (to be determined) ]
 
     ENGINE:
+        Class Example<3>:
+            - Renamed whiteheadLink() to whitehead().  The old name is kept
+              as a deprecated alias.
         Class HyperEncoding:
             - New static function empty().
         Class ListView<...>:

@@ -2615,7 +2615,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         void copyMove() {
             testCopyMove(Example<3>::poincare(), "Poincare homology sphere");
             testCopyMove(Example<3>::weeks(), "Weeks manifold");
-            testCopyMove(Example<3>::whiteheadLink(), "Whitehead");
+            testCopyMove(Example<3>::whitehead(), "Whitehead");
         }
 };
 

@@ -97,7 +97,7 @@ namespace {
         ExampleCreator<3>(QObject::tr("Twisted product S² ×~ S¹"), &regina::Example<3>::twistedSphereBundle),
         ExampleCreator<3>(QObject::tr("Weeks manifold"), &regina::Example<3>::weeks),
         ExampleCreator<3>(QObject::tr("Weber-Seifert dodecahedral space"), &regina::Example<3>::weberSeifert),
-        ExampleCreator<3>(QObject::tr("Whitehead link complement"), &regina::Example<3>::whiteheadLink),
+        ExampleCreator<3>(QObject::tr("Whitehead link complement"), &regina::Example<3>::whitehead),
     };
 
     /**

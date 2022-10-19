@@ -370,7 +370,17 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * @return the Whitehead link complement.
          */
-        static Triangulation<3> whiteheadLink();
+        static Triangulation<3> whitehead();
+
+        /**
+         * Deprecated alias for whitehead(), which returns a four-tetrahedron
+         * ideal triangulation of the Whitehead link complement.
+         *
+         * \deprecated This routine has been renamed to whitehead().
+         *
+         * @return the Whitehead link complement.
+         */
+        [[deprecated]] static Triangulation<3> whiteheadLink();
 
         /**
          * Returns the one-tetrahedron ideal triangulation of the
@@ -402,6 +412,10 @@ inline Triangulation<3> Example<3>::s2xs1() {
 
 inline Triangulation<3> Example<3>::solidKleinBottle() {
     return twistedBallBundle();
+}
+
+inline Triangulation<3> Example<3>::whiteheadLink() {
+    return whitehead();
 }
 
 } // namespace regina
