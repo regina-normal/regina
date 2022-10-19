@@ -43,22 +43,23 @@ void addLayeredLensSpace(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredLensSpace)
 
     auto c = pybind11::class_<LayeredLensSpace, regina::StandardTriangulation>
-            (m, "LayeredLensSpace")
-        .def(pybind11::init<const LayeredLensSpace&>())
-        .def("swap", &LayeredLensSpace::swap)
-        .def("p", &LayeredLensSpace::p)
-        .def("q", &LayeredLensSpace::q)
+            (m, "LayeredLensSpace", rdoc_scope)
+        .def(pybind11::init<const LayeredLensSpace&>(), rdoc::__copy)
+        .def("swap", &LayeredLensSpace::swap, rdoc::swap)
+        .def("p", &LayeredLensSpace::p, rdoc::p)
+        .def("q", &LayeredLensSpace::q, rdoc::q)
         .def("torus", &LayeredLensSpace::torus,
-            pybind11::return_value_policy::reference_internal)
-        .def("mobiusBoundaryGroup", &LayeredLensSpace::mobiusBoundaryGroup)
-        .def("isSnapped", &LayeredLensSpace::isSnapped)
-        .def("isTwisted", &LayeredLensSpace::isTwisted)
-        .def_static("recognise", &LayeredLensSpace::recognise)
+            pybind11::return_value_policy::reference_internal, rdoc::torus)
+        .def("mobiusBoundaryGroup", &LayeredLensSpace::mobiusBoundaryGroup,
+            rdoc::mobiusBoundaryGroup)
+        .def("isSnapped", &LayeredLensSpace::isSnapped, rdoc::isSnapped)
+        .def("isTwisted", &LayeredLensSpace::isTwisted, rdoc::isTwisted)
+        .def_static("recognise", &LayeredLensSpace::recognise, rdoc::recognise)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<LayeredLensSpace>(m);
+    regina::python::add_global_swap<LayeredLensSpace>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

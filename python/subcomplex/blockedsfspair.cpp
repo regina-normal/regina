@@ -44,19 +44,20 @@ void addBlockedSFSPair(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BlockedSFSPair)
 
     auto c = pybind11::class_<BlockedSFSPair, regina::StandardTriangulation>
-            (m, "BlockedSFSPair")
-        .def(pybind11::init<const BlockedSFSPair&>())
-        .def("swap", &BlockedSFSPair::swap)
+            (m, "BlockedSFSPair", rdoc_scope)
+        .def(pybind11::init<const BlockedSFSPair&>(), rdoc::__copy)
+        .def("swap", &BlockedSFSPair::swap, rdoc::swap)
         .def("region", &BlockedSFSPair::region,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::region)
         .def("matchingReln", &BlockedSFSPair::matchingReln,
-            pybind11::return_value_policy::reference_internal)
-        .def_static("recognise", &BlockedSFSPair::recognise)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::matchingReln)
+        .def_static("recognise", &BlockedSFSPair::recognise, rdoc::recognise)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<BlockedSFSPair>(m);
+    regina::python::add_global_swap<BlockedSFSPair>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

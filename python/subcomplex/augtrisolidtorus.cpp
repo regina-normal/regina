@@ -44,27 +44,30 @@ void addAugTriSolidTorus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(AugTriSolidTorus)
 
     auto c = pybind11::class_<AugTriSolidTorus, regina::StandardTriangulation>
-            (m, "AugTriSolidTorus")
-        .def(pybind11::init<const AugTriSolidTorus&>())
-        .def("swap", &AugTriSolidTorus::swap)
+            (m, "AugTriSolidTorus", rdoc_scope)
+        .def(pybind11::init<const AugTriSolidTorus&>(), rdoc::__copy)
+        .def("swap", &AugTriSolidTorus::swap, rdoc::swap)
         .def("core", &AugTriSolidTorus::core,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::core)
         .def("augTorus", &AugTriSolidTorus::augTorus,
-            pybind11::return_value_policy::reference_internal)
-        .def("edgeGroupRoles", &AugTriSolidTorus::edgeGroupRoles)
-        .def("chainLength", &AugTriSolidTorus::chainLength)
-        .def("chainType", &AugTriSolidTorus::chainType)
-        .def("torusAnnulus", &AugTriSolidTorus::torusAnnulus)
-        .def("hasLayeredChain", &AugTriSolidTorus::hasLayeredChain)
-        .def_static("recognise", &AugTriSolidTorus::recognise)
+            pybind11::return_value_policy::reference_internal, rdoc::augTorus)
+        .def("edgeGroupRoles", &AugTriSolidTorus::edgeGroupRoles,
+            rdoc::edgeGroupRoles)
+        .def("chainLength", &AugTriSolidTorus::chainLength, rdoc::chainLength)
+        .def("chainType", &AugTriSolidTorus::chainType, rdoc::chainType)
+        .def("torusAnnulus", &AugTriSolidTorus::torusAnnulus,
+            rdoc::torusAnnulus)
+        .def("hasLayeredChain", &AugTriSolidTorus::hasLayeredChain,
+            rdoc::hasLayeredChain)
+        .def_static("recognise", &AugTriSolidTorus::recognise, rdoc::recognise)
         .def_readonly_static("CHAIN_NONE", &AugTriSolidTorus::CHAIN_NONE)
         .def_readonly_static("CHAIN_MAJOR", &AugTriSolidTorus::CHAIN_MAJOR)
         .def_readonly_static("CHAIN_AXIS", &AugTriSolidTorus::CHAIN_AXIS)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<AugTriSolidTorus>(m);
+    regina::python::add_global_swap<AugTriSolidTorus>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

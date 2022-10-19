@@ -43,27 +43,30 @@ void addLayeredChain(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredChain)
 
     auto c = pybind11::class_<LayeredChain, regina::StandardTriangulation>
-            (m, "LayeredChain")
-        .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())
-        .def(pybind11::init<const LayeredChain&>())
-        .def("swap", &LayeredChain::swap)
+            (m, "LayeredChain", rdoc_scope)
+        .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>(),
+            rdoc::__init)
+        .def(pybind11::init<const LayeredChain&>(), rdoc::__copy)
+        .def("swap", &LayeredChain::swap, rdoc::swap)
         .def("bottom", &LayeredChain::bottom,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rdoc::bottom)
         .def("top", &LayeredChain::top,
-            pybind11::return_value_policy::reference)
-        .def("index", &LayeredChain::index)
-        .def("bottomVertexRoles", &LayeredChain::bottomVertexRoles)
-        .def("topVertexRoles", &LayeredChain::topVertexRoles)
-        .def("extendAbove", &LayeredChain::extendAbove)
-        .def("extendBelow", &LayeredChain::extendBelow)
-        .def("extendMaximal", &LayeredChain::extendMaximal)
-        .def("reverse", &LayeredChain::reverse)
-        .def("invert", &LayeredChain::invert)
+            pybind11::return_value_policy::reference, rdoc::top)
+        .def("index", &LayeredChain::index, rdoc::index)
+        .def("bottomVertexRoles", &LayeredChain::bottomVertexRoles,
+            rdoc::bottomVertexRoles)
+        .def("topVertexRoles", &LayeredChain::topVertexRoles,
+            rdoc::topVertexRoles)
+        .def("extendAbove", &LayeredChain::extendAbove, rdoc::extendAbove)
+        .def("extendBelow", &LayeredChain::extendBelow, rdoc::extendBelow)
+        .def("extendMaximal", &LayeredChain::extendMaximal, rdoc::extendMaximal)
+        .def("reverse", &LayeredChain::reverse, rdoc::reverse)
+        .def("invert", &LayeredChain::invert, rdoc::invert)
     ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);
 
-    regina::python::add_global_swap<LayeredChain>(m);
+    regina::python::add_global_swap<LayeredChain>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }
