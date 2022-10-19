@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <cstdlib>
+#include <cstring>
 #include <list>
 #include "packet/packet.h"
 #include "utilities/i18nutils.h"

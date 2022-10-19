@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <cstdlib>
+#include <cstring>
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "utilities/i18nutils.h"

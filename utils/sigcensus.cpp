@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <cstdlib>
+#include <cstring>
 #include "split/sigcensus.h"
 #include "utilities/stringutils.h"
 

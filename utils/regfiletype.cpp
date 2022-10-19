@@ -32,6 +32,7 @@
 
 #include "file/fileinfo.h"
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 
 void usage(const char* progName, const std::string& error = std::string()) {
