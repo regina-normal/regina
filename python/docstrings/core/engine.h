@@ -21,6 +21,9 @@ Debian servers might return "Debian package build".
 This information is supplied at build time by passing the option
 ``-DBUILD_INFO=...`` to CMake.
 
+If no such information was supplied at build time, then this string
+will be empty.
+
 Returns:
     any additional information supplied at build time.)doc";
 

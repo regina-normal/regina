@@ -121,6 +121,8 @@ namespace detail {
     /**
      * Returns a raw GMP integer holding the given value.
      *
+     * \nopython
+     *
      * @param value the value to assign to the new GMP integer.
      * @return a corresponding newly created and initialised GMP integer.
      */
@@ -128,6 +130,8 @@ namespace detail {
 
     /**
      * Returns a raw GMP integer holding the given value.
+     *
+     * \nopython
      *
      * @param value the value to assign to the new GMP integer.
      * @return a corresponding newly created and initialised GMP integer.
