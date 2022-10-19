@@ -236,12 +236,12 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     QLabel* aboutLabel;
     const char* buildInfo = BUILD_INFO;
     if (*buildInfo) {
-        autoLabel = new QLabel(QString("<qt>") + regDescription +
+        aboutLabel = new QLabel((QString("<qt>") + regDescription +
             "<p>%1<p>" + regCopyright +
             "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>")
-            .arg(BUILD_INFO);
+            .arg(BUILD_INFO));
     } else {
-        autoLabel = new QLabel(QString("<qt>") + regDescription +
+        aboutLabel = new QLabel(QString("<qt>") + regDescription +
             "<p>" + regCopyright +
             "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>");
     }
