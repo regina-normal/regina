@@ -11,6 +11,24 @@
 namespace regina::python::doc {
 
 
+namespace FacetPairing_ {
+
+// Docstring regina::python::doc::FacetPairing_::global_swap
+constexpr const char *global_swap =
+R"doc(Swaps the contents of the given facet pairings.
+
+This global routine simply calls FacetPairing<dim>::swap(); it is
+provided so that FacetPairing<dim> meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first facet pairing whose contents should be swapped.
+
+Parameter ``b``:
+    the second facet pairing whose contents should be swapped.)doc";
+
+}
+
 namespace detail {
 
 // Docstring regina::python::doc::detail::FacetPairingBase

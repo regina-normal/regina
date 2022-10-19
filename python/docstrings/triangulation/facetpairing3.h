@@ -93,36 +93,6 @@ Parameter ``faces``:
     begin. This parameter will also be modified directly by this
     routine as a way of returning results.)doc";
 
-// Docstring regina::python::doc::FacetPairing_::followChain_2
-static const char *followChain_2 =
-R"doc(Deprecated version of followChain() that uses an unsigned integer
-type.
-
-This routine behaves identically to followChain(size_t&, FacePair&),
-except that the tetrahedron index is passed using type ``size_t``
-instead of ``ssize_t``. This was the behaviour of followChain() in
-Regina 7.0 and earlier.
-
-As of Regina 7.1, followChain() has been reimplemented using
-``ssize_t``, for consistency with the type used by FacetSpec<3>::simp.
-
-See followChain(size_t&, FacePair&) for further details.
-
-.. deprecated::
-    Use ``ssize_t`` for the tetrahedron index instead. This routine is
-    implemented by calling the ``ssize_t`` variant with some extra
-    casts on either side that may add a tiny performance cost.
-
-Parameter ``tet``:
-    the index in the underlying triangulation of the tetrahedron to
-    begin at. This parameter will be modified directly by this routine
-    as a way of returning the results.
-
-Parameter ``faces``:
-    the pair of face numbers in the given tetrahedron at which we
-    begin. This parameter will also be modified directly by this
-    routine as a way of returning results.)doc";
-
 // Docstring regina::python::doc::FacetPairing_::hasBrokenDoubleEndedChain
 static const char *hasBrokenDoubleEndedChain =
 R"doc(Determines whether this face pairing contains a broken double-ended

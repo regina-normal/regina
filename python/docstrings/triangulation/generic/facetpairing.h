@@ -94,20 +94,6 @@ Precondition:
 Parameter ``tri``:
     the triangulation whose facet pairing should be constructed.)doc";
 
-// Docstring regina::python::doc::FacetPairing_::global_swap
-static const char *global_swap =
-R"doc(Swaps the contents of the given facet pairings.
-
-This global routine simply calls FacetPairing<dim>::swap(); it is
-provided so that FacetPairing<dim> meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first facet pairing whose contents should be swapped.
-
-Parameter ``b``:
-    the second facet pairing whose contents should be swapped.)doc";
-
 }
 
 } // namespace regina::python::doc
