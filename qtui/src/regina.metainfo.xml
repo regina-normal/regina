@@ -61,6 +61,15 @@
   </provides>
 
   <releases>
+    <release version="7.2" date="2022-09-30">
+      <description>
+        <p>
+          Significant updates for Python users, including comprehensive
+          docstrings throughout Regina's API and support for Python 3.11,
+          plus a handful of other minor improvements.
+        </p>
+      </description>
+    </release>
     <release version="7.1" date="2022-09-30">
       <description>
         <p>

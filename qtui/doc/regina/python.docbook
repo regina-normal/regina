@@ -364,7 +364,7 @@
   </para>
   <programlisting>
 bab@ember:~$ regina-python 
-Regina 7.1
+Regina 7.2
 Software for low-dimensional topology
 Copyright (c) 1999-2022, The Regina development team
 &gt;&gt;&gt; import snappy
