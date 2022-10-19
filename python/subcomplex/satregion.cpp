@@ -49,32 +49,35 @@ namespace {
 void addSatRegion(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SatBlockSpec)
 
-    auto s = pybind11::class_<SatBlockSpec>(m, "SatBlockSpec")
+    auto s = pybind11::class_<SatBlockSpec>(m, "SatBlockSpec", rdoc_scope)
+        .def("swap", &SatBlockSpec::swap, rdoc::swap)
         .def("block", &SatBlockSpec::block,
-            pybind11::return_value_policy::reference_internal)
-        .def("refVert", &SatBlockSpec::refVert)
-        .def("refHoriz", &SatBlockSpec::refHoriz)
+            pybind11::return_value_policy::reference_internal, rdoc::block)
+        .def("refVert", &SatBlockSpec::refVert, rdoc::refVert)
+        .def("refHoriz", &SatBlockSpec::refHoriz, rdoc::refHoriz)
     ;
     regina::python::add_output(s);
-    regina::python::add_eq_operators(s);
+    regina::python::add_eq_operators(s, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<SatBlockSpec>(m);
+    regina::python::add_global_swap<SatBlockSpec>(m, rdoc::global_swap);
 
     RDOC_SCOPE_SWITCH(SatRegion)
 
-    auto r = pybind11::class_<SatRegion>(m, "SatRegion")
-        .def(pybind11::init<const SatRegion&>())
-        .def("swap", &SatRegion::swap)
-        .def("countBlocks", &SatRegion::countBlocks)
+    auto r = pybind11::class_<SatRegion>(m, "SatRegion", rdoc_scope)
+        .def(pybind11::init<const SatRegion&>(), rdoc::__copy)
+        .def("swap", &SatRegion::swap, rdoc::swap)
+        .def("countBlocks", &SatRegion::countBlocks, rdoc::countBlocks)
         .def("block", &SatRegion::block,
-            pybind11::return_value_policy::reference_internal)
-        .def("blockIndex", &SatRegion::blockIndex)
-        .def("countBoundaryAnnuli", &SatRegion::countBoundaryAnnuli)
+            pybind11::return_value_policy::reference_internal, rdoc::block)
+        .def("blockIndex", &SatRegion::blockIndex, rdoc::blockIndex)
+        .def("countBoundaryAnnuli", &SatRegion::countBoundaryAnnuli,
+            rdoc::countBoundaryAnnuli)
         .def("boundaryAnnulus", &SatRegion::boundaryAnnulus,
-            pybind11::return_value_policy::reference_internal)
-        .def("createSFS", &SatRegion::createSFS)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::boundaryAnnulus)
+        .def("createSFS", &SatRegion::createSFS, rdoc::createSFS)
         .def("blockAbbrs", &SatRegion::blockAbbrs,
-            pybind11::arg("tex") = false)
+            pybind11::arg("tex") = false, rdoc::blockAbbrs)
         .def_static("find", [](regina::Triangulation<3>& tri, bool complete,
                 const std::function<bool(std::unique_ptr<SatRegion>)>& action) {
             // We need to strip out any reference to the TetList argument.
@@ -82,16 +85,16 @@ void addSatRegion(pybind11::module_& m) {
                     [&](std::unique_ptr<SatRegion> r, SatBlock::TetList&) {
                 return action(std::move(r));
             });
-        })
+        }, rdoc::find)
         .def_static("beginsRegion", [](const regina::SatAnnulus& a) {
             SatBlock::TetList avoidTets;
             return SatRegion::beginsRegion(a, avoidTets);
-        })
+        }, rdoc::beginsRegion)
     ;
     regina::python::add_output(r);
-    regina::python::add_eq_operators(r);
+    regina::python::add_eq_operators(r, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<SatRegion>(m);
+    regina::python::add_global_swap<SatRegion>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }
