@@ -599,46 +599,46 @@ InvalidInput : class
 Exception type
 
 IsoSigClassic2 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic3 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic4 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic5 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic6 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic7 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigClassic8 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees2 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees3 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees4 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees5 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees6 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees7 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigEdgeDegrees8 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigPrintable2 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -662,24 +662,24 @@ IsoSigPrintable8 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 IsoSigRidgeDegrees2 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigRidgeDegrees3 : alias ->  IsoSigEdgeDegrees3
 
 IsoSigRidgeDegrees4 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigRidgeDegrees5 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigRidgeDegrees6 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigRidgeDegrees7 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 IsoSigRidgeDegrees8 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.DISABLED
 
 Isomorphism2 : class
 Equality type : EqualityType.BY_VALUE
