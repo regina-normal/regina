@@ -61,12 +61,11 @@ namespace regina {
  * curves on the upper and lower boundaries, as well as mappings from
  * boundary curves to specific tetrahedron edges.
  *
- * For each of the two torus boundaries, two curves are chosen as
- * generators of the fundamental group; these curves are called
- * \a alpha and \a beta.  Note that there is no requirement that the
- * upper \a alpha and \a beta be parallel to the lower \a alpha and
- * \a beta.  The parallelReln() routine can be called to establish the
- * precise relationship between these upper and lower curves.
+ * For each of the two torus boundaries, two curves are chosen as generators
+ * of the fundamental group; these curves are called α and β.  Note that there
+ * is no requirement that the upper α and β be parallel to the lower α and β.
+ * The parallelReln() routine can be called to establish the precise
+ * relationship between these upper and lower curves.
  *
  * Every object of this class contains a full copy of the triangulation
  * that it describes (so you should not create excessive objects of this
@@ -92,16 +91,14 @@ class TxICore : public Output<TxICore> {
                  in the upper and lower boundary triangles.  See bdryRoles()
                  for details. */
         std::array<Matrix2, 2> bdryReln_;
-            /**< Expresses the \a alpha and \a beta curves for each
-                 torus boundary in terms of specific tetrahedron edges and
-                 vertices.  The elements \a bdryReln_[0] and \a bdryReln_[1]
-                 refer to the upper and lower boundaries respectively,
-                 and each of these matrices must have determinant +1 or -1.
-                 See bdryReln() for further details. */
+            /**< Expresses the α and β curves for each torus boundary in terms
+                 of specific tetrahedron edges and vertices.  The elements
+                 \a bdryReln_[0] and \a bdryReln_[1] refer to the upper and
+                 lower boundaries respectively, and each of these matrices must
+                 have determinant ±1.  See bdryReln() for further details. */
         Matrix2 parallelReln_;
-            /**< Expresses the lower \a alpha and \a beta curves in
-                 terms of the upper \a alpha and \a beta curves.  See
-                 parallelReln() for details. */
+            /**< Expresses the lower α and β curves in terms of the upper
+                 α and β curves.  See parallelReln() for details. */
 
     public:
         /**
@@ -185,7 +182,7 @@ class TxICore : public Output<TxICore> {
          */
         Perm<4> bdryRoles(int whichBdry, int whichTri) const;
         /**
-         * Returns a 2-by-2 matrix describing the \a alpha and \a beta curves
+         * Returns a 2-by-2 matrix describing the α and β curves
          * on a torus boundary in terms of specific tetrahedron edges.
          *
          * Consider the first triangle of the given boundary.  Let
@@ -194,15 +191,15 @@ class TxICore : public Output<TxICore> {
          *
          * Let \a edge01 be the directed edge from vertex \a p[0] to \a p[1]
          * of tetrahedron \a t, and let \a edge02 be the directed edge from
-         * vertex \a p[0] to \a p[2] of tetrahedron \a t.  Then the
-         * matrix returned by this routine describes how the directed
-         * edges \a edge01 and \a edge02 relate to the \a alpha and \a beta
-         * curves on the given boundary.  Specifically:
+         * vertex \a p[0] to \a p[2] of tetrahedron \a t.  Then the matrix
+         * returned by this routine describes how the directed edges \a edge01
+         * and \a edge02 relate to the α and β curves on the given boundary.
+         * Specifically:
          *
          * <pre>
-         *     [ alpha ]                  [ edge01 ]
-         *     [       ]  =  bdryReln() * [        ] .
-         *     [ beta  ]                  [ edge02 ]
+         *     [ α ]                  [ edge01 ]
+         *     [   ]  =  bdryReln() * [        ] .
+         *     [ β ]                  [ edge02 ]
          * </pre>
          *
          * It is guaranteed that this matrix has determinant +1 or -1.
@@ -217,11 +214,10 @@ class TxICore : public Output<TxICore> {
          * Returns a 2-by-2 matrix describing the parallel relationship
          * between the upper and lower boundary curves.
          *
-         * Let \a a_u and \a b_u be the upper \a alpha and \a beta
-         * boundary curves.  Suppose that the lower \a alpha is parallel
-         * to \a w.\a a_u + \a x.\a b_u, and that the lower \a beta is
-         * parallel to \a y.\a a_u + \a z.\a b_u.  Then the matrix
-         * returned will be
+         * Let \a a_u and \a b_u be the upper α and β boundary curves.
+         * Suppose that the lower α is parallel to \a w.\a a_u + \a x.\a b_u,
+         * and that the lower β is parallel to \a y.\a a_u + \a z.\a b_u.
+         * Then the matrix returned will be
          *
          * <pre>
          *     [ w  x ]
@@ -229,8 +225,8 @@ class TxICore : public Output<TxICore> {
          *     [ y  z ]
          * </pre>
          *
-         * In other words, if \a a_l and \a b_l are the lower \a alpha
-         * and \a beta curves respectively, we have
+         * In other words, if \a a_l and \a b_l are the lower α and β curves
+         * respectively, we have
          *
          * <pre>
          *     [ a_l ]                      [ a_u ]
@@ -429,8 +425,7 @@ class TxICore : public Output<TxICore> {
  * is coned out from triangles \a u0 and \a u1, and the lower boundary is
  * coned out from triangles \a w0 and \a w1.  In each boundary, \a u0 or
  * \a w0 gives the first boundary triangle and \a u1 or \a w1 gives the second.
- * The directions of the corresponding \a alpha and \a beta curves are
- * illustrated below.
+ * The directions of the corresponding α and β curves are illustrated below.
  *
  * \image html diagbdry.png
  *
@@ -555,8 +550,8 @@ void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs);
  * the different TxIDiagonalCore triangulation <tt>T_6:1</tt>.
  *
  * The triangulations of the upper and lower boundary tori are completely
- * parallel (and in particular, the upper and lower \a alpha curves are
- * parallel, as are the upper and lower \a beta curves).
+ * parallel (and in particular, the upper and lower α curves are parallel,
+ * as are the upper and lower β curves).
  *
  * For reference, the central torus of this triangulation is depicted below.
  * The left and right sides of the diagram are identified, as are the
@@ -565,8 +560,7 @@ void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs);
  * boundary coned out from triangles \a u0 and \a u1 and the lower boundary
  * coned out from triangles \a w0 and \a w1.  In each boundary, \a u0 or
  * \a w0 gives the first boundary triangle and \a u1 or \a w1 gives the second.
- * The directions of the corresponding \a alpha and \a beta curves are
- * are also included.
+ * The directions of the corresponding α and β curves are are also included.
  *
  * \image html parallel.png
  *

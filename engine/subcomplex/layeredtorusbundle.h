@@ -158,25 +158,23 @@ class LayeredTorusBundle : public StandardTriangulation {
          * tetrahedra relates curves on the two torus boundaries of the
          * core <tt>T x I</tt>.
          *
-         * The TxICore class documentation describes generating \a alpha
-         * and \a beta curves on the two torus boundaries of the core
-         * <tt>T x I</tt> (which are referred to as the \e upper and
-         * \e lower boundaries).  The two boundary tori are parallel in
-         * two directions: through the core, and through the layering.
-         * It is desirable to know the parallel relationship between
-         * the two sets of boundary curves in each direction.
+         * The TxICore class documentation describes generating α and β curves
+         * on the two torus boundaries of the core <tt>T x I</tt> (which are
+         * referred to as the \e upper and \e lower boundaries).  The two
+         * boundary tori are parallel in two directions: through the core,
+         * and through the layering.  It is desirable to know the parallel
+         * relationship between the two sets of boundary curves in each
+         * direction.
          *
          * The relationship through the core is already described by
          * TxICore::parallelReln().  This routine describes the
          * relationship through the layering.
          *
-         * Let \a a_u and \a b_u be the \a alpha and \a beta curves on
-         * the upper boundary torus, and let \a a_l and \a b_l be the
-         * \a alpha and \a beta curves on the lower boundary torus.
-         * Suppose that the upper \a alpha is parallel to
-         * \a w.\a a_l + \a x.\a b_l, and that the upper \a beta is
-         * parallel to \a y.\a a_l + \a z.\a b_l.  Then the matrix
-         * returned will be
+         * Let \a a_u and \a b_u be the α and β curves on the upper boundary
+         * torus, and let \a a_l and \a b_l be the α and β curves on the lower
+         * boundary torus.  Suppose that the upper α is parallel to
+         * \a w.\a a_l + \a x.\a b_l, and that the upper β is parallel to
+         * \a y.\a a_l + \a z.\a b_l.  Then the matrix returned will be
          *
          * <pre>
          *     [ w  x ]
