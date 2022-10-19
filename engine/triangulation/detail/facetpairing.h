@@ -51,7 +51,8 @@
 #include "utilities/boolset.h"
 #include "utilities/tightencoding.h"
 
-namespace regina::detail {
+namespace regina {
+namespace detail {
 
 /**
  * Provides core functionality for facet pairings (that is, dual graphs) of
@@ -917,6 +918,26 @@ class FacetPairingBase :
             Action&& action, Args&&... args);
 };
 
+} // namespace regina::detail -> namespace regina
+
+/**
+ * Swaps the contents of the given facet pairings.
+ *
+ * This global routine simply calls FacetPairing<dim>::swap(); it is provided
+ * so that FacetPairing<dim> meets the C++ Swappable requirements.
+ *
+ * @param a the first facet pairing whose contents should be swapped.
+ * @param b the second facet pairing whose contents should be swapped.
+ *
+ * \ingroup generic
+ */
+template <int dim>
+void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept {
+    a.swap(b);
+}
+
+namespace detail {
+
 // Inline functions for FacetPairingBase
 
 template <int dim>
@@ -1140,7 +1161,7 @@ inline void FacetPairingBase<dim>::findAllPairings(size_t nSimplices,
         std::forward<Action>(action), std::forward<Args>(args)...);
 }
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #include "triangulation/detail/facetpairing-impl.h"
 

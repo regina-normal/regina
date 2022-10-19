@@ -35,37 +35,44 @@
 #include "regina-config.h" // for REGINA_HIGHDIM
 #include "triangulation/facetspec.h"
 #include "../helpers.h"
+#include "../python/docstrings/triangulation/facetspec.h"
 
 using pybind11::overload_cast;
 using regina::FacetSpec;
 
 template <int dim>
 void addFacetSpec(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<FacetSpec<dim>>(m, name)
-        .def(pybind11::init<>())
-        .def(pybind11::init<ssize_t, int>())
-        .def(pybind11::init<const FacetSpec<dim>&>())
+    RDOC_SCOPE_BEGIN(FacetSpec)
+
+    auto c = pybind11::class_<FacetSpec<dim>>(m, name, rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<ssize_t, int>(), rdoc::__init)
+        .def(pybind11::init<const FacetSpec<dim>&>(), rdoc::__copy)
         .def_readwrite("simp", &FacetSpec<dim>::simp)
         .def_readwrite("facet", &FacetSpec<dim>::facet)
-        .def("isBoundary", &FacetSpec<dim>::isBoundary)
-        .def("isBeforeStart", &FacetSpec<dim>::isBeforeStart)
-        .def("isPastEnd", &FacetSpec<dim>::isPastEnd)
-        .def("setFirst", &FacetSpec<dim>::setFirst)
-        .def("setBoundary", &FacetSpec<dim>::setBoundary)
-        .def("setBeforeStart", &FacetSpec<dim>::setBeforeStart)
-        .def("setPastEnd", &FacetSpec<dim>::setPastEnd)
+        .def("isBoundary", &FacetSpec<dim>::isBoundary, rdoc::isBoundary)
+        .def("isBeforeStart", &FacetSpec<dim>::isBeforeStart,
+            rdoc::isBeforeStart)
+        .def("isPastEnd", &FacetSpec<dim>::isPastEnd, rdoc::isPastEnd)
+        .def("setFirst", &FacetSpec<dim>::setFirst, rdoc::setFirst)
+        .def("setBoundary", &FacetSpec<dim>::setBoundary, rdoc::setBoundary)
+        .def("setBeforeStart", &FacetSpec<dim>::setBeforeStart,
+            rdoc::setBeforeStart)
+        .def("setPastEnd", &FacetSpec<dim>::setPastEnd, rdoc::setPastEnd)
         .def("inc", [](FacetSpec<dim>& s) {
             return s++;
-        })
+        }, rdoc::__inc)
         .def("dec", [](FacetSpec<dim>& s) {
             return s--;
-        })
-        .def(pybind11::self < pybind11::self)
-        .def(pybind11::self <= pybind11::self)
+        }, rdoc::__dec)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
+        .def(pybind11::self <= pybind11::self, rdoc::__le)
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_END
 }
 
 void addFacetSpec(pybind11::module_& m) {

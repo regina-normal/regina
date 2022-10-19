@@ -218,20 +218,6 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
     friend class Cut;
 };
 
-/**
- * Swaps the contents of the given facet pairings.
- *
- * This global routine simply calls FacetPairing<dim>::swap(); it is provided
- * so that FacetPairing<dim> meets the C++ Swappable requirements.
- *
- * @param a the first facet pairing whose contents should be swapped.
- * @param b the second facet pairing whose contents should be swapped.
- *
- * \ingroup generic
- */
-template <int dim>
-void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept;
-
 // Inline functions for FacetPairing
 
 template <int dim>
@@ -247,11 +233,6 @@ inline FacetPairing<dim>::FacetPairing(std::istream& in) :
 template <int dim>
 inline FacetPairing<dim>::FacetPairing(size_t size) :
         detail::FacetPairingBase<dim>(size) {
-}
-
-template <int dim>
-inline void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept {
-    a.swap(b);
 }
 
 } // namespace regina

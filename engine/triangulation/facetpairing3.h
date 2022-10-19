@@ -214,6 +214,8 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * with some extra casts on either side that may add a tiny
          * performance cost.
          *
+         * \nopython Use the non-deprecated variant of this routine instead.
+         *
          * @param tet the index in the underlying triangulation of the
          * tetrahedron to begin at.  This parameter will be modified
          * directly by this routine as a way of returning the results.
