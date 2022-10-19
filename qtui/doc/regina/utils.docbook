@@ -177,6 +177,10 @@
     <arg><option>-g, --graph</option></arg>
     <arg><option>-r, --real</option></arg>
    </cmdsynopsis>
+   <cmdsynopsis>
+    <command>dgt</command>
+    &versionhelpopts;
+   </cmdsynopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -278,6 +282,7 @@
       </para>
      </listitem>
     </varlistentry>
+    &versionhelpdesc;
    </variablelist>
   </refsect1>
 

@@ -11,6 +11,9 @@ dgt \- Triangulate a 3-manifold or 4-manifold from a framed link
 
 \fBdgt\fR { \fB-3, --dim3\fR | \fB-4, --dim4\fR } [ \fB-g, --graph\fR ] [ \fB-r, --real\fR ]
 
+
+\fBdgt\fR { \fB-v, --version\fR | \fB-?, --help\fR }
+
 .SH "DESCRIPTION"
 .PP
 This utility builds a triangulation or coloured graph of a
@@ -76,6 +79,13 @@ produce a closed manifold.
 
 This option will be ignored for 3-manifolds, as all 3-manifolds
 built from this construction are closed.
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "EXAMPLES"
 .PP
 The following builds the Poincare homology 3-sphere obtained by
