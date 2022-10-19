@@ -62,12 +62,12 @@ Returns:
 
 // Docstring regina::python::doc::detail::ExampleBase_::ballBundle
 constexpr const char *ballBundle =
-R"doc(Returns a triangulation of the product space ``B^(*dim*-1) x S^1``.
+R"doc(Returns a triangulation of the product space ``B^(*dim*-1) x S¹``.
 This will use one simplex in odd dimensions, or two simplices in even
 dimensions.
 
 Returns:
-    the product ``B^(*dim*-1) x S^1``.)doc";
+    the product ``B^(*dim*-1) x S¹``.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::simplicialSphere
 constexpr const char *simplicialSphere =
@@ -87,27 +87,27 @@ Returns:
 // Docstring regina::python::doc::detail::ExampleBase_::sphereBundle
 constexpr const char *sphereBundle =
 R"doc(Returns a two-simplex triangulation of the product space ``S^(*dim*-1)
-x S^1``.
+x S¹``.
 
 Returns:
-    the product ``S^(*dim*-1) x S^1``.)doc";
+    the product ``S^(*dim*-1) x S¹``.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::twistedBallBundle
 constexpr const char *twistedBallBundle =
 R"doc(Returns a triangulation of the twisted product space ``B^(*dim*-1) x~
-S^1``. This will use one simplex in even dimensions, or two simplices
+S¹``. This will use one simplex in even dimensions, or two simplices
 in odd dimensions.
 
 Returns:
-    the twisted product ``B^(*dim*-1) x~ S^1``.)doc";
+    the twisted product ``B^(*dim*-1) x~ S¹``.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::twistedSphereBundle
 constexpr const char *twistedSphereBundle =
 R"doc(Returns a two-simplex triangulation of the twisted product space
-``S^(*dim*-1) x~ S^1``.
+``S^(*dim*-1) x~ S¹``.
 
 Returns:
-    the twisted product ``S^(*dim*-1) x~ S^1``.)doc";
+    the twisted product ``S^(*dim*-1) x~ S¹``.)doc";
 
 }
 

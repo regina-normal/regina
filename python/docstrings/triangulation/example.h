@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Example
-static const char *Example =
+constexpr const char *Example =
 R"doc(This class offers static routines for constructing a variety of sample
 *dim*-dimensional triangulations. These triangulations may be useful
 for testing new code, or for simply getting a feel for how Regina

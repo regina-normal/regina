@@ -27,6 +27,9 @@ __version__ = "2.6.2.dev1.regina"
 INLINE_FILES = [
     '../../engine/census/gluingperms.h',
     '../../engine/core/output.h',
+    '../../engine/triangulation/example.h',
+    '../../engine/triangulation/isosigencoding.h',
+    '../../engine/triangulation/isosigtype.h',
     '../../engine/utilities/flags.h',
     '../../engine/utilities/listview.h',
     '../../engine/utilities/tableview.h'

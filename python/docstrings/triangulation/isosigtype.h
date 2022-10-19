@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::IsoSigClassic
-static const char *IsoSigClassic =
+constexpr const char *IsoSigClassic =
 R"doc(The default signature type to use for isomorphism signatures.
 
 This signature type is consistent with the original isomorphism
@@ -57,7 +57,7 @@ Python:
     IsoSigClassic3 for dimensions 2 and 3).)doc";
 
 // Docstring regina::python::doc::IsoSigDegrees
-static const char *IsoSigDegrees =
+constexpr const char *IsoSigDegrees =
 R"doc(Defines an alternate type of isomorphism signature based on degree
 sequences of *subdim*-faces.
 
@@ -91,7 +91,7 @@ Python:
 namespace IsoSigClassic_ {
 
 // Docstring regina::python::doc::IsoSigClassic_::__init
-static const char *__init =
+constexpr const char *__init =
 R"doc(Initialises this object to iterate through candidate "starting
 simplices" *s* and "starting labellings" *p* for the given
 triangulation component. See the class notes for details.
@@ -103,7 +103,7 @@ Parameter ``comp``:
     the triangulation component that we are examining.)doc";
 
 // Docstring regina::python::doc::IsoSigClassic_::next
-static const char *next =
+constexpr const char *next =
 R"doc(Advances this object to the next candidate pair (*s*, *p*).
 
 See the class notes for further details.
@@ -117,7 +117,7 @@ Returns:
     candidate pair (i.e., the current candidate pair is the last).)doc";
 
 // Docstring regina::python::doc::IsoSigClassic_::perm
-static const char *perm =
+constexpr const char *perm =
 R"doc(Returns the current starting labelling *p* of the vertices of the
 current starting simplex.
 
@@ -133,7 +133,7 @@ Returns:
     "canonical" labels 0,1,...,*dim*.)doc";
 
 // Docstring regina::python::doc::IsoSigClassic_::simplex
-static const char *simplex =
+constexpr const char *simplex =
 R"doc(Returns the current starting simplex *s*.
 
 See the class notes for further details.
@@ -154,7 +154,7 @@ Returns:
 namespace IsoSigDegrees_ {
 
 // Docstring regina::python::doc::IsoSigDegrees_::__init
-static const char *__init =
+constexpr const char *__init =
 R"doc(Initialises this object to iterate through candidate "starting
 simplices" *s* and "starting labellings" *p* for the given
 triangulation component.
@@ -168,7 +168,7 @@ Parameter ``comp``:
     the triangulation component that we are examining.)doc";
 
 // Docstring regina::python::doc::IsoSigDegrees_::next
-static const char *next =
+constexpr const char *next =
 R"doc(Advances this object to the next candidate pair (*s*, *p*).
 
 See the IsoSigClassic class documentation for further details.
@@ -182,7 +182,7 @@ Returns:
     candidate pair (i.e., the current candidate pair is the last).)doc";
 
 // Docstring regina::python::doc::IsoSigDegrees_::perm
-static const char *perm =
+constexpr const char *perm =
 R"doc(Returns the current starting labelling *p* of the vertices of the
 current starting simplex.
 
@@ -198,7 +198,7 @@ Returns:
     "canonical" labels 0,1,...,*dim*.)doc";
 
 // Docstring regina::python::doc::IsoSigDegrees_::simplex
-static const char *simplex =
+constexpr const char *simplex =
 R"doc(Returns the current starting simplex *s*.
 
 See the IsoSigClassic class documentation notes for further details.

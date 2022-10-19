@@ -47,13 +47,7 @@ The new tetrahedra will be inserted at the end of the list of
 tetrahedra in the triangulation.
 
 Precondition:
-    gcd(*a1*, *b1*) = 1.
-
-Precondition:
-    gcd(*a2*, *b2*) = 1.
-
-Precondition:
-    gcd(*a3*, *b3*) = 1.
+    gcd(*a1*, *b1*) = gcd(*a2*, *b2*) = gcd(*a3*, *b3*) = 1.
 
 Parameter ``a1``:
     a parameter describing the first layered solid torus in the
@@ -212,26 +206,25 @@ Returns:
 // Docstring regina::python::doc::Example_::rp2xs1
 static const char *rp2xs1 =
 R"doc(Returns a three-tetrahedron triangulation of the non-orientable
-product space ``RP^2 x S^1``.
+product space ``RP² x S¹``.
 
 Returns:
-    the product space ``RP^2 x S^1``.)doc";
+    the product space ``RP² x S¹``.)doc";
 
 // Docstring regina::python::doc::Example_::rp3rp3
 static const char *rp3rp3 =
-R"doc(Returns a triangulation of the connected sum ``RP^3 # RP^3``.
+R"doc(Returns a triangulation of the connected sum ``RP³ # RP³``.
 
 Returns:
-    the connected sum ``RP^3 # RP^3``.)doc";
+    the connected sum ``RP³ # RP³``.)doc";
 
 // Docstring regina::python::doc::Example_::s2xs1
 static const char *s2xs1 =
-R"doc(Returns a two-tetrahedron triangulation of the product space ``S^2 x
-S^1``. This is identical to calling the generic routine
-sphereBundle().
+R"doc(Returns a two-tetrahedron triangulation of the product space ``S² x
+S¹``. This is identical to calling the generic routine sphereBundle().
 
 Returns:
-    the product space ``S^2 x S^1``.)doc";
+    the product space ``S² x S¹``.)doc";
 
 // Docstring regina::python::doc::Example_::sfsOverSphere
 static const char *sfsOverSphere =
@@ -258,13 +251,7 @@ Precondition:
     None of *a1*, *a2* or *a3* are 0.
 
 Precondition:
-    gcd(*a1*, *b1*) = 1.
-
-Precondition:
-    gcd(*a2*, *b2*) = 1.
-
-Precondition:
-    gcd(*a3*, *b3*) = 1.
+    gcd(*a1*, *b1*) = gcd(*a2*, *b2*) = gcd(*a3*, *b3*) = 1.
 
 Parameter ``a1``:
     a parameter describing the first exceptional fibre.
@@ -368,10 +355,21 @@ returns just one).
 Returns:
     the Weeks manifold.)doc";
 
-// Docstring regina::python::doc::Example_::whiteheadLink
-static const char *whiteheadLink =
+// Docstring regina::python::doc::Example_::whitehead
+static const char *whitehead =
 R"doc(Returns a four-tetrahedron ideal triangulation of the Whitehead link
 complement.
+
+Returns:
+    the Whitehead link complement.)doc";
+
+// Docstring regina::python::doc::Example_::whiteheadLink
+static const char *whiteheadLink =
+R"doc(Deprecated alias for whitehead(), which returns a four-tetrahedron
+ideal triangulation of the Whitehead link complement.
+
+.. deprecated::
+    This routine has been renamed to whitehead().
 
 Returns:
     the Whitehead link complement.)doc";

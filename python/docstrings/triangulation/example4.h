@@ -78,8 +78,8 @@ R"doc(Returns a four-pentachoron triangulation of the standard complex
 projective plane. This triangulation is minimal.
 
 Under the orientation convention that we use for intersection forms,
-this triangulation gives the "plain" ``CP^2`` with intersection form
-[1], not the reflected ``CP^2`` with intersection form [-1].
+this triangulation gives the "plain" ``CP²`` with intersection form
+[1], not the reflected ``CP²`` with intersection form [-1].
 
 Returns:
     the standard complex projective plane.)doc";
@@ -160,39 +160,38 @@ Returns:
 
 // Docstring regina::python::doc::Example_::s2xs2
 static const char *s2xs2 =
-R"doc(Returns a six-pentachoron triangulation of the standard product ``S^2
-x S^2``. This triangulation is minimal.
+R"doc(Returns a six-pentachoron triangulation of the standard product ``S² x
+S²``. This triangulation is minimal.
 
 Returns:
     the standard product of two 2-spheres.)doc";
 
 // Docstring regina::python::doc::Example_::s2xs2Twisted
 static const char *s2xs2Twisted =
-R"doc(Returns a six-pentachoron triangulation of the twisted product ``S^2
-x~ S^2``. This manifold is diffeomorphic to ``CP^2 # -CP^2``, where
-``-CP^2`` denotes ``CP^2`` with its orientation reversed. This
-triangulation is minimal.
+R"doc(Returns a six-pentachoron triangulation of the twisted product ``S² x~
+S²``. This manifold is diffeomorphic to ``CP² # -CP²``, where ``-CP²``
+denotes ``CP²`` with its orientation reversed. This triangulation is
+minimal.
 
 Returns:
     the twisted product of two 2-spheres.)doc";
 
 // Docstring regina::python::doc::Example_::s3xs1
 static const char *s3xs1 =
-R"doc(Returns a two-pentachoron triangulation of the product space ``S^3 x
-S^1``. This is identical to calling the generic routine
-sphereBundle().
+R"doc(Returns a two-pentachoron triangulation of the product space ``S³ x
+S¹``. This is identical to calling the generic routine sphereBundle().
 
 Returns:
-    the product ``S^3 x S^1``.)doc";
+    the product ``S³ x S¹``.)doc";
 
 // Docstring regina::python::doc::Example_::s3xs1Twisted
 static const char *s3xs1Twisted =
 R"doc(Returns a two-pentachoron triangulation of the twisted product space
-``S^3 x~ S^1``. This is identical to calling the generic routine
+``S³ x~ S¹``. This is identical to calling the generic routine
 twistedSphereBundle().
 
 Returns:
-    the twisted product ``S^3 x~ S^1``.)doc";
+    the twisted product ``S³ x~ S¹``.)doc";
 
 // Docstring regina::python::doc::Example_::simplicialFourSphere
 static const char *simplicialFourSphere =

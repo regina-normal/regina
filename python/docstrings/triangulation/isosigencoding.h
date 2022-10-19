@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::IsoSigPrintable
-static const char *IsoSigPrintable =
+constexpr const char *IsoSigPrintable =
 R"doc(The default encoding to use for isomorphism signatures.
 
 This printable encoding is consistent with the original isomorphism
@@ -33,12 +33,12 @@ Python:
 namespace IsoSigPrintable_ {
 
 // Docstring regina::python::doc::IsoSigPrintable_::emptySig
-static const char *emptySig =
+constexpr const char *emptySig =
 R"doc(Returns the isomorphism signature of an empty *dim*-dimensional
 triangulation.)doc";
 
 // Docstring regina::python::doc::IsoSigPrintable_::encode
-static const char *encode =
+constexpr const char *encode =
 R"doc(Encodes data for a single connected component of a *dim*-dimensional
 triangulation.
 

@@ -150,7 +150,7 @@ double-ended chain that is not a part of a complete double-ended
 chain, i.e., the final two unaccounted faces are not joined together.
 
 A face pairing containing a broken double-ended chain cannot model a
-closed minimal irreducible P^2-irreducible 3-manifold triangulation on
+closed minimal irreducible P²-irreducible 3-manifold triangulation on
 more than two tetrahedra. See "Face pairing graphs and 3-manifold
 enumeration", Benjamin A. Burton, J. Knot Theory Ramifications 13
 (2004), 1057--1101.
@@ -208,7 +208,7 @@ joined to each other along two faces. The remaining two faces of these
 two tetrahedra remain unaccounted for by this structure.
 
 A face pairing containing a one-ended chain with a double handle
-cannot model a closed minimal irreducible P^2-irreducible 3-manifold
+cannot model a closed minimal irreducible P²-irreducible 3-manifold
 triangulation on more than two tetrahedra. See "Face pairing graphs
 and 3-manifold enumeration", Benjamin A. Burton, J. Knot Theory
 Ramifications 13 (2004), 1057--1101.
@@ -253,7 +253,7 @@ tetrahedron, and one face at the end of the chain) remain unaccounted
 for by this structure.
 
 A face pairing containing a structure of this type cannot model a
-closed minimal irreducible P^2-irreducible 3-manifold triangulation on
+closed minimal irreducible P²-irreducible 3-manifold triangulation on
 more than two tetrahedra. See "Enumeration of non-orientable
 3-manifolds using face-pairing graphs and union-find", Benjamin A.
 Burton, Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
@@ -282,7 +282,7 @@ edge is where two different tetrahedra are joined along three of their
 faces.
 
 A face pairing containing a triple edge cannot model a closed minimal
-irreducible P^2-irreducible 3-manifold triangulation on more than two
+irreducible P²-irreducible 3-manifold triangulation on more than two
 tetrahedra. See "Face pairing graphs and 3-manifold enumeration",
 Benjamin A. Burton, J. Knot Theory Ramifications 13 (2004), 1057--
 1101.
@@ -310,7 +310,7 @@ remaining two faces (one from each of the new tetrahedra) remain
 unaccounted for by this structure.
 
 A face pairing containing a triple one-ended chain cannot model a
-closed minimal irreducible P^2-irreducible 3-manifold triangulation on
+closed minimal irreducible P²-irreducible 3-manifold triangulation on
 more than two tetrahedra. See "Enumeration of non-orientable
 3-manifolds using face-pairing graphs and union-find", Benjamin A.
 Burton, Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
@@ -359,7 +359,7 @@ original chain has zero or positive length). See hasTripleEdge() and
 hasOneEndedChainWithDoubleHandle() for further details.
 
 A face pairing containing a wedged double-ended chain cannot model a
-closed minimal irreducible P^2-irreducible 3-manifold triangulation on
+closed minimal irreducible P²-irreducible 3-manifold triangulation on
 more than two tetrahedra. See "Enumeration of non-orientable
 3-manifolds using face-pairing graphs and union-find", Benjamin A.
 Burton, Discrete Comput. Geom. 38 (2007), no. 3, 527--571.

@@ -135,7 +135,7 @@ Returns:
 // Docstring regina::python::doc::Manifold_::structure
 static const char *structure =
 R"doc(Returns details of the structure of this 3-manifold that might not be
-evident from its common name. For instance, for an orbit space S^3/G
+evident from its common name. For instance, for an orbit space S³/G
 this routine might return the full Seifert structure.
 
 This routine may return the empty string if no additional details are

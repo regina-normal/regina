@@ -114,7 +114,7 @@ neatly into other families.
 
 This triangulation contains the fewest possible number of tetrahedra
 (TxICore triangulations are not seen below six tetrahedra). It is
-referred to as ``T_6^1`` in the paper "Structures of small closed non-
+referred to as ``T_6¹`` in the paper "Structures of small closed non-
 orientable 3-manifold triangulations", Benjamin A. Burton, J. Knot
 Theory Ramifications 16 (2007), 545--574. In Regina it is given the
 name ``T_6*``, to avoid confusion with the different TxIDiagonalCore
