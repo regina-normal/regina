@@ -12,7 +12,7 @@ tricensus \- Form a census of triangulations
 \fBtricensus\fR [ \fB-t, --tetrahedra=\fItetrahedra\fB\fR ] [ \fB-2, --dim2\fR | \fB-4, --dim4\fR ] [ \fB-b, --boundary\fR | \fB-i, --internal\fR | \fB-B, --bdryfaces=\fItriangles\fB\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR | \fB-h, --minhyp\fR ] [ \fB--allowinvalid\fR ] [ \fB-s, --sigs\fR | \fB-S, --canonical\fR | \fB-e, --encodings\fR | \fB-c, --subcontainers\fR ] [ \fB-p, --genpairs\fR | \fB-P, --usepairs\fR ] [ \fB--threads=\fInum_threads\fB\fR ] \fB\fIoutput-file\fB\fR
 
 
-\fBtricensus\fR \fB--help\fR
+\fBtricensus\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
@@ -426,6 +426,13 @@ Once all of the pairings have been output, you may still face a
 long wait while the threads together work their way through the
 queue of subsearches that has accumulated.
 .RE
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "EXAMPLES"
 .PP
 The following command forms a census of all 3-tetrahedron closed

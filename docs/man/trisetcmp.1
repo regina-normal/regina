@@ -11,6 +11,9 @@ trisetcmp \- Compare triangulations between two Regina data files
 
 \fBtrisetcmp\fR [ \fB-m\fR | \fB-n\fR ] [ \fB-s\fR ] \fB\fIfile1\fB\fR \fB\fIfile2\fB\fR
 
+
+\fBtrisetcmp\fR { \fB-v, --version\fR | \fB-?, --help\fR }
+
 .SH "DESCRIPTION"
 .PP
 Compares all triangulations in the first file against
@@ -63,6 +66,13 @@ In the case of \fB-n\fR (output non-matches only),
 this program outputs all triangulations from
 \fIfile1\fR that are not isomorphic to a
 subcomplex of any triangulation from \fIfile2\fR\&.
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "INTERNATIONALISATION"
 .PP
 If any packets contain international characters,

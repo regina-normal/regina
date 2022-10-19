@@ -11,6 +11,9 @@ regfiletype \- Identify the formats of Regina data files
 
 \fBregfiletype\fR \fB\fIfile\fB\fR\fI ...\fR
 
+
+\fBregfiletype\fR { \fB-v, --version\fR | \fB-?, --help\fR }
+
 .SH "DESCRIPTION"
 .PP
 This utility determines which file format a given
@@ -26,6 +29,14 @@ and support for this format was removed completely in 2013
 (Regina\~4.94).
 If you still need to recognise and/or read files in this ancient binary
 format, you will need to download Regina\~4.93.
+.SH "OPTIONS"
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "MACOS USERS"
 .PP
 If you downloaded a drag-and-drop app bundle, this utility is

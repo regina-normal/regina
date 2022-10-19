@@ -12,7 +12,7 @@ retriangulate \- Exhaustively search through triangulations or knot diagrams usi
 \fBretriangulate\fR [ \fB-h, --height=\fIheight\fB\fR ] [ \fB-t, --threads=\fIthreads\fB\fR ] [ \fB-3, --dim3\fR | \fB-4, --dim4\fR | \fB-k, --knot\fR ] [ \fB-a, --anysig\fR ] [ \fB--\fR ] \fB\fIsignature\fB\fR
 
 
-\fBretriangulate\fR \fB--help\fR
+\fBretriangulate\fR { \fB-v, --version\fR | \fB-?, --help\fR }
 
 .SH "DESCRIPTION"
 .PP
@@ -211,6 +211,13 @@ next on the command line should be treated as the input signature.
 
 This is useful when your signature begins with a dash, to avoid
 confusing your input signature with a regular command line option.
+.TP
+\fB-v, --version\fR
+Show which version of Regina is being used, and exit
+immediately.
+.TP
+\fB-?, --help\fR
+Display brief usage information, and exit immediately.
 .SH "EXAMPLES"
 .PP
 The following 3-manifold triangulation is non-minimal, but it requires a bit
