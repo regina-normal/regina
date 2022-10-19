@@ -404,6 +404,7 @@ int main(int argc, const char* argv[]) {
     int argNor = 0;
     int argFinite = 0;
     int argIdeal = 0;
+    int showVersion = 0;
     poptOption opts[] = {
         { "tetrahedra", 't', POPT_ARG_INT, &nTet, 0,
             "Number of tetrahedra.", "<tetrahedra>" },
@@ -464,6 +465,8 @@ int main(int argc, const char* argv[]) {
             "Only use face pairings read from standard input.", nullptr },
         { "threads", 0, POPT_ARG_INT, &threads, 0,
             "Number of parallel threads (default = 1).", "<threads>" },
+        { "version", 'v', POPT_ARG_NONE, &showVersion, 0,
+            "Show which version of Regina is being used.", nullptr },
         POPT_AUTOHELP
         { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
     };
@@ -479,6 +482,14 @@ int main(int argc, const char* argv[]) {
         poptPrintHelp(optCon, stderr, 0);
         poptFreeContext(optCon);
         return 1;
+    }
+
+    if (showVersion) {
+        // If other arguments were passed, just silently ignore them for now.
+        // Other (non-popt) command-line tools give an error in this scenario.
+        std::cout << PACKAGE_BUILD_STRING << std::endl;
+        poptFreeContext(optCon);
+        return 0;
     }
 
     const char** otherOpts = poptGetArgs(optCon);
