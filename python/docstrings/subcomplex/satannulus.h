@@ -377,6 +377,23 @@ representation. The first and second triangles (as described in the
 class notes) will remain unchanged, but the markings 0 and 1 on each
 triangle will be switched.)doc";
 
+// Docstring regina::python::doc::SatAnnulus_::roles
+static const char *roles =
+R"doc(A Python-only routine that allows you to query the *roles* field.
+
+The *roles* field describes how the two triangles that make up this
+match up with the individual vertices of their corresponding
+tetrahedra. See the class notes for details.
+
+Parameter ``which``:
+    identifies whether we are querying information for the first or
+    second triangle of this annulus. This argument must be 0 or 1
+    respectively.
+
+Returns:
+    the permutation that describes how the given triangle matches up
+    with the individual vertices of its corresponding tetrahedron.)doc";
+
 // Docstring regina::python::doc::SatAnnulus_::rotateHalfTurn
 static const char *rotateHalfTurn =
 R"doc(Rotates the representation of this annulus by 180 degrees. This has
@@ -385,6 +402,38 @@ reversing the direction of the vertical fibres.
 
 Calling this routine is equivalent to calling reflectVertical() and
 then reflectHorizontal().)doc";
+
+// Docstring regina::python::doc::SatAnnulus_::setRoles
+static const char *setRoles =
+R"doc(A Python-only routine that allows you to set the *roles* field.
+
+The *roles* field describes how the two triangles that make up this
+match up with the individual vertices of their corresponding
+tetrahedra. See the class notes for details.
+
+Parameter ``which``:
+    identifies whether we are setting information for the first or
+    second triangle of this annulus. This argument must be 0 or 1
+    respectively.
+
+Parameter ``value``:
+    the permutation that describes how the given triangle matches up
+    with the individual vertices of its corresponding tetrahedron.)doc";
+
+// Docstring regina::python::doc::SatAnnulus_::setTet
+static const char *setTet =
+R"doc(A Python-only routine that allows you to set the *tet* field.
+
+The *tet* field describes which two tetrahedra provide the two
+triangles that make up this annulus. See the class notes for details.
+
+Parameter ``which``:
+    identifies whether we are setting information for the first or
+    second triangle of this annulus. This argument must be 0 or 1
+    respectively.
+
+Parameter ``value``:
+    the tetrahedron that provides the given triangle.)doc";
 
 // Docstring regina::python::doc::SatAnnulus_::switchSides
 static const char *switchSides =
@@ -399,6 +448,21 @@ itself).
 Precondition:
     Neither triangle of this annulus is a boundary triangle of the
     triangulation.)doc";
+
+// Docstring regina::python::doc::SatAnnulus_::tet
+static const char *tet =
+R"doc(A Python-only routine that allows you to query the *tet* field.
+
+The *tet* field describes which two tetrahedra provide the two
+triangles that make up this annulus. See the class notes for details.
+
+Parameter ``which``:
+    identifies whether we are querying information for the first or
+    second triangle of this annulus. This argument must be 0 or 1
+    respectively.
+
+Returns:
+    the tetrahedron that provides the given triangle.)doc";
 
 // Docstring regina::python::doc::SatAnnulus_::transform
 static const char *transform =
