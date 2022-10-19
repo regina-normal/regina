@@ -41,6 +41,7 @@
 #include "triangulation/facetpairing.h"
 #include "triangulation/facetpairing3.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/cut.h"
 
 using pybind11::overload_cast;
 using regina::Cut;
@@ -48,137 +49,140 @@ using regina::FacetPairing;
 using regina::Triangulation;
 
 void addCut(pybind11::module_& m) {
-    auto c = pybind11::class_<Cut>(m, "Cut")
-        .def(pybind11::init<size_t>())
-        .def(pybind11::init<size_t, size_t>())
-        .def(pybind11::init<const Cut&>())
+    RDOC_SCOPE_BEGIN(Cut)
+
+    auto c = pybind11::class_<Cut>(m, "Cut", rdoc_scope)
+        .def(pybind11::init<size_t>(), rdoc::__init)
+        .def(pybind11::init<size_t, size_t>(), rdoc::__init_2)
+        .def(pybind11::init<const Cut&>(), rdoc::__copy)
         .def(pybind11::init([](const std::vector<int> sides) {
             return new Cut(sides.begin(), sides.end());
-        }))
-        .def("side", &Cut::side)
-        .def("set", &Cut::set)
-        .def("size", overload_cast<>(&Cut::size, pybind11::const_))
-        .def("size", overload_cast<int>(&Cut::size, pybind11::const_))
-        .def("isTrivial", &Cut::isTrivial)
+        }), rdoc::__init_3)
+        .def("side", &Cut::side, rdoc::side)
+        .def("set", &Cut::set, rdoc::set)
+        .def("size", overload_cast<>(&Cut::size, pybind11::const_), rdoc::size)
+        .def("size", overload_cast<int>(&Cut::size, pybind11::const_),
+            rdoc::size_2)
+        .def("isTrivial", &Cut::isTrivial, rdoc::isTrivial)
         .def("weight", overload_cast<const Triangulation<2>&>(
-            &Cut::weight<2>, pybind11::const_))
+            &Cut::weight<2>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<3>&>(
-            &Cut::weight<3>, pybind11::const_))
+            &Cut::weight<3>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<4>&>(
-            &Cut::weight<4>, pybind11::const_))
+            &Cut::weight<4>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<5>&>(
-            &Cut::weight<5>, pybind11::const_))
+            &Cut::weight<5>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<6>&>(
-            &Cut::weight<6>, pybind11::const_))
+            &Cut::weight<6>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<7>&>(
-            &Cut::weight<7>, pybind11::const_))
+            &Cut::weight<7>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<8>&>(
-            &Cut::weight<8>, pybind11::const_))
+            &Cut::weight<8>, pybind11::const_), rdoc::weight)
 #ifdef REGINA_HIGHDIM
         .def("weight", overload_cast<const Triangulation<9>&>(
-            &Cut::weight<9>, pybind11::const_))
+            &Cut::weight<9>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<10>&>(
-            &Cut::weight<10>, pybind11::const_))
+            &Cut::weight<10>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<11>&>(
-            &Cut::weight<11>, pybind11::const_))
+            &Cut::weight<11>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<12>&>(
-            &Cut::weight<12>, pybind11::const_))
+            &Cut::weight<12>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<13>&>(
-            &Cut::weight<13>, pybind11::const_))
+            &Cut::weight<13>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<14>&>(
-            &Cut::weight<14>, pybind11::const_))
+            &Cut::weight<14>, pybind11::const_), rdoc::weight)
         .def("weight", overload_cast<const Triangulation<15>&>(
-            &Cut::weight<15>, pybind11::const_))
+            &Cut::weight<15>, pybind11::const_), rdoc::weight)
 #endif /* REGINA_HIGHDIM */
         .def("weight", overload_cast<const FacetPairing<2>&>(
-            &Cut::weight<2>, pybind11::const_))
+            &Cut::weight<2>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<3>&>(
-            &Cut::weight<3>, pybind11::const_))
+            &Cut::weight<3>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<4>&>(
-            &Cut::weight<4>, pybind11::const_))
+            &Cut::weight<4>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<5>&>(
-            &Cut::weight<5>, pybind11::const_))
+            &Cut::weight<5>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<6>&>(
-            &Cut::weight<6>, pybind11::const_))
+            &Cut::weight<6>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<7>&>(
-            &Cut::weight<7>, pybind11::const_))
+            &Cut::weight<7>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<8>&>(
-            &Cut::weight<8>, pybind11::const_))
+            &Cut::weight<8>, pybind11::const_), rdoc::weight_2)
 #ifdef REGINA_HIGHDIM
         .def("weight", overload_cast<const FacetPairing<9>&>(
-            &Cut::weight<9>, pybind11::const_))
+            &Cut::weight<9>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<10>&>(
-            &Cut::weight<10>, pybind11::const_))
+            &Cut::weight<10>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<11>&>(
-            &Cut::weight<11>, pybind11::const_))
+            &Cut::weight<11>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<12>&>(
-            &Cut::weight<12>, pybind11::const_))
+            &Cut::weight<12>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<13>&>(
-            &Cut::weight<13>, pybind11::const_))
+            &Cut::weight<13>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<14>&>(
-            &Cut::weight<14>, pybind11::const_))
+            &Cut::weight<14>, pybind11::const_), rdoc::weight_2)
         .def("weight", overload_cast<const FacetPairing<15>&>(
-            &Cut::weight<15>, pybind11::const_))
+            &Cut::weight<15>, pybind11::const_), rdoc::weight_2)
 #endif /* REGINA_HIGHDIM */
         .def("__call__", overload_cast<const Triangulation<2>&>(
-            &Cut::operator()<2>, pybind11::const_))
+            &Cut::operator()<2>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<3>&>(
-            &Cut::operator()<3>, pybind11::const_))
+            &Cut::operator()<3>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<4>&>(
-            &Cut::operator()<4>, pybind11::const_))
+            &Cut::operator()<4>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<5>&>(
-            &Cut::operator()<5>, pybind11::const_))
+            &Cut::operator()<5>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<6>&>(
-            &Cut::operator()<6>, pybind11::const_))
+            &Cut::operator()<6>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<7>&>(
-            &Cut::operator()<7>, pybind11::const_))
+            &Cut::operator()<7>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<8>&>(
-            &Cut::operator()<8>, pybind11::const_))
+            &Cut::operator()<8>, pybind11::const_), rdoc::__call)
 #ifdef REGINA_HIGHDIM
         .def("__call__", overload_cast<const Triangulation<9>&>(
-            &Cut::operator()<9>, pybind11::const_))
+            &Cut::operator()<9>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<10>&>(
-            &Cut::operator()<10>, pybind11::const_))
+            &Cut::operator()<10>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<11>&>(
-            &Cut::operator()<11>, pybind11::const_))
+            &Cut::operator()<11>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<12>&>(
-            &Cut::operator()<12>, pybind11::const_))
+            &Cut::operator()<12>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<13>&>(
-            &Cut::operator()<13>, pybind11::const_))
+            &Cut::operator()<13>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<14>&>(
-            &Cut::operator()<14>, pybind11::const_))
+            &Cut::operator()<14>, pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const Triangulation<15>&>(
-            &Cut::operator()<15>, pybind11::const_))
+            &Cut::operator()<15>, pybind11::const_), rdoc::__call)
 #endif /* REGINA_HIGHDIM */
         .def("__call__", overload_cast<const FacetPairing<2>&>(
-            &Cut::operator()<2>, pybind11::const_))
+            &Cut::operator()<2>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<3>&>(
-            &Cut::operator()<3>, pybind11::const_))
+            &Cut::operator()<3>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<4>&>(
-            &Cut::operator()<4>, pybind11::const_))
+            &Cut::operator()<4>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<5>&>(
-            &Cut::operator()<5>, pybind11::const_))
+            &Cut::operator()<5>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<6>&>(
-            &Cut::operator()<6>, pybind11::const_))
+            &Cut::operator()<6>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<7>&>(
-            &Cut::operator()<7>, pybind11::const_))
+            &Cut::operator()<7>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<8>&>(
-            &Cut::operator()<8>, pybind11::const_))
+            &Cut::operator()<8>, pybind11::const_), rdoc::__call_2)
 #ifdef REGINA_HIGHDIM
         .def("__call__", overload_cast<const FacetPairing<9>&>(
-            &Cut::operator()<9>, pybind11::const_))
+            &Cut::operator()<9>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<10>&>(
-            &Cut::operator()<10>, pybind11::const_))
+            &Cut::operator()<10>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<11>&>(
-            &Cut::operator()<11>, pybind11::const_))
+            &Cut::operator()<11>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<12>&>(
-            &Cut::operator()<12>, pybind11::const_))
+            &Cut::operator()<12>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<13>&>(
-            &Cut::operator()<13>, pybind11::const_))
+            &Cut::operator()<13>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<14>&>(
-            &Cut::operator()<14>, pybind11::const_))
+            &Cut::operator()<14>, pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const FacetPairing<15>&>(
-            &Cut::operator()<15>, pybind11::const_))
+            &Cut::operator()<15>, pybind11::const_), rdoc::__call_2)
 #endif /* REGINA_HIGHDIM */
         .def("inclusion", [](const Cut& c, int dim) {
             // We use pybind11::cast() here so that the return type is
@@ -210,14 +214,16 @@ void addCut(pybind11::module_& m) {
                         "dimensions 2..8.");
 #endif /* REGINA_HIGHDIM */
             }
-        })
-        .def("swap", &Cut::swap)
-        .def("inc", &Cut::inc)
-        .def("incFixedSizes", &Cut::incFixedSizes)
+        }, rdoc::inclusion)
+        .def("swap", &Cut::swap, rdoc::swap)
+        .def("inc", &Cut::inc, rdoc::inc)
+        .def("incFixedSizes", &Cut::incFixedSizes, rdoc::incFixedSizes)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<Cut>(m);
+    regina::python::add_global_swap<Cut>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 
