@@ -233,17 +233,18 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     auto* tabs = new QTabWidget;
 
-#ifdef BUILD_INFO
-    QString aboutText = (QString("<qt>") + regDescription +
-        "<p>%1<p>" + regCopyright +
-        "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>")
-        .arg(BUILD_INFO);
-#else
-    QString aboutText = QString("<qt>") + regDescription +
-        "<p>" + regCopyright +
-        "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>";
-#endif
-    auto* aboutLabel = new QLabel(aboutText);
+    QLabel* aboutLabel;
+    const char* buildInfo = BUILD_INFO;
+    if (*buildInfo) {
+        autoLabel = new QLabel(QString("<qt>") + regDescription +
+            "<p>%1<p>" + regCopyright +
+            "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>")
+            .arg(BUILD_INFO);
+    } else {
+        autoLabel = new QLabel(QString("<qt>") + regDescription +
+            "<p>" + regCopyright +
+            "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>");
+    }
     aboutLabel->setWordWrap(true);
     aboutLabel->setOpenExternalLinks(true);
     aboutLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);

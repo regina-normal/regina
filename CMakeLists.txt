@@ -12,6 +12,9 @@ SET (PACKAGE_PRETTY_NAME Regina)
 # Look here for Find___.cmake modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
+# Regina's own cmake scripts:
+INCLUDE( ReginaMacros )
+
 # Version
 SET (PACKAGE_VERSION 7.1)
 SET (SNAPPY_VERSION 2.8)
@@ -24,12 +27,16 @@ STRING(REGEX MATCH "^([0-9]+).([0-9]+)" PACKAGE_VERSION_MAJOR "${PACKAGE_VERSION
 SET (PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1} )
 SET (PACKAGE_VERSION_MINOR ${CMAKE_MATCH_2} )
 
-IF(NOT BUILD_INFO)
-  SET(BUILD_INFO "Custom build" CACHE STRING
+IF(BUILD_INFO)
+  SET (PACKAGE_BUILD_STRING "${PACKAGE_STRING} (${BUILD_INFO})")
+ELSE(BUILD_INFO)
+  SET (BUILD_INFO "" CACHE STRING
     "Optional additional information about this specific build.  Examples might be: \"Official macOS build\", or \"Debian package build\"."
   FORCE)
-ENDIF(NOT BUILD_INFO)
-SET (PACKAGE_BUILD_STRING "${PACKAGE_STRING} (${BUILD_INFO})")
+  SET (PACKAGE_BUILD_STRING "${PACKAGE_STRING}")
+ENDIF(BUILD_INFO)
+REGINA_ESCAPE_C (BUILD_INFO)
+REGINA_ESCAPE_C (PACKAGE_BUILD_STRING)
 MESSAGE (STATUS "Detailed version: ${PACKAGE_BUILD_STRING}")
 
 # Make a release build by default.
@@ -56,9 +63,6 @@ ENDIF(HIGHDIM)
 IF (WIN32)
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-ipa-cp-clone")
 ENDIF (WIN32)
-
-# Regina's own cmake scripts:
-INCLUDE( ReginaMacros )
 
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.

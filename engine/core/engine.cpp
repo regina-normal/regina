@@ -51,11 +51,7 @@ int versionMinor() {
 }
 
 const char* buildInfo() {
-#ifdef BUILD_INFO
     return BUILD_INFO;
-#else
-    return "";
-#endif
 }
 
 bool versionUsesUTF8(const char* version) {

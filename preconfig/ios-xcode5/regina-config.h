@@ -104,11 +104,12 @@
 /* Minor version number of the package. */
 #define PACKAGE_VERSION_MINOR 1
 
-/* Optional additional information about this specific build. */
-#define BUILD_INFO "Custom build"
+/* Optional additional information about this specific build.
+   This will always be defined, but it may be the empty string. */
+#define BUILD_INFO ""
 
 /* A nicely formatted combination of PACKAGE_STRING and BUILD_INFO. */
-#define PACKAGE_BUILD_STRING "Regina 7.1 (Custom build)"
+#define PACKAGE_BUILD_STRING "Regina 7.1"
 
 /* Define to the version of SnapPy that is bundled with Regina. */
 #define SNAPPY_VERSION "2.8"
