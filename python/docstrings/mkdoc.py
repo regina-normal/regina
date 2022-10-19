@@ -221,6 +221,12 @@ def process_comment(comment):
     s = re.sub(r'[\\@]brief\s*', r'', s)
     s = re.sub(r'[\\@]short\s*', r'', s)
 
+    # Images require a format and file argument, plus optional caption and size
+    # arguments; some of these might include spaces (and thus be surrounded by
+    # double quotes).  Instead of unpacking all of this, we just cheat and use
+    # the fact that Regina's usage of \image is always as a full-line command.
+    s = re.sub(r'[\\@]image\s+\S.*\n', r'(Image available in HTML docs)\n\n', s)
+
     # If a \ref comes with a custom name, use it.  If not, see if the
     # tag is one that is known to us, and if not, just use the tag itself.
     s = re.sub(r'[\\@]ref\s+(\S+)\s+"([^"]+)"', r'\2', s)
