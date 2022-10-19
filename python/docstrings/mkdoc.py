@@ -32,6 +32,11 @@ INLINE_FILES = [
     '../../engine/utilities/tableview.h'
 ]
 
+INLINE_DIRS = [
+    '../../engine/triangulation/alias',
+    '../../engine/triangulation/detail',
+]
+
 RECURSE_LIST = [
     CursorKind.TRANSLATION_UNIT,
     CursorKind.NAMESPACE,
@@ -755,6 +760,11 @@ def extract_all(args):
     global errors_detected, inline
     for filename in filenames:
         inline = (filename in INLINE_FILES)
+        if not inline:
+            for d in INLINE_DIRS:
+                if filename.startswith(d + '/'):
+                    inline = True
+                    break
         if inline:
             print('Processing "%s" (inline) ..' % filename, file=sys.stderr)
         else:

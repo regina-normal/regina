@@ -53,6 +53,7 @@
 #include "algebra/grouppresentation.h"
 #include "algebra/markedabeliangroup.h"
 #include "maths/matrix.h"
+#include "packet/packet.h"
 #include "triangulation/generic/component.h"
 #include "triangulation/generic/boundarycomponent.h"
 #include "triangulation/generic/face.h"

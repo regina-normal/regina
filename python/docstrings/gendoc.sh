@@ -2,7 +2,7 @@
 set -e
 
 if [ "$#" = 0 ]; then
-  dirs="algebra angle census core enumerate file foreign hypersurface link manifold maths packet progress python snappea split subcomplex surface treewidth utilities"
+  dirs="algebra angle census core enumerate file foreign hypersurface link manifold maths packet progress python snappea split subcomplex surface treewidth triangulation utilities"
 else
   dirs="$@"
 fi
@@ -54,6 +54,20 @@ for dir in $dirs; do
         python3 ./mkdoc.py -std=c++17 \
           -o "$dir/$header" ../../engine/"$dir/spec/$header"
       done
+    elif [ "$dir" = triangulation ]; then
+      for sub in dim2 dim3 dim4 generic alias detail; do
+        for i in ../../engine/"$dir"/"$sub"/*.h; do
+          header=`basename "$i"`
+          case "$sub/$header" in
+            *-impl.h ) ;;
+            detail/retriangulate.h ) ;;
+            * )
+              python3 ./mkdoc.py -std=c++17 \
+                -o "$dir/$sub/$header" ../../engine/"$dir/$sub/$header"
+              ;;
+          esac
+        done
+      done
     fi
     for i in ../../engine/"$dir"/*.h; do
       header=`basename "$i"`
@@ -61,7 +75,12 @@ for dir in $dirs; do
         *-impl.h ) ;;
         link/graph.h ) ;;
         manifold/notation.h ) ;;
+        triangulation/dim?.h ) ;;
+        triangulation/facetpairing.h ) ;;
+        triangulation/forward.h ) ;;
+        triangulation/generic.h ) ;;
         triangulation/graph.h ) ;;
+        triangulation/pachner.h ) ;;
         utilities/markedvector.h ) ;;
         utilities/memstream.h ) ;;
         utilities/sequence.h ) ;;
