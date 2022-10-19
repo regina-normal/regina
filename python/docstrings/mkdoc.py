@@ -251,6 +251,7 @@ def process_comment(comment):
 
     # Regina-specific paragraphs that we can ignore in Python:
     s = re.sub(r'\\headers\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
+    s = re.sub(r'\\headerfile\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\cpp\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\nocpp\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
 

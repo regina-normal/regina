@@ -30,9 +30,7 @@ Triangles do not support value semantics: they cannot be copied,
 swapped, or manually constructed. Their location in memory defines
 them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
-of by the Triangulation to which they belong.
-
-\headerfile triangulation/dim2.h)doc";
+of by the Triangulation to which they belong.)doc";
 
 namespace Face_ {
 

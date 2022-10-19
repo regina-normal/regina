@@ -79,9 +79,7 @@ Template parameter ``dim``:
 
 Template parameter ``subdim``:
     the dimension of the faces that this class represents. This must
-    be between 0 and *dim* inclusive.
-
-\headerfile triangulation/generic.h)doc";
+    be between 0 and *dim* inclusive.)doc";
 
 // Docstring regina::python::doc::FaceEmbedding
 static const char *FaceEmbedding =
@@ -132,9 +130,7 @@ Template parameter ``dim``:
 
 Template parameter ``subdim``:
     the dimension of the faces of the underlying triangulation. This
-    must be between 0 and *dim*-1 inclusive.
-
-\headerfile triangulation/generic.h)doc";
+    must be between 0 and *dim*-1 inclusive.)doc";
 
 namespace FaceEmbedding_ {
 

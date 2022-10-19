@@ -24,9 +24,7 @@ functionality, including many functions specific to 2-manifolds.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
-
-\headerfile triangulation/dim2.h)doc";
+possible, even when passing or returning objects by value.)doc";
 
 namespace Triangulation_ {
 

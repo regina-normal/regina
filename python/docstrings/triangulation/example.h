@@ -40,9 +40,7 @@ Python:
 
 Template parameter ``dim``:
     the dimension of the example triangulations to construct. This
-    must be between 2 and 15 inclusive.
-
-\headerfile triangulation/generic.h)doc";
+    must be between 2 and 15 inclusive.)doc";
 
 } // namespace regina::python::doc
 

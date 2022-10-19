@@ -27,9 +27,7 @@ is a 4-dimensional simplex, with five vertices.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
-
-\headerfile triangulation/dim4.h)doc";
+possible, even when passing or returning objects by value.)doc";
 
 namespace Triangulation_ {
 
