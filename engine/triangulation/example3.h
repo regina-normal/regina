@@ -173,9 +173,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
          *
-         * \pre gcd(\a a1, \a b1) = 1.
-         * \pre gcd(\a a2, \a b2) = 1.
-         * \pre gcd(\a a3, \a b3) = 1.
+         * \pre gcd(\a a1, \a b1) = gcd(\a a2, \a b2) = gcd(\a a3, \a b3) = 1.
          *
          * @param a1 a parameter describing the first layered solid
          * torus in the augmented triangular solid torus.
@@ -214,9 +212,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * orbifold), you can use the more sophisticated SFSpace::construct().
          *
          * \pre None of \a a1, \a a2 or \a a3 are 0.
-         * \pre gcd(\a a1, \a b1) = 1.
-         * \pre gcd(\a a2, \a b2) = 1.
-         * \pre gcd(\a a3, \a b3) = 1.
+         * \pre gcd(\a a1, \a b1) = gcd(\a a2, \a b2) = gcd(\a a3, \a b3) = 1.
          *
          * @param a1 a parameter describing the first exceptional fibre.
          * @param b1 a parameter describing the first exceptional fibre.

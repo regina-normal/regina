@@ -37,51 +37,67 @@
 #include "triangulation/isosigtype.h"
 #include "utilities/exception.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/isosigencoding.h"
+#include "../docstrings/triangulation/isosigtype.h"
 
 using regina::Perm;
 
 template <int dim>
 void addIsoSigClassic(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(IsoSigClassic)
+
     using Type = regina::IsoSigClassic<dim>;
-    auto s = pybind11::class_<Type>(m, name)
-        .def(pybind11::init<const regina::Component<dim>&>())
-        .def("simplex", &Type::simplex)
-        .def("perm", &Type::perm)
-        .def("next", &Type::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def("simplex", &Type::simplex, rdoc::simplex)
+        .def("perm", &Type::perm, rdoc::perm)
+        .def("next", &Type::next, rdoc::next)
         ;
     regina::python::disable_eq_operators(s);
+
+    RDOC_SCOPE_END
 }
 
 template <int dim>
 void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(IsoSigDegrees)
+
     using Type = regina::IsoSigEdgeDegrees<dim>;
-    auto s = pybind11::class_<Type>(m, name)
-        .def(pybind11::init<const regina::Component<dim>&>())
-        .def("simplex", &Type::simplex)
-        .def("perm", &Type::perm)
-        .def("next", &Type::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def("simplex", &Type::simplex, rdoc::simplex)
+        .def("perm", &Type::perm, rdoc::perm)
+        .def("next", &Type::next, rdoc::next)
         ;
     regina::python::disable_eq_operators(s);
+
+    RDOC_SCOPE_END
 }
 
 template <int dim>
 void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(IsoSigDegrees)
+
     using Type = regina::IsoSigRidgeDegrees<dim>;
-    auto s = pybind11::class_<Type>(m, name)
-        .def(pybind11::init<const regina::Component<dim>&>())
-        .def("simplex", &Type::simplex)
-        .def("perm", &Type::perm)
-        .def("next", &Type::next)
+    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+        .def(pybind11::init<const regina::Component<dim>&>(), rdoc::__init)
+        .def("simplex", &Type::simplex, rdoc::simplex)
+        .def("perm", &Type::perm, rdoc::perm)
+        .def("next", &Type::next, rdoc::next)
         ;
     regina::python::disable_eq_operators(s);
+
+    RDOC_SCOPE_END
 }
 
 template <int dim>
 void addIsoSigPrintable(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(IsoSigPrintable)
+
     using Encoding = regina::IsoSigPrintable<dim>;
-    auto s = pybind11::class_<Encoding>(m, name)
+    auto s = pybind11::class_<Encoding>(m, name, rdoc_scope)
         .def_readonly_static("charsPerPerm", &Encoding::charsPerPerm)
-        .def_static("emptySig", &Encoding::emptySig)
+        .def_static("emptySig", &Encoding::emptySig, rdoc::emptySig)
         .def_static("encode", [](
                 size_t size,
                 const std::vector<uint8_t>& facetActions,
@@ -93,8 +109,10 @@ void addIsoSigPrintable(pybind11::module_& m, const char* name) {
             return Encoding::encode(size, facetActions.size(),
                 facetActions.data(), joinDest.size(), joinDest.data(),
                 joinGluing.data());
-        })
+        }, rdoc::encode)
         ;
     regina::python::no_eq_static(s);
+
+    RDOC_SCOPE_END
 }
 
