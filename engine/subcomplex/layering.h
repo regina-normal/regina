@@ -212,7 +212,7 @@ class Layering : public ShortOutput<Layering> {
         bool operator != (const Layering& other) const;
 
         /**
-         * Creates a new copy of this layering structure.
+         * Creates a new copy of the given layering structure.
          *
          * The new structure will describe the same layering within the same
          * underlying triangulation.

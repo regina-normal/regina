@@ -88,7 +88,7 @@ class LayeredChainPair : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         LayeredChainPair(const LayeredChainPair&) = default;
 

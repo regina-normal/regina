@@ -97,7 +97,7 @@ class LayeredTorusBundle : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         LayeredTorusBundle(const LayeredTorusBundle&) = default;
 

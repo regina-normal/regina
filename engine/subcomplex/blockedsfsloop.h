@@ -116,7 +116,7 @@ class BlockedSFSLoop : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          * This will induce a deep copy of \a src.
          *
          * @param src the structure to copy.

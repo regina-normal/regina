@@ -117,7 +117,7 @@ class LayeredChain : public StandardTriangulation {
         LayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles);
 
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         LayeredChain(const LayeredChain&) = default;
 

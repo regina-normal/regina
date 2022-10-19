@@ -111,7 +111,7 @@ class TrivialTri : public StandardTriangulation {
 
     public:
         /**
-         * Creates a new copy of this structure.
+         * Creates a new copy of the given structure.
          */
         TrivialTri(const TrivialTri&) = default;
 
