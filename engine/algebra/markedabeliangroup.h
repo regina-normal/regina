@@ -55,9 +55,9 @@ class HomMarkedAbelianGroup;
  * Represents a finitely generated abelian group given by a chain complex.
  *
  * This class is initialized with a chain complex.  The chain complex is given
- * in terms of two integer matrices \a M and \a N such that M*N=0.  These
+ * in terms of two integer matrices \a M and \a N such that M×N=0.  These
  * matrices should be thought of as acting on column vectors: this means for
- * example that the product <tt>B*A</tt> applies the linear transformation
+ * example that the product `B×A` applies the linear transformation
  * \a A, then the linear transformation \a B.  This is consistent with the
  * convention that Regina uses for for multiplying permutations.
  *
@@ -69,7 +69,7 @@ class HomMarkedAbelianGroup;
  * in an arbitrary cyclic group.
  *
  * Like the simpler class AbelianGroup, this group will be isomorphic to some
- * <tt>Z_{d0} + ... + Z_{dk} + Z^r</tt>, where:
+ * `Z_{d0} + ... + Z_{dk} + Z^r`, where:
  *
  * - \a r is the number of free generators, as returned by rank();
  *
@@ -109,7 +109,7 @@ class HomMarkedAbelianGroup;
  * Some routines in this class refer to the <i>internal presentation
  * matrix</i>.  This is a proper presentation matrix for the abelian group;
  * if you are looking at the implementation details, this refers to the
- * matrix \a pres, created by taking the product <tt>MRi_ * N</tt> and then
+ * matrix \a pres, created by taking the product `MRi_ * N` and then
  * removing the first \a rankM_ rows.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
@@ -127,10 +127,10 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         /** Internal original M */
         MatrixInt M_; // copy of initializing M
         /** Internal original N */
-        MatrixInt N_; // copy of initializing N assumes M*N == 0
-        /** Internal change of basis. SNF(M_) == MC*M_*MR_ */
+        MatrixInt N_; // copy of initializing N assumes M×N == 0
+        /** Internal change of basis. SNF(M_) == MC×M_×MR_ */
         MatrixInt MR_;
-        /** Internal change of basis. M_ = MCi*SNF(M_)*MRi_ */
+        /** Internal change of basis. M_ = MCi×SNF(M_)×MRi_ */
         MatrixInt MRi_;
         /** Internal rank of M */
         size_t rankM_; // this is the index of the first zero entry in SNF(M_)
@@ -160,8 +160,8 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         // These variables store information for mod-p homology computations.
         /** coefficients to use in homology computation **/
         Integer coeff_;
-        /** TORVec_'s i-th entry stores the entries q where Z_p --q-->Z_p
-            is the i-th TOR entry from the SNF of M_ */
+        /** The i-th entry of TORVec_ stores the entries q where Z_p --q-->Z_p
+            is the i-th TOR entry from the SNF of M_. */
         std::vector<Integer> TORVec_;
 
         /** invariant factor data in the tensor product presentation matrix
@@ -180,7 +180,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
          *
-         * \pre The product M*N = 0.  This condition will \e not be tested
+         * \pre The product M×N = 0.  This condition will \e not be tested
          * (for efficiency reasons); this is left to the user/programmer
          * to ensure.
          *
@@ -204,7 +204,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
          *
-         * \pre The product M*N = 0.  This condition will \e not be tested
+         * \pre The product M×N = 0.  This condition will \e not be tested
          * (for efficiency reasons); this is left to the user/programmer
          * to ensure.
          *
@@ -231,7 +231,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \a p down the diagonal.
          *
          * @param rank the rank of the group as a Z_p-module.  That is, if the
-         * group is <tt>n Z_p</tt>, then \a rank should be \a n.
+         * group is `n Z_p`, then \a rank should be \a n.
          * @param p describes the type of ring that we use to talk about
          * the "free" module.
          */
@@ -627,7 +627,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         /**
          * Computes the differential of the given vector in the chain
          * complex whose kernel is the cycles.  In other words, this
-         * routine returns <tt>M*chain</tt>, where \a M is the "right"
+         * routine returns `M×chain`, where \a M is the "right"
          * matrix passed to the class constructor.
          *
          * \exception InvalidArgument The given vector is not in chain
@@ -652,9 +652,9 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Expresses the given vector as a boundary in the chain complex.
          *
          * \warning If you are using mod \a p coefficients and if your element
-         * projects to a non-trivial element of TOR, then N*v != bdry as
+         * projects to a non-trivial element of TOR, then `N×v != bdry` as
          * elements of TOR are not in the image of \a N.  In this case,
-         * (\a bdry - N*v) represents the projection to TOR.
+         * (`bdry - N×v`) represents the projection to TOR.
          *
          * \warning The return value is not unique.  The specific choice
          * of vector may change between different versions of Regina.
@@ -662,7 +662,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The given vector is not a boundary.
          *
          * @param bdry a boundary vector, given in chain complex coordinates.
-         * @return a vector \a v such that <tt>N*v=bdry</tt>.
+         * @return a vector \a v such that `N×v=bdry`.
          */
         Vector<Integer> asBoundary(const Vector<Integer>& bdry) const;
 
@@ -710,8 +710,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * The text representation will be of the form
-         * <tt>3 Z + 4 Z_2 + Z_120</tt>.
+         * The text representation will be of the form `3 Z + 4 Z_2 + Z_120`.
          * The torsion elements will be written in terms of the
          * invariant factors of the group, as described in the
          * MarkedAbelianGroup notes.
@@ -846,12 +845,12 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * In order for this to make sense as a homomorphism of the groups
          * represented by the domain and codomain respectively, one requires
-         * img(mat*N1) to be a subset of img(N2).  Similarly, ker(M1) must
+         * `img(mat×N1)` to be a subset of img(N2).  Similarly, ker(M1) must
          * be sent into ker(M2).  These facts are not checked, but are
          * assumed as preconditions of this constructor.
          *
          * \pre The matrix \a mat has the required dimensions e-by-b,
-         * gives img(mat*N1) as a subset of img(N2), and sends ker(M1)
+         * gives `img(mat×N1)` as a subset of img(N2), and sends ker(M1)
          * into ker(M2), as explained in the detailed notes above.
          *
          * @param dom the domain group.
@@ -1080,7 +1079,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * \exception InvalidArgument The given vector was not in the
          * original chain complex coordinates; that is, its length was not
-         * <tt>domain().M().columns()</tt>.
+         * `domain().M().columns()`.
          *
          * @param input an input vector in the domain chain complex's
          * coordinates, of length domain().M().columns().
@@ -1099,7 +1098,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * canonical.
          *
          * \exception InvalidArgument The given vector was not in domain SNF
-         * coordinates; that is, its length was not <tt>domain().snfRank()</tt>.
+         * coordinates; that is, its length was not `domain().snfRank()`.
          *
          * @param input an input vector in the domain SNF coordinates,
          * of length domain().snfRank().
