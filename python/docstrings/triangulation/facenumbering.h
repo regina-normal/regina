@@ -71,6 +71,16 @@ working through the FaceNumbering class.
 
 The arguments *i* and *j* do not need to appear in ascending order.
 
+Python:
+    Python does not support templates. Instead, Python users should
+    call this function in the form ``faceOppositeEdge(dim, i, j)``;
+    that is, the template parameter *dim* becomes the first argument
+    of the function.
+
+Template parameter ``dim``:
+    the dimension of simplex that we are working with. This must be
+    between 2 and 15 inclusive.
+
 Parameter ``i``:
     the first vertex of an edge in a *dim*-dimensional simplex. This
     must be between 0 and *dim* inclusive.
