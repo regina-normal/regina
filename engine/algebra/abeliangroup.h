@@ -83,7 +83,7 @@ class AbelianGroup :
         size_t rank_ { 0 };
             /**< The rank of the group (the number of Z components). */
         std::vector<Integer> revInvFactors_;
-            /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
+            /**< The invariant factors \a d0,...,\a dn as
                  described in the AbelianGroup notes.
                  These are stored in reverse order, since addTorsion()
                  always extends the vector on the \a d0 end.
@@ -171,7 +171,7 @@ class AbelianGroup :
          * The abelian group is the kernel of \a M modulo the image of \a N.
          *
          * The matrices should be thought of as acting on column vectors:
-         * this means that the product `B*A` applies the linear
+         * this means that the product `B×A` applies the linear
          * transformation \a A, then the linear transformation \a B.
          * This is consistent (for example) with the convention that
          * Regina uses for for multiplying permutations.
@@ -179,7 +179,7 @@ class AbelianGroup :
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
          *
-         * \pre The product M*N = 0.  This condition will \e not be tested
+         * \pre The product M×N = 0.  This condition will \e not be tested
          * (for efficiency reasons); this is left to the user/programmer
          * to ensure.
          *
@@ -198,7 +198,7 @@ class AbelianGroup :
          * The abelian group is the kernel of \a M modulo the image of \a N.
          *
          * The matrices should be thought of as acting on column vectors:
-         * this means that the product `B*A` applies the linear
+         * this means that the product `B×A` applies the linear
          * transformation \a A, then the linear transformation \a B.
          * This is consistent (for example) with the convention that
          * Regina uses for for multiplying permutations.
@@ -206,7 +206,7 @@ class AbelianGroup :
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
          *
-         * \pre The product M*N = 0.  This condition will \e not be tested
+         * \pre The product M×N = 0.  This condition will \e not be tested
          * (for efficiency reasons); this is left to the user/programmer
          * to ensure.
          *
@@ -270,7 +270,7 @@ class AbelianGroup :
 
         /**
          * Returns the rank of the group.
-         * This is the number of included copies of <i>Z</i>.
+         * This is the number of included copies of \a Z.
          *
          * Equivalently, the rank is the maximum number of linearly independent
          * elements, and it indicates the size of the largest free abelian
@@ -280,13 +280,13 @@ class AbelianGroup :
          * rank differently. Specifically, SnapPy's AbelianGroup.rank()
          * computation includes torsion factors also.
          *
-         * @return the number of included copies of \e Z.
+         * @return the number of included copies of \a Z.
          */
         size_t rank() const;
         /**
          * Returns the rank in the group of the torsion term of given degree.
-         * If the given degree is <i>d</i>, this routine will return the
-         * largest <i>m</i> for which <i>m</i>Z_<i>d</i> is a subgroup
+         * If the given degree is \a d, this routine will return the
+         * largest \a m for which <i>m</i>Z_<i>d</i> is a subgroup
          * of this group.
          *
          * For instance, if this group is Z_6+Z_12, the torsion term of
@@ -302,8 +302,8 @@ class AbelianGroup :
         size_t torsionRank(const Integer& degree) const;
         /**
          * Returns the rank in the group of the torsion term of given degree.
-         * If the given degree is <i>d</i>, this routine will return the
-         * largest <i>m</i> for which <i>m</i>Z_<i>d</i> is a subgroup
+         * If the given degree is \a d, this routine will return the
+         * largest \a m for which <i>m</i>Z_<i>d</i> is a subgroup
          * of this group.
          *
          * For instance, if this group is Z_6+Z_12, the torsion term of
@@ -331,7 +331,7 @@ class AbelianGroup :
          * See the AbelianGroup class notes for further details.
          *
          * If the invariant factors are <i>d0</i>|<i>d1</i>|...|<i>dn</i>,
-         * this routine will return <i>di</i> where <i>i</i> is the
+         * this routine will return \a di where \a i is the
          * value of parameter \a index.
          *
          * @param index the index of the invariant factor to return;

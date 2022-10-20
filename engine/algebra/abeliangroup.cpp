@@ -210,7 +210,7 @@ void AbelianGroup::writeXMLData(std::ostream& out) const {
     out << "</abeliangroup>";
 }
 
-// ---N--> CC --M-->  ie: M*N = 0.
+// ---N--> CC --M-->  ie: M×N = 0.
 AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) {
     if (M.columns() != N.rows())
         throw InvalidArgument("The chain complex constructor requires "

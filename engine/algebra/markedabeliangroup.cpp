@@ -321,7 +321,7 @@ void MarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
 
 /*
  * The marked abelian group was defined by matrices M and N
- * with M*N==0.  Think of M as m by l and N as l by n.  Then
+ * with M×N==0.  Think of M as m by l and N as l by n.  Then
  * this routine returns the index-th free generator of the
  * ker(M)/img(N) in Z^l.
  */
@@ -344,7 +344,7 @@ Vector<Integer> MarkedAbelianGroup::freeRep(size_t index) const {
 
 /*
  * The marked abelian group was defined by matrices M and N
- * with M*N==0.  Think of M as m by l and N as l by n.  Then
+ * with M×N==0.  Think of M as m by l and N as l by n.  Then
  * this routine returns the index-th torsion generator of the
  * ker(M)/img(N) in Z^l.
  */
@@ -477,7 +477,7 @@ Vector<Integer> MarkedAbelianGroup::ccRep(size_t SNFRep) const {
 
 /*
  * The marked abelian group was defined by matrices M and N
- * with M*N==0.  Think of M as m by l and N as l by n.
+ * with M×N==0.  Think of M as m by l and N as l by n.
  * When the group was initialized, it was computed to be isomorphic
  * to some Z_{d1} + ... + Z_{dk} + Z^d where d1 | d2 | ... | dk
  * this routine assumes element is in Z^l, and it returns a vector
