@@ -841,7 +841,7 @@ class Perm<3> {
 
         /**
          * Extends a <i>k</i>-element permutation to an 3-element permutation.
-         * where 2 ≤ \a k &lt; 3.  The only possible value of \a k is 2, but
+         * where 2 ≤ \a k \< 3.  The only possible value of \a k is 2, but
          * this routine is kept as a template function for consistency
          * with the other classes' Perm<n>::extend() routines.
          *

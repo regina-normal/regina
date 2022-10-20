@@ -1212,7 +1212,7 @@ class Perm<5> {
 
         /**
          * Extends a <i>k</i>-element permutation to a 5-element permutation,
-         * where 2 ≤ \a k &lt; 5.
+         * where 2 ≤ \a k \< 5.
          *
          * The resulting permutation will map 0,...,<i>k</i>-1 to their
          * respective images under \a p, and will map the "unused" elements

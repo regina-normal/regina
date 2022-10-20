@@ -312,7 +312,7 @@ class HilbertDual {
                  * formSum().  If nextHyp() ≥ 0, then this routine returns
                  * `pos.nextHyp()` where \a pos was the
                  * positive summand passed to formSum().
-                 * If nextHyp() &lt; 0, then this routine returns
+                 * If nextHyp() \< 0, then this routine returns
                  * `neg.nextHyp()` where \a neg was the
                  * negative summand passed to formSum().
                  *

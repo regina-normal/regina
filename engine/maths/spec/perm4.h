@@ -1110,7 +1110,7 @@ class Perm<4> {
 
         /**
          * Extends a <i>k</i>-element permutation to a 4-element permutation,
-         * where 2 ≤ \a k &lt; 4.
+         * where 2 ≤ \a k \< 4.
          *
          * The resulting permutation will map 0,...,<i>k</i>-1 to their
          * respective images under \a p, and will map the "unused" elements

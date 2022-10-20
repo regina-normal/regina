@@ -1048,7 +1048,7 @@ class Perm<6> {
 
         /**
          * Extends a <i>k</i>-element permutation to a 6-element permutation,
-         * where 2 ≤ \a k &lt; 6.
+         * where 2 ≤ \a k \< 6.
          *
          * The resulting permutation will map 0,...,<i>k</i>-1 to their
          * respective images under \a p, and will map the "unused" elements

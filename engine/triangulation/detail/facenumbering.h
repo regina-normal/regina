@@ -116,7 +116,7 @@ class FaceNumberingAPI {
          *
          * If this canonical ordering is \a c, then \a c[0,...,\a subdim]
          * will be the vertices of the given face in increasing numerical
-         * order.  That is, \a c[0] &lt; ... &lt; \a c[\a subdim].
+         * order.  That is, \a c[0] \< ... \< \a c[\a subdim].
          * The remaining images \a c[(\a subdim + 1),...,\a dim] will
          * be ordered arbitrarily.
          *
