@@ -161,8 +161,7 @@ class IntersectionForm : public Output<IntersectionForm> {
         /**
          * Returns \c true if and only if this bilinear form is of even type.
          *
-         * A form \a Q is \e even if and only if <tt>Q(x,x)</tt> is even
-         * for all \a x.
+         * A form \a Q is \e even if and only if `Q(x,x)` is even for all \a x.
          *
          * @return \c true if this bilinear form is of even type, or \c false
          * if it is of odd type.
@@ -172,8 +171,7 @@ class IntersectionForm : public Output<IntersectionForm> {
         /**
          * Returns \c true if and only if this bilinear form is of odd type.
          *
-         * A form \a Q is \e odd if and only if <tt>Q(x,x)</tt> is odd
-         * for some \a x.
+         * A form \a Q is \e odd if and only if `Q(x,x)` is odd for some \a x.
          *
          * @return \c true if this bilinear form is of odd type, or \c false
          * if it is of even type.
@@ -187,7 +185,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * This does \e not test whether this and the given form are
          * congruent (i.e., related by a change basis in the underlying
          * free abelian group).  Instead it is equivalent to testing
-         * whether <tt>matrix() == other.matrix()</tt>.
+         * whether `matrix() == other.matrix()`.
          *
          * @param other the bilinear form to compare with this.
          * @return \c true if and only if this and the given bilinear form
@@ -202,7 +200,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * This does \e not test whether this and the given form are
          * congruent (i.e., related by a change basis in the underlying
          * free abelian group).  Instead it is equivalent to testing
-         * whether <tt>matrix() != other.matrix()</tt>.
+         * whether `matrix() != other.matrix()`.
          *
          * @param other the bilinear form to compare with this.
          * @return \c true if and only if this and the given bilinear form

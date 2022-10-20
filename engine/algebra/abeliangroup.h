@@ -171,7 +171,7 @@ class AbelianGroup :
          * The abelian group is the kernel of \a M modulo the image of \a N.
          *
          * The matrices should be thought of as acting on column vectors:
-         * this means that the product <tt>B*A</tt> applies the linear
+         * this means that the product `B*A` applies the linear
          * transformation \a A, then the linear transformation \a B.
          * This is consistent (for example) with the convention that
          * Regina uses for for multiplying permutations.
@@ -198,7 +198,7 @@ class AbelianGroup :
          * The abelian group is the kernel of \a M modulo the image of \a N.
          *
          * The matrices should be thought of as acting on column vectors:
-         * this means that the product <tt>B*A</tt> applies the linear
+         * this means that the product `B*A` applies the linear
          * transformation \a A, then the linear transformation \a B.
          * This is consistent (for example) with the convention that
          * Regina uses for for multiplying permutations.
@@ -479,8 +479,7 @@ class AbelianGroup :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * The text representation will be of the form
-         * <tt>3 Z + 4 Z_2 + Z_120</tt>.
+         * The text representation will be of the form `3 Z + 4 Z_2 + Z_120`.
          * The torsion elements will be written in terms of the
          * invariant factors of the group, as described in the
          * AbelianGroup notes.
