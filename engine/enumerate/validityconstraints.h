@@ -223,7 +223,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * For example, to encode the quadrilateral constraints for
          * normal surfaces in standard coordinates, you can make the
-         * single call <tt>addLocal({4, 5, 6})</tt>.
+         * single call `addLocal({4, 5, 6})`.
          *
          * \nopython Instead, use the Python version of this function that
          * takes the coordinate pattern as a Python list (which need not be
@@ -272,7 +272,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * As an example, for almost normal surfaces in standard coordinates,
          * you can encode the constraint that there is at most one octagon
-         * in the entire surface by calling <tt>addGlobal({7, 8, 9})</tt>.
+         * in the entire surface by calling `addGlobal({7, 8, 9})`.
          *
          * \nopython Instead, use the Python version of this function that
          * takes the coordinate pattern as a Python list (which need not be
@@ -327,9 +327,8 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * Returns the list of all individual validity constraints, each
          * expressed as a bitmask of the smallest possible length.
          *
-         * Calling <tt>bitmasks()</tt> is equivalent to calling
-         * <tt>bitmasks(len)</tt>, where \a len is the block size multiplied
-         * by the number of blocks.
+         * Calling `bitmasks()` is equivalent to calling `bitmasks(len)`,
+         * where \a len is the block size multiplied by the number of blocks.
          *
          * As an example, this is appropriate for normal surface coordinate
          * systems, where the normal coordinates incorporate precisely

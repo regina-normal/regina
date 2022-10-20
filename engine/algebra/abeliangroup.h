@@ -63,7 +63,7 @@ using MatrixInt = Matrix<Integer, true>;
  * Z_6, and Z_2+Z_2+Z_3 will appear as Z_2+Z_6.
  *
  * In general the factors will appear as Z_<i>d0</i>+...+Z_<i>dn</i>,
- * where the invariant factors <i>di</i> are all greater than 1 and satisfy
+ * where the invariant factors \a di are all greater than 1 and satisfy
  * <i>d0</i>|<i>d1</i>|...|<i>dn</i>.  Note that this representation is
  * unique.
  *
