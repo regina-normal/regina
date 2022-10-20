@@ -803,8 +803,8 @@ class NormalSurfaces :
          * as field separators.  Text fields with arbitrary contents are
          * placed inside double quotes, and the double quote character itself
          * is represented by a pair of double quotes.  Thus the string
-         * <tt>my "normal" surface's name</tt> would be stored as
-         * <tt>"my ""normal"" surface's name"</tt>.
+         * ``my "normal" surface's name`` would be stored as
+         * ``"my ""normal"" surface's name"``.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name, and
@@ -843,8 +843,8 @@ class NormalSurfaces :
          * as field separators.  Text fields with arbitrary contents are
          * placed inside double quotes, and the double quote character itself
          * is represented by a pair of double quotes.  Thus the string
-         * <tt>my "normal" surface's name</tt> would be stored as
-         * <tt>"my ""normal"" surface's name"</tt>.
+         * ``my "normal" surface's name`` would be stored as
+         * ``"my ""normal"" surface's name"``.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name, and
