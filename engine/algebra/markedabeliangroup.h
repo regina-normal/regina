@@ -116,7 +116,7 @@ class HomMarkedAbelianGroup;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * @author Ryan Budney and B.B.
+ * \author Ryan Budney and B.B.
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
  *
@@ -787,7 +787,7 @@ void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs) noexcept;
  * kernelInclusion(), coKerMap(), etc.  Add a liftMap() call, i.e., a
  * procedure to find a lift of a map if one exists.
  *
- * @author Ryan Budney
+ * \author Ryan Budney
  *
  * \ingroup algebra
  */

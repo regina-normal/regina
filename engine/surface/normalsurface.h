@@ -1327,7 +1327,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * largest possible long integer), then the behaviour of this
          * routine is undefined.
          *
-         * @author Alex He
+         * \author Alex He
          *
          * @return the number of disjoint boundary curves.
          */
@@ -1738,7 +1738,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \exception FailedPrecondition One or more of the preconditions
          * listed above was not met.
          *
-         * @author William Pettersson and Stephan Tillmann
+         * \author William Pettersson and Stephan Tillmann
          *
          * @return a matrix with \a number_of_vertices rows and two columns
          * as described above.

@@ -697,7 +697,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @return \c true if and only if all gluing permutations are
          * order preserving on the tetrahedron faces.
          *
-         * @author Matthias Goerner
+         * \author Matthias Goerner
          */
         bool isOrdered() const;
 
@@ -2102,7 +2102,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the topology of the manifold. If \a check is false, the function
          * simply returns \c true.
          *
-         * @author Alex He
+         * \author Alex He
          */
         bool zeroTwoMove(
                 EdgeEmbedding<3> e0, int t0, EdgeEmbedding<3> e1, int t1,
@@ -2169,7 +2169,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the topology of the manifold. If \a check is false, the function
          * simply returns \c true.
          *
-         * @author Alex He
+         * \author Alex He
          */
         bool zeroTwoMove(Edge<3>* e, size_t t0, size_t t1,
             bool check = true, bool perform = true);
@@ -2223,7 +2223,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the topology of the manifold. If \a check is false, the function
          * simply returns \c true.
          *
-         * @author Alex He
+         * \author Alex He
          */
         bool zeroTwoMove(Triangle<3>* t0, int e0, Triangle<3>* t1, int e1,
             bool check = true, bool perform = true);
@@ -2471,7 +2471,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @return \c true if the triangulation has been successfully ordered
          * as described above, or \c false if not.
          *
-         * @author Matthias Goerner
+         * \author Matthias Goerner
          */
         bool order(bool forceOriented = false);
 
@@ -2700,7 +2700,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @return the genus if this is a triangulation of an orientable
          * handlebody, or -1 otherwise.
          *
-         * @author Alex He
+         * \author Alex He
          */
         ssize_t isHandlebody() const;
         /**
@@ -2729,7 +2729,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @return \c true if and only if this property is already known or
          * trivial to calculate.
          *
-         * @author Alex He
+         * \author Alex He
          */
         bool knowsHandlebody() const;
 
@@ -3043,7 +3043,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * as are necessary, leaving finite vertices alone.
          *
          * @return \c true if and only if the triangulation was changed.
-         * @author David Letscher
+         * \author David Letscher
          */
         bool idealToFinite();
 
@@ -3672,7 +3672,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * adjacent face gluings should always match if the Tetrahedron<3>
          * gluing routines have been used correctly.
          *
-         * @author Matthias Goerner
+         * \author Matthias Goerner
          */
         void checkPermutations();
 

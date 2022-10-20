@@ -144,10 +144,10 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
  * \ifacespython In Python, this routine fixes the integer type
  * \a IntType to be \c long.
  *
+ * \tparam IntType any integer type, such as \c int, \c long, and so on.
+ *
  * \param n any integer.
  * \return the number of bits required to store 0,...,<i>n</i>-1.
- *
- * \tparam IntType any integer type, such as \c int, \c long, and so on.
  *
  * \ingroup utilities
  */
@@ -171,10 +171,10 @@ constexpr int bitsRequired(IntType n) {
  * if \a IntType is an unsigned char then nextPowerOfTwo(255) will return 0.
  * Be sure that \a IntType is large enough for your requirements.
  *
+ * \tparam IntType any integer type, such as \c int, \c long, and so on.
+ *
  * \param n any integer.
  * \return the smallest integer power of two that is &ge; \a n.
- *
- * \tparam IntType any integer type, such as \c int, \c long, and so on.
  *
  * \ingroup utilities
  */

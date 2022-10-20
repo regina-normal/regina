@@ -1388,7 +1388,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * @param p the given odd prime.
          * @return The Legendre symbol (0, 1 or -1) as described above.
          *
-         * @author Ryan Budney
+         * \author Ryan Budney
          */
         int legendre(const IntegerBase<supportInfinity>& p) const;
 

@@ -325,7 +325,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * @param genus the genus of the handlebody.
          * @return the orientable handlebody with the given genus.
          *
-         * @author Alex He
+         * \author Alex He
          */
         static Triangulation<3> handlebody(size_t genus);
 

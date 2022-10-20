@@ -92,7 +92,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * this must be greater than or equal to zero.
          * @return the requested non-orientable surface.
          *
-         * @author Alex He, B.B.
+         * \author Alex He, B.B.
          */
         static Triangulation<2> nonOrientable(
             unsigned genus, unsigned punctures);

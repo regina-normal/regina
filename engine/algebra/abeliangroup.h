@@ -222,7 +222,7 @@ class AbelianGroup :
          * which will give the same result as the
          * AbelianGroup(MatrixInt, MatrixInt) constructor.
          *
-         * @author Ryan Budney
+         * \author Ryan Budney
          */
         AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p);
         /**

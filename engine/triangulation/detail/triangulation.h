@@ -1202,7 +1202,7 @@ class TriangulationBase :
          * @return \c true if and only if all top-dimensional simplices are
          * oriented consistently.
          *
-         * @author Matthias Goerner
+         * \author Matthias Goerner
          */
         bool isOriented() const;
 

@@ -103,7 +103,7 @@ class XMLPropertyDict : private std::map<std::string, std::string> {
  *
  * \nopython
  *
- * @author This class was taken and modified from the libxml++ library
+ * \author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
  */
 class XMLParserCallback {
@@ -188,7 +188,7 @@ class XMLParserCallback {
  *
  * \nopython
  *
- * @author This class was taken and modified from the libxml++ library
+ * \author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
  */
 class XMLParser {

@@ -415,7 +415,7 @@ class Rational {
          *
          * @return the double approximation to this rational.
          *
-         * @author Ryan Budney, B.B.
+         * \author Ryan Budney, B.B.
          */
         double doubleApprox() const;
 
@@ -425,7 +425,7 @@ class Rational {
          *
          * @return this rational as written using TeX formatting.
          *
-         * @author Ryan Budney
+         * \author Ryan Budney
          */
         std::string tex() const;
 
@@ -439,7 +439,7 @@ class Rational {
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
          *
-         * @author Ryan Budney
+         * \author Ryan Budney
          */
         std::ostream& writeTeX(std::ostream& out) const;
 

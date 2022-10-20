@@ -132,7 +132,7 @@ namespace regina {
  *
  * This class will eventually be removed in a future release of Regina.
  *
- * @author Ryan Budney
+ * \author Ryan Budney
  *
  * \ingroup triangulation
  */

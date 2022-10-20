@@ -78,7 +78,7 @@ namespace regina {
  * Although this class makes use of global data in its implementation, all
  * of its methods are thread-safe.
  *
- * @author Ryan Budney, B.B.
+ * \author Ryan Budney, B.B.
  *
  * \ingroup maths
  */

@@ -154,7 +154,7 @@ inline constexpr char base64Spare[] = "_-.";
  * characters will be written.
  * @param outlen the length of the output buffer.
  *
- * @author This routine is based on the \a Base64 project at
+ * \author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
  *
@@ -184,7 +184,7 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
  * array of base64 characters.
  * @return the length of the output array, not counting the terminating null.
  *
- * @author This routine is based on the \a Base64 project at
+ * \author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
  *
@@ -225,7 +225,7 @@ size_t base64Encode(const char* in, size_t inlen, char** out);
  * @return \c true if decoding was successful, or \c false if the output
  * buffer was exhausted or an unexpected input character was found.
  *
- * @author This routine is based on the \a Base64 project at
+ * \author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
  *
@@ -270,7 +270,7 @@ bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
  * @return \c true if decoding was successful, or \c false if an unexpected
  * input character was found or some other error occurred.
  *
- * @author This routine is based on the \a Base64 project at
+ * \author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
  *

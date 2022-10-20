@@ -1579,7 +1579,7 @@ class SnapPeaTriangulation :
          *
          * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * @author William Pettersson and Stephan Tillmann
+         * \author William Pettersson and Stephan Tillmann
          *
          * @return a matrix with (2 * \a number_of_cusps) rows
          * and (3 * \a number_of_tetrahedra) columns as described above.

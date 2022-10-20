@@ -3714,7 +3714,7 @@ class Link :
          * classical Gauss code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
-         * @author Adam Gowty
+         * \author Adam Gowty
          *
          * @param str a classical Gauss code for a knot, as described above.
          * @return the reconstructed knot.
@@ -3763,7 +3763,7 @@ class Link :
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
          *
-         * @author Adam Gowty
+         * \author Adam Gowty
          *
          * @param begin an iterator that points to the beginning of the
          * sequence of integers for a classical Gauss code.
@@ -4082,7 +4082,7 @@ class Link :
          * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
-         * @author Much of the code for this routine is based on the
+         * \author Much of the code for this routine is based on the
          * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
          *
          * @param str either the alphabetical or numerical
@@ -4138,7 +4138,7 @@ class Link :
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
          *
-         * @author Much of the code for this routine is based on the
+         * \author Much of the code for this routine is based on the
          * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
          *
          * @param begin an iterator that points to the beginning of the
@@ -4387,7 +4387,7 @@ class Link :
          *
          * @return \c true if and only if a planar embedding was found.
          *
-         * @author This routine is based on the Dowker-Thistlethwaite
+         * \author This routine is based on the Dowker-Thistlethwaite
          * implementation from the SnapPea/SnapPy kernel.
          */
         static bool realizeDT(size_t* anInvolution, bool* aRealization,

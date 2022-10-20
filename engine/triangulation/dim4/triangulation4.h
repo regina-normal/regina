@@ -879,7 +879,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * topology of the manifold. If \a check is \c false, the function
          * simply returns \c true.
          *
-         * @author Alex He
+         * \author Alex He
          */
         bool fourFourMove(Edge<4>* e, bool check = true, bool perform = true);
         /**
@@ -1093,7 +1093,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * topology of the manifold. If \a check is \c false, the function
          * simply returns \c true.
          *
-         * @author Alex He
+         * \author Alex He
          */
         bool snapEdge( Edge<4>* e, bool check = true, bool perform = true );
 

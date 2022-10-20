@@ -68,7 +68,7 @@ template <typename> class PacketOf;
  * @return a new triangulation packet containing the data read from the
  * Orb / Casson file, or \c null on error.
  *
- * @author Ryan Budney, also with code from Damien Heard
+ * \author Ryan Budney, also with code from Damien Heard
  *
  * \ingroup foreign
  */
