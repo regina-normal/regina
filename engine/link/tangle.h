@@ -817,8 +817,7 @@ class Tangle : public Output<Tangle> {
          *
          * - Start at the top-left endpoint and follow this string to
          *   its other endpoint.  At every crossing that you pass, write a
-         *   token of the form <tt>+&lt;<i>k</i></tt>, <tt>-&lt;<i>k</i></tt>,
-         *   <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt>, where:
+         *   token of the form `+<k`, `-<k`, `+>k` or `->k`, where:
          *
          *     * the symbol `+` indicates that you are passing over the
          *       crossing labelled \a k, and the symbol `-` indicates
@@ -826,17 +825,18 @@ class Tangle : public Output<Tangle> {
          *
          *     * the symbol `<` indicates that the other strand of
          *       the crossing passes from right to left, and `>`
-         *       indicates that the other strand passes from left to right.
+         *       indicates that the other strand passes from left to right;
+         *
+         *     * \a k is replaced with the integer crossing label.
          *
          * - Write the token `_` to indicate that the first string has
          *   finished.
          *
          * - Start at the beginning of the other string (for horizontal
          *   or diagonal tangles, this is the bottom-left endpoint, and
-         *   for vertical tangles this is the top-right endpoint).  As
-         *   before, follow this string to its other endpoint, writing a
-         *   token of the form <tt>+&lt;<i>k</i></tt>, <tt>-&lt;<i>k</i></tt>,
-         *   <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt> at every
+         *   for vertical tangles this is the top-right endpoint).  As before,
+         *   follow this string to its other endpoint, writing a token of
+         *   the form `+<k`, `-<k`, `+>k` or `->k` at every
          *   crossing that you pass.
          *
          * Be aware that, once the tangle has been constructed, the crossings
