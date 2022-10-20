@@ -150,7 +150,7 @@ class Component<2> : public detail::ComponentBase<2> {
          *
          * \tparam subdim the face dimension; this must be either 0 or 1.
          *
-         * @param index the index of the desired face, ranging from 0 to
+         * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
          * @return the requested face.
          */

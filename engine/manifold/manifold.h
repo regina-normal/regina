@@ -191,7 +191,7 @@ class Manifold : public Output<Manifold> {
          * closed 3-manifolds.  For most classes of bounded 3-manifolds,
          * this routine simply compares the strings returned by name().
          *
-         * @param compare the 3-manifold representation with which this
+         * \param compare the 3-manifold representation with which this
          * will be compared.
          * @return \c true if and only if this is "smaller" than the
          * given 3-manifold representation.
@@ -205,7 +205,7 @@ class Manifold : public Output<Manifold> {
          * \nopython Instead use the variant name() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          * @return a reference to the given output stream.
          */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
@@ -221,7 +221,7 @@ class Manifold : public Output<Manifold> {
          * \nopython Instead use the variant texName() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          * @return a reference to the given output stream.
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
@@ -238,7 +238,7 @@ class Manifold : public Output<Manifold> {
          * \nopython Instead use the variant structure() that takes no
          * arguments and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          * @return a reference to the given output stream.
          */
         virtual std::ostream& writeStructure(std::ostream& out) const;
@@ -252,7 +252,7 @@ class Manifold : public Output<Manifold> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -264,7 +264,7 @@ class Manifold : public Output<Manifold> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 

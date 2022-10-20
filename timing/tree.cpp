@@ -40,7 +40,7 @@ using namespace regina;
  * Output information on how to use this program, and then terminate the
  * entire program with return value 1.
  *
- * @param program the name of this program (typically argv[0]).
+ * \param program the name of this program (typically argv[0]).
  */
 void usage(const char* program) {
     std::cerr << "Usage:\n\n"

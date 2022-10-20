@@ -82,8 +82,8 @@ struct GroupExpressionTerm {
     /**
      * Creates a new term initialised to the given value.
      *
-     * @param gen the number that identifies the generator in the new term.
-     * @param exp the exponent to which this generator is raised.
+     * \param gen the number that identifies the generator in the new term.
+     * \param exp the exponent to which this generator is raised.
      */
     GroupExpressionTerm(unsigned long gen, long exp);
     /**
@@ -100,7 +100,7 @@ struct GroupExpressionTerm {
     /**
      * Determines whether this and the given term contain identical data.
      *
-     * @param other the term with which this term will be compared.
+     * \param other the term with which this term will be compared.
      * @return \c true if and only if this and the given term have both the
      * same generator and exponent.
      */
@@ -108,7 +108,7 @@ struct GroupExpressionTerm {
     /**
      * Determines whether this and the given term do not contain identical data.
      *
-     * @param other the term with which this term will be compared.
+     * \param other the term with which this term will be compared.
      * @return \c true if and only if this and the given term do not have
      * both the same generator and exponent.
      */
@@ -118,7 +118,7 @@ struct GroupExpressionTerm {
      * Imposes an ordering on terms.
      * Terms are ordered lexigraphically as (generator, exponent) pairs.
      *
-     * @param other the term to compare with this.
+     * \param other the term to compare with this.
      * @return true if and only if this term is lexicographically
      * smaller than \a other.
      */
@@ -143,7 +143,7 @@ struct GroupExpressionTerm {
      * Note that this term might be changed but the given term will remain
      * unchanged.
      *
-     * @param other the term to merge with this term.
+     * \param other the term to merge with this term.
      * @return \c true if the two terms were merged into this term, or
      * \c false if the two terms have different generators.
      */
@@ -158,8 +158,8 @@ struct GroupExpressionTerm {
  * If the term has exponent 0 or 1, the output format will be
  * appropriately simplified.
  *
- * @param out the output stream to which to write.
- * @param term the term to write.
+ * \param out the output stream to which to write.
+ * \param term the term to write.
  * @return a reference to the given output stream.
  *
  * \ingroup algebra
@@ -194,14 +194,14 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         /**
          * Creates a new expression containing a single term.
          *
-         * @param term the term to use as the new expression.
+         * \param term the term to use as the new expression.
          */
         GroupExpression(const GroupExpressionTerm& term);
         /**
          * Creates a new expression containing a single term.
          *
-         * @param generator the number of the generator to use in the term.
-         * @param exponent the exponent to which the given generator is
+         * \param generator the number of the generator to use in the term.
+         * \param exponent the exponent to which the given generator is
          * raised in the term.
          */
         GroupExpression(unsigned long generator, long exponent);
@@ -230,7 +230,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \exception InvalidArgument The given string could not be
          * interpreted as a group expression.
          *
-         * @param input the input string that is to be interpreted.
+         * \param input the input string that is to be interpreted.
          */
         GroupExpression(const char* input);
         /**
@@ -247,7 +247,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \exception InvalidArgument The given string could not be
          * interpreted as a group expression.
          *
-         * @param input the input string that is to be interpreted.
+         * \param input the input string that is to be interpreted.
          */
         GroupExpression(const std::string &input);
 
@@ -270,7 +270,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         /**
          * Swaps the contents of this and the given expression.
          *
-         * @param other the expression whose contents should be swapped with
+         * \param other the expression whose contents should be swapped with
          * this.
          */
         void swap(GroupExpression& other) noexcept;
@@ -279,7 +279,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Equality operator. Checks to see whether or not these two words
          * represent the same literal string.
          *
-         * @param comp the expression to compare against this.
+         * \param comp the expression to compare against this.
          * @return \c true if this and the given string literal are identical.
          */
         bool operator == (const GroupExpression& comp) const;
@@ -288,7 +288,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Inequality operator. Checks to see whether or not these two words
          * represent different literal strings.
          *
-         * @param comp the expression to compare against this.
+         * \param comp the expression to compare against this.
          * @return \c true if this and the given string literal are not
          * identical.
          */
@@ -375,7 +375,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \warning This routine is <i>O(n)</i> where \a n is the number
          * of terms in this expression.
          *
-         * @param index the index of the term to return; this must be
+         * \param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
          * @return the requested term.
          */
@@ -389,7 +389,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \warning This routine is <i>O(n)</i> where \a n is the number
          * of terms in this expression.
          *
-         * @param index the index of the term to return; this must be
+         * \param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
          * @return the requested term.
          */
@@ -403,7 +403,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \warning This routine is <i>O(n)</i> where \a n is the number
          * of terms in this expression.
          *
-         * @param index the index of the term to return; this must be
+         * \param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
          * @return the number of the requested generator.
          */
@@ -417,7 +417,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \warning This routine is <i>O(n)</i> where \a n is the number
          * of terms in this expression.
          *
-         * @param index the index of the term to return; this must be
+         * \param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
          * @return the requested exponent.
          */
@@ -426,30 +426,30 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         /**
          * Adds the given term to the beginning of this expression.
          *
-         * @param term the term to add.
+         * \param term the term to add.
          */
         void addTermFirst(const GroupExpressionTerm& term);
         /**
          * Adds the given term to the beginning of this expression.
          *
-         * @param generator the number of the generator corresponding to
+         * \param generator the number of the generator corresponding to
          * the new term.
-         * @param exponent the exponent to which the given generator is
+         * \param exponent the exponent to which the given generator is
          * raised.
          */
         void addTermFirst(unsigned long generator, long exponent);
         /**
          * Adds the given term to the end of this expression.
          *
-         * @param term the term to add.
+         * \param term the term to add.
          */
         void addTermLast(const GroupExpressionTerm& term);
         /**
          * Adds the given term to the end of this expression.
          *
-         * @param generator the number of the generator corresponding to
+         * \param generator the number of the generator corresponding to
          * the new term.
-         * @param exponent the exponent to which the given generator is
+         * \param exponent the exponent to which the given generator is
          * raised.
          */
         void addTermLast(unsigned long generator, long exponent);
@@ -458,14 +458,14 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Multiplies this expression on the left by the given word.
          * This expression will be modified directly.
          *
-         * @param word the word to multiply with this expression.
+         * \param word the word to multiply with this expression.
          */
         void addTermsFirst(GroupExpression word);
         /**
          * Multiplies this expression on the right by the given word.
          * This expression will be modified directly.
          *
-         * @param word the word to multiply with this expression.
+         * \param word the word to multiply with this expression.
          */
         void addTermsLast(GroupExpression word);
 
@@ -508,7 +508,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Returns this expression raised to the given power.
          * The given exponent may be positive, zero or negative.
          *
-         * @param exponent the power to which this expression should be raised.
+         * \param exponent the power to which this expression should be raised.
          * @return this expression raised to the given power.
          */
         GroupExpression power(long exponent) const;
@@ -525,7 +525,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * simplifies to <tt>g1^2 g2 g1 g2</tt> if it is cyclic, but does not
          * simplify at all if it is not cyclic.
          *
-         * @param cyclic \c true if and only if the expression may be
+         * \param cyclic \c true if and only if the expression may be
          * assumed to be cyclic.
          * @return \c true if and only if this expression was changed.
          */
@@ -539,10 +539,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \pre The given expansion is not the same GroupExpression
          * object as this.
          *
-         * @param generator the generator to be replaced.
-         * @param expansion the substitute expression that will replace
+         * \param generator the generator to be replaced.
+         * \param expansion the substitute expression that will replace
          * every occurrence of the given generator.
-         * @param cyclic \c true if and only if the expression may be
+         * \param cyclic \c true if and only if the expression may be
          * assumed to be cyclic; see simplify() for further details.
          * @return \c true if and only if any substitutions were made.
          */
@@ -568,9 +568,9 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * In other words, <tt>expansions[i]</tt> exists for every generator
          * \a i that appears in this expression.
          *
-         * @param expansions the list of substitutes for all generators in
+         * \param expansions the list of substitutes for all generators in
          * this expression.
-         * @param cyclic \c true if and only if the expression may be
+         * \param cyclic \c true if and only if the expression may be
          * assumed to be cyclic; see simplify() for further details.
          */
         void substitute(const std::vector<GroupExpression>& expansions,
@@ -595,8 +595,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * \nopython
          *
-         * @param other the word to compare against this.
-         * @param cyclic if \c false we get a list of exact relabellings from
+         * \param other the word to compare against this.
+         * \param cyclic if \c false we get a list of exact relabellings from
          * this word to \a other.  If \c true, it can be up to cyclic
          * permutation and inversion.
          * @return a list of permutations, implemented as maps from
@@ -612,7 +612,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \ifacespython The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML should be written.
+         * \param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
 
@@ -634,7 +634,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \nopython Instead use the variant tex() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTeX(std::ostream& out) const;
 
@@ -658,7 +658,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
-         * @param alphaGen indicates whether to use numbered or
+         * \param alphaGen indicates whether to use numbered or
          * alphabetic generators, as described above.
          * @return a short text representation of this group expression.
          */
@@ -680,7 +680,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
-         * @param alphaGen indicates whether to use numbered or
+         * \param alphaGen indicates whether to use numbered or
          * alphabetic generators, as described above.
          * @return a short text representation of this group expression.
          */
@@ -703,11 +703,11 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * \nopython Use str() or utf8() instead.
          *
-         * @param out the output stream to which to write.
-         * @param utf8 \c true if exponents should be written using
+         * \param out the output stream to which to write.
+         * \param utf8 \c true if exponents should be written using
          * unicode superscript characters, or \c false if they should be
          * written using a caret (^) symbol.
-         * @param alphaGen indicates whether to use numbered or
+         * \param alphaGen indicates whether to use numbered or
          * alphabetic generators, as described above.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
@@ -720,8 +720,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
  * This global routine simply calls GroupExpression::swap(); it is provided
  * so that GroupExpression meets the C++ Swappable requirements.
  *
- * @param lhs the expression whose contents should be swapped with \a rhs.
- * @param rhs the expression whose contents should be swapped with \a lhs.
+ * \param lhs the expression whose contents should be swapped with \a rhs.
+ * \param rhs the expression whose contents should be swapped with \a lhs.
  *
  * \ingroup algebra
  */
@@ -764,7 +764,7 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Creates a clone of the given group presentation.
          *
-         * @param src the group presentation to clone.
+         * \param src the group presentation to clone.
          */
         GroupPresentation(const GroupPresentation& src) = default;
         /**
@@ -774,13 +774,13 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The group presentation that was passed (\a src) will no longer be
          * usable.
          *
-         * @param src the group presentation to move.
+         * \param src the group presentation to move.
          */
         GroupPresentation(GroupPresentation&& src) noexcept = default;
         /**
          * Creates the free group on the given number of generators.
          *
-         * @param nGenerators the number of generators.
+         * \param nGenerators the number of generators.
          */
         GroupPresentation(unsigned long nGenerators);
         /**
@@ -802,8 +802,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \exception InvalidArgument One or more of the given strings
          * could not be interpreted as a group expression.
          *
-         * @param nGens the number of generators.
-         * @param rels a vector of relations each given in string form,
+         * \param nGens the number of generators.
+         * \param rels a vector of relations each given in string form,
          * as outlined above.
          */
         GroupPresentation(unsigned long nGens,
@@ -812,7 +812,7 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Sets this to be a clone of the given group presentation.
          *
-         * @param src the group presentation to copy.
+         * \param src the group presentation to copy.
          * @return a reference to this group presentation.
          */
         GroupPresentation& operator = (const GroupPresentation& src) = default;
@@ -823,7 +823,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The group presentation that was passed (\a src) will no longer be
          * usable.
          *
-         * @param src the group presentation to move.
+         * \param src the group presentation to move.
          * @return a reference to this group presentation.
          */
         GroupPresentation& operator = (GroupPresentation&& src) noexcept =
@@ -832,7 +832,7 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Swaps the contents of this and the given group presentation.
          *
-         * @param other the group presentation whose contents should be
+         * \param other the group presentation whose contents should be
          * swapped with this.
          */
         void swap(GroupPresentation& other) noexcept;
@@ -842,7 +842,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * If the new presentation has \a g generators, the new
          * generators will be numbered <i>g</i>-1, <i>g</i>-2 and so on.
          *
-         * @param numToAdd the number of generators to add.
+         * \param numToAdd the number of generators to add.
          * @return the number of generators in the new presentation.
          */
         unsigned long addGenerator(unsigned long numToAdd = 1);
@@ -855,7 +855,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * words, it does not stop you from using generators beyond the
          * countGenerators() bound.
          *
-         * @param rel the expression that the relation sets to 1; for
+         * \param rel the expression that the relation sets to 1; for
          * instance, if the relation is <tt>g1^2 g2 = 1</tt> then this
          * parameter should be the expression <tt>g1^2 g2</tt>.
          */
@@ -878,7 +878,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * presentation.  The relation will be of the form <tt>expresson
          * = 1</tt>.
          *
-         * @param index the index of the desired relation; this must be
+         * \param index the index of the desired relation; this must be
          * between 0 and countRelations()-1 inclusive.
          *
          * @return the expression that the requested relation sets to 1;
@@ -978,7 +978,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * possibly in concert with proliferateRelators(), before using this
          * routine for any significant tasks.
          *
-         * @param input is the word you would like to simplify.
+         * \param input is the word you would like to simplify.
          * This must be a word in the generators of this group.
          * @return \c true if and only if the input word was modified.
          */
@@ -1007,7 +1007,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * exponential amount of memory (exponential in your presentation
          * size times n).  So do be careful when using it.
          *
-         * @param depth controls the depth of the proliferation, as
+         * \param depth controls the depth of the proliferation, as
          * described above; this must be strictly positive.
          */
         void proliferateRelators(unsigned long depth=1);
@@ -1058,7 +1058,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \ifacespython The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML should be written.
+         * \param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
 
@@ -1141,8 +1141,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \pre Both \a i and \a j are strictly less than
          * countGenerators().
          *
-         * @param i indicates the first of the two generators to switch.
-         * @param j indicates the second of the two generators to switch.
+         * \param i indicates the first of the two generators to switch.
+         * \param j indicates the second of the two generators to switch.
          * @return \c true if and only if the Nielsen automorphism had an
          * effect on at least one relation.
          */
@@ -1155,7 +1155,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \pre \a i is strictly less than countGenerators().
          *
-         * @param i indicates the generator to invert.
+         * \param i indicates the generator to invert.
          * @return \c true if and only if the Nielsen automorphism had an
          * effect on at least one relation.
          */
@@ -1173,12 +1173,12 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \pre Both \a i and \a j are strictly less than countGenerators().
          *
-         * @param i indicates the generator to replace.
-         * @param j indicates the generator to combine with \c gi.
-         * @param k indicates the power to which we raise \c gj when
+         * \param i indicates the generator to replace.
+         * \param j indicates the generator to combine with \c gi.
+         * \param k indicates the power to which we raise \c gj when
          * performing the replacement; this may be positive or negative
          * (or zero, but this will have no effect).
-         * @param rightMult \c true if we should replace \c gi by
+         * \param rightMult \c true if we should replace \c gi by
          * <tt>(gi)(gj)^k</tt>, or \c false if we should replace \c gi by
          * <tt>(gj)^k(gi)</tt>.
          * @return \c true if and only if the nielsen automorphism had an
@@ -1282,7 +1282,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * this and the given presentation use exactly the same generators
          * and exactly the same relations, presented in exactly the same order.
          *
-         * @param other the group presentation to compare with this.
+         * \param other the group presentation to compare with this.
          * @return \c true if and only if this and the given group presentation
          * are identical.
          */
@@ -1297,7 +1297,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * this and the given presentation use exactly the same generators
          * and exactly the same relations, presented in exactly the same order.
          *
-         * @param other the group presentation to compare with this.
+         * \param other the group presentation to compare with this.
          * @return \c true if and only if this and the given group presentation
          * are not identical.
          */
@@ -1328,7 +1328,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * - The groups are simply isomorphic but this routine could not
          *   prove it, due to difficulties with the word problem.
          *
-         * @param other the group presentation to compare with this.
+         * \param other the group presentation to compare with this.
          * @return \c true if this routine could certify that the two group
          * presentations are simply isomorphic, or \c false if it could not.
          */
@@ -1405,9 +1405,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          * must be between 2 and 7 inclusive; this range is chosen because
          * those are the \a k for which Regina's permutation class Perm<k>
          * is highly optimised.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each representation that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial subgroup presentation argument.
          * @return the total number of representations found.
          */
@@ -1447,7 +1447,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \nopython Instead use the variant tex() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTeX(std::ostream& out) const;
 
@@ -1478,7 +1478,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \nopython Instead use the variant compact() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextCompact(std::ostream& out) const;
 
@@ -1492,7 +1492,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -1501,7 +1501,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -1519,7 +1519,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * (possibly very long) GAP function call, and will not contain
          * any newlines.
          *
-         * @param groupVariable the name of the GAP variable to which
+         * \param groupVariable the name of the GAP variable to which
          * this group will be assigned.
          * @return a sequence of commands to create this group in GAP.
          */
@@ -1740,8 +1740,8 @@ class GroupPresentation : public Output<GroupPresentation> {
  * This global routine simply calls GroupPresentation::swap(); it is provided
  * so that GroupPresentation meets the C++ Swappable requirements.
  *
- * @param lhs the presentation whose contents should be swapped with \a rhs.
- * @param rhs the presentation whose contents should be swapped with \a lhs.
+ * \param lhs the presentation whose contents should be swapped with \a rhs.
+ * \param rhs the presentation whose contents should be swapped with \a lhs.
  *
  * \ingroup algebra
  */

@@ -149,15 +149,15 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
-         * @param pairing the specific pairing of triangle edges
+         * \param pairing the specific pairing of triangle edges
          * that the generated permutation sets will complement.
-         * @param autos the collection of isomorphisms that define equivalence
+         * \param autos the collection of isomorphisms that define equivalence
          * of permutation sets.  These are used by runSearch(), which produces
          * each permutation set precisely once up to equivalence.  These
          * isomorphisms must all be automorphisms of the given edge pairing,
          * and will generally be the set of all such automorphisms (which
          * you can generate via <tt>pairing.findAutomorphisms()</tt>).
-         * @param orientableOnly \c true if only gluing permutations
+         * \param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
          */
@@ -186,7 +186,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * use taggedData() and fromTaggedData() instead, which incorporate
          * this same text data as part of their richer text format.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         GluingPermSearcher(std::istream& in);
 
@@ -230,9 +230,9 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * additional arguments beyond the initial gluing permutation set
          * (and therefore the additional \a args list is omitted here).
          *
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each permutation set that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
          */
         template <typename Action, typename... Args>
@@ -269,11 +269,11 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * large enough), it is possible that this routine will produce
          * complete gluing permutation sets.
          *
-         * @param maxDepth the depth of the partial search to run.
+         * \param maxDepth the depth of the partial search to run.
          * A negative number indicates that a full search should be run.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each permutation set (partial or complete) that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
          */
         template <typename Action, typename... Args>
@@ -312,7 +312,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * \nopython Instead use taggedData(), which returns this same
          * information as a string.
          *
-         * @param out the output stream to which the data should be
+         * \param out the output stream to which the data should be
          * written.
          */
         void dumpTaggedData(std::ostream& out) const;
@@ -368,7 +368,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * constructor is not available in Python either, so it is recommended
          * that Python users use taggedData() and fromTaggedData() instead.
          *
-         * @param out the output stream to which the data should be written.
+         * \param out the output stream to which the data should be written.
          */
         virtual void dumpData(std::ostream& out) const;
 
@@ -410,7 +410,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -495,7 +495,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * \nopython Instead use the variant of fromTaggedData() that takes
          * its input as a string.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          * @return the new search manager, or \c null if the data in the
          * input stream was invalid or incorrectly formatted.
          */
@@ -521,7 +521,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * \exception InvalidArgument The data found in the given string
          * is invalid, incomplete, or incorrectly formatted.
          *
-         * @param data the tagged data from which to reconstruct a
+         * \param data the tagged data from which to reconstruct a
          * search manager.
          * @return the new search manager, or \c null if the data in the
          * given string was invalid or incorrectly formatted.

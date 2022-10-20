@@ -125,7 +125,7 @@ class TrivialTri : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(TrivialTri& other) noexcept;
@@ -151,7 +151,7 @@ class TrivialTri : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of trivial triangulation.
          */
@@ -170,7 +170,7 @@ class TrivialTri : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent different types of trivial triangulation.
          */
@@ -184,7 +184,7 @@ class TrivialTri : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param comp the triangulation component to examine.
+         * \param comp the triangulation component to examine.
          * @return a structure representing the trivial triangulation, or
          * \c null if the given component is not one of the triangulations
          * recognised by this class.
@@ -210,8 +210,8 @@ class TrivialTri : public StandardTriangulation {
  * This global routine simply calls TrivialTri::swap(); it is provided
  * so that TrivialTri meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

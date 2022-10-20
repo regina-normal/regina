@@ -120,12 +120,12 @@ class GraphPair : public Manifold {
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
-         * @param sfs0 the first Seifert fibred space.
-         * @param sfs1 the second Seifert fibred space.
-         * @param mat00 the (0,0) element of the matching matrix.
-         * @param mat01 the (0,1) element of the matching matrix.
-         * @param mat10 the (1,0) element of the matching matrix.
-         * @param mat11 the (1,1) element of the matching matrix.
+         * \param sfs0 the first Seifert fibred space.
+         * \param sfs1 the second Seifert fibred space.
+         * \param mat00 the (0,0) element of the matching matrix.
+         * \param mat01 the (0,1) element of the matching matrix.
+         * \param mat10 the (1,0) element of the matching matrix.
+         * \param mat11 the (1,1) element of the matching matrix.
          */
         GraphPair(const SFSpace& sfs0, const SFSpace& sfs1,
             long mat00, long mat01, long mat10, long mat11);
@@ -143,12 +143,12 @@ class GraphPair : public Manifold {
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
-         * @param sfs0 the first Seifert fibred space.
-         * @param sfs1 the second Seifert fibred space.
-         * @param mat00 the (0,0) element of the matching matrix.
-         * @param mat01 the (0,1) element of the matching matrix.
-         * @param mat10 the (1,0) element of the matching matrix.
-         * @param mat11 the (1,1) element of the matching matrix.
+         * \param sfs0 the first Seifert fibred space.
+         * \param sfs1 the second Seifert fibred space.
+         * \param mat00 the (0,0) element of the matching matrix.
+         * \param mat01 the (0,1) element of the matching matrix.
+         * \param mat10 the (1,0) element of the matching matrix.
+         * \param mat11 the (1,1) element of the matching matrix.
          */
         GraphPair(SFSpace&& sfs0, SFSpace&& sfs1,
             long mat00, long mat01, long mat10, long mat11);
@@ -163,9 +163,9 @@ class GraphPair : public Manifold {
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
-         * @param sfs0 the first Seifert fibred space.
-         * @param sfs1 the second Seifert fibred space.
-         * @param matchingReln the 2-by-2 matching matrix.
+         * \param sfs0 the first Seifert fibred space.
+         * \param sfs1 the second Seifert fibred space.
+         * \param matchingReln the 2-by-2 matching matrix.
          */
         GraphPair(const SFSpace& sfs0, const SFSpace& sfs1,
             const Matrix2& matchingReln);
@@ -183,9 +183,9 @@ class GraphPair : public Manifold {
          * does not have precisely one torus boundary, corresponding to a
          * single untwisted puncture in its base orbifold.
          *
-         * @param sfs0 the first Seifert fibred space.
-         * @param sfs1 the second Seifert fibred space.
-         * @param matchingReln the 2-by-2 matching matrix.
+         * \param sfs0 the first Seifert fibred space.
+         * \param sfs1 the second Seifert fibred space.
+         * \param matchingReln the 2-by-2 matching matrix.
          */
         GraphPair(SFSpace&& sfs0, SFSpace&& sfs1, const Matrix2& matchingReln);
         /**
@@ -204,7 +204,7 @@ class GraphPair : public Manifold {
          * Returns a reference to one of the two bounded Seifert fibred
          * spaces that are joined together.
          *
-         * @param which 0 if the first Seifert fibred space is to be
+         * \param which 0 if the first Seifert fibred space is to be
          * returned, or 1 if the second space is to be returned.
          * @return a reference to the requested Seifert fibred space.
          */
@@ -232,7 +232,7 @@ class GraphPair : public Manifold {
          * All that this routine really offers is a well-defined way of
          * ordering graph manifold representations.
          *
-         * @param compare the representation with which this will be compared.
+         * \param compare the representation with which this will be compared.
          * @return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
@@ -257,7 +257,7 @@ class GraphPair : public Manifold {
         /**
          * Swaps the contents of this and the given graph manifold.
          *
-         * @param other the graph manifold whose contents should be swapped
+         * \param other the graph manifold whose contents should be swapped
          * with this.
          */
         void swap(GraphPair& other) noexcept;
@@ -273,7 +273,7 @@ class GraphPair : public Manifold {
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
+         * \param compare the presentation with which this will be compared.
          * @return \c true if and only if this and the given object contain
          * identical presentations of the same graph manifold.
          */
@@ -290,7 +290,7 @@ class GraphPair : public Manifold {
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
+         * \param compare the presentation with which this will be compared.
          * @return \c true if and only if this and the given object do not
          * contain identical presentations of the same graph manifold.
          */
@@ -324,7 +324,7 @@ class GraphPair : public Manifold {
          *
          * This routine is for internal use by reduce().
          *
-         * @param reln the matching matrix to simplify.
+         * \param reln the matching matrix to simplify.
          */
         static void reduceSign(Matrix2& reln);
 };
@@ -335,8 +335,8 @@ class GraphPair : public Manifold {
  * This global routine simply calls GraphPair::swap(); it is provided so
  * that GraphPair meets the C++ Swappable requirements.
  *
- * @param a the first graph manifold whose contents should be swapped.
- * @param b the second graph manifold whose contents should be swapped.
+ * \param a the first graph manifold whose contents should be swapped.
+ * \param b the second graph manifold whose contents should be swapped.
  *
  * \ingroup manifold
  */

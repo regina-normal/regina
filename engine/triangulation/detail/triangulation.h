@@ -261,15 +261,15 @@ class TriangulationBase :
          * If you want a "clean" copy that resets all properties to unknown,
          * you can use the two-argument copy constructor instead.
          *
-         * @param copy the triangulation to copy.
+         * \param copy the triangulation to copy.
          */
         TriangulationBase(const TriangulationBase<dim>& copy);
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
          *
-         * @param copy the triangulation to copy.
-         * @param cloneProps \c true if this should also clone any computed
+         * \param copy the triangulation to copy.
+         * \param cloneProps \c true if this should also clone any computed
          * properties of the given triangulation (such as homology,
          * fundamental group, and so on), or \c false if the new triangulation
          * should have all properties marked as unknown.
@@ -297,7 +297,7 @@ class TriangulationBase :
          * because we assume that \a src is about to be destroyed (an action
          * that \e will fire a packet destruction event).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          */
         TriangulationBase(TriangulationBase&& src) noexcept;
         /**
@@ -354,7 +354,7 @@ class TriangulationBase :
          * Note that indexing may change when a simplex is added to or
          * removed from the triangulation.
          *
-         * @param index specifies which simplex to return; this
+         * \param index specifies which simplex to return; this
          * value should be between 0 and size()-1 inclusive.
          * @return the <i>index</i>th top-dimensional simplex.
          */
@@ -366,7 +366,7 @@ class TriangulationBase :
          * Note that indexing may change when a simplex is added to or
          * removed from the triangulation.
          *
-         * @param index specifies which simplex to return; this
+         * \param index specifies which simplex to return; this
          * value should be between 0 and size()-1 inclusive.
          * @return the <i>index</i>th top-dimensional simplex.
          */
@@ -444,7 +444,7 @@ class TriangulationBase :
          * runtime argument, and the new top-dimensional simplices will
          * be returned in a Python tuple of size \a k.
          *
-         * @param k the number of new top-dimensional simplices to add;
+         * \param k the number of new top-dimensional simplices to add;
          * this must be non-negative.
          */
         void newSimplices(size_t k);
@@ -460,7 +460,7 @@ class TriangulationBase :
          * The new simplex will become the last simplex in this
          * triangulation; that is, it will have index size()-1.
          *
-         * @param desc the description to give to the new simplex.
+         * \param desc the description to give to the new simplex.
          * @return the new simplex.
          */
         Simplex<dim>* newSimplex(const std::string& desc);
@@ -473,7 +473,7 @@ class TriangulationBase :
          * \pre The given simplex is a top-dimensional simplex in this
          * triangulation.
          *
-         * @param simplex the simplex to remove.
+         * \param simplex the simplex to remove.
          */
         void removeSimplex(Simplex<dim>* simplex);
         /**
@@ -485,7 +485,7 @@ class TriangulationBase :
          * The given simplex will be unglued from any adjacent simplices
          * (if any), and will be destroyed immediately.
          *
-         * @param index specifies which top-dimensionalsimplex to remove; this
+         * \param index specifies which top-dimensionalsimplex to remove; this
          * must be between 0 and size()-1 inclusive.
          */
         void removeSimplexAt(size_t index);
@@ -519,7 +519,7 @@ class TriangulationBase :
          *
          * \pre \a dest is not this triangulation.
          *
-         * @param dest the triangulation into which simplices should be moved.
+         * \param dest the triangulation into which simplices should be moved.
          */
         void moveContentsTo(Triangulation<dim>& dest);
 
@@ -589,7 +589,7 @@ class TriangulationBase :
          * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., negative or greater than \a dim).
          *
-         * @param subdim the face dimension; this must be between 0 and \a dim
+         * \param subdim the face dimension; this must be between 0 and \a dim
          * inclusive.
          * @return the number of <i>subdim</i>-faces.
          */
@@ -777,7 +777,7 @@ class TriangulationBase :
          * the supported range (i.e., negative, or greater than or equal to
          * \a dim).
          *
-         * @param subdim the face dimension; this must be between 0 and
+         * \param subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
          * @return access to the list of all <i>subdim</i>-faces.
          */
@@ -838,7 +838,7 @@ class TriangulationBase :
          * objects will be deleted and replaced with new ones.
          * Therefore this component object should be considered temporary only.
          *
-         * @param index the index of the desired component; this must be
+         * \param index the index of the desired component; this must be
          * between 0 and countComponents()-1 inclusive.
          * @return the requested component.
          */
@@ -851,7 +851,7 @@ class TriangulationBase :
          * boundary components will be deleted and replaced with new
          * ones.  Therefore this object should be considered temporary only.
          *
-         * @param index the index of the desired boundary component; this must
+         * \param index the index of the desired boundary component; this must
          * be between 0 and countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
@@ -866,7 +866,7 @@ class TriangulationBase :
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
          *
-         * @param index the index of the desired face, ranging from 0 to
+         * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
          * @return the requested face.
          */
@@ -898,9 +898,9 @@ class TriangulationBase :
          * the supported range (i.e., negative, or greater than or equal to
          * \a dim).
          *
-         * @param subdim the face dimension; this must be between 0 and
+         * \param subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
-         * @param index the index of the desired face, ranging from 0 to
+         * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
          * @return the requested face.
          */
@@ -1017,7 +1017,7 @@ class TriangulationBase :
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
          *
-         * @param other the face to translate.
+         * \param other the face to translate.
          * @return the corresponding face of this triangulation.
          */
         template <int subdim>
@@ -1162,7 +1162,7 @@ class TriangulationBase :
          * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., negative or greater than <i>dim</i>-1).
          *
-         * @param subdim the face dimension; this must be between 0 and
+         * \param subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
          * @return the number of boundary <i>subdim</i>-faces.
          */
@@ -1295,7 +1295,7 @@ class TriangulationBase :
          *
          * Note that this routine will not fire a packet change event.
          *
-         * @param newGroup a new (and hopefully simpler) presentation of
+         * \param newGroup a new (and hopefully simpler) presentation of
          * the fundamental group of this triangulation.
          */
         void simplifiedFundamentalGroup(GroupPresentation newGroup);
@@ -1387,7 +1387,7 @@ class TriangulationBase :
          * \ifacespython Like the C++ template function homology<k>(),
          * you can omit the homology dimension \a k; this will default to 1.
          *
-         * @param k the dimension of the homology group to return;
+         * \param k the dimension of the homology group to return;
          * this must be between 1 and (\a dim - 1) inclusive if \a dim is
          * one of Regina's \ref stddim "standard dimensions", or between
          * 1 and (\a dim - 2) inclusive if not.
@@ -1466,7 +1466,7 @@ class TriangulationBase :
          * \ifacespython Like the C++ template function markedHomology<k>(),
          * you can omit the homology dimension \a k; this will default to 1.
          *
-         * @param k the dimension of the homology group to compute; this must
+         * \param k the dimension of the homology group to compute; this must
          * be between 1 and (<i>dim</i>-1) inclusive.
          * @return the <i>k</i>th homology group of the union of all
          * simplices in this triangulation, as described above.
@@ -1546,7 +1546,7 @@ class TriangulationBase :
          * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., less than 1 or greater than \a dim).
          *
-         * @param subdim the face dimension; this must be between 1 and \a dim
+         * \param subdim the face dimension; this must be between 1 and \a dim
          * inclusive.
          * @return the boundary map from <i>subdim</i>-faces to
          * (<i>subdim</i>-1)-faces.
@@ -1660,7 +1660,7 @@ class TriangulationBase :
          * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (as documented for the \a subdim argument below).
          *
-         * @param subdim the dual face dimension; this must be between
+         * \param subdim the dual face dimension; this must be between
          * 1 and \a dim inclusive if \a dim is one of Regina's standard
          * dimensions, or between 1 and (\a dim - 1) inclusive otherwise.
          * @return the boundary map from dual <i>subdim</i>-faces to
@@ -1734,7 +1734,7 @@ class TriangulationBase :
          * \exception InvalidArgument The chain dimension \a subdim is outside
          * the supported range (as documented for the \a subdim argument below).
          *
-         * @param subdim the chain dimension; this must be between
+         * \param subdim the chain dimension; this must be between
          * 0 and (\a dim - 1) inclusive.
          * @return the map from dual <i>subdim</i>-chains to primal
          * <i>subdim</i>-chains.
@@ -1823,10 +1823,10 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
-         * @param f the <i>k</i>-face about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param f the <i>k</i>-face about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -2004,7 +2004,7 @@ class TriangulationBase :
          * In Regina 6.0.1 and earlier, this comparison was called
          * isIdenticalTo().
          *
-         * @param other the triangulation to compare with this.
+         * \param other the triangulation to compare with this.
          * @return \c true if and only if the two triangulations are
          * combinatorially identical.
          */
@@ -2036,7 +2036,7 @@ class TriangulationBase :
          * may be situations in which identical triangulations can acquire
          * different numberings for vertices, edges, and so on.)
          *
-         * @param other the triangulation to compare with this.
+         * \param other the triangulation to compare with this.
          * @return \c true if and only if the two triangulations are
          * not combinatorially identical.
          */
@@ -2083,7 +2083,7 @@ class TriangulationBase :
          * mapping from each component and following gluings to
          * determine the others.
          *
-         * @param other the triangulation to compare with this one.
+         * \param other the triangulation to compare with this one.
          * @return details of the isomorphism if the two triangulations
          * are combinatorially isomorphic, or no value otherwise.
          */
@@ -2117,7 +2117,7 @@ class TriangulationBase :
          * extremely slow: its running time includes a factor of
          * (<i>dim</i>+1)!.
          *
-         * @param other the triangulation in which to search for an
+         * \param other the triangulation in which to search for an
          * isomorphic copy of this triangulation.
          * @return details of the isomorphism if such a copy is found,
          * or no value otherwise.
@@ -2168,10 +2168,10 @@ class TriangulationBase :
          * returns a Python list containing all of the isomorphisms that were
          * found.
          *
-         * @param other the triangulation to compare with this one.
-         * @param action a function (or other callable object) to call
+         * \param other the triangulation to compare with this one.
+         * \param action a function (or other callable object) to call
          * for each isomorphism that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
          * @return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
@@ -2225,11 +2225,11 @@ class TriangulationBase :
          * returns a Python list containing all of the isomorphisms that were
          * found.
          *
-         * @param other the triangulation in which to search for
+         * \param other the triangulation in which to search for
          * isomorphic copies of this triangulation.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each isomorphism that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
          * @return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
@@ -2284,7 +2284,7 @@ class TriangulationBase :
          *
          * This routine behaves correctly when \a source is this triangulation.
          *
-         * @param source the triangulation whose copy will be inserted.
+         * \param source the triangulation whose copy will be inserted.
          */
         void insertTriangulation(const Triangulation<dim>& source);
 
@@ -2300,7 +2300,7 @@ class TriangulationBase :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -2309,7 +2309,7 @@ class TriangulationBase :
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -2469,7 +2469,7 @@ class TriangulationBase :
          *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -2548,9 +2548,9 @@ class TriangulationBase :
          * \nopython Instead, use the variant of fromGluings() that takes this
          * same data using a Python list (which need not be constant).
          *
-         * @param size the number of top-dimensional simplices in the
+         * \param size the number of top-dimensional simplices in the
          * triangulation to construct.
-         * @param gluings describes the gluings between these top-dimensional
+         * \param gluings describes the gluings between these top-dimensional
          * simplices, as described above.
          * @return the reconstructed triangulation.
          */
@@ -2615,11 +2615,11 @@ class TriangulationBase :
          * \ifacespython The gluings should be passed as a single Python
          * list of tuples (not an iterator pair).
          *
-         * @param size the number of top-dimensional simplices in the
+         * \param size the number of top-dimensional simplices in the
          * triangulation to construct.
-         * @param beginGluings the beginning of the list of gluings, as
+         * \param beginGluings the beginning of the list of gluings, as
          * described above.
-         * @param endGluings a past-the-end iterator indicating the end
+         * \param endGluings a past-the-end iterator indicating the end
          * of the list of gluings.
          * @return the reconstructed triangulation.
          */
@@ -2662,7 +2662,7 @@ class TriangulationBase :
          * <i>dim</i>-dimensional isomorphism signature created using
          * the default encoding.
          *
-         * @param sig the isomorphism signature of the triangulation to
+         * \param sig the isomorphism signature of the triangulation to
          * construct.  Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
          * @return the reconstructed triangulation.
@@ -2682,7 +2682,7 @@ class TriangulationBase :
          * <i>dim</i>-dimensional isomorphism signature created using
          * the default encoding.
          *
-         * @param sig the isomorphism signature of the triangulation to
+         * \param sig the isomorphism signature of the triangulation to
          * construct.  Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
          * @return the reconstructed triangulation.
@@ -2724,7 +2724,7 @@ class TriangulationBase :
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different dimensions \a p and \a q.
          *
-         * @param sig the isomorphism signature of a <i>dim</i>-dimensional
+         * \param sig the isomorphism signature of a <i>dim</i>-dimensional
          * triangulation.  Note that isomorphism signature are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
          * @return the number of top-dimensional simplices in the first
@@ -2752,7 +2752,7 @@ class TriangulationBase :
          * \nopython Use tightDecoding() instead, which takes a string as
          * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for a <i>dim</i>-dimensional triangulation.
          * @return the triangulation represented by the given tight encoding.
          */
@@ -2767,7 +2767,7 @@ class TriangulationBase :
          * TriangulationBase never calls this operator itself; it is only
          * ever called by the Triangulation<dim> assignment operator.
          *
-         * @param src the triangulation to copy.
+         * \param src the triangulation to copy.
          * @return a reference to this triangulation.
          */
         TriangulationBase& operator = (const TriangulationBase& src);
@@ -2804,7 +2804,7 @@ class TriangulationBase :
          * \e not fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          * @return a reference to this triangulation.
          */
         TriangulationBase& operator = (TriangulationBase&& src);
@@ -2871,7 +2871,7 @@ class TriangulationBase :
          * Typically swapBaseData() is only ever called by
          * Triangulation<dim>::swap().
          *
-         * @param other the triangulation whose data should be
+         * \param other the triangulation whose data should be
          * swapped with this.
          */
         void swapBaseData(TriangulationBase<dim>& other);
@@ -2886,7 +2886,7 @@ class TriangulationBase :
          * Triangulation<dim>::writeXMLPacketData().  The XML elements
          * that it writes are child elements of the \c tri element.
          *
-         * @param out the output stream to which the XML should be written.
+         * \param out the output stream to which the XML should be written.
          */
         void writeXMLBaseProperties(std::ostream& out) const;
 
@@ -2943,10 +2943,10 @@ class TriangulationBase :
          * of its vertices becomes simplex zero with vertices
          * 0,...,\a dim under the "canonical isomorphism".
          *
-         * @param simp the index of some top-dimensional simplex in this
+         * \param simp the index of some top-dimensional simplex in this
          * triangulation.
-         * @param vertices some ordering of the vertices of the given simplex.
-         * @param relabelling if this is non-null, it will be filled with the
+         * \param vertices some ordering of the vertices of the given simplex.
+         * \param relabelling if this is non-null, it will be filled with the
          * canonical isomorphism; in this case it must already have been
          * constructed for the correct number of simplices.
          * @return the candidate isomorphism signature.
@@ -2980,14 +2980,14 @@ class TriangulationBase :
          * findAllIsomorphisms() and findAllSubcomplexesIn() for details on
          * how \a action should behave.
          *
-         * @param other the triangulation in which to search for an
+         * \param other the triangulation in which to search for an
          * isomorphic copy of this triangulation.
-         * @param complete \c true if isomorphisms must be
+         * \param complete \c true if isomorphisms must be
          * onto and boundary complete, or \c false if neither of these
          * restrictions should be imposed.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each isomorphism that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
          * @return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
@@ -3011,9 +3011,9 @@ class TriangulationBase :
          * have been computed.
          * \pre This triangulation is non-empty.
          *
-         * @param other the triangulation in which we are searching for an
+         * \param other the triangulation in which we are searching for an
          * isomorphic copy of this triangulation.
-         * @param complete \c true if the isomorphism must be
+         * \param complete \c true if the isomorphism must be
          * onto and boundary complete, or \c false if neither of these
          * restrictions should be imposed.
          * @return \c true if no immediate obstructions were found, or
@@ -3063,7 +3063,7 @@ class TriangulationBase :
          * \pre This and the given triangulation are known to have the
          * same number of <i>useDim</i>-faces as each other.
          *
-         * @param other the triangulation to compare against this.
+         * \param other the triangulation to compare against this.
          * @return \c true if and only if the <i>useDim</i>-face
          * degree sequences are equal.
          */
@@ -3081,7 +3081,7 @@ class TriangulationBase :
          * same number of <i>k</i>-faces as each other, for each facial
          * dimension \a k contained in the integer pack \a useDim.
          *
-         * @param other the triangulation to compare against this.
+         * \param other the triangulation to compare against this.
          * @return \c true if and only if all degree sequences considered
          * are equal.
          */
@@ -3139,7 +3139,7 @@ class TriangulationBase :
                 /**
                  * Creates a new lock on the given triangulation.
                  *
-                 * @param tri the triangulation whose topological
+                 * \param tri the triangulation whose topological
                  * properties are to be locked.  This may be \c null
                  * (in which case the lock has no effect).
                  */
@@ -3173,8 +3173,8 @@ class TriangulationBase :
  * fires packet change events which may in turn call arbitrary
  * code via any registered packet listeners.
  *
- * @param lhs the triangulation whose contents should be swapped with \a rhs.
- * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ * \param lhs the triangulation whose contents should be swapped with \a rhs.
+ * \param rhs the triangulation whose contents should be swapped with \a lhs.
  *
  * \ingroup detail
  */

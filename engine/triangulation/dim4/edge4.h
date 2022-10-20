@@ -192,7 +192,7 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          * Creates a new edge and marks it as belonging to the
          * given triangulation component.
          *
-         * @param component the triangulation component to which this
+         * \param component the triangulation component to which this
          * edge belongs.
          */
         Face(Component<4>* component);

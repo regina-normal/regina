@@ -63,7 +63,7 @@ namespace regina::xml {
  * entities.  For instance, the string <tt>"a \< b"</tt> would be
  * converted to <tt>"a \&lt; b"</tt>.
  *
- * @param original the string to convert; this string will not be
+ * \param original the string to convert; this string will not be
  * changed.
  * @return the converted string with special characters replaced by
  * XML entities.
@@ -78,7 +78,7 @@ std::string xmlEncodeSpecialChars(const std::string& original);
  * entities, this routine will replace dashes with underscores to avoid
  * double-hyphens (which are illegal in XML comments).
  *
- * @param comment the string to convert; this string will not be
+ * \param comment the string to convert; this string will not be
  * changed.
  * @return the string converted to be usable inside an XML comment.
  *
@@ -99,8 +99,8 @@ std::string xmlEncodeComment(const std::string& comment);
  *
  * \nopython
  *
- * @param tagName the name of the XML tag to create.
- * @param value the value to assign to the <i>value</i> property of the tag.
+ * \param tagName the name of the XML tag to create.
+ * \param value the value to assign to the <i>value</i> property of the tag.
  * @return the corresponding XML tag.
  *
  * \ingroup utilities

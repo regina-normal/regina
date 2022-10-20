@@ -264,7 +264,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * Nodes are always stored in ascending order.  This means that
          * <tt>element(0) &lt; element(1) &lt; element(2) &lt; ...</tt>.
          *
-         * @param which indicates which node should be returned; this
+         * \param which indicates which node should be returned; this
          * must be between 0 and size()-1 inclusive.
          * @return the number of the corresponding node stored in this bag.
          */
@@ -277,7 +277,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * Then <tt>contains(x)</tt> queries whether the node numbered \a x
          * is contained in this bag.
          *
-         * @param element the number of some node in the graph \a G.
+         * \param element the number of some node in the graph \a G.
          * @return \c true if and only if the given node is in this bag.
          */
         bool contains(size_t element) const;
@@ -371,7 +371,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * - BAG_SUPERSET if this bag is a strict superset of \a rhs;
          * - BAG_UNRELATED if neither this nor \a rhs is a subset of the other.
          *
-         * @param rhs the bag to compare with this.
+         * \param rhs the bag to compare with this.
          * @return the relationship between the two bags, as outlined above.
          */
         BagComparison compare(const TreeBag& rhs) const;
@@ -476,7 +476,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -497,7 +497,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * This new bag will not be inserted into the tree, and will not
          * be assigned any other information (such as index, type or subtype).
          *
-         * @param size the number of nodes that will be contained in the
+         * \param size the number of nodes that will be contained in the
          * new bag.
          */
         TreeBag(size_t size);
@@ -511,7 +511,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * and it will not be assigned any other information (such as index,
          * type or subtype).
          *
-         * @param src the bag whose contents should be cloned.
+         * \param src the bag whose contents should be cloned.
          */
         TreeBag(const TreeBag& src);
 
@@ -522,7 +522,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * \pre The given bag has not yet been inserted into the tree.
          *
-         * @param child the bag to insert into the tree.
+         * \param child the bag to insert into the tree.
          */
         void insertChild(TreeBag* child);
 
@@ -532,7 +532,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * This only swaps the nodes stored in each bag.  It does not
          * switch the positions of the two bags in the underlying tree.
          *
-         * @param other the bag to swap contents with this.
+         * \param other the bag to swap contents with this.
          */
         void swapNodes(TreeBag& other) noexcept;
 
@@ -657,7 +657,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
             /**
              * Constructs a new graph with no arcs.
              *
-             * @param order the number of nodes in the new graph.
+             * \param order the number of nodes in the new graph.
              */
             Graph(size_t order);
             /**
@@ -672,7 +672,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
              * The output will be formatted as a matrix, and will be
              * spread across multiple lines.
              *
-             * @param out the output stream to which to write.
+             * \param out the output stream to which to write.
              */
             void dump(std::ostream& out) const;
 
@@ -697,7 +697,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * This will be a deep copy, in the sense that all of the bags
          * of \a src will be cloned also.
          *
-         * @param src the tree decomposition to clone.
+         * \param src the tree decomposition to clone.
          */
         TreeDecomposition(const TreeDecomposition& src);
 
@@ -708,7 +708,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * The tree decomposition that was passed (\a src) will no longer be
          * usable.
          *
-         * @param src the tree decomposition to move.
+         * \param src the tree decomposition to move.
          */
         TreeDecomposition(TreeDecomposition&& src) noexcept;
 
@@ -728,9 +728,9 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \ifacespython This constructor is only available in Python when
          * \a dim is one of Regina's \ref stddim "standard dimensions".
          *
-         * @param triangulation the triangulation whose facet pairing
+         * \param triangulation the triangulation whose facet pairing
          * graph we are working with.
-         * @param alg the algorithm that should be used to compute the
+         * \param alg the algorithm that should be used to compute the
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
@@ -754,8 +754,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \ifacespython This constructor is only available in Python when
          * \a dim is one of Regina's \ref stddim "standard dimensions".
          *
-         * @param pairing the facet pairing graph that we are working with.
-         * @param alg the algorithm that should be used to compute the
+         * \param pairing the facet pairing graph that we are working with.
+         * \param alg the algorithm that should be used to compute the
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
@@ -771,8 +771,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * The nodes of the graph will be numbered in the same way as
          * the crossings of the given knot / link.
          *
-         * @param link the knot or link that we are working with.
-         * @param alg the algorithm that should be used to compute the
+         * \param link the knot or link that we are working with.
+         * \param alg the algorithm that should be used to compute the
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
@@ -796,8 +796,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * (which is the Python type corresponding to the C++ class
          * Matrix<bool>).
          *
-         * @param graph the adjacency matrix of the graph.
-         * @param alg the algorithm that should be used to compute the
+         * \param graph the adjacency matrix of the graph.
+         * \param alg the algorithm that should be used to compute the
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
@@ -831,8 +831,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \ifacespython The adjacency matrix should be given as a list of
          * lists.
          *
-         * @param graph the adjacency matrix of the graph.
-         * @param alg the algorithm that should be used to compute the
+         * \param graph the adjacency matrix of the graph.
+         * \param alg the algorithm that should be used to compute the
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
@@ -855,7 +855,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * originally built from different and/or differently sized objects
          * or graphs.
          *
-         * @param src the tree decomposition to copy.
+         * \param src the tree decomposition to copy.
          * @return a reference to this tree decomposition.
          */
         TreeDecomposition& operator = (const TreeDecomposition& src);
@@ -871,7 +871,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * originally built from different and/or differently sized objects
          * or graphs.
          *
-         * @param src the tree decomposition to move.
+         * \param src the tree decomposition to move.
          * @return a reference to this tree decomposition.
          */
         TreeDecomposition& operator = (TreeDecomposition&& src) noexcept;
@@ -879,7 +879,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
         /**
          * Swaps the contents of this and the given tree decomposition.
          *
-         * @param other the tree decomposition whose contents should be
+         * \param other the tree decomposition whose contents should be
          * swapped with this.
          */
         void swap(TreeDecomposition& other) noexcept;
@@ -908,7 +908,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * have the same numbered child bags.  Bag types and subtypes
          * are ignored.
          *
-         * @param other the tree decomposition to compare with this.
+         * \param other the tree decomposition to compare with this.
          * @return \c true if and only if this and the given tree
          * decomposition are identical.
          */
@@ -924,7 +924,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * elements (i.e., numbered graph nodes), and must have the same
          * numbered child bags.  Bag types and subtypes are ignored.
          *
-         * @param other the tree decomposition to compare with this.
+         * \param other the tree decomposition to compare with this.
          * @return \c true if and only if this and the given tree
          * decomposition are different.
          */
@@ -1006,7 +1006,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * array, and so this routine must search the tree from the root
          * downwards to find the bag that is being requested.
          *
-         * @param index the number of a bag; this must be between 0 and
+         * \param index the number of a bag; this must be between 0 and
          * size()-1 inclusive.
          * @return the bag with the given number.
          */
@@ -1091,7 +1091,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \ifacespython If a \e heightHint argument is given, it should
          * be passed as a Python list of integers.
          *
-         * @param heightHint an optional array where, for each node \a i,
+         * \param heightHint an optional array where, for each node \a i,
          * a higher value of <tt>heightHint[i]</tt> indicates that the node
          * should be forgotten closer to the root bag.  If this is non-null,
          * then the size of this array should be the number of nodes in
@@ -1115,7 +1115,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * If the given bag is already the root bag, then this routine
          * does nothing (and in particular, types and subtypes are preserved).
          *
-         * @param newRoot the bag that should become the root of this
+         * \param newRoot the bag that should become the root of this
          * tree decomposition.  This must already be a bag of this tree
          * decomposition.
          */
@@ -1210,11 +1210,11 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * It must be possible to assign 0 to a variable of type \a T
          * using both constructors and the assignment operator.
          *
-         * @param costSame An array of size() elements giving an
+         * \param costSame An array of size() elements giving an
          * estimated cost of preserving each child-parent connection;
-         * @param costReverse An array of size() elements giving an
+         * \param costReverse An array of size() elements giving an
          * estimated cost of reversing each child-parent connection;
-         * @param costRoot An array of size() elements giving an
+         * \param costRoot An array of size() elements giving an
          * additional estimated cost for each bag being the new root.
          * This array may be \c null.
          */
@@ -1236,7 +1236,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \nopython Instead use the variant dot() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          *
          * \see http://www.graphviz.org/
          */
@@ -1270,7 +1270,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \nopython Instead use the variant pace() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          *
          * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
@@ -1300,7 +1300,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -1310,7 +1310,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -1372,7 +1372,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * of a tree decomposition using the PACE text format.
          * As noted above, the checks performed here are not exhaustive.
          *
-         * @param str a text representation of the tree
+         * \param str a text representation of the tree
          * decomposition using the PACE text format.
          * @return the corresponding tree decomposition.
          *
@@ -1404,7 +1404,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \nopython Instead you can use the variant of fromPACE() that
          * takes a string.
          *
-         * @param in an input stream that provides a text
+         * \param in an input stream that provides a text
          * representation of the tree decomposition using the PACE text format.
          * @return the corresponding tree decomposition.
          *
@@ -1452,8 +1452,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
  * This global routine simply calls TreeDecomposition::swap(); it is provided
  * so that TreeDecomposition meets the C++ Swappable requirements.
  *
- * @param a the first tree decomposition whose contents should be swapped.
- * @param b the second tree decomposition whose contents should be swapped.
+ * \param a the first tree decomposition whose contents should be swapped.
+ * \param b the second tree decomposition whose contents should be swapped.
  *
  * \ingroup treewidth
  */

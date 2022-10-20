@@ -108,9 +108,9 @@ class FaceEmbeddingBase :
         /**
          * Creates a new object containing the given data.
          *
-         * @param simplex the top-dimensional simplex in which the
+         * \param simplex the top-dimensional simplex in which the
          * underlying <i>subdim</i>-face of the triangulation is contained.
-         * @param vertices a mapping from the vertices of the underlying
+         * \param vertices a mapping from the vertices of the underlying
          * <i>subdim</i>-face of the triangulation to the corresponding
          * vertex numbers of \a simplex.  See vertices() for details of how
          * this permutation should be structured.
@@ -119,14 +119,14 @@ class FaceEmbeddingBase :
         /**
          * Creates a new copy of the given object.
          *
-         * @param cloneMe the object to copy.
+         * \param cloneMe the object to copy.
          */
         FaceEmbeddingBase(const FaceEmbeddingBase& cloneMe) = default;
 
         /**
          * Makes this a copy of the given object.
          *
-         * @param cloneMe the object to copy.
+         * \param cloneMe the object to copy.
          */
         FaceEmbeddingBase& operator = (const FaceEmbeddingBase& cloneMe) =
             default;
@@ -200,7 +200,7 @@ class FaceEmbeddingBase :
          * (a weaker requirement that nowadays would incur an unacceptable
          * performance cost).
          *
-         * @param rhs the object to compare with this.
+         * \param rhs the object to compare with this.
          * @return \c true if and only if both object are identical.
          */
         bool operator == (const FaceEmbeddingBase& rhs) const;
@@ -225,7 +225,7 @@ class FaceEmbeddingBase :
          * (a weaker requirement that nowadays would incur an unacceptable
          * performance cost).
          *
-         * @param rhs the object to compare with this.
+         * \param rhs the object to compare with this.
          * @return \c true if and only if both object are identical.
          */
         bool operator != (const FaceEmbeddingBase& rhs) const;
@@ -236,7 +236,7 @@ class FaceEmbeddingBase :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -468,7 +468,7 @@ class FaceBase :
          * are ordered in a way that follows the link around the face
          * (which in codimension 2 is always a path or a cycle).
          *
-         * @param index the index of the requested appearance.  This
+         * \param index the index of the requested appearance.  This
          * must be between 0 and degree()-1 inclusive.
          * @return details of the requested appearance.
          */
@@ -768,7 +768,7 @@ class FaceBase :
          * <tt>face(lowerdim, face)</tt>; that is, the template parameter
          * \a lowerdim becomes the first argument of the function.
          *
-         * @param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
+         * \param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
          * examine.  This should be between 0 and
          * (<i>subdim</i>+1 choose <i>lowerdim</i>+1)-1 inclusive.
          * @return the corresponding <i>lowerdim</i>-face of the triangulation.
@@ -868,7 +868,7 @@ class FaceBase :
          * <tt>faceMapping(lowerdim, face)</tt>; that is, the template
          * parameter \a lowerdim becomes the first argument of the function.
          *
-         * @param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
+         * \param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
          * examine.  This should be between 0 and
          * (<i>subdim</i>+1 choose <i>lowerdim</i>+1)-1 inclusive.
          * @return a mapping from the vertices of the underlying
@@ -933,7 +933,7 @@ class FaceBase :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -946,7 +946,7 @@ class FaceBase :
          * Creates a new face.  The face will be initialised as belong
          * to no boundary component.
          *
-         * @param component the component of the underlying triangulation
+         * \param component the component of the underlying triangulation
          * to which the new face belongs.
          */
         FaceBase(Component<dim>* component);

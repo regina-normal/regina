@@ -167,7 +167,7 @@ class ListView {
          *
          * \nopython
          *
-         * @param list the list that this object will access.
+         * \param list the list that this object will access.
          * Internally, this object will store a reference to \a list (which
          * means \a list needs to exist for at least as long as this object).
          */
@@ -203,7 +203,7 @@ class ListView {
         /**
          * Returns the requested element of this list.
          *
-         * @param index indicates which element to return; this must be
+         * \param index indicates which element to return; this must be
          * between 0 and size()-1 inclusive.
          * @return the (\a index)th element in this list.
          */
@@ -270,7 +270,7 @@ class ListView {
          * must be the same container object at the same location in memory;
          * it is not enough to be two containers with identical contents).
          *
-         * @param other the list view to compare with this.
+         * \param other the list view to compare with this.
          * @return \c true if and only if this and the given list use
          * the same underlying container.
          */
@@ -284,7 +284,7 @@ class ListView {
          * location in memory; it is not enough to be two containers with
          * identical contents).
          *
-         * @param other the list view to compare with this.
+         * \param other the list view to compare with this.
          * @return \c true if and only if this and the given list use
          * different underlying containers.
          */
@@ -371,8 +371,8 @@ class ListView<Element*> {
          * Internally, this object will store a pointer to the array, which
          * means the array needs to exist for at least as long as this object.
          *
-         * @param array the pointer to the C-style array.
-         * @param size the number of elements in the C-style array.
+         * \param array the pointer to the C-style array.
+         * \param size the number of elements in the C-style array.
          */
         ListView(const Element* array, size_t size);
         /**
@@ -382,9 +382,9 @@ class ListView<Element*> {
          * Internally, this object will store a pointer to the array, which
          * means the array needs to exist for at least as long as this object.
          *
-         * @param begin the beginning of the C-style array (that is, a
+         * \param begin the beginning of the C-style array (that is, a
          * pointer to the first element).
-         * @param end a pointer past the end of the C-style array (that is,
+         * \param end a pointer past the end of the C-style array (that is,
          * a pointer immediately after the last element).
          */
         ListView(const Element* begin, const Element* end);
@@ -414,7 +414,7 @@ class ListView<Element*> {
         /**
          * Returns the requested element of this list.
          *
-         * @param index indicates which element to return; this must be
+         * \param index indicates which element to return; this must be
          * between 0 and size()-1 inclusive.
          * @return the (\a index)th element in this list.
          */
@@ -457,7 +457,7 @@ class ListView<Element*> {
          * In particular, it is not enough for the two arrays just to have
          * identical contents.
          *
-         * @param other the list view to compare with this.
+         * \param other the list view to compare with this.
          * @return \c true if and only if this and the given list use
          * the same underlying array.
          */
@@ -472,7 +472,7 @@ class ListView<Element*> {
          * In particular, it is not enough for the two arrays just to have
          * identical contents.
          *
-         * @param other the list view to compare with this.
+         * \param other the list view to compare with this.
          * @return \c true if and only if this and the given list use
          * different underlying arrays.
          */
@@ -556,7 +556,7 @@ class ListView<Element[n]> {
          * Internally, this object will store a pointer to the array, which
          * means the array needs to exist for at least as long as this object.
          *
-         * @param array the pointer to the C-style array.
+         * \param array the pointer to the C-style array.
          */
         ListView(const Element* array);
         /**
@@ -585,7 +585,7 @@ class ListView<Element[n]> {
         /**
          * Returns the requested element of this list.
          *
-         * @param index indicates which element to return; this must be
+         * \param index indicates which element to return; this must be
          * between 0 and size()-1 inclusive.
          * @return the (\a index)th element in this list.
          */
@@ -627,7 +627,7 @@ class ListView<Element[n]> {
          * must be equal).  In particular, it is not enough for the two arrays
          * just to have identical contents.
          *
-         * @param other the list view to compare with this.
+         * \param other the list view to compare with this.
          * @return \c true if and only if this and the given list use
          * the same underlying array.
          */
@@ -641,7 +641,7 @@ class ListView<Element[n]> {
          * must be equal).  In particular, it is not enough for the two arrays
          * just to have identical contents.
          *
-         * @param other the list view to compare with this.
+         * \param other the list view to compare with this.
          * @return \c true if and only if this and the given list use
          * different underlying arrays.
          */

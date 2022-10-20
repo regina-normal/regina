@@ -92,7 +92,7 @@ struct EnableIf<false, T, defaultValue> {
  *
  * If \a from is not less than \a to, then this routine safely does nothing.
  *
- * @param action the body of the \c for loop; that is, the action to
+ * \param action the body of the \c for loop; that is, the action to
  * perform for each integer \a i.  See above for the interface that
  * \a action should adhere to.
  *
@@ -127,9 +127,9 @@ constexpr void for_constexpr(Action&& action) {
  * but it may differ (particuarly if the return type of \a action
  * depends upon its integer argument).
  *
- * @param value the runtime value that determines the selection; that is, the
+ * \param value the runtime value that determines the selection; that is, the
  * argument that will be passed to the given action as a compile-time constant.
- * @param action the action to perform for whichever integer \a i matches
+ * \param action the action to perform for whichever integer \a i matches
  * the given runtime value.  See above for the interface that \a action
  * should adhere to.
  * @return the value returned from \a action.
@@ -198,9 +198,9 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  * \exception std::runtime_error The given runtime value is not within the
  * range <i>from</i>, ..., (<i>to</i>-1).
  *
- * @param value the runtime value that determines the selection; that is, the
+ * \param value the runtime value that determines the selection; that is, the
  * argument that will be passed to the given action as a compile-time constant.
- * @param action the action to perform for whichever integer \a i matches
+ * \param action the action to perform for whichever integer \a i matches
  * the given runtime value.  See above for the interface that \a action
  * should adhere to.
  * @return the value returned from \a action, given as a variant that
@@ -357,7 +357,7 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
  *
  * \nopython
  *
- * @param t an object that references the C++ type whose display name we
+ * \param t an object that references the C++ type whose display name we
  * wish to obtain.
  * @return the preferred display name for this type in Python, or \c nullptr
  * if the default C++-to-Python name conversion mechanism should be used.

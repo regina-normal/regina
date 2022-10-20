@@ -99,7 +99,7 @@ class Face<4, 3> : public detail::FaceBase<4, 3> {
          * Creates a new tetrahedron and marks it as belonging to the
          * given triangulation component.
          *
-         * @param component the triangulation component to which this
+         * \param component the triangulation component to which this
          * tetrahedron belongs.
          */
         Face(Component<4>* component);

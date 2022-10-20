@@ -64,7 +64,7 @@ template <typename> class PacketOf;
  * simply passes it through unchanged to low-level C/C++ file I/O routines.
  * It assumes however that the \e contents of the file are in UTF-8.
  *
- * @param filename the name of the Orb / Casson file from which to read.
+ * \param filename the name of the Orb / Casson file from which to read.
  * @return a new triangulation packet containing the data read from the
  * Orb / Casson file, or \c null on error.
  *

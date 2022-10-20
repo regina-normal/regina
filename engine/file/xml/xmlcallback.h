@@ -92,10 +92,10 @@ class XMLCallback : public regina::xml::XMLParserCallback {
         /**
          * Creates a new callback object.
          *
-         * @param newTopReader the element reader to use for the
+         * \param newTopReader the element reader to use for the
          * top-level XML element.  This is the only element reader that
          * will not be destroyed once parsing has finished.
-         * @param newErrStream the output stream to which any warning or
+         * \param newErrStream the output stream to which any warning or
          * error messages should be sent.
          */
         XMLCallback(XMLElementReader& newTopReader,

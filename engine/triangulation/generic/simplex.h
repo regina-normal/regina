@@ -107,15 +107,15 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
          * Creates a new simplex with no description and no facets joined
          * to anything.
          *
-         * @param tri the triangulation to which the new simplex belongs.
+         * \param tri the triangulation to which the new simplex belongs.
          */
         Face(Triangulation<dim>* tri);
         /**
          * Creates a new simplex with the given description and no facets
          * joined to anything.
          *
-         * @param desc the description to give the new simplex.
-         * @param tri the triangulation to which the new simplex belongs.
+         * \param desc the description to give the new simplex.
+         * \param tri the triangulation to which the new simplex belongs.
          */
         Face(const std::string& desc, Triangulation<dim>* tri);
 

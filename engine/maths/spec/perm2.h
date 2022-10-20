@@ -133,7 +133,7 @@ class Perm<2> {
              *
              * This operation is extremely fast (and constant time).
              *
-             * @param index an index between 0 and 1 inclusive.
+             * \param index an index between 0 and 1 inclusive.
              * @return the corresponding permutation in S2.
              */
             constexpr Perm<2> operator[] (int index) const;
@@ -156,7 +156,7 @@ class Perm<2> {
              *
              * This operation is extremely fast (and constant time).
              *
-             * @param index an index; the only allowed value is 0.
+             * \param index an index; the only allowed value is 0.
              * @return the corresponding permutation in S1.
              */
             constexpr Perm<2> operator[] (int index) const;
@@ -298,8 +298,8 @@ class Perm<2> {
          *
          * \pre \a a and \a b are in {0,1}.
          *
-         * @param a the element to switch with \a b.
-         * @param b the element to switch with \a a.
+         * \param a the element to switch with \a b.
+         * \param b the element to switch with \a a.
          */
         constexpr Perm(int a, int b);
 
@@ -309,7 +309,7 @@ class Perm<2> {
          *
          * \pre The elements of \a image are 0 and 1 in some order.
          *
-         * @param image the array of images.
+         * \param image the array of images.
          */
         constexpr Perm(const std::array<int, 2>& image);
 
@@ -317,7 +317,7 @@ class Perm<2> {
          * Creates a permutation that is a clone of the given
          * permutation.
          *
-         * @param cloneMe the permutation to clone.
+         * \param cloneMe the permutation to clone.
          */
         constexpr Perm(const Perm<2>& cloneMe) = default;
 
@@ -340,7 +340,7 @@ class Perm<2> {
          * \pre the given code is a valid permutation code; see
          * isPermCode() for details.
          *
-         * @param code the internal code that will determine the
+         * \param code the internal code that will determine the
          * new value of this permutation.
          */
         void setPermCode(Code code);
@@ -351,7 +351,7 @@ class Perm<2> {
          * \pre the given code is a valid permutation code; see
          * isPermCode() for details.
          *
-         * @param code the internal code for the new permutation.
+         * \param code the internal code for the new permutation.
          * @return the permutation represented by the given internal code.
          */
         static constexpr Perm<2> fromPermCode(Code code);
@@ -361,7 +361,7 @@ class Perm<2> {
          * permutation code.  Valid permutation codes can be passed to
          * setPermCode() or fromPermCode(), and are returned by permCode().
          *
-         * @param code the permutation code to test.
+         * \param code the permutation code to test.
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */
@@ -370,7 +370,7 @@ class Perm<2> {
         /**
          * Sets this permutation to be equal to the given permutation.
          *
-         * @param cloneMe the permutation whose value will be assigned
+         * \param cloneMe the permutation whose value will be assigned
          * to this permutation.
          * @return a reference to this permutation.
          */
@@ -382,7 +382,7 @@ class Perm<2> {
          * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
          * <tt>(p*q)[x] == p[q[x]]</tt>.
          *
-         * @param q the permutation with which to compose this.
+         * \param q the permutation with which to compose this.
          * @return the composition of both permutations.
          */
         constexpr Perm<2> operator * (const Perm<2>& q) const;
@@ -399,7 +399,7 @@ class Perm<2> {
          *
          * This routine runs in constant time.
          *
-         * @param exp the exponent; this may be positive, zero or negative.
+         * \param exp the exponent; this may be positive, zero or negative.
          * @return this permutation raised to the power of \a exp.
          */
         constexpr Perm<2> pow(long exp) const;
@@ -435,7 +435,7 @@ class Perm<2> {
         /**
          * Determines the image of the given integer under this permutation.
          *
-         * @param source the integer whose image we wish to find.  This
+         * \param source the integer whose image we wish to find.  This
          * should be 0 or 1.
          * @return the image of \a source.
          */
@@ -444,7 +444,7 @@ class Perm<2> {
         /**
          * Determines the preimage of the given integer under this permutation.
          *
-         * @param image the integer whose preimage we wish to find.  This
+         * \param image the integer whose preimage we wish to find.  This
          * should be 0 or 1.
          * @return the preimage of \a image.
          */
@@ -455,7 +455,7 @@ class Perm<2> {
          * This is true if and only if both permutations have the same
          * images for 0 and 1.
          *
-         * @param other the permutation with which to compare this.
+         * \param other the permutation with which to compare this.
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
@@ -466,7 +466,7 @@ class Perm<2> {
          * This is true if and only if the two permutations have
          * different images for at least one of 0 or 1.
          *
-         * @param other the permutation with which to compare this.
+         * \param other the permutation with which to compare this.
          * @return \c true if and only if this and the given permutation
          * differ.
          */
@@ -476,7 +476,7 @@ class Perm<2> {
          * Lexicographically compares the images of (0,1) under this
          * and the given permutation.
          *
-         * @param other the permutation with which to compare this.
+         * \param other the permutation with which to compare this.
          * @return -1 if this permutation produces a smaller image, 0 if
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
@@ -527,7 +527,7 @@ class Perm<2> {
          * Also, like all permutation classes, this ordering is consistent
          * with the ordering implied by the ++ operators.
          *
-         * @param rhs the permutation to compare this against.
+         * \param rhs the permutation to compare this against.
          * @return \c true if and only if this appears before \a rhs in \a Sn.
          */
         constexpr bool operator < (const Perm<2>& rhs) const;
@@ -537,7 +537,7 @@ class Perm<2> {
          * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod 2)
          * for all \a k.
          *
-         * @param i the image of 0; this must be 0 or 1.
+         * \param i the image of 0; this must be 0 or 1.
          * @return the <i>i</i>th rotation.
          */
         static constexpr Perm rot(int i);
@@ -555,7 +555,7 @@ class Perm<2> {
          * creating a single RandomEngine object yourself and then calling
          * <tt>rand(randomEngine.engine(), even)</tt>.
          *
-         * @param even if \c true, then the resulting permutation is
+         * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (which means, for a permutation on two
          * elements, the resulting permutation must be the identity).
          * @return a random permutation.
@@ -576,9 +576,9 @@ class Perm<2> {
          * \nopython Python users are still able to use the non-thread-safe
          * variant without the \a gen argument.
          *
-         * @param gen the source of randomness to use (e.g., one of the
+         * \param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
-         * @param even if \c true, then the resulting permutation is
+         * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (which means, for a permutation on two
          * elements, the resulting permutation must be the identity).
          * @return a random permutation.
@@ -600,7 +600,7 @@ class Perm<2> {
          * Returns a prefix of the string representation of this permutation,
          * containing only the images of the first \a len integers.
          *
-         * @param len the length of the prefix required; this must be
+         * \param len the length of the prefix required; this must be
          * between 0 and 2 inclusive.
          * @return the corresponding prefix of the string representation
          * of this permutation.
@@ -620,7 +620,7 @@ class Perm<2> {
          *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -656,7 +656,7 @@ class Perm<2> {
          * \exception InvalidArgument The given string is not a tight encoding
          * of a 2-element permutation.
          *
-         * @param enc the tight encoding for a 2-element permutation.
+         * \param enc the tight encoding for a 2-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
         static Perm tightDecoding(const std::string& enc);
@@ -683,7 +683,7 @@ class Perm<2> {
          * \nopython Use tightDecoding() instead, which takes a string as
          * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for a 2-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
@@ -700,7 +700,7 @@ class Perm<2> {
          * \pre The images of <i>from</i>,...,1 are exactly
          * <i>from</i>,...,1, but possibly in a different order.
          *
-         * @param from the first integer whose image should be reset.
+         * \param from the first integer whose image should be reset.
          * This must be between 0 and 2 inclusive.
          */
         void clear(unsigned from);
@@ -771,7 +771,7 @@ class Perm<2> {
          * \tparam k the number of elements for the input permutation;
          * this must be strictly greater than 2.
          *
-         * @param p a permutation on \a k elements.
+         * \param p a permutation on \a k elements.
          * @return the same permutation restricted to a permutation on
          * 2 elements.
          */
@@ -801,7 +801,7 @@ class Perm<2> {
          * \pre the given code is a valid permutation code; see
          * isPermCode() for details.
          *
-         * @param code the internal code from which the new
+         * \param code the internal code from which the new
          * permutation will be created.
          */
         constexpr Perm<2>(Code code);
@@ -826,11 +826,11 @@ class Perm<2> {
          *
          * \tparam iterator an input iterator type.
          *
-         * @param start an iterator that points to the beginning of a
+         * \param start an iterator that points to the beginning of a
          * tight encoding.
-         * @param limit an iterator that, if reached, indicates that no more
+         * \param limit an iterator that, if reached, indicates that no more
          * characters are available.
-         * @param noTrailingData \c true if iteration should reach \a limit
+         * \param noTrailingData \c true if iteration should reach \a limit
          * immediately after the encoding is read, or \c false if there is
          * allowed to be additional unread data.
          * @return the permutation represented by the given tight encoding.

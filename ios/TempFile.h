@@ -50,14 +50,14 @@
 /**
  * Initialises this to a new temporary filename, which is unique for the life of this process.
  *
- * @param ext The extension of the new filename, which should not begin with a period.
+ * \param ext The extension of the new filename, which should not begin with a period.
  * An example might be @"pdf".
  */
 - (id)initWithExtension:(NSString*)ext;
 /**
  * Creates a new temporary filename, which is unique for the life of this process.
  *
- * @param ext The extension of the new filename, which should not begin with a period.
+ * \param ext The extension of the new filename, which should not begin with a period.
  * An example might be @"pdf".
  */
 + (id)tempFileWithExtension:(NSString*)ext;

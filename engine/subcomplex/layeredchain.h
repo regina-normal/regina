@@ -108,8 +108,8 @@ class LayeredChain : public StandardTriangulation {
          * may be extended using extendAbove(), extendBelow() or
          * extendMaximal().
          *
-         * @param tet the tetrahedron that will make up this layered chain.
-         * @param vertexRoles a permutation describing the role each
+         * \param tet the tetrahedron that will make up this layered chain.
+         * \param vertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the layered chain; this must be
          * in the same format as the permutation returned by
          * bottomVertexRoles() and topVertexRoles().
@@ -131,7 +131,7 @@ class LayeredChain : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(LayeredChain& other) noexcept;
@@ -267,7 +267,7 @@ class LayeredChain : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of layered chain.
          */
@@ -287,7 +287,7 @@ class LayeredChain : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent different types of layered chain.
          */
@@ -306,8 +306,8 @@ class LayeredChain : public StandardTriangulation {
  * This global routine simply calls LayeredChain::swap(); it is provided
  * so that LayeredChain meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

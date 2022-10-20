@@ -116,7 +116,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
         /**
          * Creates a new copy of the given facet pairing.
          *
-         * @param src the facet pairing to clone.
+         * \param src the facet pairing to clone.
          */
         FacetPairing(const FacetPairing& src) = default;
 
@@ -126,7 +126,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * The facet pairing that is passed (\a src) will no longer be usable.
          *
-         * @param src the facet pairing to move.
+         * \param src the facet pairing to move.
          */
         FacetPairing(FacetPairing&& src) noexcept = default;
 
@@ -141,7 +141,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * \pre The given triangulation is not empty.
          *
-         * @param tri the triangulation whose facet pairing should
+         * \param tri the triangulation whose facet pairing should
          * be constructed.
          */
         FacetPairing(const Triangulation<dim>& tri);
@@ -164,7 +164,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * skip over initial whitespace; and (ii) fromTextRep() throws
          * InvalidArgument exceptions on error (not InvalidInput).
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         FacetPairing(std::istream& in);
 
@@ -177,7 +177,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * This operator induces a deep copy of \a src.
          *
-         * @param src the facet pairing to copy.
+         * \param src the facet pairing to copy.
          * @return a reference to this facet pairing.
          */
         FacetPairing& operator = (const FacetPairing& src) = default;
@@ -192,7 +192,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * The facet pairing that is passed (\a src) will no longer be usable.
          *
-         * @param src the facet pairing to move.
+         * \param src the facet pairing to move.
          * @return a reference to this facet pairing.
          */
         FacetPairing& operator = (FacetPairing&& src) noexcept = default;
@@ -204,7 +204,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * \pre \a size is at least 1.
          *
-         * @param size the number of top-dimensional simplicies under
+         * \param size the number of top-dimensional simplicies under
          * consideration in this new facet pairing.
          */
         FacetPairing(size_t size);

@@ -126,8 +126,8 @@ class Example<3> : public detail::ExampleBase<3> {
          * \pre \a p \> \a q \>= 0 unless (<i>p</i>,<i>q</i>) = (0,1).
          * \pre gcd(\a p, \a q) = 1.
          *
-         * @param p a parameter of the desired lens space.
-         * @param q a parameter of the desired lens space.
+         * \param p a parameter of the desired lens space.
+         * \param q a parameter of the desired lens space.
          * @return the lens space <tt>L(p,q)</tt>.
          */
         static Triangulation<3> lens(size_t p, size_t q);
@@ -136,9 +136,9 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a layered loop of the given length.
          * Layered loops are described in detail in the LayeredLoop class notes.
          *
-         * @param length the length of the layered loop to construct;
+         * \param length the length of the layered loop to construct;
          * this must be strictly positive.
-         * @param twisted \c true if the layered loop should be twisted,
+         * \param twisted \c true if the layered loop should be twisted,
          * or \c false if it should be untwisted.
          * @return the resulting layered loop.
          */
@@ -175,17 +175,17 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * \pre gcd(\a a1, \a b1) = gcd(\a a2, \a b2) = gcd(\a a3, \a b3) = 1.
          *
-         * @param a1 a parameter describing the first layered solid
+         * \param a1 a parameter describing the first layered solid
          * torus in the augmented triangular solid torus.
-         * @param b1 a parameter describing the first layered solid
+         * \param b1 a parameter describing the first layered solid
          * torus in the augmented triangular solid torus.
-         * @param a2 a parameter describing the second layered solid
+         * \param a2 a parameter describing the second layered solid
          * torus in the augmented triangular solid torus.
-         * @param b2 a parameter describing the second layered solid
+         * \param b2 a parameter describing the second layered solid
          * torus in the augmented triangular solid torus.
-         * @param a3 a parameter describing the third layered solid
+         * \param a3 a parameter describing the third layered solid
          * torus in the augmented triangular solid torus.
-         * @param b3 a parameter describing the third layered solid
+         * \param b3 a parameter describing the third layered solid
          * torus in the augmented triangular solid torus.
          */
         static Triangulation<3> augTriSolidTorus(long a1, long b1,
@@ -214,12 +214,12 @@ class Example<3> : public detail::ExampleBase<3> {
          * \pre None of \a a1, \a a2 or \a a3 are 0.
          * \pre gcd(\a a1, \a b1) = gcd(\a a2, \a b2) = gcd(\a a3, \a b3) = 1.
          *
-         * @param a1 a parameter describing the first exceptional fibre.
-         * @param b1 a parameter describing the first exceptional fibre.
-         * @param a2 a parameter describing the second exceptional fibre.
-         * @param b2 a parameter describing the second exceptional fibre.
-         * @param a3 a parameter describing the third exceptional fibre.
-         * @param b3 a parameter describing the third exceptional fibre.
+         * \param a1 a parameter describing the first exceptional fibre.
+         * \param b1 a parameter describing the first exceptional fibre.
+         * \param a2 a parameter describing the second exceptional fibre.
+         * \param b2 a parameter describing the second exceptional fibre.
+         * \param a3 a parameter describing the third exceptional fibre.
+         * \param b3 a parameter describing the third exceptional fibre.
          * @return the triangulated Seifert fibred space.
          */
         static Triangulation<3> sfsOverSphere(long a1 = 1, long b1 = 0,
@@ -301,8 +301,8 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * \pre gcd(\a a, \a b) = 1.
          *
-         * @param a the first parameter of the layered solid torus.
-         * @param b the second parameter of the layered solid torus.
+         * \param a the first parameter of the layered solid torus.
+         * \param b the second parameter of the layered solid torus.
          * @return the layered solid torus <tt>LST(a,b,c)</tt>.
          */
         static Triangulation<3> lst(size_t a, size_t b);
@@ -322,7 +322,7 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * For genus 0, this routine uses the one-tetrahedron 3-ball.
          *
-         * @param genus the genus of the handlebody.
+         * \param genus the genus of the handlebody.
          * @return the orientable handlebody with the given genus.
          *
          * \author Alex He

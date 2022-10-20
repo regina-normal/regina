@@ -132,9 +132,9 @@ class TxICore : public Output<TxICore> {
          * Note that the same tetrahedron may provide more than one
          * boundary triangle.
          *
-         * @param whichBdry 0 if the upper boundary should be examined,
+         * \param whichBdry 0 if the upper boundary should be examined,
          * or 1 if the lower boundary should be examined.
-         * @param whichTri 0 if the first boundary triangle should be
+         * \param whichTri 0 if the first boundary triangle should be
          * examined, or 1 if the second boundary triangle should be examined.
          */
         size_t bdryTet(int whichBdry, int whichTri) const;
@@ -173,9 +173,9 @@ class TxICore : public Output<TxICore> {
          * upper or lower boundary and whether we examine the first or
          * second triangle of this boundary 
          *
-         * @param whichBdry 0 if the upper boundary should be examined,
+         * \param whichBdry 0 if the upper boundary should be examined,
          * or 1 if the lower boundary should be examined.
-         * @param whichTri 0 if the first boundary triangle should be
+         * \param whichTri 0 if the first boundary triangle should be
          * examined, or 1 if the second boundary triangle should be examined.
          * @return the permutation mapping roles 0, 1 and 2 in the
          * diagram above to real tetrahedron vertex numbers.
@@ -204,7 +204,7 @@ class TxICore : public Output<TxICore> {
          *
          * It is guaranteed that this matrix has determinant +1 or -1.
          *
-         * @param whichBdry 0 if the upper boundary should be examined,
+         * \param whichBdry 0 if the upper boundary should be examined,
          * or 1 if the lower boundary should be examined.
          * @return the relationship between the boundary curves and
          * tetrahedron edges.
@@ -261,7 +261,7 @@ class TxICore : public Output<TxICore> {
          * If this returns \c true, then the triangulations returned
          * by core() should also be combinatorially identical.
          *
-         * @param other the <tt>T x I</tt> triangulation to compare with this.
+         * \param other the <tt>T x I</tt> triangulation to compare with this.
          * @return \c true if and only if this and the given triangulation
          * are of the same type and have the same parameters.
          */
@@ -275,7 +275,7 @@ class TxICore : public Output<TxICore> {
          * then the triangulations returned by core() should also be
          * combinatorially identical.
          *
-         * @param other the <tt>T x I</tt> triangulation to compare with this.
+         * \param other the <tt>T x I</tt> triangulation to compare with this.
          * @return \c true if and only if this and the given triangulation
          * are of different types and/or have different parameters.
          */
@@ -289,7 +289,7 @@ class TxICore : public Output<TxICore> {
          * \nopython Instead use the variant name() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          * @return a reference to the given output stream.
          */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
@@ -301,7 +301,7 @@ class TxICore : public Output<TxICore> {
          * \nopython Instead use the variant texName() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          * @return a reference to the given output stream.
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
@@ -312,7 +312,7 @@ class TxICore : public Output<TxICore> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -321,7 +321,7 @@ class TxICore : public Output<TxICore> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -370,7 +370,7 @@ class TxICore : public Output<TxICore> {
          * listeners, and the internal triangulation here does not belong to a
          * packet.
          *
-         * @param other the triangulation whose data should be swapped
+         * \param other the triangulation whose data should be swapped
          * with this.
          */
         void swapBaseData(TxICore& other) noexcept;
@@ -454,9 +454,9 @@ class TxIDiagonalCore : public TxICore {
          * Creates a new <tt>T x I</tt> triangulation with the given
          * parameters.
          *
-         * @param size the number of tetrahedra in this
+         * \param size the number of tetrahedra in this
          * triangulation.  This must be at least 6.
-         * @param k the additional parameter \a k as described in the
+         * \param k the additional parameter \a k as described in the
          * class notes.  This must be between 1 and (\a size - 5) inclusive.
          */
         TxIDiagonalCore(size_t size, size_t k);
@@ -512,7 +512,7 @@ class TxIDiagonalCore : public TxICore {
          * Swaps the contents of this and the given
          * <tt>T x I</tt> triangulation.
          *
-         * @param other the triangulation whose contents should be swapped
+         * \param other the triangulation whose contents should be swapped
          * with this.
          */
         void swap(TxIDiagonalCore& other) noexcept;
@@ -530,8 +530,8 @@ class TxIDiagonalCore : public TxICore {
  *
  * See TxIDiagonalCore::swap() for more details.
  *
- * @param lhs the triangulation whose contents should be swapped with \a rhs.
- * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ * \param lhs the triangulation whose contents should be swapped with \a rhs.
+ * \param rhs the triangulation whose contents should be swapped with \a lhs.
  *
  * \ingroup subcomplex
  */
@@ -616,7 +616,7 @@ class TxIParallelCore : public TxICore {
          * Swaps the contents of this and the given
          * <tt>T x I</tt> triangulation.
          *
-         * @param other the triangulation whose contents should be swapped
+         * \param other the triangulation whose contents should be swapped
          * with this.
          */
         void swap(TxIParallelCore& other) noexcept;
@@ -634,8 +634,8 @@ class TxIParallelCore : public TxICore {
  *
  * See TxIParallelCore::swap() for more details.
  *
- * @param lhs the triangulation whose contents should be swapped with \a rhs.
- * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ * \param lhs the triangulation whose contents should be swapped with \a rhs.
+ * \param rhs the triangulation whose contents should be swapped with \a lhs.
  *
  * \ingroup subcomplex
  */

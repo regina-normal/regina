@@ -113,7 +113,7 @@ class FacetPairingBase :
         /**
          * Creates a new copy of the given facet pairing.
          *
-         * @param src the facet pairing to clone.
+         * \param src the facet pairing to clone.
          */
         FacetPairingBase(const FacetPairingBase& src);
 
@@ -123,7 +123,7 @@ class FacetPairingBase :
          *
          * The facet pairing that is passed (\a src) will no longer be usable.
          *
-         * @param src the facet pairing to move.
+         * \param src the facet pairing to move.
          */
         FacetPairingBase(FacetPairingBase&& src) noexcept;
 
@@ -135,7 +135,7 @@ class FacetPairingBase :
          *
          * \pre The given triangulation is not empty.
          *
-         * @param tri the triangulation whose facet pairing should
+         * \param tri the triangulation whose facet pairing should
          * be constructed.
          */
         FacetPairingBase(const Triangulation<dim>& tri);
@@ -152,7 +152,7 @@ class FacetPairingBase :
          * \exception InvalidInput The data found in the input stream is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         FacetPairingBase(std::istream& in);
 
@@ -170,7 +170,7 @@ class FacetPairingBase :
          *
          * This operator induces a deep copy of \a src.
          *
-         * @param src the facet pairing to copy.
+         * \param src the facet pairing to copy.
          * @return a reference to this facet pairing.
          */
         FacetPairingBase& operator = (const FacetPairingBase& src);
@@ -185,7 +185,7 @@ class FacetPairingBase :
          *
          * The facet pairing that is passed (\a src) will no longer be usable.
          *
-         * @param src the facet pairing to move.
+         * \param src the facet pairing to move.
          * @return a reference to this facet pairing.
          */
         FacetPairingBase& operator = (FacetPairingBase&& src) noexcept;
@@ -193,7 +193,7 @@ class FacetPairingBase :
         /**
          * Swaps the contents of this and the given facet pairing.
          *
-         * @param other the facet pairing whose contents are to be
+         * \param other the facet pairing whose contents are to be
          * swapped with this.
          */
         void swap(FacetPairingBase& other) noexcept;
@@ -227,7 +227,7 @@ class FacetPairingBase :
          * \ifacespython This routine returns by value, not by reference,
          * since Python cannot enforce constness otherwise.
          *
-         * @param source the facet under investigation.
+         * \param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
          */
         const FacetSpec<dim>& dest(const FacetSpec<dim>& source) const;
@@ -241,10 +241,10 @@ class FacetPairingBase :
          * \ifacespython This routine returns by value, not by reference,
          * since Python cannot enforce constness otherwise.
          *
-         * @param simp the simplex under investigation (this must be
+         * \param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
          * consideration).
-         * @param facet the facet of the given simplex under
+         * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
          * @return the other facet to which the given facet is paired.
          */
@@ -265,7 +265,7 @@ class FacetPairingBase :
          * \ifacespython This routine returns by value, not by reference,
          * since Python cannot enforce constness otherwise.
          *
-         * @param source the facet under investigation.
+         * \param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
          */
         const FacetSpec<dim>& operator [](const FacetSpec<dim>& source) const;
@@ -277,7 +277,7 @@ class FacetPairingBase :
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
          *
-         * @param source the facet under investigation.
+         * \param source the facet under investigation.
          * @return \c true if the given facet has been left unmatched, or
          * \c false if the given facet is paired with some other facet.
          */
@@ -287,10 +287,10 @@ class FacetPairingBase :
          * Determines whether the given simplex facet has been left
          * deliberately unmatched.
          *
-         * @param simp the simplex under investigation (this must be
+         * \param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
          * consideration).
-         * @param facet the facet of the given simplex under
+         * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
          * @return \c true if the given facet has been left unmatched, or
          * \c false if the given facet is paired with some other facet.
@@ -306,7 +306,7 @@ class FacetPairingBase :
         /**
          * Determines if this and the given facet pairing are identical.
          *
-         * @param other the facet pairing to compare with this.
+         * \param other the facet pairing to compare with this.
          * @return \c true if and only if this and the given facet pairing
          * are identical.
          */
@@ -315,7 +315,7 @@ class FacetPairingBase :
         /**
          * Determines if this and the given facet pairing are not identical.
          *
-         * @param other the facet pairing to compare with this.
+         * \param other the facet pairing to compare with this.
          * @return \c true if and only if this and the given facet pairing
          * are not identical.
          */
@@ -360,7 +360,7 @@ class FacetPairingBase :
          * exhaustive, and so the running time is exponential in the
          * size of this facet pairing.
          *
-         * @param minSide the minimum number of simplices in each of the
+         * \param minSide the minimum number of simplices in each of the
          * two connected pieces; this must be at least 1.
          * @return the best possible cut as described above, or no value
          * if no such cut exists.
@@ -468,7 +468,7 @@ class FacetPairingBase :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -512,7 +512,7 @@ class FacetPairingBase :
          *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -554,14 +554,14 @@ class FacetPairingBase :
          *
          * \nopython Use dot() instead, which returns a string.
          *
-         * @param out the output stream to which to write.
-         * @param prefix a string to prepend to the name of each graph
+         * \param out the output stream to which to write.
+         * \param prefix a string to prepend to the name of each graph
          * vertex, and to include in the graph or subgraph name; see
          * above for details.
-         * @param subgraph \c false if a complete standalone DOT graph
+         * \param subgraph \c false if a complete standalone DOT graph
          * should be output, or \c true if a clustered subgraph should
          * be output for use in some larger DOT file.
-         * @param labels indicates whether graph vertices will be
+         * \param labels indicates whether graph vertices will be
          * labelled with the corresponding simplex numbers.
          * This feature is currently experimental, and the default is
          * \c false.
@@ -597,7 +597,7 @@ class FacetPairingBase :
          * text-based representation of a facet pairing on a positive
          * number of simplices.
          *
-         * @param rep a text-based representation of a facet pairing, as
+         * \param rep a text-based representation of a facet pairing, as
          * produced by routine textRep().
          * @return the corresponding facet pairing.
          */
@@ -622,7 +622,7 @@ class FacetPairingBase :
          * \nopython Use tightDecoding() instead, which takes a string as
          * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for a <i>dim</i>-dimensional facet pairing.
          * @return the facet pairing represented by the given tight encoding.
          */
@@ -655,8 +655,8 @@ class FacetPairingBase :
          *
          * \nopython Use dotHeader() instead, which returns a string.
          *
-         * @param out the output stream to which to write.
-         * @param graphName the name of the graph in the DOT file.
+         * \param out the output stream to which to write.
+         * \param graphName the name of the graph in the DOT file.
          * If this is null or empty then a default graph name will be used.
          *
          * \see http://www.graphviz.org/
@@ -737,13 +737,13 @@ class FacetPairingBase :
          * it cannot take any additional arguments beyond these.
          * As a consequence, the additional \a args list is omitted also.
          *
-         * @param nSimplices the number of simplices whose facets should
+         * \param nSimplices the number of simplices whose facets should
          * be (potentially) matched.
-         * @param boundary determines whether any facets may be left
+         * \param boundary determines whether any facets may be left
          * unmatched.  This set should contain \c true if pairings with at
          * least one unmatched facet are to be generated, and should contain
          * \c false if pairings with no unmatched facets are to be generated.
-         * @param nBdryFacets specifies the precise number of facets that
+         * \param nBdryFacets specifies the precise number of facets that
          * should be left unmatched.  If this parameter is negative, it
          * is ignored and no additional restriction is imposed.  If
          * parameter \a boundary does not contain \c true, this parameter
@@ -756,9 +756,9 @@ class FacetPairingBase :
          * Note that, in order to produce any pairings at all, this parameter
          * must be of the same parity as <tt>nSimplices * (dim+1)</tt>,
          * and can be at most <tt>(dim-1) * nSimplices + 2</tt>.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each facet pairing that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial facet pairing argument and the
          * optional automorphism argument.
          */
@@ -773,7 +773,7 @@ class FacetPairingBase :
          *
          * \pre \a size is at least 1.
          *
-         * @param size the number of simplices under
+         * \param size the number of simplices under
          * consideration in this new facet pairing.
          */
         FacetPairingBase(size_t size);
@@ -787,7 +787,7 @@ class FacetPairingBase :
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
          *
-         * @param source the facet under investigation.
+         * \param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
          */
         FacetSpec<dim>& dest(const FacetSpec<dim>& source);
@@ -798,10 +798,10 @@ class FacetPairingBase :
          * value returned will be boundary (as returned by
          * FacetSpec<dim>::isBoundary()).
          *
-         * @param simp the simplex under investigation (this must be
+         * \param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
          * consideration).
-         * @param facet the facet of the given simplex under
+         * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
          * @return the other facet to which the given facet is paired.
          */
@@ -819,7 +819,7 @@ class FacetPairingBase :
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
          *
-         * @param source the facet under investigation.
+         * \param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
          */
         FacetSpec<dim>& operator [](const FacetSpec<dim>& source);
@@ -832,7 +832,7 @@ class FacetPairingBase :
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
          *
-         * @param source the facet under investigation.
+         * \param source the facet under investigation.
          * @return \c true if the matching for the given facet has not yet
          * been determined, or \c false otherwise.
          */
@@ -843,10 +843,10 @@ class FacetPairingBase :
          * has not yet been determined.  This is signalled by a facet
          * matched to itself.
          *
-         * @param simp the simplex under investigation (this must be
+         * \param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
          * consideration).
-         * @param facet the facet of the given simplex under
+         * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
          * @return \c true if the matching for the given facet has not yet
          * been determined, or \c false otherwise.
@@ -876,7 +876,7 @@ class FacetPairingBase :
          * ..., <tt>dest(n-1,0)</tt> is strictly increasing, where
          * \a n is the total number of simplices under investigation.
          *
-         * @param list the list into which automorphisms will be placed
+         * \param list the list into which automorphisms will be placed
          * if this facet pairing is indeed canonical, or \a null if the
          * automorphisms are not requred.
          * @return \c true if and only if this facet pairing is in
@@ -926,8 +926,8 @@ class FacetPairingBase :
  * This global routine simply calls FacetPairing<dim>::swap(); it is provided
  * so that FacetPairing<dim> meets the C++ Swappable requirements.
  *
- * @param a the first facet pairing whose contents should be swapped.
- * @param b the second facet pairing whose contents should be swapped.
+ * \param a the first facet pairing whose contents should be swapped.
+ * \param b the second facet pairing whose contents should be swapped.
  *
  * \ingroup generic
  */

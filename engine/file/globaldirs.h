@@ -198,13 +198,13 @@ class GlobalDirs {
          *   meaning, namely that the python module has been installed in
          *   python's standard site-packages directory.
          *
-         * @param homeDir Regina's primary home directory; this will be
+         * \param homeDir Regina's primary home directory; this will be
          * returned by homeDir().
-         * @param pythonDir the directory containing Regina's
+         * \param pythonDir the directory containing Regina's
          * python module, or the empty string if the module has been
          * installed in python's standard site-packages directory;
          * this will be returned by pythonModule().
-         * @param censusDir The directory containing the large
+         * \param censusDir The directory containing the large
          * machine-encoded census data files; this will be returned
          * by census().
          */
@@ -252,7 +252,7 @@ class GlobalDirs {
          * correctly, you can always call setDirs() to set the paths
          * explicitly yourself.
          *
-         * @param executable the path to an executable, which would
+         * \param executable the path to an executable, which would
          * typically be the executable currently being run.
          */
         static void deduceDirs(const char* executable);

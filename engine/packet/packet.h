@@ -80,8 +80,8 @@ template <typename Held> class XMLWriter;
  * - declarations and implementations of the virtual functions
  *   Packet::type() and Packet::typeName().
  *
- * @param id the corresponding PacketType constant.
- * @param name the human-readable name of this packet type.
+ * \param id the corresponding PacketType constant.
+ * \param name the human-readable name of this packet type.
  *
  * \ingroup packet
  */
@@ -320,7 +320,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Note that, whilst this routine returns a modified version of the
          * packet label, the label itself will not be permamently changed.
          *
-         * @param adornment the string that will be used to adorn this
+         * \param adornment the string that will be used to adorn this
          * packet label.  The adornment should just be a piece of
          * English, ideally beginning with an upper-case letter.
          * It should not contain any surrounding punctuation such as
@@ -333,7 +333,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
         /**
          * Sets the label associated with this individual packet.
          *
-         * @param label the new label to give this packet.
+         * \param label the new label to give this packet.
          */
         void setLabel(const std::string& label);
 
@@ -366,7 +366,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * @param tag the tag to search for.
+         * \param tag the tag to search for.
          * @return \c true if the given tag is found, \c false otherwise.
          */
         bool hasTag(const std::string& tag) const;
@@ -401,7 +401,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given tag is not the empty string.
          *
-         * @param tag the tag to add.
+         * \param tag the tag to add.
          * @return \c true if the given tag was successfully added,
          * or \c false if the given tag was already present beforehand.
          */
@@ -419,7 +419,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * @param tag the tag to remove.
+         * \param tag the tag to remove.
          * @return \c true if the given tag was removed, or \c false if the
          * given tag was not actually associated with this packet.
          */
@@ -468,7 +468,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * this packet.  See the PacketListener class notes for
          * details.
          *
-         * @param listener the listener to register.
+         * \param listener the listener to register.
          * @return \c true if the given listener was successfully registered,
          * or \c false if the given listener was already registered
          * beforehand.
@@ -479,7 +479,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * listening for events on this packet.  See the PacketListener
          * class notes for details.
          *
-         * @param listener the listener to search for.
+         * \param listener the listener to search for.
          * @return \c true if the given listener is currently registered
          * with this packet, or \c false otherwise.
          */
@@ -489,7 +489,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * listens for events on this packet.  See the PacketListener
          * class notes for details.
          *
-         * @param listener the listener to unregister.
+         * \param listener the listener to unregister.
          * @return \c true if the given listener was successfully unregistered,
          * or \c false if the given listener was not registered in the
          * first place.
@@ -523,7 +523,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * through a packet tree and identifying when a particular
          * known packet has been found.
          *
-         * @param other the packet to compare with this.
+         * \param other the packet to compare with this.
          * @return \c true if and only if this and the given object refer to
          * the same underlying packet.
          */
@@ -610,7 +610,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \exception FailedPrecondition The argument \a descendant is
          * not equal to or a descendant of this packet.
          *
-         * @param descendant the packet whose relationship with this
+         * \param descendant the packet whose relationship with this
          * packet we are examining.
          * @return the number of levels difference.
          */
@@ -627,7 +627,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \exception FailedPrecondition This packet is not equal to or a
          * descendant of the argument \a descendant.
          *
-         * @param ancestor the packet whose relationship with this
+         * \param ancestor the packet whose relationship with this
          * packet we are examining.
          * @return the number of levels difference.
          */
@@ -637,7 +637,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Determines if this packet is equal to or an ancestor of
          * the given packet in the tree structure.
          *
-         * @param descendant the other packet whose relationships we are
+         * \param descendant the other packet whose relationships we are
          * examining.
          * @return \c true if and only if this packet is equal to or an
          * ancestor of \c descendant.
@@ -694,7 +694,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * preconditions, there are other preconditions that are \e not
          * tested, and for which no exceptions are thrown.
          *
-         * @param child the child to insert.
+         * \param child the child to insert.
          */
         void prepend(std::shared_ptr<Packet> child);
 
@@ -713,7 +713,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * preconditions, there are other preconditions that are \e not
          * tested, and for which no exceptions are thrown.
          *
-         * @param child the child to insert.
+         * \param child the child to insert.
          */
         [[deprecated]] void insertChildFirst(std::shared_ptr<Packet> child);
 
@@ -736,7 +736,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * preconditions, there are other preconditions that are \e not
          * tested, and for which no exceptions are thrown.
          *
-         * @param child the child to insert.
+         * \param child the child to insert.
          */
         void append(std::shared_ptr<Packet> child);
 
@@ -755,7 +755,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * preconditions, there are other preconditions that are \e not
          * tested, and for which no exceptions are thrown.
          *
-         * @param child the child to insert.
+         * \param child the child to insert.
          */
         [[deprecated]] void insertChildLast(std::shared_ptr<Packet> child);
 
@@ -782,8 +782,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tests \e some of our preconditions, there are other preconditions
          * that are \e not tested, and for which no exceptions are thrown.
          *
-         * @param newChild the child to insert.
-         * @param prevChild the preexisting child of this packet after
+         * \param newChild the child to insert.
+         * \param prevChild the preexisting child of this packet after
          * which \a newChild will be inserted, or \c null if \a newChild
          * is to be the first child of this packet.
          */
@@ -807,8 +807,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tests \e some of our preconditions, there are other preconditions
          * that are \e not tested, and for which no exceptions are thrown.
          *
-         * @param newChild the child to insert.
-         * @param prevChild the preexisting child of this packet after
+         * \param newChild the child to insert.
+         * \param prevChild the preexisting child of this packet after
          * which \a newChild will be inserted, or \c null if \a newChild
          * is to be the first child of this packet.
          */
@@ -864,9 +864,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given parent is not a descendant of this packet.
          *
-         * @param newParent the new parent of this packet, i.e., the
+         * \param newParent the new parent of this packet, i.e., the
          * packet beneath which this packet will be inserted.
-         * @param first \c true if this packet should be inserted as the
+         * \param first \c true if this packet should be inserted as the
          * first child of the given parent, or \c false (the default) if
          * it should be inserted as the last child.
          */
@@ -896,7 +896,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given parent is not a descendant of this packet.
          *
-         * @param newParent the new parent beneath which the children
+         * \param newParent the new parent beneath which the children
          * will be inserted.
          */
         void transferChildren(const std::shared_ptr<Packet>& newParent);
@@ -923,7 +923,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given number of steps is strictly positive.
          *
-         * @param steps the number of steps up to move.
+         * \param steps the number of steps up to move.
          */
         void moveUp(unsigned steps = 1);
 
@@ -937,7 +937,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given number of steps is strictly positive.
          *
-         * @param steps the number of steps down to move.
+         * \param steps the number of steps down to move.
          */
         void moveDown(unsigned steps = 1);
 
@@ -1308,7 +1308,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @param type the type of packet to search for.
+         * \param type the type of packet to search for.
          * @return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
@@ -1324,7 +1324,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @param type the type of packet to search for.
+         * \param type the type of packet to search for.
          * @return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
@@ -1337,7 +1337,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The order of tree searching is described in
          * firstTreePacket().
          *
-         * @param type the type of packet to search for.
+         * \param type the type of packet to search for.
          * @return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
@@ -1350,7 +1350,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The order of tree searching is described in
          * firstTreePacket().
          *
-         * @param type the type of packet to search for.
+         * \param type the type of packet to search for.
          * @return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
@@ -1361,7 +1361,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * subtree for which this packet is matriarch.  Note that label
          * comparisons are case sensitive.
          *
-         * @param label the label to search for.
+         * \param label the label to search for.
          * @return the packet with the requested label, or \c null if there is
          * no such packet.
          */
@@ -1372,7 +1372,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * subtree for which this packet is matriarch.  Note that label
          * comparisons are case sensitive.
          *
-         * @param label the label to search for.
+         * \param label the label to search for.
          * @return the packet with the requested label, or \c null if there is
          * no such packet.
          */
@@ -1413,11 +1413,11 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * the original triangulation was cloned also (it could live outside
          * the cloned subtree, or might not be part of a packet tree at all).
          *
-         * @param cloneDescendants \c true if the descendants of this
+         * \param cloneDescendants \c true if the descendants of this
          * packet should also be cloned and inserted as descendants of
          * the new packet.  If this is passed as \c false (the default),
          * only this packet will be cloned.
-         * @param end \c true if the new packet should be inserted at
+         * \param end \c true if the new packet should be inserted at
          * the end of the parent's list of children (the default), or
          * \c false if the new packet should be inserted as the sibling
          * immediately after this packet.
@@ -1450,10 +1450,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * and simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The \e contents of the file will be written using UTF-8.
          *
-         * @param filename the pathname of the file to write to.
-         * @param compressed \c true if the XML data should be compressed,
+         * \param filename the pathname of the file to write to.
+         * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
-         * @param format indicates which of Regina's XML file formats to write.
+         * \param format indicates which of Regina's XML file formats to write.
          * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
          * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
@@ -1480,10 +1480,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * XML data file directly to an open Python file, you can still use
          * writeXMLFile() for this.
          *
-         * @param s the output stream to which to write.
-         * @param compressed \c true if the XML data should be compressed,
+         * \param s the output stream to which to write.
+         * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
-         * @param format indicates which of Regina's XML file formats to write.
+         * \param format indicates which of Regina's XML file formats to write.
          * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
          * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
@@ -1508,9 +1508,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \ifacespython The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML data file should
+         * \param out the output stream to which the XML data file should
          * be written.
-         * @param format indicates which of Regina's XML file formats to write.
+         * \param format indicates which of Regina's XML file formats to write.
          * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
          * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
@@ -1593,7 +1593,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
                  * PacketListener::packetToBeChanged() for all
                  * registered listeners for the given packet.
                  *
-                 * @param packet the packet whose data is about to change.
+                 * \param packet the packet whose data is about to change.
                  */
                 ChangeEventSpan(Packet& packet);
 
@@ -1680,21 +1680,21 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * then this routine will set <tt>refs[this]</tt> as \c true
          * to record that this packet is now being written to XML.
          *
-         * @param out the output stream to which the opening XML tag
+         * \param out the output stream to which the opening XML tag
          * should be written.
-         * @param element the name of the XML tag.  If we are writing to
+         * \param element the name of the XML tag.  If we are writing to
          * the REGINA_XML_GEN_2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param anon \c true if this packet is being written within an
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param anon \c true if this packet is being written within an
          * anonymous block.  If so, then the packet ID will always be written.
-         * @param refs manages the necessary references between packets
+         * \param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
-         * @param newline indicates whether the opening XML tag should be
+         * \param newline indicates whether the opening XML tag should be
          * followed by a newline.  Normally this would be \c true, but
          * if you need to avoid whitespace between the opening XML tag
          * and the packet contents then you should pass \c false instead.
-         * @param attr any additional attributes to write to the XML tag;
+         * \param attr any additional attributes to write to the XML tag;
          * each attribute should a pair of the form (\a attribute, \a value).
          * When writing to the REGINA_XML_GEN_2 format, this will be ignored.
          */
@@ -1717,10 +1717,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre This packet is not contained within an anonymous block.
          *
-         * @param out the output stream to which the closing XML tag
+         * \param out the output stream to which the closing XML tag
          * should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param refs manages the necessary references between packets
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
          */
         void writeXMLTreeData(std::ostream& out, FileFormat format,
@@ -1733,12 +1733,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * There will be no whitespace before the closing XML tag.
          * The tag will be followed by a newline.
          *
-         * @param out the output stream to which the closing XML tag
+         * \param out the output stream to which the closing XML tag
          * should be written.
-         * @param element the name of the XML tag.  If we are writing to
+         * \param element the name of the XML tag.  If we are writing to
          * the REGINA_XML_GEN_2 format, then this will be ignored (and may
          * be \c null), and the tag name \c packet will be used instead.
-         * @param format indicates which of Regina's XML file formats to write.
+         * \param format indicates which of Regina's XML file formats to write.
          */
         void writeXMLFooter(std::ostream& out, const char* element,
             FileFormat format) const;
@@ -1755,12 +1755,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * it calls <tt>p.writeXMLPacketData()</tt> with the \a anon
          * argument set to \c true.
          *
-         * @param out the output stream to which the anonymous block
+         * \param out the output stream to which the anonymous block
          * should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param refs manages the necessary references between packets
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
-         * @param p the packet to write inside the anonymous block.
+         * \param p the packet to write inside the anonymous block.
          */
         void writeXMLAnon(std::ostream& out, FileFormat format,
             PacketRefs& refs, const Packet& p) const;
@@ -1805,12 +1805,12 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * should not be used as a complete XML file.  For a complete
          * XML file, see routine writeXMLFile() instead.
          *
-         * @param out the output stream to which the XML should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param anon \c true if this packet is being written within an
+         * \param out the output stream to which the XML should be written.
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param anon \c true if this packet is being written within an
          * anonymous block.  If so, then the packet ID must be included,
          * and any packet tags and/or child packets must be excluded.
-         * @param refs manages the necessary references between packets
+         * \param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
          */
         virtual void writeXMLPacketData(std::ostream& out,
@@ -1844,7 +1844,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * The default implementation of this routine does nothing.
          *
-         * @param refs the map in which any dependencies should be recorded.
+         * \param refs the map in which any dependencies should be recorded.
          */
         virtual void addPacketRefs(PacketRefs& refs) const;
 
@@ -1857,7 +1857,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \pre The given parent is a clone of this packet.
          *
-         * @param parent the parent beneath which the descendant clones
+         * \param parent the parent beneath which the descendant clones
          * will be inserted.
          */
         void internalCloneDescendants(Packet& parent) const;
@@ -1871,7 +1871,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * manually, since it behaves correctly even if listeners unregister
          * themselves as they handle the event.
          *
-         * @param event the member function of PacketListener to be called
+         * \param event the member function of PacketListener to be called
          * for each listener.
          */
         void fireEvent(void (PacketListener::*event)(Packet&));
@@ -1885,9 +1885,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * manually, since it behaves correctly even if listeners unregister
          * themselves as they handle the event.
          *
-         * @param event the member function of PacketListener to be called
+         * \param event the member function of PacketListener to be called
          * for each listener.
-         * @param arg2 the second argument to pass to the event function.
+         * \param arg2 the second argument to pass to the event function.
          */
         void fireEvent(void (PacketListener::*event)(Packet&, Packet&),
             Packet& arg2);
@@ -1922,10 +1922,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * then this routine will set <tt>refs[this]</tt> as \c true
          * to record that this packet is now being written to XML.
          *
-         * @param out the output stream to which to write.
-         * @param anon \c true if this packet is being written within an
+         * \param out the output stream to which to write.
+         * \param anon \c true if this packet is being written within an
          * anonymous block.  If so, then the packet ID will always be written.
-         * @param refs manages the necessary references between packets
+         * \param refs manages the necessary references between packets
          * in the XML file; see the PacketRefs documentation for details.
          */
         void writeXMLPacketAttributes(std::ostream& out, bool anon,
@@ -1940,7 +1940,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
          virtual void writeTextShort(std::ostream& out) const = 0;
         /**
@@ -1952,7 +1952,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
          virtual void writeTextLong(std::ostream& out) const;
 
@@ -2062,7 +2062,7 @@ class PacketOf : public Packet, public Held {
          * The packet will not be inserted into any packet tree, and
          * will have an empty packet label.
          *
-         * @param data the object to copy.
+         * \param data the object to copy.
          */
         PacketOf(const Held& data) : Held(data) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
@@ -2077,7 +2077,7 @@ class PacketOf : public Packet, public Held {
          *
          * The object that is passed (\a data) will no longer be usable.
          *
-         * @param data the object to move.
+         * \param data the object to move.
          */
         PacketOf(Held&& data) : Held(std::move(data)) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
@@ -2098,7 +2098,7 @@ class PacketOf : public Packet, public Held {
          * \ifacespython The initial \c std::in_place argument is not present.
          * Just use PacketOf(args...).
          *
-         * @param args the arguments to be forwarded to the appropriate
+         * \param args the arguments to be forwarded to the appropriate
          * \a Held constructor.
          */
         template <typename... Args>
@@ -2114,7 +2114,7 @@ class PacketOf : public Packet, public Held {
          * it will not clone the given packet's children, and it will not
          * insert the new packet into any packet tree).
          *
-         * @param src the packet whose contents should be copied.
+         * \param src the packet whose contents should be copied.
          */
         PacketOf(const PacketOf<Held>& src) : Held(src) {
             PacketData<Held>::heldBy_ = HELD_BY_PACKET;
@@ -2122,7 +2122,7 @@ class PacketOf : public Packet, public Held {
         /**
          * Sets the content of this packet to be a copy of the given data.
          *
-         * @param data the object to copy.
+         * \param data the object to copy.
          * @return a reference to this packet.
          */
         PacketOf<Held>& operator = (const Held& data) {
@@ -2138,7 +2138,7 @@ class PacketOf : public Packet, public Held {
          *
          * The object that is passed (\a data) will no longer be usable.
          *
-         * @param data the object to move.
+         * \param data the object to move.
          * @return a reference to this packet.
          */
         PacketOf<Held>& operator = (Held&& data) {
@@ -2153,7 +2153,7 @@ class PacketOf : public Packet, public Held {
          * the packet infrastructure (e.g., it will not copy the packet label,
          * or change this packet's location in any packet tree).
          *
-         * @param src the packet whose contents should be copied.
+         * \param src the packet whose contents should be copied.
          * @return a reference to this packet.
          */
         PacketOf<Held>& operator = (const PacketOf<Held>& src) {
@@ -2369,7 +2369,7 @@ class PacketData {
                  * PacketListener::packetToBeChanged() for all
                  * registered listeners for the packet.
                  *
-                 * @param data the object whose data is about to change;
+                 * \param data the object whose data is about to change;
                  * this may or may not be of the subclass PacketOf<Held>.
                  */
                 ChangeEventSpan(PacketData& data);
@@ -2410,7 +2410,7 @@ class PacketData {
  * makes a deep copy of \a src.  This is because Python will still maintain a
  * reference to \a src, and so it is not possible to move from \a src.
  *
- * @param src the \a Held object that will be moved into the new packet;
+ * \param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.
  * @return the new wrapped packet.
  *
@@ -2441,9 +2441,9 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
  * makes a deep copy of \a src.  This is because Python will still maintain a
  * reference to \a src, and so it is not possible to move from \a src.
  *
- * @param src the \a Held object that will be moved into the new packet;
+ * \param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.
- * @param label the label to assign to the new packet.
+ * \param label the label to assign to the new packet.
  * @return the new wrapped packet.
  *
  * \ingroup packet
@@ -2480,7 +2480,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
  * \nopython This routine is too heavily templated for Python.  Instead you
  * can just directly call the constructor <tt>PacketOfHeld(args...)</tt>.
  *
- * @param args the arguments to be forwarded to the appropriate
+ * \param args the arguments to be forwarded to the appropriate
  * \a Held constructor.
  * @return the new wrapped packet.
  *
@@ -2535,7 +2535,7 @@ std::shared_ptr<PacketOf<Held>> make_packet() {
  *
  * \nopython Casting is unnecessary in Python.
  *
- * @param p a reference, presented as a packet.
+ * \param p a reference, presented as a packet.
  * @return the same reference, presented using the type \a Held.
  *
  * \ingroup packet
@@ -2563,7 +2563,7 @@ Held& static_packet_cast(Packet& p) {
  *
  * \nopython Casting is unnecessary in Python.
  *
- * @param p a reference, presented as a packet.
+ * \param p a reference, presented as a packet.
  * @return the same reference, presented using the type \a Held.
  *
  * \ingroup packet
@@ -2594,7 +2594,7 @@ const Held& static_packet_cast(const Packet& p) {
  * Python's own built-in open() function.  You can access Regina's open()
  * function by calling <tt>regina.open()</tt>.
  *
- * @param filename the pathname of the file to read from.
+ * \param filename the pathname of the file to read from.
  * @return the packet tree read from file, or \c null on error.
  *
  * \ingroup packet
@@ -2616,7 +2616,7 @@ std::shared_ptr<Packet> open(const char* filename);
  *
  * \nopython Instead you can use the variant of open() that takes a filename.
  *
- * @param in the input stream to read from.
+ * \param in the input stream to read from.
  * @return the packet tree read from file, or \c null on error.
  *
  * \ingroup packet
@@ -2689,7 +2689,7 @@ class ChildIterator {
          * \nopython The only way to create a ChildIterator is via
          * Packet::children().
          *
-         * @param current the child packet that the new iterator should
+         * \param current the child packet that the new iterator should
          * point to, or \c null if the new iterator should be past-the-end.
          */
         ChildIterator(std::shared_ptr<value_type> current);
@@ -2846,7 +2846,7 @@ class SubtreeIterator {
          * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          *
-         * @param subtree the packet subtree that we are iterating through.
+         * \param subtree the packet subtree that we are iterating through.
          * This does not need to be the root of the overall packet tree
          * (i.e., \a subtree is allowed to have a non-null parent).
          */
@@ -2859,10 +2859,10 @@ class SubtreeIterator {
          * Packet::subtree() or Packet::descendants(), or by iterating
          * over a Packet itself.
          *
-         * @param subtree the packet subtree that we are iterating through.
+         * \param subtree the packet subtree that we are iterating through.
          * This does not need to be the root of the overall packet tree
          * (i.e., \a subtree is allowed to have a non-null parent).
-         * @param current the packet within the subtree that the new iterator
+         * \param current the packet within the subtree that the new iterator
          * should point to, or \c null if the new iterator should be
          * past-the-end.
          * If \a current is not null, then it must be equal to or a
@@ -3046,7 +3046,7 @@ class PacketChildren {
          * \nopython The only way to create a PacketChildren object is via
          * Packet::children().
          *
-         * @param parent the packet whose children we will iterate through.
+         * \param parent the packet whose children we will iterate through.
          */
         PacketChildren(std::shared_ptr<packet_type> parent);
 
@@ -3192,7 +3192,7 @@ class PacketDescendants {
          * \nopython The only way to create a PacketDescendants object is via
          * Packet::descendants().
          *
-         * @param subtree the packet whose strict descendants we will iterate
+         * \param subtree the packet whose strict descendants we will iterate
          * through.
          */
         PacketDescendants(std::shared_ptr<packet_type> subtree);
@@ -3292,7 +3292,7 @@ class PacketShell {
         /**
          * Creates a new shell referring to the given packet.
          *
-         * @param packet the packet to refer to.
+         * \param packet the packet to refer to.
          */
         PacketShell(const Packet* packet);
 
@@ -3300,7 +3300,7 @@ class PacketShell {
          * Creates a copy of the given shell.  Both shells will refer to
          * the same underlying packet.
          *
-         * @param shell the shell to clone.
+         * \param shell the shell to clone.
          */
         PacketShell(const PacketShell& shell) = default;
 
@@ -3308,7 +3308,7 @@ class PacketShell {
          * Sets this to be a copy of the given shell.  Both shells will refer
          * to the same underlying packet.
          *
-         * @param shell the shell to clone.
+         * \param shell the shell to clone.
          */
         PacketShell& operator = (const PacketShell& shell) = default;
 
@@ -3316,7 +3316,7 @@ class PacketShell {
          * Identifies if this and the given shell refer to the same
          * underlying packet.
          *
-         * @param shell the shell to compare with this.
+         * \param shell the shell to compare with this.
          * @return \c true if and only if both shells refer to the same packet.
          */
         bool operator == (const PacketShell& shell) const;
@@ -3327,7 +3327,7 @@ class PacketShell {
          * This test is also available the other way around (with PacketShell
          * on the right); this reversed test is defined as a global function.
          *
-         * @param packet the packet to test against; this may be \c null.
+         * \param packet the packet to test against; this may be \c null.
          * @return \c true if and only if this shell refers to the given packet.
          */
         bool operator == (const Packet* packet) const;
@@ -3336,7 +3336,7 @@ class PacketShell {
          * Identifies if this and the given shell refer to different
          * underlying packets.
          *
-         * @param shell the shell to compare with this.
+         * \param shell the shell to compare with this.
          * @return \c true if and only if both shells refer to different
          * packets.
          */
@@ -3348,7 +3348,7 @@ class PacketShell {
          * This test is also available the other way around (with PacketShell
          * on the right); this reversed test is defined as a global function.
          *
-         * @param packet the packet to test against; this may be \c null.
+         * \param packet the packet to test against; this may be \c null.
          * @return \c true if and only if this shell does not refer to the
          * given packet.
          */
@@ -3384,7 +3384,7 @@ class PacketShell {
          *
          * See Packet::tags() for further details on packet tags.
          *
-         * @param tag the tag to search for.
+         * \param tag the tag to search for.
          * @return \c true if the given tag is found, \c false otherwise.
          */
         bool hasTag(const std::string& tag) const;
@@ -3433,8 +3433,8 @@ class PacketShell {
  * This test is also available the other way around (with PacketShell on
  * the left); this reversed test is defined as a member function of PacketShell.
  *
- * @param packet the packet to test against; this may be \c null.
- * @param shell the packet shell to test against.
+ * \param packet the packet to test against; this may be \c null.
+ * \param shell the packet shell to test against.
  * @return \c true if and only if the given shell refers to the given packet.
  *
  * \ingroup packet
@@ -3447,8 +3447,8 @@ bool operator == (const Packet* packet, PacketShell shell);
  * This test is also available the other way around (with PacketShell on
  * the left); this reversed test is defined as a member function of PacketShell.
  *
- * @param packet the packet to test against; this may be \c null.
- * @param shell the packet shell to test against.
+ * \param packet the packet to test against; this may be \c null.
+ * \param shell the packet shell to test against.
  * @return \c true if and only if the given shell does not refer to the
  * given packet.
  *
@@ -3575,7 +3575,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
+         * \param packet the packet being listened to.
          */
         virtual void packetToBeChanged(Packet& packet) {};
         /**
@@ -3585,7 +3585,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
+         * \param packet the packet being listened to.
          */
         virtual void packetWasChanged(Packet& packet) {};
         /**
@@ -3595,7 +3595,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
+         * \param packet the packet being listened to.
          * \see childToBeRenamed()
          */
         virtual void packetToBeRenamed(Packet& packet) {};
@@ -3606,7 +3606,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
+         * \param packet the packet being listened to.
          * \see childWasRenamed()
          */
         virtual void packetWasRenamed(Packet& packet) {};
@@ -3635,7 +3635,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet gives access to the packet being listened to.
+         * \param packet gives access to the packet being listened to.
          */
         virtual void packetBeingDestroyed(PacketShell packet) {};
         /**
@@ -3646,8 +3646,8 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @param child the child packet to be added.
+         * \param packet the packet being listened to.
+         * \param child the child packet to be added.
          */
         virtual void childToBeAdded(Packet& packet, Packet& child) {};
         /**
@@ -3658,8 +3658,8 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @param child the child packet that was added.
+         * \param packet the packet being listened to.
+         * \param child the child packet that was added.
          */
         virtual void childWasAdded(Packet& packet, Packet& child) {};
         /**
@@ -3675,9 +3675,9 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to, or \c null if
+         * \param packet the packet being listened to, or \c null if
          * this routine is being called from within this packet's destructor.
-         * @param child the child packet to be removed.
+         * \param child the child packet to be removed.
          */
         virtual void childToBeRemoved(Packet& packet, Packet& child) {};
         /**
@@ -3693,9 +3693,9 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to, or \c null if
+         * \param packet the packet being listened to, or \c null if
          * this routine is being called from within this packet's destructor.
-         * @param child the child packet that was removed.
+         * \param child the child packet that was removed.
          */
         virtual void childWasRemoved(Packet& packet, Packet& child) {};
         /**
@@ -3706,7 +3706,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
+         * \param packet the packet being listened to.
          */
         virtual void childrenToBeReordered(Packet& packet) {};
 
@@ -3718,7 +3718,7 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
+         * \param packet the packet being listened to.
          */
         virtual void childrenWereReordered(Packet& packet) {};
         /**
@@ -3728,8 +3728,8 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @param child the child packet to be renamed.
+         * \param packet the packet being listened to.
+         * \param child the child packet to be renamed.
          * \see packetToBeRenamed()
          */
         virtual void childToBeRenamed(Packet& packet, Packet& child) {};
@@ -3740,8 +3740,8 @@ class PacketListener {
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @param child the child packet that was renamed.
+         * \param packet the packet being listened to.
+         * \param child the child packet that was renamed.
          * \see packetWasRenamed()
          */
         virtual void childWasRenamed(Packet& packet, Packet& child) {};
@@ -3922,7 +3922,7 @@ class PacketListener {
          * The new listener will be registered as listening to the same
          * packets as \a src.
          *
-         * @param src the listener to copy.
+         * \param src the listener to copy.
          */
         PacketListener(const PacketListener& src);
 
@@ -3933,7 +3933,7 @@ class PacketListener {
          * currently listening to, and instead will be registered as listening
          * to the same packets as \a src.
          *
-         * @param src the listener to copy.
+         * \param src the listener to copy.
          * @return a reference to this packet listener.
          */
         PacketListener& operator = (const PacketListener& src);
@@ -3949,7 +3949,7 @@ class PacketListener {
          * This operation is \e not constant time, since it needs to
          * perform an internal adjustment for each packet that is affected.
          *
-         * @param other the listener to swap with this.
+         * \param other the listener to swap with this.
          */
         void swapListeners(PacketListener& other);
 

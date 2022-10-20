@@ -90,16 +90,16 @@ struct DiscType {
     /**
      * Creates a new disc type initialised with the given values.
      *
-     * @param newTetIndex the index within the triangulation of the
+     * \param newTetIndex the index within the triangulation of the
      * tetrahedron containing this disc type.
-     * @param newType the specific disc type within the given
+     * \param newType the specific disc type within the given
      * tetrahedron; see the class notes for the meaning of this field.
      */
     constexpr DiscType(size_t newTetIndex, int newType);
     /**
      * Creates a copy of the given disc type.
      *
-     * @param cloneMe the disc type to clone.
+     * \param cloneMe the disc type to clone.
      */
     constexpr DiscType(const DiscType& cloneMe) = default;
 
@@ -116,7 +116,7 @@ struct DiscType {
     /**
      * Sets this to a copy of the given disc type.
      *
-     * @param cloneMe the disc type to clone.
+     * \param cloneMe the disc type to clone.
      * @return a reference to this disc type.
      */
     DiscType& operator = (const DiscType& cloneMe) = default;
@@ -157,8 +157,8 @@ struct DiscType {
  * Writes the given disc type to the given output stream.
  * The disc type will be written as a pair <tt>(tetIndex, type)</tt>.
  *
- * @param out the output stream to which to write.
- * @param type the disc type to write.
+ * \param out the output stream to which to write.
+ * \param type the disc type to write.
  * @return a reference to the given output stream.
  *
  * \ingroup surfaces

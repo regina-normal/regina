@@ -83,7 +83,7 @@ class BlockedSFS : public StandardTriangulation {
          * Creates a new copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
+         * \param src the structure to copy.
          */
         BlockedSFS(const BlockedSFS& src) = default;
         /**
@@ -92,14 +92,14 @@ class BlockedSFS : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
+         * \param src the structure to move from.
          */
         BlockedSFS(BlockedSFS&& src) noexcept = default;
         /**
          * Sets this to be a copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
+         * \param src the structure to copy.
          * @return a reference to this structure.
          */
         BlockedSFS& operator = (const BlockedSFS& src) = default;
@@ -109,14 +109,14 @@ class BlockedSFS : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
+         * \param src the structure to move from.
          * @return a reference to this structure.
          */
         BlockedSFS& operator = (BlockedSFS&& src) noexcept = default;
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(BlockedSFS& other) noexcept;
@@ -146,7 +146,7 @@ class BlockedSFS : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * blocked Seifert fibred space).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of blocked Seifert fibred space.
          */
@@ -169,7 +169,7 @@ class BlockedSFS : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * blocked Seifert fibred space).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * do not represent the same type of blocked Seifert fibred space.
          */
@@ -200,7 +200,7 @@ class BlockedSFS : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tri the triangulation to examine.
+         * \param tri the triangulation to examine.
          * @return a structure containing details of the blocked Seifert
          * fibred space, or \c null if the given triangulation is not a
          * blocked Seifert fibred space.
@@ -215,7 +215,7 @@ class BlockedSFS : public StandardTriangulation {
          *
          * Note that the new object must describe an existing triangulation.
          *
-         * @param region the region describing this entire triangulation.
+         * \param region the region describing this entire triangulation.
          */
         BlockedSFS(SatRegion&& region);
 
@@ -237,28 +237,28 @@ class BlockedSFS : public StandardTriangulation {
          * parameters for the same triangulation.  If either block is not a
          * solid torus plug then no value will be returned.
          *
-         * @param thin \c true if the overall structure being identified
+         * \param thin \c true if the overall structure being identified
          * is a plugged thin I-bundle, or \c false if it is a plugged
          * thick I-bundle.
-         * @param id identifies the particular thin/thick twisted
+         * \param id identifies the particular thin/thick twisted
          * I-bundle into which the solid tori are plugged.  This must be
          * 1, 2, 3 or 4, to distinguish between the four thin twisted
          * I-bundles or the four thick twisted I-bundles described in
          * the paper "Structures of small closed non-orientable
          * 3-manifold triangulations" (see isPluggedIBundle for details).
-         * @param torus0 the block that should provide the solid torus plug
+         * \param torus0 the block that should provide the solid torus plug
          * corresponding to the first pair of integers in the plugged
          * thin/thick I-bundle parameters.
-         * @param horiz0 \c true if the first pair of integers in the
+         * \param horiz0 \c true if the first pair of integers in the
          * plugged thin/thick I-bundle parameters should measure the
          * number of times the meridinal curve cuts the vertical and
          * horizontal edges of the adjacent block (not the block
          * \a torus0, but its neighbour), or \c false if the vertical
          * and diagonal edges should be used instead.
-         * @param torus1 the block that should provide the solid torus plug
+         * \param torus1 the block that should provide the solid torus plug
          * corresponding to the second pair of integers in the plugged
          * thin/thick I-bundle parameters.
-         * @param horiz1 \c true if the second pair of integers in the
+         * \param horiz1 \c true if the second pair of integers in the
          * plugged thin/thick I-bundle parameters should measure the
          * number of times the meridinal curve cuts the vertical and
          * horizontal edges of the adjacent block (not the block
@@ -279,8 +279,8 @@ class BlockedSFS : public StandardTriangulation {
  * This global routine simply calls BlockedSFS::swap(); it is provided
  * so that BlockedSFS meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

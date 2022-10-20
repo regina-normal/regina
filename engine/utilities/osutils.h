@@ -103,7 +103,7 @@ std::tuple<unsigned long, unsigned long, unsigned long> resUsage();
  * \nopython Instead use the variant resUsage() that takes no arguments and
  * returns a tuple.
  *
- * @param out the output stream to which to write.
+ * \param out the output stream to which to write.
  */
 void writeResUsage(std::ostream& out);
 

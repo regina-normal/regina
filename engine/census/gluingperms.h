@@ -139,7 +139,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * by FacetPairing::isCanonical().  Note that all facet pairings
          * constructed by FacetPairing::findAllPairings() are of this form.
          *
-         * @param pairing the specific pairing of simplex facets
+         * \param pairing the specific pairing of simplex facets
          * that this permutation set will complement.
          */
         GluingPerms(const FacetPairing<dim>& pairing);
@@ -160,7 +160,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * by FacetPairing::isCanonical().  Note that all facet pairings
          * constructed by FacetPairing::findAllPairings() are of this form.
          *
-         * @param pairing the specific pairing of simplex facets
+         * \param pairing the specific pairing of simplex facets
          * that this permutation set will complement.
          */
         GluingPerms(FacetPairing<dim>&& pairing);
@@ -168,7 +168,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         /**
          * Creates a new copy of the given gluing permutation set.
          *
-         * @param src the gluing permutations to copy.
+         * \param src the gluing permutations to copy.
          */
         GluingPerms(const GluingPerms<dim>& src);
 
@@ -179,7 +179,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          *
          * The permutation set that is passed (\a src) will no longer be usable.
          *
-         * @param src the gluing permutations to move.
+         * \param src the gluing permutations to move.
          */
         GluingPerms(GluingPerms<dim>&& src) noexcept;
 
@@ -198,7 +198,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \nopython Instead call fromData(), which takes this same input data
          * in string format.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         GluingPerms(std::istream& in);
 
@@ -210,7 +210,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         /**
          * Sets this to be a copy of the given gluing permutation set.
          *
-         * @param src the gluing permutations to copy.
+         * \param src the gluing permutations to copy.
          * @return a reference to this gluing permutation set.
          */
         GluingPerms& operator = (const GluingPerms& src);
@@ -222,7 +222,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          *
          * The permutation set that is passed (\a src) will no longer be usable.
          *
-         * @param src the gluing permutations to move.
+         * \param src the gluing permutations to move.
          * @return a reference to this gluing permutation set.
          */
         GluingPerms& operator = (GluingPerms&& src) noexcept;
@@ -230,7 +230,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
         /**
          * Swaps the contents of this and the given gluing permutation set.
          *
-         * @param other the set whose contents should be swapped with this.
+         * \param other the set whose contents should be swapped with this.
          */
         void swap(GluingPerms& other) noexcept;
 
@@ -260,7 +260,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \pre The requested permutation is not the special "not yet chosen"
          * value (i.e., the internal index that is stored for it is not -1).
          *
-         * @param source the simplex facet under investigation.
+         * \param source the simplex facet under investigation.
          * @return the associated gluing permutation.
          */
         Perm<dim+1> perm(const FacetSpec<dim>& source) const;
@@ -274,10 +274,10 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \pre The requested permutation is not the special "not yet chosen"
          * value (i.e., the internal index that is stored for it is not -1).
          *
-         * @param simp the simplex under investigation (this must be
+         * \param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
          * consideration).
-         * @param facet the facet of the given simplex under
+         * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
          * @return the associated gluing permutation.
          */
@@ -302,7 +302,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \pre The given facet is a real simplex
          * facet (not boundary, before-the-start or past-the-end).
          *
-         * @param source the simplex facet under investigation.
+         * \param source the simplex facet under investigation.
          * @return a reference to the corresponding array index.
          */
         Index permIndex(const FacetSpec<dim>& source) const;
@@ -323,10 +323,10 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * could be the special value -1 indicating that the permutation
          * has not yet been chosen.
          *
-         * @param simp the simplex under investigation (this must be
+         * \param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
          * consideration).
-         * @param facet the facet of the given simplex under
+         * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
          * @return a reference to the corresponding array index.
          */
@@ -356,7 +356,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * to edit the gluing permutations.  As an alternative however, you
          * can call <tt>setPermIndex(source, index)</tt> instead.
          *
-         * @param source the simplex facet under investigation.
+         * \param source the simplex facet under investigation.
          * @return a reference to the corresponding array index.
          */
         Index& permIndex(const FacetSpec<dim>& source);
@@ -382,10 +382,10 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * to edit the gluing permutations.  As an alternative however, you
          * can call <tt>setPermIndex(simp, facet, index)</tt> instead.
          *
-         * @param simp the simplex under investigation (this must be
+         * \param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
          * consideration).
-         * @param facet the facet of the given simplex under
+         * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
          * @return a reference to the corresponding array index.
          */
@@ -429,7 +429,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * constructor is not available in Python either, so it is recommended
          * that Python users use fromData() instead.
          *
-         * @param out the output stream to which the data should be written.
+         * \param out the output stream to which the data should be written.
          */
         void dumpData(std::ostream& out) const;
 
@@ -467,8 +467,8 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \a x and \a y of their respective simplices, then the
          * given gluing permutation maps \a x to \a y.
          *
-         * @param source the simplex facet under investigation.
-         * @param gluing a possible gluing permutation from the given
+         * \param source the simplex facet under investigation.
+         * \param gluing a possible gluing permutation from the given
          * simplex facet to its partner according to the underlying
          * facet pairing.
          * @return the index into Perm<dim+1>::Sn_1 corresponding to the
@@ -494,12 +494,12 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \a x and \a y of their respective simplices, then the
          * given gluing permutation maps \a x to \a y.
          *
-         * @param simp the simplex under investigation; this must be
+         * \param simp the simplex under investigation; this must be
          * strictly less than the total number of simplices under
          * consideration.
-         * @param facet the facet of the given simplex under
+         * \param facet the facet of the given simplex under
          * investigation; this must be between 0 and \a dim inclusive.
-         * @param gluing a possible gluing permutation from the given
+         * \param gluing a possible gluing permutation from the given
          * simplex facet to its partner according to the underlying
          * facet pairing.
          * @return the index into Perm<dim+1>::Sn_1 corresponding to the
@@ -527,8 +527,8 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \pre The given simplex facet has a partner according to
          * the underlying facet pairing, i.e., is not a boundary facet.
          *
-         * @param source the simplex facet under investigation.
-         * @param index an index into Perm<dim+1>::Sn_1; this must be
+         * \param source the simplex facet under investigation.
+         * \param index an index into Perm<dim+1>::Sn_1; this must be
          * between 0 and \a dim!-1 inclusive.
          * @return the gluing permutation corresponding to the given
          * index into Perm<dim+1>::Sn_1.
@@ -554,12 +554,12 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \pre The given simplex facet has a partner according to
          * the underlying facet pairing, i.e., is not a boundary facet.
          *
-         * @param simp the simplex under investigation; this must be
+         * \param simp the simplex under investigation; this must be
          * strictly less than the total number of simplices under
          * consideration.
-         * @param facet the facet of the given simplex under
+         * \param facet the facet of the given simplex under
          * investigation; this must be between 0 and \a dim inclusive.
-         * @param index an index into Perm<dim+1>::Sn_1; this must be
+         * \param index an index into Perm<dim+1>::Sn_1; this must be
          * between 0 and \a dim!-1 inclusive.
          * @return the gluing permutation corresponding to the given
          * index into Perm<dim+1>::Sn_1.
@@ -573,7 +573,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * To be identical, the two sets must use identical facet pairings
          * and all of their corresponding permutations must be the same.
          *
-         * @param other the gluing permutation set to compare with this.
+         * \param other the gluing permutation set to compare with this.
          * @return \c true if and only if this and the given set are identical.
          */
         bool operator == (const GluingPerms& other) const;
@@ -585,7 +585,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * To be identical, the two sets must use identical facet pairings
          * and all of their corresponding permutations must be the same.
          *
-         * @param other the gluing permutation set to compare with this.
+         * \param other the gluing permutation set to compare with this.
          * @return \c true if and only if this and the given set are not
          * identical.
          */
@@ -597,7 +597,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -607,7 +607,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -622,7 +622,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \exception InvalidArgument The data found in the given string is
          * invalid, incomplete, or incorrectly formatted.
          *
-         * @param data the data from which to reconstruct a gluing
+         * \param data the data from which to reconstruct a gluing
          * permutation set.
          * @return the reconstructed gluing permutation set.
          */
@@ -635,8 +635,8 @@ class GluingPerms : public Output<GluingPerms<dim>> {
  * This global routine simply calls GluingPerms<dim>::swap(); it is provided
  * so that GluingPerms<dim> meets the C++ Swappable requirements.
  *
- * @param a the first matrix whose contents should be swapped.
- * @param b the second matrix whose contents should be swapped.
+ * \param a the first matrix whose contents should be swapped.
+ * \param b the second matrix whose contents should be swapped.
  *
  * \ingroup census
  */

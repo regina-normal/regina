@@ -150,16 +150,16 @@ class HilbertPrimal {
          * The global interpreter lock will be released while this function
          * runs, so you can use it with Python-based multithreading.
          *
-         * @param action a function (or other callable object) that will be
+         * \param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
          * argument, which will be passed as an rvalue of type RayClass.
-         * @param raysBegin an iterator pointing to the beginning of the
+         * \param raysBegin an iterator pointing to the beginning of the
          * list of extremal rays.
-         * @param raysEnd an iterator pointing past the end of the
+         * \param raysEnd an iterator pointing past the end of the
          * list of extremal rays.
-         * @param constraints a set of validity constraints as described above,
+         * \param constraints a set of validity constraints as described above,
          * or ValidityConstraints::none if none should be imposed.
-         * @param tracker a progress tracker through which progress
+         * \param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
          */
         template <class RayClass, class RayIterator, typename Action>
@@ -212,7 +212,7 @@ class HilbertPrimal {
          * \exception UnsolvedCase Normaliz was unable to compute the
          * requested Hilbert basis.
          *
-         * @param input the extreme rays of a single maximal admissible face,
+         * \param input the extreme rays of a single maximal admissible face,
          * presented in a form that Normaliz can understand (i.e., as vectors
          * of GMP integers).
          * @return the Hilbert basis for the given maximal admissible face.
@@ -230,8 +230,8 @@ class HilbertPrimal {
          * face, and \c false represents a coordinate that is always
          * zero throughout the face.
          *
-         * @param ray the ray to test, given as a vector of integers.
-         * @param face the face to test, given as a bitmask.
+         * \param ray the ray to test, given as a vector of integers.
+         * \param face the face to test, given as a bitmask.
          * @return \c true if the given ray lies within the given face,
          * or \c false otherwise.
          */

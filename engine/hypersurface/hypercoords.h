@@ -175,7 +175,7 @@ class HyperEncoding {
          * can use to enumerate normal hypersurfaces, then the resulting
          * encoding will be invalid, and valid() will return \c false.
          *
-         * @param coords one of Regina's normal hypersurface coordinate systems.
+         * \param coords one of Regina's normal hypersurface coordinate systems.
          */
         constexpr HyperEncoding(HyperCoords coords) : flags_(INVALID) {
             switch (coords) {
@@ -205,7 +205,7 @@ class HyperEncoding {
         /**
          * Determines whether this and the given encoding are identical.
          *
-         * @param other the encoding to compare with this.
+         * \param other the encoding to compare with this.
          * @return \c true if and only if both encodings are identical.
          */
         constexpr bool operator == (const HyperEncoding& other) const {
@@ -214,7 +214,7 @@ class HyperEncoding {
         /**
          * Determines whether this and the given encoding are different.
          *
-         * @param other the encoding to compare with this.
+         * \param other the encoding to compare with this.
          * @return \c true if and only if both encodings are different.
          */
         constexpr bool operator != (const HyperEncoding& other) const {
@@ -321,7 +321,7 @@ class HyperEncoding {
          * possible encoding that is capable of holding the sum of two normal
          * hypersurfaces that use this and the given encoding respectively.
          *
-         * @param rhs the encoding to combine with this.
+         * \param rhs the encoding to combine with this.
          * @return the "sum" of this and the given encoding, as defined above.
          */
         constexpr HyperEncoding operator + (HyperEncoding rhs) const {
@@ -367,7 +367,7 @@ class HyperEncoding {
          * The main purpose of intValue() and fromIntValue() is to support
          * reading and writing hypersurfaces to/from Regina's XML file format.
          *
-         * @param value an integer that represents an encoding, typically
+         * \param value an integer that represents an encoding, typically
          * obtained by calling intValue().
          * @return the corresponding encoding.
          */
@@ -397,7 +397,7 @@ class HyperInfo {
          * This routine is guaranteed to return a non-null string, even
          * if \a coordSystem is not one of the HyperCoords enum values.
          *
-         * @param coordSystem the coordinate system being queried; this
+         * \param coordSystem the coordinate system being queried; this
          * may be any of the HyperCoords enumeration values.
          * @return the name of the given coordinate system.
          */

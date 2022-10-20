@@ -135,7 +135,7 @@ class Script : public Packet {
          * the packet infrastructure (e.g., it will not copy the packet label,
          * or change this packet's location in any packet tree).
          *
-         * @param src the script packet whose contents should be copied.
+         * \param src the script packet whose contents should be copied.
          * @return a reference to this packet.
          */
         Script& operator = (const Script& src);
@@ -147,7 +147,7 @@ class Script : public Packet {
          * the packet infrastructure (e.g., it will not swap packet labels,
          * or change either packet's location in any packet tree).
          *
-         * @param other the script packet whose contents should be swapped
+         * \param other the script packet whose contents should be swapped
          * with this.
          */
         void swap(Script& other);
@@ -169,14 +169,14 @@ class Script : public Packet {
          * Variables are not considered part of the text; you can get
          * and set them through other member functions (see below).
          *
-         * @param newText the new text for this script.
+         * \param newText the new text for this script.
          */
         void setText(const std::string& newText);
 
         /**
          * Adds the given text to the end of this script.
          *
-         * @param extraText the text to add.
+         * \param extraText the text to add.
          */
         void append(const std::string& extraText);
 
@@ -190,7 +190,7 @@ class Script : public Packet {
          * Returns the name of the requested variable associated with
          * this script.
          *
-         * @param index the index of the requested variable; this must
+         * \param index the index of the requested variable; this must
          * be between 0 and countVariables()-1 inclusive.
          * @return the name of the requested variable.
          */
@@ -198,7 +198,7 @@ class Script : public Packet {
         /**
          * Returns the index of the variable stored with the given name.
          *
-         * @param name the name of the requested variable; note that
+         * \param name the name of the requested variable; note that
          * names are case sensitive.
          * @return the index of the requested variable as an integer
          * between 0 and countVariables()-1 inclusive, or -1 if
@@ -209,7 +209,7 @@ class Script : public Packet {
          * Returns the value of the requested variable associated with
          * this script.  Variables may take the value \c null.
          *
-         * @param index the index of the requested variable; this must
+         * \param index the index of the requested variable; this must
          * be between 0 and countVariables()-1 inclusive.
          * @return the value of the requested variable.
          */
@@ -221,7 +221,7 @@ class Script : public Packet {
          * If no variable is stored with the given name, then \c null
          * will likewise be returned.
          *
-         * @param name the name of the requested variable; note that
+         * \param name the name of the requested variable; note that
          * names are case sensitive.
          * @return the value of the requested variable.
          */
@@ -235,18 +235,18 @@ class Script : public Packet {
          * variables, since (at present) variables are kept stored in
          * sorted order by name.
          *
-         * @param index the index of the variable whose name should change;
+         * \param index the index of the variable whose name should change;
          * this must be between 0 and countVariables()-1 inclusive.
-         * @param name the new name to assign to the variable.
+         * \param name the new name to assign to the variable.
          */
         void setVariableName(size_t index, const std::string& name);
         /**
          * Changes the value of an existing variable associated with
          * this script.
          *
-         * @param index the index of the variable whose value should change;
+         * \param index the index of the variable whose value should change;
          * this must be between 0 and countVariables()-1 inclusive.
-         * @param value the new value to assign to the variable.  This is
+         * \param value the new value to assign to the variable.  This is
          * allowed to be a null pointer, and if the argument is omitted then a
          * null pointer will be used.
          */
@@ -266,8 +266,8 @@ class Script : public Packet {
          * indices of other variables also.  This is because (at present)
          * variables are kept stored in sorted order by name.
          *
-         * @param name the name of the new variable.
-         * @param value the value of the new variable.  This is allowed
+         * \param name the name of the new variable.
+         * \param value the value of the new variable.  This is allowed
          * to be a null pointer, and if the argument is omitted then a
          * null pointer will be used.
          * @return \c true if the variable was successfully added, or
@@ -287,9 +287,9 @@ class Script : public Packet {
          * indices of other variables also.  This is because (at present)
          * variables are kept stored in sorted order by name.
          *
-         * @param name the string upon which the new variable name will
+         * \param name the string upon which the new variable name will
          * be based.
-         * @param value the value of the new variable.  This is allowed
+         * \param value the value of the new variable.  This is allowed
          * to be a null pointer, and if the argument is omitted then a
          * null pointer will be used.
          * @return the name of the variable that was added; this might
@@ -305,7 +305,7 @@ class Script : public Packet {
          * \warning This may change the indices of other variables, since
          * (at present) variables are kept stored in sorted order by name.
          *
-         * @param name the name of the variable to remove; note that
+         * \param name the name of the variable to remove; note that
          * names are case sensitive.
          */
         void removeVariable(const std::string& name);
@@ -315,7 +315,7 @@ class Script : public Packet {
          * \warning This may change the indices of other variables, since
          * (at present) variables are kept stored in sorted order by name.
          *
-         * @param index the index of the variable to remove;
+         * \param index the index of the variable to remove;
          * this must be between 0 and countVariables()-1 inclusive.
          */
         void removeVariable(size_t index);
@@ -334,7 +334,7 @@ class Script : public Packet {
          * This routine is safe to call if some variables have null values,
          * and/or if the same packet is identified by multiple variables.
          *
-         * @param listener the listener to register with all packets
+         * \param listener the listener to register with all packets
          * identified by the script variables.
          */
         void listenVariables(PacketListener* listener);
@@ -349,7 +349,7 @@ class Script : public Packet {
          * This routine is safe to call if some variables have null values,
          * and/or if the same packet is identified by multiple variables.
          *
-         * @param listener the listener to deregister from all packets
+         * \param listener the listener to deregister from all packets
          * identified by the script variables.
          */
         void unlistenVariables(PacketListener* listener);
@@ -363,7 +363,7 @@ class Script : public Packet {
          * variable name, and their values must be either both \c null or
          * both pointers to the same packet.
          *
-         * @param other the script to compare with this.
+         * \param other the script to compare with this.
          * @return \c true if and only if this and the given script are
          * identical.
          */
@@ -378,7 +378,7 @@ class Script : public Packet {
          * variable name, and their values must be either both \c null or
          * both pointers to the same packet.
          *
-         * @param other the script to compare with this.
+         * \param other the script to compare with this.
          * @return \c true if and only if this and the given script are
          * not identical.
          */
@@ -400,8 +400,8 @@ class Script : public Packet {
  * This global routine simply calls Script::swap(); it is provided so that
  * Script meets the C++ Swappable requirements.
  *
- * @param a the first script packet whose contents should be swapped.
- * @param b the second script packet whose contents should be swapped.
+ * \param a the first script packet whose contents should be swapped.
+ * \param b the second script packet whose contents should be swapped.
  *
  * \ingroup packet
  */

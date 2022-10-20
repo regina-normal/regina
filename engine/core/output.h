@@ -168,8 +168,8 @@ struct Output {
  *
  * This is equivalent to calling <tt>out << object.str()</tt>.
  *
- * @param out the output stream to which to write.
- * @param object the object to write.
+ * \param out the output stream to which to write.
+ * \param object the object to write.
  * @return a reference to the given output stream.
  *
  * \ingroup engine
@@ -225,7 +225,7 @@ struct ShortOutput : public Output<T, supportsUtf8> {
      * \nopython Instead you can call detail() from the subclass \a T, which
      * returns this output as a string.
      *
-     * @param out the output stream to which to write.
+     * \param out the output stream to which to write.
      */
     void writeTextLong(std::ostream& out) const;
 };

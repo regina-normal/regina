@@ -112,7 +112,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * Creates a new copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
+         * \param src the structure to copy.
          */
         BlockedSFSPair(const BlockedSFSPair& src) = default;
         /**
@@ -121,14 +121,14 @@ class BlockedSFSPair : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
+         * \param src the structure to move from.
          */
         BlockedSFSPair(BlockedSFSPair&& src) noexcept = default;
         /**
          * Sets this to be a copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
+         * \param src the structure to copy.
          * @return a reference to this structure.
          */
         BlockedSFSPair& operator = (const BlockedSFSPair& src) = default;
@@ -138,14 +138,14 @@ class BlockedSFSPair : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
+         * \param src the structure to move from.
          * @return a reference to this structure.
          */
         BlockedSFSPair& operator = (BlockedSFSPair&& src) noexcept = default;
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(BlockedSFSPair& other) noexcept;
@@ -155,7 +155,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * form this triangulation.  See the class notes above for further
          * information.
          *
-         * @param which 0 if the first region should be returned, or
+         * \param which 0 if the first region should be returned, or
          * 1 if the second region should be returned.
          * @return details of the requested saturated region.
          */
@@ -194,7 +194,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * blocked Seifert fibred space).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of blocked pair of Seifert fibred spaces.
          */
@@ -218,7 +218,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * blocked Seifert fibred space).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * do not represent the same type of blocked pair of Seifert fibred
          * spaces.
@@ -238,7 +238,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tri the triangulation to examine.
+         * \param tri the triangulation to examine.
          * @return a structure containing details of the blocked pair, or
          * \c null if the given triangulation is not of this form.
          */
@@ -252,9 +252,9 @@ class BlockedSFSPair : public StandardTriangulation {
          *
          * Note that the new object must describe an existing triangulation.
          *
-         * @param region0 the first saturated region.
-         * @param region1 the second saturated region.
-         * @param matchingReln describes how the first and second region
+         * \param region0 the first saturated region.
+         * \param region1 the second saturated region.
+         * \param matchingReln describes how the first and second region
          * boundaries are joined, as detailed in the class notes above.
          */
         BlockedSFSPair(SatRegion&& region0, SatRegion&& region1,
@@ -267,8 +267,8 @@ class BlockedSFSPair : public StandardTriangulation {
  * This global routine simply calls BlockedSFSPair::swap(); it is provided
  * so that BlockedSFSPair meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

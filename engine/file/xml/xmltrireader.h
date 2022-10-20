@@ -130,10 +130,10 @@ class XMLSimplexReader : public XMLElementReader {
          * \pre The given triangulation \a tri already contains at least
          * (\a whichSimplex + 1) top-dimensional simplices.
          *
-         * @param tri the triangulation containing the simplex being read.
-         * @param whichSimplex the index of the simplex being read
+         * \param tri the triangulation containing the simplex being read.
+         * \param whichSimplex the index of the simplex being read
          * within the triangulation \a tri.
-         * @param permIndex \c true if permutations are stored as indices into
+         * \param permIndex \c true if permutations are stored as indices into
          * Sn, or \c false if they are stored as image packs.
          * This must always be specified, regardless of which XML file format
          * we are reading.
@@ -180,8 +180,8 @@ class XMLLegacySimplicesReader : public XMLElementReader {
          * The given triangulation should be empty; its simplices will
          * be created by this reader.
          *
-         * @param tri the triangulation being read.
-         * @param readSimplices a reference to the counter that needs to
+         * \param tri the triangulation being read.
+         * \param readSimplices a reference to the counter that needs to
          * track the number of top-dimensional simplices read so far.
          */
         XMLLegacySimplicesReader(Triangulation<dim>* tri,
@@ -223,10 +223,10 @@ class XMLTriangulationReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param size the total number of top-dimensional simplices in the
+         * \param size the total number of top-dimensional simplices in the
          * triangulation.  This should be 0 if we are reading the
          * second-generation file format.
-         * @param permIndex \c true if permutations are stored as indices into
+         * \param permIndex \c true if permutations are stored as indices into
          * Sn, or \c false if they are stored as image packs.
          * This will be ignored when reading the second-generation file format.
          */
@@ -246,8 +246,8 @@ class XMLTriangulationReader : public XMLPacketReader {
          * Otherwise this function should return a new XMLElementReader,
          * which will cause the XML element to be ignored.
          *
-         * @param subTagName the name of the XML subelement opening tag.
-         * @param subTagProps the properties associated with the
+         * \param subTagName the name of the XML subelement opening tag.
+         * \param subTagProps the properties associated with the
          * subelement opening tag.
          * @return a newly created element reader that will be used to
          * parse the subelement.  This class should not take care of the
@@ -282,7 +282,7 @@ class AbelianGroupPropertyReader : public XMLElementReader {
          * Creates a new reader that stores its results in the
          * given triangulation property.
          *
-         * @param prop a reference to the triangulation property
+         * \param prop a reference to the triangulation property
          * in which the data that is read should be stored.
          */
         AbelianGroupPropertyReader(PropType& prop);
@@ -311,7 +311,7 @@ class GroupPresentationPropertyReader : public XMLElementReader {
          * Creates a new reader that stores its results in the
          * given triangulation property.
          *
-         * @param prop a reference to the triangulation property
+         * \param prop a reference to the triangulation property
          * in which the data that is read should be stored.
          */
         GroupPresentationPropertyReader(PropType& prop);

@@ -105,16 +105,16 @@ class IsoSigPrintable : public Base64SigEncoding {
          * The arguments \a nFacetActions and \a nJoins are not present,
          * since Python lists already know their own sizes.
          *
-         * @param size the number of top-dimensional simplices in the component.
-         * @param nFacetActions the size of the array \a facetAction.
-         * @param facetAction an array of size \a nFacetActions, where
+         * \param size the number of top-dimensional simplices in the component.
+         * \param nFacetActions the size of the array \a facetAction.
+         * \param facetAction an array of size \a nFacetActions, where
          * each element is either 0, 1 or 2, respectively representing
          * a boundary facet, a facet joined to a new simplex, or a facet
          * joined to a simplex that has already been seen.
-         * @param nJoins the size of the arrays \a joinDest and \a joinGluing.
-         * @param joinDest an array whose elements are indices of
+         * \param nJoins the size of the arrays \a joinDest and \a joinGluing.
+         * \param joinDest an array whose elements are indices of
          * top-dimensional simplices to which gluings are being made.
-         * @param joinGluing an array of gluing permutations.
+         * \param joinGluing an array of gluing permutations.
          * @return the encoding of the component being described.
          */
         static Signature encode(size_t size,

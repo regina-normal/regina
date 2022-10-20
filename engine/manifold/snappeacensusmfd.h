@@ -118,10 +118,10 @@ class SnapPeaCensusManifold : public Manifold {
         /**
          * Creates a new SnapPea census manifold with the given parameters.
          *
-         * @param section the section of the SnapPea census to which
+         * \param section the section of the SnapPea census to which
          * this manifold belongs.  This must be one of the section
          * constants defined in this class.
-         * @param index specifies which particular manifold within the
+         * \param index specifies which particular manifold within the
          * given section is represented.  The indices for each section
          * begin counting at zero, and so this index
          * must be between 0 and <i>k</i>-1, where <i>k</i> is the total
@@ -157,7 +157,7 @@ class SnapPeaCensusManifold : public Manifold {
          * For details, see B.B., <i>A duplicate pair in the SnapPea census</i>,
          * Experimental Mathematics, 23:170-173, 2014.
          *
-         * @param compare the structure with which this will be compared.
+         * \param compare the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same SnapPea census manifold.
          */
@@ -171,7 +171,7 @@ class SnapPeaCensusManifold : public Manifold {
          * For details, see B.B., <i>A duplicate pair in the SnapPea census</i>,
          * Experimental Mathematics, 23:170-173, 2014.
          *
-         * @param compare the structure with which this will be compared.
+         * \param compare the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent different SnapPea census manifolds.
          */
@@ -188,7 +188,7 @@ class SnapPeaCensusManifold : public Manifold {
         /**
          * Swaps the contents of this and the given SnapPea census manifold.
          *
-         * @param other the census manifold whose contents should be swapped
+         * \param other the census manifold whose contents should be swapped
          * with this.
          */
         void swap(SnapPeaCensusManifold& other) noexcept;
@@ -207,8 +207,8 @@ class SnapPeaCensusManifold : public Manifold {
  * This global routine simply calls SnapPeaCensusManifold::swap(); it is
  * provided so that SnapPeaCensusManifold meets the C++ Swappable requirements.
  *
- * @param a the first census manifold whose contents should be swapped.
- * @param b the second census manifold whose contents should be swapped.
+ * \param a the first census manifold whose contents should be swapped.
+ * \param b the second census manifold whose contents should be swapped.
  *
  * \ingroup manifold
  */

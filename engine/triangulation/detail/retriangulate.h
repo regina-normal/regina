@@ -108,15 +108,15 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  * or \c false if we are storing an action whose argument list begins with
  * just a triangulation/link.
  *
- * @param obj the object being retriangulated or rewritten.
- * @param height the maximum number of top-dimensional simplices or crossings
+ * \param obj the object being retriangulated or rewritten.
+ * \param height the maximum number of top-dimensional simplices or crossings
  * to allow beyond the initial number in \a obj, or a negative number if
  * this should not be bounded.
- * @param nThreads the number of threads to use.  If this is 1 or smaller then
+ * \param nThreads the number of threads to use.  If this is 1 or smaller then
  * the routine will run single-threaded.
- * @param tracker a progress tracker through which progress will be reported,
+ * \param tracker a progress tracker through which progress will be reported,
  * or \c null if no progress reporting is required.
- * @param action a function to call for each triangulation that is found.
+ * \param action a function to call for each triangulation that is found.
  * @return \c true if some call to \a action returned \c true (thereby
  * terminating the search early), or \c false if the search ran to completion.
  *

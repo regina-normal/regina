@@ -81,7 +81,7 @@ class BitManipulatorByType {
          * If \a x is the largest such integer (i.e., \a x is of the
          * form 111...1000...0), then this routine returns 0.
          *
-         * @param x the integer of type \a T to examine.
+         * \param x the integer of type \a T to examine.
          * @return the next largrst integer with the same number of \c true
          * bits, or 0 if this is the largest such integer.
          */
@@ -200,7 +200,7 @@ class BitManipulatorBySize {
          * Note that this routine will become redundant once we move to C++20,
          * since we will be able to use std::popcount() instead.
          *
-         * @param x the integer of type \a T to examine.
+         * \param x the integer of type \a T to examine.
          * @return the number of bits that are set.
          */
         inline static int bits(T x) {
@@ -349,7 +349,7 @@ class BitManipulator :
          * Bits are indexed from 0 upwards, starting at the least
          * significant bit.
          *
-         * @param x the integer of type \a T to examine.
+         * \param x the integer of type \a T to examine.
          * @return the position of the first \c true bit, or -1 if there
          * are no \c true bits.
          */
@@ -375,7 +375,7 @@ class BitManipulator :
          * Bits are indexed from 0 upwards, starting at the least
          * significant bit.
          *
-         * @param x the integer of type \a T to examine.
+         * \param x the integer of type \a T to examine.
          * @return the position of the last \c true bit, or -1 if there
          * are no \c true bits.
          */

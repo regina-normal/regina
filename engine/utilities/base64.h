@@ -76,7 +76,7 @@ namespace regina {
  * number of bytes.  This is the number of characters used (excluding the
  * null terminator) by the routine base64Encode(const char*, size_t, char**).
  *
- * @param bytes the number of raw input bytes.
+ * \param bytes the number of raw input bytes.
  * @return the corresponding number of base64 printable output characters.
  *
  * \ingroup utilities
@@ -92,7 +92,7 @@ size_t base64Length(size_t bytes);
  * Note that the equals sign (=) is padding, and is not considered by
  * this routine to be a base64 printable character.
  *
- * @param ch any character.
+ * \param ch any character.
  * @return \c true if the given character is one of the base64 printable
  * characters used in Regina, or \c false if it is not.
  *
@@ -147,12 +147,12 @@ inline constexpr char base64Spare[] = "_-.";
  * a Python \c bytes object, and the return value is a Python string.
  * You do not need to supply any input or output buffer lengths.
  *
- * @param in the sequence of input bytes; this does not need to be
+ * \param in the sequence of input bytes; this does not need to be
  * terminated in any special way.
- * @param inlen the length of the input sequence.
- * @param out the output buffer into which the resulting base64
+ * \param inlen the length of the input sequence.
+ * \param out the output buffer into which the resulting base64
  * characters will be written.
- * @param outlen the length of the output buffer.
+ * \param outlen the length of the output buffer.
  *
  * \author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
@@ -177,10 +177,10 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
  * a Python \c bytes object, and the return value is a Python string.
  * You do not need to supply any input or output buffer lengths.
  *
- * @param in the sequence of input bytes; this does not need to be
+ * \param in the sequence of input bytes; this does not need to be
  * terminated in any special way.
- * @param inlen the length of the input sequence.
- * @param out the address of a pointer which will be set to the output
+ * \param inlen the length of the input sequence.
+ * \param out the address of a pointer which will be set to the output
  * array of base64 characters.
  * @return the length of the output array, not counting the terminating null.
  *
@@ -215,12 +215,12 @@ size_t base64Encode(const char* in, size_t inlen, char** out);
  * You do not need to supply any input or output buffer lengths.
  * If the decoding is unsuccessful, this routine will return \c None.
  *
- * @param in the input sequence of base64 characters; this does not need
+ * \param in the input sequence of base64 characters; this does not need
  * to be terminated in any special way.
- * @param inlen the length of the input sequence.
- * @param out the output buffer into which the resulting raw bytes
+ * \param inlen the length of the input sequence.
+ * \param out the output buffer into which the resulting raw bytes
  * will be written.
- * @param outlen must contain the length of the output buffer on entry, and
+ * \param outlen must contain the length of the output buffer on entry, and
  * on exit contains the number of output bytes that were successfully written.
  * @return \c true if decoding was successful, or \c false if the output
  * buffer was exhausted or an unexpected input character was found.
@@ -260,12 +260,12 @@ bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
  * You do not need to supply any input or output buffer lengths.
  * If the decoding is unsuccessful, this routine will return \c None.
  *
- * @param in the input sequence of base64 characters; this does not need
+ * \param in the input sequence of base64 characters; this does not need
  * to be terminated in any special way.
- * @param inlen the length of the input sequence.
- * @param out the address of a pointer which will be set to the output
+ * \param inlen the length of the input sequence.
+ * \param out the address of a pointer which will be set to the output
  * array of raw bytes (or which will be set to \c null on failure).
- * @param outlen the address of an integer which will be set to the
+ * \param outlen the address of an integer which will be set to the
  * length of the output array (or which will be left undefined on failure).
  * @return \c true if decoding was successful, or \c false if an unexpected
  * input character was found or some other error occurred.

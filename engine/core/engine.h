@@ -120,7 +120,7 @@ const char* buildInfo();
  * As a special case, an empty string is treated as belonging to the
  * UTF-8 regime.
  *
- * @param version a version string from some release of Regina, such as "4.2".
+ * \param version a version string from some release of Regina, such as "4.2".
  * This must not contain any whitespace padding.
  * @return \c true if the given version uses UTF-8 consistently, or
  * \c false if the given version is an older version that did not pay
@@ -195,7 +195,7 @@ int politeThreads();
  * passed to it; it can be used to test whether communications between
  * the interface and the C++ engine are working properly.
  *
- * @param value any integer; this same integer will be returned.
+ * \param value any integer; this same integer will be returned.
  * @return the same integer that was passed as \a value.
  *
  * \ingroup engine

@@ -78,10 +78,10 @@ class Matrix2 {
         /**
          * Initialises to the given integer values.
          *
-         * @param val00 the value to place in row 0, column 0.
-         * @param val01 the value to place in row 0, column 1.
-         * @param val10 the value to place in row 1, column 0.
-         * @param val11 the value to place in row 1, column 1.
+         * \param val00 the value to place in row 0, column 0.
+         * \param val01 the value to place in row 0, column 1.
+         * \param val10 the value to place in row 1, column 0.
+         * \param val11 the value to place in row 1, column 1.
          */
         Matrix2(long val00, long val01, long val10, long val11);
 
@@ -95,7 +95,7 @@ class Matrix2 {
         /**
          * Swaps the contents of this and the given matrix.
          *
-         * @param other the matrix whose contents should be swapped with this.
+         * \param other the matrix whose contents should be swapped with this.
          */
         void swap(Matrix2& other) noexcept;
 
@@ -106,7 +106,7 @@ class Matrix2 {
          * accessed as <tt>myMatrix[r][c]</tt> (where \a r and \a c are
          * each 0 or 1).
          *
-         * @param row the index of the requested row; this must be 0 or 1.
+         * \param row the index of the requested row; this must be 0 or 1.
          * @return a two-integer array containing the elements of the
          * requested row.
          */
@@ -118,7 +118,7 @@ class Matrix2 {
          * accessed as <tt>myMatrix[r][c]</tt> (where \a r and \a c are
          * each 0 or 1).  Each such element may be modified directly.
          *
-         * @param row the index of the requested row; this must be 0 or 1.
+         * \param row the index of the requested row; this must be 0 or 1.
          * @return a two-integer array containing the elements of the
          * requested row.
          */
@@ -128,7 +128,7 @@ class Matrix2 {
          * Calculates the matrix product of this and the given matrix.
          * Neither this nor the given matrix is changed.
          *
-         * @param other the matrix that this should be multiplied by.
+         * \param other the matrix that this should be multiplied by.
          * @return the product \a this * \a other.
          */
         Matrix2 operator * (const Matrix2& other) const;
@@ -136,7 +136,7 @@ class Matrix2 {
          * Calculates the scalar product of this matrix and the given
          * integer.  This matrix is not changed.
          *
-         * @param scalar the integer that this matrix should be multiplied by.
+         * \param scalar the integer that this matrix should be multiplied by.
          * @return the product \a this * \a scalar.
          */
         Matrix2 operator * (long scalar) const;
@@ -144,7 +144,7 @@ class Matrix2 {
          * Calculates the sum of two matrices.
          * Neither this nor the given matrix is changed.
          *
-         * @param other the matrix to add to this.
+         * \param other the matrix to add to this.
          * @return the sum \a this + \a other.
          */
         Matrix2 operator + (const Matrix2& other) const;
@@ -152,7 +152,7 @@ class Matrix2 {
          * Calculates the difference of two matrices.
          * Neither this nor the given matrix is changed.
          *
-         * @param other the matrix to subtract from this.
+         * \param other the matrix to subtract from this.
          * @return the difference \a this - \a other.
          */
         Matrix2 operator - (const Matrix2& other) const;
@@ -187,7 +187,7 @@ class Matrix2 {
          * Adds the given matrix to this.
          * This matrix is changed to reflect the result.
          *
-         * @param other the matrix to add to this.
+         * \param other the matrix to add to this.
          * @return a reference to this matrix with its new value.
          */
         Matrix2& operator += (const Matrix2& other);
@@ -195,7 +195,7 @@ class Matrix2 {
          * Subtracts the given matrix from this.
          * This matrix is changed to reflect the result.
          *
-         * @param other the matrix to subtract from this.
+         * \param other the matrix to subtract from this.
          * @return a reference to this matrix with its new value.
          */
         Matrix2& operator -= (const Matrix2& other);
@@ -203,7 +203,7 @@ class Matrix2 {
          * Multiplies this by the given matrix.
          * This matrix is changed to reflect the result.
          *
-         * @param other the matrix by which this should be multiplied.
+         * \param other the matrix by which this should be multiplied.
          * @return a reference to this matrix with its new value.
          */
         Matrix2& operator *= (const Matrix2& other);
@@ -211,7 +211,7 @@ class Matrix2 {
          * Multiplies this by the given scalar.
          * This matrix is changed to reflect the result.
          *
-         * @param scalar the scalar by which this should be multiplied.
+         * \param scalar the scalar by which this should be multiplied.
          * @return a reference to this matrix with its new value.
          */
         Matrix2& operator *= (long scalar);
@@ -234,14 +234,14 @@ class Matrix2 {
         /**
          * Determines if this is equal to the given matrix.
          *
-         * @param compare the matrix with which this will be compared.
+         * \param compare the matrix with which this will be compared.
          * @return \c true if and only if this matrix is equal to \a compare.
          */
         bool operator == (const Matrix2& compare) const;
         /**
          * Determines if this is not equal to the given matrix.
          *
-         * @param compare the matrix with which this will be compared.
+         * \param compare the matrix with which this will be compared.
          * @return \c true if and only if this matrix is not equal to
          * \a compare.
          */
@@ -277,8 +277,8 @@ class Matrix2 {
  * This global routine simply calls Matrix2::swap(); it is provided so
  * that Matrix2 meets the C++ Swappable requirements.
  *
- * @param a the first matrix whose contents should be swapped.
- * @param b the second matrix whose contents should be swapped.
+ * \param a the first matrix whose contents should be swapped.
+ * \param b the second matrix whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -289,8 +289,8 @@ void swap(Matrix2& a, Matrix2& b) noexcept;
  * be written entirely on a single line, with the first row followed by the
  * second row.
  *
- * @param out the output stream to which to write.
- * @param mat the matrix to write.
+ * \param out the output stream to which to write.
+ * \param mat the matrix to write.
  * @return a reference to \a out.
  *
  * \ingroup maths
@@ -303,8 +303,8 @@ std::ostream& operator << (std::ostream& out, const Matrix2& mat);
  * is purely aesthetic on the part of the author, and is subject to
  * change in future versions of Regina.
  *
- * @param m1 the first matrix to examine.
- * @param m2 the second matrix to examine.
+ * \param m1 the first matrix to examine.
+ * \param m2 the second matrix to examine.
  * @return \c true if \a m1 is deemed to be more pleasing than \a m2,
  * or \c false if either the matrices are equal or \a m2 is more
  * pleasing than \a m1.
@@ -322,10 +322,10 @@ bool simpler(const Matrix2& m1, const Matrix2& m2);
  * Note that pairs are ordered, so the pair (\a M, \a N) may be more
  * (or perhaps less) pleasing than the pair (\a N, \a M).
  *
- * @param pair1first the first matrix of the first pair to examine.
- * @param pair1second the second matrix of the first pair to examine.
- * @param pair2first the first matrix of the second pair to examine.
- * @param pair2second the second matrix of the second pair to examine.
+ * \param pair1first the first matrix of the first pair to examine.
+ * \param pair1second the second matrix of the first pair to examine.
+ * \param pair2first the first matrix of the second pair to examine.
+ * \param pair2second the second matrix of the second pair to examine.
  * @return \c true if the first pair is deemed to be more pleasing than
  * the second pair, or \c false if either the ordered pairs are equal or
  * the second pair is more pleasing than the first.

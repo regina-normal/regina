@@ -152,7 +152,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * or \c long), then the elements will not be initialised
          * to any particular value.
          *
-         * @param size the number of elements in the new vector.
+         * \param size the number of elements in the new vector.
          */
         inline Vector(size_t size) : elts_(new T[size]), end_(elts_ + size) {
         }
@@ -160,8 +160,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * Creates a new vector and initialises every element to the
          * given value.
          *
-         * @param size the number of elements in the new vector.
-         * @param initValue the value to assign to every element of the
+         * \param size the number of elements in the new vector.
+         * \param initValue the value to assign to every element of the
          * vector.
          */
         inline Vector(size_t size, const T& initValue) :
@@ -184,8 +184,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * \ifacespython Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
          *
-         * @param begin the beginning of the sequence of elements.
-         * @param end a past-the-end iterator indicating the end of the
+         * \param begin the beginning of the sequence of elements.
+         * \param end a past-the-end iterator indicating the end of the
          * sequence of elements.
          */
         template <typename iterator>
@@ -201,7 +201,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \nopython Instead, use the Python constructor that takes a list
          * of coefficients (which need not be constant).
          *
-         * @param data the elements of the vector.
+         * \param data the elements of the vector.
          */
         inline Vector(std::initializer_list<T> data) :
                 elts_(new T[data.size()]), end_(elts_ + data.size()) {
@@ -210,7 +210,7 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Creates a new vector that is a clone of the given vector.
          *
-         * @param src the vector to clone.
+         * \param src the vector to clone.
          */
         inline Vector(const Vector<T>& src) :
                 elts_(new T[src.end_ - src.elts_]),
@@ -223,7 +223,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * The vector that is passed (\a src) will no longer be usable.
          *
-         * @param src the vector to move.
+         * \param src the vector to move.
          */
         inline Vector(Vector&& src) noexcept :
                 elts_(src.elts_), end_(src.end_) {
@@ -253,7 +253,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre \c index is between 0 and size()-1 inclusive.
          *
-         * @param index the vector index to examine.
+         * \param index the vector index to examine.
          * @return the vector element at the given index.
          */
         inline const T& operator[](size_t index) const {
@@ -264,7 +264,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre \c index is between 0 and size()-1 inclusive.
          *
-         * @param index the vector index to access.
+         * \param index the vector index to access.
          * @return a reference to the vector element at the given index.
          */
         inline T& operator[](size_t index) {
@@ -365,7 +365,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * It is safe to call this operator if this and the given vector have
          * different sizes (in which case the return value will be \c false).
          *
-         * @param compare the vector with which this will be compared.
+         * \param compare the vector with which this will be compared.
          * @return \c true if and only if the this and the given vector
          * are equal.
          */
@@ -378,7 +378,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * It is safe to call this operator if this and the given vector have
          * different sizes (in which case the return value will be \c true).
          *
-         * @param compare the vector with which this will be compared.
+         * \param compare the vector with which this will be compared.
          * @return \c true if and only if the this and the given vector
          * are not equal.
          */
@@ -391,7 +391,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * It does not matter if this and the given vector have different
          * sizes; if they do then this vector will be resized as a result.
          *
-         * @param src the vector whose value shall be assigned to this
+         * \param src the vector whose value shall be assigned to this
          * vector.
          */
         inline Vector<T>& operator = (const Vector<T>& src) {
@@ -419,7 +419,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * The vector that is passed (\a src) will no longer be usable.
          *
-         * @param src the vector to move.
+         * \param src the vector to move.
          * @return a reference to this vector.
          */
         inline Vector& operator = (Vector&& src) noexcept {
@@ -431,7 +431,7 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Swaps the contents of this and the given vector.
          *
-         * @param other the vector whose contents are to be swapped with this.
+         * \param other the vector whose contents are to be swapped with this.
          */
         inline void swap(Vector& other) noexcept {
             std::swap(elts_, other.elts_);
@@ -444,7 +444,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector to add to this vector.
+         * \param other the vector to add to this vector.
          * @return a reference to this vector.
          */
         inline Vector& operator += (const Vector<T>& other) {
@@ -461,7 +461,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector to subtract from this vector.
+         * \param other the vector to subtract from this vector.
          * @return a reference to this vector.
          */
         inline Vector& operator -= (const Vector<T>& other) {
@@ -475,7 +475,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * Multiplies this vector by the given scalar.
          * This vector will be changed directly.
          *
-         * @param factor the scalar with which this will be multiplied.
+         * \param factor the scalar with which this will be multiplied.
          * @return a reference to this vector.
          */
         inline Vector& operator *= (const T& factor) {
@@ -491,7 +491,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector to add to this vector.
+         * \param other the vector to add to this vector.
          * @return the sum <tt>this + other</tt>.
          */
         inline Vector operator + (const Vector<T>& other) const {
@@ -512,7 +512,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector to subtract from this vector.
+         * \param other the vector to subtract from this vector.
          * @return the difference <tt>this - other</tt>.
          */
         inline Vector operator - (const Vector<T>& other) const {
@@ -531,7 +531,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * Multiplies this vector by the given scalar, and returns the result.
          * This vector will not be changed.
          *
-         * @param factor the scalar to multiply this vector by.
+         * \param factor the scalar to multiply this vector by.
          * @return the product <tt>this * factor</tt>.
          */
         inline Vector operator * (const T& factor) const {
@@ -553,7 +553,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector with which this will be multiplied.
+         * \param other the vector with which this will be multiplied.
          * @return the dot product of this and the given vector.
          */
         inline T operator * (const Vector<T>& other) const {
@@ -608,9 +608,9 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector a multiple of which will be added to
+         * \param other the vector a multiple of which will be added to
          * this vector.
-         * @param multiple the multiple of \a other to be added to this
+         * \param multiple the multiple of \a other to be added to this
          * vector.
          */
         void addCopies(const Vector<T>& other, const T& multiple) {
@@ -635,9 +635,9 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre This and the given vector have the same size.
          *
-         * @param other the vector a multiple of which will be
+         * \param other the vector a multiple of which will be
          * subtracted from this vector.
-         * @param multiple the multiple of \a other to be subtracted
+         * \param multiple the multiple of \a other to be subtracted
          * from this vector.
          */
         void subtractCopies(const Vector<T>& other, const T& multiple) {
@@ -673,7 +673,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
             out << '(';
@@ -730,8 +730,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * in position \a coordinate will be set to 1, and all other
          * elements will be set to 0.
          *
-         * @param dimension the number of elements in the vector.
-         * @param coordinate the coordinate position that should hold
+         * \param dimension the number of elements in the vector.
+         * \param coordinate the coordinate position that should hold
          * the value 1; this must be between 0 and (\a dimension - 1)
          * inclusive.
          * @return the requested unit vector.
@@ -756,8 +756,8 @@ class Vector : public ShortOutput<Vector<T>> {
  * This global routine simply calls Vector<T>::swap(); it is provided
  * so that Vector<T> meets the C++ Swappable requirements.
  *
- * @param a the first vector whose contents should be swapped.
- * @param b the second vector whose contents should be swapped.
+ * \param a the first vector whose contents should be swapped.
+ * \param b the second vector whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -771,8 +771,8 @@ inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
  * The vector will be written on a single line with elements separated
  * by a single space.  No newline will be written.
  *
- * @param out the output stream to which to write.
- * @param vector the vector to write.
+ * \param out the output stream to which to write.
+ * \param vector the vector to write.
  * @return a reference to \a out.
  *
  * \ingroup maths

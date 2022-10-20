@@ -170,7 +170,7 @@ class Perm<5> {
              *
              * This operation is extremely fast (and constant time).
              *
-             * @param index an index between 0 and 119 inclusive.
+             * \param index an index between 0 and 119 inclusive.
              * @return the corresponding permutation in S5.
              */
             constexpr Perm<5> operator[] (int index) const;
@@ -193,7 +193,7 @@ class Perm<5> {
              *
              * This operation is extremely fast (and constant time).
              *
-             * @param index an index between 0 and 119 inclusive.
+             * \param index an index between 0 and 119 inclusive.
              * @return the corresponding permutation in orderedS5.
              */
             constexpr Perm<5> operator[] (int index) const;
@@ -216,7 +216,7 @@ class Perm<5> {
              *
              * This operation is extremely fast (and constant time).
              *
-             * @param index an index between 0 and 23 inclusive.
+             * \param index an index between 0 and 23 inclusive.
              * @return the corresponding permutation in S4.
              */
             constexpr Perm<5> operator[] (int index) const;
@@ -239,7 +239,7 @@ class Perm<5> {
              *
              * This operation is extremely fast (and constant time).
              *
-             * @param index an index between 0 and 23 inclusive.
+             * \param index an index between 0 and 23 inclusive.
              * @return the corresponding permutation in orderedS4.
              */
             constexpr Perm<5> operator[] (int index) const;
@@ -262,7 +262,7 @@ class Perm<5> {
              *
              * This operation is extremely fast (and constant time).
              *
-             * @param index an index between 0 and 5 inclusive.
+             * \param index an index between 0 and 5 inclusive.
              * @return the corresponding permutation in S3.
              */
             constexpr Perm<5> operator[] (int index) const;
@@ -285,7 +285,7 @@ class Perm<5> {
              *
              * This operation is extremely fast (and constant time).
              *
-             * @param index an index between 0 and 5 inclusive.
+             * \param index an index between 0 and 5 inclusive.
              * @return the corresponding permutation in orderedS3.
              */
             constexpr Perm<5> operator[] (int index) const;
@@ -308,7 +308,7 @@ class Perm<5> {
              *
              * This operation is extremely fast (and constant time).
              *
-             * @param index an index between 0 and 1 inclusive.
+             * \param index an index between 0 and 1 inclusive.
              * @return the corresponding permutation in S2.
              */
             constexpr Perm<5> operator[] (int index) const;
@@ -563,8 +563,8 @@ class Perm<5> {
          *
          * \pre \a a and \a b are in {0,1,2,3,4}.
          *
-         * @param a the element to switch with \a b.
-         * @param b the element to switch with \a a.
+         * \param a the element to switch with \a b.
+         * \param b the element to switch with \a a.
          */
         constexpr Perm(int a, int b);
 
@@ -574,11 +574,11 @@ class Perm<5> {
          *
          * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>,<i>e</i>} = {0,1,2,3,4}.
          *
-         * @param a the desired image of 0.
-         * @param b the desired image of 1.
-         * @param c the desired image of 2.
-         * @param d the desired image of 3.
-         * @param e the desired image of 4.
+         * \param a the desired image of 0.
+         * \param b the desired image of 1.
+         * \param c the desired image of 2.
+         * \param d the desired image of 3.
+         * \param e the desired image of 4.
          */
         constexpr Perm(int a, int b, int c, int d, int e);
 
@@ -588,7 +588,7 @@ class Perm<5> {
          *
          * \pre The elements of \a image are 0, 1, 2, 3 and 4 in some order.
          *
-         * @param image the array of images.
+         * \param image the array of images.
          */
         constexpr Perm(const std::array<int, 5>& image);
 
@@ -601,16 +601,16 @@ class Perm<5> {
          * {<i>a1</i>,<i>b1</i>,<i>c1</i>,<i>d1</i>,<i>e1</i>} =
          * {0,1,2,3,4}.
          *
-         * @param a0 the desired preimage of <i>a1</i>.
-         * @param b0 the desired preimage of <i>b1</i>.
-         * @param c0 the desired preimage of <i>c1</i>.
-         * @param d0 the desired preimage of <i>d1</i>.
-         * @param e0 the desired preimage of <i>e1</i>.
-         * @param a1 the desired image of <i>a0</i>.
-         * @param b1 the desired image of <i>b0</i>.
-         * @param c1 the desired image of <i>c0</i>.
-         * @param d1 the desired image of <i>d0</i>.
-         * @param e1 the desired image of <i>e0</i>.
+         * \param a0 the desired preimage of <i>a1</i>.
+         * \param b0 the desired preimage of <i>b1</i>.
+         * \param c0 the desired preimage of <i>c1</i>.
+         * \param d0 the desired preimage of <i>d1</i>.
+         * \param e0 the desired preimage of <i>e1</i>.
+         * \param a1 the desired image of <i>a0</i>.
+         * \param b1 the desired image of <i>b0</i>.
+         * \param c1 the desired image of <i>c0</i>.
+         * \param d1 the desired image of <i>d0</i>.
+         * \param e1 the desired image of <i>e0</i>.
          */
         constexpr Perm(int a0, int a1, int b0, int b1, int c0, int c1,
             int d0, int d1, int e0, int e1);
@@ -619,7 +619,7 @@ class Perm<5> {
          * Creates a permutation that is a clone of the given
          * permutation.
          *
-         * @param cloneMe the permutation to clone.
+         * \param cloneMe the permutation to clone.
          */
         constexpr Perm(const Perm<5>& cloneMe) = default;
 
@@ -663,7 +663,7 @@ class Perm<5> {
          * Perm<5> now uses second-generation codes internally.
          * See the class notes and the routine setPermCode2() for details.
          *
-         * @param code the first-generation code that will determine the
+         * \param code the first-generation code that will determine the
          * new value of this permutation.
          */
         void setPermCode1(Code1 code);
@@ -678,7 +678,7 @@ class Perm<5> {
          * \pre the given code is a valid second-generation permutation code;
          * see isPermCode2() for details.
          *
-         * @param code the second-generation code that will determine the
+         * \param code the second-generation code that will determine the
          * new value of this permutation.
          */
         void setPermCode2(Code2 code);
@@ -694,7 +694,7 @@ class Perm<5> {
          * Perm<5> now uses second-generation codes internally.
          * See the class notes and the routine fromPermCode2() for details.
          *
-         * @param code the first-generation code for the new permutation.
+         * \param code the first-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
         static constexpr Perm<5> fromPermCode1(Code1 code);
@@ -709,7 +709,7 @@ class Perm<5> {
          * \pre the given code is a valid second-generation permutation code;
          * see isPermCode2() for details.
          *
-         * @param code the second-generation code for the new permutation.
+         * \param code the second-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
         static constexpr Perm<5> fromPermCode2(Code2 code);
@@ -723,7 +723,7 @@ class Perm<5> {
          * Perm<5> now uses second-generation codes internally.
          * See the class notes and the routine isPermCode2() for details.
          *
-         * @param code the permutation code to test.
+         * \param code the permutation code to test.
          * @return \c true if and only if the given code is a valid
          * first-generation permutation code.
          */
@@ -737,7 +737,7 @@ class Perm<5> {
          * Second-generation codes are fast to work with, since they are
          * used internally by the Perm<5> class.
          *
-         * @param code the permutation code to test.
+         * \param code the permutation code to test.
          * @return \c true if and only if the given code is a valid
          * second-generation permutation code.
          */
@@ -766,7 +766,7 @@ class Perm<5> {
          * \pre The argument \a pack is a valid image pack; see isImagePack()
          * for details.
          *
-         * @param pack an image pack that describes a permutation.
+         * \param pack an image pack that describes a permutation.
          * @return the permutation represented by the given image pack.
          */
         static constexpr Perm fromImagePack(ImagePack pack);
@@ -780,7 +780,7 @@ class Perm<5> {
          *
          * For Perm<5>, this routine is identical to isPermCode1().
          *
-         * @param pack the candidate image pack to test.
+         * \param pack the candidate image pack to test.
          * @return \c true if and only if \a pack is a valid image pack.
          */
         static constexpr bool isImagePack(ImagePack pack);
@@ -788,7 +788,7 @@ class Perm<5> {
         /**
          * Sets this permutation to be equal to the given permutation.
          *
-         * @param cloneMe the permutation whose value will be assigned
+         * \param cloneMe the permutation whose value will be assigned
          * to this permutation.
          * @return a reference to this permutation.
          */
@@ -800,7 +800,7 @@ class Perm<5> {
          * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
          * <tt>(p*q)[x] == p[q[x]]</tt>.
          *
-         * @param q the permutation with which to compose this.
+         * \param q the permutation with which to compose this.
          * @return the composition of both permutations.
          */
         constexpr Perm<5> operator * (const Perm<5>& q) const;
@@ -817,7 +817,7 @@ class Perm<5> {
          *
          * This routine runs in constant time.
          *
-         * @param exp the exponent; this may be positive, zero or negative.
+         * \param exp the exponent; this may be positive, zero or negative.
          * @return this permutation raised to the power of \a exp.
          */
         constexpr Perm<5> pow(long exp) const;
@@ -854,7 +854,7 @@ class Perm<5> {
          * Determines the image of the given integer under this
          * permutation.
          *
-         * @param source the integer whose image we wish to find.  This
+         * \param source the integer whose image we wish to find.  This
          * should be between 0 and 4 inclusive.
          * @return the image of \a source.
          */
@@ -864,7 +864,7 @@ class Perm<5> {
          * Determines the preimage of the given integer under this
          * permutation.
          *
-         * @param image the integer whose preimage we wish to find.  This
+         * \param image the integer whose preimage we wish to find.  This
          * should be between 0 and 4 inclusive.
          * @return the preimage of \a image.
          */
@@ -875,7 +875,7 @@ class Perm<5> {
          * This is true if and only if both permutations have the same
          * images for 0, 1, 2, 3 and 4.
          *
-         * @param other the permutation with which to compare this.
+         * \param other the permutation with which to compare this.
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
@@ -886,7 +886,7 @@ class Perm<5> {
          * This is true if and only if the two permutations have
          * different images for at least one of 0, 1, 2, 3 or 4.
          *
-         * @param other the permutation with which to compare this.
+         * \param other the permutation with which to compare this.
          * @return \c true if and only if this and the given permutation
          * differ.
          */
@@ -900,7 +900,7 @@ class Perm<5> {
          * as used by the less-than and increment operators.  Moreover,
          * compareWith() is slower than the less-than operator to compute.
          *
-         * @param other the permutation with which to compare this.
+         * \param other the permutation with which to compare this.
          * @return -1 if this permutation produces a smaller image, 0 if
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
@@ -952,7 +952,7 @@ class Perm<5> {
          * consistent with the ordering implied by the ++ operators,
          * and this order is also faster to compute than compareWith().
          *
-         * @param rhs the permutation to compare this against.
+         * \param rhs the permutation to compare this against.
          * @return \c true if and only if this appears before \a rhs in \a Sn.
          */
         constexpr bool operator < (const Perm<5>& rhs) const;
@@ -962,7 +962,7 @@ class Perm<5> {
          * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod 5)
          * for all \a k.
          *
-         * @param i the image of 0; this must be between 0 and 4 inclusive.
+         * \param i the image of 0; this must be between 0 and 4 inclusive.
          * @return the <i>i</i>th rotation.
          */
         static constexpr Perm rot(int i);
@@ -980,7 +980,7 @@ class Perm<5> {
          * creating a single RandomEngine object yourself and then calling
          * <tt>rand(randomEngine.engine(), even)</tt>.
          *
-         * @param even if \c true, then the resulting permutation is
+         * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
          * returned with equal probability).
          * @return a random permutation.
@@ -1001,9 +1001,9 @@ class Perm<5> {
          * \nopython Python users are still able to use the non-thread-safe
          * variant without the \a gen argument.
          *
-         * @param gen the source of randomness to use (e.g., one of the
+         * \param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
-         * @param even if \c true, then the resulting permutation is
+         * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
          * returned with equal probability).
          * @return a random permutation.
@@ -1025,7 +1025,7 @@ class Perm<5> {
          * Returns a prefix of the string representation of this permutation,
          * containing only the images of the first \a len integers.
          *
-         * @param len the length of the prefix required; this must be
+         * \param len the length of the prefix required; this must be
          * between 0 and 5 inclusive.
          * @return the corresponding prefix of the string representation
          * of this permutation.
@@ -1072,7 +1072,7 @@ class Perm<5> {
          *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -1108,7 +1108,7 @@ class Perm<5> {
          * \exception InvalidArgument The given string is not a tight encoding
          * of a 5-element permutation.
          *
-         * @param enc the tight encoding for a 5-element permutation.
+         * \param enc the tight encoding for a 5-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
         static Perm tightDecoding(const std::string& enc);
@@ -1135,7 +1135,7 @@ class Perm<5> {
          * \nopython Use tightDecoding() instead, which takes a string as
          * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for a 5-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
@@ -1152,7 +1152,7 @@ class Perm<5> {
          * \pre The images of <i>from</i>,...,4 are exactly
          * <i>from</i>,...,4, but possibly in a different order.
          *
-         * @param from the first integer whose image should be reset.
+         * \param from the first integer whose image should be reset.
          * This must be between 0 and 5 inclusive.
          */
         void clear(unsigned from);
@@ -1221,7 +1221,7 @@ class Perm<5> {
          * \tparam k the number of elements for the input permutation;
          * this must be 2, 3 or 4.
          *
-         * @param p a permutation on \a k elements.
+         * \param p a permutation on \a k elements.
          * @return the same permutation expressed as a permutation on
          * five elements.
          */
@@ -1241,7 +1241,7 @@ class Perm<5> {
          * \tparam k the number of elements for the input permutation;
          * this must be strictly greater than 5.
          *
-         * @param p a permutation on \a k elements.
+         * \param p a permutation on \a k elements.
          * @return the same permutation restricted to a permutation on
          * 5 elements.
          */
@@ -1510,7 +1510,7 @@ class Perm<5> {
          * \pre the given code is a valid second-generation permutation code;
          * see isPermCode2() for details.
          *
-         * @param code the second-generation code from which the new
+         * \param code the second-generation code from which the new
          * permutation will be created.
          */
         constexpr Perm<5>(Code2 code);
@@ -1522,11 +1522,11 @@ class Perm<5> {
          *
          * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>,<i>e</i>} = {0,1,2,3,4}.
          *
-         * @param a the desired image of 0.
-         * @param b the desired image of 1.
-         * @param c the desired image of 2.
-         * @param d the desired image of 3.
-         * @param e the desired image of 4.
+         * \param a the desired image of 0.
+         * \param b the desired image of 1.
+         * \param c the desired image of 2.
+         * \param d the desired image of 3.
+         * \param e the desired image of 4.
          * @return the index \a i for which the given permutation is equal to
          * Perm<5>::S5[i].  This will be between 0 and 119 inclusive.
          */
@@ -1561,11 +1561,11 @@ class Perm<5> {
          *
          * \tparam iterator an input iterator type.
          *
-         * @param start an iterator that points to the beginning of a
+         * \param start an iterator that points to the beginning of a
          * tight encoding.
-         * @param limit an iterator that, if reached, indicates that no more
+         * \param limit an iterator that, if reached, indicates that no more
          * characters are available.
-         * @param noTrailingData \c true if iteration should reach \a limit
+         * \param noTrailingData \c true if iteration should reach \a limit
          * immediately after the encoding is read, or \c false if there is
          * allowed to be additional unread data.
          * @return the permutation represented by the given tight encoding.

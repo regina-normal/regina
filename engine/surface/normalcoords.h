@@ -332,7 +332,7 @@ class NormalEncoding {
          * and must not be used anywhere in Regina unless the documentation
          * explicitly allows it.  See the class notes for further details.
          *
-         * @param coords one of Regina's normal or almost normal coordinate
+         * \param coords one of Regina's normal or almost normal coordinate
          * systems.
          */
         constexpr NormalEncoding(NormalCoords coords) : flags_(INVALID) {
@@ -377,7 +377,7 @@ class NormalEncoding {
         /**
          * Determines whether this and the given encoding are identical.
          *
-         * @param other the encoding to compare with this.
+         * \param other the encoding to compare with this.
          * @return \c true if and only if both encodings are identical.
          */
         constexpr bool operator == (const NormalEncoding& other) const {
@@ -386,7 +386,7 @@ class NormalEncoding {
         /**
          * Determines whether this and the given encoding are different.
          *
-         * @param other the encoding to compare with this.
+         * \param other the encoding to compare with this.
          * @return \c true if and only if both encodings are different.
          */
         constexpr bool operator != (const NormalEncoding& other) const {
@@ -608,7 +608,7 @@ class NormalEncoding {
          * \pre Neither this encoding nor \a rhs is the special angle
          * structure encoding (see the class notes for details).
          *
-         * @param rhs the encoding to combine with this.
+         * \param rhs the encoding to combine with this.
          * @return the "sum" of this and the given encoding, as defined above.
          */
         constexpr NormalEncoding operator + (NormalEncoding rhs) const {
@@ -656,7 +656,7 @@ class NormalEncoding {
          * The main purpose of intValue() and fromIntValue() is to support
          * reading and writing surfaces to/from Regina's XML file format.
          *
-         * @param value an integer that represents an encoding, typically
+         * \param value an integer that represents an encoding, typically
          * obtained by calling intValue().
          * @return the corresponding encoding.
          */
@@ -686,7 +686,7 @@ class NormalInfo {
          * This routine is guaranteed to return a non-null string, even
          * if \a coordSystem is not one of the NormalCoords enum values.
          *
-         * @param coordSystem the coordinate system being queried; this
+         * \param coordSystem the coordinate system being queried; this
          * may be any of the NormalCoords enumeration values.
          * @return the name of the given coordinate system.
          */

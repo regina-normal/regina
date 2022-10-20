@@ -84,7 +84,7 @@ namespace {
              * Creates a new ray whose coordinates are a clone of the
              * given vector.
              *
-             * @param v the vector to clone.
+             * \param v the vector to clone.
              */
             RaySpec(const Vector<LargeInteger>& v) :
                     Vector<LargeInteger>(v.size()), facets_(v.size()) {
@@ -99,11 +99,11 @@ namespace {
              * Creates a new ray that represents the \e negative of
              * the link of the given vertex.
              *
-             * @param tri the underlying triangulation.
-             * @param whichLink the index of the vertex whose link
+             * \param tri the underlying triangulation.
+             * \param whichLink the index of the vertex whose link
              * we should negate; this must be strictly less than
              * <tt>tri->countVertices()</tt>.
-             * @param coordsPerTet the number of standard coordinate
+             * \param coordsPerTet the number of standard coordinate
              * positions for each tetrahedron (that is, 7 if we are
              * working with normal surfaces, or 10 if we are working
              * with almost normal surfaces).
@@ -138,11 +138,11 @@ namespace {
              * \pre The <i>coord</i>th coordinates of \a pos and \a neg
              * are strictly positive and negative respectively.
              *
-             * @param pos the first of the given rays, in which the given
+             * \param pos the first of the given rays, in which the given
              * coordinate is positive.
-             * @param neg the second of the given rays, in which the given
+             * \param neg the second of the given rays, in which the given
              * coordinate is negative.
-             * @param coord the index of the coordinate that we must set
+             * \param coord the index of the coordinate that we must set
              * to zero to form the intersecting hyperplane.
              */
             RaySpec(const RaySpec& pos, const RaySpec& neg, size_t coord) :
@@ -196,9 +196,9 @@ namespace {
              * positions that should be ignored for the purposes of this
              * routine.
              *
-             * @param x the first of the two given rays to examine.
-             * @param y the second of the two given rays to examine.
-             * @param ignoreFacets a bitmask of coordinate positions to
+             * \param x the first of the two given rays to examine.
+             * \param y the second of the two given rays to examine.
+             * \param ignoreFacets a bitmask of coordinate positions to
              * ignore.
              * @return \c false if there is some coordinate position
              * where (i) both \a x and \a y are zero, (ii) this vector
@@ -219,7 +219,7 @@ namespace {
              * \pre None of the coordinates in this ray that correspond
              * to discs in the given vertex link are already negative.
              *
-             * @param link the vertex link to subtract copies of.
+             * \param link the vertex link to subtract copies of.
              */
             void reduce(const RaySpec& link) {
                 if (! (facets_ <= link.facets_))
@@ -253,8 +253,8 @@ namespace {
              * so this object will become unsable (as indicated by the
              * rvalue reference qualifier).
              *
-             * @param tri the underlying triangulation.
-             * @param enc the encoding used by this vector to describe a
+             * \param tri the underlying triangulation.
+             * \param enc the encoding used by this vector to describe a
              * normal surface.
              * @return a normal surface based on this vector.
              */

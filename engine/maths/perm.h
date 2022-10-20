@@ -67,7 +67,7 @@ namespace regina {
  *
  * - At present, this routine only supports integers \a i < 36.
  *
- * @param i the integer to represent; this must be between 0 and 35 inclusive.
+ * \param i the integer to represent; this must be between 0 and 35 inclusive.
  * @return the single character used to represent \a i.
  *
  * \ingroup maths
@@ -80,7 +80,7 @@ inline constexpr char digit(int i) {
 /**
  * Returns the factorial of \a n.
  *
- * @param n any non-negative integer; this must be at most 20
+ * \param n any non-negative integer; this must be at most 20
  * (since otherwise the factorial will overflow).
  * @return the factorial of \a n..
  *
@@ -268,7 +268,7 @@ class Perm {
              * However, for \a n &ge; 8 it is not constant time; the current
              * implementation is quadratic in \a n.
              *
-             * @param index an index between 0 and <i>n</i>!-1 inclusive.
+             * \param index an index between 0 and <i>n</i>!-1 inclusive.
              * @return the corresponding permutation in Sn.
              */
             constexpr Perm<n> operator[] (Index index) const;
@@ -293,7 +293,7 @@ class Perm {
              * However, for \a n &ge; 8 it is not constant time; the current
              * implementation is quadratic in \a n.
              *
-             * @param index an index between 0 and <i>n</i>!-1 inclusive.
+             * \param index an index between 0 and <i>n</i>!-1 inclusive.
              * @return the corresponding permutation in orderedSn.
              */
             constexpr Perm<n> operator[] (Index index) const;
@@ -386,8 +386,8 @@ class Perm {
          *
          * \pre 0 &le; \a a,\a b < \a n.
          *
-         * @param a the element to switch with \a b.
-         * @param b the element to switch with \a a.
+         * \param a the element to switch with \a b.
+         * \param b the element to switch with \a a.
          */
         constexpr Perm(int a, int b);
 
@@ -397,7 +397,7 @@ class Perm {
          *
          * \pre The elements of \a image are 0,...,<i>n</i>-1 in some order.
          *
-         * @param image the array of images.
+         * \param image the array of images.
          */
         constexpr Perm(const std::array<int, n>& image);
 
@@ -405,7 +405,7 @@ class Perm {
          * Creates a permutation that is a clone of the given
          * permutation.
          *
-         * @param cloneMe the permutation to clone.
+         * \param cloneMe the permutation to clone.
          */
         constexpr Perm(const Perm<n>& cloneMe) = default;
 
@@ -428,7 +428,7 @@ class Perm {
          * \pre the given code is a valid permutation code; see
          * isPermCode() for details.
          *
-         * @param code the internal code that will determine the
+         * \param code the internal code that will determine the
          * new value of this permutation.
          */
         void setPermCode(Code code);
@@ -439,7 +439,7 @@ class Perm {
          * \pre the given code is a valid permutation code; see
          * isPermCode() for details.
          *
-         * @param code the internal code for the new permutation.
+         * \param code the internal code for the new permutation.
          * @return the permutation reprsented by the given internal
          * code.
          */
@@ -450,7 +450,7 @@ class Perm {
          * permutation code.  Valid permutation codes can be passed to
          * setPermCode() or fromPermCode(), and are returned by permCode().
          *
-         * @param code the permutation code to test.
+         * \param code the permutation code to test.
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */
@@ -479,7 +479,7 @@ class Perm {
          * \pre The argument \a pack is a valid image pack; see isImagePack()
          * for details.
          *
-         * @param pack an image pack that describes a permutation.
+         * \param pack an image pack that describes a permutation.
          * @return the permutation represented by the given image pack.
          */
         static constexpr Perm fromImagePack(ImagePack pack);
@@ -493,7 +493,7 @@ class Perm {
          *
          * For \a n &ge; 7, this routine is identical to isPermCode().
          *
-         * @param pack the candidate image pack to test.
+         * \param pack the candidate image pack to test.
          * @return \c true if and only if \a pack is a valid image pack.
          */
         static constexpr bool isImagePack(ImagePack pack);
@@ -501,7 +501,7 @@ class Perm {
         /**
          * Sets this permutation to be equal to the given permutation.
          *
-         * @param cloneMe the permutation whose value will be assigned
+         * \param cloneMe the permutation whose value will be assigned
          * to this permutation.
          * @return a reference to this permutation.
          */
@@ -513,7 +513,7 @@ class Perm {
          * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
          * <tt>(p*q)[x] == p[q[x]]</tt>.
          *
-         * @param q the permutation to compose this with.
+         * \param q the permutation to compose this with.
          * @return the composition of both permutations.
          */
         constexpr Perm operator * (const Perm& q) const;
@@ -546,7 +546,7 @@ class Perm {
          * Determines the image of the given integer under this
          * permutation.
          *
-         * @param source the integer whose image we wish to find.  This
+         * \param source the integer whose image we wish to find.  This
          * should be between 0 and <i>n</i>-1 inclusive.
          * @return the image of \a source.
          */
@@ -556,7 +556,7 @@ class Perm {
          * Determines the preimage of the given integer under this
          * permutation.
          *
-         * @param image the integer whose preimage we wish to find.  This
+         * \param image the integer whose preimage we wish to find.  This
          * should be between 0 and <i>n</i>-1 inclusive.
          * @return the preimage of \a image.
          */
@@ -567,7 +567,7 @@ class Perm {
          * This is true if and only if both permutations have the same
          * images for all 0 &le; \a i < \a n.
          *
-         * @param other the permutation with which to compare this.
+         * \param other the permutation with which to compare this.
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
@@ -578,7 +578,7 @@ class Perm {
          * This is true if and only if the two permutations have
          * different images for some 0 &le; \a i < \a n.
          *
-         * @param other the permutation with which to compare this.
+         * \param other the permutation with which to compare this.
          * @return \c true if and only if this and the given permutation
          * differ.
          */
@@ -588,7 +588,7 @@ class Perm {
          * Lexicographically compares the images of (0,1,...,\a n-1) under this
          * and the given permutation.
          *
-         * @param other the permutation with which to compare this.
+         * \param other the permutation with which to compare this.
          * @return -1 if this permutation produces a smaller image, 0 if
          * the permutations are equal, and 1 if this permutation produces
          * a greater image.
@@ -610,7 +610,7 @@ class Perm {
          * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod \a n)
          * for all \a k.
          *
-         * @param i the image of 0; this must be between 0 and <i>n</i>-1
+         * \param i the image of 0; this must be between 0 and <i>n</i>-1
          * inclusive.
          * @return the <i>i</i>th rotation.
          */
@@ -650,7 +650,7 @@ class Perm {
          * creating a single RandomEngine object yourself and then calling
          * <tt>rand(randomEngine.engine(), even)</tt>.
          *
-         * @param even if \c true, then the resulting permutation is
+         * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
          * returned with equal probability).
          * @return a random permutation.
@@ -671,9 +671,9 @@ class Perm {
          * \nopython Python users are still able to use the non-thread-safe
          * variant without the \a gen argument.
          *
-         * @param gen the source of randomness to use (e.g., one of the
+         * \param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
-         * @param even if \c true, then the resulting permutation is
+         * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
          * returned with equal probability).
          * @return a random permutation.
@@ -697,7 +697,7 @@ class Perm {
          * Returns a prefix of the string representation of this permutation,
          * containing only the images of the first \a len integers.
          *
-         * @param len the length of the prefix required; this must be
+         * \param len the length of the prefix required; this must be
          * between 0 and \a n inclusive.
          * @return the corresponding prefix of the string representation
          * of this permutation.
@@ -717,7 +717,7 @@ class Perm {
          *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -753,7 +753,7 @@ class Perm {
          * \exception InvalidArgument The given string is not a tight encoding
          * of an <i>n</i>-element permutation.
          *
-         * @param enc the tight encoding for an <i>n</i>-element permutation.
+         * \param enc the tight encoding for an <i>n</i>-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
         static Perm tightDecoding(const std::string& enc);
@@ -780,7 +780,7 @@ class Perm {
          * \nopython Use tightDecoding() instead, which takes a string as
          * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for an <i>n</i>-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
@@ -797,7 +797,7 @@ class Perm {
          * \pre The images of <i>from</i>,...,<i>n</i>-1 are exactly
          * <i>from</i>,...,<i>n</i>-1, but possibly in a different order.
          *
-         * @param from the first integer whose image should be reset.
+         * \param from the first integer whose image should be reset.
          * This must be between 0 and \a n inclusive.
          */
         void clear(unsigned from);
@@ -813,7 +813,7 @@ class Perm {
          * \tparam k the number of elements for the input permutation;
          * this must be at least 2, and strictly less than \a n.
          *
-         * @param p a permutation on \a k elements.
+         * \param p a permutation on \a k elements.
          * @return the same permutation expressed as a permutation on
          * \a n elements.
          */
@@ -834,7 +834,7 @@ class Perm {
          * \tparam k the number of elements for the input permutation;
          * this must be strictly greater than \a n.
          *
-         * @param p a permutation on \a k elements.
+         * \param p a permutation on \a k elements.
          * @return the same permutation restricted to a permutation on
          * \a n elements.
          */
@@ -848,7 +848,7 @@ class Perm {
          * \pre the given code is a valid permutation code; see
          * isPermCode() for details.
          *
-         * @param code the internal code from which the new permutation
+         * \param code the internal code from which the new permutation
          * will be created.
          */
         constexpr Perm(Code code);
@@ -873,11 +873,11 @@ class Perm {
          *
          * \tparam iterator an input iterator type.
          *
-         * @param start an iterator that points to the beginning of a
+         * \param start an iterator that points to the beginning of a
          * tight encoding.
-         * @param limit an iterator that, if reached, indicates that no more
+         * \param limit an iterator that, if reached, indicates that no more
          * characters are available.
-         * @param noTrailingData \c true if iteration should reach \a limit
+         * \param noTrailingData \c true if iteration should reach \a limit
          * immediately after the encoding is read, or \c false if there is
          * allowed to be additional unread data.
          * @return the permutation represented by the given tight encoding.
@@ -892,8 +892,8 @@ class Perm {
  * output stream.  The format will be the same as is used by
  * Perm::str().
  *
- * @param out the output stream to which to write.
- * @param p the permutation to write.
+ * \param out the output stream to which to write.
+ * \param p the permutation to write.
  * @return a reference to \a out.
  *
  * \tparam n the number of objects being permuted.

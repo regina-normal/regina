@@ -216,7 +216,7 @@ class MarkedVector : private std::vector<T*> {
          * \pre The given item does not already belong to some other
          * MarkedVector.
          *
-         * @param item the item to add to this vector.
+         * \param item the item to add to this vector.
          */
         inline void push_back(T* item) {
             item->marking_ = size();
@@ -231,7 +231,7 @@ class MarkedVector : private std::vector<T*> {
          *
          * \pre The given iterator points to an element of this vector.
          *
-         * @param pos an iterator pointing to the element to erase.
+         * \param pos an iterator pointing to the element to erase.
          * @return an iterator pointing to the element immediately
          * after the element that was erased.
          */
@@ -251,8 +251,8 @@ class MarkedVector : private std::vector<T*> {
          *
          * \pre The given iterators describe a valid range in this vector.
          *
-         * @param first an iterator pointing to the first element to erase.
-         * @param last an iterator pointing just beyond the last element
+         * \param first an iterator pointing to the first element to erase.
+         * \param last an iterator pointing just beyond the last element
          * to erase.
          * @return an iterator pointing to the element immediately
          * after the elements that were erased.
@@ -269,7 +269,7 @@ class MarkedVector : private std::vector<T*> {
         /**
          * Swaps the contents of this and the given vector.
          *
-         * @param other the vector whose contents are to be swapped with this.
+         * \param other the vector whose contents are to be swapped with this.
          */
         inline void swap(MarkedVector<T>& other) noexcept {
             std::vector<T*>::swap(other);
@@ -288,9 +288,9 @@ class MarkedVector : private std::vector<T*> {
          * \tparam Iterator an input iterator type, whose dereference
          * operator returns a pointer of type <tt>T*</tt>.
          *
-         * @param begin an iterator that points to the beginning of the range
+         * \param begin an iterator that points to the beginning of the range
          * of items with which to refill this vector.
-         * @param end an iterator that points past the end of the range of
+         * \param end an iterator that points past the end of the range of
          * items with which to refill this vector.
          */
         template <typename Iterator>
@@ -336,8 +336,8 @@ class MarkedVector : private std::vector<T*> {
  * This global routine simply calls MarkedVector<T>::swap(); it is provided
  * so that MarkedVector<T> meets the C++ Swappable requirements.
  *
- * @param a the first vector whose contents should be swapped.
- * @param b the second vector whose contents should be swapped.
+ * \param a the first vector whose contents should be swapped.
+ * \param b the second vector whose contents should be swapped.
  *
  * \ingroup utilities
  */

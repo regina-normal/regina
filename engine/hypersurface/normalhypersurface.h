@@ -173,8 +173,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * combinatorially identical to, the triangulation in which
          * \a src resides.
          *
-         * @param src the normal hypersurface to copy.
-         * @param triangulation the triangulation in which this new
+         * \param src the normal hypersurface to copy.
+         * \param triangulation the triangulation in which this new
          * hypersurface will reside.
          */
         NormalHypersurface(const NormalHypersurface& src,
@@ -190,8 +190,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param src the normal hypersurface to copy.
-         * @param triangulation a snapshot, frozen in time, of the
+         * \param src the normal hypersurface to copy.
+         * \param triangulation a snapshot, frozen in time, of the
          * triangulation in which this new hypersurface will reside.
          */
         NormalHypersurface(const NormalHypersurface& src,
@@ -210,7 +210,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * All normal coordinates will be zero.
          *
-         * @param triang the triangulation in which this normal hypersurface
+         * \param triang the triangulation in which this normal hypersurface
          * resides.
          */
         NormalHypersurface(const Triangulation<4>& triang);
@@ -222,7 +222,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          */
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang);
@@ -251,11 +251,11 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
          *
-         * @param triang the triangulation in which this normal hypersurface
+         * \param triang the triangulation in which this normal hypersurface
          * resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const Triangulation<4>& triang, HyperEncoding enc,
@@ -284,11 +284,11 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that copies \a vector.
          *
-         * @param triang the triangulation in which this normal hypersurface
+         * \param triang the triangulation in which this normal hypersurface
          * resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const Triangulation<4>& triang, HyperEncoding enc,
@@ -312,11 +312,11 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
@@ -341,11 +341,11 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \nopython Instead use the version that takes a "pure" triangulation
          * and copies \a vector.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
@@ -379,11 +379,11 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
          *
-         * @param triang the triangulation in which this normal hypersurface
+         * \param triang the triangulation in which this normal hypersurface
          * resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const Triangulation<4>& triang, HyperCoords coords,
@@ -416,11 +416,11 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that copies \a vector.
          *
-         * @param triang the triangulation in which this normal hypersurface
+         * \param triang the triangulation in which this normal hypersurface
          * resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const Triangulation<4>& triang, HyperCoords coords,
@@ -448,11 +448,11 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
@@ -481,11 +481,11 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \nopython Instead use the version that takes a "pure" triangulation
          * and copies \a vector.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
@@ -533,7 +533,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * these properties differs then the two hypersurfaces will be adjusted
          * accordingly.
          *
-         * @param other the normal hypersurface whose contents should be swapped
+         * \param other the normal hypersurface whose contents should be swapped
          * with this.
          */
         void swap(NormalHypersurface& other) noexcept;
@@ -562,7 +562,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \pre Both this and the given normal hypersurface use the same
          * underlying triangulation.
          *
-         * @param rhs the hypersurface to sum with this.
+         * \param rhs the hypersurface to sum with this.
          * @return the sum of both normal hypersurfaces.
          */
         NormalHypersurface operator + (const NormalHypersurface& rhs) const;
@@ -573,7 +573,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * The resulting hypersurface will use the same internal vector
          * encoding as this hypersurface.
          *
-         * @param coeff the coefficient to multiply this hypersurface by;
+         * \param coeff the coefficient to multiply this hypersurface by;
          * this must be non-negative.
          * @return the resulting multiple of this hypersurface.
          */
@@ -585,7 +585,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * The internal vector encoding used by this hypersurface will not
          * change.
          *
-         * @param coeff the coefficient to multiply this hypersurface by;
+         * \param coeff the coefficient to multiply this hypersurface by;
          * this must be non-negative.
          * @return a reference to this hypersurface.
          */
@@ -614,10 +614,10 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * pentachoron and a vertex of that pentachoron that the
          * tetrahedron surrounds.
          *
-         * @param pentIndex the index in the triangulation of the
+         * \param pentIndex the index in the triangulation of the
          * pentachoron in which the requested pieces reside;
          * this should be between 0 and Triangulation<4>::size()-1 inclusive.
-         * @param vertex the vertex of the given pentachoron around
+         * \param vertex the vertex of the given pentachoron around
          * which the requested pieces lie; this should be between 0
          * and 4 inclusive.
          * @return the number of tetrahedron pieces of the given type.
@@ -631,10 +631,10 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * type will then separate edge \a i of the pentachoron from
          * triangle \a i of the pentachoron.
          *
-         * @param pentIndex the index in the triangulation of the
+         * \param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prisms reside;
          * this should be between 0 and Triangulation<4>::size()-1 inclusive.
-         * @param prismType specifies the edge of the given pentachoron that
+         * \param prismType specifies the edge of the given pentachoron that
          * this prism separates from the opposite triangle;
          * this should be between 0 and 9 inclusive.
          * @return the number of prism pieces of the given type.
@@ -644,7 +644,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Returns the number of times this normal hypersurface crosses the
          * given edge.
          *
-         * @param edgeIndex the index in the triangulation of the edge
+         * \param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
          * Triangulation<4>::countEdges()-1 inclusive.
          * @return the number of times this normal hypersurface crosses the
@@ -691,7 +691,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Names are optional and need not be unique.
          * The default name for a hypersurface is the empty string.
          *
-         * @param name the new name to associate with this hypersurface.
+         * \param name the new name to associate with this hypersurface.
          */
         void setName(const std::string& name);
 
@@ -701,7 +701,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -713,9 +713,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param list the enclosing normal hypersurface list.  Currently this
+         * \param out the output stream to which the XML should be written.
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param list the enclosing normal hypersurface list.  Currently this
          * is only relevant when writing to the older REGINA_XML_GEN_2 format;
          * it will be ignored (and may be \c null) for newer file formats.
          */
@@ -1157,7 +1157,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * - If the two triangulations have different sizes, then this
          *   routine will return \c false.
          *
-         * @param other the hypersurface to be compared with this hypersurface.
+         * \param other the hypersurface to be compared with this hypersurface.
          * @return \c true if both hypersurfaces represent the same normal
          * hypersurface, or \c false if not.
          */
@@ -1187,7 +1187,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * - If the two triangulations have different sizes, then this
          *   routine will return \c true.
          *
-         * @param other the hypersurface to be compared with this hypersurface.
+         * \param other the hypersurface to be compared with this hypersurface.
          * @return \c true if both hypersurfaces represent different normal
          * hypersurface, or \c false if not.
          */
@@ -1212,7 +1212,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * or if one but not the other supports non-compact hypersurfaces.
          * See the equality test operator==() for further details.
          *
-         * @param other the hypersurface to be compared with this hypersurface.
+         * \param other the hypersurface to be compared with this hypersurface.
          * @return \c true if and only if this appears before the given
          * hypersurface in the total order.
          */
@@ -1251,7 +1251,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \pre Both this and the given normal hypersurface live within the
          * same 4-manifold triangulation.
          *
-         * @param other the other hypersurface to test for local compatibility
+         * \param other the other hypersurface to test for local compatibility
          * with this hypersurface.
          * @return \c true if the two hypersurfaces are locally compatible, or
          * \c false if they are not.
@@ -1306,10 +1306,10 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * - If the given encoding does already store tetrahedra, then
          *   this routine will do nothing and immediately return \a enc.
          *
-         * @param tri the triangulation in which the normal hypersurface lives.
-         * @param vector an integer vector that encodes a normal hypersurface
+         * \param tri the triangulation in which the normal hypersurface lives.
+         * \param vector an integer vector that encodes a normal hypersurface
          * within \a tri; this will be modified directly.
-         * @param enc the encoding used by the given integer vector.
+         * \param enc the encoding used by the given integer vector.
          * @return the new encoding used by the modified \a vector.
          */
         static HyperEncoding reconstructTetrahedra(const Triangulation<4>& tri,
@@ -1358,8 +1358,8 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
  * This global routine simply calls NormalHypersurface::swap(); it is provided
  * so that NormalHypersurface meets the C++ Swappable requirements.
  *
- * @param a the first normal hypersurface whose contents should be swapped.
- * @param b the second normal hypersurface whose contents should be swapped.
+ * \param a the first normal hypersurface whose contents should be swapped.
+ * \param b the second normal hypersurface whose contents should be swapped.
  *
  * \ingroup hypersurface
  */

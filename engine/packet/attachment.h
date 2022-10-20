@@ -149,7 +149,7 @@ class Attachment : public Packet {
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.
          *
-         * @param pathname the full pathname of the attachment to read.
+         * \param pathname the full pathname of the attachment to read.
          */
         Attachment(const char* pathname);
 
@@ -177,14 +177,14 @@ class Attachment : public Packet {
          * since a \c bytes object knows its size, and in Python the
          * only available ownership policy is to make a deep copy.
          *
-         * @param data the block of binary data that forms the attachment,
+         * \param data the block of binary data that forms the attachment,
          * or \c null if no attachment is to be stored.
-         * @param size the number of bytes in this block of binary data;
+         * \param size the number of bytes in this block of binary data;
          * if actual data is passed (i.e., \a data is not \c null) then
          * this must be strictly positive.
-         * @param alloc describes if/how this packet should claim ownership
+         * \param alloc describes if/how this packet should claim ownership
          * of the given block of data; see the notes above for details.
-         * @param filename the filename to associated with this attachment;
+         * \param filename the filename to associated with this attachment;
          * typically this would be a filename only, with no directory prefixes.
          * See filename() for details on how this string will be used.
          */
@@ -202,7 +202,7 @@ class Attachment : public Packet {
          * This is safe to call even if \a src does not contain a non-empty
          * attachment (i.e., if <tt>src.isNull()</tt> returns \c true).
          *
-         * @param src the attachment packet whose contents should be copied.
+         * \param src the attachment packet whose contents should be copied.
          */
         Attachment(const Attachment& src);
 
@@ -222,7 +222,7 @@ class Attachment : public Packet {
          * This is safe to call even if \a src does not contain a non-empty
          * attachment (i.e., if <tt>src.isNull()</tt> returns \c true).
          *
-         * @param src the attachment packet whose contents should be copied.
+         * \param src the attachment packet whose contents should be copied.
          * @return a reference to this packet.
          */
         Attachment& operator = (const Attachment& src);
@@ -238,7 +238,7 @@ class Attachment : public Packet {
          * This is safe to call even if this packet and/or \a other does not
          * contain a non-empty attachment (i.e., if isNull() returns \c true).
          *
-         * @param other the attachment packet whose contents should be swapped
+         * \param other the attachment packet whose contents should be swapped
          * with this.
          */
         void swap(Attachment& other);
@@ -343,14 +343,14 @@ class Attachment : public Packet {
          * since a \c bytes object knows its size, and in Python the
          * only available ownership policy is to make a deep copy.
          *
-         * @param data the block of binary data that forms the new attachment,
+         * \param data the block of binary data that forms the new attachment,
          * or \c null if no attachment is to be stored.
-         * @param size the number of bytes in this new block of binary data;
+         * \param size the number of bytes in this new block of binary data;
          * if actual data is passed (i.e., \a data is not \c null) then
          * this must be strictly positive.
-         * @param alloc describes if/how this packet should claim ownership
+         * \param alloc describes if/how this packet should claim ownership
          * of the given block of data; see the notes above for details.
-         * @param filename the new filename to associated with this attachment;
+         * \param filename the new filename to associated with this attachment;
          * this will override the previously stored filename.  Typically
          * this would be a filename only, with no directory prefixes.
          * See filename() for details on how this string will be used.
@@ -369,7 +369,7 @@ class Attachment : public Packet {
          * \ref i18n "character encoding" used in the given file \e name, and
          * simply passes it unchanged to low-level C/C++ file I/O routines.
          *
-         * @param pathname the full pathname of the file to write.
+         * \param pathname the full pathname of the file to write.
          * @return \c true if the file was successfully written, or
          * \c false otherwise.
          */
@@ -384,7 +384,7 @@ class Attachment : public Packet {
          * empty (i.e., isNull() returns \c true), in which case an empty
          * attachment will compare as equal to any other empty attachment.
          *
-         * @param other the attachment to compare with this.
+         * \param other the attachment to compare with this.
          * @return \c true if and only if this and the given attachment
          * contain identical data.
          */
@@ -399,7 +399,7 @@ class Attachment : public Packet {
          * empty (i.e., isNull() returns \c true), in which case an empty
          * attachment will compare as equal to any other empty attachment.
          *
-         * @param other the attachment to compare with this.
+         * \param other the attachment to compare with this.
          * @return \c true if and only if this and the given attachment
          * contain different data.
          */
@@ -419,8 +419,8 @@ class Attachment : public Packet {
  * This global routine simply calls Attachment::swap(); it is provided so that
  * Attachment meets the C++ Swappable requirements.
  *
- * @param a the first attachment packet whose contents should be swapped.
- * @param b the second attachment packet whose contents should be swapped.
+ * \param a the first attachment packet whose contents should be swapped.
+ * \param b the second attachment packet whose contents should be swapped.
  *
  * \ingroup packet
  */

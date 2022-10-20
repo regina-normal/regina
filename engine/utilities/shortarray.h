@@ -159,7 +159,7 @@ class ShortArray {
         /**
          * Gives write access to the array element at the given index.
          *
-         * @param index the index of the element to access; this must be
+         * \param index the index of the element to access; this must be
          * between 0 and size()-1 inclusive.
          * @return a reference to the array element at the given index.
          */
@@ -170,7 +170,7 @@ class ShortArray {
         /**
          * Gives read-only access to the array element at the given index.
          *
-         * @param index the index of the element to access; this must be
+         * \param index the index of the element to access; this must be
          * between 0 and size()-1 inclusive.
          * @return a const reference to the array element at the given index.
          */
@@ -243,7 +243,7 @@ class ShortArray {
          *
          * \pre The array has size strictly less than \a maxSize.
          *
-         * @param item the item to add to this array.
+         * \param item the item to add to this array.
          */
         void push_back(const T& item) {
             data_[size_++] = item;
@@ -254,7 +254,7 @@ class ShortArray {
          *
          * \pre The array has size strictly less than \a maxSize.
          *
-         * @param item the item to add to this array.
+         * \param item the item to add to this array.
          */
         void push_back(T&& item) {
             data_[size_++] = std::move(item);

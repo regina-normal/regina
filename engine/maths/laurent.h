@@ -124,7 +124,7 @@ class Laurent :
         /**
          * Creates the polynomial <tt>x^d</tt> for the given exponent \a d.
          *
-         * @param exponent the exponent to use for the new polynomial.
+         * \param exponent the exponent to use for the new polynomial.
          */
         explicit Laurent(long exponent);
 
@@ -138,7 +138,7 @@ class Laurent :
          * implemented separately.  Otherwise the compiler might create
          * its own (incorrect) copy constructor automatically.
          *
-         * @param value the polynomial to clone.
+         * \param value the polynomial to clone.
          */
         Laurent(const Laurent<T>& value);
 
@@ -153,7 +153,7 @@ class Laurent :
          * coefficient (the case where \a T is Integer).  Therefore
          * Python users can use the non-templated copy constructor.
          *
-         * @param value the polynomial to clone.
+         * \param value the polynomial to clone.
          */
         template <typename U>
         Laurent(const Laurent<U>& value);
@@ -164,7 +164,7 @@ class Laurent :
          *
          * The polynomial that was passed (\a value) will no longer be usable.
          *
-         * @param value the polynomial to move.
+         * \param value the polynomial to move.
          */
         Laurent(Laurent<T>&& value) noexcept;
 
@@ -187,10 +187,10 @@ class Laurent :
          * \ifacespython Instead of the iterators \a begin and \a end,
          * this routine takes a python list of coefficients.
          *
-         * @param minExp the exponent corresponding to the first
+         * \param minExp the exponent corresponding to the first
          * coefficient in the sequence.
-         * @param begin the beginning of the sequence of coefficients.
-         * @param end a past-the-end iterator indicating the end of the
+         * \param begin the beginning of the sequence of coefficients.
+         * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
         template <typename iterator>
@@ -210,9 +210,9 @@ class Laurent :
          * \nopython Instead, use the Python constructor that takes a list
          * of coefficients (which need not be constant).
          *
-         * @param minExp the exponent corresponding to the first
+         * \param minExp the exponent corresponding to the first
          * coefficient in the sequence.
-         * @param coefficients the full sequence of coefficients.
+         * \param coefficients the full sequence of coefficients.
          */
         Laurent(long minExp, std::initializer_list<T> coefficients);
 
@@ -230,7 +230,7 @@ class Laurent :
          * Sets this to become the polynomial <tt>x^d</tt> for the
          * given exponent \a d.
          *
-         * @param exponent the new exponent to use for this polynomial.
+         * \param exponent the new exponent to use for this polynomial.
          */
         void init(long exponent);
 
@@ -254,10 +254,10 @@ class Laurent :
          * \ifacespython Instead of the iterators \a begin and \a end,
          * this routine takes a python list of coefficients.
          *
-         * @param minExp the exponent corresponding to the first
+         * \param minExp the exponent corresponding to the first
          * coefficient in the sequence.
-         * @param begin the beginning of the sequence of coefficients.
-         * @param end a past-the-end iterator indicating the end of the
+         * \param begin the beginning of the sequence of coefficients.
+         * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
         template <typename iterator>
@@ -301,7 +301,7 @@ class Laurent :
          * \cpp For C++ users, this operator is read-only.  To \e set
          * coefficients, you must use the separate routine set().
          *
-         * @param exp the exponent of the term whose coefficient should
+         * \param exp the exponent of the term whose coefficient should
          * be returned.
          * @return the coefficient of the given term.
          */
@@ -326,16 +326,16 @@ class Laurent :
          * also set coefficients directly using syntax of the form
          * <tt>p[exp] = value</tt>.
          *
-         * @param exp the exponent of the term whose coefficient should
+         * \param exp the exponent of the term whose coefficient should
          * be changed.
-         * @param value the new value of this coefficient.
+         * \param value the new value of this coefficient.
          */
         void set(long exp, const T& value);
 
         /**
          * Tests whether this and the given polynomial are equal.
          *
-         * @param rhs the polynomial to compare with this.
+         * \param rhs the polynomial to compare with this.
          * @return \c true if and only if this and the given polynomial
          * are equal.
          */
@@ -344,7 +344,7 @@ class Laurent :
         /**
          * Tests whether this and the given polynomial are not equal.
          *
-         * @param rhs the polynomial to compare with this.
+         * \param rhs the polynomial to compare with this.
          * @return \c true if and only if this and the given polynomial
          * are not equal.
          */
@@ -360,7 +360,7 @@ class Laurent :
          * is to support algorithms that require a "canonical" choice of
          * polynomial from amongst many alternatives.
          *
-         * @param rhs the polynomial to compare with this.
+         * \param rhs the polynomial to compare with this.
          * @return \c true if and only if this is less than the given
          * polynomial under the total order that Regina uses.
          */
@@ -376,7 +376,7 @@ class Laurent :
          * is to support algorithms that require a "canonical" choice of
          * polynomial from amongst many alternatives.
          *
-         * @param rhs the polynomial to compare with this.
+         * \param rhs the polynomial to compare with this.
          * @return \c true if and only if this is greater than the given
          * polynomial under the total order that Regina uses.
          */
@@ -392,7 +392,7 @@ class Laurent :
          * is to support algorithms that require a "canonical" choice of
          * polynomial from amongst many alternatives.
          *
-         * @param rhs the polynomial to compare with this.
+         * \param rhs the polynomial to compare with this.
          * @return \c true if and only if this is less than or equal to the
          * given polynomial under the total order that Regina uses.
          */
@@ -408,7 +408,7 @@ class Laurent :
          * is to support algorithms that require a "canonical" choice of
          * polynomial from amongst many alternatives.
          *
-         * @param rhs the polynomial to compare with this.
+         * \param rhs the polynomial to compare with this.
          * @return \c true if and only if this is greater than or equal to
          * the given polynomial under the total order that Regina uses.
          */
@@ -426,7 +426,7 @@ class Laurent :
          * assignment operator, it must be declared and implemented separately.
          * See the copy constructor for further details.
          *
-         * @param value the polynomial to copy.
+         * \param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
         Laurent& operator = (const Laurent<T>& value);
@@ -439,7 +439,7 @@ class Laurent :
          *
          * This operator induces a deep copy of \a value.
          *
-         * @param value the polynomial to copy.
+         * \param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
         template <typename U>
@@ -454,7 +454,7 @@ class Laurent :
          *
          * The polynomial that was passed (\a value) will no longer be usable.
          *
-         * @param value the polynomial to move.
+         * \param value the polynomial to move.
          * @return a reference to this polynomial.
          */
         Laurent& operator = (Laurent<T>&& value) noexcept;
@@ -466,7 +466,7 @@ class Laurent :
          * This and the given polynomial do not need to have the same
          * minimum and/or maximum exponents.
          *
-         * @param other the polynomial whose contents should be swapped
+         * \param other the polynomial whose contents should be swapped
          * with this.
          */
         void swap(Laurent<T>& other) noexcept;
@@ -474,7 +474,7 @@ class Laurent :
         /**
          * Multiplies this polynomial by <tt>x^s</tt> for some integer \a s.
          *
-         * @param s the power of \a x to multiply by.
+         * \param s the power of \a x to multiply by.
          */
         void shift(long s);
 
@@ -487,7 +487,7 @@ class Laurent :
          *
          * \pre \a k is non-zero.
          *
-         * @param k the scaling factor to multiply exponents by.
+         * \param k the scaling factor to multiply exponents by.
          */
         void scaleUp(long k);
 
@@ -502,7 +502,7 @@ class Laurent :
          * \pre All exponents in this polynomial with non-zero coefficients
          * are multiples of \a k.
          *
-         * @param k the scaling factor to divide exponents by.
+         * \param k the scaling factor to divide exponents by.
          */
         void scaleDown(long k);
 
@@ -523,7 +523,7 @@ class Laurent :
         /**
          * Multiplies this polynomial by the given constant.
          *
-         * @param scalar the scalar factor to multiply by.
+         * \param scalar the scalar factor to multiply by.
          * @return a reference to this polynomial.
          */
         Laurent& operator *= (const T& scalar);
@@ -535,7 +535,7 @@ class Laurent :
          *
          * \pre The argument \a scalar is non-zero.
          *
-         * @param scalar the scalar factor to divide by.
+         * \param scalar the scalar factor to divide by.
          * @return a reference to this polynomial.
          */
         Laurent& operator /= (const T& scalar);
@@ -551,7 +551,7 @@ class Laurent :
          * the binary <tt>+</tt> operator instead, which is better able to
          * avoid this deep copy where possible.
          *
-         * @param other the polynomial to add to this.
+         * \param other the polynomial to add to this.
          * @return a reference to this polynomial.
          */
         Laurent& operator += (const Laurent<T>& other);
@@ -562,7 +562,7 @@ class Laurent :
          * The given polynomial need not have the same minimum and/or
          * maximum exponents as this.
          *
-         * @param other the polynomial to subtract from this.
+         * \param other the polynomial to subtract from this.
          * @return a reference to this polynomial.
          */
         Laurent& operator -= (const Laurent<T>& other);
@@ -573,7 +573,7 @@ class Laurent :
          * The given polynomial need not have the same minimum and/or
          * maximum exponents as this.
          *
-         * @param other the polynomial to multiply this by.
+         * \param other the polynomial to multiply this by.
          * @return a reference to this polynomial.
          */
         Laurent& operator *= (const Laurent<T>& other);
@@ -589,9 +589,9 @@ class Laurent :
          *
          * \nopython Use str() or utf8() instead.
          *
-         * @param out the output stream to which to write.
-         * @param utf8 \c true if unicode characters may be used.
-         * @param variable the symbol to use for the variable in this
+         * \param out the output stream to which to write.
+         * \param utf8 \c true if unicode characters may be used.
+         * \param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
          */
@@ -605,7 +605,7 @@ class Laurent :
          * \note There is also the usual variant of str() which takes no
          * arguments; that variant is inherited from the Output class.
          *
-         * @param variable the symbol to use for the variable in this
+         * \param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
          * @return this polynomial as a human-readable string.
@@ -626,7 +626,7 @@ class Laurent :
          * \note There is also the usual variant of utf8() which takes no
          * arguments; that variant is inherited from the Output class.
          *
-         * @param variable the symbol to use for the variable in this
+         * \param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
          * @return this polynomial as a unicode-enabled human-readable string.
@@ -643,7 +643,7 @@ class Laurent :
          *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -670,7 +670,7 @@ class Laurent :
          * \nopython Use tightDecoding() instead, which takes a string as
          * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for a single-variable Laurent polynomial.
          * @return the polynomial represented by the given tight encoding.
          */
@@ -723,7 +723,7 @@ class Laurent :
          *
          * This is equivalent to calling the -= operator and then negating.
          *
-         * @param other the polynomial to subtract this from.
+         * \param other the polynomial to subtract this from.
          * @return a reference to this polynomial.
          */
         Laurent<T>& subtractFrom(const Laurent<T>& other);
@@ -753,8 +753,8 @@ class Laurent :
  * This global routine simply calls Laurent<T>::swap(); it is provided
  * so that Laurent<T> meets the C++ Swappable requirements.
  *
- * @param a the first polynomial whose contents should be swapped.
- * @param b the second polynomial whose contents should be swapped.
+ * \param a the first polynomial whose contents should be swapped.
+ * \param b the second polynomial whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -767,8 +767,8 @@ void swap(Laurent<T>& a, Laurent<T>& b) noexcept;
  * The scalar is simply of type \a T; we use the identical type
  * Laurent<T>::Coefficient here to assist with C++ template type matching.
  *
- * @param poly the polynomial to multiply by.
- * @param scalar the scalar to multiply by.
+ * \param poly the polynomial to multiply by.
+ * \param scalar the scalar to multiply by.
  * @return the product of the given polynomial and scalar.
  *
  * \ingroup maths
@@ -783,8 +783,8 @@ Laurent<T> operator * (Laurent<T> poly,
  * The scalar is simply of type \a T; we use the identical type
  * Laurent<T>::Coefficient here to assist with C++ template type matching.
  *
- * @param scalar the scalar to multiply by.
- * @param poly the polynomial to multiply by.
+ * \param scalar the scalar to multiply by.
+ * \param poly the polynomial to multiply by.
  * @return the product of the given polynomial and scalar.
  *
  * \ingroup maths
@@ -803,8 +803,8 @@ Laurent<T> operator * (const typename Laurent<T>::Coefficient& scalar,
  *
  * \pre The argument \a scalar is non-zero.
  *
- * @param poly the polynomial to divide by the given scalar.
- * @param scalar the scalar factor to divide by.
+ * \param poly the polynomial to divide by the given scalar.
+ * \param scalar the scalar factor to divide by.
  * @return the quotient of the given polynomial by the given scalar.
  *
  * \ingroup maths
@@ -819,8 +819,8 @@ Laurent<T> operator / (Laurent<T> poly,
  * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
  * @return the sum of both polynomials.
  *
  * \ingroup maths
@@ -834,8 +834,8 @@ Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs);
  * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
  * @return the sum of both polynomials.
  *
  * \ingroup maths
@@ -849,8 +849,8 @@ Laurent<T> operator + (Laurent<T>&& lhs, const Laurent<T>& rhs);
  * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
  * @return the sum of both polynomials.
  *
  * \ingroup maths
@@ -864,8 +864,8 @@ Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs);
  * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the first polynomial to add.
- * @param rhs the second polynomial to add.
+ * \param lhs the first polynomial to add.
+ * \param rhs the second polynomial to add.
  * @return the sum of both polynomials.
  *
  * \ingroup maths
@@ -876,7 +876,7 @@ Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs);
 /**
  * Returns the negative of the given polynomial.
  *
- * @param arg the polynomial to negate.
+ * \param arg the polynomial to negate.
  * @return the negative of \a arg.
  *
  * \ingroup maths
@@ -890,8 +890,8 @@ Laurent<T> operator - (Laurent<T> arg);
  * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the polynomial to sutract \a rhs from.
- * @param rhs the polynomial to subtract from \a lhs.
+ * \param lhs the polynomial to sutract \a rhs from.
+ * \param rhs the polynomial to subtract from \a lhs.
  * @return the difference of the two given polynomials.
  *
  * \ingroup maths
@@ -905,8 +905,8 @@ Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs);
  * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the polynomial to sutract \a rhs from.
- * @param rhs the polynomial to subtract from \a lhs.
+ * \param lhs the polynomial to sutract \a rhs from.
+ * \param rhs the polynomial to subtract from \a lhs.
  * @return the difference of the two given polynomials.
  *
  * \ingroup maths
@@ -920,8 +920,8 @@ Laurent<T> operator - (Laurent<T>&& lhs, const Laurent<T>& rhs);
  * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the polynomial to sutract \a rhs from.
- * @param rhs the polynomial to subtract from \a lhs.
+ * \param lhs the polynomial to sutract \a rhs from.
+ * \param rhs the polynomial to subtract from \a lhs.
  * @return the difference of the two given polynomials.
  *
  * \ingroup maths
@@ -935,8 +935,8 @@ Laurent<T> operator - (const Laurent<T>& lhs, Laurent<T>&& rhs);
  * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
  * since it has more flexibility to avoid an internal deep copy.
  *
- * @param lhs the polynomial to sutract \a rhs from.
- * @param rhs the polynomial to subtract from \a lhs.
+ * \param lhs the polynomial to sutract \a rhs from.
+ * \param rhs the polynomial to subtract from \a lhs.
  * @return the difference of the two given polynomials.
  *
  * \ingroup maths
@@ -947,8 +947,8 @@ Laurent<T> operator - (Laurent<T>&& lhs, Laurent<T>&& rhs);
 /**
  * Multiplies the two given polynomials.
  *
- * @param lhs the first polynomial to multiply.
- * @param rhs the second polynomial to multiply.
+ * \param lhs the first polynomial to multiply.
+ * \param rhs the second polynomial to multiply.
  * @return the product of both polynomials.
  *
  * \ingroup maths

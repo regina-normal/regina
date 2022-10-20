@@ -146,7 +146,7 @@ class AugTriSolidTorus : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(AugTriSolidTorus& other) noexcept;
@@ -165,7 +165,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * band (i.e., the two triangles of the corresponding annulus have
          * simply been glued together), then no value will be returned.
          *
-         * @param annulus specifies which annulus to examine; this must
+         * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
          * @return the corresponding layered solid torus.
          */
@@ -187,7 +187,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * the concept of edge groups is still
          * meaningful and this routine will return correct results.
          *
-         * @param annulus specifies which annulus to examine; this must
+         * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.  It is the layered solid torus glued to this
          * annulus whose edge groups will be described.
          * @return a permutation describing the roles of the
@@ -266,7 +266,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * this test does not account for the many symmetries in an
          * augmented triangular solid torus).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of augmented triangular solid torus.
          */
@@ -295,7 +295,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * this test does not account for the many symmetries in an
          * augmented triangular solid torus).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent different types of augmented triangular solid torus.
          */
@@ -309,7 +309,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param comp the triangulation component to examine.
+         * \param comp the triangulation component to examine.
          * @return a structure containing details of the augmented triangular
          * solid torus, or \c null if the given component is not an augmented
          * triangular solid torus.
@@ -333,8 +333,8 @@ class AugTriSolidTorus : public StandardTriangulation {
         /**
          * Contains code common to both writeName() and writeTeXName().
          *
-         * @param out the output stream to which to write.
-         * @param tex \c true if this routine is called from
+         * \param out the output stream to which to write.
+         * \param tex \c true if this routine is called from
          * writeTeXName() or \c false if it is called from writeName().
          * @return a reference to \a out.
          */
@@ -347,8 +347,8 @@ class AugTriSolidTorus : public StandardTriangulation {
  * This global routine simply calls AugTriSolidTorus::swap(); it is provided
  * so that AugTriSolidTorus meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

@@ -87,7 +87,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * \exception InvalidArgument The given matrix is not both symmetric
          * and square.
          *
-         * @param form a symmetric square integer matrix that describes
+         * \param form a symmetric square integer matrix that describes
          * this bilinear form.
          */
         IntersectionForm(MatrixInt form);
@@ -125,7 +125,7 @@ class IntersectionForm : public Output<IntersectionForm> {
         /**
          * Swaps the contents of this and the given intersection form.
          *
-         * @param other the intersection form whose contents should be swapped
+         * \param other the intersection form whose contents should be swapped
          * with this.
          */
         void swap(IntersectionForm& other) noexcept;
@@ -187,7 +187,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * free abelian group).  Instead it is equivalent to testing
          * whether `matrix() == other.matrix()`.
          *
-         * @param other the bilinear form to compare with this.
+         * \param other the bilinear form to compare with this.
          * @return \c true if and only if this and the given bilinear form
          * are represented by identical matrices.
          */
@@ -202,7 +202,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * free abelian group).  Instead it is equivalent to testing
          * whether `matrix() != other.matrix()`.
          *
-         * @param other the bilinear form to compare with this.
+         * \param other the bilinear form to compare with this.
          * @return \c true if and only if this and the given bilinear form
          * are not represented by identical matrices.
          */
@@ -214,7 +214,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to write to.
+         * \param out the output stream to write to.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -224,7 +224,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to write to.
+         * \param out the output stream to write to.
          */
         void writeTextLong(std::ostream& out) const;
 };
@@ -235,9 +235,9 @@ class IntersectionForm : public Output<IntersectionForm> {
  * This global routine simply calls IntersectionForm::swap(); it is provided
  * so that IntersectionForm meets the C++ Swappable requirements.
  *
- * @param lhs the intersection form whose contents should be swapped with
+ * \param lhs the intersection form whose contents should be swapped with
  * \a rhs.
- * @param rhs the intersection form whose contents should be swapped with
+ * \param rhs the intersection form whose contents should be swapped with
  * \a lhs.
  *
  * \ingroup algebra

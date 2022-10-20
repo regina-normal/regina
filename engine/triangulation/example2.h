@@ -69,9 +69,9 @@ class Example<2> : public detail::ExampleBase<2> {
          * will be minimal (which, for positive genus, means there is exactly
          * one vertex).
          *
-         * @param genus the genus of the surface; this must be greater
+         * \param genus the genus of the surface; this must be greater
          * than or equal to zero.
-         * @param punctures the number of punctures in the surface;
+         * \param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
          * @return the requested orientable surface.
          */
@@ -85,10 +85,10 @@ class Example<2> : public detail::ExampleBase<2> {
          * triangulation will be minimal (which, with the exception of
          * the projective plane, means there is exactly one vertex).
          *
-         * @param genus the non-orientable genus of the surface, i.e.,
+         * \param genus the non-orientable genus of the surface, i.e.,
          * the number of crosscaps that it contains; this must be greater
          * than or equal to one.
-         * @param punctures the number of punctures in the surface;
+         * \param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
          * @return the requested non-orientable surface.
          *

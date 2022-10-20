@@ -142,7 +142,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * Creates a new copy of the given trie.
          * This will induce a deep copy of \a src.
          *
-         * @param src the trie to copy.
+         * \param src the trie to copy.
          */
         TypeTrie(const TypeTrie& src);
 
@@ -153,7 +153,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          *
          * The trie that was passed (\a src) will no longer be usable.
          *
-         * @param src the trie whose contents should be moved.
+         * \param src the trie whose contents should be moved.
          */
         TypeTrie(TypeTrie&& src) noexcept;
 
@@ -161,7 +161,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * Sets this to be a copy of the given trie.
          * This will induce a deep copy of \a src.
          *
-         * @param src the trie to copy.
+         * \param src the trie to copy.
          * @return a reference to this trie.
          */
         TypeTrie& operator = (const TypeTrie& src);
@@ -173,7 +173,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          *
          * The trie that was passed (\a src) will no longer be usable.
          *
-         * @param src the trie whose contents should be moved.
+         * \param src the trie whose contents should be moved.
          * @return a reference to this trie.
          */
         TypeTrie& operator = (TypeTrie&& src) noexcept;
@@ -181,7 +181,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
         /**
          * Swaps the contents of this and the given trie.
          *
-         * @param other the trie whose contents should be swapped with this.
+         * \param other the trie whose contents should be swapped with this.
          */
         void swap(TypeTrie& other) noexcept;
 
@@ -189,7 +189,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * Determines whether this and the given trie store exactly the
          * same type vectors.
          *
-         * @param other the trie to compare with this.
+         * \param other the trie to compare with this.
          * @return \c true if and only if both tries store the same type
          * vectors.
          */
@@ -199,7 +199,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * Determines whether this and the given trie do not store exactly the
          * same type vectors.
          *
-         * @param other the trie to compare with this.
+         * \param other the trie to compare with this.
          * @return \c true if and only if both tries do not store the same type
          * vectors.
          */
@@ -222,8 +222,8 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * of length \a len.  This list should be a type vector, and
          * each list element should be between 0 and (\a nTypes - 1) inclusive.
          *
-         * @param entry the type vector to insert.
-         * @param len the number of elements in the given type vector.
+         * \param entry the type vector to insert.
+         * \param len the number of elements in the given type vector.
          */
         void insert(const char* entry, size_t len);
 
@@ -240,8 +240,8 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * of length \a len.  This list should be a type vector, and
          * each list element should be between 0 and (\a nTypes - 1) inclusive.
          *
-         * @param vec the type vector to test.
-         * @param len the number of elements in the given type vector.
+         * \param vec the type vector to test.
+         * \param len the number of elements in the given type vector.
          * @return \c true if and only if \a vec dominates some type
          * vector stored in this trie.
          */
@@ -253,7 +253,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -262,7 +262,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 };
@@ -270,8 +270,8 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
 /**
  * Swaps the contents of the two given tries.
  *
- * @param a the first trie whose contents should be swapped.
- * @param b the second trie whose contents should be swapped.
+ * \param a the first trie whose contents should be swapped.
+ * \param b the second trie whose contents should be swapped.
  *
  * \ingroup enumerate
  */

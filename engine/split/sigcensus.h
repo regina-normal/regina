@@ -132,10 +132,10 @@ class SigCensus {
          * arguments beyond the signature and its automorphisms (and
          * therefore the additional \a args list is omitted here).
          *
-         * @param order the order of signatures to generate.
-         * @param action a function (or other callable object) to call for each
+         * \param order the order of signatures to generate.
+         * \param action a function (or other callable object) to call for each
          * signature that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial signature and automorphism
          * arguments.
          * @return the total number of non-equivalent signatures that were
@@ -194,10 +194,10 @@ class SigCensus {
          * Extends the partial signature created so far to add a new
          * cycle.
          *
-         * @param cycleLen the length of the new cycle to add.
-         * @param newCycleGroup \c true if and only if the new cycle
+         * \param cycleLen the length of the new cycle to add.
+         * \param newCycleGroup \c true if and only if the new cycle
          * begins a new cycle group.
-         * @param startPos the position within the list of symbols
+         * \param startPos the position within the list of symbols
          * that make up the signature at which the new cycle will begin.
          */
         void tryCycle(unsigned cycleLen, bool newCycleGroup, unsigned startPos);

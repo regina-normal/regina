@@ -96,9 +96,9 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Creates a new specifier referring to the given facet of the given
      * simplex.
      *
-     * @param newSimp the given simplex; see the class notes for
+     * \param newSimp the given simplex; see the class notes for
      * allowable values of this parameter.
-     * @param newFacet the given facet; this should be between 0 and
+     * \param newFacet the given facet; this should be between 0 and
      * \a dim inclusive.
      */
     FacetSpec(ssize_t newSimp, int newFacet);
@@ -106,14 +106,14 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Creates a new specifier referring to the same simplex facet as
      * the given specifier.
      *
-     * @param cloneMe the specifier to clone.
+     * \param cloneMe the specifier to clone.
      */
     FacetSpec(const FacetSpec<dim>& cloneMe) = default;
 
     /**
      * Determines if this specifier represents the overall boundary.
      *
-     * @param nSimplices the number of simplices under consideration.
+     * \param nSimplices the number of simplices under consideration.
      * Note that the boundary is represented in this specifier as
      * simplex \a nSimplices, facet 0.
      * @return \c true if and only if this specifier represents the
@@ -131,10 +131,10 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * You can optionally declare the overall boundary to be
      * past-the-end as well as the already predefined past-the-end value.
      *
-     * @param nSimplices the number of simplices under consideration.
+     * \param nSimplices the number of simplices under consideration.
      * Note that past-the-end is represented in this specifier as
      * simplex \a nSimplices, facet 1.
-     * @param boundaryAlso \c true if the overall boundary should be
+     * \param boundaryAlso \c true if the overall boundary should be
      * considered past-the-end in addition to the predefined past-the-end
      * value.
      * @return \c true if and only if this specifier is past-the-end.
@@ -148,7 +148,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Sets this specifier to the overall boundary.
      *
-     * @param nSimplices the number of simplices under consideration.
+     * \param nSimplices the number of simplices under consideration.
      * Note that the boundary is represented in this specifier as
      * simplex \a nSimplices, facet 0.
      */
@@ -160,7 +160,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Sets this specifier to past-the-end.
      *
-     * @param nSimplices the number of simplices under consideration.
+     * \param nSimplices the number of simplices under consideration.
      * Note that past-the-end is represented in this specifier as
      * simplex \a nSimplices, facet 1.
      */
@@ -169,7 +169,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Sets this specifier to the value of the given specifier.
      *
-     * @param other the given specifier.
+     * \param other the given specifier.
      * @return a reference to this specifier.
      */
     FacetSpec& operator = (const FacetSpec<dim>& other) = default;
@@ -237,7 +237,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Determines if this and the given specifier are identical.
      *
-     * @param other the specifier to compare with this.
+     * \param other the specifier to compare with this.
      * @return \c true if and only if this and the given specifier are
      * equal.
      */
@@ -245,7 +245,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Determines if this and the given specifier are not identical.
      *
-     * @param other the specifier to compare with this.
+     * \param other the specifier to compare with this.
      * @return \c true if and only if this and the given specifier are
      * not equal.
      */
@@ -253,7 +253,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Determines if this is less than the given specifier.
      *
-     * @param other the specifier to compare with this.
+     * \param other the specifier to compare with this.
      * @return \c true if and only if this is less than the given
      * specifier.
      */
@@ -261,7 +261,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     /**
      * Determines if this is less than or equal to the given specifier.
      *
-     * @param other the specifier to compare with this.
+     * \param other the specifier to compare with this.
      * @return \c true if and only if this is less than or equal to
      * the given specifier.
      */
@@ -276,7 +276,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \nopython Use tightEncoding() instead, which returns a string.
      *
-     * @param out the output stream to which the encoded string will be written.
+     * \param out the output stream to which the encoded string will be written.
      */
     void tightEncode(std::ostream& out) const;
 
@@ -301,7 +301,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \nopython Use tightDecoding() instead, which takes a string as
      * its argument.
      *
-     * @param input an input stream that begins with the tight encoding
+     * \param input an input stream that begins with the tight encoding
      * for a <i>dim</i>-dimensional facet specifier.
      * @return the specifier represented by the given tight encoding.
      */
@@ -311,8 +311,8 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
 /**
  * Writes the given facet specifier to the given output stream.
  *
- * @param out the output stream to which to write.
- * @param spec the specifier to write.
+ * \param out the output stream to which to write.
+ * \param spec the specifier to write.
  * @return a reference to \a out.
  *
  * \ingroup triangulation

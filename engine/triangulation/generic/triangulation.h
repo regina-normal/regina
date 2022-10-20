@@ -185,15 +185,15 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * If you want a "clean" copy that resets all properties to unknown,
          * you can use the two-argument copy constructor instead.
          *
-         * @param copy the triangulation to copy.
+         * \param copy the triangulation to copy.
          */
         Triangulation(const Triangulation& copy);
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
          *
-         * @param copy the triangulation to copy.
-         * @param cloneProps \c true if this should also clone any computed
+         * \param copy the triangulation to copy.
+         * \param cloneProps \c true if this should also clone any computed
          * properties of the given triangulation (such as homology,
          * fundamental group, and so on), or \c false if the new triangulation
          * should have all properties marked as unknown.
@@ -221,7 +221,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * because we assume that \a src is about to be destroyed (an action
          * that \e will fire a packet destruction event).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
@@ -270,7 +270,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * \e not fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          * @return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src) = default;
@@ -295,7 +295,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
-         * @param other the triangulation whose contents should be
+         * \param other the triangulation whose contents should be
          * swapped with this.
          */
         void swap(Triangulation<dim>& other);
@@ -352,7 +352,7 @@ class DegreeLessThan {
          * Constructions a function object for working with faces of the
          * given triangulation.
          *
-         * @param tri the triangulation with which we are working.
+         * \param tri the triangulation with which we are working.
          */
         DegreeLessThan(const Triangulation<dim>& tri);
         /**
@@ -369,9 +369,9 @@ class DegreeLessThan {
          * less than the total number of <i>subdim</i>-dimensional faces in
          * the triangulation.
          *
-         * @param a the index of the first <i>subdim</i>-dimensional face
+         * \param a the index of the first <i>subdim</i>-dimensional face
          * within the triangulation.
-         * @param b the index of the second <i>subdim</i>-dimensional face
+         * \param b the index of the second <i>subdim</i>-dimensional face
          * within the triangulation.
          * @return \c true if and only if face \a a has smaller degree than
          * face \a b within the given triangulation.
@@ -417,7 +417,7 @@ class DegreeGreaterThan {
          * Constructions a function object for working with faces of the
          * given triangulation.
          *
-         * @param tri the triangulation with which we are working.
+         * \param tri the triangulation with which we are working.
          */
         DegreeGreaterThan(const Triangulation<dim>& tri);
         /**
@@ -434,9 +434,9 @@ class DegreeGreaterThan {
          * less than the total number of <i>subdim</i>-dimensional faces in
          * the triangulation.
          *
-         * @param a the index of the first <i>subdim</i>-dimensional face
+         * \param a the index of the first <i>subdim</i>-dimensional face
          * within the triangulation.
-         * @param b the index of the second <i>subdim</i>-dimensional face
+         * \param b the index of the second <i>subdim</i>-dimensional face
          * within the triangulation.
          * @return \c true if and only if face \a a has greater degree than
          * face \a b within the given triangulation.

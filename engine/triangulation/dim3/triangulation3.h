@@ -225,15 +225,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If you want a "clean" copy that resets all properties to unknown,
          * you can use the two-argument copy constructor instead.
          *
-         * @param copy the triangulation to copy.
+         * \param copy the triangulation to copy.
          */
         Triangulation(const Triangulation<3>& copy);
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
          *
-         * @param copy the triangulation to copy.
-         * @param cloneProps \c true if this should also clone any computed
+         * \param copy the triangulation to copy.
+         * \param cloneProps \c true if this should also clone any computed
          * properties of the given triangulation (such as homology,
          * fundamental group, and so on), or \c false if the new triangulation
          * should have all properties marked as unknown.
@@ -261,7 +261,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * because we assume that \a src is about to be destroyed (an action
          * that \e will fire a packet destruction event).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
@@ -284,8 +284,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This is the same triangulation that is produced by
          * Link::complement().
          *
-         * @param link the link whose complement we should build.
-         * @param simplify \c true if and only if the triangulation
+         * \param link the link whose complement we should build.
+         * \param simplify \c true if and only if the triangulation
          * should be simplified to use as few tetrahedra as possible.
          */
         Triangulation(const Link& link, bool simplify = true);
@@ -312,7 +312,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * string as representing a triangulation using any of the supported
          * string types.
          *
-         * @param description a string that describes a 3-manifold
+         * \param description a string that describes a 3-manifold
          * triangulation.
          */
         Triangulation(const std::string& description);
@@ -327,7 +327,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \nocpp
          *
-         * @param m a SnapPy object of type snappy.Manifold.
+         * \param m a SnapPy object of type snappy.Manifold.
          */
         Triangulation(snappy::Manifold m);
         /**
@@ -340,7 +340,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \nocpp
          *
-         * @param t a SnapPy object of type snappy.Triangulation.
+         * \param t a SnapPy object of type snappy.Triangulation.
          */
         Triangulation(snappy::Triangulation t);
 #endif
@@ -483,7 +483,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
-         * @param src the triangulation to copy.
+         * \param src the triangulation to copy.
          * @return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation& src);
@@ -511,7 +511,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \e not fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          * @return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src);
@@ -536,7 +536,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
-         * @param other the triangulation whose contents should be
+         * \param other the triangulation whose contents should be
          * swapped with this.
          */
         void swap(Triangulation<3>& other);
@@ -841,16 +841,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param r the integer \a r as described above; this must be at
+         * \param r the integer \a r as described above; this must be at
          * least 3.
-         * @param parity determines for odd \a r whether \a q0 is a primitive
+         * \param parity determines for odd \a r whether \a q0 is a primitive
          * <i>2r</i>th or <i>r</i>th root of unity, as described above.
-         * @param alg the algorithm with which to compute the invariant.  If
+         * \param alg the algorithm with which to compute the invariant.  If
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
          * This should be treated as a hint only: if the algorithm you choose
          * is not supported for the given parameters (\a r and \a parity),
          * then Regina will use another algorithm instead.
-         * @param tracker a progress tracker through will progress will
+         * \param tracker a progress tracker through will progress will
          * be reported, or \c nullptr if no progress reporting is required.
          * @return the requested Turaev-Viro invariant, or an uninitialised
          * field element if the calculation was cancelled via the given
@@ -898,11 +898,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The argument \a whichRoot is strictly between 0 and <i>2r</i>,
          * and has no common factors with \a r.
          *
-         * @param r the integer \a r as described above; this must be at
+         * \param r the integer \a r as described above; this must be at
          * least 3.
-         * @param whichRoot specifies which root of unity is used for \a q0,
+         * \param whichRoot specifies which root of unity is used for \a q0,
          * as described above.
-         * @param alg the algorithm with which to compute the invariant.  If
+         * \param alg the algorithm with which to compute the invariant.  If
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
          * This should be treated as a hint only: if the algorithm you choose
          * is not supported for the given parameters (\a r and \a whichRoot),
@@ -1475,7 +1475,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Note that the edge pointers returned will become
          * invalid once the triangulation has changed.
          *
-         * @param canJoinBoundaries \c true if and only if different
+         * \param canJoinBoundaries \c true if and only if different
          * boundary components are allowed to be joined by the maximal forest.
          * @return a set containing the edges of the maximal forest.
          */
@@ -1534,7 +1534,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.
          *
-         * @param perform \c true if we are to perform the
+         * \param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
          * whether simplifications are possible (defaults to \c true).
          * @return if \a perform is \c true, this routine returns
@@ -1610,12 +1610,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param height the maximum number of \e additional tetrahedra to
+         * \param height the maximum number of \e additional tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
          * triangulation, or a negative number if this should not be bounded.
-         * @param nThreads the number of threads to use.  If this is
+         * \param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c nullptr if no progress reporting is required.
          * @return \c true if and only if the triangulation was successfully
          * simplified to fewer tetrahedra.
@@ -1716,16 +1716,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * (const std::string&, Triangulation<3>&&) representing a signature
          * and the triangulation, as described in option (b) above.
          *
-         * @param height the maximum number of \e additional tetrahedra to
+         * \param height the maximum number of \e additional tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
          * triangulation, or a negative number if this should not be bounded.
-         * @param nThreads the number of threads to use.  If this is
+         * \param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each triangulation that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
          * @return \c true if some call to \a action returned \c true (thereby
          * terminating the search early), or \c false if the search ran to
@@ -1876,17 +1876,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is legal.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param newAxis Specifies which axis of the octahedron the new
+         * \param e the edge about which to perform the move.
+         * \param newAxis Specifies which axis of the octahedron the new
          * tetrahedra should meet along; this should be 0 or 1.
          * Consider the four original tetrahedra in the order described
          * by Edge<3>::embedding(0,...,3); call these tetrahedra 0, 1, 2 and
          * 3.  If \a newAxis is 0, the new axis will separate tetrahedra
          * 0 and 1 from 2 and 3.  If \a newAxis is 1, the new axis will
          * separate tetrahedra 1 and 2 from 3 and 0.
-         * @param check \c true if we are to check whether the move is
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -1934,10 +1934,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is legal.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param e the edge about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -1979,10 +1979,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is legal.
          * \pre The given vertex is a vertex of this triangulation.
          *
-         * @param v the vertex about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param v the vertex about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -2034,15 +2034,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is legal.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param edgeEnd the end of the edge \e opposite that at
+         * \param e the edge about which to perform the move.
+         * \param edgeEnd the end of the edge \e opposite that at
          * which the second tetrahedron (to be merged) is joined.
          * The end is 0 or 1, corresponding to the labelling (0,1) of
          * the vertices of the edge as described in
          * EdgeEmbedding<3>::vertices().
-         * @param check \c true if we are to check whether the move is
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -2086,16 +2086,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * must by known in advance that the move is legal.
          * \pre The edge \a e is an edge of this triangulation.
          *
-         * @param e0 an embedding of the common edge \a e of the two
+         * \param e0 an embedding of the common edge \a e of the two
          * triangles about which to perform the move.
-         * @param t0 one of the two triangles about which to perform the
+         * \param t0 one of the two triangles about which to perform the
          * move (associated to the edge embedding \a e0).
-         * @param e1 another embedding of the edge \a e.
-         * @param t1 the other triangle about which to perform move
+         * \param e1 another embedding of the edge \a e.
+         * \param t1 the other triangle about which to perform move
          * (associated to the edge embedding \a e1).
-         * @param check \c true if we are to check whether the move is
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move (defaults to
+         * \param perform \c true if we are to perform the move (defaults to
          * \c true).
          * @return If \a check is \c true, the function returns \c true if
          * and only if the requested move may be performed without changing
@@ -2154,15 +2154,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * must by known in advance that the move is legal.
          * \pre The given edge \a e is an edge of this triangulation.
          *
-         * @param e the common edge of the two triangles about which to
+         * \param e the common edge of the two triangles about which to
          * perform the move.
-         * @param t0 the number assigned to one of two triangles about which
+         * \param t0 the number assigned to one of two triangles about which
          * to perform the move.
-         * @param t1 the number assigned to the other triangle about which
+         * \param t1 the number assigned to the other triangle about which
          * to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move (defaults to
+         * \param perform \c true if we are to perform the move (defaults to
          * \c true).
          * @return If \a check is \c true, the function returns \c true if
          * and only if the requested move may be performed without changing
@@ -2209,14 +2209,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * triangulation.
          * \pre The numbers \a e0 and \a e1 are both 0, 1 or 2.
          *
-         * @param t0 one of the two triangles about which to perform the move.
-         * @param e0 the edge at which \a t0 meets the other triangle about
+         * \param t0 one of the two triangles about which to perform the move.
+         * \param e0 the edge at which \a t0 meets the other triangle about
          * which to perform the move.
-         * @param t1 the other triangle about which to perform the move.
-         * @param e1 the edge at which \a t1 meets \a t0.
-         * @param check \c true if we are to check whether the move is
+         * \param t1 the other triangle about which to perform the move.
+         * \param e1 the edge at which \a t1 meets \a t0.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move (defaults to
+         * \param perform \c true if we are to perform the move (defaults to
          * \c true).
          * @return If \a check is \c true, the function returns \c true if
          * and only if the requested move may be performed without changing
@@ -2263,10 +2263,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is legal.
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * @param t the triangle about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param t the triangle about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -2311,10 +2311,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is legal.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param e the edge about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -2357,10 +2357,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is legal.
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
-         * @param t the tetrahedron upon which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param t the tetrahedron upon which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -2410,10 +2410,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * it must be known in advance that the move is legal.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge to collapse.
-         * @param check \c true if we are to check whether the move is
+         * \param e the edge to collapse.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the given edge may be collapsed
@@ -2440,7 +2440,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * will become tetrahedron \a n-1, its neighbours will become
          * tetrahedra \a n-2 down to \a n-5, and so on.
          *
-         * @param reverse \c true if the new tetrahedron numbers should
+         * \param reverse \c true if the new tetrahedron numbers should
          * be assigned in reverse order, as described above.
          */
         void reorderTetrahedraBFS(bool reverse = false);
@@ -2464,7 +2464,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * through all possible edge orientations until a consistent one
          * has been found.
          *
-         * @param forceOriented \c true if the triangulation must be
+         * \param forceOriented \c true if the triangulation must be
          * both ordered and \e oriented, in which case this routine will
          * return \c false if the triangulation cannot be oriented and
          * ordered at the same time.  See orient() for further details.
@@ -3100,7 +3100,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The given edge is an internal edge of this triangulation
          * (that is, \a e does not lie entirely within the boundary).
          *
-         * @param e the edge to collapse.
+         * \param e the edge to collapse.
          */
         void pinchEdge(Edge<3>* e);
 
@@ -3134,7 +3134,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre This triangulation is non-empty, and if \c tet is non-null
          * then it is in fact a tetrahedron of this triangulation.
          *
-         * @param tet the tetrahedron inside which the puncture will be
+         * \param tet the tetrahedron inside which the puncture will be
          * taken.  This may be \c null (the default), in which case the
          * first tetrahedron will be used.
          */
@@ -3158,7 +3158,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The given edge is a boundary edge of this triangulation,
          * and the two boundary triangles on either side of it are distinct.
          *
-         * @param edge the boundary edge upon which to layer.
+         * \param edge the boundary edge upon which to layer.
          * @return the new tetrahedron provided by the layering.
          */
         Tetrahedron<3>* layerOn(Edge<3>* edge);
@@ -3194,13 +3194,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * each boundary edge but you do not know how these edges are
          * indexed in the boundary component.
          *
-         * @param cuts0 the number of times that the meridional curve of
+         * \param cuts0 the number of times that the meridional curve of
          * the new solid torus should cut the edge <tt>bc->edge(0)</tt>.
-         * @param cuts1 the number of times that the meridional curve of
+         * \param cuts1 the number of times that the meridional curve of
          * the new solid torus should cut the edge <tt>bc->edge(1)</tt>.
-         * @param cuts2 the number of times that the meridional curve of
+         * \param cuts2 the number of times that the meridional curve of
          * the new solid torus should cut the edge <tt>bc->edge(2)</tt>.
-         * @param bc the boundary component to fill.  If the triangulation
+         * \param bc the boundary component to fill.  If the triangulation
          * has precisely one boundary component then this may be \c null.
          * @return \c true if the boundary component was filled successfully,
          * or \c false if one of the required conditions as described
@@ -3235,16 +3235,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * filling curve cuts each boundary edge but you do not know how these
          * edges are indexed in the corresponding boundary component.
          *
-         * @param e0 one of the three edges of the boundary component to fill.
-         * @param e1 the second of the three edges of the boundary component
+         * \param e0 one of the three edges of the boundary component to fill.
+         * \param e1 the second of the three edges of the boundary component
          * to fill.
-         * @param e2 the second of the three edges of the boundary component
+         * \param e2 the second of the three edges of the boundary component
          * to fill.
-         * @param cuts0 the number of times that the meridional curve of
+         * \param cuts0 the number of times that the meridional curve of
          * the new solid torus should cut the edge \a e0.
-         * @param cuts1 the number of times that the meridional curve of
+         * \param cuts1 the number of times that the meridional curve of
          * the new solid torus should cut the edge \a e1.
-         * @param cuts2 the number of times that the meridional curve of
+         * \param cuts2 the number of times that the meridional curve of
          * the new solid torus should cut the edge \a e2.
          * @return \c true if the boundary component was filled successfully,
          * or \c false if one of the required conditions as described
@@ -3273,8 +3273,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre 0 \<= \a cuts0 \<= \a cuts1;
          * \pre gcd(\a cuts0, \a cuts1) = 1.
          *
-         * @param cuts0 the smallest of the three desired intersection numbers.
-         * @param cuts1 the second smallest of the three desired intersection
+         * \param cuts0 the smallest of the three desired intersection numbers.
+         * \param cuts1 the second smallest of the three desired intersection
          * numbers.
          * @return the tetrahedron containing the boundary torus.
          *
@@ -3306,7 +3306,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * It is allowed to pass this triangulation as \a other.
          *
-         * @param other the triangulation to sum with this.
+         * \param other the triangulation to sum with this.
          */
         void connectedSumWith(const Triangulation& other);
 
@@ -3432,7 +3432,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \nopython Instead call snapPea() with no arguments, which returns
          * this data as a string.
          *
-         * @param out the output stream to which the SnapPea data file
+         * \param out the output stream to which the SnapPea data file
          * will be written.
          */
         void snapPea(std::ostream& out) const;
@@ -3469,7 +3469,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The \e contents of the file will be written using UTF-8.
          *
-         * @param filename the name of the SnapPea file to which to write.
+         * \param filename the name of the SnapPea file to which to write.
          * @return \c true if and only if the file was successfully written.
          */
         bool saveSnapPea(const char* filename) const;
@@ -3519,7 +3519,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \nopython Instead call recogniser() with no arguments, which
          * returns this data as a string.
          *
-         * @param out the output stream to which the recogniser data file
+         * \param out the output stream to which the recogniser data file
          * will be written.
          */
         void recogniser(std::ostream& out) const;
@@ -3539,7 +3539,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \nopython Instead call recognizer() with no arguments, which
          * returns this data as a string.
          *
-         * @param out the output stream to which the recogniser data file
+         * \param out the output stream to which the recogniser data file
          * will be written.
          */
         void recognizer(std::ostream& out) const;
@@ -3558,7 +3558,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The \e contents of the file will be written using UTF-8.
          *
-         * @param filename the name of the Recogniser file to which to write.
+         * \param filename the name of the Recogniser file to which to write.
          * @return \c true if and only if the file was successfully written.
          */
         bool saveRecogniser(const char* filename) const;
@@ -3575,7 +3575,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The \e contents of the file will be written using UTF-8.
          *
-         * @param filename the name of the Recogniser file to which to write.
+         * \param filename the name of the Recogniser file to which to write.
          * @return \c true if and only if the file was successfully written.
          */
         bool saveRecognizer(const char* filename) const;
@@ -3603,7 +3603,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \exception InvalidArgument The given string could not be rehydrated.
          *
-         * @param dehydration a dehydrated representation of the
+         * \param dehydration a dehydrated representation of the
          * triangulation to construct.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
          * @return the rehydrated triangulation.
@@ -3639,7 +3639,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception InvalidArgument The given SnapPea data was not in
          * the correct format.
          *
-         * @param snapPeaData a string containing the full contents of a
+         * \param snapPeaData a string containing the full contents of a
          * SnapPea data file.
          * @return a native Regina triangulation extracted from the given
          * SnapPea data.
@@ -3749,7 +3749,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
  *
  * \nopython Casting is unnecessary in Python.
  *
- * @param p a reference, presented as a packet.
+ * \param p a reference, presented as a packet.
  * @return the same reference, presented using the type \a Held.
  *
  * \ingroup dim3
@@ -3776,7 +3776,7 @@ Triangulation<3>& static_triangulation3_cast(Packet& p);
  *
  * \nopython Casting is unnecessary in Python.
  *
- * @param p a reference, presented as a packet.
+ * \param p a reference, presented as a packet.
  * @return the same reference, presented using the type \a Held.
  *
  * \ingroup dim3

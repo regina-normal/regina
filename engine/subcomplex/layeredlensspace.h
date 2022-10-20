@@ -94,7 +94,7 @@ class LayeredLensSpace : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(LayeredLensSpace& other) noexcept;
@@ -163,7 +163,7 @@ class LayeredLensSpace : public StandardTriangulation {
          * the same layered lens space can be built from a layered solid
          * torus starting at either of its two "ends").
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of layered lens space.
          */
@@ -185,7 +185,7 @@ class LayeredLensSpace : public StandardTriangulation {
          * the same layered lens space can be built from a layered solid
          * torus starting at either of its two "ends").
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent different types of layered lens space.
          */
@@ -199,7 +199,7 @@ class LayeredLensSpace : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param comp the triangulation component to examine.
+         * \param comp the triangulation component to examine.
          * @return a structure containing details of the layered lens space,
          * or \c null if the given component is not a layered lens space.
          */
@@ -226,8 +226,8 @@ class LayeredLensSpace : public StandardTriangulation {
  * This global routine simply calls LayeredLensSpace::swap(); it is provided
  * so that LayeredLensSpace meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

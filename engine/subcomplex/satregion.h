@@ -135,7 +135,7 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          * after the move will be the same as <tt>other.block()</tt> and
          * <tt>this->block()</tt> were respectively before the move.
          *
-         * @param other the structure whose contents should be swapped with
+         * \param other the structure whose contents should be swapped with
          * this.
          */
         void swap(SatBlockSpec& other) noexcept;
@@ -151,7 +151,7 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          * parameters within the larger region (as returned by refVert() and
          * refHoriz()).
          *
-         * @param other the structure to compare against this.
+         * \param other the structure to compare against this.
          * @return \c true if and only if this and \a other contain
          * combinatorially equivalent information.
          */
@@ -167,7 +167,7 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          * parameters within the larger region (as returned by refVert() and
          * refHoriz()).
          *
-         * @param other the structure to compare against this.
+         * \param other the structure to compare against this.
          * @return \c true if and only if this and \a other do not contain
          * combinatorially equivalent information.
          */
@@ -200,7 +200,7 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -214,10 +214,10 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
         /**
          * Creates a new structure that is initialised to the given content.
          *
-         * @param block details of the saturated block structure.
-         * @param refVert \c true if the block is reflected vertically
+         * \param block details of the saturated block structure.
+         * \param refVert \c true if the block is reflected vertically
          * within the larger region, or \c false otherwise.
-         * @param refHoriz \c true if the block is reflected horizontally
+         * \param refHoriz \c true if the block is reflected horizontally
          * within the larger region, or \c false otherwise.
          */
         SatBlockSpec(SatBlock* block, bool refVert, bool refHoriz);
@@ -236,8 +236,8 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
  * This global routine simply calls SatBlockSpec::swap(); it is provided
  * so that SatBlockSpec meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */
@@ -342,7 +342,7 @@ class SatRegion : public Output<SatRegion> {
         /**
          * Creates a new copy of the given region.
          *
-         * @param src the region to copy.
+         * \param src the region to copy.
          */
         SatRegion(const SatRegion& src);
         /**
@@ -355,7 +355,7 @@ class SatRegion : public Output<SatRegion> {
         /**
          * Sets this to be a copy of the given region.
          *
-         * @param src the region to copy.
+         * \param src the region to copy.
          * @return a reference to this region.
          */
         SatRegion& operator = (const SatRegion& src);
@@ -372,7 +372,7 @@ class SatRegion : public Output<SatRegion> {
         /**
          * Swaps the contents of this and the given region.
          *
-         * @param other the region whose contents should be swapped with this.
+         * \param other the region whose contents should be swapped with this.
          */
         void swap(SatRegion& other) noexcept;
 
@@ -390,7 +390,7 @@ class SatRegion : public Output<SatRegion> {
          * how the block is aligned (e.g., reflected vertically or
          * horizontally) within the larger region.
          *
-         * @param which indicates which of the constituent blocks should
+         * \param which indicates which of the constituent blocks should
          * be returned; this must be between 0 and countBlocks()-1
          * inclusive.
          * @return details of the requested saturated block.
@@ -457,7 +457,7 @@ class SatRegion : public Output<SatRegion> {
          * \exception InvalidArgument The argument \a which was not
          * between 0 and countBoundaryAnnuli()-1 inclusive.
          *
-         * @param which specifies which boundary annulus of this region to
+         * \param which specifies which boundary annulus of this region to
          * return; this must be between 0 and countBoundaryAnnuli()-1 inclusive.
          * @return a tuple (\a block, annulus, refVert, refHoriz), where:
          * \a block is a pointer to the the particular saturated block
@@ -493,7 +493,7 @@ class SatRegion : public Output<SatRegion> {
          * account for the many symmetries in how the same saturated
          * region can be presented.
          *
-         * @param other the saturated region to compare with this.
+         * \param other the saturated region to compare with this.
          * @return \c true if and only if this and the given object represent
          * the same combinatorial presentation of a saturated region.
          */
@@ -518,7 +518,7 @@ class SatRegion : public Output<SatRegion> {
          * account for the many symmetries in how the same saturated
          * region can be presented.
          *
-         * @param other the saturated region to compare with this.
+         * \param other the saturated region to compare with this.
          * @return \c true if and only if this and the given object represent
          * different combinatorial presentations of a saturated region.
          */
@@ -568,7 +568,7 @@ class SatRegion : public Output<SatRegion> {
          * non-orientable cases where Regina cannot distinguish between
          * classes \c n3 and \c n4, as described above.
          *
-         * @param reflect \c true if this region is to be reflected
+         * \param reflect \c true if this region is to be reflected
          * as the Seifert fibred space is created, or \c false if not.
          * @return the structure of the underlying Seifert fibred space.
          */
@@ -585,7 +585,7 @@ class SatRegion : public Output<SatRegion> {
          * is an arbitrary aesthetic decision on the part of the author,
          * and is subject to change in future versions of Regina.
          *
-         * @param tex \c true if the output should be formatted for TeX,
+         * \param tex \c true if the output should be formatted for TeX,
          * or \c false if it should be written as plain text.
          * @return the abbreviated list of all blocks.
          */
@@ -604,8 +604,8 @@ class SatRegion : public Output<SatRegion> {
          *
          * \nopython Instead use the variant blockAbbrs() that returns a string.
          *
-         * @param out the output stream to which to write.
-         * @param tex \c true if the output should be formatted for TeX,
+         * \param out the output stream to which to write.
+         * \param tex \c true if the output should be formatted for TeX,
          * or \c false if it should be written as plain text.
          */
         void writeBlockAbbrs(std::ostream& out, bool tex = false) const;
@@ -624,8 +624,8 @@ class SatRegion : public Output<SatRegion> {
          * information in string form (but without the option of using a
          * custom title).
          *
-         * @param out the output stream to which to write.
-         * @param title the name of this region, to be written on the
+         * \param out the output stream to which to write.
+         * \param title the name of this region, to be written on the
          * first line of output.
          */
         void writeDetail(std::ostream& out, const std::string& title) const;
@@ -636,7 +636,7 @@ class SatRegion : public Output<SatRegion> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -646,7 +646,7 @@ class SatRegion : public Output<SatRegion> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -706,12 +706,12 @@ class SatRegion : public Output<SatRegion> {
          * \e not be passed, and there can be no additional argument list
          * \a args.
          *
-         * @param tri the triangulation in which to search for starter blocks.
-         * @param mustBeComplete \c true if you are searching for a region
+         * \param tri the triangulation in which to search for starter blocks.
+         * \param mustBeComplete \c true if you are searching for a region
          * that fills an entire triangulation component, as described above.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each embedding of a starter block that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial region and tetrahedron list
          * arguments.
          * @return \c true if \a action ever terminated the search by returning
@@ -743,9 +743,9 @@ class SatRegion : public Output<SatRegion> {
          * This is necessary to ensure that the saturated region does not
          * expand through the annulus to the other side.
          *
-         * @param annulus the proposed boundary annulus that should form
+         * \param annulus the proposed boundary annulus that should form
          * part of the new saturated region.
-         * @param avoidTets the list of tetrahedra that should not be
+         * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
          * @return details of the saturated region if one was found, or
          * \c null if none was found.
@@ -771,7 +771,7 @@ class SatRegion : public Output<SatRegion> {
          * for every boundary annulus of the given block,
          * SatBlock::hasAdjacentBlock() returns \c false.
          *
-         * @param starter the single block that this region will describe.
+         * \param starter the single block that this region will describe.
          */
         SatRegion(SatBlock* starter);
 
@@ -793,9 +793,9 @@ class SatRegion : public Output<SatRegion> {
          * torus), or twisted (forming a Klein bottle).
          * This routine counts the total number of boundaries of each type.
          *
-         * @param untwisted returns the number of untwisted (torus)
+         * \param untwisted returns the number of untwisted (torus)
          * boundary components.
-         * @param twisted returns the number of twisted (Klein bottle)
+         * \param twisted returns the number of twisted (Klein bottle)
          * boundary components.
          */
         void countBoundaries(size_t& untwisted, size_t& twisted) const;
@@ -847,10 +847,10 @@ class SatRegion : public Output<SatRegion> {
          * \pre The list \a avoidTets includes all tetrahedra on the
          * boundaries of any blocks already contained in this region.
          *
-         * @param avoidTets a list of tetrahedra that should not be
+         * \param avoidTets a list of tetrahedra that should not be
          * considered for new blocks, as discussed above.  Note that
          * this list may be modified by this routine.
-         * @param stopIfIncomplete \c true if you are filling an entire
+         * \param stopIfIncomplete \c true if you are filling an entire
          * triangulation component with this region and you wish this
          * routine to exit early if this is not possible, or \c false
          * (the default) if you simply wish to expand this region as far
@@ -890,8 +890,8 @@ class SatRegion : public Output<SatRegion> {
  * This global routine simply calls SatRegion::swap(); it is provided
  * so that SatRegion meets the C++ Swappable requirements.
  *
- * @param a the first region whose contents should be swapped.
- * @param b the second region whose contents should be swapped.
+ * \param a the first region whose contents should be swapped.
+ * \param b the second region whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

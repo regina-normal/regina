@@ -239,9 +239,9 @@ class LPConstraintBase {
          * coefficients.  Each of these inner lists will have size
          * init.columns().
          *
-         * @param col the array of columns as stored in the initial
+         * \param col the array of columns as stored in the initial
          * tableaux (i.e., the data member LPInitialTableaux::col_).
-         * @param init the tableaux through which this routine can acces
+         * \param init the tableaux through which this routine can acces
          * the underlying triangulation and permutation of columns.
          * Typically this will be the tableaux holding the column array \a col.
          */
@@ -264,9 +264,9 @@ class LPConstraintBase {
          * tableaux (LPInitialTableaux) from which the given tableaux is
          * derived.
          *
-         * @param lp the tableaux in which to constrain these linear
+         * \param lp the tableaux in which to constrain these linear
          * functions.
-         * @param numCols the number of columns in the given tableaux.
+         * \param numCols the number of columns in the given tableaux.
          */
         template <typename IntType>
         static void constrain(LPData<LPConstraintNone, IntType>& lp,
@@ -286,7 +286,7 @@ class LPConstraintBase {
          * (not normal or almost normal surfaces), then this routine should
          * return \c false.
          *
-         * @param s the surface to test.
+         * \param s the surface to test.
          * @return \c true if the given surface satisfies these linear
          * constraints, or \c false if it does not.
          */
@@ -304,7 +304,7 @@ class LPConstraintBase {
          * surfaces (not angle structure coordinates), then this routine should
          * return \c false.
          *
-         * @param s the angle structure to test.
+         * \param s the angle structure to test.
          * @return \c true if the given angle structure satisfies these linear
          * constraints, or \c false if it does not.
          */
@@ -328,7 +328,7 @@ class LPConstraintBase {
          * routine will not look at any "semantic guarantees" (e.g.
          * NormalEncoding::couldBeNonCompact()).
          *
-         * @param enc the vector encoding being queried.  This must
+         * \param enc the vector encoding being queried.  This must
          * be one of the vector encodings known to be supported by the
          * generic TreeTraversal infrastructure, and in particular it
          * may be the special angle structure encoding.
@@ -693,7 +693,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * mark, and adjust the contents of the \a banned_ and \a marked_
          * arrays accordingly.
          *
-         * @param init the original starting tableaux being used for this
+         * \param init the original starting tableaux being used for this
          * enumeration task.
          */
         template <class LPConstraint>
@@ -710,7 +710,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * routine calls LPData::constrainZero() on the corresponding
          * coordinate column.
          *
-         * @param lp the tableaux in which to enforce the bans.
+         * \param lp the tableaux in which to enforce the bans.
          */
         template <class LPConstraint, typename IntType>
         void enforceBans(LPData<LPConstraint, IntType>& lp) const;
@@ -719,7 +719,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * Identifies whether the given column of the tableaux corresponds to
          * a marked coordinate (e.g., a marked normal disc type).
          *
-         * @param column a column of the tableaux.  This must be one of
+         * \param column a column of the tableaux.  This must be one of
          * the columns corresponding to a normal or angle structure coordinate,
          * not one of the extra columns induced by an LPConstraint parameter
          * for the tree traversal class.
@@ -742,7 +742,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * (as described by LPSystem), then these two objects will compare as
          * not equal.
          *
-         * @param other the object to compare with this.
+         * \param other the object to compare with this.
          * @return \c true if and only if this and the object ban and
          * mark the same tableaux coordinates, as described above.
          */
@@ -763,7 +763,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * (as described by LPSystem), then these two objects will compare as
          * not equal.
          *
-         * @param other the object to compare with this.
+         * \param other the object to compare with this.
          * @return \c true if and only if this and the object do not ban and
          * mark the same tableaux coordinates, as described above.
          */
@@ -775,7 +775,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -798,7 +798,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * routine will not look at any "semantic guarantees" (e.g.
          * NormalEncoding::couldBeNonCompact()).
          *
-         * @param enc the vector encoding being queried.  This must
+         * \param enc the vector encoding being queried.  This must
          * be one of the vector encodings known to be supported by the
          * generic TreeTraversal infrastructure, and in particular it
          * may be the special angle structure encoding.
@@ -915,7 +915,7 @@ class BanBoundary : public BanConstraintBase {
          *
          * No disc types will be marked.
          *
-         * @param init the original starting tableaux being used for this
+         * \param init the original starting tableaux being used for this
          * enumeration task.  This tableaux must work with normal or almost
          * normal surface coordinates (not angle structure coordinates).
          */
@@ -978,10 +978,10 @@ class BanEdge : public BanConstraintBase {
          *
          * No disc types will be marked.
          *
-         * @param init the original starting tableaux being used for this
+         * \param init the original starting tableaux being used for this
          * enumeration task.  This tableaux must work with normal or almost
          * normal surface coordinates (not angle structure coordinates).
-         * @param edge the specific edge that our normal discs must not meet.
+         * \param edge the specific edge that our normal discs must not meet.
          */
         template <class LPConstraint>
         BanEdge(const LPInitialTableaux<LPConstraint>& init, Edge<3>* edge);
@@ -1048,7 +1048,7 @@ class BanTorusBoundary : public BanConstraintBase {
          * disc types associated with torus boundary components, as
          * described in the class notes.
          *
-         * @param init the original starting tableaux being used for this
+         * \param init the original starting tableaux being used for this
          * enumeration task.  This tableaux must work with normal or almost
          * normal surface coordinates (not angle structure coordinates).
          */

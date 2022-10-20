@@ -69,7 +69,7 @@ class ReginaException : public std::runtime_error {
          *
          * This constructor may throw std::bad_alloc.
          *
-         * @param msg a human-readable description of the error.
+         * \param msg a human-readable description of the error.
          */
         ReginaException(const std::string& msg) : std::runtime_error(msg) {
         }
@@ -79,7 +79,7 @@ class ReginaException : public std::runtime_error {
          *
          * This constructor may throw std::bad_alloc.
          *
-         * @param msg a human-readable description of the error.
+         * \param msg a human-readable description of the error.
          */
         ReginaException(const char* msg) : std::runtime_error(msg) {
         }
@@ -286,7 +286,7 @@ class SnapPeaIsNull : public ReginaException {
          * Creates a new exception, and marks it as having occurred
          * within the given Regina function.
          *
-         * @param fromFunction the name of the Regina function that the user
+         * \param fromFunction the name of the Regina function that the user
          * called (in particular, this is not the name of the SnapPea kernel
          * function that would have been called as a result).  An example
          * might be "SnapPeaTriangulation::homologyFilled".

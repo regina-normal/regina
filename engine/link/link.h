@@ -170,8 +170,8 @@ class StrandRef {
          * so that comparison tests treat this null reference as equal to
          * a null reference created by the zero-argument constructor.
          *
-         * @param crossing the crossing being identified.
-         * @param strand 0 to denote the strand running under the crossing, or
+         * \param crossing the crossing being identified.
+         * \param strand 0 to denote the strand running under the crossing, or
          * 1 to denote the strand running over the crossing.
          */
         StrandRef(Crossing* crossing, int strand);
@@ -388,8 +388,8 @@ class StrandRef {
  * denoting the upper or lower strand at crossing \a n respectively.
  * For example, the upper strand of crossing 7 will be written as <tt>^7</tt>.
  *
- * @param out the output stream to which to write.
- * @param s the reference to write.
+ * \param out the output stream to which to write.
+ * \param s the reference to write.
  * @return a reference to the given output stream.
  *
  * \ingroup link
@@ -519,7 +519,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          * Note that upper() and over() are synonyms for strand(1), and
          * lower() and under() are synonyms for strand(0).
          *
-         * @param which either 1 to indicate the upper strand,
+         * \param which either 1 to indicate the upper strand,
          * or 0 to indicate the lower strand.
          * @return a reference to the given strand at this crossing.
          */
@@ -533,7 +533,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          * Note that for a crossing \a c, calling <tt>c.next(s)</tt>
          * is equivalent to calling <tt>c.strand(s).next()</tt>.
          *
-         * @param strand either 1 to walk forward along the upper strand,
+         * \param strand either 1 to walk forward along the upper strand,
          * or 0 to walk forward along the lower strand.
          * @return a reference to the next crossing after this along the
          * given strand.
@@ -548,7 +548,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          * Note that for a crossing \a c, calling <tt>c.prev(s)</tt>
          * is equivalent to calling <tt>c.strand(s).prev()</tt>.
          *
-         * @param strand either 1 to walk backward along the upper strand,
+         * \param strand either 1 to walk backward along the upper strand,
          * or 0 to walk backward along the lower strand.
          * @return a reference to the previous crossing before this along the
          * given strand.
@@ -561,7 +561,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -582,7 +582,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          * references, and sets the sign of this crossing according to
          * the given argument.
          *
-         * @param sign the sign of this crossing; this must be +1 or -1.
+         * \param sign the sign of this crossing; this must be +1 or -1.
          */
         Crossing(int sign);
 
@@ -763,7 +763,7 @@ class Link :
         /**
          * Constructs the unlink with the given number of components.
          *
-         * @param unknots the number of (unknotted) components in the
+         * \param unknots the number of (unknotted) components in the
          * new unlink.
          */
         Link(size_t unknots);
@@ -775,15 +775,15 @@ class Link :
          * "clean" copy that resets all properties to unknown, you can
          * use the two-argument copy constructor instead.
          *
-         * @param copy the link to copy.
+         * \param copy the link to copy.
          */
         Link(const Link& copy);
         /**
          * Constructs a new copy of the given link, with the option of
          * whether or not to clone its computed properties also.
          *
-         * @param copy the link to copy.
-         * @param cloneProps \c true if this should also clone any
+         * \param copy the link to copy.
+         * \param cloneProps \c true if this should also clone any
          * computed properties of the given link (such as Jones
          * polynomial and so on), or \c false if the new link should
          * have all properties marked as unknown.
@@ -805,7 +805,7 @@ class Link :
          * because we assume that \a src is about to be destroyed (an action
          * that \e will fire a packet destruction event).
          *
-         * @param src the link to move.
+         * \param src the link to move.
          */
         Link(Link&& src) noexcept;
         /**
@@ -828,7 +828,7 @@ class Link :
          * string as representing a link using any of the supported string
          * types.
          *
-         * @param description a string that describes a knot or link.
+         * \param description a string that describes a knot or link.
          */
         Link(const std::string& description);
 
@@ -882,7 +882,7 @@ class Link :
          * crossing through such operations then you should use the pointer
          * to the relevant Crossing object instead.
          *
-         * @param index the index of the requested crossing.  This must
+         * \param index the index of the requested crossing.  This must
          * be between 0 and size()-1 inclusive.
          * @return the crossing at the given index.
          */
@@ -928,7 +928,7 @@ class Link :
          * unknot component), then this routine will return a null reference
          * (i.e., StrandRef::crossing() will return \c null).
          *
-         * @param index the index of the requested component.  This must
+         * \param index the index of the requested component.  This must
          * be between 0 and countComponents()-1 inclusive.
          * @return a "starting strand" for traversing the component at
          * the given index, or a null reference if the requested component
@@ -974,7 +974,7 @@ class Link :
          * upper strand respectively.  A null strand reference (as used to
          * indicate 0-crossing unknot components) has an ID of -1.
          *
-         * @param id an integer between -1 and 2*size()-1 inclusive.
+         * \param id an integer between -1 and 2*size()-1 inclusive.
          * @return the strand of this link with the corresponding ID.
          *
          * \see StrandRef::id()
@@ -1000,7 +1000,7 @@ class Link :
          * containing \a other (though, as noted above, in typical scenarios
          * both links would actually be combinatorially identical).
          *
-         * @param other the strand reference to translate.
+         * \param other the strand reference to translate.
          * @return the corresponding strand reference for this link.
          */
         StrandRef translate(const StrandRef& other) const;
@@ -1024,8 +1024,8 @@ class Link :
          * \warning This routine is slow (linear time), since it may
          * need to perform a depth-first search through the graph.
          *
-         * @param a the first of the two crossings to examine.
-         * @param b the second of the two crossings to examine.
+         * \param a the first of the two crossings to examine.
+         * \param b the second of the two crossings to examine.
          * @return \c true if and only if the two given crossings are
          * connected.
          */
@@ -1050,7 +1050,7 @@ class Link :
          *   is the same (under/over) strand of the same numbered crossing
          *   in both diagrams.
          *
-         * @param other the link diagram to compare with this.
+         * \param other the link diagram to compare with this.
          * @return \c true if and only if the two link diagrams are
          * combinatorially identical.
          */
@@ -1075,7 +1075,7 @@ class Link :
          *   is the same (under/over) strand of the same numbered crossing
          *   in both diagrams.
          *
-         * @param other the link diagram to compare with this.
+         * \param other the link diagram to compare with this.
          * @return \c true if and only if the two link diagrams are
          * not combinatorially identical.
          */
@@ -1106,7 +1106,7 @@ class Link :
         /**
          * Sets this to be a (deep) copy of the given link.
          *
-         * @param src the link to copy.
+         * \param src the link to copy.
          * @return a reference to this link.
          */
         Link& operator = (const Link& src);
@@ -1127,7 +1127,7 @@ class Link :
          * fire change events on \a src, since it assumes that \a src is about
          * to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the link to move.
+         * \param src the link to move.
          * @return a reference to this link.
          */
         Link& operator = (Link&& src);
@@ -1150,14 +1150,14 @@ class Link :
          * fires change events on both links which may in turn call arbitrary
          * code via any registered packet listeners.
          *
-         * @param other the link whose contents should be swapped with this.
+         * \param other the link whose contents should be swapped with this.
          */
         void swap(Link& other);
 
         /**
          * Switches the upper and lower strands of the given crossing.
          *
-         * @param c the crossing to change.
+         * \param c the crossing to change.
          */
         void change(Crossing* c);
 
@@ -1178,7 +1178,7 @@ class Link :
          * \note The number of components in the link \e will change
          * as a result of this operation.
          *
-         * @param c the crossing to resolve.
+         * \param c the crossing to resolve.
          */
         void resolve(Crossing* c);
 
@@ -1257,10 +1257,10 @@ class Link :
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
-         * @param crossing identifies the crossing to be removed.
-         * @param check \c true if we are to check whether the move can
+         * \param crossing identifies the crossing to be removed.
+         * \param check \c true if we are to check whether the move can
          * be performed at the given location.
-         * @param perform \c true if we should actually perform the move.
+         * \param perform \c true if we should actually perform the move.
          * @return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
@@ -1319,16 +1319,16 @@ class Link :
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * @param arc identifies the arc of the link in which the new
+         * \param arc identifies the arc of the link in which the new
          * twist will be introduced, as described above.
-         * @param side 0 if the twist should be introduced on the left
+         * \param side 0 if the twist should be introduced on the left
          * of the arc (when walking along the arc in the forward direction),
          * or 1 if the twist should be introduced on the right of the arc.
-         * @param sign the sign of the new crossing that will be
+         * \param sign the sign of the new crossing that will be
          * introduced as part of the twist; this must be +1 or -1.
-         * @param check \c true if we are to check whether the move can
+         * \param check \c true if we are to check whether the move can
          * be performed at the given location.
-         * @param perform \c true if we should actually perform the move.
+         * \param perform \c true if we should actually perform the move.
          * @return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
@@ -1389,10 +1389,10 @@ class Link :
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * @param arc identifies one of the arcs of the bigon about
+         * \param arc identifies one of the arcs of the bigon about
          * which the move will be performed, as described above.
-         * @param check \c true if we are to check whether the move is legal.
-         * @param perform \c true if we should actually perform the move.
+         * \param check \c true if we are to check whether the move is legal.
+         * \param perform \c true if we should actually perform the move.
          * @return If \a check is \c true, this function returns \c true
          * if and only if the requested move is legal.  If \a check is \c false,
          * this function always returns \c true.
@@ -1455,10 +1455,10 @@ class Link :
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
-         * @param crossing identifies the crossing at the beginning of
+         * \param crossing identifies the crossing at the beginning of
          * the "upper" arc that features in this move, as described above.
-         * @param check \c true if we are to check whether the move is legal.
-         * @param perform \c true if we should actually perform the move.
+         * \param check \c true if we are to check whether the move is legal.
+         * \param perform \c true if we should actually perform the move.
          * @return If \a check is \c true, this function returns \c true
          * if and only if the requested move is legal.  If \a check is \c false,
          * this function always returns \c true.
@@ -1532,21 +1532,21 @@ class Link :
          * since it includes testing whether both sides-of-arcs belong
          * to the same 2-cell of the knot diagram.
          *
-         * @param upperArc identifies the arc of the link which will be
+         * \param upperArc identifies the arc of the link which will be
          * passed over the other, as described above.
-         * @param upperSide 0 if the new overlap should take place on the left
+         * \param upperSide 0 if the new overlap should take place on the left
          * of \a upperArc (when walking along \a upperArc in the forward
          * direction), or 1 if the new overlap should take place on the right
          * of \a upperArc.
-         * @param lowerArc identifies the arc of the link which will be
+         * \param lowerArc identifies the arc of the link which will be
          * passed beneath the other, as described above.
-         * @param lowerSide 0 if the new overlap should take place on the left
+         * \param lowerSide 0 if the new overlap should take place on the left
          * of \a lowerArc (when walking along \a lowerArc in the forward
          * direction), or 1 if the new overlap should take place on the right
          * of \a lowerArc.
-         * @param check \c true if we are to check whether the move can
+         * \param check \c true if we are to check whether the move can
          * be performed at the given location.
-         * @param perform \c true if we should actually perform the move.
+         * \param perform \c true if we should actually perform the move.
          * @return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
@@ -1608,15 +1608,15 @@ class Link :
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * @param arc identifies one of the arcs of the triangle about
+         * \param arc identifies one of the arcs of the triangle about
          * which the move will be performed, as described above.
-         * @param side 0 if the third crossing of the triangle is located to
+         * \param side 0 if the third crossing of the triangle is located to
          * the left of the arc (when walking along the arc in the forward
          * direction), or 1 if the third crossing is located on the right of
          * the arc.
-         * @param check \c true if we are to check whether the move can
+         * \param check \c true if we are to check whether the move can
          * be performed at the given location.
-         * @param perform \c true if we should actually perform the move.
+         * \param perform \c true if we should actually perform the move.
          * @return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
@@ -1680,15 +1680,15 @@ class Link :
          * \pre The given crossing is either a null pointer, or else some
          * crossing in this link.
          *
-         * @param crossing identifies the crossing at the beginning of
+         * \param crossing identifies the crossing at the beginning of
          * the "uppermost" arc that features in this move, as described above.
-         * @param side 0 if the third crossing of the triangle is located to
+         * \param side 0 if the third crossing of the triangle is located to
          * the left of the uppermost arc (when walking along the arc in the
          * forward direction), or 1 if the third crossing is located on the
          * right of the uppermost arc.
-         * @param check \c true if we are to check whether the move can
+         * \param check \c true if we are to check whether the move can
          * be performed at the given location.
-         * @param perform \c true if we should actually perform the move.
+         * \param perform \c true if we should actually perform the move.
          * @return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
@@ -1778,7 +1778,7 @@ class Link :
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.
          *
-         * @param perform \c true if we are to perform the
+         * \param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
          * whether simplifications are possible (defaults to \c true).
          * @return if \a perform is \c true, this routine returns
@@ -1861,12 +1861,12 @@ class Link :
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param height the maximum number of \e additional crossings to
+         * \param height the maximum number of \e additional crossings to
          * allow beyond the number of crossings originally present in this
          * diagram, or a negative number if this should not be bounded.
-         * @param nThreads the number of threads to use.  If this is
+         * \param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * @return \c true if and only if this diagram was successfully
          * simplified to fewer crossings.
@@ -1973,16 +1973,16 @@ class Link :
          * (const std::string&, Link&&) representing the knot signature and
          * the knot diagram, as described in option (b) above.
          *
-         * @param height the maximum number of \e additional crossings to
+         * \param height the maximum number of \e additional crossings to
          * allow beyond the number of crossings originally present in this
          * knot diagram, or a negative number if this should not be bounded.
-         * @param nThreads the number of threads to use.  If this is
+         * \param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each knot diagram that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial knot argument(s).
          * @return \c true if some call to \a action returned \c true (thereby
          * terminating the search early), or \c false if the search ran to
@@ -2014,7 +2014,7 @@ class Link :
          *
          * It is allowed to pass this link as \a other.
          *
-         * @param other the link with which this should be composed.
+         * \param other the link with which this should be composed.
          */
         void composeWith(const Link& other);
 
@@ -2082,7 +2082,7 @@ class Link :
          * regardless of whether the link actually contains any zero-crossing
          * unknot components.
          *
-         * @param component any strand along the component of interest.
+         * \param component any strand along the component of interest.
          * @return the writhe of the component containing the given strand,
          * or 0 if the given strand is a null strand.
          */
@@ -2099,7 +2099,7 @@ class Link :
          * indicated by its index.  This function is equivalent to calling
          * <tt>writheOfComponent(component(index))</tt>.
          *
-         * @param index the index of the requested component.  This must
+         * \param index the index of the requested component.  This must
          * be between 0 and countComponents()-1 inclusive.
          * @return the writhe of the given component.
          */
@@ -2125,7 +2125,7 @@ class Link :
          * This is the same triangulation that would be produced by passing
          * this link to the Triangulation<3> constructor.
          *
-         * @param simplify \c true if and only if the triangulation of the
+         * \param simplify \c true if and only if the triangulation of the
          * complement should be simplified to use as few tetrahedra as possible.
          * @return the complement of this link.
          */
@@ -2145,9 +2145,9 @@ class Link :
          *
          * This link will not be modified.
          *
-         * @param k the number of parallel copies to create.
+         * \param k the number of parallel copies to create.
          * This must be non-negative.
-         * @param framing the framing under which these copies will be parallel.
+         * \param framing the framing under which these copies will be parallel.
          * @return \a k parallel copies of this link.
          */
         Link parallel(int k, Framing framing = FRAMING_SEIFERT) const;
@@ -2195,14 +2195,14 @@ class Link :
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param alg the algorithm with which to compute the polynomial.
+         * \param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
          * currently two choices: ALG_NAIVE is a slow algorithm that computes
          * the Kauffman bracket by resolving all crossings in all possible
          * ways, and ALG_TREEWIDTH uses a fixed-parameter tractable
          * treewidth-based algorithm.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * @return the bracket polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
@@ -2285,14 +2285,14 @@ class Link :
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param alg the algorithm with which to compute the polynomial.
+         * \param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
          * currently two choices: ALG_NAIVE is a slow algorithm that computes
          * the Kauffman bracket by resolving all crossings in all possible
          * ways, and ALG_TREEWIDTH uses a fixed-parameter tractable
          * treewidth-based algorithm.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * @return the Jones polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
@@ -2369,13 +2369,13 @@ class Link :
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param alg the algorithm with which to compute the polynomial.
+         * \param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
          * currently two choices: ALG_BACKTRACK will use Kauffman's
          * skein-template algorithm, and ALG_TREEWIDTH will use a
          * fixed-parameter tractable treewidth-based algorithm.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * @return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
@@ -2439,13 +2439,13 @@ class Link :
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param alg the algorithm with which to compute the polynomial.
+         * \param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
          * currently two choices: ALG_BACKTRACK will use Kauffman's
          * skein-template algorithm, and ALG_TREEWIDTH will use a
          * fixed-parameter tractable treewidth-based algorithm.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * @return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
@@ -2478,13 +2478,13 @@ class Link :
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param alg the algorithm with which to compute the polynomial.
+         * \param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
          * currently two choices: ALG_BACKTRACK will use Kauffman's
          * skein-template algorithm, and ALG_TREEWIDTH will use a
          * fixed-parameter tractable treewidth-based algorithm.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * @return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
@@ -2513,7 +2513,7 @@ class Link :
          *
          * See homflyAZ() and homflyLM() for further details.
          *
-         * @param homflyAZ the HOMFLY polynomial of a link as a polynomial in
+         * \param homflyAZ the HOMFLY polynomial of a link as a polynomial in
          * \a alpha and \a z, where (\a alpha, \a z) are represented by
          * (\a x, \a y) in the class Laurent2<Integer>.
          * @return the HOMFLY polynomial of the same link as a polynomial in
@@ -2603,7 +2603,7 @@ class Link :
          * Regina will automatically create a nice tree decomposition
          * from it if \e td is not nice already.
          *
-         * @param td a tree decomposition of the planar 4-valent
+         * \param td a tree decomposition of the planar 4-valent
          * multigraph formed by this link diagram.
          */
         void useTreeDecomposition(TreeDecomposition td);
@@ -2678,7 +2678,7 @@ class Link :
          * \nopython Instead use the variant brief() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void brief(std::ostream& out) const;
 
@@ -2783,7 +2783,7 @@ class Link :
          * \nopython Instead use the variants gauss() or gaussData() that
          * take no arguments.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void gauss(std::ostream& out) const;
 
@@ -2899,7 +2899,7 @@ class Link :
          * \nopython Instead use the variants orientedGauss() or
          * orientedGaussData() that take no arguments.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void orientedGauss(std::ostream& out) const;
 
@@ -3005,7 +3005,7 @@ class Link :
          * \nopython Instead use the variants jenkins() or jenkinsData() that
          * take no arguments.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void jenkins(std::ostream& out) const;
 
@@ -3085,7 +3085,7 @@ class Link :
          * \exception NotImplemented Either this link is empty or has multiple
          * components, or \a alpha is true and it has more than 26 crossings.
          *
-         * @param alpha \c true to use alphabetical notation, or \c false
+         * \param alpha \c true to use alphabetical notation, or \c false
          * (the default) to use numerical notation.
          * @return the Dowker-Thistlethwaite notation for this knot diagram.
          */
@@ -3142,8 +3142,8 @@ class Link :
          * \nopython Instead use the variants dt(bool) or dtData() that take
          * no arguments.
          *
-         * @param out the output stream to which to write.
-         * @param alpha \c true to use alphabetical notation, or \c false
+         * \param out the output stream to which to write.
+         * \param alpha \c true to use alphabetical notation, or \c false
          * (the default) to use numerical notation.
          */
         void dt(std::ostream& out, bool alpha = false) const;
@@ -3268,7 +3268,7 @@ class Link :
          * \nopython Instead use the variants pd() or pdData() that take no
          * arguments.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void pd(std::ostream& out) const;
 
@@ -3307,7 +3307,7 @@ class Link :
          * \nopython Instead use the variant pace() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          *
          * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
@@ -3373,11 +3373,11 @@ class Link :
          * \exception NotImplemented This link is empty or has multiple
          * components.
          *
-         * @param useReflection \c true if the reflection of a knot diagram
+         * \param useReflection \c true if the reflection of a knot diagram
          * should have the same signature as the original, or \c false
          * if these should be distinct (assuming the diagram is not symmetric
          * under reflection).
-         * @param useReversal \c true if the reversal of a knot diagram
+         * \param useReversal \c true if the reversal of a knot diagram
          * should have the same signature as the original, or \c false
          * if these should be distinct (assuming the diagram is not symmetric
          * under reversal).
@@ -3392,7 +3392,7 @@ class Link :
          *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -3403,7 +3403,7 @@ class Link :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -3412,7 +3412,7 @@ class Link :
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -3439,11 +3439,11 @@ class Link :
          * inserting one into an existing link), it is simpler to just call
          * ExampleLink::torus().
          *
-         * @param p the first parameter of the new torus link; this must be
+         * \param p the first parameter of the new torus link; this must be
          * non-negative.
-         * @param q the second parameter of the new torus link; this must
+         * \param q the second parameter of the new torus link; this must
          * also be non-negative.
-         * @param positive \c true if the crossings in the new torus link
+         * \param positive \c true if the crossings in the new torus link
          * should be positive, or \c false if they should be negative.
          */
         void insertTorusLink(int p, int q, bool positive = true);
@@ -3503,9 +3503,9 @@ class Link :
          * \nopython Instead, use the variant of fromData() that takes this
          * same data using two Python lists (which need not be constant).
          *
-         * @param crossingSigns a list containing the signs of the
+         * \param crossingSigns a list containing the signs of the
          * crossings; each sign must be either +1 or -1.
-         * @param components one list for each link component that
+         * \param components one list for each link component that
          * describes the crossings that are visited along that component,
          * as described in the detailed notes above.
          * @return the reconstructed link.
@@ -3576,12 +3576,12 @@ class Link :
          * welcome to replace the list of lists <tt>[[...]]</tt> with a
          * single list <tt>[...]</tt>.
          *
-         * @param beginSigns the beginning of the list of crossing signs.
-         * @param endSigns a past-the-end iterator indicating the end of
+         * \param beginSigns the beginning of the list of crossing signs.
+         * \param endSigns a past-the-end iterator indicating the end of
          * the list of crossing signs.
-         * @param beginComponents the beginning of the list of containers
+         * \param beginComponents the beginning of the list of containers
          * describing each link component.
-         * @param endComponents a past-the-end iterator indicating the
+         * \param endComponents a past-the-end iterator indicating the
          * end of the list of link components.
          * @return the reconstructed link.
          */
@@ -3602,7 +3602,7 @@ class Link :
          * \exception InvalidArgument The given string was not a valid
          * knot signature.
          *
-         * @param sig the signature of the knot diagram to construct.
+         * \param sig the signature of the knot diagram to construct.
          * Note that signatures are case-sensitive.
          * @return the reconstructed knot.
          */
@@ -3620,7 +3620,7 @@ class Link :
          * \exception InvalidArgument The given string was not a valid
          * knot signature.
          *
-         * @param sig the signature of the knot diagram to construct.
+         * \param sig the signature of the knot diagram to construct.
          * Note that signatures are case-sensitive.
          * @return the reconstructed knot.
          */
@@ -3644,7 +3644,7 @@ class Link :
          * \nopython Use tightDecoding() instead, which takes a string as
          * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for a link.
          * @return the link represented by the given tight encoding.
          */
@@ -3716,7 +3716,7 @@ class Link :
          *
          * \author Adam Gowty
          *
-         * @param str a classical Gauss code for a knot, as described above.
+         * \param str a classical Gauss code for a knot, as described above.
          * @return the reconstructed knot.
          */
         static Link fromGauss(const std::string& str);
@@ -3765,9 +3765,9 @@ class Link :
          *
          * \author Adam Gowty
          *
-         * @param begin an iterator that points to the beginning of the
+         * \param begin an iterator that points to the beginning of the
          * sequence of integers for a classical Gauss code.
-         * @param end an iterator that points past the end of the
+         * \param end an iterator that points past the end of the
          * sequence of integers for a classical Gauss code.
          * @return the reconstructed knot.
          */
@@ -3829,7 +3829,7 @@ class Link :
          * oriented Gauss code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
-         * @param str an "oriented" Gauss code for a knot, as described above.
+         * \param str an "oriented" Gauss code for a knot, as described above.
          * @return the reconstructed knot.
          */
         static Link fromOrientedGauss(const std::string& str);
@@ -3884,9 +3884,9 @@ class Link :
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of strings.
          *
-         * @param begin an iterator that points to the beginning of the
+         * \param begin an iterator that points to the beginning of the
          * sequence of tokens for an "oriented" Gauss code.
-         * @param end an iterator that points past the end of the
+         * \param end an iterator that points past the end of the
          * sequence of tokens for an "oriented" Gauss code.
          * @return the reconstructed knot.
          */
@@ -3935,7 +3935,7 @@ class Link :
          * encoding of a link in Jenkins' format.  As noted above, the
          * checks performed here are not exhaustive.
          *
-         * @param str a string describing a link in Jenkins' format,
+         * \param str a string describing a link in Jenkins' format,
          * as described above.
          * @return the reconstructed link.
          */
@@ -3975,7 +3975,7 @@ class Link :
          * \nopython Instead use the variant fromJenkins(const std::string&),
          * which takes the input as a string.
          *
-         * @param in an input stream that begins with a sequence of integers
+         * \param in an input stream that begins with a sequence of integers
          * separated by whitespace that describes a link.
          * @return the reconstructed link.
          */
@@ -4015,9 +4015,9 @@ class Link :
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
          *
-         * @param begin an iterator that points to the beginning of the
+         * \param begin an iterator that points to the beginning of the
          * sequence of integers that describes a link.
-         * @param end an iterator that points past the end of the
+         * \param end an iterator that points past the end of the
          * sequence of integers that describes a link.
          * @return the reconstructed link.
          */
@@ -4085,7 +4085,7 @@ class Link :
          * \author Much of the code for this routine is based on the
          * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
          *
-         * @param str either the alphabetical or numerical
+         * \param str either the alphabetical or numerical
          * Dowker-Thistlethwaite notation for a knot, as described above.
          * @return the reconstructed knot.
          */
@@ -4141,10 +4141,10 @@ class Link :
          * \author Much of the code for this routine is based on the
          * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
          *
-         * @param begin an iterator that points to the beginning of the
+         * \param begin an iterator that points to the beginning of the
          * sequence of integers for the Dowker-Thistlethwaite notation
          * for a knot.
-         * @param end an iterator that points past the end of the
+         * \param end an iterator that points past the end of the
          * sequence of integers for the Dowker-Thistlethwaite notation
          * for a knot.
          * @return the reconstructed knot.
@@ -4249,7 +4249,7 @@ class Link :
          * planar diagram code.  As noted above, the checks performed here
          * are not exhaustive.
          *
-         * @param str a planar diagram code for a link, as described above.
+         * \param str a planar diagram code for a link, as described above.
          * @return the reconstructed link.
          */
         static Link fromPD(const std::string& str);
@@ -4302,9 +4302,9 @@ class Link :
          * In particular, a list of Python lists is fine, and a list of
          * Python tuples is fine also.
          *
-         * @param begin an iterator that points to the beginning of the
+         * \param begin an iterator that points to the beginning of the
          * sequence of 4-tuples for a planar diagram code.
-         * @param end an iterator that points past the end of the
+         * \param end an iterator that points past the end of the
          * sequence of 4-tuples for a planar diagram code.
          * @return the reconstructed link.
          */
@@ -4341,14 +4341,14 @@ class Link :
          * This routine parses a single token in an "oriented" Gauss code.
          * The token must not contain any whitespace.
          *
-         * @param s the token to parse.
-         * @param nCross the total number of crossings in the knot.
-         * @param crossing used to return the label of the crossing
+         * \param s the token to parse.
+         * \param nCross the total number of crossings in the knot.
+         * \param crossing used to return the label of the crossing
          * described by this token.
-         * @param strand used to return either 1 or 0 according to
+         * \param strand used to return either 1 or 0 according to
          * whether this token describes the upper or lower strand of the
          * crossing respectively.
-         * @param sign used to return the sign of this crossing (either
+         * \param sign used to return the sign of this crossing (either
          * +1 or -1).
          * @return \c true if and only if no errors were detected when
          * parsing the token.
@@ -4361,14 +4361,14 @@ class Link :
          * This routine parses a single token in an "oriented" Gauss code.
          * The token must not contain any whitespace.
          *
-         * @param s the token to parse.
-         * @param nCross the total number of crossings in the knot.
-         * @param crossing used to return the label of the crossing
+         * \param s the token to parse.
+         * \param nCross the total number of crossings in the knot.
+         * \param crossing used to return the label of the crossing
          * described by this token.
-         * @param strand used to return either 1 or 0 according to
+         * \param strand used to return either 1 or 0 according to
          * whether this token describes the upper or lower strand of the
          * crossing respectively.
-         * @param sign used to return the sign of this crossing (either
+         * \param sign used to return the sign of this crossing (either
          * +1 or -1).
          * @return \c true if and only if no errors were detected when
          * parsing the token.
@@ -4402,15 +4402,15 @@ class Link :
          * \exception InvalidArgument An error or inconsistency is found in
          * the given data.
          *
-         * @param strandsRemaining the expected sum of the lengths of
+         * \param strandsRemaining the expected sum of the lengths of
          * all components that still need to be processed.  This expected
          * sum is computed as twice the number of crossings minus the
          * lengths of all components that have already been processed.
          * In an error-free scenario, \a strandsRemaining should equal
          * the sum of the lengths of the lists passed in \a component and
          * \a otherComponents.
-         * @param component the component to process now.
-         * @param otherComponents the remaining components still to be
+         * \param component the component to process now.
+         * \param otherComponents the remaining components still to be
          * processed; these will be processed by a recursive call to this
          * routine.
          */
@@ -4430,7 +4430,7 @@ class Link :
          * the given data (which for this terminating call simply means
          * \a strandsRemaining != 0).
          *
-         * @param strandsRemaining the expected sum of the lengths of
+         * \param strandsRemaining the expected sum of the lengths of
          * all components that still need to be processed.  This expected
          * sum is computed as twice the number of crossings minus the
          * lengths of all components that have already been processed.
@@ -4547,7 +4547,7 @@ class Link :
          * treewidth-based dynamic programming algorithm, and chooses a
          * root that minimises the maximum such estimate over all bags.
          *
-         * @param td the tree decomposition to optimise.
+         * \param td the tree decomposition to optimise.
          */
         void optimiseForJones(TreeDecomposition& td) const;
 
@@ -4566,7 +4566,7 @@ class Link :
          * \a bracket (using a move, not a deep copy), and the
          * Jones polynomial will be derived from it.
          *
-         * @param bracket the Kauffman bracket polynomial of this link.
+         * \param bracket the Kauffman bracket polynomial of this link.
          */
         void setPropertiesFromBracket(Laurent<Integer>&& bracket) const;
 
@@ -4589,8 +4589,8 @@ class Link :
  * fires change events on both links which may in turn call arbitrary
  * code via any registered packet listeners.
  *
- * @param lhs the link whose contents should be swapped with \a rhs.
- * @param rhs the link whose contents should be swapped with \a lhs.
+ * \param lhs the link whose contents should be swapped with \a rhs.
+ * \param rhs the link whose contents should be swapped with \a lhs.
  *
  * \ingroup link
  */

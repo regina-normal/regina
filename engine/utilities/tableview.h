@@ -280,7 +280,7 @@ class TableView {
                 /**
                  * Compares this with the given iterator for equality.
                  *
-                 * @param rhs the iterator to compare this with.
+                 * \param rhs the iterator to compare this with.
                  * @return \c true if the iterators point to the same
                  * subarray/element of the underlying table, or \c false
                  * if they do not.
@@ -291,7 +291,7 @@ class TableView {
                 /**
                  * Compares this with the given iterator for equality.
                  *
-                 * @param rhs the iterator to compare this with.
+                 * \param rhs the iterator to compare this with.
                  * @return \c false if the iterators point to the same
                  * subarray/element of the underlying table, or \c true
                  * if they do not.
@@ -394,7 +394,7 @@ class TableView {
          *
          * \nopython
          *
-         * @param array the pointer to the C-style array.
+         * \param array the pointer to the C-style array.
          */
         constexpr TableView(Subarray* array) : array_(array) {
         }
@@ -445,7 +445,7 @@ class TableView {
          * <tt>array[index_1][index_2]...[index_dim]</tt>, where
          * \a dim is the dimension of this array.
          *
-         * @param index indicates which element or sub-array to return;
+         * \param index indicates which element or sub-array to return;
          * this must be between 0 and (\a dim1-1) inclusive.
          * @return the (\a index)th sub-array.
          */
@@ -529,7 +529,7 @@ class TableView {
          * must be equal).  In particular, it is not enough for the two arrays
          * just to have identical contents.
          *
-         * @param other the table view to compare with this.
+         * \param other the table view to compare with this.
          * @return \c true if and only if this and the given table use
          * the same underlying C-style array.
          */
@@ -546,7 +546,7 @@ class TableView {
          * must be equal).  In particular, it is not enough for the two arrays
          * just to have identical contents.
          *
-         * @param other the table view to compare with this.
+         * \param other the table view to compare with this.
          * @return \c true if and only if this and the given table use
          * different underlying C-style arrays.
          */

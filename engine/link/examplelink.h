@@ -161,9 +161,9 @@ class ExampleLink {
          *
          * All of the crossings in the resulting link will be positive.
          *
-         * @param p the first parameter of the torus link; this must be
+         * \param p the first parameter of the torus link; this must be
          * strictly non-negative.
-         * @param q the second parameter of the torus link; this must
+         * \param q the second parameter of the torus link; this must
          * also be strictly non-negative.
          * @return the (\a p, \a q) torus link.
          */

@@ -53,8 +53,8 @@ class IntegerBase;
 /**
  * Determines whether the given C++ string begins with the given prefix.
  *
- * @param str the full C++ string to examine.
- * @param prefix the prefix whose presence we are testing for.
+ * \param str the full C++ string to examine.
+ * \param prefix the prefix whose presence we are testing for.
  * @return \c true if and only if \a str begins with \a prefix.
  *
  * \ingroup utilities
@@ -71,7 +71,7 @@ bool startsWith(const std::string& str, const std::string& prefix);
  * isspace() is used to identify whitespace.  Use it on strings with
  * international characters at your own peril.
  *
- * @param str the string to be stripped.
+ * \param str the string to be stripped.
  * @return the resulting stripped string.
  *
  * \ingroup utilities
@@ -91,8 +91,8 @@ std::string stripWhitespace(const std::string& str);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting 8-bit integer.
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting 8-bit integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
@@ -112,8 +112,8 @@ bool valueOf(const std::string& str, int8_t& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting unsigned
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting unsigned
  * 8-bit integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
@@ -134,8 +134,8 @@ bool valueOf(const std::string& str, uint8_t& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting short integer.
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting short integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
@@ -155,8 +155,8 @@ bool valueOf(const std::string& str, short& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting unsigned
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting unsigned
  * short integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
@@ -177,8 +177,8 @@ bool valueOf(const std::string& str, unsigned short& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting integer.
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
@@ -198,8 +198,8 @@ bool valueOf(const std::string& str, int& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting unsigned integer.
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting unsigned integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
@@ -219,8 +219,8 @@ bool valueOf(const std::string& str, unsigned& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting long integer.
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting long integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
@@ -240,8 +240,8 @@ bool valueOf(const std::string& str, long& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting unsigned long
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting unsigned long
  * integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
@@ -262,8 +262,8 @@ bool valueOf(const std::string& str, unsigned long& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting long long integer.
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting long long integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
@@ -283,8 +283,8 @@ bool valueOf(const std::string& str, long long& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting unsigned long long
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting unsigned long long
  * integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
@@ -305,8 +305,8 @@ bool valueOf(const std::string& str, unsigned long long& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting real number.
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting real number.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
@@ -328,8 +328,8 @@ bool valueOf(const std::string& str, double& dest);
  * since these tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting boolean.
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting boolean.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
@@ -350,8 +350,8 @@ bool valueOf(const std::string& str, bool& dest);
  * performs the same task (with the minor difference that it does not change
  * \a dest if the conversion is unsuccessful).
  *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting set of booleans.
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting set of booleans.
  * @return \c true if the conversion was successful or \c false otherwise.
  *
  * \ingroup utilities
@@ -370,7 +370,7 @@ bool valueOf(const std::string& str, BoolSet& dest);
  * isspace() is used to identify whitespace.  Use it on strings with
  * international characters at your own peril.
  *
- * @param str the string to decompose.
+ * \param str the string to decompose.
  * @return the resulting list of tokens.
  *
  * \ingroup utilities
@@ -382,7 +382,7 @@ std::vector<std::string> basicTokenise(const std::string& str);
  * All whitespace characters in the given string will be replaced with
  * an underscore.
  *
- * @param str the string on which to base the token.
+ * \param str the string on which to base the token.
  * @return the corresponding token.
  *
  * \ingroup utilities

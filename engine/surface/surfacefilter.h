@@ -67,8 +67,8 @@ class SurfaceFilterProperties;
  * - declarations and implementations of the virtual functions
  *   SurfaceFilter::filterType() and SurfaceFilter::filterTypeName();
  *
- * @param id the corresponding SurfaceFilterType constant.
- * @param name a human-readable name for this filter type.
+ * \param id the corresponding SurfaceFilterType constant.
+ * \param name a human-readable name for this filter type.
  *
  * \ingroup surfaces
  */
@@ -121,7 +121,7 @@ class SurfaceFilter : public Packet {
          *
          * The default implementation simply returns \c true.
          *
-         * @param surface the normal surface under investigation.
+         * \param surface the normal surface under investigation.
          * @return \c true if and only if the given surface is accepted
          * by this filter.
          */
@@ -208,7 +208,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
          * the packet infrastructure (e.g., it will not copy the packet label,
          * or change this packet's location in any packet tree).
          *
-         * @param src the filter whose contents should be copied.
+         * \param src the filter whose contents should be copied.
          * @return a reference to this filter.
          */
         SurfaceFilterCombination& operator = (
@@ -221,7 +221,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
          * the packet infrastructure (e.g., it will not swap packet labels,
          * or change either packet's location in any packet tree).
          *
-         * @param other the filter whose contents should be swapped with this.
+         * \param other the filter whose contents should be swapped with this.
          */
         void swap(SurfaceFilterCombination& other);
 
@@ -235,7 +235,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
         /**
          * Sets whether this is an \a and or an \a or combination.
          *
-         * @param value \c true if this is to be an \a and combination,
+         * \param value \c true if this is to be an \a and combination,
          * or \c false if this is to be an \a or combination.
          */
         void setUsesAnd(bool value);
@@ -244,7 +244,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
          * Determines if this and the given filter use the same boolean
          * operation.
          *
-         * @param other the filter to compare with this.
+         * \param other the filter to compare with this.
          * @return \c true if and only if this and the given filter
          * use the same boolean operation.
          */
@@ -254,7 +254,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
          * Determines if this and the given filter do not use the same
          * boolean operation.
          *
-         * @param other the filter to compare with this.
+         * \param other the filter to compare with this.
          * @return \c true if and only if this and the given filter
          * use different boolean operations.
          */
@@ -276,8 +276,8 @@ class SurfaceFilterCombination : public SurfaceFilter {
  * provided so that SurfaceFilterCombination meets the C++ Swappable
  * requirements.
  *
- * @param a the first filter whose contents should be swapped.
- * @param b the second filter whose contents should be swapped.
+ * \param a the first filter whose contents should be swapped.
+ * \param b the second filter whose contents should be swapped.
  *
  * \ingroup surfaces
  */
@@ -340,7 +340,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * the packet infrastructure (e.g., it will not copy the packet label,
          * or change this packet's location in any packet tree).
          *
-         * @param src the filter whose contents should be copied.
+         * \param src the filter whose contents should be copied.
          * @return a reference to this filter.
          */
         SurfaceFilterProperties& operator = (
@@ -353,7 +353,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * the packet infrastructure (e.g., it will not swap packet labels,
          * or change either packet's location in any packet tree).
          *
-         * @param other the filter whose contents should be swapped with this.
+         * \param other the filter whose contents should be swapped with this.
          */
         void swap(SurfaceFilterProperties& other);
 
@@ -380,7 +380,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Returns the allowable Euler characteristic at the given index
          * in the set.  See eulerChars() for further details.
          *
-         * @param index the index in the set of allowable Euler
+         * \param index the index in the set of allowable Euler
          * characteristics; this must be between 0 and countEulerChars()-1
          * inclusive.
          * @return the requested allowable Euler characteristic.
@@ -424,9 +424,9 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * \tparam Iterator an iterator type that, when dereferenced,
          * can be assigned to a LargeInteger.
          *
-         * @param beginEuler the beginning of an iterator range that
+         * \param beginEuler the beginning of an iterator range that
          * gives the new set of allowable Euler characteristics.
-         * @param endEuler the end of an iterator range (i.e., an iterator
+         * \param endEuler the end of an iterator range (i.e., an iterator
          * past the end of the list) that gives the new set of allowable
          * Euler characteristics.
          */
@@ -437,7 +437,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Adds the given Euler characteristic to the set of allowable
          * Euler characteristics.  See eulerChars() for further details.
          *
-         * @param ec the new allowable Euler characteristic.
+         * \param ec the new allowable Euler characteristic.
          */
         void addEulerChar(const LargeInteger& ec);
         /**
@@ -450,7 +450,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * \pre The given Euler characteristic is currently in the
          * allowable set.
          *
-         * @param ec the allowable Euler characteristic to remove.
+         * \param ec the allowable Euler characteristic to remove.
          */
         void removeEulerChar(const LargeInteger& ec);
         /**
@@ -465,21 +465,21 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Sets the set of allowable orientabilities.
          * See orientability() for further details.
          *
-         * @param value the new set of allowable orientabilities.
+         * \param value the new set of allowable orientabilities.
          */
         void setOrientability(BoolSet value);
         /**
          * Sets the set of allowable compactness properties.
          * See compactness() for further details.
          *
-         * @param value the new set of allowable compactness properties.
+         * \param value the new set of allowable compactness properties.
          */
         void setCompactness(BoolSet value);
         /**
          * Sets the set of allowable has-real-boundary properties.
          * See realBoundary() for further details.
          *
-         * @param value the new set of allowable has-real-boundary
+         * \param value the new set of allowable has-real-boundary
          * properties.
          */
         void setRealBoundary(BoolSet value);
@@ -495,7 +495,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * this test compares the precise configurations of the filters,
          * not their deduced behaviour.
          *
-         * @param other the filter to compare with this.
+         * \param other the filter to compare with this.
          * @return \c true if and only if this and the given filters are
          * identical.
          */
@@ -512,7 +512,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * this test compares the precise configurations of the filters,
          * not their deduced behaviour.
          *
-         * @param other the filter to compare with this.
+         * \param other the filter to compare with this.
          * @return \c true if and only if this and the given filters are
          * not identical.
          */
@@ -534,8 +534,8 @@ class SurfaceFilterProperties : public SurfaceFilter {
  * provided so that SurfaceFilterProperties meets the C++ Swappable
  * requirements.
  *
- * @param a the first filter whose contents should be swapped.
- * @param b the second filter whose contents should be swapped.
+ * \param a the first filter whose contents should be swapped.
+ * \param b the second filter whose contents should be swapped.
  *
  * \ingroup surfaces
  */

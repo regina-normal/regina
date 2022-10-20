@@ -69,7 +69,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
         /**
          * Creates a new copy of the given face pairing.
          *
-         * @param src the face pairing to clone.
+         * \param src the face pairing to clone.
          */
         FacetPairing(const FacetPairing& src) = default;
 
@@ -79,7 +79,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * The face pairing that is passed (\a src) will no longer be usable.
          *
-         * @param src the face pairing to move.
+         * \param src the face pairing to move.
          */
         FacetPairing(FacetPairing&& src) noexcept = default;
 
@@ -93,7 +93,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * \pre The given triangulation is not empty.
          *
-         * @param tri the triangulation whose face pairing should be
+         * \param tri the triangulation whose face pairing should be
          * constructed.
          */
         FacetPairing(const Triangulation<3>& tri);
@@ -117,7 +117,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * skip over initial whitespace; and (ii) fromTextRep() throws
          * InvalidArgument exceptions on error (not InvalidInput).
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         FacetPairing(std::istream& in);
 
@@ -130,7 +130,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * This operator induces a deep copy of \a src.
          *
-         * @param src the facet pairing to copy.
+         * \param src the facet pairing to copy.
          * @return a reference to this face pairing.
          */
         FacetPairing& operator = (const FacetPairing& src) = default;
@@ -145,7 +145,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * The face pairing that is passed (\a src) will no longer be usable.
          *
-         * @param src the face pairing to move.
+         * \param src the face pairing to move.
          * @return a reference to this face pairing.
          */
         FacetPairing& operator = (FacetPairing&& src) noexcept = default;
@@ -186,10 +186,10 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * next, this routine will cycle around the loop forever and
          * never return.
          *
-         * @param tet the index in the underlying triangulation of the
+         * \param tet the index in the underlying triangulation of the
          * tetrahedron to begin at.  This parameter will be modified
          * directly by this routine as a way of returning the results.
-         * @param faces the pair of face numbers in the given
+         * \param faces the pair of face numbers in the given
          * tetrahedron at which we begin.  This parameter will also be
          * modified directly by this routine as a way of returning results.
          */
@@ -216,10 +216,10 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * \nopython Use the non-deprecated variant of this routine instead.
          *
-         * @param tet the index in the underlying triangulation of the
+         * \param tet the index in the underlying triangulation of the
          * tetrahedron to begin at.  This parameter will be modified
          * directly by this routine as a way of returning the results.
-         * @param faces the pair of face numbers in the given
+         * \param faces the pair of face numbers in the given
          * tetrahedron at which we begin.  This parameter will also be
          * modified directly by this routine as a way of returning results.
          */
@@ -493,7 +493,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * \pre \a size is at least 1.
          *
-         * @param size the number of tetrahedra under
+         * \param size the number of tetrahedra under
          * consideration in this new face pairing.
          */
         FacetPairing(size_t size);
@@ -508,9 +508,9 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \pre The given face of the given tetrahedron is paired with
          * another face of the same tetrahedron under this face pairing.
          *
-         * @param tet the index in the triangulation of the given
+         * \param tet the index in the triangulation of the given
          * tetrahedron.
-         * @param face the number of the given face in the tetrahedron;
+         * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
          * @return \c true if and only if this face pairing contains a
@@ -528,9 +528,9 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \pre The given face of the given tetrahedron is paired with
          * another face of the same tetrahedron under this face pairing.
          *
-         * @param tet the index in the triangulation of the given
+         * \param tet the index in the triangulation of the given
          * tetrahedron.
-         * @param face the number of the given face in the tetrahedron;
+         * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
          * @return \c true if and only if this face pairing contains a
@@ -548,9 +548,9 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \pre The given face of the given tetrahedron is paired with
          * another face of the same tetrahedron under this face pairing.
          *
-         * @param tet the index in the triangulation of the given
+         * \param tet the index in the triangulation of the given
          * tetrahedron.
-         * @param face the number of the given face in the tetrahedron;
+         * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
          * @return \c true if and only if this face pairing contains a
@@ -568,9 +568,9 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \pre The given face of the given tetrahedron is paired with
          * another face of the same tetrahedron under this face pairing.
          *
-         * @param tet the index in the triangulation of the given
+         * \param tet the index in the triangulation of the given
          * tetrahedron.
-         * @param face the number of the given face in the tetrahedron;
+         * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
          * @return \c true if and only if this face pairing contains a
@@ -588,9 +588,9 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \pre The given face of the given tetrahedron is paired with
          * another face of the same tetrahedron under this face pairing.
          *
-         * @param tet the index in the triangulation of the given
+         * \param tet the index in the triangulation of the given
          * tetrahedron.
-         * @param face the number of the given face in the tetrahedron;
+         * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
          * @return \c true if and only if this face pairing contains a

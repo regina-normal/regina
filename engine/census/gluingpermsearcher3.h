@@ -204,23 +204,23 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
-         * @param pairing the specific pairing of tetrahedron faces
+         * \param pairing the specific pairing of tetrahedron faces
          * that the generated permutation sets will complement.
-         * @param autos the collection of isomorphisms that define equivalence
+         * \param autos the collection of isomorphisms that define equivalence
          * of permutation sets.  These are used by runSearch(), which produces
          * each permutation set precisely once up to equivalence.  These
          * isomorphisms must all be automorphisms of the given face pairing,
          * and will generally be the set of all such automorphisms (which
          * you can generate via <tt>pairing.findAutomorphisms()</tt>).
-         * @param orientableOnly \c true if only gluing permutations
+         * \param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
-         * @param finiteOnly \c true if only gluing permutations
+         * \param finiteOnly \c true if only gluing permutations
          * corresponding to finite triangulations are required, or
          * \c false if there is no such requirement.  Note that
          * regardless of this value, some non-finite triangulations
          * might still be produced; see the notes above for details.
-         * @param whichPurge specifies which permutation sets we may avoid
+         * \param whichPurge specifies which permutation sets we may avoid
          * constructing (see the function notes above for details).  This
          * should be a bitwise OR of constants from the CensusPurgeFlags
          * enumeration, or PURGE_NONE if we should simply generate every
@@ -257,7 +257,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * use taggedData() and fromTaggedData() instead, which incorporate
          * this same text data as part of their richer text format.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         GluingPermSearcher(std::istream& in);
 
@@ -301,9 +301,9 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * additional arguments beyond the initial gluing permutation set
          * (and therefore the additional \a args list is omitted here).
          *
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each permutation set that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
          */
         template <typename Action, typename... Args>
@@ -340,11 +340,11 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * large enough), it is possible that this routine will produce
          * complete gluing permutation sets.
          *
-         * @param maxDepth the depth of the partial search to run.
+         * \param maxDepth the depth of the partial search to run.
          * A negative number indicates that a full search should be run.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each permutation set (partial or complete) that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial permutation set argument.
          */
         template <typename Action, typename... Args>
@@ -383,7 +383,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * \nopython Instead use taggedData(), which returns this same
          * information as a string.
          *
-         * @param out the output stream to which the data should be
+         * \param out the output stream to which the data should be
          * written.
          */
         void dumpTaggedData(std::ostream& out) const;
@@ -439,7 +439,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * constructor is not available in Python either, so it is recommended
          * that Python users use taggedData() and fromTaggedData() instead.
          *
-         * @param out the output stream to which the data should be written.
+         * \param out the output stream to which the data should be written.
          */
         virtual void dumpData(std::ostream& out) const;
 
@@ -481,7 +481,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -567,7 +567,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * \nopython Instead use the variant of fromTaggedData() that takes
          * its input as a string.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          * @return the new search manager, or \c null if the data in the
          * input stream was invalid or incorrectly formatted.
          */
@@ -593,7 +593,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * \exception InvalidArgument The data found in the given string
          * is invalid, incomplete, or incorrectly formatted.
          *
-         * @param data the tagged data from which to reconstruct a
+         * \param data the tagged data from which to reconstruct a
          * search manager.
          * @return the new search manager, or \c null if the data in the
          * given string was invalid or incorrectly formatted.
@@ -651,7 +651,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * searching for bad edge links per se, they can be performed within
          * this routine with very little additional work needing to be done.
          *
-         * @param face the specific tetrahedron face upon which tests
+         * \param face the specific tetrahedron face upon which tests
          * will be based.
          * @return \c true if the permutations under construction will
          * lead to an edge identified with itself in reverse, or \c false
@@ -673,11 +673,11 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * selected have the corresponding element of permIndices[] set
          * to -1.
          *
-         * @param face the specific tetrahedron face upon which tests
+         * \param face the specific tetrahedron face upon which tests
          * will be based.
-         * @param testDegree12 \c true if we should test for
+         * \param testDegree12 \c true if we should test for
          * non-boundary edges of degree 1 or 2.
-         * @param testDegree3 \c true if we should test for non-boundary
+         * \param testDegree3 \c true if we should test for non-boundary
          * edges of degree 3 involving three distinct tetrahedra.
          * @return \c true if the permutations under construction will
          * lead to a low-degree edge as specified by parameters
@@ -942,7 +942,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * releases.  Data in this format should be used on a short-term
              * temporary basis only.
              *
-             * @param out the output stream to which the data should be
+             * \param out the output stream to which the data should be
              * written.
              */
             void dumpData(std::ostream& out) const;
@@ -958,8 +958,8 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * This routine does test for bad input data, but it
              * does \e not test for end-of-file.
              *
-             * @param in the input stream from which to read.
-             * @param nStates the total number of vertex states under
+             * \param in the input stream from which to read.
+             * \param nStates the total number of vertex states under
              * consideration (this must be four times the number of
              * tetrahedra).
              * @return \c false if any errors were encountered during
@@ -1085,9 +1085,9 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * releases.  Data in this format should be used on a short-term
              * temporary basis only.
              *
-             * @param nTets the number of tetrahedra under consideration
+             * \param nTets the number of tetrahedra under consideration
              * in the census.
-             * @param out the output stream to which the data should be
+             * \param out the output stream to which the data should be
              * written.
              */
             void dumpData(std::ostream& out, size_t nTets) const;
@@ -1103,8 +1103,8 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * This routine does test for bad input data, but it
              * does \e not test for end-of-file.
              *
-             * @param in the input stream from which to read.
-             * @param nTets the number of tetrahedra under consideration
+             * \param in the input stream from which to read.
+             * \param nTets the number of tetrahedra under consideration
              * in the census.
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
@@ -1207,7 +1207,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
-         * @param useEuler the Euler characteristic that vertex links must
+         * \param useEuler the Euler characteristic that vertex links must
          * have.  For boundary vertices, this is the Euler characteristic
          * of the closed surface that would be obtained if the puncture in
          * the vertex link were filled.
@@ -1238,7 +1238,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * use taggedData() and fromTaggedData() instead, which incorporate
          * this same text data as part of their richer text format.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         EulerSearcher(std::istream& in);
 
@@ -1265,7 +1265,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * other variant of findEdgeClass(), which is slightly slower
          * but which also tracks edge orientation.
          *
-         * @param edgeID the index of a single tetrahedron edge; this
+         * \param edgeID the index of a single tetrahedron edge; this
          * must be between 0 and 6t-1 inclusive, where \a t is the
          * number of tetrahedra.  See the TetEdgeState class notes for
          * details on edge indexing.
@@ -1292,11 +1292,11 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * other variant of findEdgeClass(), which is slightly faster
          * but which does not track edge orientation.
          *
-         * @param edgeID the index of a single tetrahedron edge; this
+         * \param edgeID the index of a single tetrahedron edge; this
          * must be between 0 and 6t-1 inclusive, where \a t is the
          * number of tetrahedra.  See the TetEdgeState class notes for
          * details on edge indexing.
-         * @param twisted used to track edge orientation, as described
+         * \param twisted used to track edge orientation, as described
          * above.  This must be either 0 or 1 as it is passed into the
          * function, and it will also be either 0 or 1 upon returning
          * from the function.
@@ -1364,18 +1364,18 @@ class EulerSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for details.
          *
-         * @param vertexID the first tetrahedron vertex on which to operate;
+         * \param vertexID the first tetrahedron vertex on which to operate;
          * this must be between 0 and 4n-1 inclusive, where \a n is the number
          * of tetrahedra.
-         * @param end specifies in which direction the adjacent boundary
+         * \param end specifies in which direction the adjacent boundary
          * edges lie.  This must be either 0 or 1, and its value should
          * correspond to the relevant index in the \a bdryNext and \a bdryTwist
          * arrays for vertex \a vertexID.
-         * @param adjVertexID the tetrahedron vertex whose boundary edges are
+         * \param adjVertexID the tetrahedron vertex whose boundary edges are
          * adjacent to the boundary edges supplied by \a vertexID; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @param twist 0 if the orientations of the two boundary segments of
+         * \param twist 0 if the orientations of the two boundary segments of
          * vertex link are oriented in the same direction, or 1 if they are
          * oriented in opposite directions; see the \a bdryTwist
          * documentation for details.
@@ -1411,7 +1411,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * \pre The vertex linking triangle for the given tetrahedron
          * vertex contributes at least one boundary edge to the vertex link.
          *
-         * @param vertexID the tetrahedron vertex to examine; this must
+         * \param vertexID the tetrahedron vertex to examine; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
@@ -1424,7 +1424,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for further information.
          *
-         * @param vertexID the tetrahedron vertex on which to operate; this
+         * \param vertexID the tetrahedron vertex on which to operate; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
@@ -1437,7 +1437,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for further information.
          *
-         * @param vertexID the tetrahedron vertex on which to operate; this
+         * \param vertexID the tetrahedron vertex on which to operate; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
@@ -1473,24 +1473,24 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * this face is either order[orderElt] or its partner in the
          * underlying face pairing.
          *
-         * @param vertexID the tetrahedron vertex to examine; this must
+         * \param vertexID the tetrahedron vertex to examine; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @param tet the tetrahedron described by \a vertexID; this
+         * \param tet the tetrahedron described by \a vertexID; this
          * must be (vertexID / 4).  It is passed separately to avoid a
          * slow division operation.
-         * @param vertex the tetrahedron vertex number described by \a vertexID;
+         * \param vertex the tetrahedron vertex number described by \a vertexID;
          * this must be (vertexID % 4).  It is passed separately to
          * avoid a slow modulus operation.
-         * @param bdryFace the face number of the given tetrahedron
+         * \param bdryFace the face number of the given tetrahedron
          * containing the edge of the vertex linking triangle that is
          * under consideration.  This must be between 0 and 3 inclusive,
          * and it may not be equal to \a vertex.
-         * @param next returns the tetrahedron vertex supplying each
+         * \param next returns the tetrahedron vertex supplying each
          * adjacent boundary edge; see the TetVertexState::bdryNext
          * notes for details on which directions correspond to array
          * indices 0 and 1.
-         * @param twist returns whether the orientations of the adjacent
+         * \param twist returns whether the orientations of the adjacent
          * boundary edges are consistent with the orientation of this
          * boundary edge; see the TetVertexState::bdryTwist notes for
          * further information on orientations in the vertex link.
@@ -1505,7 +1505,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for further information.
          *
-         * @param vertexID the tetrahedron vertex to examine; this must
+         * \param vertexID the tetrahedron vertex to examine; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          * @return \c true if a one-edge boundary component is formed as
@@ -1521,10 +1521,10 @@ class EulerSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for further information.
          *
-         * @param vertexID1 the first tetrahedron vertex to examine; this
+         * \param vertexID1 the first tetrahedron vertex to examine; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @param vertexID2 the second tetrahedron vertex to examine; this
+         * \param vertexID2 the second tetrahedron vertex to examine; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          * @return \c true if a two-edge boundary component is formed as
@@ -1554,7 +1554,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for further information.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void vtxBdryDump(std::ostream& out);
 };
@@ -1761,7 +1761,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * releases.  Data in this format should be used on a short-term
              * temporary basis only.
              *
-             * @param out the output stream to which the data should be
+             * \param out the output stream to which the data should be
              * written.
              */
             void dumpData(std::ostream& out) const;
@@ -1777,8 +1777,8 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * This routine does test for bad input data, but it
              * does \e not test for end-of-file.
              *
-             * @param in the input stream from which to read.
-             * @param nStates the total number of vertex states under
+             * \param in the input stream from which to read.
+             * \param nStates the total number of vertex states under
              * consideration (this must be four times the number of
              * tetrahedra).
              * @return \c false if any errors were encountered during
@@ -1904,9 +1904,9 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * releases.  Data in this format should be used on a short-term
              * temporary basis only.
              *
-             * @param nTets the number of tetrahedra under consideration
+             * \param nTets the number of tetrahedra under consideration
              * in the census.
-             * @param out the output stream to which the data should be
+             * \param out the output stream to which the data should be
              * written.
              */
             void dumpData(std::ostream& out, size_t nTets) const;
@@ -1922,8 +1922,8 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * This routine does test for bad input data, but it
              * does \e not test for end-of-file.
              *
-             * @param in the input stream from which to read.
-             * @param nTets the number of tetrahedra under consideration
+             * \param in the input stream from which to read.
+             * \param nTets the number of tetrahedra under consideration
              * in the census.
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
@@ -2033,7 +2033,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * use taggedData() and fromTaggedData() instead, which incorporate
          * this same text data as part of their richer text format.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         CompactSearcher(std::istream& in);
 
@@ -2060,7 +2060,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * other variant of findEdgeClass(), which is slightly slower
          * but which also tracks edge orientation.
          *
-         * @param edgeID the index of a single tetrahedron edge; this
+         * \param edgeID the index of a single tetrahedron edge; this
          * must be between 0 and 6t-1 inclusive, where \a t is the
          * number of tetrahedra.  See the TetEdgeState class notes for
          * details on edge indexing.
@@ -2087,11 +2087,11 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * other variant of findEdgeClass(), which is slightly faster
          * but which does not track edge orientation.
          *
-         * @param edgeID the index of a single tetrahedron edge; this
+         * \param edgeID the index of a single tetrahedron edge; this
          * must be between 0 and 6t-1 inclusive, where \a t is the
          * number of tetrahedra.  See the TetEdgeState class notes for
          * details on edge indexing.
-         * @param twisted used to track edge orientation, as described
+         * \param twisted used to track edge orientation, as described
          * above.  This must be either 0 or 1 as it is passed into the
          * function, and it will also be either 0 or 1 upon returning
          * from the function.
@@ -2159,18 +2159,18 @@ class CompactSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for details.
          *
-         * @param vertexID the first tetrahedron vertex on which to operate;
+         * \param vertexID the first tetrahedron vertex on which to operate;
          * this must be between 0 and 4n-1 inclusive, where \a n is the number
          * of tetrahedra.
-         * @param end specifies in which direction the adjacent boundary
+         * \param end specifies in which direction the adjacent boundary
          * edges lie.  This must be either 0 or 1, and its value should
          * correspond to the relevant index in the \a bdryNext and \a bdryTwist
          * arrays for vertex \a vertexID.
-         * @param adjVertexID the tetrahedron vertex whose boundary edges are
+         * \param adjVertexID the tetrahedron vertex whose boundary edges are
          * adjacent to the boundary edges supplied by \a vertexID; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @param twist 0 if the orientations of the two boundary segments of
+         * \param twist 0 if the orientations of the two boundary segments of
          * vertex link are oriented in the same direction, or 1 if they are
          * oriented in opposite directions; see the \a bdryTwist
          * documentation for details.
@@ -2206,7 +2206,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * \pre The vertex linking triangle for the given tetrahedron
          * vertex contributes at least one boundary edge to the vertex link.
          *
-         * @param vertexID the tetrahedron vertex to examine; this must
+         * \param vertexID the tetrahedron vertex to examine; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
@@ -2219,7 +2219,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for further information.
          *
-         * @param vertexID the tetrahedron vertex on which to operate; this
+         * \param vertexID the tetrahedron vertex on which to operate; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
@@ -2232,7 +2232,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for further information.
          *
-         * @param vertexID the tetrahedron vertex on which to operate; this
+         * \param vertexID the tetrahedron vertex on which to operate; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
@@ -2268,24 +2268,24 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * this face is either order[orderElt] or its partner in the
          * underlying face pairing.
          *
-         * @param vertexID the tetrahedron vertex to examine; this must
+         * \param vertexID the tetrahedron vertex to examine; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @param tet the tetrahedron described by \a vertexID; this
+         * \param tet the tetrahedron described by \a vertexID; this
          * must be (vertexID / 4).  It is passed separately to avoid a
          * slow division operation.
-         * @param vertex the tetrahedron vertex number described by \a vertexID;
+         * \param vertex the tetrahedron vertex number described by \a vertexID;
          * this must be (vertexID % 4).  It is passed separately to
          * avoid a slow modulus operation.
-         * @param bdryFace the face number of the given tetrahedron
+         * \param bdryFace the face number of the given tetrahedron
          * containing the edge of the vertex linking triangle that is
          * under consideration.  This must be between 0 and 3 inclusive,
          * and it may not be equal to \a vertex.
-         * @param next returns the tetrahedron vertex supplying each
+         * \param next returns the tetrahedron vertex supplying each
          * adjacent boundary edge; see the TetVertexState::bdryNext
          * notes for details on which directions correspond to array
          * indices 0 and 1.
-         * @param twist returns whether the orientations of the adjacent
+         * \param twist returns whether the orientations of the adjacent
          * boundary edges are consistent with the orientation of this
          * boundary edge; see the TetVertexState::bdryTwist notes for
          * further information on orientations in the vertex link.
@@ -2300,7 +2300,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for further information.
          *
-         * @param vertexID the tetrahedron vertex to examine; this must
+         * \param vertexID the tetrahedron vertex to examine; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          * @return \c true if a one-edge boundary component is formed as
@@ -2316,10 +2316,10 @@ class CompactSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for further information.
          *
-         * @param vertexID1 the first tetrahedron vertex to examine; this
+         * \param vertexID1 the first tetrahedron vertex to examine; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @param vertexID2 the second tetrahedron vertex to examine; this
+         * \param vertexID2 the second tetrahedron vertex to examine; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          * @return \c true if a two-edge boundary component is formed as
@@ -2349,7 +2349,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          *
          * See the TetVertexState class for further information.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void vtxBdryDump(std::ostream& out);
 };
@@ -2553,7 +2553,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * use taggedData() and fromTaggedData() instead, which incorporate
          * this same text data as part of their richer text format.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         ClosedPrimeMinSearcher(std::istream& in);
 
@@ -2696,7 +2696,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * use taggedData() and fromTaggedData() instead, which incorporate
          * this same text data as part of their richer text format.
          *
-         * @param in the input stream from which to read.
+         * \param in the input stream from which to read.
          */
         HyperbolicMinSearcher(std::istream& in);
 

@@ -91,7 +91,7 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * Returns one of the two snapped 3-balls whose equators are
          * joined.
          *
-         * @param index specifies which of the two 3-balls to return;
+         * \param index specifies which of the two 3-balls to return;
          * this must be either 0 or 1.
          * @return the corresponding snapped 3-ball.
          */
@@ -110,7 +110,7 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * Tetrahedron objects, it is meaningful to compare snapped 2-spheres
          * within different triangulations.
          *
-         * @param other the snapped 2-sphere to compare with this.
+         * \param other the snapped 2-sphere to compare with this.
          * @return \c true if and only if this and the given object represent
          * the same specific presentation of a snapped 2-sphere.
          */
@@ -129,7 +129,7 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * Tetrahedron objects, it is meaningful to compare snapped 2-spheres
          * within different triangulations.
          *
-         * @param other the snapped 2-sphere to compare with this.
+         * \param other the snapped 2-sphere to compare with this.
          * @return \c true if and only if this and the given object represent
          * different specific presentations of a snapped 2-sphere.
          */
@@ -147,8 +147,8 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          *
          * \pre The two given tetrahedra are distinct.
          *
-         * @param tet1 the first tetrahedron to examine.
-         * @param tet2 the second tetrahedron to examine.
+         * \param tet1 the first tetrahedron to examine.
+         * \param tet2 the second tetrahedron to examine.
          * @return a structure containing details of the snapped 2-sphere, or
          * \c null if the given tetrahedra do not form a snapped 2-sphere.
          */
@@ -170,8 +170,8 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          *
          * \pre The two given snapped 3-balls use distinct tetrahedra.
          *
-         * @param ball1 the first snapped 3-ball to examine.
-         * @param ball2 the second snapped 3-ball to examine.
+         * \param ball1 the first snapped 3-ball to examine.
+         * \param ball2 the second snapped 3-ball to examine.
          * @return a structure containing details of the snapped 2-sphere, or
          * \c null if the given snapped 3-balls do not form a snapped 2-sphere.
          */
@@ -184,7 +184,7 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 

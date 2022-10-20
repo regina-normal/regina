@@ -104,7 +104,7 @@ class LayeredLoop : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(LayeredLoop& other) noexcept;
@@ -130,7 +130,7 @@ class LayeredLoop : public StandardTriangulation {
          * If there is only one hinge but parameter \a which is 1,
          * \c null will be returned.
          *
-         * @param which specifies which hinge to return; this must be 0
+         * \param which specifies which hinge to return; this must be 0
          * or 1.
          * @return the requested hinge edge.
          */
@@ -150,7 +150,7 @@ class LayeredLoop : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of layered loop.
          */
@@ -170,7 +170,7 @@ class LayeredLoop : public StandardTriangulation {
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent different types of layered loop.
          */
@@ -183,7 +183,7 @@ class LayeredLoop : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param comp the triangulation component to examine.
+         * \param comp the triangulation component to examine.
          * @return a structure containing details of the layered loop, or
          * \c null if the given component is not a layered loop.
          */
@@ -208,8 +208,8 @@ class LayeredLoop : public StandardTriangulation {
  * This global routine simply calls LayeredLoop::swap(); it is provided
  * so that LayeredLoop meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

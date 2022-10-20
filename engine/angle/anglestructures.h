@@ -178,14 +178,14 @@ class AngleStructures :
          * this constructor runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param triangulation the triangulation for which the vertex
+         * \param triangulation the triangulation for which the vertex
          * angle structures will be enumerated.
-         * @param tautOnly \c true if only taut structures are to be
+         * \param tautOnly \c true if only taut structures are to be
          * enuemrated, or \c false if we should enumerate all vertices
          * of the angle structure solution space.
-         * @param algHints passes requests to Regina for which specific
+         * \param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          */
         AngleStructures(const Triangulation<3>& triangulation,
@@ -209,14 +209,14 @@ class AngleStructures :
          * because we assume that \a src is about to be destroyed (an action
          * that \e will fire a packet destruction event).
          *
-         * @param src the list to move.
+         * \param src the list to move.
          */
         AngleStructures(AngleStructures&& src) noexcept = default;
 
         /**
          * Sets this to be a (deep) copy of the given list.
          *
-         * @param src the list to copy.
+         * \param src the list to copy.
          * @return a reference to this list.
          */
         AngleStructures& operator = (const AngleStructures& src);
@@ -233,7 +233,7 @@ class AngleStructures :
          * fire change events on \a src, since it assumes that \a src is about
          * to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the list to move.
+         * \param src the list to move.
          * @return a reference to this list.
          */
         AngleStructures& operator = (AngleStructures&& src);
@@ -248,7 +248,7 @@ class AngleStructures :
          * fires change events on both lists which may in turn call arbitrary
          * code via any registered packet listeners.
          *
-         * @param other the list whose contents should be swapped with this.
+         * \param other the list whose contents should be swapped with this.
          */
         void swap(AngleStructures& other);
 
@@ -321,7 +321,7 @@ class AngleStructures :
          * Returns the angle structure at the requested index in this list.
          * This is identical to using the square bracket operator.
          *
-         * @param index the index of the requested angle structure in
+         * \param index the index of the requested angle structure in
          * this list; this must be between 0 and size()-1 inclusive.
          * @return the angle structure at the requested index.
          */
@@ -330,7 +330,7 @@ class AngleStructures :
          * Returns the angle structure at the requested index in this list.
          * This is identical to calling structure().
          *
-         * @param index the index of the requested angle structure in
+         * \param index the index of the requested angle structure in
          * this list; this must be between 0 and size()-1 inclusive.
          * @return the angle structure at the requested index.
          */
@@ -443,7 +443,7 @@ class AngleStructures :
          * - If the two triangulations have different sizes, then this
          *   comparison will return \c false.
          *
-         * @param other the list to be compared with this list.
+         * \param other the list to be compared with this list.
          * @return \c true if both lists represent the same multiset of
          * angle structures, or \c false if not.
          */
@@ -470,7 +470,7 @@ class AngleStructures :
          *   comparison will return \c true (i.e., the lists will be
          *   considered different).
          *
-         * @param other the list to be compared with this list.
+         * \param other the list to be compared with this list.
          * @return \c true if both lists do not represent the same multiset of
          * angle structures, or \c false if they do.
          */
@@ -482,7 +482,7 @@ class AngleStructures :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -491,7 +491,7 @@ class AngleStructures :
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -500,13 +500,13 @@ class AngleStructures :
          * Creates a new empty angle structure list.
          * All properties are marked as unknown.
          *
-         * @param tautOnly \c true if only taut structures are to be
+         * \param tautOnly \c true if only taut structures are to be
          * enuemrated (when the time comes for enumeration to be performed),
          * or \c false if we should enumerate all vertices of the angle
          * structure solution space.
-         * @param algHints contains requests for which specific
+         * \param algHints contains requests for which specific
          * enumeration algorithm should be used.
-         * @param triangulation the triangulation on which the angle
+         * \param triangulation the triangulation on which the angle
          * structures will lie.
          */
         AngleStructures(bool tautOnly, AngleAlg algHints,
@@ -532,10 +532,10 @@ class AngleStructures :
          * \pre If \a treeParent is non-null, then this is actually the
          * inherited interface of a PacketOf<AngleStructures>.
          *
-         * @param tracker the progress tracker to use for progress
+         * \param tracker the progress tracker to use for progress
          * reporting and cancellation polling, or \c null if these
          * capabilities are not required.
-         * @param treeParent the parent packet in the tree, if we should
+         * \param treeParent the parent packet in the tree, if we should
          * insert the angle structure list into the packet tree once the
          * enumeration has finished, or \c null if we should not.
          */
@@ -558,8 +558,8 @@ class AngleStructures :
  * fires change events on both lists which may in turn call arbitrary
  * code via any registered packet listeners.
  *
- * @param lhs the list whose contents should be swapped with \a rhs.
- * @param rhs the list whose contents should be swapped with \a lhs.
+ * \param lhs the list whose contents should be swapped with \a rhs.
+ * \param rhs the list whose contents should be swapped with \a lhs.
  *
  * \ingroup angle
  */
@@ -575,7 +575,7 @@ void swap(AngleStructures& lhs, AngleStructures& rhs);
  * column will represent a coordinate in the underlying coordinate system
  * (which is described in the notes for AngleStructure::vector()).
  *
- * @param tri the triangulation upon which these angle structure
+ * \param tri the triangulation upon which these angle structure
  * equations will be based.
  * @return the resulting set of angle structure equations.
  *

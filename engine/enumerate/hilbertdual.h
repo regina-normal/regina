@@ -156,19 +156,19 @@ class HilbertDual {
          * The global interpreter lock will be released while this function
          * runs, so you can use it with Python-based multithreading.
          *
-         * @param action a function (or other callable object) that will be
+         * \param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
          * argument, which will be passed as an rvalue of type RayClass.
-         * @param subspace a matrix defining the linear subspace to intersect
+         * \param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
-         * @param constraints a set of validity constraints as described above,
+         * \param constraints a set of validity constraints as described above,
          * or ValidityConstraints::none if none should be imposed.
-         * @param tracker a progress tracker through which progress
+         * \param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
-         * @param initialRows specifies how many initial rows of \a subspace
+         * \param initialRows specifies how many initial rows of \a subspace
          * are to be processed in the precise order in which they appear.
          * The remaining rows will be sorted using the PosOrder class
          * before they are processed.
@@ -224,7 +224,7 @@ class HilbertDual {
                 /**
                  * Creates the zero vector.
                  *
-                 * @param dim the total dimension of the space (and
+                 * \param dim the total dimension of the space (and
                  * therefore the toatl length of this vector).
                  */
                 inline VecSpec(size_t dim);
@@ -234,9 +234,9 @@ class HilbertDual {
                  *
                  * The \a nextHyp_ data member will be left uninitialised.
                  *
-                 * @param pos indicates which coordinate is set to one
+                 * \param pos indicates which coordinate is set to one
                  * in this unit vector.
-                 * @param dim the total dimension of the space (and
+                 * \param dim the total dimension of the space (and
                  * therefore the total length of this vector).
                  */
                 inline VecSpec(size_t pos, size_t dim);
@@ -244,14 +244,14 @@ class HilbertDual {
                 /**
                  * Creates a clone of the given vector.
                  *
-                 * @param other the vector to clone.
+                 * \param other the vector to clone.
                  */
                 inline VecSpec(const VecSpec& other) = default;
 
                 /**
                  * Sets this to be a clone of the given vector.
                  *
-                 * @param other the vector to clone.
+                 * \param other the vector to clone.
                  */
                 inline VecSpec& operator = (const VecSpec& other) = default;
 
@@ -261,9 +261,9 @@ class HilbertDual {
                  *
                  * This routine also sets the member \a srcNextHyp_ to zero.
                  *
-                 * @param subspace the matrix containing the full set of
+                 * \param subspace the matrix containing the full set of
                  * hyperplanes.
-                 * @param row the row of the given matrix that stores
+                 * \param row the row of the given matrix that stores
                  * the specific hyperplane in which we are interested.
                  */
                 inline void initNextHyp(const MatrixInt& subspace,
@@ -275,9 +275,9 @@ class HilbertDual {
                  * \pre <tt>pos.nextHyp() &gt; 0</tt>, and
                  * <tt>neg.nextHyp() &lt; 0</tt>.
                  *
-                 * @param pos the first vector to add, which must lie on
+                 * \param pos the first vector to add, which must lie on
                  * the strictly positive side of the current hyperplane.
-                 * @param neg the second vector to add, which must lie
+                 * \param neg the second vector to add, which must lie
                  * on the strictly negative side of the current hyperplane.
                  */
                 inline void formSum(const VecSpec& pos, const VecSpec& neg);
@@ -328,7 +328,7 @@ class HilbertDual {
                 /**
                  * Determines if this and the given vector are identical.
                  *
-                 * @param other the vector to compare with this.
+                 * \param other the vector to compare with this.
                  * @return \c true if this vector is identical to the
                  * given vector, or \c false if not.
                  */
@@ -338,7 +338,7 @@ class HilbertDual {
                  * Determines if every element of this vector is less
                  * than or equal to every element of the given vector.
                  *
-                 * @param other the vector to compare with this.
+                 * \param other the vector to compare with this.
                  * @return \c true if every element of this vector is
                  * less than or equal to every element of \a other, or
                  * \c false otherwise.
@@ -385,10 +385,10 @@ class HilbertDual {
          * This routine uses VecSpec::nextHyp() to determine the
          * relationships between vectors and the current hyperplane.
          *
-         * @param vec the vector to test for reducibility.
-         * @param against the list of candidate basis vectors to reduce
+         * \param vec the vector to test for reducibility.
+         * \param against the list of candidate basis vectors to reduce
          * \a vec against.
-         * @param listSign an integer indicating which sign of the
+         * \param listSign an integer indicating which sign of the
          * current hyperplane we are working on.
          * @return \c true if the given vector can be reduced, or \c false 
          * otherwise.
@@ -408,9 +408,9 @@ class HilbertDual {
          * This routine will work even if \a reduce and \a against are
          * the same list.
          *
-         * @param reduce the list of vectors to test for reducibility.
-         * @param against the list of candidate basis vectors to reduce against.
-         * @param listSign an integer indicating which sign of the
+         * \param reduce the list of vectors to test for reducibility.
+         * \param against the list of candidate basis vectors to reduce against.
+         * \param listSign an integer indicating which sign of the
          * current hyperplane we are working on.
          */
         template <class IntegerType, class BitmaskType>
@@ -441,14 +441,14 @@ class HilbertDual {
          * these coordinates must be set to 1 in the corresponding bitmask,
          * and all other bits must be set to 0.
          *
-         * @param list contains the original Hilbert basis on entry to
+         * \param list contains the original Hilbert basis on entry to
          * this function, and will contain the updated Hilbert basis upon
          * returning.
-         * @param subspace a matrix of hyperplanes.
-         * @param row indicates which row of \a subspace contains the
+         * \param subspace a matrix of hyperplanes.
+         * \param row indicates which row of \a subspace contains the
          * hyperplane that we will intersect with the cone defined by
          * the old Hilbert basis.
-         * @param constraintsBegin the list of additional validity constraints
+         * \param constraintsBegin the list of additional validity constraints
          * to impose.
          */
         template <class IntegerType, class BitmaskType>

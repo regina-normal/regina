@@ -54,9 +54,9 @@ namespace regina {
  * triangulations in Regina, since Regina restricts its triangulations to
  * dimension &le; 15 (where each simplex has 16 vertices).
  *
- * @param n the parameter \a n in (\a n choose \a k); this must be
+ * \param n the parameter \a n in (\a n choose \a k); this must be
  * between 0 and 16 inclusive.
- * @param k the parameter \a k in (\a n choose \a k); this must be
+ * \param k the parameter \a k in (\a n choose \a k); this must be
  * between 0 and \a n inclusive.
  * @return the binomial coefficient \a n choose \a k.
  *
@@ -77,9 +77,9 @@ constexpr int binomSmall(int n, int k);
  * lookup as binomSmall() (i.e., there is no penalty for calling this
  * routine with very small arguments).
  *
- * @param n the parameter \a n in (\a n choose \a k); this must be
+ * \param n the parameter \a n in (\a n choose \a k); this must be
  * between 0 and 29 inclusive.
- * @param k the parameter \a k in (\a n choose \a k); this must be
+ * \param k the parameter \a k in (\a n choose \a k); this must be
  * between 0 and \a n inclusive.
  * @return the binomial coefficient \a n choose \a k.
  *

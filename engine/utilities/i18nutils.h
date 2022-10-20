@@ -180,10 +180,10 @@ class IConvStreamBuffer : public std::streambuf {
          *
          * \pre The destination output stream is already open.
          *
-         * @param dest the destination output stream.
-         * @param srcCode the character encoding for data that is to be
+         * \param dest the destination output stream.
+         * \param srcCode the character encoding for data that is to be
          * written into this stream buffer.
-         * @param destCode the character encoding for the translated data
+         * \param destCode the character encoding for the translated data
          * that will subsequently be written to the destination output stream.
          * @return this stream buffer on success, or \c null on error.
          */
@@ -206,7 +206,7 @@ class IConvStreamBuffer : public std::streambuf {
          * this incomplete character will be held back (since it presumably
          * needs to be combined with later input).
          *
-         * @param c an extra character to send that did not fit in the
+         * \param c an extra character to send that did not fit in the
          * internal buffer, or EOF if we simply wish to flush the buffer.
          * @return 0 on success, or EOF on error.
          */
@@ -277,10 +277,10 @@ class IConvStream : public std::ostream {
          *
          * \pre The destination output stream is already open.
          *
-         * @param dest the destination output stream.
-         * @param srcCode the character encoding for data that is to be
+         * \param dest the destination output stream.
+         * \param srcCode the character encoding for data that is to be
          * written into this IConvStream.
-         * @param destCode the character encoding for the translated data
+         * \param destCode the character encoding for the translated data
          * that will subsequently be written to the destination output stream.
          */
         IConvStream(std::ostream& dest,

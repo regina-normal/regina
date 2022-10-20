@@ -193,7 +193,7 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          * Creates a new vertex and marks it as belonging to the
          * given triangulation component.
          *
-         * @param component the triangulation component to which this
+         * \param component the triangulation component to which this
          * vertex belongs.
          */
         Face(Component<4>* component);

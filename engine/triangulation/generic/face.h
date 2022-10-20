@@ -108,9 +108,9 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
         /**
          * Creates a new object containing the given data.
          *
-         * @param simplex the top-dimensional simplex in which the
+         * \param simplex the top-dimensional simplex in which the
          * underlying <i>subdim</i>-face of the triangulation is contained.
-         * @param vertices a mapping from the vertices of the underlying
+         * \param vertices a mapping from the vertices of the underlying
          * <i>subdim</i>-face of the triangulation to the corresponding
          * vertex numbers of \a simplex.  See FaceEmbeddingBase::vertices()
          * for details of how this permutation should be structured.
@@ -120,14 +120,14 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
         /**
          * Creates a new copy of the given object.
          *
-         * @param cloneMe the object to copy.
+         * \param cloneMe the object to copy.
          */
         FaceEmbedding(const FaceEmbedding& cloneMe) = default;
 
         /**
          * Sets this to be a copy of the given object.
          *
-         * @param cloneMe the object to copy.
+         * \param cloneMe the object to copy.
          */
         FaceEmbedding& operator = (const FaceEmbedding& cloneMe) = default;
 
@@ -225,7 +225,7 @@ class Face : public detail::FaceBase<dim, subdim> {
         /**
          * Creates a new face.
          *
-         * @param component the component of the underlying triangulation
+         * \param component the component of the underlying triangulation
          * to which the new face belongs.
          */
         Face(Component<dim>* component);

@@ -99,7 +99,7 @@ class Face<4, 2> : public detail::FaceBase<4, 2> {
          * Creates a new triangle and marks it as belonging to the
          * given triangulation component.
          *
-         * @param component the triangulation component to which this
+         * \param component the triangulation component to which this
          * triangle belongs.
          */
         Face(Component<4>* component);

@@ -74,7 +74,7 @@ class PythonCompleter {
          * same completion multiple times (in which case the same completion
          * will be passed to this function multiple times in turn).
          *
-         * @param s the new completion.  This string will begin with the
+         * \param s the new completion.  This string will begin with the
          * original text that was passed to PythonCompleter::complete().
          * @return \c true to indicate that PythonCompleter::complete()
          * should continue searching for more completions, or \c false
@@ -293,8 +293,8 @@ class PythonInterpreter {
          * \pre This is called from the same C++ thread that created
          * this Python interpreter.
          *
-         * @param text the Python text to complete.
-         * @param completer the callback object that will receive the
+         * \param text the Python text to complete.
+         * \param completer the callback object that will receive the
          * resulting completions (if any).
          * @return the number of completions that were passed to \a completer,
          * or -1 if the completion process failed (e.g., the \c plainCompleter

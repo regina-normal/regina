@@ -57,8 +57,8 @@ class Qitmask1;
  * Since the length of the qitmask is not stored, the number of qits
  * written will be 8 * sizeof(\a T).
  *
- * @param out the output stream to which to write.
- * @param mask the qitmask to write.
+ * \param out the output stream to which to write.
+ * \param mask the qitmask to write.
  * @return a reference to the given output stream.
  *
  * \ingroup utilities
@@ -123,7 +123,7 @@ class Qitmask1 {
         /**
          * Creates a clone of the given qitmask.
          *
-         * @param cloneMe the qitmask to clone.
+         * \param cloneMe the qitmask to clone.
          */
         inline Qitmask1(const Qitmask1<T>& cloneMe) = default;
 
@@ -137,7 +137,7 @@ class Qitmask1 {
         /**
          * Sets this qitmask to a copy of the given qitmask.
          *
-         * @param other the qitmask to clone.
+         * \param other the qitmask to clone.
          * @return a reference to this qitmask.
          */
         Qitmask1<T>& operator = (const Qitmask1<T>& other) = default;
@@ -145,7 +145,7 @@ class Qitmask1 {
         /**
          * Returns the value of the given qit in this qitmask.
          *
-         * @param index indicates which qit to query; this must be between
+         * \param index indicates which qit to query; this must be between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
          * @return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
@@ -160,9 +160,9 @@ class Qitmask1 {
         /**
          * Sets the given qit of this qitmask to the given value.
          *
-         * @param index indicates which qit to set; this must be between
+         * \param index indicates which qit to set; this must be between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
-         * @param value the value that will be assigned to the (\a index)th
+         * \param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
         inline void set(size_t index, uint8_t value) {
@@ -208,7 +208,7 @@ class Qitmask1 {
          * Sets this to the sum of this and the given qitmask.
          * Each pair of qits is added modulo 4 (so, for instance, 2 + 3 = 1).
          *
-         * @param rhs the qitmask to add to this.
+         * \param rhs the qitmask to add to this.
          * @return a reference to this qitmask.
          */
         inline Qitmask1<T>& operator += (const Qitmask1<T>& rhs) {
@@ -222,7 +222,7 @@ class Qitmask1 {
          * Each pair of qits is subtracted modulo 4 (so, for instance,
          * 1 - 3 = 2).
          *
-         * @param rhs the qitmask to subtract from this.
+         * \param rhs the qitmask to subtract from this.
          * @return a reference to this qitmask.
          */
         inline Qitmask1<T>& operator -= (const Qitmask1<T>& rhs) {
@@ -234,7 +234,7 @@ class Qitmask1 {
         /**
          * Determines whether this and the given qitmask are identical.
          *
-         * @param other the qitmask to compare against this.
+         * \param other the qitmask to compare against this.
          * @return \c true if and only if this and the given qitmask are
          * identical.
          */
@@ -245,7 +245,7 @@ class Qitmask1 {
         /**
          * Determines whether this and the given qitmask are different.
          *
-         * @param other the qitmask to compare against this.
+         * \param other the qitmask to compare against this.
          * @return \c true if and only if this and the given qitmask are
          * different.
          */
@@ -264,7 +264,7 @@ class Qitmask1 {
          * needs to happen at one index; there may be \e other indices at
          * which the qit is zero in one qitmask but not the other.
          *
-         * @param other the qitmask to compare with this.
+         * \param other the qitmask to compare with this.
          * @return \c true if there is some index at which this and \a other
          * both have non-zero qits, or \c false otherwise.
          */
@@ -286,8 +286,8 @@ class Qitmask2;
  * Since the length of the qitmask is not stored, the number of qits
  * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
  *
- * @param out the output stream to which to write.
- * @param mask the qitmask to write.
+ * \param out the output stream to which to write.
+ * \param mask the qitmask to write.
  * @return a reference to the given output stream.
  *
  * \ingroup utilities
@@ -360,7 +360,7 @@ class Qitmask2 {
         /**
          * Creates a clone of the given qitmask.
          *
-         * @param cloneMe the qitmask to clone.
+         * \param cloneMe the qitmask to clone.
          */
         inline Qitmask2(const Qitmask2<T, U>& cloneMe) = default;
 
@@ -375,7 +375,7 @@ class Qitmask2 {
         /**
          * Sets this qitmask to a copy of the given qitmask.
          *
-         * @param other the qitmask to clone.
+         * \param other the qitmask to clone.
          * @return a reference to this qitmask.
          */
         Qitmask2<T, U>& operator = (const Qitmask2<T, U>& other) = default;
@@ -383,7 +383,7 @@ class Qitmask2 {
         /**
          * Returns the value of the given qit in this qitmask.
          *
-         * @param index indicates which qit to query; this must be between
+         * \param index indicates which qit to query; this must be between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
          * @return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
@@ -401,9 +401,9 @@ class Qitmask2 {
         /**
          * Sets the given qit of this qitmask to the given value.
          *
-         * @param index indicates which qit to set; this must be between
+         * \param index indicates which qit to set; this must be between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
-         * @param value the value that will be assigned to the (\a index)th
+         * \param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
         inline void set(size_t index, uint8_t value) {
@@ -458,7 +458,7 @@ class Qitmask2 {
          * Sets this to the sum of this and the given qitmask.
          * Each pair of qits is added modulo 4 (so, for instance, 2 + 3 = 1).
          *
-         * @param rhs the qitmask to add to this.
+         * \param rhs the qitmask to add to this.
          * @return a reference to this qitmask.
          */
         inline Qitmask2<T, U>& operator += (const Qitmask2<T, U>& rhs) {
@@ -474,7 +474,7 @@ class Qitmask2 {
          * Each pair of qits is subtracted modulo 4 (so, for instance,
          * 1 - 3 = 2).
          *
-         * @param rhs the qitmask to subtract from this.
+         * \param rhs the qitmask to subtract from this.
          * @return a reference to this qitmask.
          */
         inline Qitmask2<T, U>& operator -= (const Qitmask2<T, U>& rhs) {
@@ -488,7 +488,7 @@ class Qitmask2 {
         /**
          * Determines whether this and the given qitmask are identical.
          *
-         * @param other the qitmask to compare against this.
+         * \param other the qitmask to compare against this.
          * @return \c true if and only if this and the given qitmask are
          * identical.
          */
@@ -500,7 +500,7 @@ class Qitmask2 {
         /**
          * Determines whether this and the given qitmask are different.
          *
-         * @param other the qitmask to compare against this.
+         * \param other the qitmask to compare against this.
          * @return \c true if and only if this and the given qitmask are
          * different.
          */
@@ -520,7 +520,7 @@ class Qitmask2 {
          * needs to happen at one index; there may be \e other indices at
          * which the qit is zero in one qitmask but not the other.
          *
-         * @param other the qitmask to compare with this.
+         * \param other the qitmask to compare with this.
          * @return \c true if there is some index at which this and \a other
          * both have non-zero qits, or \c false otherwise.
          */

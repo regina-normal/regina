@@ -151,7 +151,7 @@ class ComponentBase :
          * Note that the index within this component may not be the same
          * as the index within the overall triangulation.
          *
-         * @param index specifies which simplex to return; this
+         * \param index specifies which simplex to return; this
          * value should be between 0 and size()-1 inclusive.
          * @return the <i>index</i>th top-dimensional simplex.
          */
@@ -352,7 +352,7 @@ class ComponentBase :
          * Note that the index of a boundary component within this component
          * may not be the same as its index within the overall triangulation.
          *
-         * @param index specifies which boundary component to return;
+         * \param index specifies which boundary component to return;
          * this should be between 0 and countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
@@ -412,7 +412,7 @@ class ComponentBase :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 

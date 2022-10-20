@@ -197,7 +197,7 @@ private:
             /**
              * Return the integer at the given index in this array.
              *
-             * @param index the requested array index; this must be
+             * \param index the requested array index; this must be
              * between 0 and size()-1 inclusive.
              * @return the corresponding element of this array.
              */
@@ -210,7 +210,7 @@ private:
              * This routine runs in logarithmic time (it uses a
              * binary search).
              *
-             * @param value the integer to search for.
+             * \param value the integer to search for.
              * @return the array index that holds the given integer,
              * or -1 if the given integer is not stored in this array.
              */
@@ -228,7 +228,7 @@ private:
              * \pre The given integer is at least as large as every
              * integer currently stored in the array.
              *
-             * @param value the integer to insert into this array.
+             * \param value the integer to insert into this array.
              */
             inline void push_back(unsigned long value) {
                 data_.push_back(value);
@@ -526,7 +526,7 @@ public:
      * object will automatically take its own deep copy of the original and
      * continue to use that for its own internal reference.
      *
-     * @param input the triangulation to use.
+     * \param input the triangulation to use.
      */
     HomologicalData(const Triangulation<3>& input);
     /**
@@ -576,7 +576,7 @@ public:
      * constant time".  You should still work to avoid swapping (or moving,
      * and certainly copying) HomologicalData objects where possible.
      *
-     * @param other the object whose contents should be swapped with this.
+     * \param other the object whose contents should be swapped with this.
      */
     void swap(HomologicalData& other) noexcept;
 
@@ -590,7 +590,7 @@ public:
      *
      * \nopython Use str() instead.
      *
-     * @param out the output stream to which to write.
+     * \param out the output stream to which to write.
      */
     void writeTextShort(std::ostream& out) const;
 
@@ -606,7 +606,7 @@ public:
      * are isomorphic, though they are generally described by different
      * presentations.
      *
-     * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
+     * \param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the standard
      * CW-decomposition.
      */
@@ -615,7 +615,7 @@ public:
      * This routine gives access to the homology of the boundary
      * of the manifold, computed with the regular CW-decomposition.
      *
-     * @param q the dimension of the homology group: can be 0, 1 or 2.
+     * \param q the dimension of the homology group: can be 0, 1 or 2.
      * @return the q-th boundary homology group, in standard cellular
      * homology coordinates
      */
@@ -625,7 +625,7 @@ public:
      * This routine gives access to the homomorphism from the
      * homology of the boundary to the homology of the manifold.
      *
-     * @param q the dimension of the map: can be 0, 1 or 2.
+     * \param q the dimension of the map: can be 0, 1 or 2.
      * @return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
@@ -642,7 +642,7 @@ public:
      * are isomorphic, though they are generally described by different
      * presentations.
      *
-     * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
+     * \param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the dual CW-decomposition.
      */
     const MarkedAbelianGroup& dualHomology(unsigned q);
@@ -670,7 +670,7 @@ public:
      * returns the details of the corresponding compact manifold with
      * boundary a union of closed surfaces.
      *
-     * @param dimension the dimension of the cells in question; this must
+     * \param dimension the dimension of the cells in question; this must
      * be 0, 1, 2 or 3.
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the closed manifold.
@@ -681,7 +681,7 @@ public:
      * in the dual CW-decomposition of the manifold. This is typically
      * much smaller than countStandardCells().
      *
-     * @param dimension the dimension of the cells in question; this must
+     * \param dimension the dimension of the cells in question; this must
      * be 0, 1, 2 or 3.
      * @return the number of cells of the given dimension in the dual
      * CW-decomposition to the triangulation.
@@ -692,7 +692,7 @@ public:
      * standard CW-decomposition of the boundary of the manifold.
      * This is a subcomplex of the complex used in countStandardCells().
      *
-     * @param dimension the dimension of the cells in question; this must
+     * \param dimension the dimension of the cells in question; this must
      * be 0, 1 or 2.
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the boundary.
@@ -972,8 +972,8 @@ public:
  * constant time".  You should still work to avoid swapping (or moving,
  * and certainly copying) HomologicalData objects where possible.
  *
- * @param a the first object whose contents should be swapped.
- * @param b the second object whose contents should be swapped.
+ * \param a the first object whose contents should be swapped.
+ * \param b the second object whose contents should be swapped.
  *
  * \ingroup triangulation
  */

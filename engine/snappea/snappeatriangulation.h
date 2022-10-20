@@ -84,9 +84,9 @@ class SnapPeaFatalError : public std::runtime_error {
          * Creates a new exception, indicating where in the SnapPea kernel
          * the error occurred.
          *
-         * @param fromFunction the function from the SnapPea kernel in which
+         * \param fromFunction the function from the SnapPea kernel in which
          * the error occurred.
-         * @param fromFile the source file from the SnapPea kernel in which
+         * \param fromFile the source file from the SnapPea kernel in which
          * the error occurred.
          */
         SnapPeaFatalError(const char* fromFunction, const char* fromFile);
@@ -253,7 +253,7 @@ class Cusp : public ShortOutput<Cusp> {
          * \e pointers do not need to be the same (i.e., it is meaningful
          * to compare cusps from different triangulations).
          *
-         * @param other the cusp information to compare with this.
+         * \param other the cusp information to compare with this.
          * @return \c true if and only this and the given object hold
          * the same cusp information.
          */
@@ -269,7 +269,7 @@ class Cusp : public ShortOutput<Cusp> {
          * \e pointers do not need to be the same (i.e., it is meaningful
          * to compare cusps from different triangulations).
          *
-         * @param other the cusp information to compare with this.
+         * \param other the cusp information to compare with this.
          * @return \c true if and only this and the given object do not hold
          * the same cusp information.
          */
@@ -281,7 +281,7 @@ class Cusp : public ShortOutput<Cusp> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -679,7 +679,7 @@ class SnapPeaTriangulation :
          * given file, or could not parse the file contents (which could
          * have been passed explicitly or could have been read from file).
          *
-         * @param fileNameOrContents either the name of a SnapPea data
+         * \param fileNameOrContents either the name of a SnapPea data
          * file, or the contents of a SnapPea data file (which need not
          * actually exist on the filesystem).
          */
@@ -691,7 +691,7 @@ class SnapPeaTriangulation :
          * If \a src is a null triangulation then this will be a null
          * triangulation also.  See isNull() for further details.
          *
-         * @param src the SnapPea triangulation to copy.
+         * \param src the SnapPea triangulation to copy.
          */
         SnapPeaTriangulation(const SnapPeaTriangulation& src);
 
@@ -717,7 +717,7 @@ class SnapPeaTriangulation :
          * because we assume that \a src is about to be destroyed (an action
          * that \e will fire a packet destruction event).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          */
         SnapPeaTriangulation(SnapPeaTriangulation&& src) noexcept;
 
@@ -783,8 +783,8 @@ class SnapPeaTriangulation :
          * In particular, if the given Regina triangulation is orientable but
          * not oriented, then you should \e expect these numbers to change.
          *
-         * @param tri the Regina triangulation to clone.
-         * @param ignored a legacy parameter that is now ignored.
+         * \param tri the Regina triangulation to clone.
+         * \param ignored a legacy parameter that is now ignored.
          * (This argument was once required if you wanted to pass a
          * closed triangluation to SnapPea.)
          */
@@ -813,7 +813,7 @@ class SnapPeaTriangulation :
          * (The latter problem will only occur if the number of crossings
          * and/or components does not fit into a native C++ \c int.)
          *
-         * @param link the link whose complement we should build.
+         * \param link the link whose complement we should build.
          */
         SnapPeaTriangulation(const Link& link);
 
@@ -837,7 +837,7 @@ class SnapPeaTriangulation :
          * \nopython Regina's Python interface does not allow you to talk
          * directly with the built-in copy of the SnapPea C kernel.
          *
-         * @param data the raw SnapPea kernel data to use in this triangulation.
+         * \param data the raw SnapPea kernel data to use in this triangulation.
          */
         SnapPeaTriangulation(regina::snappea::Triangulation* data);
 
@@ -903,7 +903,7 @@ class SnapPeaTriangulation :
          * \e not fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          * @return a reference to this triangulation.
          */
         SnapPeaTriangulation& operator = (SnapPeaTriangulation&& src);
@@ -935,7 +935,7 @@ class SnapPeaTriangulation :
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
-         * @param other the SnapPea triangulation whose contents should
+         * \param other the SnapPea triangulation whose contents should
          * be swapped with this.
          */
         void swap(SnapPeaTriangulation& other);
@@ -1061,7 +1061,7 @@ class SnapPeaTriangulation :
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.tetrahedra_shapes(part='rect')[tet]</tt>.
          *
-         * @param tet the index of a tetrahedron; this must be between
+         * \param tet the index of a tetrahedron; this must be between
          * 0 and size()-1 inclusive.
          * @return the shape of the given tetrahedron, in rectangular form.
          */
@@ -1193,7 +1193,7 @@ class SnapPeaTriangulation :
          *
          * Two null SnapPea triangulations will be considered equal.
          *
-         * @param other the SnapPea triangulation to compare with this.
+         * \param other the SnapPea triangulation to compare with this.
          * @return \c true if and only this and the given triangulation
          * are the same, according to the criteria described above.
          */
@@ -1226,7 +1226,7 @@ class SnapPeaTriangulation :
          *
          * Two null SnapPea triangulations will be considered equal.
          *
-         * @param other the SnapPea triangulation to compare with this.
+         * \param other the SnapPea triangulation to compare with this.
          * @return \c true if and only this and the given triangulation
          * are different, according to the criteria described above.
          */
@@ -1303,7 +1303,7 @@ class SnapPeaTriangulation :
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
-         * @param whichCusp the index of a cusp according to SnapPea;
+         * \param whichCusp the index of a cusp according to SnapPea;
          * this must be between 0 and countCusps()-1 inclusive.
          * @return information about the given cusp.
          */
@@ -1375,9 +1375,9 @@ class SnapPeaTriangulation :
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
-         * @param m the first (meridional) filling coefficient.
-         * @param l the second (longitudinal) filling coefficient.
-         * @param whichCusp the index of the cusp to fill according to
+         * \param m the first (meridional) filling coefficient.
+         * \param l the second (longitudinal) filling coefficient.
+         * \param whichCusp the index of the cusp to fill according to
          * SnapPea; this must be between 0 and countCusps()-1 inclusive.
          * @return \c true if and only if the filling coefficients were
          * accepted (according to the conditions outlined above).
@@ -1397,7 +1397,7 @@ class SnapPeaTriangulation :
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
-         * @param whichCusp the index of the cusp to unfill according to
+         * \param whichCusp the index of the cusp to unfill according to
          * SnapPea; this must be between 0 and countCusps()-1 inclusive.
          */
         void unfill(unsigned whichCusp = 0);
@@ -1452,7 +1452,7 @@ class SnapPeaTriangulation :
          * \exception FailedPrecondition The given cusp is complete,
          * and/or it is the only cusp.
          *
-         * @param whichCusp the index of the cusp to permanently fill according
+         * \param whichCusp the index of the cusp to permanently fill according
          * to SnapPea; this must be between 0 and countCusps()-1 inclusive.
          * @return the filled triangulation.
          */
@@ -1667,19 +1667,19 @@ class SnapPeaTriangulation :
          *
          * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * @param simplifyPresentation \c true if SnapPea should attempt
+         * \param simplifyPresentation \c true if SnapPea should attempt
          * to simplify the group presentation, or \c false if it should
          * be left unsimplified.  Even if \a simplifyPresentation is \c false,
          * this routine will always eliminate adjacent (x, x^-1) pairs.
-         * @param fillingsMayAffectGenerators \c true if SnapPea's choice of
+         * \param fillingsMayAffectGenerators \c true if SnapPea's choice of
          * generators is allowed to depend on the Dehn fillings, or \c false
          * if the choice of generators should be consistent across different
          * fillings.
-         * @param minimiseNumberOfGenerators \c true if SnapPea's group
+         * \param minimiseNumberOfGenerators \c true if SnapPea's group
          * simplification code should try to reduce the number of
          * generators at the expense of increasing the total length of
          * the relations, or \c false if it should do the opposite.
-         * @param tryHardToShortenRelators \c true if SnapPea's group
+         * \param tryHardToShortenRelators \c true if SnapPea's group
          * simplification code should try to reduce the length of the relations
          * by inserting one relation into another.  In general this is a
          * good thing, but it can be very costly for large presentations.
@@ -1784,14 +1784,14 @@ class SnapPeaTriangulation :
          * containing all of the triangulated covers, each given as a
          * pair (SnapPeaTriangulation, SnapPeaTriangulation::CoverType).
          *
-         * @param sheets the number of sheets in the covers to produce
+         * \param sheets the number of sheets in the covers to produce
          * (i.e., the number \a k in the description above); this must
          * be a positive integer.
-         * @param type indicates whether to enumerate all covers (up to
+         * \param type indicates whether to enumerate all covers (up to
          * equivalence) or only cyclic covers.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each cover that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation and type arguments.
          * @return the total number of covers found.
          */
@@ -2011,7 +2011,7 @@ class SnapPeaTriangulation :
          *
          * This routine (which interacts with static data) is thread-safe.
          *
-         * @param enabled \c true if diagnostic messages should be
+         * \param enabled \c true if diagnostic messages should be
          * enabled, or \c false otherwise.
          */
         static void enableKernelMessages(bool enabled = true);
@@ -2078,7 +2078,7 @@ class SnapPeaTriangulation :
          * \nopython Instead use the variant of snapPea() that takes no
          * arguments and returns a string.
          *
-         * @param out the output stream to which the SnapPea data file
+         * \param out the output stream to which the SnapPea data file
          * will be written.
          */
         void snapPea(std::ostream& out) const;
@@ -2101,7 +2101,7 @@ class SnapPeaTriangulation :
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The \e contents of the file will be written using UTF-8.
          *
-         * @param filename the name of the SnapPea file to which to write.
+         * \param filename the name of the SnapPea file to which to write.
          * @return \c true if and only if the file was successfully written.
          */
         bool saveSnapPea(const char* filename) const;
@@ -2118,7 +2118,7 @@ class SnapPeaTriangulation :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -2127,7 +2127,7 @@ class SnapPeaTriangulation :
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -2173,8 +2173,8 @@ class SnapPeaTriangulation :
          * \pre The SnapPea triangulation \a src is non-null.
          * \pre The Regina triangulation \a dest is empty.
          *
-         * @param src the SnapPea triangulation to copy from.
-         * @param dest the destination Regina triangulation.
+         * \param src the SnapPea triangulation to copy from.
+         * \param dest the destination Regina triangulation.
          */
         static void fillRegina(regina::snappea::Triangulation* src,
             Triangulation<3>& dest);
@@ -2253,8 +2253,8 @@ class SnapPeaTriangulation :
  * fires change events which may in turn call arbitrary
  * code via any registered packet listeners.
  *
- * @param lhs the triangulation whose contents should be swapped with \a rhs.
- * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ * \param lhs the triangulation whose contents should be swapped with \a rhs.
+ * \param rhs the triangulation whose contents should be swapped with \a lhs.
  *
  * \ingroup snappea
  */

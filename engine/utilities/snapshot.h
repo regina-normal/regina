@@ -339,7 +339,7 @@ class Snapshottable {
          * base class constructor (as it should), then there is no need
          * for it to call takeSnapshot() from \a src.
          *
-         * @param src the snapshot image being moved.
+         * \param src the snapshot image being moved.
          */
         Snapshottable(Snapshottable&& src) noexcept : snapshot_(src.snapshot_) {
             if (snapshot_) {
@@ -394,7 +394,7 @@ class Snapshottable {
          * This operator is not marked \c noexcept, since it might create a
          * deep copy of the old type \a T value of this object.
          *
-         * @param src the snapshot image being moved.
+         * \param src the snapshot image being moved.
          * @return a reference to this object.
          */
         Snapshottable& operator = (Snapshottable&& src) {
@@ -421,7 +421,7 @@ class Snapshottable {
          * function (as it should), then there is no need to call
          * takeSnapshot() from either this object or \a src.
          *
-         * @param other the snapshot image being swapped with this.
+         * \param other the snapshot image being swapped with this.
          */
         void swap(Snapshottable& other) noexcept {
             std::swap(snapshot_, other.snapshot_);
@@ -549,7 +549,7 @@ class SnapshotRef {
          * in the same state, it is (slightly) cheaper to copy \a R instead
          * of going through the source object \a src.
          *
-         * @param src the underlying type \a T object whose current
+         * \param src the underlying type \a T object whose current
          * snapshot we wish to maintain a reference to.
          */
         SnapshotRef(const T& src) : snapshot_(src.addSnapshotRef()) {
@@ -560,7 +560,7 @@ class SnapshotRef {
          * The new reference will refer to the same object as \a src, as it
          * appeared at the same point in time.
          *
-         * @param src the snapshot reference to copy.
+         * \param src the snapshot reference to copy.
          */
         SnapshotRef(const SnapshotRef& src) : snapshot_(src.snapshot_) {
             ++snapshot_->refCount_;
@@ -576,7 +576,7 @@ class SnapshotRef {
          * here for consistency because the move \e assignment operator is
          * different from (and more efficient) than copy assignment.
          *
-         * @param src the snapshot reference to move.
+         * \param src the snapshot reference to move.
          */
         SnapshotRef(SnapshotRef&& src) noexcept : snapshot_(src.snapshot_) {
             // We don't do anything special here like preserving the reference
@@ -613,7 +613,7 @@ class SnapshotRef {
          * Self-assignment (<tt>r = *r</tt>) is harmless, and will never cause
          * the underlying snapshot to be destroyed.
          *
-         * @param src the underlying type \a T object whose current
+         * \param src the underlying type \a T object whose current
          * snapshot we wish to make this a reference to.
          * @return a reference to this object.
          */
@@ -639,7 +639,7 @@ class SnapshotRef {
          * Self-assignment (<tt>r = r</tt>) is harmless, and will never cause
          * the underlying snapshot to be destroyed.
          *
-         * @param src the snapshot reference to copy.
+         * \param src the snapshot reference to copy.
          * @return a reference to this object.
          */
         // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
@@ -661,7 +661,7 @@ class SnapshotRef {
          * This is more efficient than copy assignment, since it avoids
          * atomic changes to reference counts.
          *
-         * @param src the snapshot reference to move.
+         * \param src the snapshot reference to move.
          * @return a reference to this object.
          */
         SnapshotRef& operator = (SnapshotRef&& src) noexcept {
@@ -680,7 +680,7 @@ class SnapshotRef {
          * This is more efficient than a sequence of copies, since it avoids
          * atomic changes to reference counts.
          *
-         * @param other the reference to swap with this.
+         * \param other the reference to swap with this.
          */
         void swap(SnapshotRef& other) noexcept {
             std::swap(snapshot_, other.snapshot_);
@@ -694,7 +694,7 @@ class SnapshotRef {
          * other references), during the same time period in which the
          * underlying type \a T object was not modified.
          *
-         * @param rhs the snapshot reference to compare with this.
+         * \param rhs the snapshot reference to compare with this.
          * @return \c true if and only if this and \a rhs refer to the
          * same snapshot of the same underlying type \a T object.
          */
@@ -711,7 +711,7 @@ class SnapshotRef {
          * object but at times that were separated by a modification of this
          * type \a T object.
          *
-         * @param rhs the snapshot reference to compare with this.
+         * \param rhs the snapshot reference to compare with this.
          * @return \c true if and only if this and \a rhs do not refer to the
          * same snapshot of the same underlying type \a T object.
          */
@@ -761,8 +761,8 @@ class SnapshotRef {
  *
  * \nopython The SnapshotRef classes are not accessible to Python users.
  *
- * @param a the first snapshot reference to swap.
- * @param b the second snapshot reference to swap.
+ * \param a the first snapshot reference to swap.
+ * \param b the second snapshot reference to swap.
  *
  * \ingroup utilities
  */

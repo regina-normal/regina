@@ -140,18 +140,18 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * additional coordinates beyond this block structure that are
          * not used in any validity constraints).
          *
-         * @param blockSize the number of coordinates in each block.
+         * \param blockSize the number of coordinates in each block.
          * For example, for vectors describing normal surfaces in standard
          * coordinates, this block size would be 7 (representing the three
          * triangle and four quadrilateral coordinates for each tetrahedron).
-         * @param nBlocks the number of consecutive blocks of size \a blockSize.
+         * \param nBlocks the number of consecutive blocks of size \a blockSize.
          * For example, for vectors describing normal surfaces in standard
          * coordinates, this number of blocks would be the number of
          * tetrahedra in the underlying triangulation.
-         * @param reserveLocal indicates that we should reserve space
+         * \param reserveLocal indicates that we should reserve space
          * for \a reserveLocal calls to addLocal().  This is purely for
          * optimisation; it is safe to leave this as 0 (the default).
-         * @param reserveGlobal indicates that we should reserve space
+         * \param reserveGlobal indicates that we should reserve space
          * for \a reserveGlobal calls to addGlobal().  This is purely for
          * optimisation; it is safe to leave this as 0 (the default).
          */
@@ -205,10 +205,10 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \ifacespython Instead of the iterators \a begin and \a end,
          * this routine takes a python list of integers.
          *
-         * @param begin the beginning of the list of coordinates to constraint
+         * \param begin the beginning of the list of coordinates to constraint
          * within each block, relative to the start of the block, as outlined
          * above.
-         * @param end a past-the-end iterator indicating the end of the list of
+         * \param end a past-the-end iterator indicating the end of the list of
          * coordinates to constraint within each block.
          */
         template <typename iterator>
@@ -229,7 +229,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * takes the coordinate pattern as a Python list (which need not be
          * constant).
          *
-         * @param pattern the coordinates to constraint within each block,
+         * \param pattern the coordinates to constraint within each block,
          * relative to the start of the block.
          */
         void addLocal(std::initializer_list<int> pattern);
@@ -253,10 +253,10 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \ifacespython Instead of the iterators \a begin and \a end,
          * this routine takes a python list of integers.
          *
-         * @param begin the beginning of the list of coordinates to constraint
+         * \param begin the beginning of the list of coordinates to constraint
          * within each block, relative to the start of the block, as outlined
          * above.
-         * @param end a past-the-end iterator indicating the end of the list of
+         * \param end a past-the-end iterator indicating the end of the list of
          * coordinates to constraint within each block.
          */
         template <typename iterator>
@@ -278,7 +278,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * takes the coordinate pattern as a Python list (which need not be
          * constant).
          *
-         * @param pattern the coordinates to constraint within each block,
+         * \param pattern the coordinates to constraint within each block,
          * relative to the start of the block.
          */
         void addGlobal(std::initializer_list<int> pattern);
@@ -286,7 +286,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
         /**
          * Swaps the contents of this and the given constraint set.
          *
-         * @param other the constraint set whose contents should be swapped
+         * \param other the constraint set whose contents should be swapped
          * with this.
          */
         void swap(ValidityConstraints& other) noexcept;
@@ -315,7 +315,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * this must be one of Regina's own bitmask types, such as Bitmask,
          * Bitmask1 or Bitmask2.
          *
-         * @param len the total number of coordinates in the vectors being
+         * \param len the total number of coordinates in the vectors being
          * constrained.  Each bitmask will be created with this length.
          * @return the list of bitmasks describing the full set of validity
          * constraints.
@@ -376,7 +376,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * not very efficient.  It is assumed that this will not be a problem,
          * because typical constraint sets are extremely small.
          *
-         * @param other the constraint set to compare against this.
+         * \param other the constraint set to compare against this.
          * @return \c true if and only if this and the given set
          * contain the same constraints.
          */
@@ -397,7 +397,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * not very efficient.  It is assumed that this will not be a problem,
          * because typical constraint sets are extremely small.
          *
-         * @param other the constraint set to compare against this.
+         * \param other the constraint set to compare against this.
          * @return \c true if and only if this and the given set
          * do not contain the same constraints.
          */
@@ -409,7 +409,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -419,7 +419,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -441,8 +441,8 @@ class ValidityConstraints : public Output<ValidityConstraints> {
  * This global routine simply calls ValidityConstraints::swap(); it is provided
  * so that ValidityConstraints meets the C++ Swappable requirements.
  *
- * @param a the first constraint set whose contents should be swapped.
- * @param b the second constraint set whose contents should be swapped.
+ * \param a the first constraint set whose contents should be swapped.
+ * \param b the second constraint set whose contents should be swapped.
  *
  * \ingroup enumerate
  */

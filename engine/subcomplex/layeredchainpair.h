@@ -102,7 +102,7 @@ class LayeredChainPair : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(LayeredChainPair& other) noexcept;
@@ -112,7 +112,7 @@ class LayeredChainPair : public StandardTriangulation {
          * If the two chains have different lengths, the shorter chain
          * will be chain 0 and the longer chain will be chain 1.
          *
-         * @param which specifies which chain to return; this must be 0
+         * \param which specifies which chain to return; this must be 0
          * or 1.
          * @return the requested layered chain.
          */
@@ -133,7 +133,7 @@ class LayeredChainPair : public StandardTriangulation {
          * subclass is more specific than combinatorial isomorphism, due
          * to the ordering requirement).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of layered chain pair.
          */
@@ -154,7 +154,7 @@ class LayeredChainPair : public StandardTriangulation {
          * subclass is more specific than combinatorial isomorphism, due
          * to the ordering requirement).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent different types of layered chain pair.
          */
@@ -168,7 +168,7 @@ class LayeredChainPair : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param comp the triangulation component to examine.
+         * \param comp the triangulation component to examine.
          * @return a structure containing details of the layered chain pair,
          * or \c null if the given component is not a layered chain pair.
          */
@@ -193,8 +193,8 @@ class LayeredChainPair : public StandardTriangulation {
  * This global routine simply calls LayeredChainPair::swap(); it is provided
  * so that LayeredChainPair meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

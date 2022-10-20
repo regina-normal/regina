@@ -84,7 +84,7 @@ class SimpleSurfaceBundle : public Manifold {
         /**
          * Creates a new surface bundle of the given type.
          *
-         * @param bundleType the specific type of surface bundle to
+         * \param bundleType the specific type of surface bundle to
          * represent.  This must be one of the 3-manifold constants
          * defined in this class.
          */
@@ -104,7 +104,7 @@ class SimpleSurfaceBundle : public Manifold {
          * Determines whether this and the given surface bundle are of
          * the same type (i.e., they represent the same 3-manifold).
          *
-         * @param compare the surface bundle with which this will be compared.
+         * \param compare the surface bundle with which this will be compared.
          * @return \c true if and only if this and the given surface bundle
          * are of the same type.
          */
@@ -113,7 +113,7 @@ class SimpleSurfaceBundle : public Manifold {
          * Determines whether this and the given surface bundle are of
          * different types (i.e., they represent different 3-manifolds).
          *
-         * @param compare the surface bundle with which this will be compared.
+         * \param compare the surface bundle with which this will be compared.
          * @return \c true if and only if this and the given surface bundle
          * are of different types.
          */
@@ -129,7 +129,7 @@ class SimpleSurfaceBundle : public Manifold {
         /**
          * Swaps the contents of this and the given surface bundle.
          *
-         * @param other the surface bundle whose contents should be swapped
+         * \param other the surface bundle whose contents should be swapped
          * with this.
          */
         void swap(SimpleSurfaceBundle& other) noexcept;
@@ -147,8 +147,8 @@ class SimpleSurfaceBundle : public Manifold {
  * This global routine simply calls SimpleSurfaceBundle::swap(); it is
  * provided so that SimpleSurfaceBundle meets the C++ Swappable requirements.
  *
- * @param a the first surface bundle whose contents should be swapped.
- * @param b the second surface bundle whose contents should be swapped.
+ * \param a the first surface bundle whose contents should be swapped.
+ * \param b the second surface bundle whose contents should be swapped.
  *
  * \ingroup manifold
  */

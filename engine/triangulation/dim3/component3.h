@@ -157,7 +157,7 @@ class Component<3> : public detail::ComponentBase<3> {
          * \tparam subdim the face dimension; this must be between 0 and 2
          * inclusive.
          *
-         * @param index the index of the desired face, ranging from 0 to
+         * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
          * @return the requested face.
          */

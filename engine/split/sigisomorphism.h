@@ -98,7 +98,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * symbols.  This empty isomorphism is designed to be extended
          * at some later point.
          *
-         * @param newDir positive if this isomorphism specifies that all
+         * \param newDir positive if this isomorphism specifies that all
          * cycles are reversed, or negative if this isomorphism specifies
          * that all cycles keep their original direction.
          */
@@ -107,7 +107,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
         /**
          * Creates a copy of the given partial isomorphism.
          *
-         * @param iso the partial isomorphism to copy.
+         * \param iso the partial isomorphism to copy.
          */
         SigPartialIsomorphism(const SigPartialIsomorphism& iso);
 
@@ -118,7 +118,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * The partial isomorphism that is passed (\a src) will no longer be
          * usable.
          *
-         * @param src the partial isomorphism to move.
+         * \param src the partial isomorphism to move.
          */
         SigPartialIsomorphism(SigPartialIsomorphism&& src) noexcept;
 
@@ -136,7 +136,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          *
          * This operator induces a deep copy of \a src.
          *
-         * @param src the partial isomorphism to copy.
+         * \param src the partial isomorphism to copy.
          * @return a reference to this partial isomorphism.
          */
         SigPartialIsomorphism& operator = (const SigPartialIsomorphism& src);
@@ -152,7 +152,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * The partial isomorphism that is passed (\a src) will no longer be
          * usable.
          *
-         * @param src the partial isomorphism to move.
+         * \param src the partial isomorphism to move.
          * @return a reference to this partial isomorphism.
          */
         SigPartialIsomorphism& operator = (SigPartialIsomorphism&& src)
@@ -165,7 +165,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * with different numbers of symbols or different cycle structures;
          * if they do then they will both be adjusted accordingly.
          *
-         * @param other the partial isomorphism whose contents are to be
+         * \param other the partial isomorphism whose contents are to be
          * swapped with this.
          */
         void swap(SigPartialIsomorphism& other) noexcept;
@@ -178,8 +178,8 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * The result of this routine is dependent upon the symbol map
          * defined by this isomorphism (this symbol map will not be changed).
          *
-         * @param sig the signature to which this isomorphism will be applied.
-         * @param fromCycleGroup the first cycle group whose images may
+         * \param sig the signature to which this isomorphism will be applied.
+         * \param fromCycleGroup the first cycle group whose images may
          * be rearranged.  If it is already known that the cycle images for
          * the first \a k cycle groups are correct, \a k should be passed
          * in this parameter.  This parameter should not exceed the
@@ -192,7 +192,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * Determines whether this and the given partial isomorphism are
          * identical.
          *
-         * @param other the partial isomorphism to compare with this.
+         * \param other the partial isomorphism to compare with this.
          * @return \c true if and only if this and \a other are identical.
          */
         bool operator == (const SigPartialIsomorphism& other) const;
@@ -201,7 +201,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * Determines whether this and the given partial isomorphism are
          * not identical.
          *
-         * @param other the partial isomorphism to compare with this.
+         * \param other the partial isomorphism to compare with this.
          * @return \c true if and only if this and \a other are not identical.
          */
         bool operator != (const SigPartialIsomorphism& other) const;
@@ -218,10 +218,10 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * \pre the given partial isomorphism maps at least as many
          * cycles and symbols as this partial isomorphism.
          *
-         * @param sig the signature to which both this and the given
+         * \param sig the signature to which both this and the given
          * isomorphism will be applied.
-         * @param other the isomorphism to compare with this isomorphism.
-         * @param fromCycleGroup the first cycle group whose images should
+         * \param other the isomorphism to compare with this isomorphism.
+         * \param fromCycleGroup the first cycle group whose images should
          * be examined.  If it is already known that the cycle images for
          * the first \a k cycle groups are identical under both
          * isomorphisms, \a k should be passed in this parameter.
@@ -244,8 +244,8 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * that it does not take a second isomorphism to compare against.
          * See compareWith() for further details.
          *
-         * @param sig the signature to which this isomorphism will be applied.
-         * @param fromCycleGroup the first cycle group whose images should
+         * \param sig the signature to which this isomorphism will be applied.
+         * \param fromCycleGroup the first cycle group whose images should
          * be examined.  If it is already known that the cycle images for
          * the first \a k cycle groups are identical under both this and the
          * identity isomorphism, \a k should be passed in this parameter.
@@ -265,7 +265,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -278,11 +278,11 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * will be initialised; the remainder of the new isomorphism will
          * remain uninitialised.
          *
-         * @param base the partial isomorphism to be extended.
-         * @param newLabels the number of symbols that the new
+         * \param base the partial isomorphism to be extended.
+         * \param newLabels the number of symbols that the new
          * isomorphism will map; this must be at least as large as the
          * number of symbols mapped by the given isomorphism.
-         * @param newCycles the number of cycles that the new
+         * \param newCycles the number of cycles that the new
          * isomorphism will map; this must be at least as large as the
          * number of cycles mapped by the given isomorphism.
          */
@@ -311,9 +311,9 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
             /**
              * Creates a new comparison function.
              *
-             * @param newSig the signature containing the cycles that
+             * \param newSig the signature containing the cycles that
              * this function will examine.
-             * @param newIso the partial isomorphism to apply to the cycles
+             * \param newIso the partial isomorphism to apply to the cycles
              * before they are compared.
              */
             ShorterCycle(const Signature& newSig,
@@ -324,11 +324,11 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
              * See the class notes for further details on how this
              * comparison is done.
              *
-             * @param cycle1 the index of the first cycle to examine;
+             * \param cycle1 the index of the first cycle to examine;
              * this must be less than the total number of cycles mapped
              * by the isomorphism concerned and less than the total number
              * of cycles in the signature concerned.
-             * @param cycle2 the index of the second cycle to examine;
+             * \param cycle2 the index of the second cycle to examine;
              * this must be less than the total number of cycles mapped
              * by the isomorphism concerned and less than the total number
              * of cycles in the signature concerned.
@@ -347,8 +347,8 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
  * This global routine simply calls SigPartialIsomorphism::swap(); it is
  * provided so that SigPartialIsomorphism meets the C++ Swappable requirements.
  *
- * @param a the first partial isomorphism whose contents should be swapped.
- * @param b the second partial isomorphism whose contents should be swapped.
+ * \param a the first partial isomorphism whose contents should be swapped.
+ * \param b the second partial isomorphism whose contents should be swapped.
  *
  * \ingroup split
  */

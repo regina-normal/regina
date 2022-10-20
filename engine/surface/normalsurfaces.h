@@ -167,8 +167,8 @@ using SurfaceExport = regina::Flags<SurfaceExportFields>;
 /**
  * Returns the bitwise OR of the two given flags.
  *
- * @param lhs the first flag to combine.
- * @param rhs the second flag to combine.
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
  * @return the combination of both flags.
  *
  * \ingroup surfaces
@@ -338,15 +338,15 @@ class NormalSurfaces :
          * this constructor runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param triangulation the triangulation upon which this list of
+         * \param triangulation the triangulation upon which this list of
          * normal surfaces will be based.
-         * @param coords the coordinate system to be used.  This must be
+         * \param coords the coordinate system to be used.  This must be
          * one of the system that Regina is able to use for enumeration;
          * this is documented alongside each NormalCoords enum value.
-         * @param which indicates which normal surfaces should be enumerated.
-         * @param algHints passes requests to Regina for which specific
+         * \param which indicates which normal surfaces should be enumerated.
+         * \param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          */
         NormalSurfaces(
@@ -382,9 +382,9 @@ class NormalSurfaces :
          * transformation were not met.  See each NormalTransform enum
          * constant for the corresponding set of preconditions.
          *
-         * @param src the normal surface list that we wish to transform;
+         * \param src the normal surface list that we wish to transform;
          * this will not be modified.
-         * @param transform the specific transformation to apply.
+         * \param transform the specific transformation to apply.
          */
         NormalSurfaces(const NormalSurfaces& src, NormalTransform transform);
 
@@ -398,9 +398,9 @@ class NormalSurfaces :
          * For this new filtered list, which() will include the NS_CUSTOM
          * flag, and algorithm() will include the NS_ALG_CUSTOM flag.
          *
-         * @param src the normal surface list that we wish to filter;
+         * \param src the normal surface list that we wish to filter;
          * this will not be modified.
-         * @param filter the filter to apply to the given list.
+         * \param filter the filter to apply to the given list.
          */
         NormalSurfaces(const NormalSurfaces& src, const SurfaceFilter& filter);
 
@@ -421,14 +421,14 @@ class NormalSurfaces :
          * because we assume that \a src is about to be destroyed (an action
          * that \e will fire a packet destruction event).
          *
-         * @param src the list to move.
+         * \param src the list to move.
          */
         NormalSurfaces(NormalSurfaces&& src) noexcept = default;
 
         /**
          * Sets this to be a (deep) copy of the given list.
          *
-         * @param src the list to copy.
+         * \param src the list to copy.
          * @return a reference to this list.
          */
         NormalSurfaces& operator = (const NormalSurfaces& src);
@@ -445,7 +445,7 @@ class NormalSurfaces :
          * fire change events on \a src, since it assumes that \a src is about
          * to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the list to move.
+         * \param src the list to move.
          * @return a reference to this list.
          */
         NormalSurfaces& operator = (NormalSurfaces&& src);
@@ -460,7 +460,7 @@ class NormalSurfaces :
          * fires change events on both lists which may in turn call arbitrary
          * code via any registered packet listeners.
          *
-         * @param other the list whose contents should be swapped with this.
+         * \param other the list whose contents should be swapped with this.
          */
         void swap(NormalSurfaces& other);
 
@@ -576,7 +576,7 @@ class NormalSurfaces :
          * Returns the surface at the requested index in this list.
          * This is identical to using the square bracket operator.
          *
-         * @param index the index of the requested surface in this list;
+         * \param index the index of the requested surface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
          * @return the normal surface at the requested index in this list.
@@ -586,7 +586,7 @@ class NormalSurfaces :
          * Returns the surface at the requested index in this list.
          * This is identical to calling surface().
          *
-         * @param index the index of the requested surface in this list;
+         * \param index the index of the requested surface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
          * @return the normal surface at the requested index in this list.
@@ -681,7 +681,7 @@ class NormalSurfaces :
          * - If the two triangulations have different sizes, then this
          *   comparison will return \c false.
          *
-         * @param other the list to be compared with this list.
+         * \param other the list to be compared with this list.
          * @return \c true if both lists represent the same multiset of
          * normal or almost normal surfaces, or \c false if not.
          */
@@ -715,7 +715,7 @@ class NormalSurfaces :
          *   comparison will return \c true (i.e., the lists will be
          *   considered different).
          *
-         * @param other the list to be compared with this list.
+         * \param other the list to be compared with this list.
          * @return \c true if both lists do not represent the same multiset of
          * normal or almost normal surfaces, or \c false if they do.
          */
@@ -727,7 +727,7 @@ class NormalSurfaces :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -736,7 +736,7 @@ class NormalSurfaces :
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -751,7 +751,7 @@ class NormalSurfaces :
          * \ifacespython This is available in Python, and \a comp may be
          * a pure Python function.
          *
-         * @param comp a binary function (or other callable object) that
+         * \param comp a binary function (or other callable object) that
          * accepts two const NormalSurface references, and returns \c true
          * if and only if the first surface should appear before the second
          * in the sorted list.
@@ -812,8 +812,8 @@ class NormalSurfaces :
          * routines.  Any user strings such as surface names will be written
          * in UTF-8.
          *
-         * @param filename the name of the CSV file to export to.
-         * @param additionalFields a bitwise OR combination of constants from
+         * \param filename the name of the CSV file to export to.
+         * \param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
          * @return \c true if the export was successful, or \c false otherwise.
@@ -852,8 +852,8 @@ class NormalSurfaces :
          * routines.  Any user strings such as surface names will be written
          * in UTF-8.
          *
-         * @param filename the name of the CSV file to export to.
-         * @param additionalFields a bitwise OR combination of constants from
+         * \param filename the name of the CSV file to export to.
+         * \param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
          * @return \c true if the export was successful, or \c false otherwise.
@@ -950,7 +950,7 @@ class NormalSurfaces :
                 /**
                  * Compares this with the given iterator for equality.
                  *
-                 * @param other the iterator to compare this with.
+                 * \param other the iterator to compare this with.
                  * @return \c true if the iterators point to the same
                  * element of the same normal surface list, or \c false
                  * if they do not.
@@ -960,7 +960,7 @@ class NormalSurfaces :
                 /**
                  * Compares this with the given iterator for inequality.
                  *
-                 * @param other the iterator to compare this with.
+                 * \param other the iterator to compare this with.
                  * @return \c false if the iterators point to the same
                  * element of the same normal surface list, or \c true
                  * if they do not.
@@ -1062,9 +1062,9 @@ class NormalSurfaces :
          * \pre The underlying triangulation is valid, and the link
          * of every vertex is either a sphere or a disc.
          *
-         * @param reducedList a full list of vertex surfaces in
+         * \param reducedList a full list of vertex surfaces in
          * (quad or quad-oct) coordinates for the underlying triangulation.
-         * @param tracker a progress tracker to be used for progress reporting
+         * \param tracker a progress tracker to be used for progress reporting
          * and cancellation requests, or \c null if this is not required.
          */
         void buildStandardFromReduced(
@@ -1109,7 +1109,7 @@ class NormalSurfaces :
          * \pre The underlying triangulation is valid, and the link
          * of every vertex is either a sphere or a disc.
          *
-         * @param stdList a full list of vertex surfaces in standard normal or
+         * \param stdList a full list of vertex surfaces in standard normal or
          * almost normal coordinates for the underlying triangulation.
          */
         void buildReducedFromStandard(
@@ -1342,8 +1342,8 @@ class NormalSurfaces :
  * fires change events on both lists which may in turn call arbitrary
  * code via any registered packet listeners.
  *
- * @param lhs the list whose contents should be swapped with \a rhs.
- * @param rhs the list whose contents should be swapped with \a lhs.
+ * \param lhs the list whose contents should be swapped with \a rhs.
+ * \param rhs the list whose contents should be swapped with \a lhs.
  *
  * \ingroup surfaces
  */
@@ -1372,9 +1372,9 @@ void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
  * systems, where this is explicitly described in the NormalCoords enum
  * documentation.
  *
- * @param triangulation the triangulation upon which these matching equations
+ * \param triangulation the triangulation upon which these matching equations
  * will be based.
- * @param coords the coordinate system to be used.
+ * \param coords the coordinate system to be used.
  * @return the resulting set of matching equations.
  *
  * \ingroup surfaces
@@ -1398,9 +1398,9 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
  * NS_EMBEDDED_ONLY flag is used).  They will not be used when the enumeration
  * allows for immersed and/or singular surfaces.
  *
- * @param triangulation the triangulation upon which these validity constraints
+ * \param triangulation the triangulation upon which these validity constraints
  * will be based.
- * @param coords the coordinate system to be used.
+ * \param coords the coordinate system to be used.
  * @return the set of validity constraints.
  *
  * \ingroup surfaces

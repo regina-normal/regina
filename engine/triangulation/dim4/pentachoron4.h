@@ -90,15 +90,15 @@ class Face<4, 4> : public detail::SimplexBase<4> {
          * Creates a new pentachoron with empty description and no
          * facets joined to anything.
          *
-         * @param tri the triangulation to which the new pentachoron belongs.
+         * \param tri the triangulation to which the new pentachoron belongs.
          */
         Face(Triangulation<4>* tri);
         /**
          * Creates a new pentachoron with the given description and
          * no facets joined to anything.
          *
-         * @param desc the description to give the new pentachoron.
-         * @param tri the triangulation to which the new pentachoron belongs.
+         * \param desc the description to give the new pentachoron.
+         * \param tri the triangulation to which the new pentachoron belongs.
          */
         Face(const std::string& desc, Triangulation<4>* tri);
 

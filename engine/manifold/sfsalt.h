@@ -132,7 +132,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * \pre The given Seifert fibred space has at least one torus
          * boundary.
          *
-         * @param original the original Seifert fibred space for which we are
+         * \param original the original Seifert fibred space for which we are
          * creating a set of alternative representations.
          */
         SFSAlt(const SFSpace& original);
@@ -170,11 +170,11 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * \c reflect or \c negate is \c true, since \a base should
          * already be in a reduced form with zero obstruction constant.
          *
-         * @param base the Seifert fibred space representation that will
+         * \param base the Seifert fibred space representation that will
          * be used as a starting point for this new alternative.
-         * @param reflect \c true if we should reflect the Seifert
+         * \param reflect \c true if we should reflect the Seifert
          * fibred space.
-         * @param negate \c true if we should attempt to negate all
+         * \param negate \c true if we should attempt to negate all
          * exceptional fibres without reflecting, as described above.
          */
         SFSAlt(const SFSAlt& base, bool reflect, bool negate = false);
@@ -209,7 +209,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
         /**
          * Swaps the contents of this and the given alternative.
          *
-         * @param other the alternative whose contents should be swapped
+         * \param other the alternative whose contents should be swapped
          * with this.
          */
         void swap(SFSAlt& other) noexcept;
@@ -233,7 +233,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * \pre The given Seifert fibred space has at least one torus
          * boundary.
          *
-         * @param sfs the original Seifert fibred space.
+         * \param sfs the original Seifert fibred space.
          * @return the resulting set of alternative representations for \a sfs.
          */
         static std::vector<SFSAlt> altSet(const SFSpace& sfs);
@@ -249,7 +249,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * \pre The given Seifert fibred space has at least one torus
          * boundary.
          *
-         * @param sfs the Seifert fibred space that we are attempting to
+         * \param sfs the Seifert fibred space that we are attempting to
          * represent.
          * @return \c true if and only if it is possible to set the
          * negation argument to \c true in the SFSAlt class constructor.
@@ -326,7 +326,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * not used a reflection.  In other words, this is equivalent to
          * testing all of alt(), conversion() and reflected() for equality.
          *
-         * @param other the alternative to compare against this.
+         * \param other the alternative to compare against this.
          * @return \c true if and only if this and the given alternative
          * have identical presentations, as described above.
          */
@@ -342,7 +342,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * not used a reflection.  In other words, this is equivalent to
          * testing all of alt(), conversion() and reflected() for equality.
          *
-         * @param other the alternative to compare against this.
+         * \param other the alternative to compare against this.
          * @return \c true if and only if this and the given alternative
          * do not have identical presentations, as described above.
          */
@@ -354,7 +354,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 };
@@ -366,8 +366,8 @@ class SFSAlt : public ShortOutput<SFSAlt> {
  * This global routine simply calls SFSAlt::swap(); it is provided so
  * that SFSAlt meets the C++ Swappable requirements.
  *
- * @param a the first alternative whose contents should be swapped.
- * @param b the second alternative whose contents should be swapped.
+ * \param a the first alternative whose contents should be swapped.
+ * \param b the second alternative whose contents should be swapped.
  *
  * \ingroup manifold
  */

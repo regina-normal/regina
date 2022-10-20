@@ -140,7 +140,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * \c size_t, <tt>long long</tt>, etc.); this may be either
          * signed or unsigned.
          *
-         * @param range the size of the range of possible results;
+         * \param range the size of the range of possible results;
          * this must be strictly positive.
          * @return a random integer between 0 and (\a range - 1) inclusive.
          */

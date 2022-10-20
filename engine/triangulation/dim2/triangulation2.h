@@ -98,15 +98,15 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * If you want a "clean" copy that resets all properties to unknown,
          * you can use the two-argument copy constructor instead.
          *
-         * @param copy the triangulation to copy.
+         * \param copy the triangulation to copy.
          */
         Triangulation(const Triangulation& copy) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
          *
-         * @param copy the triangulation to copy.
-         * @param cloneProps \c true if this should also clone any computed
+         * \param copy the triangulation to copy.
+         * \param cloneProps \c true if this should also clone any computed
          * properties of the given triangulation (such as homology,
          * fundamental group, and so on), or \c false if the new triangulation
          * should have all properties marked as unknown.
@@ -134,7 +134,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * because we assume that \a src is about to be destroyed (an action
          * that \e will fire a packet destruction event).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
@@ -152,7 +152,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * string as representing a triangulation using any of the supported
          * string types.
          *
-         * @param description a string that describes a 2-manifold
+         * \param description a string that describes a 2-manifold
          * triangulation.
          */
         Triangulation(const std::string& description);
@@ -246,7 +246,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * \e not fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          * @return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src) = default;
@@ -271,7 +271,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
-         * @param other the triangulation whose contents should be
+         * \param other the triangulation whose contents should be
          * swapped with this.
          */
         void swap(Triangulation<2>& other);

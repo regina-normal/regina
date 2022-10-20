@@ -170,12 +170,12 @@ class GraphTriple : public Manifold {
          * \a centre does not have precisely two disjoint torus boundaries
          * corresponding to two untwisted punctures in its base orbifold.
          *
-         * @param end0 the first end space, as described in the class notes.
-         * @param centre the central space, as described in the class notes.
-         * @param end1 the second end space, as described in the class notes.
-         * @param matchingReln0 the 2-by-2 matching matrix that
+         * \param end0 the first end space, as described in the class notes.
+         * \param centre the central space, as described in the class notes.
+         * \param end1 the second end space, as described in the class notes.
+         * \param matchingReln0 the 2-by-2 matching matrix that
          * specifies how spaces \a end0 and \a centre are joined.
-         * @param matchingReln1 the 2-by-2 matching matrix that
+         * \param matchingReln1 the 2-by-2 matching matrix that
          * specifies how spaces \a end1 and \a centre are joined.
          */
         GraphTriple(const SFSpace& end0, const SFSpace& centre,
@@ -197,12 +197,12 @@ class GraphTriple : public Manifold {
          * \a centre does not have precisely two disjoint torus boundaries
          * corresponding to two untwisted punctures in its base orbifold.
          *
-         * @param end0 the first end space, as described in the class notes.
-         * @param centre the central space, as described in the class notes.
-         * @param end1 the second end space, as described in the class notes.
-         * @param matchingReln0 the 2-by-2 matching matrix that
+         * \param end0 the first end space, as described in the class notes.
+         * \param centre the central space, as described in the class notes.
+         * \param end1 the second end space, as described in the class notes.
+         * \param matchingReln0 the 2-by-2 matching matrix that
          * specifies how spaces \a end0 and \a centre are joined.
-         * @param matchingReln1 the 2-by-2 matching matrix that
+         * \param matchingReln1 the 2-by-2 matching matrix that
          * specifies how spaces \a end1 and \a centre are joined.
          */
         GraphTriple(SFSpace&& end0, SFSpace&& centre, SFSpace&& end1,
@@ -225,7 +225,7 @@ class GraphTriple : public Manifold {
          * component, to be joined to the central space.  See the class
          * notes for further discussion.
          *
-         * @param which 0 if the first end space is to be returned, or
+         * \param which 0 if the first end space is to be returned, or
          * 1 if the second end space is to be returned.
          * @return a reference to the requested Seifert fibred space.
          */
@@ -252,7 +252,7 @@ class GraphTriple : public Manifold {
          * between the central space and the second end space
          * (corresponding to matrix \a M' in the class notes).
          *
-         * @param which indicates which particular join should be
+         * \param which indicates which particular join should be
          * examined; this should be 0 or 1 as described above.
          * @return a reference to the requested matching matrix.
          */
@@ -272,7 +272,7 @@ class GraphTriple : public Manifold {
          * All that this routine really offers is a well-defined way of
          * ordering graph manifold representations.
          *
-         * @param compare the representation with which this will be compared.
+         * \param compare the representation with which this will be compared.
          * @return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
@@ -297,7 +297,7 @@ class GraphTriple : public Manifold {
         /**
          * Swaps the contents of this and the given graph manifold.
          *
-         * @param other the graph manifold whose contents should be swapped
+         * \param other the graph manifold whose contents should be swapped
          * with this.
          */
         void swap(GraphTriple& other) noexcept;
@@ -313,7 +313,7 @@ class GraphTriple : public Manifold {
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
+         * \param compare the presentation with which this will be compared.
          * @return \c true if and only if this and the given object contain
          * identical presentations of the same graph manifold.
          */
@@ -330,7 +330,7 @@ class GraphTriple : public Manifold {
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
+         * \param compare the presentation with which this will be compared.
          * @return \c true if and only if this and the given object do not
          * contain identical presentations of the same graph manifold.
          */
@@ -364,8 +364,8 @@ class GraphTriple : public Manifold {
          *
          * This routine is for internal use by reduce().
          *
-         * @param reln0 the first matching matrix in the pair to simplify.
-         * @param reln1 the second matching matrix in the pair to simplify.
+         * \param reln0 the first matching matrix in the pair to simplify.
+         * \param reln1 the second matching matrix in the pair to simplify.
          */
         static void reduceBasis(Matrix2& reln0, Matrix2& reln1);
 
@@ -375,7 +375,7 @@ class GraphTriple : public Manifold {
          *
          * This routine is for internal use by reduce().
          *
-         * @param reln the matching matrix to simplify.
+         * \param reln the matching matrix to simplify.
          */
         static void reduceSign(Matrix2& reln);
 };
@@ -386,8 +386,8 @@ class GraphTriple : public Manifold {
  * This global routine simply calls GraphTriple::swap(); it is provided so
  * that GraphTriple meets the C++ Swappable requirements.
  *
- * @param a the first graph manifold whose contents should be swapped.
- * @param b the second graph manifold whose contents should be swapped.
+ * \param a the first graph manifold whose contents should be swapped.
+ * \param b the second graph manifold whose contents should be swapped.
  *
  * \ingroup manifold
  */

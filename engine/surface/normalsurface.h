@@ -346,8 +346,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * combinatorially identical to, the triangulation in which
          * \a src resides.
          *
-         * @param src the normal surface to copy.
-         * @param triangulation the triangulation in which this new surface
+         * \param src the normal surface to copy.
+         * \param triangulation the triangulation in which this new surface
          * will reside.
          */
         NormalSurface(const NormalSurface& src,
@@ -363,8 +363,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param src the normal surface to copy.
-         * @param triangulation a snapshot, frozen in time, of the
+         * \param src the normal surface to copy.
+         * \param triangulation a snapshot, frozen in time, of the
          * triangulation in which this new surface will reside.
          */
         NormalSurface(const NormalSurface& src,
@@ -383,7 +383,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * All normal coordinates will be zero.
          *
-         * @param triang the triangulation in which this normal surface resides.
+         * \param triang the triangulation in which this normal surface resides.
          */
         NormalSurface(const Triangulation<3>& triang);
 
@@ -394,7 +394,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
          */
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang);
@@ -423,10 +423,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \ifacespython Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
          *
-         * @param triang the triangulation in which this normal surface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param triang the triangulation in which this normal surface resides.
+         * \param enc indicates precisely how the given vector encodes a normal
          * surface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const Triangulation<3>& triang, NormalEncoding enc,
@@ -455,10 +455,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Instead use the version that copies \a vector.
          *
-         * @param triang the triangulation in which this normal surface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param triang the triangulation in which this normal surface resides.
+         * \param enc indicates precisely how the given vector encodes a normal
          * surface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const Triangulation<3>& triang, NormalEncoding enc,
@@ -482,11 +482,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * surface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
@@ -511,11 +511,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \nopython Instead use the version that takes a "pure" triangulation
          * and copies \a vector.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
-         * @param enc indicates precisely how the given vector encodes a normal
+         * \param enc indicates precisely how the given vector encodes a normal
          * surface.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
@@ -549,10 +549,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \ifacespython Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
          *
-         * @param triang the triangulation in which this normal surface resides.
-         * @param coords the coordinate system from which the vector
+         * \param triang the triangulation in which this normal surface resides.
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const Triangulation<3>& triang, NormalCoords coords,
@@ -585,10 +585,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Instead use the version that copies \a vector.
          *
-         * @param triang the triangulation in which this normal surface resides.
-         * @param coords the coordinate system from which the vector
+         * \param triang the triangulation in which this normal surface resides.
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const Triangulation<3>& triang, NormalCoords coords,
@@ -616,11 +616,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
@@ -649,11 +649,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \nopython Instead use the version that takes a "pure" triangulation
          * and copies \a vector.
          *
-         * @param triang a snapshot, frozen in time, of the
+         * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
-         * @param coords the coordinate system from which the vector
+         * \param coords the coordinate system from which the vector
          * encoding will be deduced.
-         * @param vector a vector containing the coordinates of the normal
+         * \param vector a vector containing the coordinates of the normal
          * surface.
          */
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
@@ -700,7 +700,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * these properties differs then the two surfaces will be adjusted
          * accordingly.
          *
-         * @param other the normal surface whose contents should be swapped
+         * \param other the normal surface whose contents should be swapped
          * with this.
          */
         void swap(NormalSurface& other) noexcept;
@@ -729,7 +729,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre Both this and the given normal surface use the same
          * underlying triangulation.
          *
-         * @param rhs the surface to sum with this.
+         * \param rhs the surface to sum with this.
          * @return the sum of both normal surfaces.
          */
         NormalSurface operator + (const NormalSurface& rhs) const;
@@ -740,7 +740,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * The resulting surface will use the same internal vector encoding
          * as this surface.
          *
-         * @param coeff the coefficient to multiply this surface by;
+         * \param coeff the coefficient to multiply this surface by;
          * this must be non-negative.
          * @return the resulting multiple of this surface.
          */
@@ -751,7 +751,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * The internal vector encoding used by this surface will not change.
          *
-         * @param coeff the coefficient to multiply this surface by;
+         * \param coeff the coefficient to multiply this surface by;
          * this must be non-negative.
          * @return a reference to this surface.
          */
@@ -781,10 +781,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * tetrahedron and a vertex of that tetrahedron that the
          * triangle surrounds.
          *
-         * @param tetIndex the index in the triangulation of the
+         * \param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and Triangulation<3>::size()-1 inclusive.
-         * @param vertex the vertex of the given tetrahedron around
+         * \param vertex the vertex of the given tetrahedron around
          * which the requested triangles lie; this should be between 0
          * and 3 inclusive.
          * @return the number of triangular discs of the given type.
@@ -805,10 +805,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * - type 1 separates vertices 0,2 of the tetrahedron from vertices 1,3;
          * - type 2 separates vertices 0,3 of the tetrahedron from vertices 1,2.
          *
-         * @param tetIndex the index in the triangulation of the
+         * \param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and Triangulation<3>::size()-1 inclusive.
-         * @param quadType the type of this quadrilateral in the given
+         * \param quadType the type of this quadrilateral in the given
          * tetrahedron; this should be 0, 1 or 2, as described above.
          * @return the number of quadrilateral discs of the given type.
          */
@@ -827,10 +827,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * - type 1 separates vertices 0,2 of the tetrahedron from vertices 1,3;
          * - type 2 separates vertices 0,3 of the tetrahedron from vertices 1,2.
          *
-         * @param tetIndex the index in the triangulation of the
+         * \param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested octagons reside;
          * this should be between 0 and Triangulation<3>::size()-1 inclusive.
-         * @param octType the type of this octagon in the given tetrahedron;
+         * \param octType the type of this octagon in the given tetrahedron;
          * this should be 0, 1 or 2, as described above.
          * @return the number of octagonal discs of the given type.
          */
@@ -839,7 +839,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Returns the number of times this normal surface crosses the
          * given edge.
          *
-         * @param edgeIndex the index in the triangulation of the edge
+         * \param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
          * Triangulation<3>::countEdges()-1 inclusive.
          * @return the number of times this normal surface crosses the
@@ -850,10 +850,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
          *
-         * @param triIndex the index in the triangulation of the triangle
+         * \param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
          * Triangulation<3>::countTriangles()-1 inclusive.
-         * @param triVertex the vertex of the triangle (0, 1 or 2) around
+         * \param triVertex the vertex of the triangle (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
          * @return the number of times this normal surface intersect the
@@ -922,7 +922,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Names are optional and need not be unique.
          * The default name for a surface is the empty string.
          *
-         * @param name the new name to associate with this surface.
+         * \param name the new name to associate with this surface.
          */
         void setName(const std::string& name);
 
@@ -934,7 +934,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -946,9 +946,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \ifacespython The argument \a out should be an open Python file
          * object.
          *
-         * @param out the output stream to which the XML should be written.
-         * @param format indicates which of Regina's XML file formats to write.
-         * @param list the enclosing normal surface list.  Currently this
+         * \param out the output stream to which the XML should be written.
+         * \param format indicates which of Regina's XML file formats to write.
+         * \param list the enclosing normal surface list.  Currently this
          * is only relevant when writing to the older REGINA_XML_GEN_2 format;
          * it will be ignored (and may be \c null) for newer file formats.
          */
@@ -1357,7 +1357,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * retriangulate, and so may run out of memory if the normal
          * coordinates are extremely large.
          *
-         * @param knownConnected \c true if this normal surface is
+         * \param knownConnected \c true if this normal surface is
          * already known to be connected (for instance, if it came from
          * an enumeration of vertex normal surfaces), or \c false if
          * we should not assume any such information about this surface.
@@ -1526,7 +1526,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * - If the two triangulations have different sizes, then this
          *   routine will return \c false.
          *
-         * @param other the surface to be compared with this surface.
+         * \param other the surface to be compared with this surface.
          * @return \c true if both surfaces represent the same normal or
          * almost normal surface, or \c false if not.
          */
@@ -1556,7 +1556,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * - If the two triangulations have different sizes, then this
          *   routine will return \c true.
          *
-         * @param other the surface to be compared with this surface.
+         * \param other the surface to be compared with this surface.
          * @return \c true if both surfaces represent different normal or
          * almost normal surface, or \c false if not.
          */
@@ -1581,7 +1581,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * other supports non-compact or almost normal surfaces.
          * See the equality test operator==() for further details.
          *
-         * @param other the surface to be compared with this surface.
+         * \param other the surface to be compared with this surface.
          * @return \c true if and only if this appears before the given
          * surface in the total order.
          */
@@ -1642,7 +1642,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre Both this and the given normal surface live within the
          * same 3-manifold triangulation.
          *
-         * @param other the other surface to test for local compatibility with
+         * \param other the other surface to test for local compatibility with
          * this surface.
          * @return \c true if the two surfaces are locally compatible, or
          * \c false if they are not.
@@ -1667,7 +1667,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \warning This routine is slow, since it performs a depth-first
          * search over the entire set of normal discs.
          *
-         * @param other the other surface to test alongside this surface
+         * \param other the other surface to test alongside this surface
          * for potential intersections.
          * @return \c true if both surfaces can be embedded without
          * intersecting anywhere, or \c false if this and the given
@@ -1833,10 +1833,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * - If the given encoding does already store triangles, then
          *   this routine will do nothing and immediately return \a enc.
          *
-         * @param tri the triangulation in which the normal surface lives.
-         * @param vector an integer vector that encodes a normal (or almost
+         * \param tri the triangulation in which the normal surface lives.
+         * \param vector an integer vector that encodes a normal (or almost
          * normal) surface within \a tri; this will be modified directly.
-         * @param enc the encoding used by the given integer vector.
+         * \param enc the encoding used by the given integer vector.
          * @return the new encoding used by the modified \a vector.
          */
         static NormalEncoding reconstructTriangles(const Triangulation<3>& tri,
@@ -1906,8 +1906,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
  * This global routine simply calls NormalSurface::swap(); it is provided
  * so that NormalSurface meets the C++ Swappable requirements.
  *
- * @param a the first normal surface whose contents should be swapped.
- * @param b the second normal surface whose contents should be swapped.
+ * \param a the first normal surface whose contents should be swapped.
+ * \param b the second normal surface whose contents should be swapped.
  *
  * \ingroup surfaces
  */

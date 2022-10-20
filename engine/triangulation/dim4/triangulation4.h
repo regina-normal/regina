@@ -141,7 +141,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If you want a "clean" copy that resets all properties to unknown,
          * you can use the two-argument copy constructor instead.
          *
-         * @param copy the triangulation to copy.
+         * \param copy the triangulation to copy.
          */
         Triangulation(const Triangulation& copy) = default;
         /**
@@ -152,8 +152,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * all vertex links of \a copy are 3-sphere or 3-balls, this
          * knowledge will be copied over to the new triangulation.
          *
-         * @param copy the triangulation to copy.
-         * @param cloneProps \c true if this should also clone any computed
+         * \param copy the triangulation to copy.
+         * \param cloneProps \c true if this should also clone any computed
          * properties of the given triangulation (such as homology,
          * fundamental group, and so on), or \c false if the new triangulation
          * should have all properties marked as unknown.
@@ -181,7 +181,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * because we assume that \a src is about to be destroyed (an action
          * that \e will fire a packet destruction event).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
@@ -199,7 +199,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * string as representing a triangulation using any of the supported
          * string types.
          *
-         * @param description a string that describes a 4-manifold
+         * \param description a string that describes a 4-manifold
          * triangulation.
          */
         Triangulation(const std::string& description);
@@ -266,7 +266,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
-         * @param src the triangulation to copy.
+         * \param src the triangulation to copy.
          * @return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation& src);
@@ -294,7 +294,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \e not fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the triangulation to move.
+         * \param src the triangulation to move.
          * @return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src);
@@ -319,7 +319,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
-         * @param other the triangulation whose contents should be
+         * \param other the triangulation whose contents should be
          * swapped with this.
          */
         void swap(Triangulation<4>& other);
@@ -491,7 +491,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * weak (as opposed to 3-manifolds, where a rich library of
          * simplification techinques is available to call upon).
          *
-         * @param perform \c true if we are to perform the simplifications,
+         * \param perform \c true if we are to perform the simplifications,
          * or \c false if we are only to investigate whether simplifications
          * are possible (defaults to \c true).
          * @return if \a perform is \c true, this routine returns \c true
@@ -569,12 +569,12 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param height the maximum number of \e additional pentachora to
+         * \param height the maximum number of \e additional pentachora to
          * allow beyond the number of pentachora originally present in the
          * triangulation, or a negative number if this should not be bounded.
-         * @param nThreads the number of threads to use.  If this is
+         * \param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * @return \c true if and only if the triangulation was successfully
          * simplified to fewer pentachora.
@@ -681,16 +681,16 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * (const std::string&, Triangulation<4>&&) representing a signature
          * and the triangulation, as described in option (b) above.
          *
-         * @param height the maximum number of \e additional pentachora to
+         * \param height the maximum number of \e additional pentachora to
          * allow beyond the number of pentachora originally present in the
          * triangulation, or a negative number if this should not be bounded.
-         * @param nThreads the number of threads to use.  If this is
+         * \param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each triangulation that is found.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
          * @return \c true if some call to \a action returned \c true (thereby
          * terminating the search early), or \c false if the search ran to
@@ -726,10 +726,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * it must be known in advance that the move is legal.
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * @param t the triangle about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param t the triangle about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -781,10 +781,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * it must be known in advance that the move is legal.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param e the edge about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -825,10 +825,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * it must be known in advance that the move is legal.
          * \pre The given vertex is a vertex of this triangulation.
          *
-         * @param v the vertex about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param v the vertex about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -869,10 +869,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * must be known in advance that the move is legal.
          * \pre The given edge \a e is an edge of this triangulation.
          *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is allowed
+         * \param e the edge about which to perform the move.
+         * \param check \c true if we are to check whether the move is allowed
          * (defaults to \c true).
-         * @param perform \c true if we are to perform the move (defaults to
+         * \param perform \c true if we are to perform the move (defaults to
          * \c true).
          * @return If \a check is \c true, the function returns \c true if and
          * only if the requested move may be performed without changing the
@@ -926,10 +926,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * it must be known in advance that the move is legal.
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
-         * @param t the tetrahedron about which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param t the tetrahedron about which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
@@ -980,10 +980,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * run, it must be known in advance that the move is legal.
          * \pre The given pentachoron is a pentachoron of this triangulation.
          *
-         * @param p the pentachoron upon which to perform the move.
-         * @param check \c true if we are to check whether the move is
+         * \param p the pentachoron upon which to perform the move.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \a true, this function returns \c true
          * if and only if the requested move may be performed without
@@ -1031,10 +1031,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * it must be known in advance that the move is legal.
          * \pre The given edge is an edge of this triangulation.
          *
-         * @param e the edge to collapse.
-         * @param check \c true if we are to check whether the move is
+         * \param e the edge to collapse.
+         * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
+         * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
          * if and only if the given edge may be collapsed
@@ -1083,10 +1083,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * must be known in advance that the move is legal.
          * \pre The given edge \a e is an edge of this triangulation.
          *
-         * @param e the edge whose endpoints are to be snapped together.
-         * @param check \c true if we are to check whether the move is allowed
+         * \param e the edge whose endpoints are to be snapped together.
+         * \param check \c true if we are to check whether the move is allowed
          * (defaults to \c true).
-         * @param perform \c true if we are to perform the move (defaults to
+         * \param perform \c true if we are to perform the move (defaults to
          * \c true).
          * @return If \a check is \c true, the function returns \c true if and
          * only if the requested move may be performed without changing the

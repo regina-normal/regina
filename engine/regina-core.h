@@ -49,7 +49,7 @@ namespace regina {
  * Standard dimensions offer significantly richer functionality for
  * triangulations than generic dimensions.
  *
- * @param dim the dimension in question.
+ * \param dim the dimension in question.
  * @return \c true if and only if \a dim is one of Regina's standard dimensions.
  *
  * \ingroup engine

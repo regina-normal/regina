@@ -135,8 +135,8 @@ class Primes {
          * which might take some time.  If \a autoGrow is \c false then
          * this routine returns zero.
          *
-         * @param which indicates which prime is requested.
-         * @param autoGrow specifies what to do if the requested
+         * \param which indicates which prime is requested.
+         * \param autoGrow specifies what to do if the requested
          * prime lies beyond the list currently stored (see above).
          * @return the requested prime (or suspected prime), or zero if
          * \a which was too large and \a autoGrow was \c false.
@@ -184,7 +184,7 @@ class Primes {
          * Integer; (ii) the input value \a n must lie within
          * the C++ long integer range (otherwise the behaviour is undefined).
          *
-         * @param n the integer to factorise.
+         * \param n the integer to factorise.
          * @return the list of prime factors as described above.
          */
         static std::vector<Integer> primeDecomp(const Integer& n);
@@ -237,7 +237,7 @@ class Primes {
          * Integer; (ii) the input value \a n must lie within
          * the C++ long integer range (otherwise the behaviour is undefined).
          *
-         * @param n the integer to factorise.
+         * \param n the integer to factorise.
          * @return the list of prime power factors as described above.
          */
         static std::vector<std::pair<Integer, unsigned long> >
@@ -254,7 +254,7 @@ class Primes {
          * This routine is \e not thread-safe.  It should only be called
          * when \a largeMutex is locked.
          *
-         * @param extras the number of additional suspected primes to
+         * \param extras the number of additional suspected primes to
          * calculate.
          */
         static void growPrimeList(unsigned long extras = 1);

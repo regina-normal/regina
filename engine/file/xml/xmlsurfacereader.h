@@ -72,8 +72,8 @@ class XMLNormalSurfaceReader : public XMLElementReader {
         /**
          * Creates a new normal surface reader.
          *
-         * @param tri the triangulation in which this normal surface lives.
-         * @param coords the coordinate system used by this normal surface.
+         * \param tri the triangulation in which this normal surface lives.
+         * \param coords the coordinate system used by this normal surface.
          */
         XMLNormalSurfaceReader(const SnapshotRef<Triangulation<3>>& tri,
             NormalCoords coords);
@@ -112,7 +112,7 @@ class XMLNormalSurfacesReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param props the attributes of the \c surfaces XML element.
+         * \param props the attributes of the \c surfaces XML element.
          */
         XMLNormalSurfacesReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
@@ -145,7 +145,7 @@ class XMLLegacyNormalSurfacesReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param tri the triangulation in which these normal surfaces live.
+         * \param tri the triangulation in which these normal surfaces live.
          */
         XMLLegacyNormalSurfacesReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,

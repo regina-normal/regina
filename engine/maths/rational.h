@@ -123,7 +123,7 @@ class Rational {
         /**
          * Initialises to the given rational value.
          *
-         * @param value the new rational value of this rational.
+         * \param value the new rational value of this rational.
          */
         Rational(const Rational& value);
         /**
@@ -132,21 +132,21 @@ class Rational {
          *
          * The rational that is passed (\a src) will no longer be usable.
          *
-         * @param src the rational to move.
+         * \param src the rational to move.
          */
         Rational(Rational&& src) noexcept;
         /**
          * Initialises to the given integer value.
          * The given integer may be infinite.
          *
-         * @param value the new integer value of this rational.
+         * \param value the new integer value of this rational.
          */
         template <bool supportInfinity>
         Rational(const IntegerBase<supportInfinity>& value);
         /**
          * Initialises to the given integer value.
          *
-         * @param value the new integer value of this rational.
+         * \param value the new integer value of this rational.
          */
         Rational(long value);
         /**
@@ -164,8 +164,8 @@ class Rational {
          * which is different again from Rational(-1,-1) (which breaks
          * the non-negativity requirement).
          *
-         * @param num the new numerator.
-         * @param den the new denominator.
+         * \param num the new numerator.
+         * \param den the new denominator.
          */
         template <bool supportInfinity>
         Rational(const IntegerBase<supportInfinity>& num,
@@ -183,8 +183,8 @@ class Rational {
          * which is different again from Rational(-1,-1) (which breaks
          * the non-negativity requirement).
          *
-         * @param num the new numerator.
-         * @param den the new denominator.
+         * \param num the new numerator.
+         * \param den the new denominator.
          */
         Rational(long num, unsigned long den);
         /**
@@ -195,7 +195,7 @@ class Rational {
         /**
          * Sets this rational to the given rational value.
          *
-         * @param value the new value of this rational.
+         * \param value the new value of this rational.
          * @return a reference to this rational with its new value.
          */
         Rational& operator = (const Rational& value);
@@ -203,7 +203,7 @@ class Rational {
          * Sets this rational to the given integer value.
          * The given integer may be infinite.
          *
-         * @param value the new value of this rational.
+         * \param value the new value of this rational.
          * @return a reference to this rational with its new value.
          */
         template <bool supportInfinity>
@@ -211,7 +211,7 @@ class Rational {
         /**
          * Sets this rational to the given integer value.
          *
-         * @param value the new value of this rational.
+         * \param value the new value of this rational.
          * @return a reference to this rational with its new value.
          */
         Rational& operator = (long value);
@@ -221,14 +221,14 @@ class Rational {
          *
          * The rational that is passed (\a src) will no longer be usable.
          *
-         * @param src the rational to move.
+         * \param src the rational to move.
          * @return a reference to this rational.
          */
         Rational& operator = (Rational&& src) noexcept;
         /**
          * Swaps the values of this and the given rational.
          *
-         * @param other the rational whose value will be swapped with this.
+         * \param other the rational whose value will be swapped with this.
          */
         void swap(Rational& other) noexcept;
 
@@ -253,7 +253,7 @@ class Rational {
          * Calculates the product of two rationals.
          * This rational is not changed.
          *
-         * @param r the rational with which to multiply this.
+         * \param r the rational with which to multiply this.
          * @return the product \a this * \a r.
          */
         Rational operator *(const Rational& r) const;
@@ -261,7 +261,7 @@ class Rational {
          * Calculates the ratio of two rationals.
          * This rational is not changed.
          *
-         * @param r the rational to divide this by.
+         * \param r the rational to divide this by.
          * @return the ratio \a this / \a r.
          */
         Rational operator /(const Rational& r) const;
@@ -269,7 +269,7 @@ class Rational {
          * Calculates the sum of two rationals.
          * This rational is not changed.
          *
-         * @param r the rational to add to this.
+         * \param r the rational to add to this.
          * @return the sum \a this + \a r.
          */
         Rational operator +(const Rational& r) const;
@@ -277,7 +277,7 @@ class Rational {
          * Calculates the difference of two rationals.
          * This rational is not changed.
          *
-         * @param r the rational to subtract from this.
+         * \param r the rational to subtract from this.
          * @return the difference \a this - \a r.
          */
         Rational operator -(const Rational& r) const;
@@ -307,7 +307,7 @@ class Rational {
          * Adds the given rational to this.
          * This rational is changed to reflect the result.
          *
-         * @param other the rational to add to this.
+         * \param other the rational to add to this.
          * @return a reference to this rational with its new value.
          */
         Rational& operator += (const Rational& other);
@@ -315,7 +315,7 @@ class Rational {
          * Subtracts the given rational from this.
          * This rational is changed to reflect the result.
          *
-         * @param other the rational to subtract from this.
+         * \param other the rational to subtract from this.
          * @return a reference to this rational with its new value.
          */
         Rational& operator -= (const Rational& other);
@@ -323,7 +323,7 @@ class Rational {
          * Multiplies the given rational by this.
          * This rational is changed to reflect the result.
          *
-         * @param other the rational to multiply by this.
+         * \param other the rational to multiply by this.
          * @return a reference to this rational with its new value.
          */
         Rational& operator *= (const Rational& other);
@@ -331,7 +331,7 @@ class Rational {
          * Divides this by the given rational.
          * This rational is changed to reflect the result.
          *
-         * @param other the rational to divide this by.
+         * \param other the rational to divide this by.
          * @return a reference to this rational with its new value.
          */
         Rational& operator /= (const Rational& other);
@@ -349,7 +349,7 @@ class Rational {
         /**
          * Determines if this is equal to the given rational.
          *
-         * @param compare the rational with which this will be compared.
+         * \param compare the rational with which this will be compared.
          * @return \c true if and only if this rational is equal to
          * \a compare.
          */
@@ -357,7 +357,7 @@ class Rational {
         /**
          * Determines if this is not equal to the given rational.
          *
-         * @param compare the rational with which this will be compared.
+         * \param compare the rational with which this will be compared.
          * @return \c true if and only if this rational is not equal to
          * \a compare.
          */
@@ -365,7 +365,7 @@ class Rational {
         /**
          * Determines if this is less than the given rational.
          *
-         * @param compare the rational with which this will be compared.
+         * \param compare the rational with which this will be compared.
          * @return \c true if and only if this rational is less than
          * \a compare.
          */
@@ -373,7 +373,7 @@ class Rational {
         /**
          * Determines if this is greater than the given rational.
          *
-         * @param compare the rational with which this will be compared.
+         * \param compare the rational with which this will be compared.
          * @return \c true if and only if this rational is greater than
          * \a compare.
          */
@@ -381,7 +381,7 @@ class Rational {
         /**
          * Determines if this is less than or equal to the given rational.
          *
-         * @param compare the rational with which this will be compared.
+         * \param compare the rational with which this will be compared.
          * @return \c true if and only if this rational is less than or
          * equal to \a compare.
          */
@@ -389,7 +389,7 @@ class Rational {
         /**
          * Determines if this is greater than or equal to the given rational.
          *
-         * @param compare the rational with which this will be compared.
+         * \param compare the rational with which this will be compared.
          * @return \c true if and only if this rational is greater than
          * or equal to \a compare.
          */
@@ -436,7 +436,7 @@ class Rational {
          * \nopython Instead use the variant tex()
          * that takes no arguments and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          * @return a reference to the given output stream.
          *
          * \author Ryan Budney
@@ -460,8 +460,8 @@ class Rational {
  * This global routine simply calls Rational::swap(); it is provided
  * so that Rational meets the C++ Swappable requirements.
  *
- * @param a the first rational whose contents should be swapped.
- * @param b the second rational whose contents should be swapped.
+ * \param a the first rational whose contents should be swapped.
+ * \param b the second rational whose contents should be swapped.
  *
  * \ingroup maths
  */
@@ -474,8 +474,8 @@ void swap(Rational& a, Rational& b) noexcept;
  * as a single integer.  All other rationals will be written in the form
  * <tt>r/s</tt>.
  *
- * @param out the output stream to which to write.
- * @param rat the rational to write.
+ * \param out the output stream to which to write.
+ * \param rat the rational to write.
  * @return a reference to \a out.
  *
  * \ingroup maths

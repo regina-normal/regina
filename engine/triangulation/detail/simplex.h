@@ -185,7 +185,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * To remove an existing description, you can simply set the
          * description to the empty string.
          *
-         * @param desc the new description to assign to this simplex.
+         * \param desc the new description to assign to this simplex.
          */
         void setDescription(const std::string& desc);
 
@@ -208,7 +208,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * given facet lies on the triangulation boundary), then this
          * routine will return \c null.
          *
-         * @param facet the facet of this simplex to examine; this must
+         * \param facet the facet of this simplex to examine; this must
          * be between 0 and \a dim inclusive.
          * @return the adjacent simplex glued to the given facet, or \c null
          * if the given facet lies on the boundary.
@@ -235,7 +235,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * (possibly this one) glued to it.  In other words,
          * adjacentSimplex(\a facet) is not \c null.
          *
-         * @param facet the facet of this simplex that we are examining.
+         * \param facet the facet of this simplex that we are examining.
          * This must be between 0 and \a dim inclusive.
          * @return a permutation that maps the vertices of this simplex to the
          * vertices of the adjacent simplex, as described above.
@@ -253,7 +253,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * (possibly this one) glued to it.  In other words,
          * adjacentSimplex(\a facet) is not \c null.
          *
-         * @param facet the facet of this simplex that we are examining.
+         * \param facet the facet of this simplex that we are examining.
          * This must be between 0 and \a dim inclusive.
          * @return the corresponding facet number of the adjacent simplex
          * that is glued to the given facet of this simplex.
@@ -294,12 +294,12 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * joined is already joined to something, or you are trying to
          * join the same facet of the same simplex to itself.
          *
-         * @param myFacet the facet of this simplex that will be glued
+         * \param myFacet the facet of this simplex that will be glued
          * to the given simplex \a you.  This facet number must be between
          * 0 and \a dim inclusive.
-         * @param you the other simplex that will be glued to the given facet
+         * \param you the other simplex that will be glued to the given facet
          * of this simplex.
-         * @param gluing a permutation that describes how the vertices of
+         * \param gluing a permutation that describes how the vertices of
          * this simplex will map to the vertices of \a you across the
          * new gluing.  This permutation should be in the form described
          * by adjacentGluing().
@@ -317,7 +317,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * This routine is safe to call even if the given facet is
          * already a boundary facet (in which case it will do nothing).
          *
-         * @param myFacet the facet of this simplex whose gluing we
+         * \param myFacet the facet of this simplex whose gluing we
          * will undo.  This should be between 0 and \a dim inclusive.
          * @return the simplex that was originally glued to the given facet
          * of this simplex, or \c null if this was already a boundary facet.
@@ -364,7 +364,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * <tt>face(subdim, face)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
-         * @param face the <i>subdim</i>-face of this simplex to examine.
+         * \param face the <i>subdim</i>-face of this simplex to examine.
          * This should be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
          * inclusive.
          * @return the corresponding <i>subdim</i>-face of the triangulation.
@@ -426,9 +426,9 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * Edge<dim>::edgeNumber is defined), this routine is identical to
          * calling <tt>edge(Edge<dim>::edgeNumber[i][j])</tt>.
          *
-         * @param i the vertex of this simplex that forms one endpoint
+         * \param i the vertex of this simplex that forms one endpoint
          * of the edge; this must be between 0 and \a dim inclusive.
-         * @param j the vertex of this simplex that forms the other endpoint
+         * \param j the vertex of this simplex that forms the other endpoint
          * of the edge; this must be between 0 and \a dim inclusive, and
          * must also be different from \a i.
          * @return the edge of this simplex that connects vertices
@@ -531,7 +531,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * <tt>faceMapping(subdim, face)</tt>; that is, the template
          * parameter \a subdim becomes the first argument of the function.
          *
-         * @param face the <i>subdim</i>-face of this simplex to examine.
+         * \param face the <i>subdim</i>-face of this simplex to examine.
          * This should be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
          * inclusive.
          * @return a mapping from the vertices of the underlying
@@ -631,7 +631,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * If the skeleton has already been computed, then this routine is
          * very fast (since it just returns a precomputed answer).
          *
-         * @param facet the facet of this simplex that we are examining.
+         * \param facet the facet of this simplex that we are examining.
          * This must be between 0 and \a dim inclusive.
          * @return \c true if and only if the given facet of this simplex
          * corresponds to a dual edge in the maximal forest chosen for the
@@ -645,7 +645,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -655,7 +655,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -668,15 +668,15 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * Creates a new simplex with no description and no facets joined
          * to anything.
          *
-         * @param tri the triangulation to which the new simplex belongs.
+         * \param tri the triangulation to which the new simplex belongs.
          */
         SimplexBase(Triangulation<dim>* tri);
         /**
          * Creates a new simplex with the given description and no facets
          * joined to anything.
          *
-         * @param desc the description to give the new simplex.
-         * @param tri the triangulation to which the new simplex belongs.
+         * \param desc the description to give the new simplex.
+         * \param tri the triangulation to which the new simplex belongs.
          */
         SimplexBase(std::string desc, Triangulation<dim>* tri);
 
@@ -684,8 +684,8 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * Tests whether the <i>useDim</i>-face degrees of this and the
          * given simplex are identical, under the given relabelling.
          *
-         * @param other the simplex to compare against this.
-         * @param p a mapping from the vertices of this simplex to the
+         * \param other the simplex to compare against this.
+         * \param p a mapping from the vertices of this simplex to the
          * vertices of \a other.
          * @return \c true if and only if, for every \a i,
          * <i>useDim</i>-face number \a i of this simplex has the same degree
@@ -699,8 +699,8 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * simplex are identical, under the given relabelling, for all
          * faces whose dimensions are contained in the integer pack \a useDim.
          *
-         * @param other the simplex to compare against this.
-         * @param p a mapping from the vertices of this simplex to the
+         * \param other the simplex to compare against this.
+         * \param p a mapping from the vertices of this simplex to the
          * vertices of \a other.
          * @return \c true if and only if, for every \a i and every
          * facial dimension \a k in the integer pack \a useDim, <i>k</i>-face

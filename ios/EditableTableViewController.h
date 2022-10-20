@@ -101,7 +101,7 @@
  * This will only be called after renaming is finished.  You may assume
  * that renameAllowed: returned \c YES.
  *
- * @param result The new name as entered by the user.
+ * \param result The new name as entered by the user.
  */
 - (void)renameDone:(NSIndexPath*)path result:(NSString*)result;
 
@@ -121,7 +121,7 @@
  * is called.  If your action needs to preserve \a actionIndex then your implementation
  * of otherActionSelected should make a local copy.
  *
- * @param which Indicates which action was selected.  This will match the
+ * \param which Indicates which action was selected.  This will match the
  * corresponding array index into \a otherActionLabels.
  */
 - (void)otherActionSelected:(int)which;
@@ -130,7 +130,7 @@
  * Subclasses must override this to return the label on the destructive
  * delete confirmation button.
  *
- * @param path Indicates the cell to be deleted.  It may be assumed
+ * \param path Indicates the cell to be deleted.  It may be assumed
  * that this allows the delete action according to
  * tableView:canEditRowAtIndexPath: (which your subclass must also implement).
  */

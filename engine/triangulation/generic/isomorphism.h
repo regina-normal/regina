@@ -138,7 +138,7 @@ class Isomorphism :
          * their vertices must be set using setSimpImage() and setFacetPerm()
          * instead.
          *
-         * @param nSimplices the number of simplices in the source
+         * \param nSimplices the number of simplices in the source
          * triangulation associated with this isomorphism.
          * This is allowed to be zero.
          */
@@ -146,7 +146,7 @@ class Isomorphism :
         /**
          * Creates a copy of the given isomorphism.
          *
-         * @param src the isomorphism to copy.
+         * \param src the isomorphism to copy.
          */
         Isomorphism(const Isomorphism& src);
         /**
@@ -155,7 +155,7 @@ class Isomorphism :
          *
          * The isomorphism that is passed (\a src) will no longer be usable.
          *
-         * @param src the isomorphism to move.
+         * \param src the isomorphism to move.
          */
         Isomorphism(Isomorphism&& src) noexcept;
         /**
@@ -171,7 +171,7 @@ class Isomorphism :
          *
          * This operator induces a deep copy of \a src.
          *
-         * @param src the isomorphism to copy.
+         * \param src the isomorphism to copy.
          * @return a reference to this isomorphism.
          */
         Isomorphism& operator = (const Isomorphism& src);
@@ -185,7 +185,7 @@ class Isomorphism :
          *
          * The isomorphism that is passed (\a src) will no longer be usable.
          *
-         * @param src the isomorphism to move.
+         * \param src the isomorphism to move.
          * @return a reference to this isomorphism.
          */
         Isomorphism& operator = (Isomorphism&& src) noexcept;
@@ -196,7 +196,7 @@ class Isomorphism :
          * It does not matter if this and the given isomorphism use different
          * numbers of simplices; if so then they will be adjusted accordingly.
          *
-         * @param other the isomorphism whose contents are to be swapped with
+         * \param other the isomorphism whose contents are to be swapped with
          * this.
          */
         void swap(Isomorphism& other) noexcept;
@@ -231,7 +231,7 @@ class Isomorphism :
          * to edit the isomorphism.  As an alternative however, Python users
          * can call <tt>setSimpImage(sourceSimp, image)</tt> instead.
          *
-         * @param sourceSimp the index of the source simplex; this must
+         * \param sourceSimp the index of the source simplex; this must
          * be between 0 and <tt>size()-1</tt> inclusive.
          * @return a reference to the index of the destination simplex
          * that the source simplex maps to.
@@ -245,7 +245,7 @@ class Isomorphism :
          * this image through the dimension-specific alias triImage(),
          * tetImage() or pentImage() respectively.
          *
-         * @param sourceSimp the index of the source simplex; this must
+         * \param sourceSimp the index of the source simplex; this must
          * be between 0 and <tt>size()-1</tt> inclusive.
          * @return the index of the destination simplex
          * that the source simplex maps to.
@@ -268,7 +268,7 @@ class Isomorphism :
          * to edit the isomorphism.  As an alternative however, Python users
          * can call <tt>setFacetPerm(sourceSimp, perm)</tt> instead.
          *
-         * @param sourceSimp the index of the source simplex containing
+         * \param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
          * <tt>size()-1</tt> inclusive.
          * @return a read-write reference to the permutation applied to the
@@ -286,7 +286,7 @@ class Isomorphism :
          * this permutation through the dimension-specific alias
          * edgePerm() or facePerm() respectively.
          *
-         * @param sourceSimp the index of the source simplex containing
+         * \param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
          * <tt>size()-1</tt> inclusive.
          * @return the permutation applied to the facets of the
@@ -298,7 +298,7 @@ class Isomorphism :
          * under this isomorphism.  This operator returns by value:
          * it cannot be used to alter the isomorphism.
          *
-         * @param source the given source simplex facet; this must
+         * \param source the given source simplex facet; this must
          * be one of the (\a dim + 1) facets of one of the size()
          * simplices in the source triangulation.
          * @return the image of the source simplex facet under this
@@ -345,7 +345,7 @@ class Isomorphism :
          * in the given triangulation is not equal to size() for this
          * isomorphism.
          *
-         * @param tri the triangulation to which this isomorphism
+         * \param tri the triangulation to which this isomorphism
          * should be applied.
          * @return the new isomorphic triangulation.
          */
@@ -379,7 +379,7 @@ class Isomorphism :
          * isomorphism does not actually know what the new value of
          * <tt>FacetSpec::simp</tt> should be.
          *
-         * @param f the facet-of-simplex which should be transformed by
+         * \param f the facet-of-simplex which should be transformed by
          * this isomorphism.
          * @return the image of \a f under this isomorphism.
          */
@@ -411,7 +411,7 @@ class Isomorphism :
          * described by the given facet pairing is not equal to size() for
          * this isomorphism.
          *
-         * @param p the facet pairing to which this isomorphism should be
+         * \param p the facet pairing to which this isomorphism should be
          * applied.
          * @return the new isomorphic facet pairing.
          */
@@ -433,7 +433,7 @@ class Isomorphism :
          * in the given triangulation is not equal to size() for this
          * isomorphism.
          *
-         * @param tri the triangulation to which this isomorphism
+         * \param tri the triangulation to which this isomorphism
          * should be applied.
          * @return the new isomorphic triangulation.
          */
@@ -456,7 +456,7 @@ class Isomorphism :
          * in the given triangulation is not equal to size() for this
          * isomorphism.
          *
-         * @param tri the triangulation to which this isomorphism
+         * \param tri the triangulation to which this isomorphism
          * should be applied.
          */
         [[deprecated]] void applyInPlace(Triangulation<dim>& tri) const;
@@ -578,7 +578,7 @@ class Isomorphism :
          *
          * \nopython Use tightEncoding() instead, which returns a string.
          *
-         * @param out the output stream to which the encoded string will
+         * \param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
@@ -602,7 +602,7 @@ class Isomorphism :
          * \nopython Use tightDecoding() instead, which takes a string as
          * its argument.
          *
-         * @param input an input stream that begins with the tight encoding
+         * \param input an input stream that begins with the tight encoding
          * for an isomorphism on <i>dim</i>-dimensional triangulations.
          * @return the isomorphism represented by the given tight encoding.
          */
@@ -614,7 +614,7 @@ class Isomorphism :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -623,7 +623,7 @@ class Isomorphism :
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -644,7 +644,7 @@ class Isomorphism :
          * It is safe to compare isomorphisms of different sizes (in
          * which case this routine will return \c false).
          *
-         * @param other the isomorphism to compare with this.
+         * \param other the isomorphism to compare with this.
          * @return \c true if and only if this and the given isomorphism
          * are identical.
          */
@@ -667,7 +667,7 @@ class Isomorphism :
          * It is safe to compare isomorphisms of different sizes (in
          * which case this routine will return \c true).
          *
-         * @param other the isomorphism to compare with this.
+         * \param other the isomorphism to compare with this.
          * @return \c true if and only if this and the given isomorphism
          * are not identical.
          */
@@ -677,7 +677,7 @@ class Isomorphism :
          * Returns the identity isomorphism for the given number of simplices.
          * This isomorphism sends every simplex and every vertex to itself.
          *
-         * @param nSimplices the number of simplices that the new
+         * \param nSimplices the number of simplices that the new
          * isomorphism should operate upon.
          * @return the identity isomorphism.
          */
@@ -696,9 +696,9 @@ class Isomorphism :
          * This routine is thread-safe, and uses RandomEngine for its
          * random number generation.
          *
-         * @param nSimplices the number of simplices that the new
+         * \param nSimplices the number of simplices that the new
          * isomorphism should operate upon.
-         * @param even if \c true, then every simplex will have its
+         * \param even if \c true, then every simplex will have its
          * vertices permuted with an even permutation.  This means that,
          * if the random isomorphism is applied to an oriented triangulation,
          * it will preserve the orientation.
@@ -713,8 +713,8 @@ class Isomorphism :
  * This global routine simply calls Isomorphism<dim>::swap(); it is provided
  * so that Isomorphism<dim> meets the C++ Swappable requirements.
  *
- * @param a the first isomorphism whose contents should be swapped.
- * @param b the second isomorphism whose contents should be swapped.
+ * \param a the first isomorphism whose contents should be swapped.
+ * \param b the second isomorphism whose contents should be swapped.
  *
  * \ingroup generic
  */

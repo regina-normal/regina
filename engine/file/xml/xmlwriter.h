@@ -169,9 +169,9 @@ class XMLWriter :
          * This constructor has a default implementation, which simply
          * stores the given arguments in the corresponding member variables.
          *
-         * @param data the object to be written in XML.
-         * @param out the output stream to which the XML will be written.
-         * @param format indicates which of Regina's XML file formats to use.
+         * \param data the object to be written in XML.
+         * \param out the output stream to which the XML will be written.
+         * \param format indicates which of Regina's XML file formats to use.
          */
         XMLWriter(const T& data, std::ostream& out, FileFormat format);
 

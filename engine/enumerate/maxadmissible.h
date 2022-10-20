@@ -110,13 +110,13 @@ class MaxAdmissible {
          * of VectorInt objects, not a pair of iterators.  The bitmasks
          * that are returned will be of type regina::Bitmask.
          *
-         * @param beginExtremalRays an iterator that begins the set of
+         * \param beginExtremalRays an iterator that begins the set of
          * admissible extremal rays, as described above.  Typically this would
          * be rays.begin() if \a rays is a standard container type.
-         * @param endExtremalRays an iterator that is past-the-end of the set
+         * \param endExtremalRays an iterator that is past-the-end of the set
          * of admissible extremal rays.  Typically this would be rays.end()
          * if \a rays is a standard container type.
-         * @param constraints a set of validity constraints as described above.
+         * \param constraints a set of validity constraints as described above.
          * This may be ValidityConstraints::none to indicate no constraints
          * (in which case there will be just one maximal admissible face).
          * @return a vector containing one bitmask representing each

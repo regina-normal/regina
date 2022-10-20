@@ -77,7 +77,7 @@ class Container : public Packet {
          * building a complex packet tree to save to a Regina data file,
          * and you are using containers to organise the data in this tree.
          *
-         * @param label the packet label for this new container.
+         * \param label the packet label for this new container.
          */
         Container(const std::string& label);
 

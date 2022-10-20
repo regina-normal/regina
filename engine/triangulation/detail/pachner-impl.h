@@ -85,10 +85,10 @@ namespace regina::detail {
      * \tparam k the dimension of the face about which we are performing a
      * Pachner move.
      *
-     * @param oldSimp identifies one of the old simplices that will
+     * \param oldSimp identifies one of the old simplices that will
      * be removed by this Pachner move; this must be between
      * 0 and (\a dim - \a k) inclusive.
-     * @param newSimp identifies one of the new simplices that will
+     * \param newSimp identifies one of the new simplices that will
      * be added by this Pachner move; this must be between
      * 0 and \a k inclusive.
      */

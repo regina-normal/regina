@@ -85,7 +85,7 @@ class SnappedBall : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(SnappedBall& other) noexcept;
@@ -104,7 +104,7 @@ class SnappedBall : public StandardTriangulation {
          * You are guaranteed that index 0 will return a smaller face
          * number than index 1.
          *
-         * @param index specifies which of the two boundary faces to return;
+         * \param index specifies which of the two boundary faces to return;
          * this must be either 0 or 1.
          * @return the corresponding face number in the tetrahedron.
          */
@@ -116,7 +116,7 @@ class SnappedBall : public StandardTriangulation {
          * You are guaranteed that index 0 will return a smaller face
          * number than index 1.
          *
-         * @param index specifies which of the two internal faces to return;
+         * \param index specifies which of the two internal faces to return;
          * this must be either 0 or 1.
          * @return the corresponding face number in the tetrahedron.
          */
@@ -152,7 +152,7 @@ class SnappedBall : public StandardTriangulation {
          * must be equal.  In particular, it is still meaningful to compare
          * snapped 3-balls within different triangulations.
          *
-         * @param other the snapped 3-ball to compare with this.
+         * \param other the snapped 3-ball to compare with this.
          * @return \c true if and only if this and the given object represent
          * the same specific presentation of a snapped 3-ball.
          */
@@ -174,7 +174,7 @@ class SnappedBall : public StandardTriangulation {
          * must be equal.  In particular, it is still meaningful to compare
          * snapped 3-balls within different triangulations.
          *
-         * @param other the snapped 3-ball to compare with this.
+         * \param other the snapped 3-ball to compare with this.
          * @return \c true if and only if this and the given object represent
          * different specific presentations of a snapped 3-ball.
          */
@@ -195,7 +195,7 @@ class SnappedBall : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tet the tetrahedron to examine as a potential 3-ball.
+         * \param tet the tetrahedron to examine as a potential 3-ball.
          * @return a structure containing details of the snapped 3-ball, or
          * \c null if the given tetrahedron is not a snapped 3-ball.
          */
@@ -220,8 +220,8 @@ class SnappedBall : public StandardTriangulation {
  * This global routine simply calls SnappedBall::swap(); it is provided
  * so that SnappedBall meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

@@ -111,9 +111,9 @@ class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
  * \tparam dim the dimension of simplex that we are working with.
  * This must be between 2 and 15 inclusive.
  *
- * @param i the first vertex of an edge in a <i>dim</i>-dimensional simplex.
+ * \param i the first vertex of an edge in a <i>dim</i>-dimensional simplex.
  * This must be between 0 and \a dim inclusive.
- * @param j the second vertex of an edge in a <i>dim</i>-dimensional simplex.
+ * \param j the second vertex of an edge in a <i>dim</i>-dimensional simplex.
  * This must be between 0 and \a dim inclusive, and must be different from \a i.
  * @return the number of the (<i>dim</i>-2)-face opposite the given edge.
  *

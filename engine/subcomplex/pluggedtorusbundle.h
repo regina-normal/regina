@@ -152,7 +152,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * Creates a new copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
+         * \param src the structure to copy.
          */
         PluggedTorusBundle(const PluggedTorusBundle& src) = default;
         /**
@@ -161,14 +161,14 @@ class PluggedTorusBundle : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
+         * \param src the structure to move from.
          */
         PluggedTorusBundle(PluggedTorusBundle&& src) noexcept = default;
         /**
          * Sets this to be a copy of the given structure.
          * This will induce a deep copy of \a src.
          *
-         * @param src the structure to copy.
+         * \param src the structure to copy.
          * @return a reference to this structure.
          */
         PluggedTorusBundle& operator = (const PluggedTorusBundle& src) =
@@ -179,7 +179,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          *
          * The structure that was passed (\a src) will no longer be usable.
          *
-         * @param src the structure to move from.
+         * \param src the structure to move from.
          * @return a reference to this structure.
          */
         PluggedTorusBundle& operator = (PluggedTorusBundle&& src) noexcept =
@@ -187,7 +187,7 @@ class PluggedTorusBundle : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(PluggedTorusBundle& other) noexcept;
@@ -264,7 +264,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * this test does not account for the many possible symmetries in a
          * plugged torus bundle).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of plugged torus bundle.
          */
@@ -294,7 +294,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * this test does not account for the many possible symmetries in a
          * plugged torus bundle).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * do not represent the same type of plugged torus bundle.
          */
@@ -314,7 +314,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tri the triangulation to examine.
+         * \param tri the triangulation to examine.
          * @return an object containing details of the structure that was
          * found, or \c null if the given triangulation is not of the form
          * described by this class.
@@ -336,20 +336,20 @@ class PluggedTorusBundle : public StandardTriangulation {
          * Typically \a bundle would be a static or global variable that is
          * not destroyed until the program exits.
          *
-         * @param bundle the thin I-bundle whose isomorphic copy is used
+         * \param bundle the thin I-bundle whose isomorphic copy is used
          * within the triangulation described by the new object.
-         * @param bundleIso the corresponding isomorphism from the given
+         * \param bundleIso the corresponding isomorphism from the given
          * thin I-bundle to the triangulation described by the new object.
-         * @param layerUpper the layering applied to the upper boundary
+         * \param layerUpper the layering applied to the upper boundary
          * of the thin I-bundle.
-         * @param layerLower the layering applied to the lower boundary
+         * \param layerLower the layering applied to the lower boundary
          * of the thin I-bundle.
-         * @param region the saturated region used within the new object.
-         * @param upperConnection 0, 1 or 2, indicating the rotation used to
+         * \param region the saturated region used within the new object.
+         * \param upperConnection 0, 1 or 2, indicating the rotation used to
          * connect the layering on the upper boundary of the thin I-bundle to
          * the first boundary annulus of the saturated region.  See the
          * \a regionPos variable in the implementation of hunt() for details.
-         * @param matchingReln the full matching relation describing how the
+         * \param matchingReln the full matching relation describing how the
          * two saturated region boundaries are joined by the thin
          * I-bundle and layerings, as described in the class notes above.
          */
@@ -373,8 +373,8 @@ class PluggedTorusBundle : public StandardTriangulation {
          * must not outlive the given thin I-bundle (since the returned object
          * will in fact contain a direct reference to this thin I-bundle).
          *
-         * @param tri the triangulation to examine.
-         * @param bundle the thin I-bundle whose isomorphic copy must be
+         * \param tri the triangulation to examine.
+         * \param bundle the thin I-bundle whose isomorphic copy must be
          * used in the given triangulation.
          * @return an object containing details of the structure that was
          * found, or \c null if the given triangulation is not of the form
@@ -391,8 +391,8 @@ class PluggedTorusBundle : public StandardTriangulation {
  * This global routine simply calls PluggedTorusBundle::swap(); it is provided
  * so that PluggedTorusBundle meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

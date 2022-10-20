@@ -184,7 +184,7 @@ class PacketInfo {
          * This routine is guaranteed to return a non-null string, even
          * if \a packetType is not one of the PacketType enum values.
          *
-         * @param packetType the packet type being queried.
+         * \param packetType the packet type being queried.
          * @return the name of the given packet type.
          */
         constexpr static const char* name(PacketType packetType) {

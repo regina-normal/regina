@@ -116,7 +116,7 @@ class TriSolidTorus : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(TriSolidTorus& other) noexcept;
@@ -125,7 +125,7 @@ class TriSolidTorus : public StandardTriangulation {
          * Returns the requested tetrahedron in this solid torus.
          * See the general class notes for further details.
          *
-         * @param index specifies which tetrahedron in the solid torus
+         * \param index specifies which tetrahedron in the solid torus
          * to return; this must be 0, 1 or 2.
          * @return the requested tetrahedron.
          */
@@ -154,7 +154,7 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * See the general class notes for further details.
          *
-         * @param index specifies which tetrahedron in the solid torus
+         * \param index specifies which tetrahedron in the solid torus
          * to examine; this must be 0, 1 or 2.
          * @return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
@@ -179,7 +179,7 @@ class TriSolidTorus : public StandardTriangulation {
          * <tt>index+2</tt> will be <tt>vertexRoles(index+2) * roleMap *
          * vertexRoles(index+1).inverse()</tt>.
          *
-         * @param index specifies which annulus on the solid torus
+         * \param index specifies which annulus on the solid torus
          * boundary to examine; this must be 0, 1 or 2.
          * @return a permutation that describes the gluing of vertex roles,
          * or \c nullopt if the two triangles of the requested annulus are
@@ -211,7 +211,7 @@ class TriSolidTorus : public StandardTriangulation {
          * torus (this correspondence is determined by the previous
          * identifications).
          *
-         * @param otherAnnulus the annulus on the solid torus boundary
+         * \param otherAnnulus the annulus on the solid torus boundary
          * \a not to be examined; this must be 0, 1 or 2.
          * @return the number of tetrahedra in the layered chain if the
          * two annuli are linked as described, or 0 otherwise.
@@ -244,7 +244,7 @@ class TriSolidTorus : public StandardTriangulation {
          * the previous identifications; the axis edge between the two
          * annuli will be identified to both of the others in reverse).
          *
-         * @param otherAnnulus the annulus on the solid torus boundary
+         * \param otherAnnulus the annulus on the solid torus boundary
          * \a not to be examined; this must be 0, 1 or 2.
          * @return the number of tetrahedra in the layered chain if the
          * two annuli are linked as described, or 0 otherwise.
@@ -269,7 +269,7 @@ class TriSolidTorus : public StandardTriangulation {
          * still meaningful to compare triangular solid tori within different
          * triangulations.
          *
-         * @param other the triangular solid torus to compare with this.
+         * \param other the triangular solid torus to compare with this.
          * @return \c true if and only if this and the given object represent
          * the same specific presentation of a triangular solid torus.
          */
@@ -293,7 +293,7 @@ class TriSolidTorus : public StandardTriangulation {
          * still meaningful to compare triangular solid tori within different
          * triangulations.
          *
-         * @param other the triangular solid torus to compare with this.
+         * \param other the triangular solid torus to compare with this.
          * @return \c true if and only if this and the given object represent
          * different specific presentations of a triangular solid torus.
          */
@@ -313,8 +313,8 @@ class TriSolidTorus : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tet the tetrahedron to examine.
-         * @param useVertexRoles a permutation describing the role each
+         * \param tet the tetrahedron to examine.
+         * \param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by
          * vertexRoles().
@@ -345,8 +345,8 @@ class TriSolidTorus : public StandardTriangulation {
  * This global routine simply calls TriSolidTorus::swap(); it is provided
  * so that TriSolidTorus meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

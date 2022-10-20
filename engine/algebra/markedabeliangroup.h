@@ -187,9 +187,9 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The number of columns in \a M does
          * not match the number of rows in \a N.
          *
-         * @param M the `right' matrix in the chain complex; that is,
+         * \param M the `right' matrix in the chain complex; that is,
          * the matrix that one takes the kernel of when computing homology.
-         * @param N the `left' matrix in the chain complex; that is, the
+         * \param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
          */
         MarkedAbelianGroup(MatrixInt M, MatrixInt N);
@@ -211,11 +211,11 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The number of columns in \a M does
          * not match the number of rows in \a N.
          *
-         * @param M the `right' matrix in the chain complex; that is,
+         * \param M the `right' matrix in the chain complex; that is,
          * the matrix that one takes the kernel of when computing homology.
-         * @param N the `left' matrix in the chain complex; that is, the
+         * \param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
-         * @param pcoeff specifies the coefficient ring, Z_pcoeff.
+         * \param pcoeff specifies the coefficient ring, Z_pcoeff.
          * This must be non-negative; a value of 0 indicates that you
          * are using integer coefficients (in which case it is more
          * efficient to use the constructor that just takes two matrices).
@@ -230,9 +230,9 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \a M would be zero and \a N would be diagonal and square with
          * \a p down the diagonal.
          *
-         * @param rank the rank of the group as a Z_p-module.  That is, if the
+         * \param rank the rank of the group as a Z_p-module.  That is, if the
          * group is `n Z_p`, then \a rank should be \a n.
-         * @param p describes the type of ring that we use to talk about
+         * \param p describes the type of ring that we use to talk about
          * the "free" module.
          */
         MarkedAbelianGroup(size_t rank, const Integer &p);
@@ -271,7 +271,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         /**
          * Swaps the contents of this and the given group.
          *
-         * @param other the group whose contents should be swapped with this.
+         * \param other the group whose contents should be swapped with this.
          */
         void swap(MarkedAbelianGroup& other) noexcept;
 
@@ -336,7 +336,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * \pre The given degree is at least 2.
          *
-         * @param degree the degree of the torsion term to query.
+         * \param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
         size_t torsionRank(const Integer& degree) const;
@@ -354,7 +354,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * \pre The given degree is at least 2.
          *
-         * @param degree the degree of the torsion term to query.
+         * \param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
         size_t torsionRank(unsigned long degree) const;
@@ -409,7 +409,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * this routine will return \a di where \a i is the
          * value of parameter \a index.
          *
-         * @param index the index of the invariant factor to return;
+         * \param index the index of the invariant factor to return;
          * this must be between 0 and countInvariantFactors()-1 inclusive.
          * @return the requested invariant factor.
          */
@@ -433,7 +433,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Determines whether this and the given abelian group are
          * isomorphic.
          *
-         * @param other the group with which this should be compared.
+         * \param other the group with which this should be compared.
          * @return \c true if and only if the two groups are isomorphic.
          */
         bool isIsomorphicTo(const MarkedAbelianGroup &other) const;
@@ -446,7 +446,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \c true, both groups must have been constructed from identical
          * matrices \a M and \a N, using homology with the same coefficients.
          *
-         * @param other the group with which this should be compared.
+         * \param other the group with which this should be compared.
          * @return \c true if and only if the this and the given group have
          * identical chain complex definitions.
          */
@@ -461,7 +461,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * identical), both groups must have been constructed from identical
          * matrices \a M and \a N, using homology with the same coefficients.
          *
-         * @param other the group with which this should be compared.
+         * \param other the group with which this should be compared.
          * @return \c true if and only if the this and the given group
          * do not have identical chain complex definitions.
          */
@@ -479,7 +479,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The argument \a index is out of
          * range (i.e., greater than or equal to rank()).
          *
-         * @param index specifies which free generator to look up;
+         * \param index specifies which free generator to look up;
          * this must be between 0 and rank()-1 inclusive.
          * @return the (\a index)th free generator, presented in
          * chain complex coordinates.
@@ -498,7 +498,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The argument \a index is out of
          * range (i.e., greater than or equal to countInvariantFactors()).
          *
-         * @param index specifies which generator in the torsion subgroup;
+         * \param index specifies which generator in the torsion subgroup;
          * this must be between 0 and countInvariantFactors()-1 inclusive.
          * @return the (\a index)th torsion generator, presented in
          * chain complex coordinates.
@@ -518,7 +518,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The size of the given vector was
          * not precisely snfRank().
          *
-         * @param snf any vector in SNF coordinates.
+         * \param snf any vector in SNF coordinates.
          * @return a corresponding vector in chain complex coordinates.
          */
         Vector<Integer> ccRep(const Vector<Integer>& snf) const;
@@ -539,7 +539,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * or equal to the number of generators in SNF coordinates
          * (i.e., greater than or equal to snfRank()).
          *
-         * @param snfGen specifies which standard basis vector to use from
+         * \param snfGen specifies which standard basis vector to use from
          * SNF coordinates; this must be between 0 and snfRank()-1 inclusive.
          * @return a corresponding vector in chain complex coordinates.
          */
@@ -576,7 +576,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The given vector was the wrong
          * size, or is not a cycle (i.e., not in the kernel of \a M).
          *
-         * @param cycle a cycle, presented in chain complex coordinates.
+         * \param cycle a cycle, presented in chain complex coordinates.
          * @return the group element corresponding to \a cycle, expressed in
          * SNF coordinates.
          */
@@ -592,7 +592,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * not the dimension of the chain complex (i.e., the number of
          * chain complex coordinates).
          *
-         * @param ccelt any vector in chain complex coordinates.
+         * \param ccelt any vector in chain complex coordinates.
          * @return a corresponding vector, also in the chain complex
          * coordinates.
          */
@@ -608,7 +608,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The index \a ccindx was greater than or
          * equal to the dimension of the chain complex (i.e., ccRank()).
          *
-         * @param ccindx the index of the standard basis vector in chain
+         * \param ccindx the index of the standard basis vector in chain
          * complex coordinates.
          * @return the resulting projection, in the chain complex
          * coordinates.
@@ -619,7 +619,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Determines whether the given vector represents a cycle in the
          * chain complex.
          *
-         * @param chain any vector in chain complex coordinates.
+         * \param chain any vector in chain complex coordinates.
          * @return \c true if and only if the given vector represents a cycle.
          */
         bool isCycle(const Vector<Integer>& chain) const;
@@ -633,7 +633,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The given vector is not in chain
          * complex coordinates; that is, its length is not M.columns().
          *
-         * @param chain any vector in chain complex coordinates.
+         * \param chain any vector in chain complex coordinates.
          * @return the differential, expressed as a vector of length M.rows().
          */
         Vector<Integer> boundaryOf(const Vector<Integer>& chain) const;
@@ -642,7 +642,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Determines whether the given vector represents a boundary in the
          * chain complex.
          *
-         * @param chain any vector in chain complex coordinates.
+         * \param chain any vector in chain complex coordinates.
          * @return \c true if and only if the given vector represents a
          * boundary.
          */
@@ -661,7 +661,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * \exception InvalidArgument The given vector is not a boundary.
          *
-         * @param bdry a boundary vector, given in chain complex coordinates.
+         * \param bdry a boundary vector, given in chain complex coordinates.
          * @return a vector \a v such that `N×v=bdry`.
          */
         Vector<Integer> asBoundary(const Vector<Integer>& bdry) const;
@@ -684,7 +684,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The argument \a index was out of range
          * (i.e., greater than or equal to cycleRank()).
          *
-         * @param index indicates which generator to return; this must be
+         * \param index indicates which generator to return; this must be
          * between 0 and cycleRank()-1 inclusive.
          * @return the (\a index)th generator of the cycles, expressed in
          * chain complex coordinates.
@@ -717,8 +717,8 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * \nopython Use str() or utf8() instead.
          *
-         * @param out the stream to write to.
-         * @param utf8 if \c true, then richer unicode characters will
+         * \param out the stream to write to.
+         * \param utf8 if \c true, then richer unicode characters will
          * be used to make the output more pleasant to read.  In particular,
          * the output will use subscript digits and the blackboard bold Z.
          */
@@ -733,8 +733,8 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
  * This global routine simply calls MarkedAbelianGroup::swap(); it is provided
  * so that MarkedAbelianGroup meets the C++ Swappable requirements.
  *
- * @param lhs the group whose contents should be swapped with \a rhs.
- * @param rhs the group whose contents should be swapped with \a lhs.
+ * \param lhs the group whose contents should be swapped with \a rhs.
+ * \param rhs the group whose contents should be swapped with \a lhs.
  *
  * \ingroup algebra
  */
@@ -853,9 +853,9 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * gives `img(mat×N1)` as a subset of img(N2), and sends ker(M1)
          * into ker(M2), as explained in the detailed notes above.
          *
-         * @param dom the domain group.
-         * @param codom the codomain group.
-         * @param mat the matrix that describes the homomorphism from
+         * \param dom the domain group.
+         * \param codom the codomain group.
+         * \param mat the matrix that describes the homomorphism from
          * \a dom to \a ran.
          */
         HomMarkedAbelianGroup(MarkedAbelianGroup dom, MarkedAbelianGroup codom,
@@ -897,7 +897,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
         /**
          * Swaps the contents of this and the given homomorphism.
          *
-         * @param other the homomorphism whose contents should be swapped with
+         * \param other the homomorphism whose contents should be swapped with
          * this.
          */
         void swap(HomMarkedAbelianGroup& other) noexcept;
@@ -916,7 +916,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * If c=g and f=j and M1=N3 and M2=N4, you can ask if these maps
          * commute, i.e., whether you have a map of chain complexes.
          *
-         * @param other the other homomorphism to analyse in conjunction
+         * \param other the other homomorphism to analyse in conjunction
          * with this.
          * @return true if and only if c=g, M1=N3, f=j, M2=N4,
          * and the diagram commutes.
@@ -1011,7 +1011,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * \nopython Instead you can call the no-argument variant of summary(),
          * which returns this same information in string form.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void summary(std::ostream& out) const;
 
@@ -1021,7 +1021,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the stream to write to.
+         * \param out the stream to write to.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -1031,7 +1031,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the stream to write to.
+         * \param out the stream to write to.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -1081,7 +1081,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * original chain complex coordinates; that is, its length was not
          * `domain().M().columns()`.
          *
-         * @param input an input vector in the domain chain complex's
+         * \param input an input vector in the domain chain complex's
          * coordinates, of length domain().M().columns().
          * @return the image of this vector in the codomain chain complex's
          * coordinates, of length codomain().M().columns().
@@ -1100,7 +1100,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * \exception InvalidArgument The given vector was not in domain SNF
          * coordinates; that is, its length was not `domain().snfRank()`.
          *
-         * @param input an input vector in the domain SNF coordinates,
+         * \param input an input vector in the domain SNF coordinates,
          * of length domain().snfRank().
          * @return the image of this vector in the codomain chain complex's
          * coordinates, of length codomain().snfRank().
@@ -1131,7 +1131,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * codomain of X must have the same presentation matrices as the
          * domain of this homomorphism.
          *
-         * @param X the homomorphism to compose this with.
+         * \param X the homomorphism to compose this with.
          * @return the composite homomorphism.
          */
         HomMarkedAbelianGroup operator * (const HomMarkedAbelianGroup& X) const;
@@ -1143,7 +1143,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * codomain of X must have the same presentation matrices as the
          * domain of this homomorphism.
          *
-         * @param X the homomorphism to compose this with.
+         * \param X the homomorphism to compose this with.
          * @return the composite homomorphism.
          */
         HomMarkedAbelianGroup operator * (HomMarkedAbelianGroup&& X) const;
@@ -1177,8 +1177,8 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
  * This global routine simply calls HomMarkedAbelianGroup::swap(); it is
  * provided so that HomMarkedAbelianGroup meets the C++ Swappable requirements.
  *
- * @param lhs the homomorphism whose contents should be swapped with \a rhs.
- * @param rhs the homomorphism whose contents should be swapped with \a lhs.
+ * \param lhs the homomorphism whose contents should be swapped with \a rhs.
+ * \param rhs the homomorphism whose contents should be swapped with \a lhs.
  *
  * \ingroup algebra
  */

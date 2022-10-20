@@ -487,7 +487,7 @@ class BoundaryComponentBase :
          * index of the corresponding top-dimensional simplex in the
          * (<i>dim</i>-1)-manifold triangulation returned by build().
          *
-         * @param index the index of the desired face, ranging from 0 to
+         * \param index the index of the desired face, ranging from 0 to
          * size()-1 inclusive.
          * @return the requested face.
          */
@@ -516,7 +516,7 @@ class BoundaryComponentBase :
          * must be between 0 and <i>dim</i>-1 inclusive.  Otherwise, the only
          * allowable value of \a subdim is the facet dimension (<i>dim</i>-1).
          *
-         * @param index the index of the desired face, ranging from 0 to
+         * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
          * @return the requested face.
          */
@@ -873,7 +873,7 @@ class BoundaryComponentBase :
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
             out << "Boundary component " << index();
@@ -931,7 +931,7 @@ class BoundaryComponentBase :
          * <i>subdim</i>-faces of this boundary component.
          * This class does not take ownership of the given face.
          *
-         * @param face the face to append to the list.
+         * \param face the face to append to the list.
          */
         template <int subdim>
         void push_back(Face<dim, subdim>* face) {
@@ -979,9 +979,9 @@ class BoundaryComponentBase :
          * (since the (<i>dim</i>-1)-faces are already in perfect
          * correspondence).
          *
-         * @param tri a triangulation of this boundary component, as
+         * \param tri a triangulation of this boundary component, as
          * described above.
-         * @param reference the internal list of all <i>subdim</i>-faces
+         * \param reference the internal list of all <i>subdim</i>-faces
          * of this boundary component.  While this can of course be deduced,
          * it is passed as a separate argument so that the template parameter
          * \a subdim can be deduced automatically from inside std::apply().

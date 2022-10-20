@@ -88,9 +88,9 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Creates a new homomorphism from the given data.
          *
-         * @param domain the domain of the homomorphism.
-         * @param codomain the codomain of the homomorphism.
-         * @param map a vector of length \a g, where \a g is the number
+         * \param domain the domain of the homomorphism.
+         * \param codomain the codomain of the homomorphism.
+         * \param map a vector of length \a g, where \a g is the number
          * of generators of the domain, and where this homomorphism
          * sends the <i>i</i>th generator of the domain to the
          * element <tt>map[i]</tt> of the codomain.
@@ -106,13 +106,13 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          *
          * \pre The argument \a inv is indeed the inverse of \a map.
          *
-         * @param domain the domain of the homomorphism.
-         * @param codomain the codomain of the homomorphism.
-         * @param map a vector of length \a g, where \a g is the number
+         * \param domain the domain of the homomorphism.
+         * \param codomain the codomain of the homomorphism.
+         * \param map a vector of length \a g, where \a g is the number
          * of generators of the domain, and where this homomorphism
          * sends the <i>i</i>th generator of the domain to the
          * element <tt>map[i]</tt> of the codomain.
-         * @param inv a vector of length \a k where \a k is the number
+         * \param inv a vector of length \a k where \a k is the number
          * of generators of the codomain, and where the inverse homomorphism
          * sends the <i>i</i>th generator of the codomain to the
          * element <tt>inv[i]</tt> of the domain.
@@ -128,7 +128,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * This will be a declared isomorphism (see the
          * HomGroupPresentation class notes for details).
          *
-         * @param groupForIdentity both the domain and codomain of the
+         * \param groupForIdentity both the domain and codomain of the
          * new identity homomorphism.
          */
         HomGroupPresentation(const GroupPresentation& groupForIdentity);
@@ -168,7 +168,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Swaps the contents of this and the given homomorphism.
          *
-         * @param other the homomorphism whose contents should be swapped with
+         * \param other the homomorphism whose contents should be swapped with
          * this.
          */
         void swap(HomGroupPresentation& other) noexcept;
@@ -193,7 +193,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * will compare as not equal (since it will be impossible to compare
          * the words that the corresponding generators map to).
          *
-         * @param other the homomorphism to compare with this.
+         * \param other the homomorphism to compare with this.
          * @return \c true if and only if this and the given homomorphisms
          * have identical presentations.
          */
@@ -219,7 +219,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * will compare as not equal (since it will be impossible to compare
          * the words that the corresponding generators map to).
          *
-         * @param other the homomorphism to compare with this.
+         * \param other the homomorphism to compare with this.
          * @return \c true if and only if this and the given homomorphisms
          * do not have identical presentations.
          */
@@ -253,7 +253,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Evaluate the homomorphism at an element of the domain.
          *
-         * @param arg an element of the domain.
+         * \param arg an element of the domain.
          * @return the image of this element in the codomain.
          */
         GroupExpression evaluate(GroupExpression arg) const;
@@ -261,7 +261,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Evaluate the homomorphism at a generator of the domain.
          *
-         * @param i the index of a generator in the domain.
+         * \param i the index of a generator in the domain.
          * @return the image of the <i>i</i>th generator in the codomain.
          */
         GroupExpression evaluate(unsigned long i) const;
@@ -273,7 +273,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * See the HomGroupPresentation class notes for details
          * on what this means.
          *
-         * @param arg an element of the codomain.
+         * \param arg an element of the codomain.
          * @return the image of this element in the domain.
          */
         GroupExpression invEvaluate(GroupExpression arg) const;
@@ -284,7 +284,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * See the HomGroupPresentation class notes for details
          * on what this means.
          *
-         * @param i the index of a generator in the codomain.
+         * \param i the index of a generator in the codomain.
          * @return the image of this generator in the domain.
          */
         GroupExpression invEvaluate(unsigned long i) const;
@@ -336,7 +336,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \pre the codomain of \a rhs must be the same as the domain of this
          * homomorphism.
          *
-         * @param rhs the homomorphism to compose this with.
+         * \param rhs the homomorphism to compose this with.
          * @return the composition of both homomorphisms.
          */
         HomGroupPresentation operator * (const HomGroupPresentation& rhs) const;
@@ -355,7 +355,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \pre the codomain of \a rhs must be the same as the domain of this
          * homomorphism.
          *
-         * @param rhs the homomorphism to compose this with.
+         * \param rhs the homomorphism to compose this with.
          * @return the composition of both homomorphisms.
          */
         HomGroupPresentation operator * (HomGroupPresentation&& rhs) const;
@@ -444,7 +444,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -453,7 +453,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 };
@@ -464,8 +464,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
  * This global routine simply calls HomGroupPresentation::swap(); it is provided
  * so that HomGroupPresentation meets the C++ Swappable requirements.
  *
- * @param lhs the homomorphism whose contents should be swapped with \a rhs.
- * @param rhs the homomorphism whose contents should be swapped with \a lhs.
+ * \param lhs the homomorphism whose contents should be swapped with \a rhs.
+ * \param rhs the homomorphism whose contents should be swapped with \a lhs.
  *
  * \ingroup algebra
  */

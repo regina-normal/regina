@@ -75,22 +75,22 @@ class BoolSet {
          * Creates a set containing a single boolean, which is passed as
          * an argument.
          *
-         * @param member the single element to include in this set.
+         * \param member the single element to include in this set.
          */
         constexpr BoolSet(bool member);
         /**
          * Creates a clone of the given set.
          *
-         * @param src the set to clone.
+         * \param src the set to clone.
          */
         constexpr BoolSet(const BoolSet& src) = default;
         /**
          * Creates a set specifying whether \c true and/or \c false
          * should be a member.
          *
-         * @param insertTrue should the new set include the element
+         * \param insertTrue should the new set include the element
          * <tt>true</tt>?
-         * @param insertFalse should the new set include the element
+         * \param insertFalse should the new set include the element
          * <tt>false</tt>?
          */
         constexpr BoolSet(bool insertTrue, bool insertFalse);
@@ -112,7 +112,7 @@ class BoolSet {
         /**
          * Determines if the given boolean is a member of this set.
          *
-         * @param value the boolean to search for in this set.
+         * \param value the boolean to search for in this set.
          * @return \c true if and only if the given boolean is a member
          * of this set.
          */
@@ -147,7 +147,7 @@ class BoolSet {
         /**
          * Determines if this set is equal to the given set.
          *
-         * @param other the set to compare with this.
+         * \param other the set to compare with this.
          * @return \c true if and only if this and the given set are
          * equal.
          */
@@ -155,7 +155,7 @@ class BoolSet {
         /**
          * Determines if this set is not equal to the given set.
          *
-         * @param other the set to compare with this.
+         * \param other the set to compare with this.
          * @return \c true if and only if this and the given set are
          * not equal.
          */
@@ -163,7 +163,7 @@ class BoolSet {
         /**
          * Determines if this set is a proper subset of the given set.
          *
-         * @param other the set to compare with this.
+         * \param other the set to compare with this.
          * @return \c true if and only if this is a proper subset of the
          * given set.
          */
@@ -171,7 +171,7 @@ class BoolSet {
         /**
          * Determines if this set is a proper superset of the given set.
          *
-         * @param other the set to compare with this.
+         * \param other the set to compare with this.
          * @return \c true if and only if this is a proper superset of the
          * given set.
          */
@@ -180,7 +180,7 @@ class BoolSet {
          * Determines if this set is a subset of (possibly equal to)
          * the given set.
          *
-         * @param other the set to compare with this.
+         * \param other the set to compare with this.
          * @return \c true if and only if this is a subset of the
          * given set.
          */
@@ -189,7 +189,7 @@ class BoolSet {
          * Determines if this set is a superset of (possibly equal to)
          * the given set.
          *
-         * @param other the set to compare with this.
+         * \param other the set to compare with this.
          * @return \c true if and only if this is a superset of the
          * given set.
          */
@@ -198,7 +198,7 @@ class BoolSet {
         /**
          * Sets this set to be identical to the given set.
          *
-         * @param cloneMe the set whose value this set will take.
+         * \param cloneMe the set whose value this set will take.
          * @return a reference to this set.
          */
         BoolSet& operator = (const BoolSet& cloneMe) = default;
@@ -206,7 +206,7 @@ class BoolSet {
          * Sets this set to the single member set containing the given
          * element.
          *
-         * @param member the single element to include in this set.
+         * \param member the single element to include in this set.
          * @return a reference to this set.
          */
         BoolSet& operator = (bool member);
@@ -216,7 +216,7 @@ class BoolSet {
          * belong to either of the original sets.
          * Note that this set will be modified.
          *
-         * @param other the set to union with this set.
+         * \param other the set to union with this set.
          * @return a reference to this set.
          */
         BoolSet& operator |= (BoolSet other);
@@ -226,7 +226,7 @@ class BoolSet {
          * belong to both original sets.
          * Note that this set will be modified.
          *
-         * @param other the set to intersect with this set.
+         * \param other the set to intersect with this set.
          * @return a reference to this set.
          */
         BoolSet& operator &= (BoolSet other);
@@ -237,7 +237,7 @@ class BoolSet {
          * belong to one but not both of the original sets.
          * Note that this set will be modified.
          *
-         * @param other the set whose symmetric difference with this set
+         * \param other the set whose symmetric difference with this set
          * is to be found.
          * @return a reference to this set.
          */
@@ -249,7 +249,7 @@ class BoolSet {
          * belong to either of the original sets.
          * This set is not changed.
          *
-         * @param other the set to union with this set.
+         * \param other the set to union with this set.
          * @return the union of this and the given set.
          */
         constexpr BoolSet operator | (BoolSet other) const;
@@ -259,7 +259,7 @@ class BoolSet {
          * belong to both original sets.
          * This set is not changed.
          *
-         * @param other the set to intersect with this set.
+         * \param other the set to intersect with this set.
          * @return the intersection of this and the given set.
          */
         constexpr BoolSet operator & (BoolSet other) const;
@@ -269,7 +269,7 @@ class BoolSet {
          * belong to one but not both of the original sets.
          * This set is not changed.
          *
-         * @param other the set whose symmetric difference with this set
+         * \param other the set whose symmetric difference with this set
          * is to be found.
          * @return the symmetric difference of this and the given set.
          */
@@ -306,7 +306,7 @@ class BoolSet {
          * If \a code is not a value byte code, then this routine will
          * do nothing and return \c false.
          *
-         * @param code the byte code that will determine the new value
+         * \param code the byte code that will determine the new value
          * of this set.
          * @return \c true if and only if \c code is a valid byte code.
          */
@@ -317,7 +317,7 @@ class BoolSet {
          *
          * \pre \a code is 0, 1, 2 or 3.
          *
-         * @param code the byte code from which the new set will be
+         * \param code the byte code from which the new set will be
          * created.
          */
         constexpr static BoolSet fromByteCode(unsigned char code);
@@ -342,7 +342,7 @@ class BoolSet {
          * If \a code is not a value string code, then this routine will
          * do nothing and return \c false.
          *
-         * @param code the string code that will determine the new value
+         * \param code the string code that will determine the new value
          * of this set.
          * @return \c true if and only if \c code is a valid string code.
          */
@@ -357,8 +357,8 @@ class BoolSet {
  * <tt>{ true, false }</tt>, <tt>{ true }</tt>,
  * <tt>{ false }</tt> or <tt>{ }</tt>.
  *
- * @param out the output stream to which to write.
- * @param set the boolean set to write.
+ * \param out the output stream to which to write.
+ * \param set the boolean set to write.
  * @return a reference to \a out.
  *
  * \ingroup utilities

@@ -214,16 +214,16 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * this constructor runs, so you can use it with Python-based
          * multithreading.
          *
-         * @param triangulation the triangulation upon which this list of
+         * \param triangulation the triangulation upon which this list of
          * normal hypersurfaces will be based.
-         * @param coords the coordinate system to be used.  This must be
+         * \param coords the coordinate system to be used.  This must be
          * one of the system that Regina is able to use for enumeration;
          * this is documented alongside each HyperCoords enum value.
-         * @param which indicates which normal hypersurfaces should be
+         * \param which indicates which normal hypersurfaces should be
          * enumerated.
-         * @param algHints passes requests to Regina for which specific
+         * \param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
-         * @param tracker a progress tracker through which progress will
+         * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          */
         NormalHypersurfaces(
@@ -250,14 +250,14 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * because we assume that \a src is about to be destroyed (an action
          * that \e will fire a packet destruction event).
          *
-         * @param src the list to move.
+         * \param src the list to move.
          */
         NormalHypersurfaces(NormalHypersurfaces&& src) noexcept = default;
 
         /**
          * Sets this to be a (deep) copy of the given list.
          *
-         * @param src the list to copy.
+         * \param src the list to copy.
          * @return a reference to this list.
          */
         NormalHypersurfaces& operator = (const NormalHypersurfaces& src);
@@ -274,7 +274,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * fire change events on \a src, since it assumes that \a src is about
          * to be destroyed (which will fire a destruction event instead).
          *
-         * @param src the list to move.
+         * \param src the list to move.
          * @return a reference to this list.
          */
         NormalHypersurfaces& operator = (NormalHypersurfaces&& src);
@@ -289,7 +289,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * fires change events on both lists which may in turn call arbitrary
          * code via any registered packet listeners.
          *
-         * @param other the list whose contents should be swapped with this.
+         * \param other the list whose contents should be swapped with this.
          */
         void swap(NormalHypersurfaces& other);
 
@@ -395,7 +395,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * Returns the hypersurface at the requested index in this list.
          * This is identical to using the square bracket operator.
          *
-         * @param index the index of the requested hypersurface in this list;
+         * \param index the index of the requested hypersurface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
          * @return the normal hypersurface at the requested index in this list.
@@ -405,7 +405,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * Returns the hypersurface at the requested index in this list.
          * This is identical to calling hypersurface().
          *
-         * @param index the index of the requested hypersurface in this list;
+         * \param index the index of the requested hypersurface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
          * @return the normal hypersurface at the requested index in this list.
@@ -501,7 +501,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * - If the two triangulations have different sizes, then this
          *   comparison will return \c false.
          *
-         * @param other the list to be compared with this list.
+         * \param other the list to be compared with this list.
          * @return \c true if both lists represent the same multiset of
          * normal hypersurfaces, or \c false if not.
          */
@@ -535,7 +535,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *   comparison will return \c true (i.e., the lists will be
          *   considered different).
          *
-         * @param other the list to be compared with this list.
+         * \param other the list to be compared with this list.
          * @return \c true if both lists do not represent the same multiset of
          * normal hypersurfaces, or \c false if they do.
          */
@@ -547,7 +547,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -556,7 +556,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -572,7 +572,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * \ifacespython This is available in Python, and \a comp may be
          * a pure Python function.
          *
-         * @param comp a binary function (or other callable object) that
+         * \param comp a binary function (or other callable object) that
          * accepts two const HyperSurface references, and returns \c true
          * if and only if the first hypersurface should appear before the
          * second in the sorted list.
@@ -682,14 +682,14 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                 /**
                  * Creates a copy of the given iterator.
                  *
-                 * @param cloneMe the iterator to clone.
+                 * \param cloneMe the iterator to clone.
                  */
                 VectorIterator(const VectorIterator& cloneMe) = default;
 
                 /**
                  * Makes this a copy of the given iterator.
                  *
-                 * @param cloneMe the iterator to clone.
+                 * \param cloneMe the iterator to clone.
                  * @return a reference to this iterator.
                  */
                 VectorIterator& operator = (const VectorIterator& cloneMe) =
@@ -698,7 +698,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                 /**
                  * Compares this with the given iterator for equality.
                  *
-                 * @param other the iterator to compare this with.
+                 * \param other the iterator to compare this with.
                  * @return \c true if the iterators point to the same
                  * element of the same normal surface list, or \c false
                  * if they do not.
@@ -708,7 +708,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                 /**
                  * Compares this with the given iterator for inequality.
                  *
-                 * @param other the iterator to compare this with.
+                 * \param other the iterator to compare this with.
                  * @return \c false if the iterators point to the same
                  * element of the same normal surface list, or \c true
                  * if they do not.
@@ -944,8 +944,8 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
  * fires change events on both lists which may in turn call arbitrary
  * code via any registered packet listeners.
  *
- * @param lhs the list whose contents should be swapped with \a rhs.
- * @param rhs the list whose contents should be swapped with \a lhs.
+ * \param lhs the list whose contents should be swapped with \a rhs.
+ * \param rhs the list whose contents should be swapped with \a lhs.
  *
  * \ingroup hypersurface
  */
@@ -974,9 +974,9 @@ void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs);
  * systems, where this is explicitly described in the HyperCoords enum
  * documentation.
  *
- * @param triangulation the triangulation upon which these matching equations
+ * \param triangulation the triangulation upon which these matching equations
  * will be based.
- * @param coords the coordinate system to be used.
+ * \param coords the coordinate system to be used.
  * @return the resulting set of matching equations.
  *
  * \ingroup hypersurface
@@ -994,9 +994,9 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
  * HS_EMBEDDED_ONLY flag is used).  They will not be used when the enumeration
  * allows for immersed and/or singular hypersurfaces.
  *
- * @param triangulation the triangulation upon which these validity constraints
+ * \param triangulation the triangulation upon which these validity constraints
  * will be based.
- * @param coords the coordinate system to be used;
+ * \param coords the coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NormalHypersurfaces.
  * @return the set of validity constraints.

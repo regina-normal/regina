@@ -73,8 +73,8 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
         /**
          * Creates a new normal hypersurface reader.
          *
-         * @param tri the triangulation in which this normal hypersurface lives.
-         * @param coords the coordinate system used by this normal hypersurface.
+         * \param tri the triangulation in which this normal hypersurface lives.
+         * \param coords the coordinate system used by this normal hypersurface.
          */
         XMLNormalHypersurfaceReader(const SnapshotRef<Triangulation<4>>& tri,
             HyperCoords coords);
@@ -113,7 +113,7 @@ class XMLNormalHypersurfacesReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param props the attributes of the \c hypersurfaces XML element.
+         * \param props the attributes of the \c hypersurfaces XML element.
          */
         XMLNormalHypersurfacesReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
@@ -146,7 +146,7 @@ class XMLLegacyNormalHypersurfacesReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param tri the triangulation in which these normal hypersurfaces
+         * \param tri the triangulation in which these normal hypersurfaces
          * live.
          */
         XMLLegacyNormalHypersurfacesReader(XMLTreeResolver& resolver,

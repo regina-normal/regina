@@ -296,10 +296,10 @@ class ProgressTracker : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * @param desc a human-readable description of the new stage.
+         * \param desc a human-readable description of the new stage.
          * Typically this begins with a capital and does not include a
          * final period (full stop).
-         * @param weight the relative weight of this stage as a fraction
+         * \param weight the relative weight of this stage as a fraction
          * of the entire operation.  This weight must be between 0 and 1
          * inclusive, and the weights of \e all stages must sum to 1
          * in total.
@@ -324,7 +324,7 @@ class ProgressTracker : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * @param percent the percentage progress through this stage, as
+         * \param percent the percentage progress through this stage, as
          * a number between 0 and 100 inclusive.
          * @return \c true if there has been no cancellation request, or
          * \c false if cancel() has been called (typically by the reading
@@ -351,7 +351,7 @@ class ProgressTracker : public ProgressTrackerBase,
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 };
@@ -421,7 +421,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * @param desc a human-readable description of the new stage.
+         * \param desc a human-readable description of the new stage.
          * Typically this begins with a capital and does not include a
          * final period (full stop).
          */
@@ -443,7 +443,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * @param add the number of additional steps that have been completed.
+         * \param add the number of additional steps that have been completed.
          * The value returned by steps() will increase by this amount.
          * @return \c true if there has been no cancellation request, or
          * \c false if cancel() has been called (typically by the reading
@@ -469,7 +469,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 };

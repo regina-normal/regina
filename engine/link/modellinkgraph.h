@@ -103,8 +103,8 @@ class ModelLinkGraphArc {
          * so that comparison tests treat this null reference as equal to
          * a null reference created by the zero-argument constructor.
          *
-         * @param node the node of the model graph that this arc exits.
-         * @param arc an integer in the range 0 to 3 inclusive,
+         * \param node the node of the model graph that this arc exits.
+         * \param arc an integer in the range 0 to 3 inclusive,
          * indicating which of the four arcs exiting \a node this represents.
          */
         ModelLinkGraphArc(ModelLinkGraphNode* node, int arc);
@@ -335,8 +335,8 @@ class ModelLinkGraphArc {
 /**
  * Writes a depiction of the given arc reference to the given output stream.
  *
- * @param out the output stream to which to write.
- * @param a the arc reference to write.
+ * \param out the output stream to which to write.
+ * \param a the arc reference to write.
  * @return a reference to the given output stream.
  *
  * \ingroup link
@@ -388,7 +388,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * The four arcs exiting this node are numbered 0,1,2,3 in a
          * clockwise order around the node.
          *
-         * @param which an integer in the range 0 to 3 inclusive, indicating
+         * \param which an integer in the range 0 to 3 inclusive, indicating
          * which of the four arcs exiting this node we should return.
          * @return a reference to the corresponding arc exiting this node.
          */
@@ -408,7 +408,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * Note that for a node \a n, calling <tt>n.adj(i)</tt>
          * is equivalent to calling <tt>n.arc(i).traverse()</tt>.
          *
-         * @param which an integer in the range 0 to 3 inclusive, indicating
+         * \param which an integer in the range 0 to 3 inclusive, indicating
          * which of the four arcs exiting this node we should examine.
          * @return a reference to the other end of the same undirected
          * edge of the underlying model graph.
@@ -421,7 +421,7 @@ class ModelLinkGraphNode : public MarkedElement,
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
@@ -484,13 +484,13 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * Using this constructor is identical to calling Link::graph().
          *
-         * @param link the link that this new graph will model.
+         * \param link the link that this new graph will model.
          */
         ModelLinkGraph(const Link& link);
         /**
          * Constructs a new copy of the given graph.
          *
-         * @param copy the graph to copy.
+         * \param copy the graph to copy.
          */
         ModelLinkGraph(const ModelLinkGraph& copy);
         /**
@@ -503,7 +503,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * The graph that is passed (\a src) will no longer be usable.
          *
-         * @param src the graph to move.
+         * \param src the graph to move.
          */
         ModelLinkGraph(ModelLinkGraph&& src) noexcept;
 
@@ -533,7 +533,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * node through such operations then you should use the pointer
          * to the relevant ModelLinkGraphNode object instead.
          *
-         * @param index the index of the requested node.  This must
+         * \param index the index of the requested node.  This must
          * be between 0 and size()-1 inclusive.
          * @return the node at the given index.
          */
@@ -568,7 +568,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         /**
          * Sets this to be a (deep) copy of the given graph.
          *
-         * @param src the graph to copy.
+         * \param src the graph to copy.
          * @return a reference to this graph.
          */
         ModelLinkGraph& operator = (const ModelLinkGraph& src);
@@ -582,7 +582,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * The graph that is passed (\a src) will no longer be usable.
          *
-         * @param src the graph to move.
+         * \param src the graph to move.
          * @return a reference to this graph.
          */
         ModelLinkGraph& operator = (ModelLinkGraph&& src) noexcept;
@@ -599,7 +599,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * This routine will behave correctly if \a other is in fact
          * this graph.
          *
-         * @param other the graph whose contents should be swapped with this.
+         * \param other the graph whose contents should be swapped with this.
          */
         void swap(ModelLinkGraph& other) noexcept;
 
@@ -611,7 +611,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * of nodes, and in both graphs the same pairs of outgoing arcs of
          * numbered nodes are connected by edges.
          *
-         * @param other the graph to compare with this.
+         * \param other the graph to compare with this.
          * @return \c true if and only if the two graphs are
          * combinatorially identical.
          */
@@ -625,7 +625,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * of nodes, and in both graphs the same pairs of outgoing arcs of
          * numbered nodes are connected by edges.
          *
-         * @param other the graph to compare with this.
+         * \param other the graph to compare with this.
          * @return \c true if and only if the two graphs are
          * not combinatorially identical.
          */
@@ -698,7 +698,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \pre This graph is connected.
          *
-         * @param from the arc that indicates where the flype disc should
+         * \param from the arc that indicates where the flype disc should
          * begin.  This is the arc labelled \a from in the diagrams for the
          * three-argument flype() function: it is the lower of the two arcs
          * that enter the flype disc from the node \a X to the left of the
@@ -803,13 +803,13 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * other preconditions \e will be checked, and an exception will
          * be thrown if any of them fails.
          *
-         * @param from the first arc that indicates where the flype should
+         * \param from the first arc that indicates where the flype should
          * take place, as labelled on the diagram above.  This should be
          * presented as an arc of the node outside the disc, to the left.
-         * @param left the second arc that indicates where the flype should
+         * \param left the second arc that indicates where the flype should
          * take place, as labelled on the diagram above.  This should be
          * presented as an arc of the node that it meets inside the disc.
-         * @param right the third arc that indicates where the flype should
+         * \param right the third arc that indicates where the flype should
          * take place, as labelled on the diagram above.  This should be
          * presented as an arc of the node that it meets inside the disc.
          * @return the graph obtained by performing the flype.
@@ -838,7 +838,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * graph from the given starting location (that is, findFlype()
          * returns a pair of null arcs).
          *
-         * @param from the arc that indicates where the flype disc should
+         * \param from the arc that indicates where the flype disc should
          * begin.  This is the arc labelled \a from in the diagrams for the
          * three-argument flype() function: it is the lower of the two arcs
          * that enter the flype disc from the node \a X to the left of the
@@ -905,9 +905,9 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * simply call it as generateMinimalLinks(action).  Moreover,
          * \a action must take exactly one argument (the knot diagram).
          *
-         * @param action a function (or other callable object) to call
+         * \param action a function (or other callable object) to call
          * for each knot diagram that is generated.
-         * @param args any additional arguments that should be passed to
+         * \param args any additional arguments that should be passed to
          * \a action, following the initial knot diagram argument.
          */
         template <typename Action, typename... Args>
@@ -1022,13 +1022,13 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \exception FailedPrecondition This graph has more than 52 nodes.
          *
-         * @param useReflection \c true if a graph and its reflection
+         * \param useReflection \c true if a graph and its reflection
          * should be considered the same (i.e., produce the same canonical
          * output), or \c false if they should be considered different.
          * Of course, if a graph is symmetric under reflection then the
          * graph and its reflection will produce the same canonical
          * output regardless of this parameter.
-         * @param tight \c false if the usual \e plantri ASCII format should
+         * \param tight \c false if the usual \e plantri ASCII format should
          * be used (as described by plantri() and fromPlantri()), or \c true
          * if the abbreviated format should be used as described above.
          * @return an optionally compressed \e plantri ASCII representation
@@ -1043,7 +1043,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -1052,7 +1052,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -1146,7 +1146,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * representation of a graph using the \e plantri output format.
          * As noted above, the checks performed here are not exhaustive.
          *
-         * @param plantri a string containing the comma-separated sequence of
+         * \param plantri a string containing the comma-separated sequence of
          * alphabetical strings in \e plantri format, as described above.
          * @return the resulting graph.
          */
@@ -1185,8 +1185,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
  *
  * See ModelLinkGraph::swap() for more details.
  *
- * @param lhs the graph whose contents should be swapped with \a rhs.
- * @param rhs the graph whose contents should be swapped with \a lhs.
+ * \param lhs the graph whose contents should be swapped with \a rhs.
+ * \param rhs the graph whose contents should be swapped with \a lhs.
  *
  * \ingroup link
  */
@@ -1308,7 +1308,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * @param cell indicates which cell to query; this must be
+         * \param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
          * @return the size of the correpsonding 2-cell.
          */
@@ -1333,9 +1333,9 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * @param cell indicates which cell to query; this must be
+         * \param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
-         * @param which indicates which arc along the boundary of the
+         * \param which indicates which arc along the boundary of the
          * corresponding cell to return; this must be between 0 and
          * <tt>size(cell)-1</tt> inclusive.
          * @return the requested arc on the boundary of the given 2-cell.
@@ -1370,7 +1370,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * Using arcs() generates a tiny amount of extra overhead, but you may
          * also find it more readable.
          *
-         * @param cell indicates which cell to query; this must be
+         * \param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
          * @return access to the list of all arcs along the boundary of
          * the given cell.
@@ -1448,7 +1448,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * @param arc the given arc of the underlying graph.
+         * \param arc the given arc of the underlying graph.
          * @return the number of the cell that lies to the left of the
          * given arc; this will be an integer between 0 and
          * <tt>countCells()-1</tt> inclusive.
@@ -1473,7 +1473,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * @param arc the given arc of the underlying graph.
+         * \param arc the given arc of the underlying graph.
          * @return the position of the given arc on the boundary of the
          * cell to its left; this will be an integer between 0 and
          * <tt>size(cell(arc))-1</tt> inclusive.
@@ -1490,7 +1490,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * same numbered nodes, using the same directions of traversal and
          * the same starting points on each cell boundary.
          *
-         * @param other the cellular decomposition to compare with this.
+         * \param other the cellular decomposition to compare with this.
          * @return \c true if and only if the two cellular decompositions are
          * combinatorially identical.
          */
@@ -1506,7 +1506,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * same numbered nodes, using the same directions of traversal and
          * the same starting points on each cell boundary.
          *
-         * @param other the cellular decomposition to compare with this.
+         * \param other the cellular decomposition to compare with this.
          * @return \c true if and only if the two cellular decompositions are
          * not combinatorially identical.
          */
@@ -1518,7 +1518,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -1527,7 +1527,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -1555,7 +1555,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * \pre The graph \a g must be connected.
          *
-         * @param g the 4-valent graph, including its planar embedding, that
+         * \param g the 4-valent graph, including its planar embedding, that
          * defines this new cellular decomposition.
          */
         ModelLinkGraphCells(const ModelLinkGraph& g);
@@ -1568,7 +1568,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * new decomposition and <tt>this->isValid()</tt> will return
          * \c false also.
          *
-         * @param cloneMe the cellular decomposition to clone.
+         * \param cloneMe the cellular decomposition to clone.
          */
         ModelLinkGraphCells(const ModelLinkGraphCells& cloneMe);
 

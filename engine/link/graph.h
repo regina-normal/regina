@@ -101,8 +101,8 @@ class CrossingIterator {
          * Creates a new iterator pointing to the given crossing of the
          * given link.
          *
-         * @param link the underlying knot/link.
-         * @param index the index of the crossing to point to.  This must be
+         * \param link the underlying knot/link.
+         * \param index the index of the crossing to point to.  This must be
          * between 0 and link.size()-1 for a deferencable iterator,
          * or must be exactly link.size() for a past-the-end iterator.
          */
@@ -145,7 +145,7 @@ class CrossingIterator {
          * It does not examine whether this and the given iterator refer
          * to the same underlying link.
          *
-         * @param rhs the iterator to compare with this.
+         * \param rhs the iterator to compare with this.
          * @return \c true if and only if the two iterators are equal.
          */
         bool operator == (const CrossingIterator& rhs) const;
@@ -156,7 +156,7 @@ class CrossingIterator {
          * It does not examine whether this and the given iterator refer
          * to the same underlying link.
          *
-         * @param rhs the iterator to compare with this.
+         * \param rhs the iterator to compare with this.
          * @return \c true if and only if the two iterators are different.
          */
         bool operator != (const CrossingIterator& rhs) const;
@@ -219,11 +219,11 @@ class ArcIterator {
          * Creates a new iterator pointing to the arc exiting the
          * given strand of the given crossing of the given link.
          *
-         * @param link the underlying knot/link.
-         * @param crossing the index of the given crossing.  This must be
+         * \param link the underlying knot/link.
+         * \param crossing the index of the given crossing.  This must be
          * between 0 and link.size()-1 for a deferencable iterator,
          * or must be exactly link.size() for a past-the-end iterator.
-         * @param upper \c true or \c false according to whether the
+         * \param upper \c true or \c false according to whether the
          * iterator should point to the arc exiting the given crossing
          * from the upper or lower strand respectively.  For a
          * past-the-end iterator, this should always be \c false.
@@ -270,7 +270,7 @@ class ArcIterator {
          * and the upper/lower strand markings.  It does not examine whether
          * this and the given iterator refer to the same underlying link.
          *
-         * @param rhs the iterator to compare with this.
+         * \param rhs the iterator to compare with this.
          * @return \c true if and only if the two iterators are equal.
          */
         bool operator == (const ArcIterator& rhs) const;
@@ -281,7 +281,7 @@ class ArcIterator {
          * and the upper/lower strand markings.  It does not examine whether
          * this and the given iterator refer to the same underlying link.
          *
-         * @param rhs the iterator to compare with this.
+         * \param rhs the iterator to compare with this.
          * @return \c true if and only if the two iterators are different.
          */
         bool operator != (const ArcIterator& rhs) const;
@@ -345,9 +345,9 @@ class ArcIterator {
              * entering or exiting the given crossing (depending on the
              * template parameter \a out).
              *
-             * @param crossing the crossing whose incident arcs we are
+             * \param crossing the crossing whose incident arcs we are
              * iterating through.
-             * @param strand 0 if we should begin at the arc
+             * \param strand 0 if we should begin at the arc
              * entering or exiting the lower strand; 1 if we should
              * begin at the arc entering or exiting the upper strand;
              * or 2 if the iterator should be marked as past-the-end.
@@ -399,7 +399,7 @@ class ArcIterator {
              * It does not compare the original "source" crossings that were
              * passed to each constructor.
              *
-             * @param rhs the iterator to compare with this.
+             * \param rhs the iterator to compare with this.
              * @return \c true if and only if the two iterators are equal.
              */
             bool operator == (const IncidentArcIterator& rhs) const;
@@ -411,7 +411,7 @@ class ArcIterator {
              * It does not compare the original "source" crossings that were
              * passed to each constructor.
              *
-             * @param rhs the iterator to compare with this.
+             * \param rhs the iterator to compare with this.
              * @return \c true if and only if the two iterators are different.
              */
             bool operator != (const IncidentArcIterator& rhs) const;
@@ -465,9 +465,9 @@ class ArcIterator {
              * Creates a new iterator that runs through the two crossings
              * adjacent to the given crossing via an outgoing arc.
              *
-             * @param crossing the crossing whose adjacent crossings we are
+             * \param crossing the crossing whose adjacent crossings we are
              * iterating through.
-             * @param strand 0 if we should begin at the crossing
+             * \param strand 0 if we should begin at the crossing
              * adjacent via the lower strand; 1 if we should begin at the
              * crossing adjacent via the upper strand; or 2 if the iterator
              * should be marked as past-the-end.
@@ -516,7 +516,7 @@ class ArcIterator {
              * to.  It does not compare the original "source" crossings that
              * were passed to each constructor.
              *
-             * @param rhs the iterator to compare with this.
+             * \param rhs the iterator to compare with this.
              * @return \c true if and only if the two iterators are equal.
              */
             bool operator == (const AdjacentCrossingIterator& rhs) const;
@@ -528,7 +528,7 @@ class ArcIterator {
              * to.  It does not compare the original "source" crossings that
              * were passed to each constructor.
              *
-             * @param rhs the iterator to compare with this.
+             * \param rhs the iterator to compare with this.
              * @return \c true if and only if the two iterators are different.
              */
             bool operator != (const AdjacentCrossingIterator& rhs) const;
@@ -566,7 +566,7 @@ class ArcIterator {
      * This range allows iteration through all crossings of the
      * underlying knot/link.
      *
-     * @param l the knot or link whose graph we are studying.
+     * \param l the knot or link whose graph we are studying.
      * @return the range of all vertices of the corresponding graph.
      */
     std::pair<CrossingIterator, CrossingIterator> vertices(const Link& l);
@@ -580,7 +580,7 @@ class ArcIterator {
      * This range allows iteration through all directed arcs of the
      * underlying knot/link, excluding any zero-crossing unknot components.
      *
-     * @param l the knot or link whose graph we are studying.
+     * \param l the knot or link whose graph we are studying.
      * @return the range of all edges of the corresponding graph.
      */
     std::pair<ArcIterator, ArcIterator> edges(const Link& l);
@@ -594,7 +594,7 @@ class ArcIterator {
      * Here the number of vertices in the graph is always the number of
      * crossings in the underlying knot/link.
      *
-     * @param l the knot or link whose graph we are studying.
+     * \param l the knot or link whose graph we are studying.
      * @return the number of vertices in the graph.
      */
     size_t num_vertices(const Link& l);
@@ -609,7 +609,7 @@ class ArcIterator {
      * This means that the number of edges is always twice the number of
      * vertices (i.e., crossings).
      *
-     * @param l the knot or link whose graph we are studying.
+     * \param l the knot or link whose graph we are studying.
      * @return the number of edges in the graph.
      */
     size_t num_edges(const Link& l);
@@ -620,8 +620,8 @@ class ArcIterator {
      * with the Boost Graph Library, where Link can be used
      * directly as the underlying graph type.
      *
-     * @param e the edge of the knot/link graph that we are examining.
-     * @param l the graph itself (i.e., the underlying knot or link).
+     * \param e the edge of the knot/link graph that we are examining.
+     * \param l the graph itself (i.e., the underlying knot or link).
      * @return the source vertex of the edge \a e.
      */
     Crossing* source(const StrandRef& e, const Link& l);
@@ -632,8 +632,8 @@ class ArcIterator {
      * with the Boost Graph Library, where Link can be used
      * directly as the underlying graph type.
      *
-     * @param e the edge of the knot/link graph that we are examining.
-     * @param l the graph itself (i.e., the underlying knot or link).
+     * \param e the edge of the knot/link graph that we are examining.
+     * \param l the graph itself (i.e., the underlying knot or link).
      * @return the target vertex of the edge \a e.
      */
     Crossing* target(const StrandRef& e, const Link& l);
@@ -646,8 +646,8 @@ class ArcIterator {
      * This routine is trivial: for any knot or link, the routines degree(),
      * in_degree() and out_degree() always return 4, 2 and 2 respectively.
      *
-     * @param v the vertex of the knot/link graph that we are examining.
-     * @param l the graph itself (i.e., the underlying knot or link).
+     * \param v the vertex of the knot/link graph that we are examining.
+     * \param l the graph itself (i.e., the underlying knot or link).
      * @return the degree of the vertex \a v.
      */
     unsigned degree(Crossing* v, const Link& l);
@@ -660,8 +660,8 @@ class ArcIterator {
      * This routine is trivial: for any knot or link, the routines degree(),
      * in_degree() and out_degree() always return 4, 2 and 2 respectively.
      *
-     * @param v the vertex of the knot/link graph that we are examining.
-     * @param l the graph itself (i.e., the underlying knot or link).
+     * \param v the vertex of the knot/link graph that we are examining.
+     * \param l the graph itself (i.e., the underlying knot or link).
      * @return the number of directed arcs of the graph that enter \a v.
      */
     unsigned in_degree(Crossing* v, const Link& l);
@@ -674,8 +674,8 @@ class ArcIterator {
      * This routine is trivial: for any knot or link, the routines degree(),
      * in_degree() and out_degree() always return 4, 2 and 2 respectively.
      *
-     * @param v the vertex of the knot/link graph that we are examining.
-     * @param l the graph itself (i.e., the underlying knot or link).
+     * \param v the vertex of the knot/link graph that we are examining.
+     * \param l the graph itself (i.e., the underlying knot or link).
      * @return the number of directed arcs of the graph that exit \a v.
      */
     unsigned out_degree(Crossing* v, const Link& l);
@@ -687,8 +687,8 @@ class ArcIterator {
      * This routine is compatible with the Boost Graph Library, where
      * Link can be used directly as the underlying graph type.
      *
-     * @param v the vertex of the knot/link graph that we are examining.
-     * @param l the graph itself (i.e., the underlying knot or link).
+     * \param v the vertex of the knot/link graph that we are examining.
+     * \param l the graph itself (i.e., the underlying knot or link).
      * @return the range of all vertices adjacent to \a v.
      */
     std::pair<graph::AdjacentCrossingIterator, graph::AdjacentCrossingIterator>
@@ -700,8 +700,8 @@ class ArcIterator {
      * routine is compatible with the Boost Graph Library, where
      * Link can be used directly as the underlying graph type.
      *
-     * @param v the vertex of the knot/link graph that we are examining.
-     * @param l the graph itself (i.e., the underlying knot or link).
+     * \param v the vertex of the knot/link graph that we are examining.
+     * \param l the graph itself (i.e., the underlying knot or link).
      * @return the range of all directed edges entering \a v.
      */
     std::pair<graph::IncidentArcIterator<false>,
@@ -714,8 +714,8 @@ class ArcIterator {
      * routine is compatible with the Boost Graph Library, where
      * Link can be used directly as the underlying graph type.
      *
-     * @param v the vertex of the knot/link graph that we are examining.
-     * @param l the graph itself (i.e., the underlying knot or link).
+     * \param v the vertex of the knot/link graph that we are examining.
+     * \param l the graph itself (i.e., the underlying knot or link).
      * @return the range of all directed edges exiting \a v.
      */
     std::pair<graph::IncidentArcIterator<true>,
@@ -733,7 +733,7 @@ class ArcIterator {
      * The first argument does not matter: it is only used to convey
      * type information (to indicate which graph property is being queried).
      *
-     * @param v the vertex of the knot/link graph that we are examining.
+     * \param v the vertex of the knot/link graph that we are examining.
      * @return the index of the \a v in the knot/link graph.
      */
     size_t get(graph::InherentLinkPropertyMap<boost::vertex_index_t>,
@@ -772,7 +772,7 @@ class ArcIterator {
      * Likewise, the second argument does not matter (but typically it
      * would be the knot or link whose graph we are studying).
      *
-     * @param v the vertex of the knot/link graph that we are examining.
+     * \param v the vertex of the knot/link graph that we are examining.
      * @return the index of the \a v in the knot/link graph.
      */
     size_t get(boost::vertex_index_t, const Link&, Crossing* v);

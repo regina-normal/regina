@@ -197,7 +197,7 @@ struct TightEncodable {
      * \exception InvalidArgument The given string is not a tight encoding
      * of an object of type \a T.
      *
-     * @param enc the tight encoding for an object of type \a T.
+     * \param enc the tight encoding for an object of type \a T.
      * @return the object represented by the given tight encoding.
      */
     static T tightDecoding(const std::string& enc) {
@@ -221,8 +221,8 @@ struct TightEncodable {
  *
  * \nopython Use regina::tightEncoding(int) instead, which returns a string.
  *
- * @param out the output stream to which the encoded string will be written.
- * @param value the integer to encode.
+ * \param out the output stream to which the encoded string will be written.
+ * \param value the integer to encode.
  *
  * \ingroup utilities
  */
@@ -232,7 +232,7 @@ void tightEncode(std::ostream& out, int value);
  * Returns the tight encoding of the given signed integer.
  * See the page on \ref tight "tight encodings" for details.
  *
- * @param value the integer to encode.
+ * \param value the integer to encode.
  * @return the resulting encoded string.
  *
  * \ingroup utilities
@@ -245,8 +245,8 @@ std::string tightEncoding(int value);
  *
  * \nopython Use regina::tightEncoding(long) instead, which returns a string.
  *
- * @param out the output stream to which the encoded string will be written.
- * @param value the integer to encode.
+ * \param out the output stream to which the encoded string will be written.
+ * \param value the integer to encode.
  *
  * \ingroup utilities
  */
@@ -256,7 +256,7 @@ void tightEncode(std::ostream& out, long value);
  * Returns the tight encoding of the given signed long integer.
  * See the page on \ref tight "tight encodings" for details.
  *
- * @param value the integer to encode.
+ * \param value the integer to encode.
  * @return the resulting encoded string.
  *
  * \ingroup utilities
@@ -270,8 +270,8 @@ std::string tightEncoding(long value);
  * \nopython Use regina::tightEncoding(long long) instead, which returns a
  * string.
  *
- * @param out the output stream to which the encoded string will be written.
- * @param value the integer to encode.
+ * \param out the output stream to which the encoded string will be written.
+ * \param value the integer to encode.
  *
  * \ingroup utilities
  */
@@ -281,7 +281,7 @@ void tightEncode(std::ostream& out, long long value);
  * Returns the tight encoding of the given signed long long integer.
  * See the page on \ref tight "tight encodings" for details.
  *
- * @param value the integer to encode.
+ * \param value the integer to encode.
  * @return the resulting encoded string.
  *
  * \ingroup utilities
@@ -294,8 +294,8 @@ std::string tightEncoding(long long value);
  *
  * \nopython Use regina::tightEncoding(int) instead, which returns a string.
  *
- * @param out the output stream to which the encoded string will be written.
- * @param value the integer to encode.
+ * \param out the output stream to which the encoded string will be written.
+ * \param value the integer to encode.
  *
  * \ingroup utilities
  */
@@ -305,7 +305,7 @@ void tightEncode(std::ostream& out, unsigned value);
  * Returns the tight encoding of the given unsigned integer.
  * See the page on \ref tight "tight encodings" for details.
  *
- * @param value the integer to encode.
+ * \param value the integer to encode.
  * @return the resulting encoded string.
  *
  * \ingroup utilities
@@ -318,8 +318,8 @@ std::string tightEncoding(unsigned value);
  *
  * \nopython Use regina::tightEncoding(long) instead, which returns a string.
  *
- * @param out the output stream to which the encoded string will be written.
- * @param value the integer to encode.
+ * \param out the output stream to which the encoded string will be written.
+ * \param value the integer to encode.
  *
  * \ingroup utilities
  */
@@ -329,7 +329,7 @@ void tightEncode(std::ostream& out, unsigned long value);
  * Returns the tight encoding of the given unsigned long integer.
  * See the page on \ref tight "tight encodings" for details.
  *
- * @param value the integer to encode.
+ * \param value the integer to encode.
  * @return the resulting encoded string.
  *
  * \ingroup utilities
@@ -344,8 +344,8 @@ std::string tightEncoding(unsigned long value);
  * \nopython Use regina::tightEncoding(long long) instead, which returns a
  * string.
  *
- * @param out the output stream to which the encoded string will be written.
- * @param value the integer to encode.
+ * \param out the output stream to which the encoded string will be written.
+ * \param value the integer to encode.
  *
  * \ingroup utilities
  */
@@ -355,7 +355,7 @@ void tightEncode(std::ostream& out, unsigned long long value);
  * Returns the tight encoding of the given unsigned long long integer.
  * See the page on \ref tight "tight encodings" for details.
  *
- * @param value the integer to encode.
+ * \param value the integer to encode.
  * @return the resulting encoded string.
  *
  * \ingroup utilities
@@ -371,8 +371,8 @@ std::string tightEncoding(unsigned long long value);
  *
  * \nopython Use regina::tightEncoding(bool) instead, which returns a string.
  *
- * @param out the output stream to which the encoded string will be written.
- * @param value the boolean to encode.
+ * \param out the output stream to which the encoded string will be written.
+ * \param value the boolean to encode.
  *
  * \ingroup utilities
  */
@@ -385,7 +385,7 @@ void tightEncode(std::ostream& out, bool value);
  * The booleans \c true and \c false are guaranteed to have the same
  * tight encodings as the integers 1 and 0 respectively.
  *
- * @param value the boolean to encode.
+ * \param value the boolean to encode.
  * @return the resulting encoded string.
  *
  * \ingroup utilities
@@ -435,7 +435,7 @@ std::string tightEncoding(bool value);
  * (i) a native C++ integer type or \c bool, or (ii) one of Regina's arbitrary
  * precision integer types (i.e., regina::Integer or regina::LargeInteger).
  *
- * @param enc the tight encoding for an integer or boolean.
+ * \param enc the tight encoding for an integer or boolean.
  * @return the integer or boolean represented by the given tight encoding.
  */
 template<typename Int>
@@ -478,7 +478,7 @@ Int tightDecoding(const std::string& enc);
  * (i) a native C++ integer type or \c bool, or (ii) one of Regina's arbitrary
  * precision integer types (i.e., regina::Integer or regina::LargeInteger).
  *
- * @param input an input stream that begins with the tight encoding for an
+ * \param input an input stream that begins with the tight encoding for an
  * integer or boolean.
  * @return the integer or boolean represented by the given tight encoding.
  */
@@ -502,8 +502,8 @@ namespace detail {
      * precision integer types (i.e., regina::Integer or regina::LargeInteger).
      * In particular, \c bool is not allowed here.
      *
-     * @param out the output stream to which the encoded string will be written.
-     * @param value the integer to encode.
+     * \param out the output stream to which the encoded string will be written.
+     * \param value the integer to encode.
      *
      * \ingroup utilities
      */
@@ -544,11 +544,11 @@ namespace detail {
      *
      * \tparam iterator an input iterator type.
      *
-     * @param start an iterator that points to the beginning of a
+     * \param start an iterator that points to the beginning of a
      * tight encoding.
-     * @param limit an iterator that, if reached, indicates that no more
+     * \param limit an iterator that, if reached, indicates that no more
      * characters are available.
-     * @param noTrailingData \c true if iteration should reach \a limit
+     * \param noTrailingData \c true if iteration should reach \a limit
      * immediately after the encoding is read, or \c false if there is
      * allowed to be additional unread data.
      * @return the integer represented by the given tight encoding.
@@ -576,8 +576,8 @@ namespace detail {
      * unsigned native C++ integer types that holds at least 16 bits.
      * This list of types may be expanded in future versions of Regina.
      *
-     * @param out the output stream to which the encoded string will be written.
-     * @param value the integer to encode.
+     * \param out the output stream to which the encoded string will be written.
+     * \param value the integer to encode.
      *
      * \ingroup utilities
      */
@@ -593,7 +593,7 @@ namespace detail {
      *
      * \nopython
      *
-     * @param out the output stream to which the encoded string will be written.
+     * \param out the output stream to which the encoded string will be written.
      *
      * \ingroup utilities
      */
@@ -625,7 +625,7 @@ namespace detail {
      * unsigned native C++ integer types that holds at least 16 bits.
      * This list of types may be expanded in future versions of Regina.
      *
-     * @param input an input stream that begins with a tight encoding.
+     * \param input an input stream that begins with a tight encoding.
      * @return the integer represented by the given tight encoding.
      *
      * \ingroup utilities

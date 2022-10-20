@@ -128,15 +128,15 @@ class HilbertCD {
          * and it returns a Python list containing all Hilbert basis elements.
          * In both versions, the argument \a RayClass is fixed as VectorInt.
          *
-         * @param action a function (or other callable object) that will be
+         * \param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single
          * argument, which will be passed as an rvalue of type RayClass.
-         * @param subspace a matrix defining the linear subspace to intersect
+         * \param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
-         * @param constraints a set of validity constraints as described above,
+         * \param constraints a set of validity constraints as described above,
          * or ValidityConstraints::none if none should be imposed.
          */
         template <class RayClass, typename Action>
@@ -174,7 +174,7 @@ class HilbertCD {
             /**
              * Creates the zero vector.
              *
-             * @param dim the total dimension of the space (and
+             * \param dim the total dimension of the space (and
              * therefore the toatl length of this vector).
              */
             inline VecSpec(size_t dim);

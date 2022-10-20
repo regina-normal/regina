@@ -226,7 +226,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The given size is strictly positive.
          *
-         * @param size the number of rows and columns in the new matrix.
+         * \param size the number of rows and columns in the new matrix.
          */
         Matrix(size_t size) :
                 rows_(size), cols_(size), data_(new T*[size]) {
@@ -247,8 +247,8 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The given number of rows and columns are both strictly positive.
          *
-         * @param rows the number of rows in the new matrix.
-         * @param cols the number of columns in the new matrix.
+         * \param rows the number of rows in the new matrix.
+         * \param cols the number of columns in the new matrix.
          */
         Matrix(size_t rows, size_t cols) :
                 rows_(rows), cols_(cols), data_(new T*[rows]) {
@@ -273,7 +273,7 @@ class Matrix : public Output<Matrix<T>> {
          * \ifacespython The argument \a data should be a Python list of
          * Python lists.
          *
-         * @param data the rows of the matrix, each given as a list of elements.
+         * \param data the rows of the matrix, each given as a list of elements.
          */
         Matrix(std::initializer_list<std::initializer_list<T>> data) :
                 rows_(data.size()), cols_(data.begin()->size()),
@@ -295,7 +295,7 @@ class Matrix : public Output<Matrix<T>> {
          * This routine is safe to call even if \a src is uninitialised
          * (in which case this matrix will become uninitialised also).
          *
-         * @param src the matrix to clone.
+         * \param src the matrix to clone.
          */
         Matrix(const Matrix& src) : rows_(src.rows_), cols_(src.cols_) {
             if (src.data_) {
@@ -319,7 +319,7 @@ class Matrix : public Output<Matrix<T>> {
          * This routine is safe to call even if \a src is uninitialised
          * (in which case this matrix will become uninitialised also).
          *
-         * @param src the matrix to move.
+         * \param src the matrix to move.
          */
         Matrix(Matrix&& src) noexcept :
                 rows_(src.rows_), cols_(src.cols_), data_(src.data_) {
@@ -349,7 +349,7 @@ class Matrix : public Output<Matrix<T>> {
          * This routine is safe to call even if \a src is uninitialised
          * (in which case this matrix will become uninitialised also).
          *
-         * @param src the matrix to copy.
+         * \param src the matrix to copy.
          * @return a reference to this matrix.
          */
         Matrix& operator = (const Matrix& src) {
@@ -398,7 +398,7 @@ class Matrix : public Output<Matrix<T>> {
          * This routine is safe to call even if \a src is uninitialised
          * (in which case this matrix will become uninitialised also).
          *
-         * @param src the matrix to move.
+         * \param src the matrix to move.
          * @return a reference to this matrix.
          */
         Matrix& operator = (Matrix&& src) noexcept {
@@ -414,7 +414,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Sets every entry in the matrix to the given value.
          *
-         * @param value the value to assign to each entry.
+         * \param value the value to assign to each entry.
          */
         void initialise(const T& value) {
             size_t r, c;
@@ -426,7 +426,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Swaps the contents of this and the given matrix.
          *
-         * @param other the matrix whose contents are to be swapped with this.
+         * \param other the matrix whose contents are to be swapped with this.
          */
         inline void swap(Matrix& other) noexcept {
             std::swap(rows_, other.rows_);
@@ -468,8 +468,8 @@ class Matrix : public Output<Matrix<T>> {
          * This set() routine returns nothing, and is provided for python
          * only (i.e., it is not part of the C++ calculation engine).
          *
-         * @param row the row of the desired entry.
-         * @param column the column of the desired entry.
+         * \param row the row of the desired entry.
+         * \param column the column of the desired entry.
          * @return a reference to the entry in the given row and column.
          */
         T& entry(size_t row, size_t column) {
@@ -482,8 +482,8 @@ class Matrix : public Output<Matrix<T>> {
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
          *
-         * @param row the row of the desired entry.
-         * @param column the column of the desired entry.
+         * \param row the row of the desired entry.
+         * \param column the column of the desired entry.
          * @return a reference to the entry in the given row and column.
          */
         const T& entry(size_t row, size_t column) const {
@@ -522,7 +522,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The type \a T provides an equality operator (==).
          *
-         * @param other the matrix to compare with this.
+         * \param other the matrix to compare with this.
          * @return \c true if the matrices are equal as described above,
          * or \c false otherwise.
          */
@@ -555,7 +555,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The type \a T provides an equality operator (==).
          *
-         * @param other the matrix to compare with this.
+         * \param other the matrix to compare with this.
          * @return \c true if the matrices are different as described above,
          * or \c false otherwise.
          */
@@ -576,8 +576,8 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The two given rows are between 0 and rows()-1 inclusive.
          *
-         * @param first the first row to swap.
-         * @param second the second row to swap.
+         * \param first the first row to swap.
+         * \param second the second row to swap.
          */
         void swapRows(size_t first, size_t second) {
             if (first != second)
@@ -596,9 +596,9 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The two given columns are between 0 and columns()-1 inclusive.
          * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
          *
-         * @param first the first column to swap.
-         * @param second the second column to swap.
-         * @param fromRow the starting point in each column from which the
+         * \param first the first column to swap.
+         * \param second the second column to swap.
+         * \param fromRow the starting point in each column from which the
          * operation will be performed.
          */
         void swapCols(size_t first, size_t second, size_t fromRow = 0) {
@@ -617,7 +617,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
             size_t r, c;
@@ -638,7 +638,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const {
             size_t r, c;
@@ -658,7 +658,7 @@ class Matrix : public Output<Matrix<T>> {
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
-         * @param size the number of rows and columns of the matrix to build.
+         * \param size the number of rows and columns of the matrix to build.
          * @return an identity matrix of the given size.
          */
         REGINA_ENABLE_FOR_RING_STATIC(Matrix) identity(size_t size) {
@@ -745,8 +745,8 @@ class Matrix : public Output<Matrix<T>> {
          * of addRow() that adds \e several copies of the source row.
          * Instead you will need to call addRowFrom().
          *
-         * @param source the row to add.
-         * @param dest the row that will be added to.
+         * \param source the row to add.
+         * \param dest the row that will be added to.
          */
         REGINA_ENABLE_FOR_RING(void) addRow(size_t source, size_t dest) {
             for (size_t i = 0; i < this->cols_; i++)
@@ -766,9 +766,9 @@ class Matrix : public Output<Matrix<T>> {
          * rows()-1 inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
          *
-         * @param source the row to add.
-         * @param dest the row that will be added to.
-         * @param fromCol the starting point in the row from which the
+         * \param source the row to add.
+         * \param dest the row that will be added to.
+         * \param fromCol the starting point in the row from which the
          * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) addRowFrom(size_t source, size_t dest,
@@ -794,10 +794,10 @@ class Matrix : public Output<Matrix<T>> {
          * rows()-1 inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
          *
-         * @param source the row to add.
-         * @param dest the row that will be added to.
-         * @param copies the number of copies of \a source to add to \a dest.
-         * @param fromCol the starting point in the row from which the
+         * \param source the row to add.
+         * \param dest the row that will be added to.
+         * \param copies the number of copies of \a source to add to \a dest.
+         * \param fromCol the starting point in the row from which the
          * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) addRow(size_t source, size_t dest,
@@ -820,8 +820,8 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The two given columns are distinct and between 0 and
          * columns()-1 inclusive.
          *
-         * @param source the columns to add.
-         * @param dest the column that will be added to.
+         * \param source the columns to add.
+         * \param dest the column that will be added to.
          */
         REGINA_ENABLE_FOR_RING(void) addCol(size_t source, size_t dest) {
             for (size_t i = 0; i < this->rows_; i++)
@@ -842,9 +842,9 @@ class Matrix : public Output<Matrix<T>> {
          * columns()-1 inclusive.
          * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
          *
-         * @param source the columns to add.
-         * @param dest the column that will be added to.
-         * @param fromRow the starting point in the column from which the
+         * \param source the columns to add.
+         * \param dest the column that will be added to.
+         * \param fromRow the starting point in the column from which the
          * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) addColFrom(size_t source, size_t dest,
@@ -870,10 +870,10 @@ class Matrix : public Output<Matrix<T>> {
          * columns()-1 inclusive.
          * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
          *
-         * @param source the columns to add.
-         * @param dest the column that will be added to.
-         * @param copies the number of copies of \a source to add to \a dest.
-         * @param fromRow the starting point in the column from which the
+         * \param source the columns to add.
+         * \param dest the column that will be added to.
+         * \param copies the number of copies of \a source to add to \a dest.
+         * \param fromRow the starting point in the column from which the
          * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) addCol(size_t source, size_t dest,
@@ -897,9 +897,9 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The given row is between 0 and rows()-1 inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
          *
-         * @param row the row to work with.
-         * @param factor the factor by which to multiply the given row.
-         * @param fromCol the starting point in the row from which the
+         * \param row the row to work with.
+         * \param factor the factor by which to multiply the given row.
+         * \param fromCol the starting point in the row from which the
          * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) multRow(size_t row, T factor,
@@ -923,9 +923,9 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The given column is between 0 and columns()-1 inclusive.
          * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
          *
-         * @param column the column to work with.
-         * @param factor the factor by which to multiply the given column.
-         * @param fromRow the starting point in the column from which the
+         * \param column the column to work with.
+         * \param factor the factor by which to multiply the given column.
+         * \param fromRow the starting point in the column from which the
          * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) multCol(size_t column, T factor,
@@ -956,17 +956,17 @@ class Matrix : public Output<Matrix<T>> {
          * rows()-1 inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
          *
-         * @param row1 the first row to operate on.
-         * @param row2 the second row to operate on.
-         * @param coeff11 the coefficient of row \a row1 to use when
+         * \param row1 the first row to operate on.
+         * \param row2 the second row to operate on.
+         * \param coeff11 the coefficient of row \a row1 to use when
          * rewriting row \a row1.
-         * @param coeff12 the coefficient of row \a row2 to use when
+         * \param coeff12 the coefficient of row \a row2 to use when
          * rewriting row \a row1.
-         * @param coeff21 the coefficient of row \a row1 to use when
+         * \param coeff21 the coefficient of row \a row1 to use when
          * rewriting row \a row2.
-         * @param coeff22 the coefficient of row \a row2 to use when
+         * \param coeff22 the coefficient of row \a row2 to use when
          * rewriting row \a row2.
-         * @param fromCol the starting point in the rows from which the
+         * \param fromCol the starting point in the rows from which the
          * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) combRows(size_t row1, size_t row2,
@@ -1003,17 +1003,17 @@ class Matrix : public Output<Matrix<T>> {
          * columns()-1 inclusive.
          * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
          *
-         * @param col1 the first column to operate on.
-         * @param col2 the second column to operate on.
-         * @param coeff11 the coefficient of column \a col1 to use when
+         * \param col1 the first column to operate on.
+         * \param col2 the second column to operate on.
+         * \param coeff11 the coefficient of column \a col1 to use when
          * rewriting column \a col1.
-         * @param coeff12 the coefficient of column \a col2 to use when
+         * \param coeff12 the coefficient of column \a col2 to use when
          * rewriting column \a col1.
-         * @param coeff21 the coefficient of column \a col1 to use when
+         * \param coeff21 the coefficient of column \a col1 to use when
          * rewriting column \a col2.
-         * @param coeff22 the coefficient of column \a col2 to use when
+         * \param coeff22 the coefficient of column \a col2 to use when
          * rewriting column \a col2.
-         * @param fromRow the starting point in the columns from which the
+         * \param fromRow the starting point in the columns from which the
          * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) combCols(size_t col1, size_t col2,
@@ -1045,7 +1045,7 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
          *
-         * @param other the other matrix to multiply this matrix by.
+         * \param other the other matrix to multiply this matrix by.
          * @return the product matrix <tt>this * other</tt>.
          */
         template <typename U>
@@ -1086,7 +1086,7 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The length of the given vector is precisely the number of
          * columns in this matrix.
          *
-         * @param other the vector to multiply this matrix by.
+         * \param other the vector to multiply this matrix by.
          * @return the product <tt>this * other</tt>, which will be a
          * vector whose length is the number of rows in this matrix.
          */
@@ -1203,9 +1203,9 @@ class Matrix : public Output<Matrix<T>> {
          * of the given row (i.e., it leaves no remainder).
          * \pre The given row number is between 0 and rows()-1 inclusive.
          *
-         * @param row the index of the row whose elements should be
+         * \param row the index of the row whose elements should be
          * divided by \a divBy.
-         * @param divBy the integer to divide each row element by.
+         * \param divBy the integer to divide each row element by.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) divRowExact(size_t row,
                 const T& divBy) {
@@ -1228,9 +1228,9 @@ class Matrix : public Output<Matrix<T>> {
          * of the given column (i.e., it leaves no remainder).
          * \pre The given column number is between 0 and columns()-1 inclusive.
          *
-         * @param col the index of the column whose elements should be
+         * \param col the index of the column whose elements should be
          * divided by \a divBy.
-         * @param divBy the integer to divide each column element by.
+         * \param divBy the integer to divide each column element by.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) divColExact(size_t col,
                 const T& divBy) {
@@ -1247,7 +1247,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The given row number is between 0 and rows()-1 inclusive.
          *
-         * @param row the index of the row whose gcd should be computed.
+         * \param row the index of the row whose gcd should be computed.
          * @return the greatest common divisor of all elements of this row.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdRow(size_t row) {
@@ -1271,7 +1271,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The given column number is between 0 and columns()-1 inclusive.
          *
-         * @param col the index of the column whose gcd should be computed.
+         * \param col the index of the column whose gcd should be computed.
          * @return the greatest common divisor of all elements of this column.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdCol(size_t col) {
@@ -1296,7 +1296,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The given row number is between 0 and rows()-1 inclusive.
          *
-         * @param row the index of the row to reduce.
+         * \param row the index of the row to reduce.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) reduceRow(size_t row) {
             T gcd = gcdRow(row);
@@ -1314,7 +1314,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre The given column number is between 0 and columns()-1 inclusive.
          *
-         * @param col the index of the column to reduce.
+         * \param col the index of the column to reduce.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) reduceCol(size_t col) {
             T gcd = gcdCol(col);
@@ -1511,8 +1511,8 @@ class Matrix : public Output<Matrix<T>> {
  * This global routine simply calls Matrix<T>::swap(); it is provided
  * so that Matrix<T> meets the C++ Swappable requirements.
  *
- * @param a the first matrix whose contents should be swapped.
- * @param b the second matrix whose contents should be swapped.
+ * \param a the first matrix whose contents should be swapped.
+ * \param b the second matrix whose contents should be swapped.
  *
  * \ingroup maths
  */

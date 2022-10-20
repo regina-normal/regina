@@ -139,8 +139,8 @@ using HyperList = regina::Flags<HyperListFlags>;
 /**
  * Returns the bitwise OR of the two given flags.
  *
- * @param lhs the first flag to combine.
- * @param rhs the second flag to combine.
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
  * @return the combination of both flags.
  *
  * \ingroup hypersurface
@@ -267,8 +267,8 @@ using HyperAlg = regina::Flags<HyperAlgFlags>;
 /**
  * Returns the bitwise OR of the two given flags.
  *
- * @param lhs the first flag to combine.
- * @param rhs the second flag to combine.
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
  * @return the combination of both flags.
  *
  * \ingroup hypersurface

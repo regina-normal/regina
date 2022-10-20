@@ -115,7 +115,7 @@ class IsoSigClassic {
          * This object will initially be set to hold the first candidate pair
          * (\a s, \a p).
          *
-         * @param comp the triangulation component that we are examining.
+         * \param comp the triangulation component that we are examining.
          */
         IsoSigClassic(const Component<dim>& comp);
 
@@ -275,7 +275,7 @@ class IsoSigDegrees {
          * This object will initially be set to hold the first candidate pair
          * (\a s, \a p).
          *
-         * @param comp the triangulation component that we are examining.
+         * \param comp the triangulation component that we are examining.
          */
         IsoSigDegrees(const Component<dim>& comp);
         /**

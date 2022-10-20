@@ -111,7 +111,7 @@ class LayeredTorusBundle : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(LayeredTorusBundle& other) noexcept;
@@ -234,7 +234,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * this test does not recognise inversion and also does not recognise
          * symmetries within the <tt>T x I</tt> core).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of layered torus bundle.
          */
@@ -260,7 +260,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * this test does not recognise inversion and also does not recognise
          * symmetries within the <tt>T x I</tt> core).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent different types of layered torus bundle.
          */
@@ -273,7 +273,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param tri the triangulation to examine.
+         * \param tri the triangulation to examine.
          * @return a structure containing details of the layered torus bundle,
          * or \c null if the given triangulation is not a layered torus bundle.
          */
@@ -298,7 +298,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * Typically the core would be a static or global variable that is
          * not destroyed until the program exits.
          *
-         * @param whichCore a reference to the core <tt>T x I</tt>
+         * \param whichCore a reference to the core <tt>T x I</tt>
          * triangulation upon which this layered torus bundle is based.
          */
         LayeredTorusBundle(const TxICore& whichCore,
@@ -307,8 +307,8 @@ class LayeredTorusBundle : public StandardTriangulation {
         /**
          * Contains code common to both writeName() and writeTeXName().
          *
-         * @param out the output stream to which to write.
-         * @param tex \c true if this routine is called from
+         * \param out the output stream to which to write.
+         * \param tex \c true if this routine is called from
          * writeTeXName() or \c false if it is called from writeName().
          * @return a reference to \a out.
          */
@@ -324,8 +324,8 @@ class LayeredTorusBundle : public StandardTriangulation {
          * must not outlive the given core (since the returned object
          * will in fact contain a direct reference to this core).
          *
-         * @param tri the triangulation to examine.
-         * @param core the core <tt>T x I</tt> to search for.
+         * \param tri the triangulation to examine.
+         * \param core the core <tt>T x I</tt> to search for.
          * @return a structure containing details of the layered torus bundle,
          * or \c null if the given triangulation is
          * not a layered torus bundle with the given <tt>T x I</tt> core.
@@ -340,8 +340,8 @@ class LayeredTorusBundle : public StandardTriangulation {
  * This global routine simply calls LayeredTorusBundle::swap(); it is provided
  * so that LayeredTorusBundle meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

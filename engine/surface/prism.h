@@ -76,23 +76,23 @@ struct PrismSpec {
     /**
      * Creates a new prism specifier containing the given values.
      *
-     * @param newTetIndex the index in the triangulation of the tetrahedron
+     * \param newTetIndex the index in the triangulation of the tetrahedron
      * containing the prism.
-     * @param newEdge the edge of the tetrahedron that is contained in
+     * \param newEdge the edge of the tetrahedron that is contained in
      * this prism; this must be between 0 and 5 inclusive.
      */
     PrismSpec(size_t newTetIndex, int newEdge);
     /**
      * Creates a new prism specifier that is a clone of the given specifier.
      *
-     * @param cloneMe the prism specifier to clone.
+     * \param cloneMe the prism specifier to clone.
      */
     PrismSpec(const PrismSpec& cloneMe) = default;
 
     /**
      * Copies the values from the given prism specifier into this specifier.
      *
-     * @param cloneMe the prism specifier whose values should be copied.
+     * \param cloneMe the prism specifier whose values should be copied.
      * @return a reference to this prism specifier.
      */
     PrismSpec& operator = (const PrismSpec& cloneMe) = default;
@@ -100,7 +100,7 @@ struct PrismSpec {
      * Determines if this and the given prism specifier contain identical
      * information.
      *
-     * @param other the prism specifier to compare with this.
+     * \param other the prism specifier to compare with this.
      * @return \c true if and only if this and the given prism specifier
      * contain identical information.
      */
@@ -109,7 +109,7 @@ struct PrismSpec {
      * Determines if this and the given prism specifier contain different
      * information.
      *
-     * @param other the prism specifier to compare with this.
+     * \param other the prism specifier to compare with this.
      * @return \c true if and only if this and the given prism specifier
      * contain different information.
      */
@@ -123,8 +123,8 @@ struct PrismSpec {
  * Writes the given prism specifier to the given output stream.
  * The prism specifier will be written as a pair <tt>(tetIndex, edge)</tt>.
  *
- * @param out the output stream to which to write.
- * @param spec the prism specifier to write.
+ * \param out the output stream to which to write.
+ * \param spec the prism specifier to write.
  * @return a reference to \a out.
  *
  * \ingroup surfaces

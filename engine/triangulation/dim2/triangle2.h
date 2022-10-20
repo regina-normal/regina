@@ -94,15 +94,15 @@ class Face<2, 2> : public detail::SimplexBase<2> {
          * Creates a new triangle with empty description and no
          * edges joined to anything.
          *
-         * @param tri the triangulation to which the new triangle belongs.
+         * \param tri the triangulation to which the new triangle belongs.
          */
         Face(Triangulation<2>* tri);
         /**
          * Creates a new triangle with the given description and
          * no edges joined to anything.
          *
-         * @param desc the description to give the new triangle.
-         * @param tri the triangulation to which the new triangle belongs.
+         * \param desc the description to give the new triangle.
+         * \param tri the triangulation to which the new triangle belongs.
          */
         Face(const std::string& desc, Triangulation<2>* tri);
 

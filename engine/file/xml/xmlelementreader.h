@@ -99,9 +99,9 @@ class XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param tagName the name of the opening tag for this element.
-         * @param tagProps the properties associated with the opening tag.
-         * @param parentReader the reader currently parsing the parent XML
+         * \param tagName the name of the opening tag for this element.
+         * \param tagProps the properties associated with the opening tag.
+         * \param parentReader the reader currently parsing the parent XML
          * element, or \c null if this is the top-level element.  If this
          * paraneter is non-null, it is guaranteed that startSubElement()
          * has already been called upon the parent reader.
@@ -116,7 +116,7 @@ class XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param chars the initial text for this element.
+         * \param chars the initial text for this element.
          */
         virtual void initialChars(const std::string& chars);
         /**
@@ -126,8 +126,8 @@ class XMLElementReader {
          * The default implementation returns a new XMLElementReader
          * which can be used to ignore the subelement completely.
          *
-         * @param subTagName the name of the subelement opening tag.
-         * @param subTagProps the properties associated with the
+         * \param subTagName the name of the subelement opening tag.
+         * \param subTagProps the properties associated with the
          * subelement opening tag.
          * @return a newly created element reader that will be used to
          * parse the subelement.  This class should \e not take care of
@@ -142,8 +142,8 @@ class XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param subTagName the name of the subelement closing tag.
-         * @param subReader the child reader that was used to parse the
+         * \param subTagName the name of the subelement closing tag.
+         * \param subReader the child reader that was used to parse the
          * subelement (this is the reader that was returned by the
          * corresponding startSubElement() call).  It is guaranteed that
          * endElement() has already been called upon this child reader
@@ -167,7 +167,7 @@ class XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param parser the current XML parser.
+         * \param parser the current XML parser.
          */
         virtual void usingParser(regina::xml::XMLParser* parser);
 
@@ -178,7 +178,7 @@ class XMLElementReader {
          *
          * The default implementation does nothing.
          *
-         * @param subReader the corresponding child reader if a
+         * \param subReader the corresponding child reader if a
          * subelement is currently being parsed, or \c null otherwise.
          * If this parameter is non-zero, it is guaranteed that abort() has
          * already been called upon the child reader and that the child

@@ -136,7 +136,7 @@ class TrieSet : public Output<TrieSet> {
          * Creates a new copy of the given collection.
          * This will induce a deep copy of \a src.
          *
-         * @param src the collection of sets to copy.
+         * \param src the collection of sets to copy.
          */
         TrieSet(const TrieSet& src);
 
@@ -146,7 +146,7 @@ class TrieSet : public Output<TrieSet> {
          *
          * The collection that was passed (\a src) will no longer be usable.
          *
-         * @param src the collection of sets whose contents should be moved.
+         * \param src the collection of sets whose contents should be moved.
          */
         TrieSet(TrieSet&& src) noexcept;
 
@@ -154,7 +154,7 @@ class TrieSet : public Output<TrieSet> {
          * Sets this to be a copy of the given collection.
          * This will induce a deep copy of \a src.
          *
-         * @param src the collection of sets to copy.
+         * \param src the collection of sets to copy.
          * @return a reference to this collection.
          */
         TrieSet& operator = (const TrieSet& src);
@@ -165,7 +165,7 @@ class TrieSet : public Output<TrieSet> {
          *
          * The collection that was passed (\a src) will no longer be usable.
          *
-         * @param src the collection of sets whose contents should be moved.
+         * \param src the collection of sets whose contents should be moved.
          * @return a reference to this collection.
          */
         TrieSet& operator = (TrieSet&& src) noexcept;
@@ -173,7 +173,7 @@ class TrieSet : public Output<TrieSet> {
         /**
          * Swaps the contents of this and the given collection.
          *
-         * @param other the collection whose contents should be swapped
+         * \param other the collection whose contents should be swapped
          * with this.
          */
         void swap(TrieSet& other) noexcept;
@@ -182,7 +182,7 @@ class TrieSet : public Output<TrieSet> {
          * Determines whether this and the given collection store
          * exactly the same sets.
          *
-         * @param other the collection to compare with this.
+         * \param other the collection to compare with this.
          * @return \c true if and only if both collections store the same sets.
          */
         bool operator == (const TrieSet& other) const;
@@ -191,7 +191,7 @@ class TrieSet : public Output<TrieSet> {
          * Determines whether this and the given collection do not store
          * exactly the same sets.
          *
-         * @param other the collection to compare with this.
+         * \param other the collection to compare with this.
          * @return \c true if and only if both collections do not store the
          * same sets.
          */
@@ -287,7 +287,7 @@ class TrieSet : public Output<TrieSet> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -296,7 +296,7 @@ class TrieSet : public Output<TrieSet> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 };
@@ -304,8 +304,8 @@ class TrieSet : public Output<TrieSet> {
 /**
  * Swaps the contents of the two given collections.
  *
- * @param a the first collection of sets whose contents should be swapped.
- * @param b the second collection of sets whose contents should be swapped.
+ * \param a the first collection of sets whose contents should be swapped.
+ * \param b the second collection of sets whose contents should be swapped.
  *
  * \ingroup utilities
  */

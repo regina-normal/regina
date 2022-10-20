@@ -118,7 +118,7 @@ class XMLCombinationFilterReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param props the attributes of the \c surfaces XML element.
+         * \param props the attributes of the \c surfaces XML element.
          */
         XMLCombinationFilterReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
@@ -170,7 +170,7 @@ class XMLPropertiesFilterReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param props the attributes of the \c surfaces XML element.
+         * \param props the attributes of the \c surfaces XML element.
          */
         XMLPropertiesFilterReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,

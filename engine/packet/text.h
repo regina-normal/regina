@@ -73,7 +73,7 @@ class Text : public Packet {
         /**
          * Initialises the packet to the given string.
          *
-         * @param text the new value for the packet.
+         * \param text the new value for the packet.
          */
         Text(std::string text);
 
@@ -94,7 +94,7 @@ class Text : public Packet {
          * the packet infrastructure (e.g., it will not copy the packet label,
          * or change this packet's location in any packet tree).
          *
-         * @param src the text packet whose contents should be copied.
+         * \param src the text packet whose contents should be copied.
          * @return a reference to this packet.
          */
         Text& operator = (const Text& src);
@@ -106,7 +106,7 @@ class Text : public Packet {
          * the packet infrastructure (e.g., it will not swap packet labels,
          * or change either packet's location in any packet tree).
          *
-         * @param other the text packet whose contents should be swapped
+         * \param other the text packet whose contents should be swapped
          * with this.
          */
         void swap(Text& other);
@@ -121,14 +121,14 @@ class Text : public Packet {
         /**
          * Sets the packet data to the given string.
          *
-         * @param text the new value for the packet.
+         * \param text the new value for the packet.
          */
         void setText(std::string text);
 
         /**
          * Determines if this and the given packet contain the same text.
          *
-         * @param other the text packet to compare with this.
+         * \param other the text packet to compare with this.
          * @return \c true if and only if this and the given packet
          * contain the same text.
          */
@@ -137,7 +137,7 @@ class Text : public Packet {
         /**
          * Determines if this and the given packet do not contain the same text.
          *
-         * @param other the text packet to compare with this.
+         * \param other the text packet to compare with this.
          * @return \c true if and only if this and the given packet
          * do not contain the same text.
          */
@@ -158,8 +158,8 @@ class Text : public Packet {
  * This global routine simply calls Text::swap(); it is provided so that
  * Text meets the C++ Swappable requirements.
  *
- * @param a the first text packet whose contents should be swapped.
- * @param b the second text packet whose contents should be swapped.
+ * \param a the first text packet whose contents should be swapped.
+ * \param b the second text packet whose contents should be swapped.
  *
  * \ingroup packet
  */

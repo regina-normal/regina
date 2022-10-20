@@ -91,8 +91,8 @@ class CensusDB {
          * format).  Note that even if the database does not exist, the
          * lookup() routine will fail gracefully.
          *
-         * @param filename the filename where the database is stored.
-         * @param desc a human-readable description of the database.
+         * \param filename the filename where the database is stored.
+         * \param desc a human-readable description of the database.
          * See the desc() routine for further information on how this
          * description might be used.
          */
@@ -154,8 +154,8 @@ class CensusDB {
          * \ifacespython This function is available in Python, and the
          * \a action argument may be a pure Python function.
          *
-         * @param isoSig the isomorphism signature to search for.
-         * @param action a function (or other callable object) that will
+         * \param isoSig the isomorphism signature to search for.
+         * \param action a function (or other callable object) that will
          * be called for each match in the database.
          * @return \c true if the lookup was correctly performed, or \c false
          * if some error occurred (e.g., the database could not be opened).
@@ -180,7 +180,7 @@ class CensusDB {
         /**
          * Swaps the contents of this and the given database reference.
          *
-         * @param other the database reference whose contents are to be
+         * \param other the database reference whose contents are to be
          * swapped with this.
          */
         void swap(CensusDB& other) noexcept;
@@ -192,7 +192,7 @@ class CensusDB {
          * filenames (as returned by the filename() function).  The database
          * descriptions are irrelevant here.
          *
-         * @param rhs the database to compare this against.
+         * \param rhs the database to compare this against.
          * @return \c true if and only if this and the given object represent
          * the same database.
          */
@@ -205,7 +205,7 @@ class CensusDB {
          * filenames (as returned by the filename() function).  The database
          * descriptions are irrelevant here.
          *
-         * @param rhs the database to compare this against.
+         * \param rhs the database to compare this against.
          * @return \c true if and only if this and the given object represent
          * different databases.
          */
@@ -218,8 +218,8 @@ class CensusDB {
  * This global routine simply calls CensusDB::swap(); it is provided
  * so that CensusDB meets the C++ Swappable requirements.
  *
- * @param a the first database reference whose contents should be swapped.
- * @param b the second database reference whose contents should be swapped.
+ * \param a the first database reference whose contents should be swapped.
+ * \param b the second database reference whose contents should be swapped.
  *
  * \ingroup census
  */
@@ -272,7 +272,7 @@ class CensusHit {
         /**
          * Swaps the contents of this and the given census hit.
          *
-         * @param other the census hit whose contents are to be swapped
+         * \param other the census hit whose contents are to be swapped
          * with this.
          */
         void swap(CensusHit& other) noexcept;
@@ -300,7 +300,7 @@ class CensusHit {
          * human-readable name and also come from the same database
          * (as identified by the CensusDB comparison operators).
          *
-         * @param rhs the census hit to compare this against.
+         * \param rhs the census hit to compare this against.
          * @return \c true if and only if this and the given hit are the same.
          */
         bool operator == (const CensusHit& rhs) const;
@@ -312,7 +312,7 @@ class CensusHit {
          * human-readable name and also come from the same database
          * (as identified by the CensusDB comparison operators).
          *
-         * @param rhs the census hit to compare this against.
+         * \param rhs the census hit to compare this against.
          * @return \c true if and only if this and the given hit are different.
          */
         bool operator != (const CensusHit& rhs) const;
@@ -336,8 +336,8 @@ class CensusHit {
  * This global routine simply calls CensusHit::swap(); it is provided
  * so that CensusHit meets the C++ Swappable requirements.
  *
- * @param a the first census hit whose contents should be swapped.
- * @param b the second census hit whose contents should be swapped.
+ * \param a the first census hit whose contents should be swapped.
+ * \param b the second census hit whose contents should be swapped.
  *
  * \ingroup census
  */
@@ -411,7 +411,7 @@ class Census {
          * logarithmic-time lookup in each database (here "logarithmic"
          * means logarithmic in the size of the database).
          *
-         * @param tri the triangulation that you wish to search for.
+         * \param tri the triangulation that you wish to search for.
          * @return a list of all database matches.
          */
         static std::list<CensusHit> lookup(const Triangulation<3>& tri);
@@ -438,7 +438,7 @@ class Census {
          * logarithmic-time lookup in each database (here "logarithmic"
          * means logarithmic in the size of the database).
          *
-         * @param isoSig the isomorphism signature of the triangulation
+         * \param isoSig the isomorphism signature of the triangulation
          * that you wish to search for.
          * @return a list of all database matches.
          */
@@ -453,10 +453,10 @@ class Census {
          * census databases, stored in the standard census database
          * location on the filesystem.
          *
-         * @param filename the filename for the database, without directory
+         * \param filename the filename for the database, without directory
          * information.  This routine will build the full pathname by joining
          * the given filename with the standard census database directory.
-         * @param desc a human-readable description for the database.
+         * \param desc a human-readable description for the database.
          * @return the new database specifier.
          */
         static CensusDB* standardDB(const char* filename, const char* desc);

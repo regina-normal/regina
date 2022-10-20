@@ -162,7 +162,7 @@ class FileInfo : public Output<FileInfo> {
         /**
          * Swaps the contents of this and the given file information.
          *
-         * @param other the object whose contents should be swapped with this.
+         * \param other the object whose contents should be swapped with this.
          */
         void swap(FileInfo& other) noexcept;
 
@@ -178,7 +178,7 @@ class FileInfo : public Output<FileInfo> {
          * It is safe to compare FileInfo objects even if one or both is
          * invalid.  Two invalid FileInfo objects will compare as equal.
          *
-         * @param other the file information to compare with this.
+         * \param other the file information to compare with this.
          * @return \c true if and only if this and the given file information
          * describe the same format and version, as described above.
          */
@@ -196,7 +196,7 @@ class FileInfo : public Output<FileInfo> {
          * It is safe to compare FileInfo objects even if one or both is
          * invalid.  Two invalid FileInfo objects will compare as equal.
          *
-         * @param other the file information to compare with this.
+         * \param other the file information to compare with this.
          * @return \c true if and only if this and the given file information
          * do not describe the same format and version, as described above.
          */
@@ -211,7 +211,7 @@ class FileInfo : public Output<FileInfo> {
          * routines.  If a FileInfo structure is returned, its pathname()
          * routine will use the same encoding that is passed here.
          *
-         * @param idPathname the pathname of the data file to be examined.
+         * \param idPathname the pathname of the data file to be examined.
          * @return a FileInfo structure containing information about the
          * given file, or no value if the file type could not be identified.
          */
@@ -223,7 +223,7 @@ class FileInfo : public Output<FileInfo> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -232,7 +232,7 @@ class FileInfo : public Output<FileInfo> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
@@ -249,8 +249,8 @@ class FileInfo : public Output<FileInfo> {
  * This global routine simply calls FileInfo::swap(); it is provided
  * so that FileInfo meets the C++ Swappable requirements.
  *
- * @param a the object whose contents should be swapped with \a b.
- * @param b the object whose contents should be swapped with \a a.
+ * \param a the object whose contents should be swapped with \a b.
+ * \param b the object whose contents should be swapped with \a a.
  *
  * \ingroup file
  */

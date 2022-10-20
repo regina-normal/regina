@@ -117,7 +117,7 @@ class SatMobius : public SatBlock {
          * annulus will remain uninitialised, and must be initialised
          * before this block can be used.
          *
-         * @param position indicates which edge of the boundary annulus
+         * \param position indicates which edge of the boundary annulus
          * meets the weight two edge of the Mobius strip, as described in
          * the position() member function documentation.  This value
          * must be 0, 1 or 2.
@@ -135,9 +135,9 @@ class SatMobius : public SatBlock {
          * a specific case of SatRegion::beginsRegion(); see that routine for
          * further details.
          *
-         * @param annulus the proposed boundary annulus that should form
+         * \param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
+         * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
@@ -219,8 +219,8 @@ class SatLST : public SatBlock {
          * annulus will remain uninitialised, and must be initialised
          * before this block can be used.
          *
-         * @param lst details of the layered solid torus.
-         * @param roles describes how the layered solid torus is
+         * \param lst details of the layered solid torus.
+         * \param roles describes how the layered solid torus is
          * attached to the boundary annulus, as explained in the
          * \a roles_ data member documentation.
          */
@@ -237,9 +237,9 @@ class SatLST : public SatBlock {
          * a specific case of SatRegion::beginsRegion(); see that routine for
          * further details.
          *
-         * @param annulus the proposed boundary annulus that should form
+         * \param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
+         * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
@@ -295,7 +295,7 @@ class SatTriPrism : public SatBlock {
         /**
          * Creates a new model of a triangular prism block.
          *
-         * @param major \c true if a block of major type should be created,
+         * \param major \c true if a block of major type should be created,
          * or \c false if a block of minor type should be created.
          * @return a full triangulated model of this type of block.
          */
@@ -310,7 +310,7 @@ class SatTriPrism : public SatBlock {
          * annuli will remain uninitialised, and must be initialised
          * before this block can be used.
          *
-         * @param major \c true if this block is of major type, or
+         * \param major \c true if this block is of major type, or
          * \c false if it is of minor type.
          */
         SatTriPrism(bool major);
@@ -326,9 +326,9 @@ class SatTriPrism : public SatBlock {
          * a specific case of SatRegion::beginsRegion(); see that routine for
          * further details.
          *
-         * @param annulus the proposed boundary annulus that should form
+         * \param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
+         * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
@@ -340,9 +340,9 @@ class SatTriPrism : public SatBlock {
          * Implements a special case of beginsRegion() to search for
          * a block of major type.  See beginsRegion() for further details.
          *
-         * @param annulus the proposed boundary annulus that should form
+         * \param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
+         * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
@@ -409,9 +409,9 @@ class SatCube : public SatBlock {
          * a block of this type (cube).  This routine is a specific case
          * of SatRegion::beginsRegion(); see that routine for further details.
          *
-         * @param annulus the proposed boundary annulus that should form
+         * \param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
+         * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
@@ -465,9 +465,9 @@ class SatReflectorStrip : public SatBlock {
         /**
          * Creates a new model of a reflector strip block.
          *
-         * @param length the length of the new reflector strip, i.e.,
+         * \param length the length of the new reflector strip, i.e.,
          * the number of boundary annuli; this must be strictly positive.
-         * @param twisted \c true if the new reflector strip should be twisted
+         * \param twisted \c true if the new reflector strip should be twisted
          * (causing its ring of boundary annuli to be twisted also), or
          * \c false if the new strip should not be twisted.
          * @return a full triangulated model of this type of block.
@@ -488,9 +488,9 @@ class SatReflectorStrip : public SatBlock {
          * The boundary annuli will remain uninitialised, and must be
          * initialised before this block can be used.
          *
-         * @param length the length of the new reflector strip, i.e.,
+         * \param length the length of the new reflector strip, i.e.,
          * the number of boundary annuli; this must be strictly positive.
-         * @param twisted \c true if the strip should be twisted (giving
+         * \param twisted \c true if the strip should be twisted (giving
          * a twisted ring of boundary annuli), or \c false if not.
          */
         SatReflectorStrip(unsigned length, bool twisted);
@@ -501,9 +501,9 @@ class SatReflectorStrip : public SatBlock {
          * case of SatRegion::beginsRegion(); see that routine for further
          * details.
          *
-         * @param annulus the proposed boundary annulus that should form
+         * \param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
+         * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
@@ -577,7 +577,7 @@ class SatLayering : public SatBlock {
          * annuli will remain uninitialised, and must be initialised
          * before this block can be used.
          *
-         * @param overHorizontal \c true if this block describes a
+         * \param overHorizontal \c true if this block describes a
          * layering over the horizontal edge of the boundary annulus, or
          * \c false if it describes a layering over the diagonal edge.
          */
@@ -594,9 +594,9 @@ class SatLayering : public SatBlock {
          * a specific case of SatRegion::beginsRegion(); see that routine for
          * further details.
          *
-         * @param annulus the proposed boundary annulus that should form
+         * \param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
+         * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
          * @return details of the saturated block if one was found, or
          * \c null if none was found.

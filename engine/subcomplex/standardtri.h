@@ -181,7 +181,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * \nopython Instead use the variant name() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          * @return a reference to the given output stream.
          */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
@@ -197,7 +197,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * \nopython Instead use the variant texName() that takes no arguments
          * and returns a string.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          * @return a reference to the given output stream.
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
@@ -212,7 +212,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         virtual void writeTextShort(std::ostream& out) const;
 
@@ -226,7 +226,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          *
          * \nopython Use detail() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         virtual void writeTextLong(std::ostream& out) const;
 
@@ -246,7 +246,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * triangulations than this routine, since passing an entire
          * triangulation allows access to more information.
          *
-         * @param component the triangulation component under examination.
+         * \param component the triangulation component under examination.
          * @return the details of the standard triangulation if the
          * given component is recognised, or \c null otherwise.
          */
@@ -267,7 +267,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * component-based recognise(Component<3>*), since passing an entire
          * triangulation allows access to more information.
          *
-         * @param tri the triangulation under examination.
+         * \param tri the triangulation under examination.
          * @return the details of the standard triangualation if the
          * given triangulation is recognised, or \c null otherwise.
          */

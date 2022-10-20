@@ -64,7 +64,7 @@ class XMLAngleStructureReader : public XMLElementReader {
         /**
          * Creates a new angle structure reader.
          *
-         * @param tri the triangulation on which this angle structure lies.
+         * \param tri the triangulation on which this angle structure lies.
          */
         XMLAngleStructureReader(const SnapshotRef<Triangulation<3>>& tri);
 
@@ -101,7 +101,7 @@ class XMLAngleStructuresReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param props the attributes of the \c angles XML element.
+         * \param props the attributes of the \c angles XML element.
          */
         XMLAngleStructuresReader(XMLTreeResolver& resolver,
             std::shared_ptr<Packet> parent, bool anon, std::string label,
@@ -135,7 +135,7 @@ class XMLLegacyAngleStructuresReader : public XMLPacketReader {
          * All parameters not explained here are the same as for the
          * parent class XMLPacketReader.
          *
-         * @param tri the triangulation on which these angle
+         * \param tri the triangulation on which these angle
          * structures are placed.
          */
         XMLLegacyAngleStructuresReader(XMLTreeResolver& resolver,

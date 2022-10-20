@@ -95,7 +95,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
         /**
          * Returns one of the two triangles whose boundaries are joined.
          *
-         * @param index specifies which of the two triangles to return;
+         * \param index specifies which of the two triangles to return;
          * this must be either 0 or 1.
          * @return the corresponding triangle.
          */
@@ -126,7 +126,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * Triangle objects, it is meaningful to compare pillow 2-spheres
          * within different triangulations.
          *
-         * @param other the pillow 2-sphere to compare with this.
+         * \param other the pillow 2-sphere to compare with this.
          * @return \c true if and only if this and the given object represent
          * the same specific presentation of a pillow 2-sphere.
          */
@@ -144,7 +144,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * Triangle objects, it is meaningful to compare pillow 2-spheres
          * within different triangulations.
          *
-         * @param other the pillow 2-sphere to compare with this.
+         * \param other the pillow 2-sphere to compare with this.
          * @return \c true if and only if this and the given object represent
          * different specific presentations of a pillow 2-sphere.
          */
@@ -162,8 +162,8 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          *
          * \pre The two given triangles are distinct.
          *
-         * @param tri1 the first triangle to examine.
-         * @param tri2 the second triangle to examine.
+         * \param tri1 the first triangle to examine.
+         * \param tri2 the second triangle to examine.
          * @return a structure containing details of the pillow 2-sphere, or
          * \c null if the given triangles do not form a pillow 2-sphere.
          */
@@ -176,7 +176,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 

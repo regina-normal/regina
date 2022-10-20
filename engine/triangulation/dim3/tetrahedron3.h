@@ -94,15 +94,15 @@ class Face<3, 3> : public detail::SimplexBase<3> {
          * Creates a new tetrahedron with empty description and no
          * faces joined to anything.
          *
-         * @param tri the triangulation to which the new tetrahedron belongs.
+         * \param tri the triangulation to which the new tetrahedron belongs.
          */
         Face(Triangulation<3>* tri);
         /**
          * Creates a new tetrahedron with the given description and
          * no edges joined to anything.
          *
-         * @param desc the description to give the new tetrahedron.
-         * @param tri the triangulation to which the new tetrahedron belongs.
+         * \param desc the description to give the new tetrahedron.
+         * \param tri the triangulation to which the new tetrahedron belongs.
          */
         Face(const std::string& desc, Triangulation<3>* tri);
 

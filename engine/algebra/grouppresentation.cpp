@@ -1220,8 +1220,8 @@ bool GroupPresentation::identifyAbelian() const
  * permutations (with possible inversions if cyclic=true) on the
  * generator set.
  *
- * @param other is what the return permutation turn
- * @param cyclic, if false we get a list of exact relabellings from
+ * \param other is what the return permutation turn
+ * \param cyclic, if false we get a list of exact relabellings from
  *  *this to other.  If true, it can be up to cyclic permutation and
  *  inversion. If cyclic is true, the routine demands both words
  *  are cyclically-reduced.

@@ -203,7 +203,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * \warning If the given 3-manifold triangulation has ideal boundary,
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
-         * @param base the 3-manifold triangulation \a M, as described above.
+         * \param base the 3-manifold triangulation \a M, as described above.
          * @return the product <tt>M x I</tt>.
          */
         static Triangulation<4> iBundle(const Triangulation<3>& base);
@@ -223,7 +223,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * \warning If the given 3-manifold triangulation has ideal boundary,
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
-         * @param base the 3-manifold triangulation \a M, as described above.
+         * \param base the 3-manifold triangulation \a M, as described above.
          * @return the product <tt>M x S1</tt>.
          */
         static Triangulation<4> s1Bundle(const Triangulation<3>& base);
@@ -253,8 +253,8 @@ class Example<4> : public detail::ExampleBase<4> {
          * \warning If the given 3-manifold triangulation has ideal boundary,
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
-         * @param base the 3-manifold triangulation \a M, as described above.
-         * @param monodromy the homeomorphism from \a M to itself, as
+         * \param base the 3-manifold triangulation \a M, as described above.
+         * \param monodromy the homeomorphism from \a M to itself, as
          * described above.
          * @return the requested bundle.
          */

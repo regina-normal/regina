@@ -90,7 +90,7 @@ class XMLLinkCrossingsReader : public XMLElementReader {
          * The given link should be empty; its crossings will be created
          * by this reader.
          *
-         * @param link the link being read.
+         * \param link the link being read.
          */
         XMLLinkCrossingsReader(Link* link);
 
@@ -123,7 +123,7 @@ class XMLLinkConnectionsReader : public XMLElementReader {
          * The given link should have its crossings initialised, but
          * with no connections between them.
          *
-         * @param link the link being read.
+         * \param link the link being read.
          */
         XMLLinkConnectionsReader(Link* link);
 
@@ -157,7 +157,7 @@ class XMLLinkComponentsReader : public XMLElementReader {
          * The given link should have all its crossings and
          * connections set up, but should have an empty list of components.
          *
-         * @param link the link being read.
+         * \param link the link being read.
          */
         XMLLinkComponentsReader(Link* link);
 

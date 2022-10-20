@@ -152,7 +152,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
         /**
          * Swaps the contents of this and the given structure.
          *
-         * @param other the structure whose contents should be swapped
+         * \param other the structure whose contents should be swapped
          * with this.
          */
         void swap(PlugTriSolidTorus& other) noexcept;
@@ -173,7 +173,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * Note that the core triangular solid torus will be attached to
          * the bottom (as opposed to the top) of the layered chain.
          *
-         * @param annulus specifies which annulus to examine; this must
+         * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
          * @return the corresponding layered chain.
          */
@@ -185,7 +185,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * torus.  This will be one of the chain type constants defined
          * in this class.
          *
-         * @param annulus specifies which annulus to examine; this must
+         * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
          * @return the type of layered chain, or \a CHAIN_NONE
          * if there is no layered chain attached to the requested annulus.
@@ -226,7 +226,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * plugged triangular solid torus).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same type of plugged triangular solid torus.
          */
@@ -249,7 +249,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * this test does not account for the many symmetries in a
          * plugged triangular solid torus).
          *
-         * @param other the structure with which this will be compared.
+         * \param other the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent different types of plugged triangular solid torus.
          */
@@ -263,7 +263,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * StandardTriangulation::recognise(), which makes use of the
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
-         * @param comp the triangulation component to examine.
+         * \param comp the triangulation component to examine.
          * @return a structure containing details of the plugged triangular
          * solid torus, or \c null if the given component is not a plugged
          * triangular solid torus.
@@ -291,8 +291,8 @@ class PlugTriSolidTorus : public StandardTriangulation {
  * This global routine simply calls PlugTriSolidTorus::swap(); it is provided
  * so that PlugTriSolidTorus meets the C++ Swappable requirements.
  *
- * @param a the first structure whose contents should be swapped.
- * @param b the second structure whose contents should be swapped.
+ * \param a the first structure whose contents should be swapped.
+ * \param b the second structure whose contents should be swapped.
  *
  * \ingroup subcomplex
  */

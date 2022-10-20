@@ -139,8 +139,8 @@ using NormalList = regina::Flags<NormalListFlags>;
 /**
  * Returns the bitwise OR of the two given flags.
  *
- * @param lhs the first flag to combine.
- * @param rhs the second flag to combine.
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
  * @return the combination of both flags.
  *
  * \ingroup surfaces
@@ -357,8 +357,8 @@ using NormalAlg = regina::Flags<NormalAlgFlags>;
 /**
  * Returns the bitwise OR of the two given flags.
  *
- * @param lhs the first flag to combine.
- * @param rhs the second flag to combine.
+ * \param lhs the first flag to combine.
+ * \param rhs the second flag to combine.
  * @return the combination of both flags.
  *
  * \ingroup surfaces

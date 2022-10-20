@@ -97,7 +97,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * All simplices will be on side 0.
          *
-         * @param size the number of top-dimensional simplices in the
+         * \param size the number of top-dimensional simplices in the
          * underlying triangulation or facet pairing.
          */
         Cut(size_t size);
@@ -110,9 +110,9 @@ class Cut : public ShortOutput<Cut> {
          * be on side 0, and the remaining \a side1 simplices will be on
          * side 1.
          *
-         * @param side0 the number of top-dimensional simplices on side 0
+         * \param side0 the number of top-dimensional simplices on side 0
          * of the partition.
-         * @param side1 the number of top-dimensional simplices on side 1
+         * \param side1 the number of top-dimensional simplices on side 1
          * of the partition.
          */
         Cut(size_t side0, size_t side1);
@@ -120,7 +120,7 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Creates a new copy of the given cut.
          *
-         * @param src the cut to copy.
+         * \param src the cut to copy.
          */
         Cut(const Cut& src);
 
@@ -130,7 +130,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * The cut that is passed (\a src) will no longer be usable.
          *
-         * @param src the cut to move.
+         * \param src the cut to move.
          */
         Cut(Cut&& src) noexcept;
 
@@ -155,9 +155,9 @@ class Cut : public ShortOutput<Cut> {
          * \ifacespython Instead of a pair of iterators, this routine
          * takes a python list of integers.
          *
-         * @param begin an iterator pointing to the beginning of the
+         * \param begin an iterator pointing to the beginning of the
          * 0-1 sequence of sides.
-         * @param end a past-the-end iterator indicating the end of the
+         * \param end a past-the-end iterator indicating the end of the
          * 0-1 sequence of sides.
          */
         template <typename iterator>
@@ -192,7 +192,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * \exception InvalidArgument The given side is not 0 or 1.
          *
-         * @param whichSide the side of the partition to query; this
+         * \param whichSide the side of the partition to query; this
          * must be either 0 or 1.
          * @return the number of top-dimensional simplices on the given side.
          */
@@ -201,7 +201,7 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Indicates which side of the partition the given simplex lies on.
          *
-         * @param simplex the simplex being queried; this must be
+         * \param simplex the simplex being queried; this must be
          * between 0 and size()-1 inclusive.
          * @return the corresponding side of the partition; this will be
          * either 0 or 1.
@@ -214,9 +214,9 @@ class Cut : public ShortOutput<Cut> {
          *
          * \exception InvalidArgument The given side is not 0 or 1.
          *
-         * @param simplex the simplex being changed; this must be
+         * \param simplex the simplex being changed; this must be
          * between 0 and size()-1 inclusive.
-         * @param newSide the side of the partition that the given simplex
+         * \param newSide the side of the partition that the given simplex
          * should lie on; this must be either 0 or 1.
          */
         void set(size_t simplex, int newSide);
@@ -246,7 +246,7 @@ class Cut : public ShortOutput<Cut> {
          * \exception InvalidArgument The given triangulation does not
          * have precisely size() top-dimensional simplices.
          *
-         * @param tri the triangulation under consideration.
+         * \param tri the triangulation under consideration.
          * @return the weight of this cut with respect to \a tri.
          */
         template <int dim>
@@ -268,7 +268,7 @@ class Cut : public ShortOutput<Cut> {
          * \exception InvalidArgument The given facet pairing does not
          * have precisely size() top-dimensional simplices.
          *
-         * @param pairing the facet pairing under consideration.
+         * \param pairing the facet pairing under consideration.
          * @return the weight of this cut with respect to \a pairing.
          */
         template <int dim>
@@ -281,7 +281,7 @@ class Cut : public ShortOutput<Cut> {
          * sizes (i.e., work with different number of top-dimensional
          * simplices); if they do then this cut will be resized as a result.
          *
-         * @param src the cut to copy.
+         * \param src the cut to copy.
          * @return a reference to this cut.
          */
         Cut& operator = (const Cut& src);
@@ -296,7 +296,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * The cut that is passed (\a src) will no longer be usable.
          *
-         * @param src the cut to move.
+         * \param src the cut to move.
          * @return a reference to this cut.
          */
         Cut& operator = (Cut&& src) noexcept;
@@ -304,7 +304,7 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Swaps the contents of this and the given cut.
          *
-         * @param other the cut whose contents are to be swapped with this.
+         * \param other the cut whose contents are to be swapped with this.
          */
         void swap(Cut& other) noexcept;
 
@@ -317,7 +317,7 @@ class Cut : public ShortOutput<Cut> {
          * It does not matter if this and the given cut have different
          * sizes; in this case they will be considered different.
          *
-         * @param rhs the cut to compare with this.
+         * \param rhs the cut to compare with this.
          * @return \c true if and only if this and the given cut are identical.
          */
         bool operator == (const Cut& rhs) const;
@@ -331,7 +331,7 @@ class Cut : public ShortOutput<Cut> {
          * It does not matter if this and the given cut have different
          * sizes; in this case they will be considered different.
          *
-         * @param rhs the cut to compare with this.
+         * \param rhs the cut to compare with this.
          * @return \c true if and only if this and the given cut are different.
          */
         bool operator != (const Cut& rhs) const;
@@ -357,7 +357,7 @@ class Cut : public ShortOutput<Cut> {
          * \exception InvalidArgument The given triangulation does not
          * have precisely size() top-dimensional simplices.
          *
-         * @param tri the triangulation to partition.
+         * \param tri the triangulation to partition.
          * @return the two resulting triangulations, one for each side
          * of the partition.
          */
@@ -391,7 +391,7 @@ class Cut : public ShortOutput<Cut> {
          * \exception FailedPrecondition This cut has all of its
          * top-dimensional simplices on the same side.
          *
-         * @param pairing the facet pairing to partition.
+         * \param pairing the facet pairing to partition.
          * @return the two resulting facet pairings, one for each side
          * of the partition.
          */
@@ -483,7 +483,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * \nopython Use str() instead.
          *
-         * @param out the output stream to which to write.
+         * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 };
@@ -494,8 +494,8 @@ class Cut : public ShortOutput<Cut> {
  * This global routine simply calls Cut::swap(); it is provided so that
  * Cut meets the C++ Swappable requirements.
  *
- * @param a the first cut whose contents should be swapped.
- * @param b the second cut whose contents should be swapped.
+ * \param a the first cut whose contents should be swapped.
+ * \param b the second cut whose contents should be swapped.
  *
  * \ingroup triangulation
  */

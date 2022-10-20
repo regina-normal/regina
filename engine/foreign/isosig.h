@@ -92,12 +92,12 @@ class Container;
  * cannot use the Python version of this function with triangulations of
  * dimension 5 or higher).
  *
- * @param filename the name of the text file from which to read.
- * @param colSigs the column of the text file containing the signatures.
- * @param colLabels the column of the text file containing the packet labels
+ * \param filename the name of the text file from which to read.
+ * \param colSigs the column of the text file containing the signatures.
+ * \param colLabels the column of the text file containing the packet labels
  * for the resulting knots or triangulations.  If this is negative then the
  * signatures themselves will be used as packet labels.
- * @param ignoreLines the number of lines at the beginning of the text
+ * \param ignoreLines the number of lines at the beginning of the text
  * file that should be ignored completely.
  * @return a new container as described above, or \c null if an I/O error
  * occurred whilst reading the given file.

@@ -67,7 +67,7 @@ struct Base64SigEncoding {
      *
      * The inverse to this routine is encodeSingle().
      *
-     * @param c a base64 character, which must be one of the 64 printable
+     * \param c a base64 character, which must be one of the 64 printable
      * characters described in the class notes.
      * @return the corresponding integer, which will be between 0 and 63
      * inclusive.
@@ -89,7 +89,7 @@ struct Base64SigEncoding {
      *
      * The inverse to this routine is decodeSingle().
      *
-     * @param c an integer between 0 and 63 inclusive.
+     * \param c an integer between 0 and 63 inclusive.
      * @return the corresponding printable base64 character.
      */
     static constexpr char encodeSingle(unsigned c) {
@@ -131,9 +131,9 @@ struct Base64SigEncoding {
      * \tparam IntType a native C++ integer type, such as \c uint8_t, or
      * \c unsigned, or <tt>long long</tt>.
      *
-     * @param s the string that resulting characters should be appended to.
-     * @param val the integer to encode.
-     * @param nChars the number of base64 characters to use.
+     * \param s the string that resulting characters should be appended to.
+     * \param val the integer to encode.
+     * \param nChars the number of base64 characters to use.
      */
     template <typename IntType>
     static void encodeInt(std::string& s, IntType val, unsigned nChars) {
@@ -164,9 +164,9 @@ struct Base64SigEncoding {
      * assumed that the programmer has chosen an integer type large enough
      * to contain whatever values they expect to read.
      *
-     * @param s the string from which the encoded base64 characters
+     * \param s the string from which the encoded base64 characters
      * should be read.
-     * @param nChars the number of base64 characters to read.
+     * \param nChars the number of base64 characters to read.
      * @return the native integer that was encoded.
      */
     template <typename IntType>
@@ -190,11 +190,11 @@ struct Base64SigEncoding {
      * \nopython Instead you can use the variant of this routine that takes
      * the trits as a fixed-size array.
      *
-     * @param trits an input iterator pointing to the first trit to encode;
+     * \param trits an input iterator pointing to the first trit to encode;
      * it must be possible to read and advance this iterator at least
      * \a nTrits times.  Each trit will be cast to a \c uint8_t, and must take
      * the value 0, 1 or 2.
-     * @param nTrits the number of trits to encode; this must be at most 3.
+     * \param nTrits the number of trits to encode; this must be at most 3.
      * @return the resulting printable base64 character.
      */
     template <typename InputIterator>
@@ -222,7 +222,7 @@ struct Base64SigEncoding {
      * \tparam nTrits the number of trits to encode; this must be between
      * 0 and 3 inclusive.
      *
-     * @param trits the array of trits to encode.  Each trit must take
+     * \param trits the array of trits to encode.  Each trit must take
      * the value 0, 1 or 2.
      * @return the resulting printable base64 character.
      */
@@ -252,8 +252,8 @@ struct Base64SigEncoding {
      * \nopython Instead you can use the variant of this routine that takes
      * one argument and returns a fixed-size array.
      *
-     * @param c the base64 character to decode.
-     * @param result an output iterator pointing to the location where the
+     * \param c the base64 character to decode.
+     * \param result an output iterator pointing to the location where the
      * resulting trits will be stored; it must be possible to write and advance
      * this iterator at least three times.  Each trit will be written as a
      * \c uint8_t.
@@ -273,7 +273,7 @@ struct Base64SigEncoding {
      * The inverse to this routine is encodeTrits(); see that routine
      * for details of the encoding.
      *
-     * @param c the base64 character to decode.
+     * \param c the base64 character to decode.
      * @return an array containing the three trits that had been
      * encoded in the given base64 character.
      */

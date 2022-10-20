@@ -61,7 +61,7 @@ namespace regina {
  * It does not use modular arithmetic to control the intermediate
  * coefficient explosion.
  *
- * @param matrix the matrix to transform.
+ * \param matrix the matrix to transform.
  *
  * \ingroup maths
  */
@@ -98,15 +98,15 @@ void smithNormalForm(MatrixInt& matrix);
  * passed may be of any size or may be uninitialised; upon return they
  * will both be square with side length matrix.rows().
  *
- * @param matrix the original matrix to put into Smith Normal Form (this
+ * \param matrix the original matrix to put into Smith Normal Form (this
  * need not be square).  When the algorithm terminates, this matrix \e is
  * in its Smith Normal Form.
- * @param rowSpaceBasis used to return a change of basis matrix (see
+ * \param rowSpaceBasis used to return a change of basis matrix (see
  * above for details).
- * @param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
- * @param colSpaceBasis used to return a change of basis matrix (see
+ * \param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
+ * \param colSpaceBasis used to return a change of basis matrix (see
  * above for details).
- * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
+ * \param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
  *
  * \ingroup maths
  */
@@ -143,15 +143,15 @@ void smithNormalForm(MatrixInt& matrix,
  * passed may be of any size or may be uninitialised; upon return they
  * will both be square with side length matrix.rows().
  *
- * @param matrix the original matrix to put into Smith Normal Form (this
+ * \param matrix the original matrix to put into Smith Normal Form (this
  * need not be square).  When the algorithm terminates, this matrix \e is
  * in its Smith Normal Form.
- * @param rowSpaceBasis used to return a change of basis matrix (see
+ * \param rowSpaceBasis used to return a change of basis matrix (see
  * above for details).
- * @param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
- * @param colSpaceBasis used to return a change of basis matrix (see
+ * \param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
+ * \param colSpaceBasis used to return a change of basis matrix (see
  * above for details).
- * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
+ * \param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
  *
  * \author Ryan Budney
  *
@@ -174,7 +174,7 @@ void metricalSmithNormalForm(MatrixInt& matrix,
  * That is, although we never divide, we act as though we could if we
  * wanted to.
  *
- * @param matrix the matrix to examine and rearrange.
+ * \param matrix the matrix to examine and rearrange.
  * @return the rank of the given matrix.
  *
  * \ingroup maths
@@ -210,9 +210,9 @@ size_t rowBasis(MatrixInt& matrix);
  * \pre The matrix \a complement is a square matrix, whose size is equal
  * to the number of columns in \a input.
  *
- * @param input the input matrix whose row space we will describe; this
+ * \param input the input matrix whose row space we will describe; this
  * matrix will be changed (though only by swapping rows).
- * @param complement the square matrix that will be re-filled with the
+ * \param complement the square matrix that will be re-filled with the
  * "incremental" basis for the orthogonal complement of \a input.
  * @return the rank of the given matrix \a input.
  *
@@ -267,10 +267,10 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  * \pre Both \a R and \a Ri are square matrices with side length M.columns(),
  * and these matrices are inverses of each other.
  *
- * @param M the matrix to reduce.
- * @param R used to return the row-reduction matrix, as described above.
- * @param Ri used to return the inverse of \a R.
- * @param rowList the rows to pay attention to.  This list must contain
+ * \param M the matrix to reduce.
+ * \param R used to return the row-reduction matrix, as described above.
+ * \param Ri used to return the inverse of \a R.
+ * \param rowList the rows to pay attention to.  This list must contain
  * distinct integers, all between 0 and M.rows()-1 inclusive.  The
  * integers may appear in any order (though changing the order will
  * change the resulting column echelon form).  For a "classical" column
@@ -300,9 +300,9 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
  * above) is some rank \a n lattice in Z^n.  This algorithm finds and
  * returns a basis for the lattice.
  *
- * @param hom the matrix representing the homomorphism from Z^n to Z^k;
+ * \param hom the matrix representing the homomorphism from Z^n to Z^k;
  * this must be a \a k by \a n matrix.
- * @param sublattice a list of length \a k describing the sublattice of Z^k;
+ * \param sublattice a list of length \a k describing the sublattice of Z^k;
  * the elements of this list must be the non-negative integers
  * \a p1, ..., \a pk as described above.
  * @return a new matrix whose columns are a basis for the preimage lattice.
@@ -331,9 +331,9 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
  * \pre The list p1, p2, ..., pn is a list of invariant factors,
  * which means that p1|p2, ..., p{n-1}|pn.
  *
- * @param input the n-by-n matrix \a A, which must be a lift of a genuine
+ * \param input the n-by-n matrix \a A, which must be a lift of a genuine
  * automorphism as described above.
- * @param invF the list p1, p2, ..., pn.
+ * \param invF the list p1, p2, ..., pn.
  * @return the inverse automorphism, also described as an n-by-n matrix
  * as per the discussion above.
  *

@@ -88,8 +88,8 @@ class FacePair {
          * \pre The two given face numbers must be distinct integers
          * between 0 and 3 inclusive.
          *
-         * @param first the first face number in the new pair.
-         * @param second the second face number in the new pair.
+         * \param first the first face number in the new pair.
+         * \param second the second face number in the new pair.
          */
         FacePair(int first, int second);
         /**
@@ -148,42 +148,42 @@ class FacePair {
         /**
          * Sets this face pair to be a copy of the given pair.
          *
-         * @param cloneMe the face pair to clone.
+         * \param cloneMe the face pair to clone.
          * @return a reference to this face pair.
          */
         FacePair& operator = (const FacePair& cloneMe) = default;
         /**
          * Determines if this and the given face pair are equal.
          *
-         * @param other the pair to compare with this.
+         * \param other the pair to compare with this.
          * @return \c true if and only if this and the given pair are equal.
          */
         bool operator == (const FacePair& other) const;
         /**
          * Determines if this and the given face pair are not equal.
          *
-         * @param other the pair to compare with this.
+         * \param other the pair to compare with this.
          * @return \c true if and only if this and the given pair are not equal.
          */
         bool operator != (const FacePair& other) const;
         /**
          * Determines if this is less than the given face pair.
          *
-         * @param other the pair to compare with this.
+         * \param other the pair to compare with this.
          * @return \c true if and only if this is less than \a other.
          */
         bool operator < (const FacePair& other) const;
         /**
          * Determines if this is greater than the given face pair.
          *
-         * @param other the pair to compare with this.
+         * \param other the pair to compare with this.
          * @return \c true if and only if this is greater than \a other.
          */
         bool operator > (const FacePair& other) const;
         /**
          * Determines if this is less than or equal to the given face pair.
          *
-         * @param other the pair to compare with this.
+         * \param other the pair to compare with this.
          * @return \c true if and only if this is less than or
          * equal to \a other.
          */
@@ -191,7 +191,7 @@ class FacePair {
         /**
          * Determines if this is greater than or equal to the given face pair.
          *
-         * @param other the pair to compare with this.
+         * \param other the pair to compare with this.
          * @return \c true if and only if this is greater than or
          * equal to \a other.
          */
@@ -298,8 +298,8 @@ class FacePair {
 /**
  * Writes the given face pair to the given output stream.
  *
- * @param out the output stream to which to write.
- * @param pair the face pair to write.
+ * \param out the output stream to which to write.
+ * \param pair the face pair to write.
  * @return a reference to \a out.
  *
  * \ingroup triangulation

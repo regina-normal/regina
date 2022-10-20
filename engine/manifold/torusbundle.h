@@ -95,7 +95,7 @@ class TorusBundle : public Manifold {
          *
          * \pre The given matrix has determinant +1 or -1.
          *
-         * @param monodromy describes precisely how the upper and lower
+         * \param monodromy describes precisely how the upper and lower
          * torus boundaries are identified.  See the class notes for details.
          */
         TorusBundle(const Matrix2& monodromy);
@@ -114,10 +114,10 @@ class TorusBundle : public Manifold {
          * \pre The monodromy matrix formed from the given parameters
          * has determinant +1 or -1.
          *
-         * @param mon00 the (0,0) element of the monodromy matrix.
-         * @param mon01 the (0,1) element of the monodromy matrix.
-         * @param mon10 the (1,0) element of the monodromy matrix.
-         * @param mon11 the (1,1) element of the monodromy matrix.
+         * \param mon00 the (0,0) element of the monodromy matrix.
+         * \param mon01 the (0,1) element of the monodromy matrix.
+         * \param mon10 the (1,0) element of the monodromy matrix.
+         * \param mon11 the (1,1) element of the monodromy matrix.
          */
         TorusBundle(long mon00, long mon01, long mon10, long mon11);
         /**
@@ -143,7 +143,7 @@ class TorusBundle : public Manifold {
         /**
          * Swaps the contents of this and the given torus bundle.
          *
-         * @param other the torus bundle whose contents should be swapped
+         * \param other the torus bundle whose contents should be swapped
          * with this.
          */
         void swap(TorusBundle& other) noexcept;
@@ -157,7 +157,7 @@ class TorusBundle : public Manifold {
          * same torus bundle using two different monodromies, they will
          * be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
+         * \param compare the presentation with which this will be compared.
          * @return \c true if and only if this and the given object contain
          * identical presentations of the same torus bundle.
          */
@@ -172,7 +172,7 @@ class TorusBundle : public Manifold {
          * same torus bundle using two different monodromies, they will
          * be treated as not equal by this routine.
          *
-         * @param compare the presentation with which this will be compared.
+         * \param compare the presentation with which this will be compared.
          * @return \c true if and only if this and the given object do not
          * contain identical presentations of the same torus bundle.
          */
@@ -247,8 +247,8 @@ class TorusBundle : public Manifold {
          *
          * \pre Both matrices consist entirely of non-negative elements.
          *
-         * @param m1 the first monodromy matrix to examine.
-         * @param m2 the second monodromy matrix to examine.
+         * \param m1 the first monodromy matrix to examine.
+         * \param m2 the second monodromy matrix to examine.
          * @return \c true if \a m1 is deemed to be more pleasing than \a m2,
          * or \c false if either the matrices are equal or \a m2 is more
          * pleasing than \a m1.
@@ -262,8 +262,8 @@ class TorusBundle : public Manifold {
  * This global routine simply calls TorusBundle::swap(); it is provided so
  * that TorusBundle meets the C++ Swappable requirements.
  *
- * @param a the first torus bundle whose contents should be swapped.
- * @param b the second torus bundle whose contents should be swapped.
+ * \param a the first torus bundle whose contents should be swapped.
+ * \param b the second torus bundle whose contents should be swapped.
  *
  * \ingroup manifold
  */
