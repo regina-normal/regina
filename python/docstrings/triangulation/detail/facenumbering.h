@@ -111,7 +111,7 @@ permutation.
 
 In other words, this routine identifies which *subdim*-face number
 within a *dim*-dimensional simplex spans vertices ``vertices[0, ...,
-*subdim*]``.
+subdim]``.
 
 Parameter ``vertices``:
     a permutation whose first (*subdim* + 1) elements represent some
