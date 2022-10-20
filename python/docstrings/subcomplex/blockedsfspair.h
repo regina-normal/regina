@@ -160,7 +160,7 @@ Parameter ``tri``:
     the triangulation to examine.
 
 Returns:
-    a structure containing details of the blocked pair, or ``null`` if
+    a structure containing details of the blocked pair, or ``None`` if
     the given triangulation is not of this form.)doc";
 
 // Docstring regina::python::doc::BlockedSFSPair_::region

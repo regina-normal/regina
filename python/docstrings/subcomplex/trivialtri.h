@@ -100,7 +100,7 @@ Parameter ``comp``:
     the triangulation component to examine.
 
 Returns:
-    a structure representing the trivial triangulation, or ``null`` if
+    a structure representing the trivial triangulation, or ``None`` if
     the given component is not one of the triangulations recognised by
     this class.)doc";
 

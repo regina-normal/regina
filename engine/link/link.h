@@ -3861,7 +3861,7 @@ class Link :
          *
          * Each individual token should \e not contain any whitespace;
          * otherwise this routine may fail to parse the token(s) and
-         * could return \c null as a result.
+         * could throw an exception as a result.
          *
          * \pre \a Iterator is a random access iterator type.
          *

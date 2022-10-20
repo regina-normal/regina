@@ -304,6 +304,8 @@ def process_comment(comment):
 
     s = s.replace('``true``', '``True``')
     s = s.replace('``false``', '``False``')
+    s = s.replace('``null``', '``None``')
+    s = s.replace('``nullptr``', '``None``')
 
     # Re-flow text
     wrapper = textwrap.TextWrapper()

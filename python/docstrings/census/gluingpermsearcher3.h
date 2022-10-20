@@ -443,7 +443,7 @@ Parameter ``data``:
     the tagged data from which to reconstruct a search manager.
 
 Returns:
-    the new search manager, or ``null`` if the data in the given
+    the new search manager, or ``None`` if the data in the given
     string was invalid or incorrectly formatted.)doc";
 
 // Docstring regina::python::doc::GluingPermSearcher_::isComplete

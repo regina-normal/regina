@@ -103,7 +103,7 @@ boundary component if the invalid vertex does not already belong to
 some real boundary component.
 
 Returns:
-    the boundary component containing this face, or ``null`` if this
+    the boundary component containing this face, or ``None`` if this
     face does not lie entirely within the boundary of the
     triangulation.)doc";
 

@@ -578,7 +578,7 @@ Parameter ``nThreads``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Parameter ``action``:
     a function (or other callable object) to call for each
@@ -730,7 +730,7 @@ Parameter ``nThreads``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Returns:
     ``True`` if and only if the triangulation was successfully

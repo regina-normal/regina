@@ -86,7 +86,7 @@ R"doc(Determines if this and the given script are identical.
 Here *identical* means that both scripts contain exactly the same
 text, and they have the same set of variables. For two variables to be
 considered the same, they must have the same variable name, and their
-values must be either both ``null`` or both pointers to the same
+values must be either both ``None`` or both pointers to the same
 packet.
 
 Parameter ``other``:
@@ -102,7 +102,7 @@ R"doc(Determines if this and the given script are not identical.
 Here *identical* means that both scripts contain exactly the same
 text, and they have the same set of variables. For two variables to be
 considered the same, they must have the same variable name, and their
-values must be either both ``null`` or both pointers to the same
+values must be either both ``None`` or both pointers to the same
 packet.
 
 Parameter ``other``:
@@ -340,7 +340,7 @@ Returns:
 // Docstring regina::python::doc::Script_::variableValue
 static const char *variableValue =
 R"doc(Returns the value of the requested variable associated with this
-script. Variables may take the value ``null``.
+script. Variables may take the value ``None``.
 
 Parameter ``index``:
     the index of the requested variable; this must be between 0 and
@@ -352,9 +352,9 @@ Returns:
 // Docstring regina::python::doc::Script_::variableValue_2
 static const char *variableValue_2 =
 R"doc(Returns the value of the variable stored with the given name.
-Variables may take the value ``null``.
+Variables may take the value ``None``.
 
-If no variable is stored with the given name, then ``null`` will
+If no variable is stored with the given name, then ``None`` will
 likewise be returned.
 
 Parameter ``name``:

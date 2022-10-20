@@ -158,7 +158,7 @@ Parameter ``comp``:
 
 Returns:
     a structure containing details of the layered lens space, or
-    ``null`` if the given component is not a layered lens space.)doc";
+    ``None`` if the given component is not a layered lens space.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::swap
 static const char *swap =

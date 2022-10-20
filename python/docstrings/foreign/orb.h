@@ -21,7 +21,7 @@ read from the second line of the Orb / Casson file. The first line of
 the Orb / Casson file must simply be: ``% orb``
 
 If the file could not be read or if the data was not in the correct
-format, ``null`` will be returned.
+format, ``None`` will be returned.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -34,7 +34,7 @@ Parameter ``filename``:
 
 Returns:
     a new triangulation packet containing the data read from the Orb /
-    Casson file, or ``null`` on error.
+    Casson file, or ``None`` on error.
 
 Author:
     Ryan Budney, also with code from Damien Heard)doc";

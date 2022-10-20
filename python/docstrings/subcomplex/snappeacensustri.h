@@ -147,7 +147,7 @@ Parameter ``comp``:
 
 Returns:
     a structure representing the small SnapPea census triangulation,
-    or ``null`` if the given component is not one of the few SnapPea
+    or ``None`` if the given component is not one of the few SnapPea
     census triangulations recognised by this routine.)doc";
 
 // Docstring regina::python::doc::SnapPeaCensusTri_::section

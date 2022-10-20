@@ -948,7 +948,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * @param out the output stream to which the XML should be written.
          * @param format indicates which of Regina's XML file formats to write.
-         * @param list the enclosing normal hypersurface list.  Currently this
+         * @param list the enclosing normal surface list.  Currently this
          * is only relevant when writing to the older REGINA_XML_GEN_2 format;
          * it will be ignored (and may be \c null) for newer file formats.
          */

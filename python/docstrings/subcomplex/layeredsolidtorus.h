@@ -225,7 +225,7 @@ Parameter ``comp``:
 
 Returns:
     a structure containing details of the layered solid torus, or
-    ``null`` if the given component is not a layered solid torus.)doc";
+    ``None`` if the given component is not a layered solid torus.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::recogniseFromBase
 static const char *recogniseFromBase =
@@ -247,7 +247,7 @@ Parameter ``tet``:
 
 Returns:
     a structure containing details of the layered solid torus, or
-    ``null`` if the given tetrahedron is not the base of a layered
+    ``None`` if the given tetrahedron is not the base of a layered
     solid torus.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::recogniseFromTop
@@ -285,7 +285,7 @@ Parameter ``topFace2``:
 
 Returns:
     a structure containing details of the layered solid torus, or
-    ``null`` if the given tetrahedron with its two faces do not form
+    ``None`` if the given tetrahedron with its two faces do not form
     the top level of a layered solid torus.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::size

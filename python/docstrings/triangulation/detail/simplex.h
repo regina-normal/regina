@@ -55,7 +55,7 @@ adjacentGluing(*facet*)[*facet*].
 Precondition:
     The given facet of this simplex has some adjacent simplex
     (possibly this one) glued to it. In other words,
-    adjacentSimplex(*facet*) is not ``null``.
+    adjacentSimplex(*facet*) is not ``None``.
 
 Parameter ``facet``:
     the facet of this simplex that we are examining. This must be
@@ -85,7 +85,7 @@ mapping in the form of a permutation *p*, where:
 Precondition:
     The given facet of this simplex has some adjacent simplex
     (possibly this one) glued to it. In other words,
-    adjacentSimplex(*facet*) is not ``null``.
+    adjacentSimplex(*facet*) is not ``None``.
 
 Parameter ``facet``:
     the facet of this simplex that we are examining. This must be
@@ -100,14 +100,14 @@ constexpr const char *adjacentSimplex =
 R"doc(Returns the adjacent simplex that is glued to the given facet of this
 simplex. If there is no adjacent simplex (i.e., the given facet lies
 on the triangulation boundary), then this routine will return
-``null``.
+``None``.
 
 Parameter ``facet``:
     the facet of this simplex to examine; this must be between 0 and
     *dim* inclusive.
 
 Returns:
-    the adjacent simplex glued to the given facet, or ``null`` if the
+    the adjacent simplex glued to the given facet, or ``None`` if the
     given facet lies on the boundary.)doc";
 
 // Docstring regina::python::doc::detail::SimplexBase_::component
@@ -500,7 +500,7 @@ Parameter ``myFacet``:
 
 Returns:
     the simplex that was originally glued to the given facet of this
-    simplex, or ``null`` if this was already a boundary facet.)doc";
+    simplex, or ``None`` if this was already a boundary facet.)doc";
 
 // Docstring regina::python::doc::detail::SimplexBase_::vertex
 constexpr const char *vertex =

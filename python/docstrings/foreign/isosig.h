@@ -30,7 +30,7 @@ assigned labels according to the parameter *colLabels*.
 If any signatures are invalid, these will be recorded in an additional
 text packet that will be the last child of the returned container.
 
-If an I/O error occurred while trying to read the given file, ``null``
+If an I/O error occurred while trying to read the given file, ``None``
 will be returned.
 
 In its simplest form, the text file can simply contain one signature
@@ -78,7 +78,7 @@ Parameter ``ignoreLines``:
     be ignored completely.
 
 Returns:
-    a new container as described above, or ``null`` if an I/O error
+    a new container as described above, or ``None`` if an I/O error
     occurred whilst reading the given file.)doc";
 
 } // namespace regina::python::doc

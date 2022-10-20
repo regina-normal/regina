@@ -97,7 +97,7 @@ Parameter ``tri2``:
     the second triangle to examine.
 
 Returns:
-    a structure containing details of the pillow 2-sphere, or ``null``
+    a structure containing details of the pillow 2-sphere, or ``None``
     if the given triangles do not form a pillow 2-sphere.)doc";
 
 // Docstring regina::python::doc::PillowTwoSphere_::triangle

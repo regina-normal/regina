@@ -181,7 +181,7 @@ Parameter ``useVertexRoles``:
 
 Returns:
     a structure containing details of the solid torus with the given
-    tetrahedron as tetrahedron 0, or ``null`` if the given tetrahedron
+    tetrahedron as tetrahedron 0, or ``None`` if the given tetrahedron
     is not part of a spiralled solid torus with the given vertex
     roles.)doc";
 

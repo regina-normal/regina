@@ -676,7 +676,7 @@ variable name instead of ``x``.
 
 Parameter ``variable``:
     the symbol to use for the variable in this polynomial. This may be
-    ``null``, in which case the default variable ``x`` will be used.
+    ``None``, in which case the default variable ``x`` will be used.
 
 Returns:
     this polynomial as a human-readable string.)doc";
@@ -708,7 +708,7 @@ The string is encoded in UTF-8.
 
 Parameter ``variable``:
     the symbol to use for the variable in this polynomial. This may be
-    ``null``, in which case the default variable ``x`` will be used.
+    ``None``, in which case the default variable ``x`` will be used.
 
 Returns:
     this polynomial as a unicode-enabled human-readable string.)doc";

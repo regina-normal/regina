@@ -134,7 +134,7 @@ inline constexpr char base64Spare[] = "_-.";
  *
  * The length of the output buffer is passed as the argument \a outlen.
  * If the number of base64 characters required is less than \a outlen,
- * a terminating \c null will be written to the end of the output sequence.
+ * a terminating null will be written to the end of the output sequence.
  * If the number of base64 characters is \a outlen or greater, this
  * routine will output as many base64 characters as possible, up to a
  * maximum of \a outlen.

@@ -311,7 +311,7 @@ Parameter ``whichAnnulus``:
     this must be between 0 and countAnnuli()-1 inclusive.
 
 Returns:
-    the other block adjacent along this annulus, or ``null`` if there
+    the other block adjacent along this annulus, or ``None`` if there
     is no adjacent block listed.)doc";
 
 // Docstring regina::python::doc::SatBlock_::adjacentReflected

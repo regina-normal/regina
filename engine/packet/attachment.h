@@ -158,8 +158,8 @@ class Attachment : public Packet {
          *
          * The \a data array must contain a block of binary data, of
          * \a size bytes.  There is no notion of null termination:
-         * the data block may contain \c null bytes within it, and does
-         * not need to be terminated by a \c null byte at the end.
+         * the data block may contain null bytes within it, and does
+         * not need to be terminated by a null byte at the end.
          *
          * The \a alloc argument shows if/how this packet claims ownership of
          * the data.  In particular, unless \a alloc is \a DEEP_COPY, this

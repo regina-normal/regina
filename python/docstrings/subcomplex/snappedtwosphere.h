@@ -101,7 +101,7 @@ Parameter ``tet2``:
 
 Returns:
     a structure containing details of the snapped 2-sphere, or
-    ``null`` if the given tetrahedra do not form a snapped 2-sphere.)doc";
+    ``None`` if the given tetrahedra do not form a snapped 2-sphere.)doc";
 
 // Docstring regina::python::doc::SnappedTwoSphere_::recognise_2
 static const char *recognise_2 =
@@ -129,7 +129,7 @@ Parameter ``ball2``:
 
 Returns:
     a structure containing details of the snapped 2-sphere, or
-    ``null`` if the given snapped 3-balls do not form a snapped
+    ``None`` if the given snapped 3-balls do not form a snapped
     2-sphere.)doc";
 
 // Docstring regina::python::doc::SnappedTwoSphere_::snappedBall

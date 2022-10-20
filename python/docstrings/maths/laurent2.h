@@ -602,11 +602,11 @@ variable names instead of ``x`` and ``y``.
     that variant is inherited from the Output class.
 
 Parameter ``varX``:
-    the symbol to use for the variable *x*. This may be ``null``, in
+    the symbol to use for the variable *x*. This may be ``None``, in
     which case the default symbol ``'x'`` will be used.
 
 Parameter ``varY``:
-    the symbol to use for the variable *y*. This may be ``null``, in
+    the symbol to use for the variable *y*. This may be ``None``, in
     which case the default symbol ``'y'`` will be used.
 
 Returns:
@@ -639,11 +639,11 @@ The string is encoded in UTF-8.
     arguments; that variant is inherited from the Output class.
 
 Parameter ``varX``:
-    the symbol to use for the variable *x*. This may be ``null``, in
+    the symbol to use for the variable *x*. This may be ``None``, in
     which case the default symbol ``'x'`` will be used.
 
 Parameter ``varY``:
-    the symbol to use for the variable *y*. This may be ``null``, in
+    the symbol to use for the variable *y*. This may be ``None``, in
     which case the default symbol ``'y'`` will be used.
 
 Returns:

@@ -159,7 +159,7 @@ Parameter ``tet``:
     the tetrahedron to examine as a potential 3-ball.
 
 Returns:
-    a structure containing details of the snapped 3-ball, or ``null``
+    a structure containing details of the snapped 3-ball, or ``None``
     if the given tetrahedron is not a snapped 3-ball.)doc";
 
 // Docstring regina::python::doc::SnappedBall_::swap

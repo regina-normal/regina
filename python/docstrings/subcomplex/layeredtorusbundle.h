@@ -226,7 +226,7 @@ Parameter ``tri``:
 
 Returns:
     a structure containing details of the layered torus bundle, or
-    ``null`` if the given triangulation is not a layered torus bundle.)doc";
+    ``None`` if the given triangulation is not a layered torus bundle.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::swap
 static const char *swap =

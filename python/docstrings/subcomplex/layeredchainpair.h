@@ -139,7 +139,7 @@ Parameter ``comp``:
 
 Returns:
     a structure containing details of the layered chain pair, or
-    ``null`` if the given component is not a layered chain pair.)doc";
+    ``None`` if the given component is not a layered chain pair.)doc";
 
 // Docstring regina::python::doc::LayeredChainPair_::swap
 static const char *swap =

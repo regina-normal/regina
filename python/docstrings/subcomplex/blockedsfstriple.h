@@ -231,7 +231,7 @@ Parameter ``tri``:
     the triangulation to examine.
 
 Returns:
-    a structure containing details of the blocked triple, or ``null``
+    a structure containing details of the blocked triple, or ``None``
     if the given triangulation is not of this form.)doc";
 
 // Docstring regina::python::doc::BlockedSFSTriple_::swap

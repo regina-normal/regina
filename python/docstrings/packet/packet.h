@@ -450,7 +450,7 @@ the left); this reversed test is defined as a member function of
 PacketShell.
 
 Parameter ``packet``:
-    the packet to test against; this may be ``null``.
+    the packet to test against; this may be ``None``.
 
 Parameter ``shell``:
     the packet shell to test against.
@@ -468,7 +468,7 @@ the left); this reversed test is defined as a member function of
 PacketShell.
 
 Parameter ``packet``:
-    the packet to test against; this may be ``null``.
+    the packet to test against; this may be ``None``.
 
 Parameter ``shell``:
     the packet shell to test against.
@@ -543,7 +543,7 @@ This uses Regina's native XML file format; it does not matter whether
 the XML file is compressed or uncompressed.
 
 If the file could not be opened or the top-level packet in the tree
-could not be read, this routine will return ``null``. If some packet
+could not be read, this routine will return ``None``. If some packet
 deeper within the tree could not be read then that particular packet
 (and its descendants, if any) will simply be ignored.
 
@@ -564,7 +564,7 @@ Parameter ``filename``:
     the pathname of the file to read from.
 
 Returns:
-    the packet tree read from file, or ``null`` on error.)doc";
+    the packet tree read from file, or ``None`` on error.)doc";
 
 namespace ChildIterator_ {
 
@@ -676,7 +676,7 @@ R"doc(Returns the packet that holds this data, if there is one.
 If this object is being held by a packet *p* of type PacketOf<Held>,
 then that packet *p* will be returned. Otherwise, if this is a
 "standalone" object of type Held, then this routine will return
-``null``.
+``None``.
 
 There is a special case when dealing with a packet *q* that holds a
 SnapPea triangulation. Here *q* is of type
@@ -685,7 +685,7 @@ PacketOf<SnapPeaTriangulation>, and it holds a Triangulation<3>
 from SnapPeaTriangulation, which in turn derives from
 Triangulation<3>. In this scenario:
 
-* calling Triangulation<3>::packet() will return ``null``, since there
+* calling Triangulation<3>::packet() will return ``None``, since there
   is no "direct" PacketOf<Triangulation<3>>;
 
 * calling SnapPeaTriangulation::packet() will return the enclosing
@@ -698,7 +698,7 @@ The function inAnyPacket() is specific to Triangulation<3>, and is not
 offered for other *Held* types.
 
 Returns:
-    the packet that holds this data, or ``null`` if this data is not
+    the packet that holds this data, or ``None`` if this data is not
     (directly) held by a packet.)doc";
 
 // Docstring regina::python::doc::PacketData_::packet_2
@@ -710,7 +710,7 @@ particular for how this functions operations in the special case of a
 packet that holds a SnapPea triangulation.
 
 Returns:
-    the packet that holds this data, or ``null`` if this data is not
+    the packet that holds this data, or ``None`` if this data is not
     (directly) held by a packet.)doc";
 
 }
@@ -775,7 +775,7 @@ childWasRemoved when this happens.
 The default implementation of this routine is to do nothing.
 
 Parameter ``packet``:
-    the packet being listened to, or ``null`` if this routine is being
+    the packet being listened to, or ``None`` if this routine is being
     called from within this packet's destructor.
 
 Parameter ``child``:
@@ -827,7 +827,7 @@ childWasRemoved when this happens.
 The default implementation of this routine is to do nothing.
 
 Parameter ``packet``:
-    the packet being listened to, or ``null`` if this routine is being
+    the packet being listened to, or ``None`` if this routine is being
     called from within this packet's destructor.
 
 Parameter ``child``:
@@ -1063,7 +1063,7 @@ This test is also available the other way around (with PacketShell on
 the right); this reversed test is defined as a global function.
 
 Parameter ``packet``:
-    the packet to test against; this may be ``null``.
+    the packet to test against; this may be ``None``.
 
 Returns:
     ``True`` if and only if this shell refers to the given packet.)doc";
@@ -1094,7 +1094,7 @@ This test is also available the other way around (with PacketShell on
 the right); this reversed test is defined as a global function.
 
 Parameter ``packet``:
-    the packet to test against; this may be ``null``.
+    the packet to test against; this may be ``None``.
 
 Returns:
     ``True`` if and only if this shell does not refer to the given
@@ -1360,7 +1360,7 @@ Note that any string tags associated with this packet will *not* be
 cloned.
 
 If this packet has no parent in the tree structure, no clone will be
-created and ``null`` will be returned.
+created and ``None`` will be returned.
 
 In Regina 6.0.1 and earlier, this function was called clone(). It was
 renamed in Regina 7.0 to emphasise that this is not just a deep copy,
@@ -1386,7 +1386,7 @@ Parameter ``end``:
     packet.
 
 Returns:
-    the newly inserted packet, or ``null`` if this packet has no
+    the newly inserted packet, or ``None`` if this packet has no
     parent.)doc";
 
 // Docstring regina::python::doc::Packet_::countChildren
@@ -1496,7 +1496,7 @@ Parameter ``label``:
     the label to search for.
 
 Returns:
-    the packet with the requested label, or ``null`` if there is no
+    the packet with the requested label, or ``None`` if there is no
     such packet.)doc";
 
 // Docstring regina::python::doc::Packet_::findPacketLabel_2
@@ -1509,7 +1509,7 @@ Parameter ``label``:
     the label to search for.
 
 Returns:
-    the packet with the requested label, or ``null`` if there is no
+    the packet with the requested label, or ``None`` if there is no
     such packet.)doc";
 
 // Docstring regina::python::doc::Packet_::firstChild
@@ -1519,7 +1519,7 @@ R"doc(Determines the first child of this packet in the tree structure.
 This routine takes small constant time.
 
 Returns:
-    the first child packet, or ``null`` if there is none.)doc";
+    the first child packet, or ``None`` if there is none.)doc";
 
 // Docstring regina::python::doc::Packet_::firstTreePacket
 static const char *firstTreePacket =
@@ -1535,7 +1535,7 @@ Parameter ``type``:
     the type of packet to search for.
 
 Returns:
-    the first such packet, or ``null`` if there are no packets of the
+    the first such packet, or ``None`` if there are no packets of the
     requested type.)doc";
 
 // Docstring regina::python::doc::Packet_::firstTreePacket_2
@@ -1552,7 +1552,7 @@ Parameter ``type``:
     the type of packet to search for.
 
 Returns:
-    the first such packet, or ``null`` if there are no packets of the
+    the first such packet, or ``None`` if there are no packets of the
     requested type.)doc";
 
 // Docstring regina::python::doc::Packet_::fullName
@@ -1658,7 +1658,7 @@ Parameter ``newChild``:
 
 Parameter ``prevChild``:
     the preexisting child of this packet after which *newChild* will
-    be inserted, or ``null`` if *newChild* is to be the first child of
+    be inserted, or ``None`` if *newChild* is to be the first child of
     this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::insertChildAfter
@@ -1691,7 +1691,7 @@ Parameter ``newChild``:
 
 Parameter ``prevChild``:
     the preexisting child of this packet after which *newChild* will
-    be inserted, or ``null`` if *newChild* is to be the first child of
+    be inserted, or ``None`` if *newChild* is to be the first child of
     this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::insertChildFirst
@@ -1805,7 +1805,7 @@ R"doc(Determines the last child of this packet in the tree structure.
 This routine takes small constant time.
 
 Returns:
-    the last child packet, or ``null`` if there is none.)doc";
+    the last child packet, or ``None`` if there is none.)doc";
 
 // Docstring regina::python::doc::Packet_::levelsDownTo
 static const char *levelsDownTo =
@@ -1932,7 +1932,7 @@ is the child of the parent that follows this packet.
 This routine takes small constant time.
 
 Returns:
-    the next sibling of this packet, or ``null`` if there is none.)doc";
+    the next sibling of this packet, or ``None`` if there is none.)doc";
 
 // Docstring regina::python::doc::Packet_::nextTreePacket
 static const char *nextTreePacket =
@@ -1945,7 +1945,7 @@ matriarch will be the first packet visited in a complete depth-first
 iteration.
 
 Returns:
-    the next packet, or ``null`` if this is the last packet in such an
+    the next packet, or ``None`` if this is the last packet in such an
     iteration.)doc";
 
 // Docstring regina::python::doc::Packet_::nextTreePacket_2
@@ -1959,7 +1959,7 @@ matriarch will be the first packet visited in a complete depth-first
 iteration.
 
 Returns:
-    the next packet, or ``null`` if this is the last packet in such an
+    the next packet, or ``None`` if this is the last packet in such an
     iteration.)doc";
 
 // Docstring regina::python::doc::Packet_::nextTreePacket_3
@@ -1973,7 +1973,7 @@ Parameter ``type``:
     the type of packet to search for.
 
 Returns:
-    the next such packet, or ``null`` if this is the last packet of
+    the next such packet, or ``None`` if this is the last packet of
     the requested type in such an iteration.)doc";
 
 // Docstring regina::python::doc::Packet_::nextTreePacket_4
@@ -1987,7 +1987,7 @@ Parameter ``type``:
     the type of packet to search for.
 
 Returns:
-    the next such packet, or ``null`` if this is the last packet of
+    the next such packet, or ``None`` if this is the last packet of
     the requested type in such an iteration.)doc";
 
 // Docstring regina::python::doc::Packet_::parent
@@ -1997,7 +1997,7 @@ R"doc(Determines the parent packet in the tree structure.
 This routine takes small constant time.
 
 Returns:
-    the parent packet, or ``null`` if there is none.)doc";
+    the parent packet, or ``None`` if there is none.)doc";
 
 // Docstring regina::python::doc::Packet_::prepend
 static const char *prepend =
@@ -2034,7 +2034,7 @@ This is the child of the parent that precedes this packet.
 This routine takes small constant time.
 
 Returns:
-    the previous sibling of this packet, or ``null`` if there is none.)doc";
+    the previous sibling of this packet, or ``None`` if there is none.)doc";
 
 // Docstring regina::python::doc::Packet_::removeAllTags
 static const char *removeAllTags =
@@ -2080,7 +2080,7 @@ routine is still safe to use: it will maintain a shared_ptr as a
 "guard" so that this packet is not inadvertently destroyed during the
 transfer.
 
-You may pass *newParent* as ``null``, in which case this routine
+You may pass *newParent* as ``None``, in which case this routine
 behaves in the same way as makeOrphan() (and is similarly safe to use
 even if there are no other shared pointers to this packet).
 
@@ -2241,7 +2241,7 @@ children, this routine is still safe to use: it will ensure there is
 always some shared_ptr to guard against any children being
 inadvertently destroyed during the transfer.
 
-You may pass *newParent* as ``null``, in which case this routine is
+You may pass *newParent* as ``None``, in which case this routine is
 equivalent to calling makeOrphan() on each child (and is similarly
 safe to use even if there are no other shared pointers to this
 packet).

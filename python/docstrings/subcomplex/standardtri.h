@@ -93,12 +93,12 @@ Returns:
 static const char *manifold =
 R"doc(Returns the 3-manifold represented by this triangulation, if such a
 recognition routine has been implemented. If the 3-manifold cannot be
-recognised then this routine will return ``null``.
+recognised then this routine will return ``None``.
 
 The details of which standard triangulations have 3-manifold
 recognition routines can be found in the notes for the corresponding
 subclasses of StandardTriangulation. The default implementation of
-this routine returns ``null``.
+this routine returns ``None``.
 
 It is expected that the number of triangulations whose underlying
 3-manifolds can be recognised will grow between releases.
@@ -135,7 +135,7 @@ Parameter ``component``:
 
 Returns:
     the details of the standard triangulation if the given component
-    is recognised, or ``null`` otherwise.)doc";
+    is recognised, or ``None`` otherwise.)doc";
 
 // Docstring regina::python::doc::StandardTriangulation_::recognise_2
 static const char *recognise_2 =
@@ -157,7 +157,7 @@ Parameter ``tri``:
 
 Returns:
     the details of the standard triangualation if the given
-    triangulation is recognised, or ``null`` otherwise.)doc";
+    triangulation is recognised, or ``None`` otherwise.)doc";
 
 // Docstring regina::python::doc::StandardTriangulation_::texName
 static const char *texName =

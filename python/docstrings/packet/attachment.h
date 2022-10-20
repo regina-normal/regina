@@ -112,8 +112,8 @@ R"doc(Creates a new attachment containing the given binary data.
 
 The *data* array must contain a block of binary data, of *size* bytes.
 There is no notion of null termination: the data block may contain
-``null`` bytes within it, and does not need to be terminated by a
-``null`` byte at the end.
+null bytes within it, and does not need to be terminated by a null
+byte at the end.
 
 The *alloc* argument shows if/how this packet claims ownership of the
 data. In particular, unless *alloc* is *DEEP_COPY*, this packet will
@@ -132,12 +132,12 @@ Python:
     policy is to make a deep copy.
 
 Parameter ``data``:
-    the block of binary data that forms the attachment, or ``null`` if
+    the block of binary data that forms the attachment, or ``None`` if
     no attachment is to be stored.
 
 Parameter ``size``:
     the number of bytes in this block of binary data; if actual data
-    is passed (i.e., *data* is not ``null``) then this must be
+    is passed (i.e., *data* is not ``None``) then this must be
     strictly positive.
 
 Parameter ``alloc``:
@@ -172,7 +172,7 @@ R"doc(Returns a pointer to the block of raw data that forms this attachment.
 The number of bytes in this block can be found by calling size().
 
 If this packet does not currently hold a non-empty attachment (i.e.,
-if isNull() returns ``True``), then this routine will return ``null``.
+if isNull() returns ``True``), then this routine will return ``None``.
 
 Python:
     This routine returns a Python ``bytes`` object. Unlike the C++
@@ -269,11 +269,11 @@ Python:
 
 Parameter ``data``:
     the block of binary data that forms the new attachment, or
-    ``null`` if no attachment is to be stored.
+    ``None`` if no attachment is to be stored.
 
 Parameter ``size``:
     the number of bytes in this new block of binary data; if actual
-    data is passed (i.e., *data* is not ``null``) then this must be
+    data is passed (i.e., *data* is not ``None``) then this must be
     strictly positive.
 
 Parameter ``alloc``:

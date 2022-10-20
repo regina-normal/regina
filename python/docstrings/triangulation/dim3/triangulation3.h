@@ -397,7 +397,7 @@ torus along a given curve.
 
 The boundary component to be filled should be passed as the argument
 *bc*; if the triangulation has exactly one boundary component then you
-may omit *bc* (i.e., pass ``null``), and the (unique) boundary
+may omit *bc* (i.e., pass ``None``), and the (unique) boundary
 component will be inferred.
 
 If the boundary component cannot be inferred, and/or if the selected
@@ -435,7 +435,7 @@ Parameter ``cuts2``:
 
 Parameter ``bc``:
     the boundary component to fill. If the triangulation has precisely
-    one boundary component then this may be ``null``.
+    one boundary component then this may be ``None``.
 
 Returns:
     ``True`` if the boundary component was filled successfully, or
@@ -998,14 +998,14 @@ triangulation packet *p*, then this routine will return *p*.
 The difference is when this triangulation is held "indirectly" by a
 SnapPea triangulation packet *q* (i.e., this is the inherited
 Triangulation<3> data belonging to the SnapPea triangulation). In such
-a scenario, Triangulation<3>::packet() will return ``null`` (since
+a scenario, Triangulation<3>::packet() will return ``None`` (since
 there is no "direct" 3-dimensional triangulation packet), but
 inAnyPacket() will return *q* (since the triangulation is still
 "indirectly" held by a different type of packet).
 
 Returns:
     the packet that holds this data (directly or indirectly), or
-    ``null`` if this data is not held by either a 3-dimensional
+    ``None`` if this data is not held by either a 3-dimensional
     triangulation packet or a SnapPea triangulation packet.)doc";
 
 // Docstring regina::python::doc::Triangulation_::inAnyPacket_2
@@ -1020,14 +1020,14 @@ triangulation packet *p*, then this routine will return *p*.
 The difference is when this triangulation is held "indirectly" by a
 SnapPea triangulation packet *q* (i.e., this is the inherited
 Triangulation<3> data belonging to the SnapPea triangulation). In such
-a scenario, Triangulation<3>::packet() will return ``null`` (since
+a scenario, Triangulation<3>::packet() will return ``None`` (since
 there is no "direct" 3-dimensional triangulation packet), but
 inAnyPacket() will return *q* (since the triangulation is still
 "indirectly" held by a different type of packet).
 
 Returns:
     the packet that holds this data (directly or indirectly), or
-    ``null`` if this data is not held by either a 3-dimensional
+    ``None`` if this data is not held by either a 3-dimensional
     triangulation packet or a SnapPea triangulation packet.)doc";
 
 // Docstring regina::python::doc::Triangulation_::insertLayeredSolidTorus
@@ -1227,10 +1227,10 @@ Triangulation<3> is not polymorphic.
 
 If this object in fact belongs to a SnapPeaTriangulation *t* (through
 its inherited Triangulation<3> interface), then this routine will
-return *t*. Otherwise it will return ``null``.
+return *t*. Otherwise it will return ``None``.
 
 Returns:
-    the SnapPea triangulation that holds this data, or ``null`` if
+    the SnapPea triangulation that holds this data, or ``None`` if
     this data is not part of a SnapPea triangulation.)doc";
 
 // Docstring regina::python::doc::Triangulation_::isSnapPea_2
@@ -1243,10 +1243,10 @@ Triangulation<3> is not polymorphic.
 
 If this object in fact belongs to a SnapPeaTriangulation *t* (through
 its inherited Triangulation<3> interface), then this routine will
-return *t*. Otherwise it will return ``null``.
+return *t*. Otherwise it will return ``None``.
 
 Returns:
-    the SnapPea triangulation that holds this data, or ``null`` if
+    the SnapPea triangulation that holds this data, or ``None`` if
     this data is not part of a SnapPea triangulation.)doc";
 
 // Docstring regina::python::doc::Triangulation_::isSolidTorus
@@ -2238,7 +2238,7 @@ Parameter ``e``:
 static const char *puncture =
 R"doc(Punctures this manifold by removing a 3-ball from the interior of the
 given tetrahedron. If no tetrahedron is specified (i.e., the
-tetrahedron pointer is ``null``), then the puncture will be taken from
+tetrahedron pointer is ``None``), then the puncture will be taken from
 the interior of tetrahedron 0.
 
 The puncture will not meet the boundary of the tetrahedron, so nothing
@@ -2267,7 +2267,7 @@ Precondition:
 
 Parameter ``tet``:
     the tetrahedron inside which the puncture will be taken. This may
-    be ``null`` (the default), in which case the first tetrahedron
+    be ``None`` (the default), in which case the first tetrahedron
     will be used.)doc";
 
 // Docstring regina::python::doc::Triangulation_::recogniser
@@ -2478,7 +2478,7 @@ Parameter ``nThreads``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Parameter ``action``:
     a function (or other callable object) to call for each
@@ -2703,7 +2703,7 @@ Parameter ``nThreads``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``nullptr`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Returns:
     ``True`` if and only if the triangulation was successfully
@@ -3008,7 +3008,7 @@ Parameter ``alg``:
 
 Parameter ``tracker``:
     a progress tracker through will progress will be reported, or
-    ``nullptr`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Returns:
     the requested Turaev-Viro invariant, or an uninitialised field

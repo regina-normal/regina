@@ -529,7 +529,7 @@ Parameter ``type``:
     columns (i.e., it should reflect the columns as they are stored in
     this tableaux, not the original matching equations). As a special
     case, when extracting a strict angle structure one may pass *type*
-    = ``null``, in which case this routine will assume that *every*
+    = ``None``, in which case this routine will assume that *every*
     coordinate was constrained as positive.
 
 Returns:

@@ -78,7 +78,7 @@ abort.
 
 The length of the output buffer is passed as the argument *outlen*. If
 an unexpected or invalid character is found or the output buffer is
-exhausted, this routine will return ``False``, set *out* to ``null``,
+exhausted, this routine will return ``False``, set *out* to ``None``,
 and leave *outlen* undefined. Otherwise (on success) it will return
 ``True`` and set *outlen* to the total number of output bytes.
 
@@ -102,7 +102,7 @@ Parameter ``inlen``:
 
 Parameter ``out``:
     the address of a pointer which will be set to the output array of
-    raw bytes (or which will be set to ``null`` on failure).
+    raw bytes (or which will be set to ``None`` on failure).
 
 Parameter ``outlen``:
     the address of an integer which will be set to the length of the
@@ -125,10 +125,10 @@ results into a preallocated output buffer.
 
 The length of the output buffer is passed as the argument *outlen*. If
 the number of base64 characters required is less than *outlen*, a
-terminating ``null`` will be written to the end of the output
-sequence. If the number of base64 characters is *outlen* or greater,
-this routine will output as many base64 characters as possible, up to
-a maximum of *outlen*.
+terminating null will be written to the end of the output sequence. If
+the number of base64 characters is *outlen* or greater, this routine
+will output as many base64 characters as possible, up to a maximum of
+*outlen*.
 
 The routine base64Length() can be used to precalculate precisely how
 many output characters will be required.
@@ -169,7 +169,7 @@ destroying it using ``delete``[].
 
 If the output array is too large (in particular, the expected size
 will overflow a ``size_t``), the *out* pointer will be set to
-``null``.
+``None``.
 
 Python:
     These base64 encoding routines are made available to Python in the

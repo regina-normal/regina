@@ -259,7 +259,7 @@ of the proposed saturated region.
 All tetrahedra in the given list *avoidTets* will be ignored by this
 routine, and so if a region is found then it is guaranteed not to
 include any of them. As a consequence, if the given annulus uses any
-of these tetrahedra then ``null`` will be returned.
+of these tetrahedra then ``None`` will be returned.
 
 If a region is found, it will be expanded as far as possible, and all
 of the tetrahedra within it will be added to the list *avoidTets*.
@@ -283,7 +283,7 @@ Parameter ``avoidTets``:
     any new tetrahedra will be added.
 
 Returns:
-    details of the saturated region if one was found, or ``null`` if
+    details of the saturated region if one was found, or ``None`` if
     none was found.)doc";
 
 // Docstring regina::python::doc::SatRegion_::block

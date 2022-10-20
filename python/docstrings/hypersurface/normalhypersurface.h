@@ -637,7 +637,7 @@ will be reevaluated every time this routine is called.
 
 Returns:
     the edge linked by a positive rational multiple of this
-    hypersurface, or ``null`` if this hypersurface is not a multiple
+    hypersurface, or ``None`` if this hypersurface is not a multiple
     of a single thin edge link.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isThinTetrahedronLink
@@ -663,9 +663,9 @@ link of at most two tetrahedra. If there are indeed two different
 tetrahedra *t1* and *t2* for which a multiple of this hypersurface can
 be expressed as the thin tetrahedron link, then the pair (*t1*, *t2*)
 will be returned. If there is only one such tetrahedron *t*, then the
-pair (*t*, ``null``) will be returned. If no positive rational
+pair (*t*, ``None``) will be returned. If no positive rational
 multiple of this hypersurface is the thin link of any tetrahedron,
-then the pair (``null``, ``null``) will be returned.
+then the pair (``None``, ``None``) will be returned.
 
 Note that the results of this routine are not cached. Thus the results
 will be reevaluated every time this routine is called.
@@ -696,9 +696,9 @@ triangle link of at most two triangles. If there are indeed two
 different triangles *t1* and *t2* for which a multiple of this
 hypersurface can be expressed as the thin triangle link, then the pair
 (*t1*, *t2*) will be returned. If there is only one such triangle *t*,
-then the pair (*t*, ``null``) will be returned. If no positive
+then the pair (*t*, ``None``) will be returned. If no positive
 rational multiple of this hypersurface is the thin link of any
-triangle, then the pair (``null``, ``null``) will be returned.
+triangle, then the pair (``None``, ``None``) will be returned.
 
 Note that the results of this routine are not cached. Thus the results
 will be reevaluated every time this routine is called.
@@ -744,7 +744,7 @@ will be reevaluated every time this routine is called.
 
 Returns:
     the vertex linked by a positive rational multiple of this
-    hypersurface, or ``null`` if this hypersurface is not a multiple
+    hypersurface, or ``None`` if this hypersurface is not a multiple
     of a single vertex link.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isVertexLinking
@@ -997,7 +997,7 @@ Parameter ``format``:
 Parameter ``list``:
     the enclosing normal hypersurface list. Currently this is only
     relevant when writing to the older REGINA_XML_GEN_2 format; it
-    will be ignored (and may be ``null``) for newer file formats.)doc";
+    will be ignored (and may be ``None``) for newer file formats.)doc";
 
 }
 

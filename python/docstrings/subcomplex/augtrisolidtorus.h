@@ -172,7 +172,7 @@ glued to an axis edge, group ``p[1]`` will be glued to a major edge
 and group ``p[2]`` will be glued to a minor edge.
 
 Even if the corresponding layered solid torus is a degenerate (2,1,1)
-mobius band (i.e., augTorus() returns ``null``), the concept of edge
+mobius band (i.e., augTorus() returns ``None``), the concept of edge
 groups is still meaningful and this routine will return correct
 results.
 
@@ -223,7 +223,7 @@ Parameter ``comp``:
 
 Returns:
     a structure containing details of the augmented triangular solid
-    torus, or ``null`` if the given component is not an augmented
+    torus, or ``None`` if the given component is not an augmented
     triangular solid torus.)doc";
 
 // Docstring regina::python::doc::AugTriSolidTorus_::swap

@@ -220,7 +220,7 @@ Parameter ``tri``:
 
 Returns:
     an object containing details of the structure that was found, or
-    ``null`` if the given triangulation is not of the form described
+    ``None`` if the given triangulation is not of the form described
     by this class.)doc";
 
 // Docstring regina::python::doc::PluggedTorusBundle_::region

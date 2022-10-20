@@ -448,7 +448,7 @@ Parameter ``alg``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Returns:
     the bracket polynomial, or the zero polynomial if the calculation
@@ -552,7 +552,7 @@ as StrandRef::operator++ or StrandRef::next().
 
 If a component has no crossings (which means it must be a separate
 unknot component), then this routine will return a null reference
-(i.e., StrandRef::crossing() will return ``null``).
+(i.e., StrandRef::crossing() will return ``None``).
 
 Parameter ``index``:
     the index of the requested component. This must be between 0 and
@@ -1383,8 +1383,8 @@ sequence could be a vector containing the six tokens:
 ```
 
 Each individual token should *not* contain any whitespace; otherwise
-this routine may fail to parse the token(s) and could return ``null``
-as a result.
+this routine may fail to parse the token(s) and could throw an
+exception as a result.
 
 Precondition:
     *Iterator* is a random access iterator type.
@@ -1814,7 +1814,7 @@ Parameter ``alg``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Returns:
     the HOMFLY polynomial, or the zero polynomial if the calculation
@@ -1890,7 +1890,7 @@ Parameter ``alg``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Returns:
     the HOMFLY polynomial, or the zero polynomial if the calculation
@@ -1985,7 +1985,7 @@ Parameter ``alg``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Returns:
     the HOMFLY polynomial, or the zero polynomial if the calculation
@@ -2229,7 +2229,7 @@ Parameter ``alg``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Returns:
     the Jones polynomial, or the zero polynomial if the calculation
@@ -3280,7 +3280,7 @@ Parameter ``nThreads``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Parameter ``action``:
     a function (or other callable object) to call for each knot
@@ -3397,7 +3397,7 @@ Parameter ``nThreads``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Returns:
     ``True`` if and only if this diagram was successfully simplified
@@ -3626,7 +3626,7 @@ copy of the original reference will be returned.
 
 Precondition:
     This is not a null reference, i.e., crossing() does not return
-    ``null``.
+    ``None``.
 
 Python:
     This routine is available under the name dec().
@@ -3638,7 +3638,7 @@ Returns:
 static const char *__default =
 R"doc(Initialises this to a null reference.
 
-The pointer returned by crossing() will be ``null``, and the integer
+The pointer returned by crossing() will be ``None``, and the integer
 returned by strand() will be 0.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__eq
@@ -3649,10 +3649,10 @@ Two references are identical if and only if they return the same
 values for both crossing() and strand().
 
 .. warning::
-    If you create a null reference by calling StrandRef(``null``, 1)
+    If you create a null reference by calling StrandRef(``None``, 1)
     then this will *not* be considered equal to the null reference
     created by calling StrandRef(), since the latter is equivalent to
-    calling StrandRef(``null``, 0).
+    calling StrandRef(``None``, 0).
 
 ``True`` if and only if this and *rhs* are identical.)doc";
 
@@ -3668,7 +3668,7 @@ copy of the original reference will be returned.
 
 Precondition:
     This is not a null reference, i.e., crossing() does not return
-    ``null``.
+    ``None``.
 
 Python:
     This routine is available under the name inc().
@@ -3680,7 +3680,7 @@ Returns:
 static const char *__init =
 R"doc(Initialises this to the given strand of the given crossing.
 
-The given crossing may be ``null``, in which case this will become a
+The given crossing may be ``None``, in which case this will become a
 null reference. If you are creating a null reference, then it is
 highly recommended that you pass *strand* as 0, so that comparison
 tests treat this null reference as equal to a null reference created
@@ -3701,10 +3701,10 @@ Two references are identical if and only if they return the same
 values for both crossing() and strand().
 
 .. warning::
-    If you create a null reference by calling StrandRef(``null``, 1)
+    If you create a null reference by calling StrandRef(``None``, 1)
     then this will *not* be considered equal to the null reference
     created by calling StrandRef(), since the latter is equivalent to
-    calling StrandRef(``null``, 0).
+    calling StrandRef(``None``, 0).
 
 ``True`` if and only if this and *rhs* are not identical.)doc";
 
@@ -3716,7 +3716,7 @@ The information returned by crossing() and strand() together pinpoint
 exactly which strand of the link this reference points to.
 
 Returns:
-    the crossing, or ``null`` if this is a null reference.)doc";
+    the crossing, or ``None`` if this is a null reference.)doc";
 
 // Docstring regina::python::doc::StrandRef_::id
 static const char *id =
@@ -3751,7 +3751,7 @@ reference).
 
 Precondition:
     This is not a null reference, i.e., crossing() does not return
-    ``null``.
+    ``None``.
 
 Returns:
     the crossing reference that follows this.)doc";
@@ -3768,7 +3768,7 @@ reference).
 
 Precondition:
     This is not a null reference, i.e., crossing() does not return
-    ``null``.
+    ``None``.
 
 Returns:
     the crossing reference that precedes this.)doc";

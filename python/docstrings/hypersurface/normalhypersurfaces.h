@@ -270,7 +270,7 @@ Parameter ``algHints``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.)doc";
+    ``None`` if no progress reporting is required.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::__iter__
 static const char *__iter__ =

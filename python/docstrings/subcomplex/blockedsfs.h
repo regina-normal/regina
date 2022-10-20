@@ -128,7 +128,7 @@ Parameter ``tri``:
 
 Returns:
     a structure containing details of the blocked Seifert fibred
-    space, or ``null`` if the given triangulation is not a blocked
+    space, or ``None`` if the given triangulation is not a blocked
     Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::BlockedSFS_::region

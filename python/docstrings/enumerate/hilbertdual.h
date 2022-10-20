@@ -105,7 +105,7 @@ Parameter ``constraints``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.
+    ``None`` if no progress reporting is required.
 
 Parameter ``initialRows``:
     specifies how many initial rows of *subspace* are to be processed

@@ -134,7 +134,7 @@ Parameter ``constraints``:
 
 Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
-    ``null`` if no progress reporting is required.)doc";
+    ``None`` if no progress reporting is required.)doc";
 
 }
 

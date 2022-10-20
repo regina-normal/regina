@@ -112,7 +112,7 @@ This is a postdecrement operator: the object will be changed, but a
 copy of the original arc will be returned.
 
 Precondition:
-    This is not a null arc, i.e., node() does not return ``null``.
+    This is not a null arc, i.e., node() does not return ``None``.
 
 Python:
     This routine is available under the name dec().
@@ -124,7 +124,7 @@ Returns:
 static const char *__default =
 R"doc(Initialises this to a null arc.
 
-The pointer returned by node() will be ``null``, and the integer
+The pointer returned by node() will be ``None``, and the integer
 returned by arc() will be 0.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraphArc_::__eq
@@ -135,11 +135,11 @@ Two references are identical if and only if they return the same
 values for both node() and arc().
 
 .. warning::
-    If you create a null arc by calling ModelLinkGraphArc(``null``,
+    If you create a null arc by calling ModelLinkGraphArc(``None``,
     *i*) for some non-zero *i*, then this will *not* be considered
     equal to the null arc created by calling ModelLinkGraphArc(),
     since the latter is equivalent to calling
-    ModelLinkGraphArc(``null``, 0).
+    ModelLinkGraphArc(``None``, 0).
 
 ``True`` if and only if this and *rhs* are identical.)doc";
 
@@ -155,7 +155,7 @@ This is a postincrement operator: the object will be changed, but a
 copy of the original arc will be returned.
 
 Precondition:
-    This is not a null arc, i.e., node() does not return ``null``.
+    This is not a null arc, i.e., node() does not return ``None``.
 
 Python:
     This routine is available under the name inc().
@@ -171,7 +171,7 @@ graph.
 Recall that the four arcs exiting a node are numbered 0,1,2,3 in a
 clockwise order around the node.
 
-The given node may be ``null``, in which case this will become a null
+The given node may be ``None``, in which case this will become a null
 arc. If you are creating a null arc, then it is highly recommended
 that you pass *arc* as 0 also, so that comparison tests treat this
 null reference as equal to a null reference created by the zero-
@@ -192,11 +192,11 @@ Two references are identical if and only if they return the same
 values for both node() and arc().
 
 .. warning::
-    If you create a null arc by calling ModelLinkGraphArc(``null``,
+    If you create a null arc by calling ModelLinkGraphArc(``None``,
     *i*) for some non-zero *i*, then this will *not* be considered
     equal to the null arc created by calling ModelLinkGraphArc(),
     since the latter is equivalent to calling
-    ModelLinkGraphArc(``null``, 0).
+    ModelLinkGraphArc(``None``, 0).
 
 ``True`` if and only if this and *rhs* are not identical.)doc";
 
@@ -226,7 +226,7 @@ For any arc *a*, calling ``a.next()`` is equivalent to calling
 ``a.traverse().opposite()``.
 
 Precondition:
-    This is not a null arc, i.e., node() does not return ``null``.
+    This is not a null arc, i.e., node() does not return ``None``.
 
 Returns:
     the next arc after this when walking through the graph as though
@@ -237,7 +237,7 @@ static const char *node =
 R"doc(The node of the model graph from which this arc exits.
 
 Returns:
-    the corresponding node, or ``null`` if this is a null arc.)doc";
+    the corresponding node, or ``None`` if this is a null arc.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraphArc_::opposite
 static const char *opposite =
@@ -252,7 +252,7 @@ Note that, for any arc *a*, ``a.opposite().opposite()`` is identical
 to *a*.
 
 Precondition:
-    This is not a null arc, i.e., node() does not return ``null``.
+    This is not a null arc, i.e., node() does not return ``None``.
 
 Returns:
     the opposite arc exiting the same node.)doc";
@@ -270,7 +270,7 @@ For any arc *a*, calling ``a.prev()`` is equivalent to calling
 ``a.opposite().traverse()``.
 
 Precondition:
-    This is not a null arc, i.e., node() does not return ``null``.
+    This is not a null arc, i.e., node() does not return ``None``.
 
 Returns:
     the previous arc before this when walking through the graph as
@@ -291,7 +291,7 @@ Note that, for any arc *a*, ``a.traverse().traverse()`` is identical
 to *a*.
 
 Precondition:
-    This is not a null arc, i.e., node() does not return ``null``.
+    This is not a null arc, i.e., node() does not return ``None``.
 
 Returns:
     the arc at the other end of the underlying edge of the model

@@ -111,7 +111,7 @@ Parameter ``b``:
 static const char *hinge =
 R"doc(Returns the requested hinge edge of this layered loop. See the general
 class notes for further details. If there is only one hinge but
-parameter *which* is 1, ``null`` will be returned.
+parameter *which* is 1, ``None`` will be returned.
 
 Parameter ``which``:
     specifies which hinge to return; this must be 0 or 1.
@@ -147,7 +147,7 @@ Parameter ``comp``:
     the triangulation component to examine.
 
 Returns:
-    a structure containing details of the layered loop, or ``null`` if
+    a structure containing details of the layered loop, or ``None`` if
     the given component is not a layered loop.)doc";
 
 // Docstring regina::python::doc::LayeredLoop_::swap

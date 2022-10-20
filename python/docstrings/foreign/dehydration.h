@@ -59,7 +59,7 @@ Parameter ``ignoreLines``:
     be ignored completely.
 
 Returns:
-    a new container as described above, or ``null`` if an I/O error
+    a new container as described above, or ``None`` if an I/O error
     occurred whilst reading the given file.)doc";
 
 } // namespace regina::python::doc

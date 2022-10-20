@@ -193,7 +193,7 @@ Parameter ``comp``:
 
 Returns:
     a structure containing details of the plugged triangular solid
-    torus, or ``null`` if the given component is not a plugged
+    torus, or ``None`` if the given component is not a plugged
     triangular solid torus.)doc";
 
 // Docstring regina::python::doc::PlugTriSolidTorus_::swap

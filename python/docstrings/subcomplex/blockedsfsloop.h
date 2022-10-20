@@ -166,7 +166,7 @@ Parameter ``tri``:
 
 Returns:
     a structure containing details of the blocked self-identified
-    Seifert fibred space, or ``null`` if the given triangulation is
+    Seifert fibred space, or ``None`` if the given triangulation is
     not of this form.)doc";
 
 // Docstring regina::python::doc::BlockedSFSLoop_::region

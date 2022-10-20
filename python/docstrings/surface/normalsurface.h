@@ -960,9 +960,9 @@ A surface (or its positive rational multiple) can be the *thin* edge
 link of at most two edges. If there are indeed two different edges
 *e1* and *e2* for which a multiple of this surface can be expressed as
 the thin edge link, then the pair (*e1*, *e2*) will be returned. If
-there is only one such edge *e*, then the pair (*e*, ``null``) will be
+there is only one such edge *e*, then the pair (*e*, ``None``) will be
 returned. If no positive rational multiple of this surface is the thin
-link of any edge, then the pair (``null``, ``null``) will be returned.
+link of any edge, then the pair (``None``, ``None``) will be returned.
 
 Note that the results of this routine are not cached. Thus the results
 will be reevaluated every time this routine is called.
@@ -992,9 +992,9 @@ A surface (or its positive rational multiple) can be the *thin* link
 of at most two triangles. If there are indeed two different triangles
 *t1* and *t2* for which a multiple of this surface can be expressed as
 the thin triangle link, then the pair (*t1*, *t2*) will be returned.
-If there is only one such triangle *t*, then the pair (*t*, ``null``)
+If there is only one such triangle *t*, then the pair (*t*, ``None``)
 will be returned. If no positive rational multiple of this surface is
-the thin link of any triangle, then the pair (``null``, ``null``) will
+the thin link of any triangle, then the pair (``None``, ``None``) will
 be returned.
 
 Note that the results of this routine are not cached. Thus the results
@@ -1043,7 +1043,7 @@ will be reevaluated every time this routine is called.
 
 Returns:
     the vertex linked by a positive rational multiple of this surface,
-    or ``null`` if this surface is not a multiple of a single vertex
+    or ``None`` if this surface is not a multiple of a single vertex
     link.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isVertexLinking
@@ -1392,9 +1392,9 @@ Parameter ``format``:
     indicates which of Regina's XML file formats to write.
 
 Parameter ``list``:
-    the enclosing normal hypersurface list. Currently this is only
-    relevant when writing to the older REGINA_XML_GEN_2 format; it
-    will be ignored (and may be ``null``) for newer file formats.)doc";
+    the enclosing normal surface list. Currently this is only relevant
+    when writing to the older REGINA_XML_GEN_2 format; it will be
+    ignored (and may be ``None``) for newer file formats.)doc";
 
 }
 

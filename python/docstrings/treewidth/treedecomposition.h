@@ -217,13 +217,13 @@ namespace TreeBag_ {
 static const char *children =
 R"doc(Returns the first child of this bag in the underlying rooted tree.
 
-If a bag has no children, then children() will be ``null``. If a bag
+If a bag has no children, then children() will be ``None``. If a bag
 has many children, then these will be ``children()``,
 ``children()->sibling()``, ``children()->sibling()->sibling()``, and
 so on.
 
 Returns:
-    the first child of this bag, or ``null`` if this is a leaf bag
+    the first child of this bag, or ``None`` if this is a leaf bag
     (i.e., it has no children).)doc";
 
 // Docstring regina::python::doc::TreeBag_::compare
@@ -306,7 +306,7 @@ static const char *isLeaf =
 R"doc(Determines if this is a leaf bag. A leaf bag is a bag with no children
 in the underlying tree.
 
-This is equivalent to testing whether children() is ``null``.
+This is equivalent to testing whether children() is ``None``.
 
 Returns:
     ``True`` if and only if this is a leaf bag.)doc";
@@ -325,7 +325,7 @@ postfix iteration of bags as follows:
 
 * the next bag after *b* in the iteration is ``b.next()``;
 
-* the iteration terminates when ``b.next()`` is ``null``.
+* the iteration terminates when ``b.next()`` is ``None``.
 
 This iteration processes the children of each bag in order; that is,
 it processes each bag *b* before ``b.sibling()`` (if the latter
@@ -337,7 +337,7 @@ equivalent to iterating through bags 0,1,2,... in order.
 
 Returns:
     the next bag after this in a postfix iteration of all bags, or
-    ``null`` if this is the final bag in such an iteration (i.e., the
+    ``None`` if this is the final bag in such an iteration (i.e., the
     root bag).)doc";
 
 // Docstring regina::python::doc::TreeBag_::nextPrefix
@@ -354,7 +354,7 @@ prefix iteration of bags as follows:
 
 * the next bag after *b* in the iteration is ``b.nextPrefix()``;
 
-* the iteration terminates when ``b.nextPrefix()`` is ``null``.
+* the iteration terminates when ``b.nextPrefix()`` is ``None``.
 
 This iteration processes the children of each bag in order; that is,
 it processes each bag *b* before ``b.sibling()`` (if the latter
@@ -362,14 +362,14 @@ exists).
 
 Returns:
     the next bag after this in a prefix iteration of all bags, or
-    ``null`` if this is the final bag in such an iteration.)doc";
+    ``None`` if this is the final bag in such an iteration.)doc";
 
 // Docstring regina::python::doc::TreeBag_::parent
 static const char *parent =
 R"doc(Returns the parent of this bag in the underlying rooted tree.
 
 Returns:
-    the parent of this bag, or ``null`` if this bag is at the root of
+    the parent of this bag, or ``None`` if this bag is at the root of
     the tree.)doc";
 
 // Docstring regina::python::doc::TreeBag_::sibling
@@ -384,7 +384,7 @@ More generally, all of the children of a bag *b* can be accessed as
 ``b.children()->sibling()->sibling()``, and so on.
 
 Returns:
-    the next sibling of this bag, or ``null`` if either (i) this is
+    the next sibling of this bag, or ``None`` if either (i) this is
     the final child of the parent bag, or (ii) this is the root bag.)doc";
 
 // Docstring regina::python::doc::TreeBag_::size
@@ -715,7 +715,7 @@ postfix iteration of bags as follows:
 
 * the next bag after *b* in the iteration is ``b.next()``;
 
-* the iteration terminates when ``b.next()`` is ``null``.
+* the iteration terminates when ``b.next()`` is ``None``.
 
 This iteration processes the children of each bag in order; that is,
 it processes each bag *b* before ``b.sibling()`` (if the latter
@@ -725,7 +725,7 @@ This postfix iteration is equivalent to iterating through bags
 numbered 0,1,2,...; that is, following the order of TreeBag::index().
 
 Returns:
-    the first bag in a postfix iteration of all bags, or ``null`` if
+    the first bag in a postfix iteration of all bags, or ``None`` if
     there are no bags (which means the underlying graph *G* is empty).)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::firstPrefix
@@ -741,7 +741,7 @@ prefix iteration of bags as follows:
 
 * the next bag after *b* in the iteration is ``b.nextPrefix()``;
 
-* the iteration terminates when ``b.nextPrefix()`` is ``null``.
+* the iteration terminates when ``b.nextPrefix()`` is ``None``.
 
 This iteration processes the children of each bag in order; that is,
 it processes each bag *b* before ``b.sibling()`` (if the latter
@@ -751,7 +751,7 @@ Since the first bag in a prefix iteration must be the root bag, this
 function is identical to calling root().
 
 Returns:
-    the first bag in a prefix iteration of all bags, or ``null`` if
+    the first bag in a prefix iteration of all bags, or ``None`` if
     there are no bags (which means the underlying graph *G* is empty).)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::fromPACE
@@ -975,7 +975,7 @@ parent bag.
 
 * ``costRoot[i]`` is an additional cost that is incurred if and only
   if *b* becomes the new root bag. The argument *costRoot* may be
-  ``null``, in which case these additional costs are all assumed to be
+  ``None``, in which case these additional costs are all assumed to be
   zero.
 
 It follows that, for each potential new root, there are size() costs
@@ -1040,14 +1040,14 @@ Parameter ``costReverse``:
 
 Parameter ``costRoot``:
     An array of size() elements giving an additional estimated cost
-    for each bag being the new root. This array may be ``null``.)doc";
+    for each bag being the new root. This array may be ``None``.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::root
 static const char *root =
 R"doc(Returns the bag at the root of the underlying tree.
 
 Returns:
-    the root bag, or ``null`` if there are no bags (which means the
+    the root bag, or ``None`` if there are no bags (which means the
     underlying graph *G* is empty).)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::size
