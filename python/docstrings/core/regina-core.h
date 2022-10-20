@@ -27,6 +27,17 @@ type is used instead. For example, see the NormalSurfaces class
 constructor, which uses the specialised algorithm types NormalAlg and
 NormalAlgFlags.)doc";
 
+// Docstring regina::python::doc::maxDim
+static const char *maxDim =
+R"doc(Indicates that largest dimension of triangulation that Regina can work
+with.
+
+If Regina was built with the ``REGINA_HIGHDIM`` option, then this will
+be 15; otherwise it will be 8 (the default for ordinary builds).
+
+Returns:
+    Regina's maximum dimension of triangulation.)doc";
+
 // Docstring regina::python::doc::standardDim
 static const char *standardDim =
 R"doc(Indicates whether the given dimension is one of Regina's standard
