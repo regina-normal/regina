@@ -207,6 +207,7 @@ a new Python session.)doc");
 
     // From regina-core.h:
     m.def("standardDim", regina::standardDim, rdoc::standardDim);
+    m.def("maxDim", regina::maxDim, rdoc::maxDim);
 
     // From core/engine.h:
     m.def("versionString", regina::versionString, rdoc::versionString);

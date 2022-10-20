@@ -103,6 +103,14 @@ class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
  *
  * The arguments \a i and \a j do not need to appear in ascending order.
  *
+ * \ifacespython Python does not support templates.  Instead, Python users
+ * should call this function in the form <tt>faceOppositeEdge(dim, i, j)</tt>;
+ * that is, the template parameter \a dim becomes the first argument of
+ * the function.
+ *
+ * \tparam dim the dimension of simplex that we are working with.
+ * This must be between 2 and 15 inclusive.
+ *
  * @param i the first vertex of an edge in a <i>dim</i>-dimensional simplex.
  * This must be between 0 and \a dim inclusive.
  * @param j the second vertex of an edge in a <i>dim</i>-dimensional simplex.

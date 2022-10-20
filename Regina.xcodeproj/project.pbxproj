@@ -2058,6 +2058,8 @@
 		05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* examplesnappea.h */; };
 		05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07E19C2B96000A31924 /* PacketPicker.mm */; };
 		05FF4D3E1DB6BE310056D1EA /* SyntaxHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */; };
+		05FFD26A2900C75900E0F61C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFD2692900C75900E0F61C /* facenumbering.cpp */; };
+		05FFD26B2900C75900E0F61C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFD2692900C75900E0F61C /* facenumbering.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -4763,6 +4765,7 @@
 		05FF4D3A1DB6BC1E0056D1EA /* SyntaxHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyntaxHighlighter.h; sourceTree = "<group>"; };
 		05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SyntaxHighlighter.mm; sourceTree = "<group>"; };
 		05FF74E31DCB12F700FC2CB4 /* 600cell.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = 600cell.py; sourceTree = "<group>"; };
+		05FFD2692900C75900E0F61C /* facenumbering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facenumbering.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -7279,6 +7282,7 @@
 				05CAFB461C4CEA020001C253 /* face15.cpp */,
 				05431FAF1C40F5CA009BC072 /* facehelper.cpp */,
 				05431FB01C40F5CA009BC072 /* facehelper.h */,
+				05FFD2692900C75900E0F61C /* facenumbering.cpp */,
 				057EE4421C6009E600C4D155 /* facetpairing-bindings.h */,
 				057EE4611C600A1B00C4D155 /* facetpairing2.cpp */,
 				057EE4621C600A1B00C4D155 /* facetpairing4.cpp */,
@@ -9614,6 +9618,7 @@
 				050F5DFE1B9BAB9C00C1F681 /* polynomial.cpp in Sources */,
 				054209061DF0DA450018AB24 /* snappeacensusmfd.cpp in Sources */,
 				05772F1B270CFBAA00D26D8A /* typetrie.cpp in Sources */,
+				05FFD26A2900C75900E0F61C /* facenumbering.cpp in Sources */,
 				050F5E001B9BAB9C00C1F681 /* rational.cpp in Sources */,
 				050F5E461B9BAB9C00C1F681 /* homologicaldata.cpp in Sources */,
 				054209071DF0DA450018AB24 /* torusbundle.cpp in Sources */,
@@ -10058,6 +10063,7 @@
 				052FA1D91806129B00FAE4DF /* disc.cpp in Sources */,
 				05249F6A1DBC1737001FE29E /* surfacefiltertype.cpp in Sources */,
 				05249F611DBC1730001FE29E /* pysubcomplex.cpp in Sources */,
+				05FFD26B2900C75900E0F61C /* facenumbering.cpp in Sources */,
 				05277ABF25CF9D16001E4134 /* snappea.cpp in Sources */,
 				052FA22D180612DD00FAE4DF /* o31_matrices.c in Sources */,
 				05870CB41FAD250E00835F9E /* modellinkgraph.cpp in Sources */,

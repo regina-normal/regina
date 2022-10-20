@@ -39,6 +39,8 @@
 #define __REGINA_CORE_H
 #endif
 
+#include "regina-config.h" // for REGINA_HIGHDIM
+
 namespace regina {
 
 /**
@@ -54,6 +56,24 @@ namespace regina {
  */
 constexpr bool standardDim(int dim) {
     return (dim == 2 || dim == 3 || dim == 4);
+}
+
+/**
+ * Indicates that largest dimension of triangulation that Regina can work with.
+ *
+ * If Regina was built with the \c REGINA_HIGHDIM option, then this will be 15;
+ * otherwise it will be 8 (the default for ordinary builds).
+ *
+ * @return Regina's maximum dimension of triangulation.
+ *
+ * \ingroup engine
+ */
+constexpr int maxDim() {
+#ifdef REGINA_HIGHDIM
+    return 15;
+#else
+    return 8;
+#endif
 }
 
 /**

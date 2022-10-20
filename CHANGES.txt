@@ -42,6 +42,9 @@ Version 7.2  [ (to be determined) ]
         Function buildInfo():
             - New function that allows packagers to embed additional
               version/build-related information in the calculation engine.
+        Function maxDim():
+            - New constexpr function that indicates whether Regina was built
+              with support for higher dimensions 9..15.
     PYTHON:
         - Updated the included pybind11 library from 2.8.1 to 2.10.0.
           This means we can now support Python 3.11, but no longer support

@@ -46,6 +46,7 @@ void addExample12(pybind11::module_& m);
 void addExample13(pybind11::module_& m);
 void addExample14(pybind11::module_& m);
 void addExample15(pybind11::module_& m);
+void addFaceNumbering(pybind11::module_& m);
 void addFacetPairing2(pybind11::module_& m);
 void addFacetPairing4(pybind11::module_& m);
 void addFacetPairing5(pybind11::module_& m);
@@ -119,6 +120,7 @@ void addGenericClasses(pybind11::module_& m) {
     addExample7(m);
     addExample8(m);
     addCut(m);
+    addFaceNumbering(m);
 #ifdef REGINA_HIGHDIM
     addFacetPairing9(m);
     addFacetPairing10(m);
