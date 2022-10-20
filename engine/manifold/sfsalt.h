@@ -124,10 +124,10 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * - add twists to the first boundary torus so that the obstruction
          *   constant \a b in the Seifert fibred space becomes zero;
          *
-         * - if the Seifert fibred space is over <tt>M/n2</tt> with no
-         *   exceptional fibres (where \c M represents the Mobius band),
-         *   it will switch the fibre and orbifold curves to give a
-         *   Seifert fibred space over the disc with two exception fibres.
+         * - if the Seifert fibred space is over `M/n2` with no exceptional
+         *   fibres (where `M` represents the Mobius band), it will switch the
+         *   fibre and orbifold curves to give a Seifert fibred space over the
+         *   disc with two exception fibres.
          *
          * \pre The given Seifert fibred space has at least one torus
          * boundary.
@@ -164,7 +164,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          *
          * \pre If \a negate is \c true, then the underlying Seifert
          * fibred space satisfies the requirements outlined above, or
-         * equivalently, <tt>canNegate(base.sfs())</tt> is \c true.
+         * equivalently, `canNegate(base.sfs())` is \c true.
          *
          * \note This constructor only makes sense if at least one of
          * \c reflect or \c negate is \c true, since \a base should

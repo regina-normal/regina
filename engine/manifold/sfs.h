@@ -76,11 +76,11 @@ class LensSpace;
  */
 struct SFSFibre {
     long alpha;
-        /**< The first parameter of this (<i>alpha</i>, <i>beta</i>) fibre.
+        /**< The first parameter of this (\a alpha, \a beta) fibre.
              Note that this is the index of the exceptional fibre.
              This parameter must always be strictly positive. */
     long beta;
-        /**< The second parameter of this (<i>alpha</i>, <i>beta</i>) fibre.
+        /**< The second parameter of this (\a alpha, \a beta) fibre.
              This parameter must have no common factors with \a alpha. */
 
     /**
@@ -141,9 +141,8 @@ struct SFSFibre {
 };
 
 /**
- * Writes the given fibre in human-readable format to the given output
- * stream.  The fibre will be written in the format
- * <tt>(alpha,beta)</tt> with no newline appended.
+ * Writes the given fibre in human-readable format to the given output stream.
+ * The fibre will be written in the format `(alpha,beta)` with no newline.
  *
  * @param out the output stream to which to write.
  * @param f the fibre to write.
@@ -182,7 +181,7 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * though in output routines such as name() and structure() it is
  * merged in with the exceptional fibres.  Specifically, it is merged in
  * with the \a beta of the final exceptional fibre (replacing it with
- * <tt>beta + b.alpha</tt>), or if there are no exceptional fibres then
+ * `beta + b.alpha`), or if there are no exceptional fibres then
  * it is presented as a single (1,b) fibre.
  *
  * The Manifold routines homology() and construct() are only
@@ -324,7 +323,7 @@ class SFSpace : public Manifold {
         std::list<SFSFibre> fibres_;
             /**< The exceptional fibres.  This list will be sorted, and will
                  only contain fibres for which \a alpha and \a beta are
-                 coprime and <tt>0 ≤ beta < alpha > 1</tt>. */
+                 coprime and 0 ≤ \a beta < \a alpha > 1. */
         unsigned long nFibres_;
             /**< The size of the \a fibres_ list, used to avoid calling
                  the linear time fibres_.size(). */
