@@ -47,10 +47,10 @@ context:
 * A facet pairing is in *canonical form* if it is a lexicographically
   minimal representative of its isomorphism class. Here we order facet
   pairings by lexicographical comparison of the sequence
-  ``dest(0,0)``, ``dest(0,1)``, ..., ``dest(size()-1,*dim*)`` (which
-  in turn uses the ordering defined by FacetSpec<dim>, where each
-  simplex facet is ordered first by simplex number and then by facet
-  number, and where the boundary is ordered last).
+  ``dest(0,0)``, ``dest(0,1)``, ..., ``dest(size()-1, dim)`` (which in
+  turn uses the ordering defined by FacetSpec<dim>, where each simplex
+  facet is ordered first by simplex number and then by facet number,
+  and where the boundary is ordered last).
 
 For dimension 3, this FacetPairing class template is specialised and
 offers more functionality. In order to use this specialised class, you

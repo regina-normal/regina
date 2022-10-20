@@ -297,7 +297,7 @@ R"doc(Returns whether this cusp is complete.
 
 SnapPy:
     In SnapPy, this field corresponds to querying
-    ``Manifold.cusp_info('is_complete')[cusp_number]``.
+    ``Manifold.cusp_info("is_complete")[cusp_number]``.
 
 Returns:
     ``True`` if this cusp is complete, or ``False`` if it is filled.)doc";
@@ -309,7 +309,7 @@ if this cusp is complete.
 
 SnapPy:
     In SnapPy, this field corresponds to querying
-    ``Manifold.cusp_info('filling')[cusp_number][1]``.
+    ``Manifold.cusp_info("filling")[cusp_number][1]``.
 
 Returns:
     the second filling coefficient.)doc";
@@ -321,7 +321,7 @@ this cusp is complete.
 
 SnapPy:
     In SnapPy, this field corresponds to querying
-    ``Manifold.cusp_info('filling')[cusp_number][0]``.
+    ``Manifold.cusp_info("filling")[cusp_number][0]``.
 
 Returns:
     the first filling coefficient.)doc";
@@ -749,7 +749,7 @@ countCusps()``.
 SnapPy:
     This has no corresponding routine in SnapPy, though the
     information is easily acessible via
-    ``Manifold.cusp_info('is_complete')``.
+    ``Manifold.cusp_info("is_complete")``.
 
 Returns:
     the total number of complete cusps.)doc";
@@ -778,7 +778,7 @@ countCusps()``.
 SnapPy:
     This has no corresponding routine in SnapPy, though the
     information is easily acessible via
-    ``Manifold.cusp_info('is_complete')``.
+    ``Manifold.cusp_info("is_complete")``.
 
 Returns:
     the total number of filled cusps.)doc";
@@ -1290,8 +1290,8 @@ corresponds to edges 1 and 4 of the tetrahedron, and ``(z-1)/z``
 corresponds to edges 2 and 3 of the tetrahedron.
 
 More specifically, a row of the form ``a b c d e f ...`` describes an
-equation with left hand side ``a * log(z0) + b * log(1/(1-z0)) + c *
-log((z0-1)/z) + d * log(z1) + ...``, and with right hand side ``2πi``
+equation with left hand side ``a log(z0) + b log(1/(1-z0)) + c
+log((z0-1)/z) + d log(z1) + ...``, and with right hand side ``2πi``
 for an edge equation or 0 for a cusp equation.
 
 See also gluingEquationsRect(), which returns the gluing equations in
@@ -1332,7 +1332,7 @@ more transparent term-by-term form.
 
 SnapPy:
     In SnapPy, this routine corresponds to calling
-    ``Manifold.gluing_equations(form='rect')``.
+    ``Manifold.gluing_equations(form="rect")``.
 
 Precondition:
     This is not a null triangulation.
@@ -1431,7 +1431,7 @@ structure), then this routine will simply return zero.
 SnapPy:
     This has no corresponding routine in SnapPy, though the
     information is easily acessible via
-    ``Manifold.tetrahedra_shapes(part='rect')``.
+    ``Manifold.tetrahedra_shapes(part="rect")``.
 
 Returns:
     the minimum imaginary part amongst all tetrahedron shapes.)doc";
@@ -1599,7 +1599,7 @@ performance penalty.
 
 SnapPy:
     In SnapPy, this routine corresponds to calling
-    ``Manifold.tetrahedra_shapes(part='rect')[tet]``.
+    ``Manifold.tetrahedra_shapes(part="rect")[tet]``.
 
 Parameter ``tet``:
     the index of a tetrahedron; this must be between 0 and size()-1

@@ -100,7 +100,7 @@ R"doc(Creates an abelian group as the homology of a chain complex. The
 abelian group is the kernel of *M* modulo the image of *N*.
 
 The matrices should be thought of as acting on column vectors: this
-means that the product ``B*A`` applies the linear transformation *A*,
+means that the product ``B×A`` applies the linear transformation *A*,
 then the linear transformation *B*. This is consistent (for example)
 with the convention that Regina uses for for multiplying permutations.
 
@@ -109,7 +109,7 @@ Precondition:
     exception will be thrown if it does not hold.
 
 Precondition:
-    The product M*N = 0. This condition will *not* be tested (for
+    The product M×N = 0. This condition will *not* be tested (for
     efficiency reasons); this is left to the user/programmer to
     ensure.
 
@@ -132,7 +132,7 @@ mod-*p* coefficients. The abelian group is the kernel of *M* modulo
 the image of *N*.
 
 The matrices should be thought of as acting on column vectors: this
-means that the product ``B*A`` applies the linear transformation *A*,
+means that the product ``B×A`` applies the linear transformation *A*,
 then the linear transformation *B*. This is consistent (for example)
 with the convention that Regina uses for for multiplying permutations.
 
@@ -141,7 +141,7 @@ Precondition:
     exception will be thrown if it does not hold.
 
 Precondition:
-    The product M*N = 0. This condition will *not* be tested (for
+    The product M×N = 0. This condition will *not* be tested (for
     efficiency reasons); this is left to the user/programmer to
     ensure.
 

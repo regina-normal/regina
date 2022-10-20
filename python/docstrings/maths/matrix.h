@@ -40,7 +40,7 @@ matrix types:
 * *T* must have a default constructor and an assignment operator.
 
 * An element *t* of type *T* must be writable to an output stream
-  using the standard stream operator ``<&lt;``.
+  using the standard stream operator ``<<``.
 
 If *ring* is ``True``, then in addition to this:
 

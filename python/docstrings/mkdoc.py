@@ -286,7 +286,7 @@ def process_comment(comment):
     s = re.sub(r'</li>', r'\n\n', s)
 
     # Doxygen markdown support
-    s = re.sub(r'([(\s]|^)`([^`\s](?:[^`]*[^`\s])?)`([);,.\s]|$)',
+    s = re.sub(r'([(,.+*/=^_\s-]|^)`([^`\s](?:[^`]*[^`\s])?)`((?:th)?[);,.?\s]|$)',
                r'\1``\2``\3', s, flags=re.DOTALL)
 
     # Special characters

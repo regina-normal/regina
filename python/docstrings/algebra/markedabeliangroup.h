@@ -49,9 +49,9 @@ R"doc(Represents a finitely generated abelian group given by a chain
 complex.
 
 This class is initialized with a chain complex. The chain complex is
-given in terms of two integer matrices *M* and *N* such that M*N=0.
+given in terms of two integer matrices *M* and *N* such that M×N=0.
 These matrices should be thought of as acting on column vectors: this
-means for example that the product ``B*A`` applies the linear
+means for example that the product ``B×A`` applies the linear
 transformation *A*, then the linear transformation *B*. This is
 consistent with the convention that Regina uses for for multiplying
 permutations.
@@ -68,7 +68,7 @@ some ``Z_{d0} + ... + Z_{dk} + Z^r``, where:
 
 * *r* is the number of free generators, as returned by rank();
 
-* *d1*, ..., *dk* are the *invariant factors* that describe the
+* *d1*, ..., *dk* are the _invariant factors_ that describe the
   torsion elements of the group, where 1 < *d1* | *d2* | ... | *dk*.
 
 This class allows you to retrieve the invariant factors, the rank, and
@@ -82,11 +82,11 @@ construction of homomorphisms, and keeping track of subgroups.
 
 This routine makes frequent use of two coordinate systems:
 
-* *Chain complex coordinates* describe vectors of length *b* (using
+* _Chain complex coordinates_ describe vectors of length *b* (using
   the notation above); that is, elements of the domain of *M*, or
   equivalently the codomain of *N*.
 
-* *SNF (or Smith normal form) coordinates* describe elements of this
+* _SNF (or Smith normal form) coordinates_ describe elements of this
   abelian group in terms of the torsion and free generators. A vector
   in SNF coordinates has length (*k* + *r*), again using the notation
   above, where the first *k* elements store coefficients for the
@@ -102,8 +102,8 @@ of this class. These choices are subject to change between different
 versions of Regina; in particular, they depend upon the particular
 algorithm used for computing Smith normal forms.
 
-Some routines in this class refer to the *internal presentation
-matrix*. This is a proper presentation matrix for the abelian group;
+Some routines in this class refer to the _internal presentation
+matrix_. This is a proper presentation matrix for the abelian group;
 if you are looking at the implementation details, this refers to the
 matrix *pres*, created by taking the product ``MRi_ * N`` and then
 removing the first *rankM_* rows.
@@ -135,13 +135,13 @@ describes a homomorphism from Z^b to Z^e.
 
 In order for this to make sense as a homomorphism of the groups
 represented by the domain and codomain respectively, one requires
-img(mat*N1) to be a subset of img(N2). Similarly, ker(M1) must be sent
-into ker(M2). These facts are not checked, but are assumed as
+``img(mat×N1)`` to be a subset of img(N2). Similarly, ker(M1) must be
+sent into ker(M2). These facts are not checked, but are assumed as
 preconditions of this constructor.
 
 Precondition:
     The matrix *mat* has the required dimensions e-by-b, gives
-    img(mat*N1) as a subset of img(N2), and sends ker(M1) into
+    ``img(mat×N1)`` as a subset of img(N2), and sends ker(M1) into
     ker(M2), as explained in the detailed notes above.
 
 Parameter ``dom``:
@@ -453,7 +453,7 @@ Precondition:
     exception will be thrown if it does not hold.
 
 Precondition:
-    The product M*N = 0. This condition will *not* be tested (for
+    The product M×N = 0. This condition will *not* be tested (for
     efficiency reasons); this is left to the user/programmer to
     ensure.
 
@@ -482,7 +482,7 @@ Precondition:
     exception will be thrown if it does not hold.
 
 Precondition:
-    The product M*N = 0. This condition will *not* be tested (for
+    The product M×N = 0. This condition will *not* be tested (for
     efficiency reasons); this is left to the user/programmer to
     ensure.
 
@@ -506,8 +506,8 @@ Parameter ``pcoeff``:
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::__init_3
 static const char *__init_3 =
-R"doc(Creates a free Z_p-module of a given rank using the direct sum of the
-standard chain complex ``0 --> Z --p--> Z --> 0``. This group is
+R"doc(Creates a free `Z_p`-module of a given rank using the direct sum of
+the standard chain complex ``0 --> Z --p--> Z --> 0``. This group is
 isomorphic to ``n Z_p``. Moreover, if constructed using the matrices-
 with-coefficients constructor, *M* would be zero and *N* would be
 diagonal and square with *p* down the diagonal.
@@ -543,8 +543,8 @@ R"doc(Expresses the given vector as a boundary in the chain complex.
 
 .. warning::
     If you are using mod *p* coefficients and if your element projects
-    to a non-trivial element of TOR, then N*v != bdry as elements of
-    TOR are not in the image of *N*. In this case, (*bdry* - N*v)
+    to a non-trivial element of TOR, then ``N×v != bdry`` as elements
+    of TOR are not in the image of *N*. In this case, (``bdry - N×v``)
     represents the projection to TOR.
 
 .. warning::
@@ -558,13 +558,13 @@ Parameter ``bdry``:
     a boundary vector, given in chain complex coordinates.
 
 Returns:
-    a vector *v* such that ``N*v=bdry``.)doc";
+    a vector *v* such that ``N×v=bdry``.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::boundaryOf
 static const char *boundaryOf =
 R"doc(Computes the differential of the given vector in the chain complex
 whose kernel is the cycles. In other words, this routine returns
-``M*chain``, where *M* is the "right" matrix passed to the class
+``M×chain``, where *M* is the "right" matrix passed to the class
 constructor.
 
 Exception ``InvalidArgument``:
