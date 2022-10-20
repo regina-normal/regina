@@ -415,7 +415,7 @@ The format works as follows:
 
 * Start at the top-left endpoint and follow this string to its other
   endpoint. At every crossing that you pass, write a token of the form
-  ``+<*k*``, ``-<*k*``, ``+>*k*`` or ``->*k*``, where:
+  ``+<k``, ``-<k``, ``+>k`` or ``->k``, where:
 
 * the symbol ``+`` indicates that you are passing over the crossing
   labelled *k*, and the symbol ``-`` indicates that you are passing
@@ -423,7 +423,9 @@ The format works as follows:
 
 * the symbol ``<`` indicates that the other strand of the crossing
   passes from right to left, and ``>`` indicates that the other strand
-  passes from left to right.
+  passes from left to right;
+
+* *k* is replaced with the integer crossing label.
 
 * Write the token ``_`` to indicate that the first string has
   finished.
@@ -431,8 +433,8 @@ The format works as follows:
 * Start at the beginning of the other string (for horizontal or
   diagonal tangles, this is the bottom-left endpoint, and for vertical
   tangles this is the top-right endpoint). As before, follow this
-  string to its other endpoint, writing a token of the form ``+<*k*``,
-  ``-<*k*``, ``+>*k*`` or ``->*k*`` at every crossing that you pass.
+  string to its other endpoint, writing a token of the form ``+<k``,
+  ``-<k``, ``+>k`` or ``->k`` at every crossing that you pass.
 
 Be aware that, once the tangle has been constructed, the crossings 1,
 ..., *n* will have been reindexed as 0, ..., *n*-1 (since every Tangle

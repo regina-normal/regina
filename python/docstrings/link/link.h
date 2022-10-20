@@ -1373,10 +1373,10 @@ readable sequence of string tokens. This sequence is given by passing
 a pair of begin/end iterators.
 
 The tokens in the input sequence should be the individual tokens of
-the form ``+<*k*``, ``-<*k*``, ``+>*k*`` or ``->*k*`` that would
-normally be joined with whitespace to form a complete oriented Gauss
-code. For example, to describe the left-hand trefoil, the input
-sequence could be a vector containing the six tokens:
+the form ``+<k``, ``-<k``, ``+>k`` or ``->k`` that would normally be
+joined with whitespace to form a complete oriented Gauss code. For
+example, to describe the left-hand trefoil, the input sequence could
+be a vector containing the six tokens:
 
 ```
 { "+>1", "-<2", "+>3", "-<1", "+>2", "-<3" }
@@ -1634,8 +1634,8 @@ follows:
 * Label the crossings arbitrarily as 1, 2, ..., *n*.
 
 * Start at some point on the knot and follow it around. Whenever you
-  pass crossing *k*, write the integer ``*k*`` if you pass over the
-  crossing, or ``-*k*`` if you pass under the crossing.
+  pass crossing *k*, write the integer ``k`` if you pass over the
+  crossing, or ``-k`` if you pass under the crossing.
 
 As an example, you can represent the trefoil using the code:
 
@@ -2367,8 +2367,8 @@ works as follows:
 * Label the crossings arbitrarily as 1, 2, ..., *n*.
 
 * Start at some point on the knot and follow it around. At every
-  crossing that you pass, write a token of the form ``+<*k*``,
-  ``-<*k*``, ``+>*k*`` or ``->*k*``, where:
+  crossing that you pass, write a token of the form ``+<k``, ``-<k``,
+  ``+>k`` or ``->k``, where:
 
 * the symbol ``+`` indicates that you are passing over the crossing
   labelled *k*, and the symbol ``-`` indicates that you are passing
@@ -2376,7 +2376,9 @@ works as follows:
 
 * the symbol ``<`` indicates that the other strand of the crossing
   passes from right to left, and ``>`` indicates that the other strand
-  passes from left to right.
+  passes from left to right;
+
+* *k* is replaced with the integer crossing label.
 
 As an example, you can represent the left-hand trefoil using the code:
 
@@ -2415,8 +2417,8 @@ See orientedGauss() for a full description of oriented Gauss codes as
 they are used in Regina, as well as their limitations.
 
 For an *n*-crossing knot, the elements of the returned vector will be
-the 2*n* individual tokens of the form ``+<*k*``, ``-<*k*``, ``+>*k*``
-or ``->*k*`` that would normally be joined with whitespace to form a
+the 2*n* individual tokens of the form ``+<k``, ``-<k``, ``+>k`` or
+``->k`` that would normally be joined with whitespace to form a
 complete oriented Gauss code. For example, for the left-hand trefoil,
 the vector might contain the six tokens:
 

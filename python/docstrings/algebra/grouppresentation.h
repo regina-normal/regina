@@ -1174,10 +1174,10 @@ R"doc(A routine to help escape local wells when simplifying presentations,
 which may be useful when small cancellation theory can't find the
 simplest relators.
 
-Given a presentation <g_i | r_i>, this routine appends consequences of
-the relators {r_i} to the presentation that are of the form ab, where
-both a and b are cyclic permutations of relators from the collection
-{r_i}.
+Given a presentation ``<g_i | r_i>``, this routine appends
+consequences of the relators {r_i} to the presentation that are of the
+form ab, where both a and b are cyclic permutations of relators from
+the collection {r_i}.
 
 Passing depth=1 means it will only form products of two relators.
 Depth=2 means products of three, etc. Depth=4 is typically the last
