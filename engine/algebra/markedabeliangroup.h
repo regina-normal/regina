@@ -63,7 +63,7 @@ class HomMarkedAbelianGroup;
  *
  * The abelian group that this class computes is the kernel of \a M modulo the
  * image of \a N.  In other words, we compute the homology of the chain complex
- * <tt>Z^a --N--> Z^b --M--> Z^c</tt>,
+ * `Z^a --N--> Z^b --M--> Z^c`,
  * where \a a = N.columns(), \a b = M.columns() = N.rows(), and \a c = M.rows().
  * An additional constructor allows you to take the homology with coefficients
  * in an arbitrary cyclic group.
@@ -223,9 +223,9 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         MarkedAbelianGroup(MatrixInt M, MatrixInt N, Integer pcoeff);
 
         /**
-         * Creates a free Z_p-module of a given rank using the direct sum
-         * of the standard chain complex <tt>0 --> Z --p--> Z --> 0</tt>.
-         * This group is isomorphic to <tt>n Z_p</tt>.  Moreover, if
+         * Creates a free `Z_p`-module of a given rank using the direct sum
+         * of the standard chain complex `0 --> Z --p--> Z --> 0`.
+         * This group is isomorphic to `n Z_p`.  Moreover, if
          * constructed using the matrices-with-coefficients constructor,
          * \a M would be zero and \a N would be diagonal and square with
          * \a p down the diagonal.
@@ -753,8 +753,8 @@ void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs) noexcept;
  *   quotient of the domain coefficients.
  *
  * So for example, if the domain was initialized by the chain complex
- * <tt>Z^a --A--> Z^b --B--> Z^c</tt> with mod p coefficients, and the codomain
- * was initialized by <tt>Z^d --D--> Z^e --E--> Z^f</tt> with mod q
+ * `Z^a --A--> Z^b --B--> Z^c` with mod p coefficients, and the codomain
+ * was initialized by `Z^d --D--> Z^e --E--> Z^f` with mod q
  * coefficients, then the matrix needs to be an e-by-b matrix.
  * Furthermore, you only obtain a well-defined
  * homomorphism if this matrix extends to a cycle map, which this class
@@ -839,8 +839,8 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * The matrix must be given in the chain-complex coordinates.
          * Specifically, if the domain was defined via the chain complex
-         * <tt>Z^a --N1--> Z^b --M1--> Z^c</tt> and the codomain was
-         * defined via <tt>Z^d --N2--> Z^e --M2--> Z^f</tt>, then \a mat is
+         * `Z^a --N1--> Z^b --M1--> Z^c` and the codomain was
+         * defined via `Z^d --N2--> Z^e --M2--> Z^f`, then \a mat is
          * an e-by-b matrix that describes a homomorphism from Z^b to Z^e.
          *
          * In order for this to make sense as a homomorphism of the groups
