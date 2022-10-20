@@ -52,8 +52,7 @@ namespace regina {
  * are the 3-sphere, L(0,1) is the product S¹ x S², and L(\a p,1) is the
  * circle bundle over S² with Euler class \a p.  In L(\a p,\a q) if you
  * take a generator \a g of H_1 and evaluate the torsion linking form on it,
- * then &lt;\a g,\a g&gt; = [+/- \a r^2 \a q/\a p] in Q/Z where \a r is an
- * integer.
+ * then `<g,g> = [± r^2 q/p]` in Q/Z where \a r is an integer.
  *
  * All optional Manifold routines are implemented for this class.
  *

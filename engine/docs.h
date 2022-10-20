@@ -70,12 +70,11 @@
  *  <h3>Authors</h3>
  *
  *  The primary developers of Regina are:
- *  <ul>
- *    <li>Benjamin Burton &lt;bab@maths.uq.edu.au&gt;</li>
- *    <li>Ryan Budney &lt;rybu@uvic.ca&gt;</li>
- *    <li>William Pettersson &lt;william.pettersson@gmail.com&gt;</li>
- *  </ul>
- *  <p>
+ *
+ *  - Benjamin Burton &lt;bab@maths.uq.edu.au&gt;
+ *  - Ryan Budney &lt;rybu@uvic.ca&gt;
+ *  - William Pettersson &lt;william.pettersson@gmail.com&gt;
+ *
  *  Many others have been of assistance with this project, be it through
  *  time, knowledge, testing or code.  Please see the full list of
  *  acknowledgements in the users' handbook.
