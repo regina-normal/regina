@@ -322,7 +322,7 @@ bit at index 0 is least significant, and the bit at index *length*-1
 is most significant.
 
 .. warning::
-    We do not use < for this operation, since <= represents the subset
+    We do not use < for this operation, since ≤ represents the subset
     operation.
 
 Parameter ``other``:
@@ -627,7 +627,7 @@ bit at index 0 is least significant, and the bit at index *length*-1
 is most significant.
 
 .. warning::
-    We do not use < for this operation, since <= represents the subset
+    We do not use < for this operation, since ≤ represents the subset
     operation.
 
 Parameter ``other``:
@@ -1004,7 +1004,7 @@ Precondition:
     This and the given bitmask have the same length.
 
 .. warning::
-    We do not use < for this operation, since <= represents the subset
+    We do not use < for this operation, since ≤ represents the subset
     operation.
 
 Parameter ``other``:

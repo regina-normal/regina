@@ -20,7 +20,7 @@ surgery on the unknot. For instance, L(1,0) and L(1,1) are the
 3-sphere, L(0,1) is the product S¹ x S², and L(*p*,1) is the circle
 bundle over S² with Euler class *p*. In L(*p*,*q*) if you take a
 generator *g* of H_1 and evaluate the torsion linking form on it, then
-<*g*,*g*> = [+/- *r*^2 *q*/*p*] in Q/Z where *r* is an integer.
+``<g,g> = [± r^2 q/p]`` in Q/Z where *r* is an integer.
 
 All optional Manifold routines are implemented for this class.
 
