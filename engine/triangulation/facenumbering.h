@@ -55,7 +55,7 @@ namespace regina {
  *   For example, in a 3-dimensional triangulation, edges 0,...,5 contain
  *   vertices 01, 02, 03, 12, 13, 23 respectively.
  *
- * - For high-dimensional faces (\a subdim &ge; \a dim / 2), faces are
+ * - For high-dimensional faces (\a subdim ≥ \a dim / 2), faces are
  *   numbered in \e reverse lexicographical order according to their vertices.
  *   For example, in a 3-dimensional triangulation, triangles 0,...,3 contain
  *   vertices 123, 023, 013, 012 respectively.

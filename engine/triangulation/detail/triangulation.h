@@ -625,7 +625,7 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for countFaces<3>().
          *
-         * This alias is available for dimensions \a dim &ge; 3.
+         * This alias is available for dimensions \a dim ≥ 3.
          *
          * See countFaces() for further information.
          */
@@ -634,7 +634,7 @@ class TriangulationBase :
         /**
          * A dimension-specific alias for countFaces<4>().
          *
-         * This alias is available for dimensions \a dim &ge; 4.
+         * This alias is available for dimensions \a dim ≥ 4.
          *
          * See countFaces() for further information.
          */
@@ -646,7 +646,7 @@ class TriangulationBase :
          *
          * The vector that is returned will have length <i>dim</i>+1.
          * If this vector is \a f, then \a f[\a k] will be the number of
-         * <i>k</i>-faces for each 0 &le; \a k &le; \a dim.
+         * <i>k</i>-faces for each 0 ≤ \a k ≤ \a dim.
          *
          * This routine is significantly more heavyweight than countFaces().
          * Its advantage is that, unlike the templatised countFaces(),
@@ -815,7 +815,7 @@ class TriangulationBase :
          * A dimension-specific alias for faces<3>(), or an alias for
          * simplices() in dimension \a dim = 3.
          *
-         * This alias is available for dimensions \a dim &ge; 3.
+         * This alias is available for dimensions \a dim ≥ 3.
          *
          * See faces() for further information.
          */
@@ -825,7 +825,7 @@ class TriangulationBase :
          * A dimension-specific alias for faces<4>(), or an alias for
          * simplices() in dimension \a dim = 4.
          *
-         * This alias is available for dimensions \a dim &ge; 4.
+         * This alias is available for dimensions \a dim ≥ 4.
          *
          * See faces() for further information.
          */
@@ -950,7 +950,7 @@ class TriangulationBase :
          * A dimension-specific alias for face<3>(), or an alias for
          * simplex() in dimension \a dim = 3.
          *
-         * This alias is available for dimensions \a dim &ge; 3.
+         * This alias is available for dimensions \a dim ≥ 3.
          *
          * See face() for further information.
          */
@@ -960,7 +960,7 @@ class TriangulationBase :
          * A dimension-specific alias for face<3>(), or an alias for
          * simplex() in dimension \a dim = 3.
          *
-         * This alias is available for dimensions \a dim &ge; 3.
+         * This alias is available for dimensions \a dim ≥ 3.
          * It returns a const tetrahedron pointer in dimension \a dim = 3,
          * and a non-const tetrahedron pointer in all higher dimensions.
          *
@@ -972,7 +972,7 @@ class TriangulationBase :
          * A dimension-specific alias for face<4>(), or an alias for
          * simplex() in dimension \a dim = 4.
          *
-         * This alias is available for dimensions \a dim &ge; 4.
+         * This alias is available for dimensions \a dim ≥ 4.
          *
          * See face() for further information.
          */
@@ -982,7 +982,7 @@ class TriangulationBase :
          * A dimension-specific alias for face<4>(), or an alias for
          * simplex() in dimension \a dim = 4.
          *
-         * This alias is available for dimensions \a dim &ge; 4.
+         * This alias is available for dimensions \a dim ≥ 4.
          * It returns a const pentachoron pointer in dimension \a dim = 4,
          * and a non-const pentachoron pointer in all higher dimensions.
          *
@@ -1066,7 +1066,7 @@ class TriangulationBase :
          *      triangulation, its link must be a topological ball;
          *    - for a vertex that does not belong to any boundary facets,
          *      its link must be a closed (\a dim - 1)-manifold;
-         *    - for a (\a subdim &ge; 1)-face that does not belong to any
+         *    - for a (\a subdim ≥ 1)-face that does not belong to any
          *      boundary facets, its link must be a topological sphere.
          *
          * Condition (1) is tested for all dimensions \a dim.
@@ -1610,7 +1610,7 @@ class TriangulationBase :
          *   `v[dim-k+1]`,...,`v[dim]` of \a s respectively,
          *   where \a v is the permutation `emb.vertices()`.
          *
-         * - Finally, we note that for \a k &gt; 1, the orientation for \a d
+         * - Finally, we note that for \a k > 1, the orientation for \a d
          *   does not depend on the particular choice of \a s and \a emb: by
          *   the preconditions and the fact that this routine only considers
          *   duals of non-boundary faces, the link of \a f must be a sphere,

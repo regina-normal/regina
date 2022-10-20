@@ -216,7 +216,7 @@ class Perm<6> {
          * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 719 inclusive.
          * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n &ge; 8).
+         * the larger permutation classes Perm<n> with \a n ≥ 8).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -251,7 +251,7 @@ class Perm<6> {
          * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 719 inclusive.
          * This element access is extremely fast (a fact that is not true for
-         * the larger permutation classes Perm<n> with \a n &ge; 8).
+         * the larger permutation classes Perm<n> with \a n ≥ 8).
          *
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[5]).
@@ -901,9 +901,9 @@ class Perm<6> {
          *
          * For all permutation classes Perm<n>, the tight encoding is based on
          * the index into the full permutation group \a S_n.  For smaller
-         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * permutation classes (\a n ≤ 7), such encodings are very fast to
          * work with since the \a S_n index is used as the internal permutation
-         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * code.  For larger permutation classes however (8 ≤ \a n ≤ 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
          * \nopython Use tightEncoding() instead, which returns a string.
@@ -919,9 +919,9 @@ class Perm<6> {
          *
          * For all permutation classes Perm<n>, the tight encoding is based on
          * the index into the full permutation group \a S_n.  For smaller
-         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * permutation classes (\a n ≤ 7), such encodings are very fast to
          * work with since the \a S_n index is used as the internal permutation
-         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * code.  For larger permutation classes however (8 ≤ \a n ≤ 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
          * \return the resulting encoded string.
@@ -938,8 +938,8 @@ class Perm<6> {
          * an invalid encoding (i.e., this routine will throw an exception).
          *
          * Tight encodings are fast to work with for small permutation classes
-         * (\a n &le; 7), but slower for larger permutation classes
-         * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
+         * (\a n ≤ 7), but slower for larger permutation classes
+         * (8 ≤ \a n ≤ 16).  See tightEncoding() for further details.
          *
          * \exception InvalidArgument The given string is not a tight encoding
          * of a 6-element permutation.
@@ -962,8 +962,8 @@ class Perm<6> {
          * whitespace.
          *
          * Tight encodings are fast to work with for small permutation classes
-         * (\a n &le; 7), but slower for larger permutation classes
-         * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
+         * (\a n ≤ 7), but slower for larger permutation classes
+         * (8 ≤ \a n ≤ 16).  See tightEncoding() for further details.
          *
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of a 6-element permutation.
@@ -1048,7 +1048,7 @@ class Perm<6> {
 
         /**
          * Extends a <i>k</i>-element permutation to a 6-element permutation,
-         * where 2 &le; \a k &lt; 6.
+         * where 2 ≤ \a k &lt; 6.
          *
          * The resulting permutation will map 0,...,<i>k</i>-1 to their
          * respective images under \a p, and will map the "unused" elements
@@ -1066,7 +1066,7 @@ class Perm<6> {
 
         /**
          * Restricts a <i>k</i>-element permutation to an 6-element
-         * permutation, where \a k &gt; 6.
+         * permutation, where \a k > 6.
          *
          * The resulting permutation will map 0,...,5 to their
          * respective images under \a p, and will ignore the "unused" images

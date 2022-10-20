@@ -207,7 +207,7 @@
  *  intrinsic difficulty of solving even simple problems in higher dimensions
  *  (for instance, in dimension&nbsp;5 it is not known how to reliably test
  *  whether a given triangulation represents a closed 5-manifold, and
- *  in dimensions &ge;&nbsp;6 this is provably undecidable).
+ *  in dimensions ≥&nbsp;6 this is provably undecidable).
  */
 
 // Put ourselves in the regina namespace so that automatic links work.

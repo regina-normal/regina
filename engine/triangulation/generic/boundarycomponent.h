@@ -59,13 +59,13 @@ namespace regina {
  *
  * - An <i>ideal boundary component</i> consists of a single ideal vertex;
  *   that is, a vertex whose link is a closed (<i>dim</i>-1)-manifold but not
- *   a sphere.  This is only possible for dimensions \a dim &ge; 3.
+ *   a sphere.  This is only possible for dimensions \a dim ≥ 3.
  *
  * - An <i>invalid vertex boundary component</i> consists of a single invalid
  *   invalid vertex that does not belong to a real boundary component.  This
  *   means the vertex link must be an ideal (<i>dim</i>-1)-manifold, or an
  *   invalid (<i>dim</i>-1)-manifold with no real boundary.  Invalid vertex
- *   boundary components are only possible for dimensions \a dim &ge; 4.
+ *   boundary components are only possible for dimensions \a dim ≥ 4.
  *
  * Ideal and invalid vertex boundary components are \e only recognised
  * when \a dim is one of Regina's \ref stddim "standard dimensions".

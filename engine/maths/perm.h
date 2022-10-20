@@ -61,7 +61,7 @@ namespace regina {
  *
  * - For \a i = 0,...,9, this will be the usual digit representing \a i.
  *
- * - For \a i &ge; 10, this will be a lower-case letter.  In particular,
+ * - For \a i ≥ 10, this will be a lower-case letter.  In particular,
  *   for \a i = 10,...,15, this will be the usual hexadecimal digit
  *   representing \a i.
  *
@@ -132,14 +132,14 @@ enum PermCodeType {
  * Perm objects are small enough to pass by value and swap with std::swap(),
  * with no need to use references, specialised move operations or custom
  * swap functions.  The trade-off is that, for this to be possible, the
- * Perm template class can only work with \a n &le; 16.
+ * Perm template class can only work with \a n ≤ 16.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the entire permutation.
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  These codes are constructed as follows:
  *
- * - For 8 &le; \a n &le; 16, the code is an <i>image pack</i>: essentially a
+ * - For 8 ≤ \a n ≤ 16, the code is an <i>image pack</i>: essentially a
  *   packed array that holds the images of 0,...,<i>n</i>-1 in a single native
  *   integer type.  More precisely, this is an unsigned integer of type
  *   \a ImagePack, whose lowest \a imageBits bits represent the image of 0,
@@ -147,7 +147,7 @@ enum PermCodeType {
  *   This scheme is consistent with the old first-generation codes for
  *   \a n = 4,...,7, which are still supported but no longer used internally.
  *
- * - For \a n &le; 7, the code is an index into a hard-coded list of
+ * - For \a n ≤ 7, the code is an index into a hard-coded list of
  *   all possible permutations; more precisely, an index into the symmetric
  *   group Perm<n>::Sn.  The ordering of Perm<n>::Sn is "almost lexicographic",
  *   in that we swap some pairs of indices (2<i>k</i>, 2<i>k</i>+1) to ensure
@@ -157,7 +157,7 @@ enum PermCodeType {
  * triangulations), this template is specialised: the code is highly optimised
  * and also offers some extra functionality.  For \a n = 6,7, this template
  * is again specialised and highly optimised, and it offers some extra
- * functionality but not as much as Perm<5> and below.  For \a n &ge; 8,
+ * functionality but not as much as Perm<5> and below.  For \a n ≥ 8,
  * this template is generic and most operations require more time (in
  * particular, there are no harded-coded lookup tables).
  *
@@ -203,7 +203,7 @@ class Perm {
          * Indicates the native unsigned integer type used to store a
          * single image pack.  See the class notes for more information
          * on image packs, and how they are used as permutation codes
-         * for \a n &ge; 7.
+         * for \a n ≥ 7.
          */
         using ImagePack = typename IntOfMinSize<(imageBits * n + 7) / 8>::utype;
 
@@ -264,8 +264,8 @@ class Perm {
              * Returns the permutation at the given index in the array Sn.
              * See Perm<n>::Sn for details.
              *
-             * For \a n &le; 7, this operator is very fast (and constant time).
-             * However, for \a n &ge; 8 it is not constant time; the current
+             * For \a n ≤ 7, this operator is very fast (and constant time).
+             * However, for \a n ≥ 8 it is not constant time; the current
              * implementation is quadratic in \a n.
              *
              * \param index an index between 0 and <i>n</i>!-1 inclusive.
@@ -289,8 +289,8 @@ class Perm {
              * Returns the permutation at the given index in the array
              * orderedSn.  See Perm<n>::orderedSn for details.
              *
-             * For \a n &le; 7, this operator is very fast (and constant time).
-             * However, for \a n &ge; 8 it is not constant time; the current
+             * For \a n ≤ 7, this operator is very fast (and constant time).
+             * However, for \a n ≥ 8 it is not constant time; the current
              * implementation is quadratic in \a n.
              *
              * \param index an index between 0 and <i>n</i>!-1 inclusive.
@@ -327,8 +327,8 @@ class Perm {
          * In particular, you cannot make a reference to it (but it is cheap
          * to make a copy).
          *
-         * \warning For \a n &le; 7, the square bracket operator is a
-         * very fast constant-time routine.  However, for \a n &ge; 8,
+         * \warning For \a n ≤ 7, the square bracket operator is a
+         * very fast constant-time routine.  However, for \a n ≥ 8,
          * this is not constant time; the current implementation is
          * quadratic in \a n.
          */
@@ -353,8 +353,8 @@ class Perm {
          * In particular, you cannot make a reference to it (but it is cheap
          * to make a copy).
          *
-         * \warning For \a n &le; 7, the square bracket operator is a
-         * very fast constant-time routine.  However, for \a n &ge; 8,
+         * \warning For \a n ≤ 7, the square bracket operator is a
+         * very fast constant-time routine.  However, for \a n ≥ 8,
          * this is not constant time; the current implementation is
          * quadratic in \a n.
          */
@@ -384,7 +384,7 @@ class Perm {
          * Creates the transposition of \a a and \a b.
          * Note that \a a and \a b need not be distinct.
          *
-         * \pre 0 &le; \a a,\a b < \a n.
+         * \pre 0 ≤ \a a,\a b < \a n.
          *
          * \param a the element to switch with \a b.
          * \param b the element to switch with \a a.
@@ -393,7 +393,7 @@ class Perm {
 
         /**
          * Creates a permutation mapping \a i to \a image[\a i] for each
-         * 0 &le; \a i < \a n.
+         * 0 ≤ \a i < \a n.
          *
          * \pre The elements of \a image are 0,...,<i>n</i>-1 in some order.
          *
@@ -462,7 +462,7 @@ class Perm {
          * See the class notes for more information on image packs, and how
          * they are used to build permutation codes.
          *
-         * For \a n &ge; 7, this routine is identical to permCode().
+         * For \a n ≥ 7, this routine is identical to permCode().
          *
          * \return the image pack for this permutation.
          */
@@ -474,7 +474,7 @@ class Perm {
          * See the class notes for more information on image packs, and how
          * they are used to build permutation codes.
          *
-         * For \a n &ge; 7, this routine is identical to fromPermCode().
+         * For \a n ≥ 7, this routine is identical to fromPermCode().
          *
          * \pre The argument \a pack is a valid image pack; see isImagePack()
          * for details.
@@ -491,7 +491,7 @@ class Perm {
          * See the class notes for more information on image packs, and how
          * they are used to build permutation codes.
          *
-         * For \a n &ge; 7, this routine is identical to isPermCode().
+         * For \a n ≥ 7, this routine is identical to isPermCode().
          *
          * \param pack the candidate image pack to test.
          * \return \c true if and only if \a pack is a valid image pack.
@@ -565,7 +565,7 @@ class Perm {
         /**
          * Determines if this is equal to the given permutation.
          * This is true if and only if both permutations have the same
-         * images for all 0 &le; \a i < \a n.
+         * images for all 0 ≤ \a i < \a n.
          *
          * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
@@ -576,7 +576,7 @@ class Perm {
         /**
          * Determines if this differs from the given permutation.
          * This is true if and only if the two permutations have
-         * different images for some 0 &le; \a i < \a n.
+         * different images for some 0 ≤ \a i < \a n.
          *
          * \param other the permutation with which to compare this.
          * \return \c true if and only if this and the given permutation
@@ -598,7 +598,7 @@ class Perm {
         /**
          * Determines if this is the identity permutation.
          * This is true if and only if every integer
-         * 0 &le; \a i < \a n is mapped to itself.
+         * 0 ≤ \a i < \a n is mapped to itself.
          *
          * \return \c true if and only if this is the identity
          * permutation.
@@ -710,9 +710,9 @@ class Perm {
          *
          * For all permutation classes Perm<n>, the tight encoding is based on
          * the index into the full permutation group \a S_n.  For smaller
-         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * permutation classes (\a n ≤ 7), such encodings are very fast to
          * work with since the \a S_n index is used as the internal permutation
-         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * code.  For larger permutation classes however (8 ≤ \a n ≤ 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
          * \nopython Use tightEncoding() instead, which returns a string.
@@ -728,9 +728,9 @@ class Perm {
          *
          * For all permutation classes Perm<n>, the tight encoding is based on
          * the index into the full permutation group \a S_n.  For smaller
-         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * permutation classes (\a n ≤ 7), such encodings are very fast to
          * work with since the \a S_n index is used as the internal permutation
-         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * code.  For larger permutation classes however (8 ≤ \a n ≤ 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
          * \return the resulting encoded string.
@@ -747,8 +747,8 @@ class Perm {
          * an invalid encoding (i.e., this routine will throw an exception).
          *
          * Tight encodings are fast to work with for small permutation classes
-         * (\a n &le; 7), but slower for larger permutation classes
-         * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
+         * (\a n ≤ 7), but slower for larger permutation classes
+         * (8 ≤ \a n ≤ 16).  See tightEncoding() for further details.
          *
          * \exception InvalidArgument The given string is not a tight encoding
          * of an <i>n</i>-element permutation.
@@ -771,8 +771,8 @@ class Perm {
          * whitespace.
          *
          * Tight encodings are fast to work with for small permutation classes
-         * (\a n &le; 7), but slower for larger permutation classes
-         * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
+         * (\a n ≤ 7), but slower for larger permutation classes
+         * (8 ≤ \a n ≤ 16).  See tightEncoding() for further details.
          *
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an <i>n</i>-element permutation.
@@ -804,7 +804,7 @@ class Perm {
 
         /**
          * Extends a <i>k</i>-element permutation to an <i>n</i>-element
-         * permutation, where 2 &le; \a k &lt; \a n.
+         * permutation, where 2 ≤ \a k &lt; \a n.
          *
          * The resulting permutation will map 0,...,<i>k</i>-1 to their
          * respective images under \a p, and will map the "unused" elements
@@ -822,7 +822,7 @@ class Perm {
 
         /**
          * Restricts a <i>k</i>-element permutation to an <i>n</i>-element
-         * permutation, where \a k &gt; \a n.
+         * permutation, where \a k > \a n.
          *
          * The resulting permutation will map 0,...,<i>n</i>-1 to their
          * respective images under \a p, and will ignore the "unused" images

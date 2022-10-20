@@ -45,14 +45,14 @@ namespace regina {
 
 /**
  * Returns the binomial coefficient \a n choose \a k in constant time
- * for small arguments (\a n &le; 16).
+ * for small arguments (\a n ≤ 16).
  *
  * This routine is very fast, since it uses a constant-time lookup.
- * The trade-off is that it can only be used for \a n &le; 16.
+ * The trade-off is that it can only be used for \a n ≤ 16.
  *
- * \note The constraint \a n &le; 16 is large enough for working with
+ * \note The constraint \a n ≤ 16 is large enough for working with
  * triangulations in Regina, since Regina restricts its triangulations to
- * dimension &le; 15 (where each simplex has 16 vertices).
+ * dimension ≤ 15 (where each simplex has 16 vertices).
  *
  * \param n the parameter \a n in (\a n choose \a k); this must be
  * between 0 and 16 inclusive.
@@ -66,14 +66,14 @@ constexpr int binomSmall(int n, int k);
 
 /**
  * Returns the binomial coefficient \a n choose \a k in linear time
- * for medium-sized arguments (\a n &le; 29).
+ * for medium-sized arguments (\a n ≤ 29).
  *
  * This routine computes the binomial coefficient using the standard
  * formula.  It works entirely with native long integers; the constraint
- * \a n &le; 29 is designed to avoid overflow (since all intermediate
+ * \a n ≤ 29 is designed to avoid overflow (since all intermediate
  * results are guaranteed to stay below 2^31).
  *
- * If \a n &le; 16 then this routine will use the same constant-time
+ * If \a n ≤ 16 then this routine will use the same constant-time
  * lookup as binomSmall() (i.e., there is no penalty for calling this
  * routine with very small arguments).
  *
@@ -90,9 +90,9 @@ constexpr long binomMedium(int n, int k);
 namespace detail {
 
 /**
- * A lookup table that stores (\a n choose \a k) for all \a n &le; \a 16.
+ * A lookup table that stores (\a n choose \a k) for all \a n ≤ \a 16.
  *
- * For all values 0 &le; \a k &le; \a n &le; 16, the value
+ * For all values 0 ≤ \a k ≤ \a n ≤ 16, the value
  * \a binomSmall_[\a n][\a k] is the binomial coefficient (\a n choose \a k).
  *
  * This array is used in the implementation of the function binomSmall().

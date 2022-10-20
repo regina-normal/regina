@@ -393,7 +393,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for face<2>().
          *
-         * This alias is available for dimensions \a dim &ge; 3.
+         * This alias is available for dimensions \a dim ≥ 3.
          *
          * See face() for further information.
          */
@@ -402,7 +402,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for face<3>().
          *
-         * This alias is available for dimensions \a dim &ge; 4.
+         * This alias is available for dimensions \a dim ≥ 4.
          *
          * See face() for further information.
          */
@@ -411,7 +411,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for face<4>().
          *
-         * This alias is available for dimensions \a dim &ge; 5.
+         * This alias is available for dimensions \a dim ≥ 5.
          *
          * See face() for further information.
          */
@@ -467,7 +467,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *   of the vertices Face<dim, subdim>::ordering[0,...,\a subdim].
          *
          * - If \a F also appears as face number \a k in some other simplex
-         *   \a s, then for each \a i in the range 0 &le; \a i &le; \a subdim,
+         *   \a s, then for each \a i in the range 0 ≤ \a i ≤ \a subdim,
          *   vertex `p[i]` of this simplex will be identified with
          *   vertex <i>s</i>.faceMapping(\a k)[\a i] of simplex \a s.
          *
@@ -562,7 +562,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for faceMapping<2>().
          *
-         * This alias is available for dimensions \a dim &ge; 3.
+         * This alias is available for dimensions \a dim ≥ 3.
          *
          * See faceMapping() for further information.
          */
@@ -571,7 +571,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for faceMapping<3>().
          *
-         * This alias is available for dimensions \a dim &ge; 4.
+         * This alias is available for dimensions \a dim ≥ 4.
          *
          * See faceMapping() for further information.
          */
@@ -580,7 +580,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         /**
          * A dimension-specific alias for faceMapping<4>().
          *
-         * This alias is available for dimensions \a dim &ge; 5.
+         * This alias is available for dimensions \a dim ≥ 5.
          *
          * See faceMapping() for further information.
          */

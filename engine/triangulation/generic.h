@@ -35,7 +35,7 @@
  *  triangulations.  This includes headers for the main class
  *  Triangulation<\a dim>, as well as the face classes Face<\a dim,\a subdim>,
  *  the component classes Component<\a dim> and BoundaryComponent<\a dim>, and
- *  the isomorphism class Isomorphism<\a dim>, for all dimensions \a dim &ge; 5.
+ *  the isomorphism class Isomorphism<\a dim>, for all dimensions \a dim ≥ 5.
  */
 
 #ifndef __REGINA_GENERIC_H

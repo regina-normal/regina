@@ -291,7 +291,7 @@ class BoundaryComponentBase :
          * A dimension-specific alias for countFaces<2>().
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         * \ref stddim "standard dimensions" and \a dim ≥ 3.
          *
          * See countFaces() for further information.
          */
@@ -437,7 +437,7 @@ class BoundaryComponentBase :
          * A dimension-specific alias for faces<2>().
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         * \ref stddim "standard dimensions" and \a dim ≥ 3.
          *
          * See faces() for further information.
          */
@@ -560,7 +560,7 @@ class BoundaryComponentBase :
          * A dimension-specific alias for face<2>().
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         * \ref stddim "standard dimensions" and \a dim ≥ 3.
          *
          * See face() for further information.
          */
@@ -738,7 +738,7 @@ class BoundaryComponentBase :
          * ideal vertex and no faces of any other dimensions.
          *
          * See the BoundaryComponent class notes for an overview of ideal
-         * boundary components, which can only occur in dimensions &ge; 3,
+         * boundary components, which can only occur in dimensions ≥ 3,
          * and which are only recognised where \a dim is one of Regina's
          * \ref stddim "standard dimensions".
          *
@@ -772,7 +772,7 @@ class BoundaryComponentBase :
          *
          * See the BoundaryComponent class notes for an overview of
          * invalid vertex boundary components, which can only occur in
-         * dimensions &ge; 4, and which are only recognised where \a dim is
+         * dimensions ≥ 4, and which are only recognised where \a dim is
          * one of Regina's \ref stddim "standard dimensions".
          *
          * An invalid vertex is only placed in its own boundary component if

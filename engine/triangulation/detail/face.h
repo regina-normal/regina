@@ -689,7 +689,7 @@ class FaceBase :
          *      triangulation, its link must be a topological ball;
          *    - for a vertex that does not belong to any boundary facets,
          *      its link must be a closed (\a dim - 1)-manifold;
-         *    - for a (\a subdim &ge; 1)-face that does not belong to any
+         *    - for a (\a subdim ≥ 1)-face that does not belong to any
          *      boundary facets, its link must be a topological sphere.
          *
          * Condition (1) is tested for all dimensions \a subdim and \a dim.
@@ -797,7 +797,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for face<2>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 3.
+         * This alias is available for facial dimensions \a subdim ≥ 3.
          *
          * See face() for further information.
          */
@@ -806,7 +806,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for face<3>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 4.
+         * This alias is available for facial dimensions \a subdim ≥ 4.
          *
          * See face() for further information.
          */
@@ -815,7 +815,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for face<4>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 5.
+         * This alias is available for facial dimensions \a subdim ≥ 5.
          *
          * See face() for further information.
          */
@@ -899,7 +899,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for faceMapping<2>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 3.
+         * This alias is available for facial dimensions \a subdim ≥ 3.
          *
          * See faceMapping() for further information.
          */
@@ -908,7 +908,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for faceMapping<3>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 4.
+         * This alias is available for facial dimensions \a subdim ≥ 4.
          *
          * See faceMapping() for further information.
          */
@@ -917,7 +917,7 @@ class FaceBase :
         /**
          * A dimension-specific alias for faceMapping<4>().
          *
-         * This alias is available for facial dimensions \a subdim &ge; 5.
+         * This alias is available for facial dimensions \a subdim ≥ 5.
          *
          * See faceMapping() for further information.
          */

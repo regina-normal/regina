@@ -174,7 +174,7 @@ constexpr int bitsRequired(IntType n) {
  * \tparam IntType any integer type, such as \c int, \c long, and so on.
  *
  * \param n any integer.
- * \return the smallest integer power of two that is &ge; \a n.
+ * \return the smallest integer power of two that is ≥ \a n.
  *
  * \ingroup utilities
  */

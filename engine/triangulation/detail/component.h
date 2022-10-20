@@ -191,7 +191,7 @@ class ComponentBase :
          * A dimension-specific alias for countFaces<3>().
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         * \ref stddim "standard dimensions" and \a dim ≥ 3.
          *
          * See countFaces() for further information.
          */
@@ -201,7 +201,7 @@ class ComponentBase :
          * A dimension-specific alias for countFaces<4>().
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 4.
+         * \ref stddim "standard dimensions" and \a dim ≥ 4.
          *
          * See countFaces() for further information.
          */
@@ -250,7 +250,7 @@ class ComponentBase :
          * simplices() in dimension \a dim = 3.
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         * \ref stddim "standard dimensions" and \a dim ≥ 3.
          *
          * See faces() for further information.
          */
@@ -261,7 +261,7 @@ class ComponentBase :
          * simplices() in dimension \a dim = 4.
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 4.
+         * \ref stddim "standard dimensions" and \a dim ≥ 4.
          *
          * See faces() for further information.
          */
@@ -330,7 +330,7 @@ class ComponentBase :
          * A dimension-specific alias for face<3>().
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         * \ref stddim "standard dimensions" and \a dim ≥ 3.
          *
          * See face() for further information.
          */
@@ -340,7 +340,7 @@ class ComponentBase :
          * A dimension-specific alias for face<4>().
          *
          * This alias is available only when \a dim is one of Regina's
-         * \ref stddim "standard dimensions" and \a dim &ge; 4.
+         * \ref stddim "standard dimensions" and \a dim ≥ 4.
          *
          * See face() for further information.
          */

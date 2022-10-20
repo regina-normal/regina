@@ -309,7 +309,7 @@ class HilbertDual {
                  * create this vector.
                  *
                  * Specifically: Suppose this vector was created using
-                 * formSum().  If nextHyp() &ge; 0, then this routine returns
+                 * formSum().  If nextHyp() ≥ 0, then this routine returns
                  * `pos.nextHyp()` where \a pos was the
                  * positive summand passed to formSum().
                  * If nextHyp() &lt; 0, then this routine returns

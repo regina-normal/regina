@@ -988,7 +988,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * presentations, which may be useful when small cancellation theory
          * can't find the simplest relators.
          *
-         * Given a presentation &lt;g_i | r_i&gt;, this routine appends
+         * Given a presentation `<g_i | r_i>`, this routine appends
          * consequences of the relators {r_i} to the presentation that
          * are of the form ab, where both a and b are cyclic permutations
          * of relators from the collection {r_i}.
@@ -1440,7 +1440,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Writes a TeX represesentation of this group presentation
          * to the given output stream.
          *
-         * The output will be of the form &lt; generators | relators &gt;.
+         * The output will be of the form `< generators | relators >`.
          * There will be no final newline.
          *
          * \nopython Instead use the variant tex() that takes no arguments
@@ -1466,7 +1466,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Writes a compact represesentation of this group to the given
          * output stream.
          *
-         * The output will be of the form &lt; generators | relators &gt;.
+         * The output will be of the form `< generators | relators >`.
          * The full relations will be included, and the entire output
          * will be written on a single line.  There will be no final newline.
          *
