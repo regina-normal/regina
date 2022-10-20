@@ -213,7 +213,7 @@ class Perm<6> {
          * six elements.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
+         * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 719 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n &ge; 8).
@@ -248,7 +248,7 @@ class Perm<6> {
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
+         * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 719 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n &ge; 8).
@@ -555,7 +555,7 @@ class Perm<6> {
          * Returns the composition of this permutation with the given
          * permutation.  If this permutation is <i>p</i>, the
          * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
-         * <tt>(p*q)[x] == p[q[x]]</tt>.
+         * `(p*q)[x] == p[q[x]]`.
          *
          * For permutations of five and fewer objects, composition is
          * extremely fast because it uses hard-coded lookup tables.
@@ -591,7 +591,7 @@ class Perm<6> {
          * will consume roughly 1MB of memory for the lifetime of your program.
          *
          * The permutation that is returned is the same as you would
-         * obtain by calling <tt>(*this) * q</tt>.
+         * obtain by calling `(*this) * q`.
          *
          * \pre You \e must have called the routine precompute() at least once
          * in the lifetime of this program before using cachedComp().
@@ -616,7 +616,7 @@ class Perm<6> {
          * will consume roughly 1MB of memory for the lifetime of your program.
          *
          * The permutation that is returned is the same as you would
-         * obtain by calling <tt>(*this) * q * r</tt>.
+         * obtain by calling `(*this) * q * r`.
          *
          * \pre You \e must have called the routine precompute() at least once
          * in the lifetime of this program before using cachedComp().
@@ -701,7 +701,7 @@ class Perm<6> {
          *
          * Here \e reverse means that we reverse the images of 0,...,5.
          * In other words, if permutation \a q is the
-         * reverse of \a p, then <tt>p[i] == q[5 - i]</tt> for all \a i.
+         * reverse of \a p, then `p[i] == q[5 - i]` for all \a i.
          */
         constexpr Perm<6> reverse() const;
 
@@ -841,7 +841,7 @@ class Perm<6> {
          * the mutex protecting Regina's global uniform random bit generator.
          * If you are calling this many times in quick succession, consider
          * creating a single RandomEngine object yourself and then calling
-         * <tt>rand(randomEngine.engine(), even)</tt>.
+         * `rand(randomEngine.engine(), even)`.
          *
          * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
@@ -878,7 +878,7 @@ class Perm<6> {
          * Returns a string representation of this permutation.
          * The representation will consist of six adjacent digits
          * representing the images of 0, 1, 2, 3, 4 and 5 respectively.
-         * An example of a string representation is <tt>304521</tt>.
+         * An example of a string representation is `304521`.
          *
          * \return a string representation of this permutation.
          */
@@ -982,7 +982,7 @@ class Perm<6> {
          * identity map.
          *
          * Specifically, for each \a i in the range <i>from</i>,...,5,
-         * this routine will ensure that <tt>image[i] == i</tt>.  The images of
+         * this routine will ensure that `image[i] == i`.  The images of
          * 0,1,...,<i>from</i>-1 will not be altered.
          *
          * \pre The images of <i>from</i>,...,5 are exactly
@@ -1105,8 +1105,8 @@ class Perm<6> {
          * Contains the first-generation permutation codes for all
          * permutations in S6.
          *
-         * Specifically, the permutation <tt>S6[i]</tt> has
-         * first-generation code <tt>code1Table[i]</tt>.
+         * Specifically, the permutation `S6[i]` has
+         * first-generation code `code1Table[i]`.
          */
         static constexpr int code1Table[720] = {
             // Generated using Regina 6.0.
@@ -1205,8 +1205,8 @@ class Perm<6> {
         /**
          * Contains the inverses of the permutations in the array \a S6.
          *
-         * Specifically, the inverse of permutation <tt>S6[i]</tt> is
-         * the permutation <tt>S6[ invS6[i] ]</tt>.
+         * Specifically, the inverse of permutation `S6[i]` is
+         * the permutation `S6[ invS6[i] ]`.
          */
         static constexpr Code2 invS6[720] = {
             // Generated using Regina 6.0.
@@ -2965,7 +2965,7 @@ class Perm<6> {
          * Contains a full table of two-element swaps.
          *
          * Specifically, the permutation that swaps \a x and \a y is
-         * <tt>S6[swapTable[x][y]]</tt>.  Here \a x and \a y may be equal.
+         * `S6[swapTable[x][y]]`.  Here \a x and \a y may be equal.
          */
         static constexpr Code2 swapTable[6][6] = {
             // Generated using Regina 6.0.

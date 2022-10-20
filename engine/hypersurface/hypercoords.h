@@ -361,7 +361,7 @@ class HyperEncoding {
          * Reconstructs an encoding from an integer value.
          *
          * This is a partner routine to intValue(): for any encoding \a enc,
-         * the encoding <tt>fromIntValue(enc.intValue())</tt> is always equal
+         * the encoding `fromIntValue(enc.intValue())` is always equal
          * to \a enc.
          *
          * The main purpose of intValue() and fromIntValue() is to support

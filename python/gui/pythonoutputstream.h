@@ -95,7 +95,7 @@ class PythonOutputStream {
         /**
          * Uses this object for either standard output or standard error.
          *
-         * This will set <tt>sys.&lt;streamname&gt;</tt> to this object.
+         * This will set `sys.<streamname>` to this object.
          *
          * \pre \a streamName must be either "stdout" or "stderr".
          * \pre The python bindings for PythonOutputStream have already been

@@ -256,7 +256,7 @@ class Qitmask1 {
         /**
          * Determines whether there is some index at which both this and
          * the given qitmask both have non-zero qits.  That is, there is some
-         * index \a i for which <tt>get(i)</tt> and <tt>other.get(i)</tt>
+         * index \a i for which `get(i)` and `other.get(i)`
          * are both non-zero.
          *
          * Note that these two qits do not need to be equal; they
@@ -512,7 +512,7 @@ class Qitmask2 {
         /**
          * Determines whether there is some index at which both this and
          * the given qitmask both have non-zero qits.  That is, there is some
-         * index \a i for which <tt>get(i)</tt> and <tt>other.get(i)</tt>
+         * index \a i for which `get(i)` and `other.get(i)`
          * are both non-zero.
          *
          * Note that these two qits do not need to be equal; they

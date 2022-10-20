@@ -101,8 +101,8 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          * Moves the contents of the given structure into this new structure.
          *
          * The internal SatBlock pointer will be preserved; that is, the
-         * pointer <tt>this->block()</tt> after the move will be the
-         * same as the pointer <tt>src.block()</tt> before the move.
+         * pointer `this->block()` after the move will be the
+         * same as the pointer `src.block()` before the move.
          *
          *
          * The structure that was passed (\a src) will no longer be usable.
@@ -120,8 +120,8 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          * The structure that was passed (\a src) will no longer be usable.
          *
          * The internal SatBlock pointer will be preserved; that is, the
-         * pointer <tt>this->block()</tt> after the move will be the
-         * same as the pointer <tt>src.block()</tt> before the move.
+         * pointer `this->block()` after the move will be the
+         * same as the pointer `src.block()` before the move.
          *
          * \return a reference to this structure.
          */
@@ -131,9 +131,9 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          * Swaps the contents of this and the given structure.
          *
          * In particular, the internal SatBlock pointers will be swapped; that
-         * is, the pointers <tt>this->block()</tt> and <tt>other.block()</tt>
-         * after the move will be the same as <tt>other.block()</tt> and
-         * <tt>this->block()</tt> were respectively before the move.
+         * is, the pointers `this->block()` and `other.block()`
+         * after the move will be the same as `other.block()` and
+         * `this->block()` were respectively before the move.
          *
          * \param other the structure whose contents should be swapped with
          * this.
@@ -229,9 +229,9 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
  * Swaps the contents of the two given structures.
  *
  * In particular, the internal SatBlock pointers will be swapped; that
- * is, the pointers <tt>a.block()</tt> and <tt>b.block()</tt>
- * after the move will be the same as <tt>b.block()</tt> and
- * <tt>a.block()</tt> were respectively before the move.
+ * is, the pointers `a.block()` and `b.block()`
+ * after the move will be the same as `b.block()` and
+ * `a.block()` were respectively before the move.
  *
  * This global routine simply calls SatBlockSpec::swap(); it is provided
  * so that SatBlockSpec meets the C++ Swappable requirements.

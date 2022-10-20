@@ -70,7 +70,7 @@ template <typename TetData> class DiscSpecIterator;
  * with no need for any specialised move operations or swap functions.
  *
  * \warning This class converts the indices of normal discs of a
- * given type from LargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to `unsigned long`.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
@@ -146,7 +146,7 @@ struct DiscSpec {
 /**
  * Writes the given disc specifier to the given output stream.
  * The disc specifier will be written as a triple
- * <tt>(tetIndex, type, number)</tt>.
+ * `(tetIndex, type, number)`.
  *
  * \param out the output stream to which to write.
  * \param spec the disc specifier to write.
@@ -205,7 +205,7 @@ bool discOrientationFollowsEdge(int discType, int vertex,
  * with no need for any specialised move operations or swap functions.
  *
  * \warning This class converts the number of normal discs of a
- * given type from LargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to `unsigned long`.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
@@ -213,8 +213,8 @@ bool discOrientationFollowsEdge(int discType, int vertex,
  * \pre This class should only be used with \a embedded normal surfaces.
  *
  * \todo \problong Have some error flag so we can barf politely if the number
- * of normal discs of a given type does not fit into an <tt>unsigned
- * long</tt>.  See how this affects DiscSetTetData also.
+ * of normal discs of a given type does not fit into an `unsigned long`.
+ * See how this affects DiscSetTetData also.
  *
  * \ingroup surfaces
  */
@@ -242,8 +242,8 @@ class DiscSetTet {
          * \param surface the normal surface whose discs we shall use.
          * \param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
-         * 0 and <tt>tri.size()-1</tt> inclusive, where
-         * <tt>tri</tt> is the triangulation containing the given normal
+         * 0 and `tri.size()-1` inclusive, where
+         * `tri` is the triangulation containing the given normal
          * surface.
          */
         DiscSetTet(const NormalSurface& surface, size_t tetIndex);
@@ -337,7 +337,7 @@ class DiscSetTet {
          * this should be between 0 and 9 inclusive, as described in the
          * DiscSpec class notes.
          * \param discNumber indicates which normal disc of the given disc
-         * type is referred to (between 0 and <tt>nDiscs(discType)-1</tt>
+         * type is referred to (between 0 and `nDiscs(discType)-1`
          * inclusive).
          * \return the number of the normal arc of the given type that belongs
          * to the given normal disc.
@@ -368,8 +368,8 @@ class DiscSetTet {
          * \return a pair (\a discType, \a discNumber), where \a discType gives
          * the disc type of the normal disc that meets the given normal arc
          * (between 0 and 9 inclusive), and \a discNumber indicates which
-         * normal disc of the returned disc type (<tt>discType</tt>)
-         * meets the given normal arc (between 0 and <tt>nDiscs(discType)-1</tt>
+         * normal disc of the returned disc type (`discType`)
+         * meets the given normal arc (between 0 and `nDiscs(discType)-1`
          * inclusive).
          */
         std::pair<int, unsigned long> discFromArc(int arcFace, int arcVertex,
@@ -385,7 +385,7 @@ class DiscSetTet {
  * even when passing or returning objects by value.
  *
  * \warning This class converts the number of normal discs of a
- * given type from LargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to `unsigned long`.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
@@ -395,7 +395,7 @@ class DiscSetTet {
  * \pre Type T has a default constructor and an
  * assignment operator.  That is, if \c a and \c b are of type T, then
  * \c a can be declared with no parameters and can then receive the
- * value of \c b using <tt>a=b</tt>.
+ * value of \c b using `a=b`.
  *
  * \nopython
  *
@@ -422,7 +422,7 @@ class DiscSetTetData : public DiscSetTet {
          * \param surface the normal surface whose discs we shall use.
          * \param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
-         * 0 and <tt>tri.size()-1</tt> inclusive, where <tt>tri</tt> is the
+         * 0 and `tri.size()-1` inclusive, where `tri` is the
          * triangulation containing the given normal surface.
          */
         DiscSetTetData(const NormalSurface& surface,
@@ -441,8 +441,8 @@ class DiscSetTetData : public DiscSetTet {
          * \param surface the normal surface whose discs we shall use.
          * \param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
-         * 0 and <tt>tri.size()-1</tt> inclusive, where
-         * <tt>tri</tt> is the triangulation containing the given normal
+         * 0 and `tri.size()-1` inclusive, where
+         * `tri` is the triangulation containing the given normal
          * surface.
          * \param initValue the value with which to initialise the data
          * corresponding to each disc.
@@ -648,7 +648,7 @@ class DiscSetTetData : public DiscSetTet {
          * DiscSpec class notes.
          * \param discNumber indicates which normal disc of the given disc
          * type is referred to; this should be between 0 and
-         * <tt>nDiscs(discType)-1</tt> inclusive.
+         * `nDiscs(discType)-1` inclusive.
          * \return a reference to the data corresponding to the given
          * normal disc.
          */
@@ -694,7 +694,7 @@ void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
  * be data of type \a T stored alongside each normal disc.
  *
  * \warning This class converts the number of normal discs of a
- * given type from LargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to `unsigned long`.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
@@ -1011,9 +1011,9 @@ class DiscSetSurfaceDataImpl {
          * this disc set.
          *
          * A directed normal arc will be specified by a permutation
-         * <i>p</i>, where the arc runs around vertex <tt>p[0]</tt>
-         * parallel to the directed edge from vertex <tt>p[1]</tt> to
-         * <tt>p[2]</tt>.
+         * <i>p</i>, where the arc runs around vertex `p[0]`
+         * parallel to the directed edge from vertex `p[1]` to
+         * `p[2]`.
          *
          * \param disc the given normal disc; this must be a disc in this
          * disc set.
@@ -1163,7 +1163,7 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  * deduced.
  *
  * \warning This class converts the indices of normal discs of a
- * given type from LargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to `unsigned long`.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
@@ -1174,10 +1174,10 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  * case where \a TetData is the type DiscSetTet).  Moreover, instead of the
  * C++ interface described here, in Python DiscSetSurface and this class
  * together implement the Python iterable/iterator interface.
- * The DiscSetSurface class implements <tt>__iter__()</tt>, which returns a
- * DiscSpecIterator; then DiscSpecIterator implements <tt>next()</tt>, which
+ * The DiscSetSurface class implements `__iter__()`, which returns a
+ * DiscSpecIterator; then DiscSpecIterator implements `next()`, which
  * either returns the next normal disc in the set or else throws a
- * <tt>StopException</tt> if there are no more discs to return.
+ * `StopException` if there are no more discs to return.
  *
  * \ingroup surfaces
  */

@@ -54,7 +54,7 @@ namespace regina {
 
 /**
  * Returns the full version number of this calculation engine.
- * For instance, version 2.3.1 would have full version <tt>"2.3.1"</tt>.
+ * For instance, version 2.3.1 would have full version `"2.3.1"`.
  *
  * \return the version of this calculation engine.
  *
@@ -89,7 +89,7 @@ int versionMinor();
  * might return "Debian package build".
  *
  * This information is supplied at build time by passing the option
- * <tt>-DBUILD_INFO=...</tt> to CMake.
+ * `-DBUILD_INFO=...` to CMake.
  *
  * If no such information was supplied at build time, then this string
  * will be empty.

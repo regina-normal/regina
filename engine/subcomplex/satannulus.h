@@ -116,10 +116,10 @@ class Matrix2;
  * \ifacespython The member arrays \a tet and \a roles are accessed for
  * reading through functions \a tet() and \a roles() respectively.  For
  * instance, the first triangle tetrahedron for the saturated annulus \a a can
- * be accessed as <tt>a.tet(0)</tt>.  These same member arrays are
+ * be accessed as `a.tet(0)`.  These same member arrays are
  * accessed for writing through functions \a setTet() and \a setRoles(),
  * so for instance the second triangle vertex roles for the saturated annulus
- * \a a can be modified by calling <tt>a.setRoles(1, newRoles)</tt>.
+ * \a a can be modified by calling `a.setRoles(1, newRoles)`.
  *
  * \ingroup subcomplex
  */

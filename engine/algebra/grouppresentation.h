@@ -152,7 +152,7 @@ struct GroupExpressionTerm {
 
 /**
  * Writes the given term to the given output stream.
- * The term will be written in the format <tt>g3^-7</tt>, where in this
+ * The term will be written in the format `g3^-7`, where in this
  * example the term represents generator number 3 raised to the -7th power.
  *
  * If the term has exponent 0 or 1, the output format will be
@@ -172,8 +172,8 @@ std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
  * of powers of generators all of which are multiplied in order.  Each power
  * of a generator corresponds to an individual GroupExpressionTerm.
  *
- * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains the
- * three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that order.
+ * For instance, the expression `g1^2 g3^-1 g6` contains the
+ * three terms `g1^2`, `g3^-1` and `g6^1` in that order.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -220,10 +220,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
          *
-         * - <tt>a^7b^-2</tt>
-         * - <tt>aaaaaaaBB</tt>
-         * - <tt>a^7B^2</tt>
-         * - <tt>g0^7g1^-2</tt>
+         * - `a^7b^-2`
+         * - `aaaaaaaBB`
+         * - `a^7B^2`
+         * - `g0^7g1^-2`
          *
          * The string may contain whitespace, which will simply be ignored.
          *
@@ -237,10 +237,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
          *
-         * - <tt>a^7b^-2</tt>
-         * - <tt>aaaaaaaBB</tt>
-         * - <tt>a^7B^2</tt>
-         * - <tt>g0^7g1^-2</tt>
+         * - `a^7b^-2`
+         * - `aaaaaaaBB`
+         * - `a^7B^2`
+         * - `g0^7g1^-2`
          *
          * The string may contain whitespace, which will simply be ignored.
          *
@@ -300,9 +300,9 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * modifications made to this list will show up in the
          * expression itself.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list
-         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and
-         * <tt>g6^1</tt> in that order.
+         * For instance, the expression `g1^2 g3^-1 g6` has list
+         * consisting of three terms `g1^2`, `g3^-1` and
+         * `g6^1` in that order.
          *
          * \ifacespython The list itself is not returned by reference
          * (instead this routine returns a new Python list).  However,
@@ -317,9 +317,9 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Returns a constant reference to the list of terms in this
          * expression.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list
-         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and
-         * <tt>g6^1</tt> in that order.
+         * For instance, the expression `g1^2 g3^-1 g6` has list
+         * consisting of three terms `g1^2`, `g3^-1` and
+         * `g6^1` in that order.
          *
          * \ifacespython The list itself is not returned by reference
          * (instead this routine returns a new Python list).  However,
@@ -331,7 +331,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         /**
          * Returns the number of terms in this expression.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains three
+         * For instance, the expression `g1^2 g3^-1 g6` contains three
          * terms.  See also wordLength().
          *
          * \return the number of terms.
@@ -342,11 +342,11 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * with exponent +1 or -1 for which this word is expressable as a
          * product.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of
+         * For instance, the expression `g1^2 g3^-1 g6` is a word of
          * length four.  See also countTerms().
          *
          * No attempt is made to remove redundant terms (so the word
-         * <tt>g g^-1</tt> will count as length two).
+         * `g g^-1` will count as length two).
          *
          * \return the length of the word.
          */
@@ -355,7 +355,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Tests whether this is the trivial (unit) word.
          *
          * No attempt is made to remove redundant terms (so the word
-         * <tt>g g^-1</tt> will be treated as non-trivial).
+         * `g g^-1` will be treated as non-trivial).
          *
          * \return \c true if and only if this is the trivial word.
          */
@@ -474,9 +474,9 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * All other terms shift one step to the left.
          *
          * If the word is of the form
-         * <tt>g_i1^j1 g_i2^j2 ... g_in^jn</tt>,
+         * `g_i1^j1 g_i2^j2 ... g_in^jn`,
          * this converts it into the word
-         * <tt>g_i2^j2 ... g_in^jn g_i1^j1</tt>.
+         * `g_i2^j2 ... g_in^jn g_i1^j1`.
          */
         void cycleRight();
 
@@ -485,9 +485,9 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * All other terms shift one step to the right.
          *
          * If the word is of the form
-         * <tt>g_i1^j1 g_i2^j2 ... g_in^jn</tt>,
+         * `g_i1^j1 g_i2^j2 ... g_in^jn`,
          * this converts it into the word
-         * <tt>g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1</tt>.
+         * `g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1`.
          */
         void cycleLeft();
 
@@ -521,8 +521,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * You may declare that the expression is cyclic, in which case
          * it is assumed that terms may be moved from the back to the
-         * front and vice versa.  Thus expression <tt>g1 g2 g1 g2 g1</tt>
-         * simplifies to <tt>g1^2 g2 g1 g2</tt> if it is cyclic, but does not
+         * front and vice versa.  Thus expression `g1 g2 g1 g2 g1`
+         * simplifies to `g1^2 g2 g1 g2` if it is cyclic, but does not
          * simplify at all if it is not cyclic.
          *
          * \param cyclic \c true if and only if the expression may be
@@ -553,7 +553,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * corresponding substitute expression from the given map.
          *
          * Specifically, each generator \a i will be replaced with the
-         * expression <tt>expansions[i]</tt>.
+         * expression `expansions[i]`.
          *
          * The expression will be simplified once all substitutions are
          * complete.
@@ -565,7 +565,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * \pre The length of \a expansions is at least <i>g</i>+1,
          * where \a g is the largest generator that appears in this expression.
-         * In other words, <tt>expansions[i]</tt> exists for every generator
+         * In other words, `expansions[i]` exists for every generator
          * \a i that appears in this expression.
          *
          * \param expansions the list of substitutes for all generators in
@@ -629,7 +629,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * output stream.
          *
          * The text representation will be of the form
-         * <tt>g_2^4 g_{13}^{-5} g_4</tt>.
+         * `g_2^4 g_{13}^{-5} g_4`.
          *
          * \nopython Instead use the variant tex() that takes no arguments
          * and returns a string.
@@ -646,14 +646,14 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * a choice of either numbered generators or alphabetic generators.
          *
          * If \a alphaGen is \c false, the text representation will be of
-         * the form <tt>g2^4 g13^-5 g4</tt>.  If \a alphaGen is \c true,
+         * the form `g2^4 g13^-5 g4`.  If \a alphaGen is \c true,
          * this routine will assume your word is in an alphabet of no more
          * than 26 letters, and will format the word using lower-case ASCII,
-         * i.e., <tt>c^4 n^-5 e</tt>.
+         * i.e., `c^4 n^-5 e`.
          *
          * Note that there is also a zero-argument version of str(), inherited
          * through the ShortOutput base class.  This zero-argument str()
-         * gives the same output as <tt>str(false)</tt>.
+         * gives the same output as `str(false)`.
          *
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
@@ -675,7 +675,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * Note that there is also a zero-argument version of utf8(), inherited
          * through the ShortOutput base class.  This zero-argument utf8()
-         * gives the same output as <tt>utf8(false)</tt>.
+         * gives the same output as `utf8(false)`.
          *
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
@@ -692,10 +692,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * alphabetic generators.
          *
          * The text representation will be of the form
-         * <tt>g2^4 g13^-5 g4</tt>. If the \a alphaGen flag is \c true, it
+         * `g2^4 g13^-5 g4`. If the \a alphaGen flag is \c true, it
          * will assume your word is in an alphabet of no more than 26 letters,
          * and will write the word using lower-case ASCII, i.e.,
-         * <tt>c^4 n^-5 e</tt>.  If the \a utf8 flag is \c true, all exponents
+         * `c^4 n^-5 e`.  If the \a utf8 flag is \c true, all exponents
          * will be written using superscript characters encoded in UTF-8.
          *
          * \pre If \a alphaGen is \c true, the number of generators in
@@ -797,7 +797,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * If you wish to create a group presentation from a hard-coded list
          * of relations, you can use this constructor with an initialiser list,
          * via syntax of the form
-         * <tt>GroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
+         * `GroupPresentation(nGens, { "rel1", "rel2", ... })`.
          *
          * \exception InvalidArgument One or more of the given strings
          * could not be interpreted as a group expression.
@@ -848,7 +848,7 @@ class GroupPresentation : public Output<GroupPresentation> {
         unsigned long addGenerator(unsigned long numToAdd = 1);
         /**
          * Adds the given relation to the group presentation.
-         * The relation must be of the form <tt>expression = 1</tt>.
+         * The relation must be of the form `expression = 1`.
          *
          * \warning This routine does not check whether or not your relation
          * is a word only in the generators of this group.  In other
@@ -856,8 +856,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * countGenerators() bound.
          *
          * \param rel the expression that the relation sets to 1; for
-         * instance, if the relation is <tt>g1^2 g2 = 1</tt> then this
-         * parameter should be the expression <tt>g1^2 g2</tt>.
+         * instance, if the relation is `g1^2 g2 = 1` then this
+         * parameter should be the expression `g1^2 g2`.
          */
         void addRelation(GroupExpression rel);
 
@@ -875,15 +875,14 @@ class GroupPresentation : public Output<GroupPresentation> {
         size_t countRelations() const;
         /**
          * Returns the relation at the given index in this group
-         * presentation.  The relation will be of the form <tt>expresson
-         * = 1</tt>.
+         * presentation.  The relation will be of the form `expresson = 1`.
          *
          * \param index the index of the desired relation; this must be
          * between 0 and countRelations()-1 inclusive.
          *
          * \return the expression that the requested relation sets to 1;
-         * for instance, if the relation is <tt>g1^2 g2 = 1</tt> then
-         * this will be the expression <tt>g1^2 g2</tt>.
+         * for instance, if the relation is `g1^2 g2 = 1` then
+         * this will be the expression `g1^2 g2`.
          */
         const GroupExpression& relation(size_t index) const;
         /**
@@ -1089,7 +1088,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Smith normal form).
          *
          * The result of this routine should be the same as the output
-         * of <tt>abelianisation().rank()</tt>.
+         * of `abelianisation().rank()`.
          *
          * \return the rank of the abelianisation of this group.
          */
@@ -1163,13 +1162,13 @@ class GroupPresentation : public Output<GroupPresentation> {
 
         /**
          * Replaces a generator \c gi by either
-         * <tt>(gi)(gj)^k</tt> or <tt>(gj)^k(gi)</tt> in the presentation. It
+         * `(gi)(gj)^k` or `(gj)^k(gi)` in the presentation. It
          * it is the third type of Nielsen move one can apply to a presentation.
          *
          * This means that, if the new generator \c Gi is the old
-         * <tt>(gi)(gj)^k</tt> or <tt>(gj)^k(gi)</tt>, then we can construct
+         * `(gi)(gj)^k` or `(gj)^k(gi)`, then we can construct
          * the new presentation from the old by replacing occurrences of \c Gi
-         * by <tt>(Gi)(gj)^(-k)</tt> or <tt>(gj)^(-k)(Gi)</tt> respectively.
+         * by `(Gi)(gj)^(-k)` or `(gj)^(-k)(Gi)` respectively.
          *
          * \pre Both \a i and \a j are strictly less than countGenerators().
          *
@@ -1179,8 +1178,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * performing the replacement; this may be positive or negative
          * (or zero, but this will have no effect).
          * \param rightMult \c true if we should replace \c gi by
-         * <tt>(gi)(gj)^k</tt>, or \c false if we should replace \c gi by
-         * <tt>(gj)^k(gi)</tt>.
+         * `(gi)(gj)^k`, or \c false if we should replace \c gi by
+         * `(gj)^k(gi)`.
          * \return \c true if and only if the nielsen automorphism had an
          * effect on at least one relation.
          */
@@ -1214,7 +1213,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \e homological-alignment of the presentation.
          *
          * If the abelianisation of this group has rank \a N and \a M invariant
-         * factors <tt>d0 | d2 | ... | d(M-1)</tt>,
+         * factors `d0 | d2 | ... | d(M-1)`,
          * this routine applies Nielsen moves
          * to the presentation to ensure that under the markedAbelianisation()
          * routine, generators 0 through \a M-1 are mapped to generators of the
@@ -1371,7 +1370,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * This routine produces a constant stream of output (i.e., it
          * calls \a action as soon as each representation is found).
          *
-         * \warning The running time is <tt>(k!)^g</tt>, where \a k is the
+         * \warning The running time is `(k!)^g`, where \a k is the
          * subgroup index described above, and \a g is the number of
          * generators of this group presentation.  In particular, the
          * running time grows \e extremely quickly with \a k.
@@ -1391,11 +1390,11 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \apinotfinal
          *
          * \ifacespython There are two versions of this function available in
-         * Python.  The first form is <tt>enumerateCovers(index, action)</tt>,
+         * Python.  The first form is `enumerateCovers(index, action)`,
          * which mirrors the C++ function: it takes \a action which may
          * be a pure Python function, it returns the number of representations
          * found, but it does \e not take an addition argument list (\a args).
-         * The second form is <tt>enumerateCovers(index)</tt>, which returns
+         * The second form is `enumerateCovers(index)`, which returns
          * a Python list containing all of the corresponding subgroups, each
          * given as a GroupPresentation.  In both forms, the template
          * parameter \a index becomes the first argument to the Python function.

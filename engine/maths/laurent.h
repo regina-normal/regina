@@ -50,14 +50,14 @@ namespace regina {
  * Represents a single-variable Laurent polynomial with coefficients of
  * type \a T.  A Laurent polynomial differs from an ordinary polynomial
  * in that it allows negative exponents (so, unlike the Polynomial class,
- * you can represent both <tt>2+3x</tt> and <tt>1+1/x</tt>).
+ * you can represent both `2+3x` and `1+1/x`).
  *
  * The type \a T must represent a ring with no zero divisors.
  * In particular, it must:
  *
  * - support basic arithmetic operations;
- * - support assignments of the form <tt>x = int</tt> and
- *   tests of the form <tt>x == int</tt> and <tt>x < int</tt>;
+ * - support assignments of the form `x = int` and
+ *   tests of the form `x == int` and <tt>x < int</tt>;
  * - have a default constructor that assigns an explicit value of zero.
  *
  * This means that Regina's numerical types such as Integer and Rational
@@ -109,7 +109,7 @@ class Laurent :
                  scenarios they will be the same). */
         T* coeff_;
             /**< The coefficients of the polynomial.  Specifically, coeff_[i]
-                 stores the coefficient of <tt>x^(base_ + i)</tt>.
+                 stores the coefficient of `x^(base_ + i)`.
                  This array has length at least (\a maxExp_ - \a base_ + 1). */
 
         static const T zero_;
@@ -122,7 +122,7 @@ class Laurent :
         Laurent();
 
         /**
-         * Creates the polynomial <tt>x^d</tt> for the given exponent \a d.
+         * Creates the polynomial `x^d` for the given exponent \a d.
          *
          * \param exponent the exponent to use for the new polynomial.
          */
@@ -227,7 +227,7 @@ class Laurent :
         void init();
 
         /**
-         * Sets this to become the polynomial <tt>x^d</tt> for the
+         * Sets this to become the polynomial `x^d` for the
          * given exponent \a d.
          *
          * \param exponent the new exponent to use for this polynomial.
@@ -293,10 +293,10 @@ class Laurent :
          * There are no restrictions on the exponent \a exp.
          *
          * \ifacespython Python users can also use this operator to \e set
-         * cofficients; that is, you can write <tt>poly[exp] = value</tt>.
+         * cofficients; that is, you can write `poly[exp] = value`.
          * However, when \e getting a coefficient this operator will return
          * by value (to enforce constness), which means for example you
-         * cannot write something like <tt>poly[exp].negate()</tt>.
+         * cannot write something like `poly[exp].negate()`.
          *
          * \cpp For C++ users, this operator is read-only.  To \e set
          * coefficients, you must use the separate routine set().
@@ -324,7 +324,7 @@ class Laurent :
          *
          * \ifacespython This set() routine is available, but you can
          * also set coefficients directly using syntax of the form
-         * <tt>p[exp] = value</tt>.
+         * `p[exp] = value`.
          *
          * \param exp the exponent of the term whose coefficient should
          * be changed.
@@ -472,7 +472,7 @@ class Laurent :
         void swap(Laurent<T>& other) noexcept;
 
         /**
-         * Multiplies this polynomial by <tt>x^s</tt> for some integer \a s.
+         * Multiplies this polynomial by `x^s` for some integer \a s.
          *
          * \param s the power of \a x to multiply by.
          */
@@ -513,10 +513,10 @@ class Laurent :
         void negate();
 
         /**
-         * Replaces <tt>x</tt> with <tt>x^-1</tt> in this polynomial.
+         * Replaces `x` with `x^-1` in this polynomial.
          * This polynomial is changed directly.
          *
-         * Calling this routine is equivalent to calling <tt>scaleUp(-1)</tt>.
+         * Calling this routine is equivalent to calling `scaleUp(-1)`.
          */
         void invertX();
 

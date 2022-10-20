@@ -84,7 +84,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
         unsigned* cyclePreImage;
             /**< Stores the preimage of each cycle. */
         unsigned* cycleStart;
-            /**< Allows a cycle to be rotated: <tt>cycleStart[k]</tt> is
+            /**< Allows a cycle to be rotated: `cycleStart[k]` is
                  the position in original cycle \a k where the image
                  cycle begins. */
 

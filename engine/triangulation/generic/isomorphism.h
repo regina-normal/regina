@@ -229,10 +229,10 @@ class Isomorphism :
          * \ifacespython Python users can only access the read-only version
          * of this function that returns by value: you cannot use simpImage()
          * to edit the isomorphism.  As an alternative however, Python users
-         * can call <tt>setSimpImage(sourceSimp, image)</tt> instead.
+         * can call `setSimpImage(sourceSimp, image)` instead.
          *
          * \param sourceSimp the index of the source simplex; this must
-         * be between 0 and <tt>size()-1</tt> inclusive.
+         * be between 0 and `size()-1` inclusive.
          * \return a reference to the index of the destination simplex
          * that the source simplex maps to.
          */
@@ -246,7 +246,7 @@ class Isomorphism :
          * tetImage() or pentImage() respectively.
          *
          * \param sourceSimp the index of the source simplex; this must
-         * be between 0 and <tt>size()-1</tt> inclusive.
+         * be between 0 and `size()-1` inclusive.
          * \return the index of the destination simplex
          * that the source simplex maps to.
          */
@@ -256,8 +256,8 @@ class Isomorphism :
          * applied to the (\a dim + 1) facets of the given source simplex
          * under this isomorphism.
          * Facet \a i of source simplex \a sourceSimp will be mapped to
-         * facet <tt>facetPerm(sourceSimp)[i]</tt> of simplex
-         * <tt>simpImage(sourceSimp)</tt>.
+         * facet `facetPerm(sourceSimp)[i]` of simplex
+         * `simpImage(sourceSimp)`.
          *
          * If the dimension \a dim is 2 or 3, then you can also access
          * this permutation through the dimension-specific alias
@@ -266,11 +266,11 @@ class Isomorphism :
          * \ifacespython Python users can only access the read-only version
          * of this function that returns by value: you cannot use facetPerm()
          * to edit the isomorphism.  As an alternative however, Python users
-         * can call <tt>setFacetPerm(sourceSimp, perm)</tt> instead.
+         * can call `setFacetPerm(sourceSimp, perm)` instead.
          *
          * \param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
-         * <tt>size()-1</tt> inclusive.
+         * `size()-1` inclusive.
          * \return a read-write reference to the permutation applied to the
          * facets of the source simplex.
          */
@@ -279,8 +279,8 @@ class Isomorphism :
          * Determines the permutation that is applied to the (\a dim + 1)
          * facets of the given source simplex under this isomorphism.
          * Facet \a i of source simplex \a sourceSimp will be mapped to
-         * face <tt>facetPerm(sourceSimp)[i]</tt> of simplex
-         * <tt>simpImage(sourceSimp)</tt>.
+         * face `facetPerm(sourceSimp)[i]` of simplex
+         * `simpImage(sourceSimp)`.
          *
          * If the dimension \a dim is 2 or 3, then you can also access
          * this permutation through the dimension-specific alias
@@ -288,7 +288,7 @@ class Isomorphism :
          *
          * \param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
-         * <tt>size()-1</tt> inclusive.
+         * `size()-1` inclusive.
          * \return the permutation applied to the facets of the
          * source simplex.
          */
@@ -357,13 +357,13 @@ class Isomorphism :
          *
          * Specifically:
          *
-         * - If <tt>f.simp</tt> is in the range 0,1,...,size()-1 inclusive
+         * - If `f.simp` is in the range 0,1,...,size()-1 inclusive
          *   (i.e., \a f denotes a facet of an actual top-dimensional simplex),
          *   then this routine will return an object denoting facet
-         *   <tt>facetPerm(f.facet)</tt> of simplex <tt>simpImage(f.simp)</tt>.
+         *   `facetPerm(f.facet)` of simplex `simpImage(f.simp)`.
          *
-         * - If <tt>f.simp</tt> is negative (i.e., \a f takes a
-         *   before-the-start value), or if <tt>f.simp</tt> is at least size()
+         * - If `f.simp` is negative (i.e., \a f takes a
+         *   before-the-start value), or if `f.simp` is at least size()
          *   (i.e., \a f takes a boundary or past-the-end value), then this
          *   routine will return \a f unchanged (but see the precondition
          *   below).
@@ -373,11 +373,11 @@ class Isomorphism :
          * isomorphism are not just some reordering of 0,1,...,size()-1),
          * then \a f must not denote a boundary or past-the-end value.
          * This is because a boundary or past-the-end value is encoded
-         * by using a past-the-end value of <tt>FacetSpec::simp</tt>.
+         * by using a past-the-end value of `FacetSpec::simp`.
          * If this isomorphism maps into a larger triangulation then this
          * past-the-end simplex number would need to change, but the
          * isomorphism does not actually know what the new value of
-         * <tt>FacetSpec::simp</tt> should be.
+         * `FacetSpec::simp` should be.
          *
          * \param f the facet-of-simplex which should be transformed by
          * this isomorphism.
@@ -394,8 +394,8 @@ class Isomorphism :
          * describe mappings between isomorphic facet pairings.
          * In particular, if \a iso represents this isomorphism and if \a p
          * were the facet pairing of some triangulation \a tri, then
-         * <tt>iso(p)</tt> would be the facet pairing for the triangulation
-         * <tt>iso(tri)</tt>.  Of course, this routine works directly with
+         * `iso(p)` would be the facet pairing for the triangulation
+         * `iso(tri)`.  Of course, this routine works directly with
          * the facet pairing, and does not actually construct any
          * triangulations at all.
          *
@@ -422,7 +422,7 @@ class Isomorphism :
          * triangulation, and returns the result as a new triangulation.
          *
          * \deprecated If this isomorphism is \a iso, then this routine
-         * is equivalent to calling <tt>iso(tri)</tt>.  See the bracket
+         * is equivalent to calling `iso(tri)`.  See the bracket
          * operator for further details.
          *
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
@@ -445,7 +445,7 @@ class Isomorphism :
          * triangulation, modifying the given triangulation directly.
          *
          * \deprecated If this isomorphism is \a iso, then this routine
-         * is equivalent to calling <tt>tri = iso(tri)</tt>.  See the bracket
+         * is equivalent to calling `tri = iso(tri)`.  See the bracket
          * operator for further details.
          *
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
@@ -466,14 +466,14 @@ class Isomorphism :
          * isomorphism.
          *
          * This follows the same order convention as Regina's permutation
-         * classes: the composition <tt>a * b</tt> first applies the right-hand
+         * classes: the composition `a * b` first applies the right-hand
          * isomorphism \a b, and then the left-hand isomorphism \a a.
          *
          * \pre The source triangulation for this isomorphism (the left-hand
          * side) is at least as large as the destination triangulation
          * for \a rhs (the right-hand side).  In other words, the maximum
-         * value of <tt>rhs.simpImage(i)</tt> over all \a i must be less than
-         * <tt>this->size()</tt>.
+         * value of `rhs.simpImage(i)` over all \a i must be less than
+         * `this->size()`.
          *
          * \return the composition of both isomorphisms.
          */
@@ -484,14 +484,14 @@ class Isomorphism :
          * isomorphism.
          *
          * This follows the same order convention as Regina's permutation
-         * classes: the composition <tt>a * b</tt> first applies the right-hand
+         * classes: the composition `a * b` first applies the right-hand
          * isomorphism \a b, and then the left-hand isomorphism \a a.
          *
          * \pre The source triangulation for this isomorphism (the left-hand
          * side) is at least as large as the destination triangulation
          * for \a rhs (the right-hand side).  In other words, the maximum
-         * value of <tt>rhs.simpImage(i)</tt> over all \a i must be less than
-         * <tt>this->size()</tt>.
+         * value of `rhs.simpImage(i)` over all \a i must be less than
+         * `this->size()`.
          *
          * \return the composition of both isomorphisms.
          */
@@ -503,8 +503,8 @@ class Isomorphism :
          * \pre The destination triangulation has precisely the same
          * number of simplices as the source triangulation.  In other words,
          * there are no "gaps" in the simplex images: the values
-         * <tt>simpImage(0)</tt>, ..., <tt>simpImage(size()-1)</tt> must be
-         * a permutation of 0, ..., <tt>size()-1</tt>.
+         * `simpImage(0)`, ..., `simpImage(size()-1)` must be
+         * a permutation of 0, ..., `size()-1`.
          *
          * \return the inverse isomorphism.
          */
@@ -686,7 +686,7 @@ class Isomorphism :
         /**
          * Returns a random isomorphism for the given number of simplices.
          * This isomorphism will reorder simplices
-         * 0 to <tt>nSimplices-1</tt> in a random fashion, and for
+         * 0 to `nSimplices-1` in a random fashion, and for
          * each simplex a random permutation of its (\a dim + 1) vertices
          * will be selected.
          *

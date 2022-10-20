@@ -754,8 +754,8 @@ class FacetPairingBase :
          * with no unmatched facets will not be produced irrespective of
          * whether \c false is contained in parameter \a boundary.
          * Note that, in order to produce any pairings at all, this parameter
-         * must be of the same parity as <tt>nSimplices * (dim+1)</tt>,
-         * and can be at most <tt>(dim-1) * nSimplices + 2</tt>.
+         * must be of the same parity as `nSimplices * (dim+1)`,
+         * and can be at most `(dim-1) * nSimplices + 2`.
          * \param action a function (or other callable object) to call
          * for each facet pairing that is found.
          * \param args any additional arguments that should be passed to
@@ -868,12 +868,12 @@ class FacetPairingBase :
          *
          * \pre The given list (if one is provided) is empty.
          * \pre For each simplex \a t, the only case in which
-         * <tt>dest(t,i)</tt> is greater than <tt>dest(t,i+1)</tt> is where
-         * facets <tt>(t,i)</tt> and <tt>(t,i+1)</tt> are paired together.
+         * `dest(t,i)` is greater than `dest(t,i+1)` is where
+         * facets `(t,i)` and `(t,i+1)` are paired together.
          * \pre For each simplex \a t > 0, it is true that
          * <tt>dest(t,0).simp < t</tt>.
-         * \pre The sequence <tt>dest(1,0)</tt>, <tt>dest(2,0)</tt>,
-         * ..., <tt>dest(n-1,0)</tt> is strictly increasing, where
+         * \pre The sequence `dest(1,0)`, `dest(2,0)`,
+         * ..., `dest(n-1,0)` is strictly increasing, where
          * \a n is the total number of simplices under investigation.
          *
          * \param list the list into which automorphisms will be placed

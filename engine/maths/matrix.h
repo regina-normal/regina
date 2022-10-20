@@ -73,7 +73,7 @@
  * Use this as the return type for a static Matrix member function that is
  * only available when working with matrices over rings.
  *
- * Equivalent to <tt>static returnType</tt> if the Matrix template
+ * Equivalent to `static returnType` if the Matrix template
  * argument \a ring is \c true, and removes the member function completey
  * otherwise.
  *
@@ -86,7 +86,7 @@
  * Use this as the return type for a deprecated Matrix member function that is
  * only available when working with matrices over rings.
  *
- * Equivalent to <tt>[[deprecated]] returnType</tt> if the Matrix template
+ * Equivalent to `[[deprecated]] returnType` if the Matrix template
  * argument \a ring is \c true, and removes the member function completey
  * otherwise.
  *
@@ -136,7 +136,7 @@ template <class> class Vector;
  * - \a T must have a default constructor and an assignment operator.
  *
  * - An element <i>t</i> of type \a T must be writable to an output stream
- *   using the standard stream operator <tt>&lt;&lt;</tt>.
+ *   using the standard stream operator `<<`.
  *
  * If \a ring is \c true, then in addition to this:
  *
@@ -189,7 +189,7 @@ class Matrix : public Output<Matrix<T>> {
             /**< The number of columns in the matrix. */
         T** data_;
             /**< The actual entries in the matrix.
-             *   <tt>data_[r][c]</tt> is the element in row \a r,
+             *   `data_[r][c]` is the element in row \a r,
              *   column \a c. */
 
     public:
@@ -461,10 +461,10 @@ class Matrix : public Output<Matrix<T>> {
          * \ifacespython The entry() routine gives direct read-write access
          * to matrix elements, but does not allow them to be set using
          * the assignment operator.  In other words, code such as
-         * <tt>matrix.entry(r, c).negate()</tt> will work, but
-         * <tt>matrix.entry(r, c) = value</tt> will not.
+         * `matrix.entry(r, c).negate()` will work, but
+         * `matrix.entry(r, c) = value` will not.
          * To assign values to matrix elements, you should instead use the
-         * syntax <tt>matrix.set(row, column, value)</tt>.
+         * syntax `matrix.set(row, column, value)`.
          * This set() routine returns nothing, and is provided for python
          * only (i.e., it is not part of the C++ calculation engine).
          *
@@ -672,7 +672,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Turns this matrix into an identity matrix.
          * This matrix need not be square; after this routine it will have
-         * <tt>entry(r,c)</tt> equal to 1 if <tt>r == c</tt> and 0 otherwise.
+         * `entry(r,c)` equal to 1 if `r == c` and 0 otherwise.
          *
          * This routine is only available when the template argument \a ring
          * is \c true.
@@ -939,8 +939,8 @@ class Matrix : public Output<Matrix<T>> {
          * Specifically, if \a R1 and \a R2 are the original values of
          * rows \a row1 and \a row2 respectively, then:
          *
-         * - Row \a row1 will become <tt>coeff11 * R1 + coeff12 * R2</tt>;
-         * - Row \a row2 will become <tt>coeff21 * R1 + coeff22 * R2</tt>.
+         * - Row \a row1 will become `coeff11 * R1 + coeff12 * R2`;
+         * - Row \a row2 will become `coeff21 * R1 + coeff22 * R2`.
          *
          * The four coefficients are passed by value, in case they are
          * elements of the rows to be changed.
@@ -986,8 +986,8 @@ class Matrix : public Output<Matrix<T>> {
          * Specifically, if \a C1 and \a C2 are the original values of
          * columns \a col1 and \a col2 respectively, then:
          *
-         * - Column \a col1 will become <tt>coeff11 * C1 + coeff12 * C2</tt>;
-         * - Column \a col2 will become <tt>coeff21 * C1 + coeff22 * C2</tt>.
+         * - Column \a col1 will become `coeff11 * C1 + coeff12 * C2`;
+         * - Column \a col2 will become `coeff21 * C1 + coeff22 * C2`.
          *
          * The four coefficients are passed by value, in case they are
          * elements of the columns to be changed.
@@ -1046,7 +1046,7 @@ class Matrix : public Output<Matrix<T>> {
          * of rows in the given matrix.
          *
          * \param other the other matrix to multiply this matrix by.
-         * \return the product matrix <tt>this * other</tt>.
+         * \return the product matrix `this * other`.
          */
         template <typename U>
         Matrix<decltype(T() * U())> operator * (
@@ -1087,7 +1087,7 @@ class Matrix : public Output<Matrix<T>> {
          * columns in this matrix.
          *
          * \param other the vector to multiply this matrix by.
-         * \return the product <tt>this * other</tt>, which will be a
+         * \return the product `this * other`, which will be a
          * vector whose length is the number of rows in this matrix.
          */
         template <typename U>

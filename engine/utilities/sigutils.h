@@ -52,7 +52,7 @@ namespace regina {
  * These are (in particular) used in the default encodings for Regina's
  * own isomorphism signatures and knot signatures.
  *
- * This base64 encoding uses the characters: <tt>a..zA..Z0..9+-</tt>
+ * This base64 encoding uses the characters: `a..zA..Z0..9+-`
  *
  * \warning Note that this base64 encoding uses a different set of
  * printable symbols from the encoding used in utilities/base64.h.
@@ -129,7 +129,7 @@ struct Base64SigEncoding {
      * native C++ \c long.
      *
      * \tparam IntType a native C++ integer type, such as \c uint8_t, or
-     * \c unsigned, or <tt>long long</tt>.
+     * \c unsigned, or `long long`.
      *
      * \param s the string that resulting characters should be appended to.
      * \param val the integer to encode.
@@ -159,7 +159,7 @@ struct Base64SigEncoding {
      * native C++ \c long.
      *
      * \tparam IntType a native C++ integer type, such as \c uint8_t,
-     * or \c unsigned, or <tt>long long</tt>.  The result will be
+     * or \c unsigned, or `long long`.  The result will be
      * assembled using bitwise OR and bitwise shift lefts, and it is
      * assumed that the programmer has chosen an integer type large enough
      * to contain whatever values they expect to read.

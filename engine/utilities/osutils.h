@@ -48,12 +48,12 @@ namespace regina {
 
 /**
  * Returns time and memory usage for the current process, for use on Linux
- * systems.  Information is gathered from the <tt>/proc</tt> filesystem; if
- * this is run on a non-Linux system (or a Linux system where <tt>/proc</tt>
+ * systems.  Information is gathered from the `/proc` filesystem; if
+ * this is run on a non-Linux system (or a Linux system where `/proc`
  * is not mounted), then this routine will throw an exception.
  *
  * More precisely, this routine reads information on the running process from
- * <tt>/proc/self/stat</tt>, and returns a tuple (\a utime, \a stime, \a vsize).
+ * `/proc/self/stat`, and returns a tuple (\a utime, \a stime, \a vsize).
  * These three fields reperesent:
  *
  * - the number jiffies that this process has been scheduled in user mode
@@ -70,10 +70,10 @@ namespace regina {
  * or it contains unexpected information.
  *
  * \warning Currently this routine allows at most 255 characters for the
- * \e comm field in <tt>/proc/self/stat</tt> (which stores the executable
+ * \e comm field in `/proc/self/stat` (which stores the executable
  * filename along with surrounding parentheses).  If the \e comm field is too
  * long (i.e., the executable filename is too long), then this routine will
- * not be able to parse <tt>/proc/self/stat</tt>, and will throw an exception.
+ * not be able to parse `/proc/self/stat`, and will throw an exception.
  * If you encounter this problem, you should be able to fix it by renaming
  * your executable to something shorter.
  *

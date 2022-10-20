@@ -213,7 +213,7 @@ class Perm<7> {
          * seven elements.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
+         * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 5039 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n &ge; 8).
@@ -248,7 +248,7 @@ class Perm<7> {
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
+         * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 5039 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n &ge; 8).
@@ -574,7 +574,7 @@ class Perm<7> {
          * Returns the composition of this permutation with the given
          * permutation.  If this permutation is <i>p</i>, the
          * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
-         * <tt>(p*q)[x] == p[q[x]]</tt>.
+         * `(p*q)[x] == p[q[x]]`.
          *
          * For permutations of five and fewer objects, composition is
          * extremely fast because it uses hard-coded lookup tables.
@@ -608,7 +608,7 @@ class Perm<7> {
          * will consume roughly 50MB of memory for the lifetime of your program.
          *
          * The permutation that is returned is the same as you would
-         * obtain by calling <tt>(*this) * q</tt>.
+         * obtain by calling `(*this) * q`.
          *
          * \pre You \e must have called the routine precompute() at least once
          * in the lifetime of this program before using cachedComp().
@@ -632,7 +632,7 @@ class Perm<7> {
          * will consume roughly 50MB of memory for the lifetime of your program.
          *
          * The permutation that is returned is the same as you would
-         * obtain by calling <tt>(*this) * q * r</tt>.
+         * obtain by calling `(*this) * q * r`.
          *
          * \pre You \e must have called the routine precompute() at least once
          * in the lifetime of this program before using cachedComp().
@@ -756,7 +756,7 @@ class Perm<7> {
          *
          * Here \e reverse means that we reverse the images of 0,...,6.
          * In other words, if permutation \a q is the
-         * reverse of \a p, then <tt>p[i] == q[6 - i]</tt> for all \a i.
+         * reverse of \a p, then `p[i] == q[6 - i]` for all \a i.
          */
         constexpr Perm<7> reverse() const;
 
@@ -896,7 +896,7 @@ class Perm<7> {
          * the mutex protecting Regina's global uniform random bit generator.
          * If you are calling this many times in quick succession, consider
          * creating a single RandomEngine object yourself and then calling
-         * <tt>rand(randomEngine.engine(), even)</tt>.
+         * `rand(randomEngine.engine(), even)`.
          *
          * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
@@ -933,7 +933,7 @@ class Perm<7> {
          * Returns a string representation of this permutation.
          * The representation will consist of seven adjacent digits
          * representing the images of 0, 1, 2, 3, 4, 5 and 6 respectively.
-         * An example of a string representation is <tt>3045261</tt>.
+         * An example of a string representation is `3045261`.
          *
          * \return a string representation of this permutation.
          */
@@ -1037,7 +1037,7 @@ class Perm<7> {
          * identity map.
          *
          * Specifically, for each \a i in the range <i>from</i>,...,6,
-         * this routine will ensure that <tt>image[i] == i</tt>.  The images of
+         * this routine will ensure that `image[i] == i`.  The images of
          * 0,1,...,<i>from</i>-1 will not be altered.
          *
          * \pre The images of <i>from</i>,...,6 are exactly
@@ -1159,8 +1159,8 @@ class Perm<7> {
         /**
          * Contains the inverses of the permutations in the array \a S7.
          *
-         * Specifically, the inverse of permutation <tt>S7[i]</tt> is
-         * the permutation <tt>S7[ invS7[i] ]</tt>.
+         * Specifically, the inverse of permutation `S7[i]` is
+         * the permutation `S7[ invS7[i] ]`.
          */
         static constexpr Code2 invS7[5040] = {
             // Generated using Regina 6.0.
@@ -1674,7 +1674,7 @@ class Perm<7> {
          * Contains a full table of two-element swaps.
          *
          * Specifically, the permutation that swaps \a x and \a y is
-         * <tt>S7[swapTable[x][y]]</tt>.  Here \a x and \a y may be equal.
+         * `S7[swapTable[x][y]]`.  Here \a x and \a y may be equal.
          */
         static constexpr Code2 swapTable[7][7] = {
             // Generated using Regina 6.0.

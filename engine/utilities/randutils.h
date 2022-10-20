@@ -137,7 +137,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * \ifacespython The integer type \a Int will be treated as \c long.
          *
          * \tparam Int a native integer type (e.g., \c int, \c long,
-         * \c size_t, <tt>long long</tt>, etc.); this may be either
+         * \c size_t, `long long`, etc.); this may be either
          * signed or unsigned.
          *
          * \param range the size of the range of possible results;

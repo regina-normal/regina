@@ -93,7 +93,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \param map a vector of length \a g, where \a g is the number
          * of generators of the domain, and where this homomorphism
          * sends the <i>i</i>th generator of the domain to the
-         * element <tt>map[i]</tt> of the codomain.
+         * element `map[i]` of the codomain.
          */
         HomGroupPresentation(GroupPresentation domain,
                 GroupPresentation codomain,
@@ -111,11 +111,11 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * \param map a vector of length \a g, where \a g is the number
          * of generators of the domain, and where this homomorphism
          * sends the <i>i</i>th generator of the domain to the
-         * element <tt>map[i]</tt> of the codomain.
+         * element `map[i]` of the codomain.
          * \param inv a vector of length \a k where \a k is the number
          * of generators of the codomain, and where the inverse homomorphism
          * sends the <i>i</i>th generator of the codomain to the
-         * element <tt>inv[i]</tt> of the domain.
+         * element `inv[i]` of the domain.
          */
         HomGroupPresentation(GroupPresentation domain,
                 GroupPresentation codomain,
@@ -326,7 +326,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Composes this homomorphism with the given homomorphism.
          *
          * Evaluating the composition on some group element \a x is the
-         * same as evaluating <tt>this(rhs(x))</tt>.
+         * same as evaluating `this(rhs(x))`.
          * In other words, in this composition, \a rhs is evaluated first
          * and then the output of that is evaluated by this homomorphism.
          *
@@ -345,7 +345,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Composes this homomorphism with the given homomorphism.
          *
          * Evaluating the composition on some group element \a x is the
-         * same as evaluating <tt>this(rhs(x))</tt>.
+         * same as evaluating `this(rhs(x))`.
          * In other words, in this composition, \a rhs is evaluated first
          * and then the output of that is evaluated by this homomorphism.
          *
@@ -404,7 +404,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * an isomorphism.
          *
          * This routine works by attempting to verify that
-         * <tt>f^-1(f(x))x^-1</tt> simplifes to 1 for all generators \a x
+         * `f^-1(f(x))x^-1` simplifes to 1 for all generators \a x
          * in the domain, and likewise for the codomain.
          *
          * This routine does not guarantee a conclusive result.  If this

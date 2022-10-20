@@ -265,8 +265,8 @@ namespace regina {
  * they are considered read-only.
  *
  * Vertices of the graph are represented directly by a pointer of type
- * <tt>regina::Crossing*</tt>.  Directed edges are represented by lightweight
- * <tt>regina::StrandRef</tt> objects; see the regina::StrandRef documentation
+ * `regina::Crossing*`.  Directed edges are represented by lightweight
+ * `regina::StrandRef` objects; see the regina::StrandRef documentation
  * for how a StrandRef object is used to identify a directed arc of the link.
  */
 
@@ -318,24 +318,24 @@ namespace regina {
  *  <h3>Testing equality</h3>
  *
  *  It is important to understand how the comparisons
- *  <tt>x == y</tt> and <tt>x is y</tt> operate under Python.
+ *  `x == y` and `x is y` operate under Python.
  *  As of Regina 7.0, this behaviour has changed significantly: many
  *  more classes now compare by value, and a few now have their comparisons
  *  disabled.
  *
- *  In general, you do \e not want to use the Python test <tt>x is y</tt>.
+ *  In general, you do \e not want to use the Python test `x is y`.
  *  This is because each of Regina's Python objects is typically a "wrapper"
  *  that points to one of Regina's native C++ objects.  Importantly, the
  *  same native C++ object could have many Python wrappers, and so
- *  <tt>x is y</tt> could return \c False even if both \a x and \a y wrap
+ *  `x is y` could return \c False even if both \a x and \a y wrap
  *  the same native C++ object.
  *
- *  Instead, you should always use the tests <tt>x == y</tt> and/or
- *  <tt>x != y</tt>.  Regina implements this in different ways, depending
+ *  Instead, you should always use the tests `x == y` and/or
+ *  `x != y`.  Regina implements this in different ways, depending
  *  on the type of class:
  *
  *  - Most of Regina's classes use <i>comparison by value</i>.  Here
- *    <tt>x == y</tt> tests whether the \e contents of \a x and \a y are
+ *    `x == y` tests whether the \e contents of \a x and \a y are
  *    the same.  What "the same " means will depend on the particular class;
  *    for example, GroupPresentation tests for identical presentations (not
  *    group isomorphism), Triangulation<3> tests for the same tetrahedron and
@@ -349,8 +349,8 @@ namespace regina {
  *    See for example Link::operator==().
  *
  *  - Some selected classes use <i>comparison by reference</i>.  Here
- *    <tt>x == y</tt> tests whether \a x and \a y refer to the same underlying
- *    C++ object (analogous to how <tt>x is y</tt> would normally behave in a
+ *    `x == y` tests whether \a x and \a y refer to the same underlying
+ *    C++ object (analogous to how `x is y` would normally behave in a
  *    native Python application).  This is typically used for the few classes
  *    that are passed around by pointer in C++, and whose location in memory
  *    is what defines them; the most common examples you will see are
@@ -377,7 +377,7 @@ namespace regina {
  *    such classes are Example<3> and \ref regina::i18n::Locale "Locale".
  *
  *  If you wish to find out how a particular class \a C behaves, you can
- *  examine the attribute <tt>C.equalityType</tt>.  This will return one of
+ *  examine the attribute `C.equalityType`.  This will return one of
  *  the values \c BY_VALUE, \c BY_REFERENCE, \c DISABLED or
  *  \c NEVER_INSTANTIATED respctively:
  *
@@ -391,8 +391,8 @@ namespace regina {
  *  combinatorially identical), but it is also useful to know whether
  *  two Python wrappers identify the same underlying C++ packet (e.g., when
  *  traversing the packet tree).  To resolve this, you can compare two
- *  packets of the same type by value using the operators <tt>x == y</tt> and
- *  <tt>x != y</tt>, and you can test whether two packets of any types
+ *  packets of the same type by value using the operators `x == y` and
+ *  `x != y`, and you can test whether two packets of any types
  *  reference the same underlying object by calling Packet::samePacket().
  *
  *  <h3>International and special characters</h3>

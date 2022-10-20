@@ -91,31 +91,31 @@ class Example<3> : public detail::ExampleBase<3> {
 
         /**
          * Returns a two-tetrahedron triangulation of the product space
-         * <tt>S² x S¹</tt>.
+         * `S² x S¹`.
          * This is identical to calling the generic routine sphereBundle().
          *
-         * \return the product space <tt>S² x S¹</tt>.
+         * \return the product space `S² x S¹`.
          */
         static Triangulation<3> s2xs1();
 
         /**
          * Returns a three-tetrahedron triangulation of the non-orientable
-         * product space <tt>RP² x S¹</tt>.
+         * product space `RP² x S¹`.
          *
-         * \return the product space <tt>RP² x S¹</tt>.
+         * \return the product space `RP² x S¹`.
          */
         static Triangulation<3> rp2xs1();
 
         /**
          * Returns a triangulation of the connected sum
-         * <tt>RP³ # RP³</tt>.
+         * `RP³ # RP³`.
          *
-         * \return the connected sum <tt>RP³ # RP³</tt>.
+         * \return the connected sum `RP³ # RP³`.
          */
         static Triangulation<3> rp3rp3();
 
         /**
-         * Returns a triangulation of the lens space <tt>L(p,q)</tt>.
+         * Returns a triangulation of the lens space `L(p,q)`.
          *
          * The triangulation uses a layered lens space, which is conjectured
          * (but not proven in all cases) to be the triangulation requiring the
@@ -128,7 +128,7 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * \param p a parameter of the desired lens space.
          * \param q a parameter of the desired lens space.
-         * \return the lens space <tt>L(p,q)</tt>.
+         * \return the lens space `L(p,q)`.
          */
         static Triangulation<3> lens(size_t p, size_t q);
 
@@ -288,7 +288,7 @@ class Example<3> : public detail::ExampleBase<3> {
         /*@{*/
 
         /**
-         * Returns the layered solid torus <tt>LST(a,b,c)</tt>.
+         * Returns the layered solid torus `LST(a,b,c)`.
          *
          * This is a parameterised triangulation of the solid torus.
          * It has two boundary triangles and three boundary edges,
@@ -303,7 +303,7 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * \param a the first parameter of the layered solid torus.
          * \param b the second parameter of the layered solid torus.
-         * \return the layered solid torus <tt>LST(a,b,c)</tt>.
+         * \return the layered solid torus `LST(a,b,c)`.
          */
         static Triangulation<3> lst(size_t a, size_t b);
 

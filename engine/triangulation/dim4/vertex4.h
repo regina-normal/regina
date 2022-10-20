@@ -99,23 +99,23 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          *
          * - The tetrahedra of the vertex link are numbered as follows.
          *   Let \a i lie between 0 and degree()-1 inclusive, let
-         *   \a pent represent <tt>embedding(i).pentachoron()</tt>,
-         *   and let \a v represent <tt>embedding(i).vertex()</tt>.
-         *   Then <tt>buildLink()->tetrahedron(i)</tt> is the tetrahedron
+         *   \a pent represent `embedding(i).pentachoron()`,
+         *   and let \a v represent `embedding(i).vertex()`.
+         *   Then `buildLink()->tetrahedron(i)` is the tetrahedron
          *   in the vertex link that "slices off" vertex \a v from
          *   pentachoron \a pent.  In other words,
-         *   <tt>buildLink()->tetrahedron(i)</tt> in the vertex link
-         *   is parallel to tetrahedron <tt>pent->tetrahedron(v)</tt> in the
+         *   `buildLink()->tetrahedron(i)` in the vertex link
+         *   is parallel to tetrahedron `pent->tetrahedron(v)` in the
          *   surrounding 4-manifold triangulation.
          *
          * - The vertices of each tetrahedron in the vertex link are
          *   numbered as follows.  Following the discussion above,
-         *   suppose that <tt>buildLink()->tetrahedron(i)</tt>
+         *   suppose that `buildLink()->tetrahedron(i)`
          *   sits within \c pent and is parallel to
-         *   <tt>pent->tetrahedron(v)</tt>.
+         *   `pent->tetrahedron(v)`.
          *   Then vertices 0,1,2,3 of the tetrahedron in the link will be
          *   parallel to vertices 0,1,2,3 of the corresponding Tetrahedron<4>.
-         *   The permutation <tt>pent->tetrahedronMapping(v)</tt> will map
+         *   The permutation `pent->tetrahedronMapping(v)` will map
          *   vertices 0,1,2,3 of the tetrahedron in the link to the
          *   corresponding vertices of \c pent (those opposite \c v),
          *   and will map 4 to \c v itself.
@@ -145,9 +145,9 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          * Specifically, this function returns an Isomorphism<4> that describes
          * how the individual tetrahedra of the link sit within the pentachora
          * of the original triangulation.  If \a p is the isomorphism returned,
-         * then <tt>p.pentImage(i)</tt> will indicate which pentachoron
+         * then `p.pentImage(i)` will indicate which pentachoron
          * \a pent of the 4-manifold triangulation contains the <i>i</i>th
-         * tetrahedron of the link.  Moreover, <tt>p.facetPerm(i)</tt> will
+         * tetrahedron of the link.  Moreover, `p.facetPerm(i)` will
          * indicate exactly where the <i>i</i>th tetrahedron sits within
          * \a pent: it will send 4 to the vertex of \a pent that the
          * tetrahedron links, and it will send 0,1,2,3 to the vertices of

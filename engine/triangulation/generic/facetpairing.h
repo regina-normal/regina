@@ -81,8 +81,8 @@ namespace regina {
  * - A facet pairing is in <i>canonical form</i> if it is a
  *   lexicographically minimal representative of its isomorphism class.
  *   Here we order facet pairings by lexicographical comparison of the
- *   sequence <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
- *   <tt>dest(size()-1,\a dim)</tt> (which in turn uses the ordering
+ *   sequence `dest(0,0)`, `dest(0,1)`, ...,
+ *   `dest(size()-1, dim)` (which in turn uses the ordering
  *   defined by FacetSpec<dim>, where each simplex facet is ordered
  *   first by simplex number and then by facet number, and where the
  *   boundary is ordered last).
@@ -137,7 +137,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * described in the class notes.
          *
          * Calling <tt>FacetPairing<dim>(tri)</tt> is equivalent to calling
-         * <tt>tri.pairing()</tt>.
+         * `tri.pairing()`.
          *
          * \pre The given triangulation is not empty.
          *

@@ -97,7 +97,7 @@ class Component<4> : public detail::ComponentBase<4> {
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * `countFaces(subdim)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
          * \tparam subdim the face dimension; this must be between 0 and 4
@@ -135,7 +135,7 @@ class Component<4> : public detail::ComponentBase<4> {
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>faces(subdim)</tt>.
+         * `faces(subdim)`.
          *
          * \tparam subdim the face dimension; this must be between 0 and 3
          * inclusive.
@@ -153,7 +153,7 @@ class Component<4> : public detail::ComponentBase<4> {
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * `face(subdim, index)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
          * \tparam subdim the face dimension; this must be between 0 and 3

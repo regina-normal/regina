@@ -90,8 +90,8 @@ namespace graph {
                 triangulation that this edge is dual to. */
         bool forward;
             /**< A dual edge joins two <i>dim</i>-simplices:
-                 <tt>face->embedding(0).simplex()</tt> and
-                 <tt>face->embedding(1).simplex()</tt>.
+                 `face->embedding(0).simplex()` and
+                 `face->embedding(1).simplex()`.
                  This data member \a forward is \c true if the dual
                  edge is directed from the first simplex to the second,
                  or \c false if the dual edge is directed from the
@@ -198,7 +198,7 @@ namespace graph {
      * must be given an orientation (as required by the DualEdge class).
      * If the corresponding (<i>dim</i>-1)-face of the triangulation is
      * \e f, then the orientation of the resulting dual edge will be from
-     * <tt>f.embedding(0).simplex()</tt> to <tt>f.embedding(1).simplex()</tt>.
+     * `f.embedding(0).simplex()` to `f.embedding(1).simplex()`.
      * Note that the same dual edge could be given a different orientation
      * if it is obtained by some other means (e.g., by dereferencing an
      * IncidentDualEdgeIterator).
@@ -261,8 +261,8 @@ namespace graph {
              * the dual edge iterator will automatically skip through the list
              * of (<i>dim</i>-1)-faces until it either locates an internal
              * face or moves past-the-end.  For this reason, it is not
-             * necessarily true that the dual edge <tt>*this</tt> will be
-             * dual to the (<i>dim</i>-1)-face <tt>*it</tt>.
+             * necessarily true that the dual edge `*this` will be
+             * dual to the (<i>dim</i>-1)-face `*it`.
              *
              * \param it the corresponding iterator over the list of all
              * (<i>dim</i>-1)-faces of the underlying triangulation.
@@ -293,8 +293,8 @@ namespace graph {
              *
              * If the corresponding (<i>dim</i>-1)-face of the triangulation
              * is \e f, then the resulting dual edge will be oriented
-             * from <tt>f.embedding(0).simplex()</tt> to
-             * <tt>f.embedding(1).simplex()</tt>.
+             * from `f.embedding(0).simplex()` to
+             * `f.embedding(1).simplex()`.
              *
              * \pre This iterator is not past-the-end.
              *

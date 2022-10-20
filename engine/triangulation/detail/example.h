@@ -71,14 +71,14 @@ class ExampleFromLowDim {
          * Returns a double cone over the given (<i>dim-1</i>)-dimensional
          * triangulation.
          *
-         * If the given triangulation represents the manifold <tt>M</tt>, then
-         * this returns an ideal triangulation of the product <tt>M x I</tt>
+         * If the given triangulation represents the manifold `M`, then
+         * this returns an ideal triangulation of the product `M x I`
          * (with two ideal boundary components).  A copy of the original
          * triangulation \a base can be found at the centre of this
          * construction, formed from the <i>dim</i>-simplices that sit
          * between the two ideal vertices.
          *
-         * Note that, as a special case, if <tt>M</tt> is either a sphere or
+         * Note that, as a special case, if `M` is either a sphere or
          * a ball, then this routine returns a (<i>dim</i>)-sphere or
          * a (<i>dim</i>)-ball (since "ideal spheres" and "ideal balls" just
          * become regular internal and boundary vertices respectively).
@@ -86,7 +86,7 @@ class ExampleFromLowDim {
          * This construction is essentially the suspension of the
          * triangulation \a base.  We do not call it this however, since
          * from a topological point of view, to form the ideal triangulation
-         * of <tt>M x I</tt> we "remove" the vertices at the apex of each cone.
+         * of `M x I` we "remove" the vertices at the apex of each cone.
          *
          * \warning If the given (<i>dim</i>-1)-dimensional triangulation has
          * any boundary whatsoever (either real or ideal), then unless it is
@@ -101,8 +101,8 @@ class ExampleFromLowDim {
          * Returns a single cone over the given (<i>dim-1</i>)-dimensional
          * triangulation.
          *
-         * If the given triangulation represents the manifold <tt>M</tt>, then
-         * this returns a triangulation of the product <tt>M x I</tt> that has
+         * If the given triangulation represents the manifold `M`, then
+         * this returns a triangulation of the product `M x I` that has
          * one real boundary component and one ideal boundary component.
          * The triangulation of the real boundary component will be identical
          * to the original (<i>dim-1</i>)-dimensional triangulation \a base.

@@ -388,7 +388,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
         LargeInteger eulerChar(size_t index) const;
         /**
          * Returns the set of allowable orientabilities.  Note that this
-         * is a subset of <tt>{ true, false }</tt>.
+         * is a subset of `{ true, false }`.
          * Any surface whose orientability is not in this set will not be
          * accepted by this filter.
          *
@@ -397,7 +397,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
         BoolSet orientability() const;
         /**
          * Returns the set of allowable compactness properties.
-         * Note that this is a subset of <tt>{ true, false }</tt>.
+         * Note that this is a subset of `{ true, false }`.
          * Any surface whose compactness property is not in this set will
          * not be accepted by this filter.
          *
@@ -406,7 +406,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
         BoolSet compactness() const;
         /**
          * Returns the set of allowable has-real-boundary properties.
-         * Note that this is a subset of <tt>{ true, false }</tt>.
+         * Note that this is a subset of `{ true, false }`.
          * Any surface whose has-real-boundary property is not in this set
          * will not be accepted by this filter.
          *

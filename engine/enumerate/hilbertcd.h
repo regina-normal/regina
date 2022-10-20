@@ -124,7 +124,7 @@ class HilbertCD {
          * in Python.  The first version is the same as the C++ function;
          * here you must pass \a action, which may be a pure Python function.
          * The second form does not have an \a action argument; instead you
-         * call <tt>enumerate(subspace, constraints)</tt>,
+         * call `enumerate(subspace, constraints)`,
          * and it returns a Python list containing all Hilbert basis elements.
          * In both versions, the argument \a RayClass is fixed as VectorInt.
          *

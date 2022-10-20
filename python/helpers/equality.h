@@ -50,7 +50,7 @@ namespace python {
  *
  * Specifically, suppose we have two python objects \a x and \a y that
  * wrap instances of some underlying C++ class \a C.  Then, if we
- * test <tt>x == y</tt> or <tt>x != y</tt> under python, the possible
+ * test `x == y` or `x != y` under python, the possible
  * behaviours are:
  */
 enum EqualityType {

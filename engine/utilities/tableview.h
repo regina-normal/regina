@@ -61,13 +61,13 @@ namespace detail {
      * If the dimension pack \a dim contains some positive number of dimensions
      * \a d1, ..., \a dk, then:
      *
-     * - \a type represents <tt>const T[d1]...[dk]</tt>;
+     * - \a type represents `const T[d1]...[dk]`;
      * - \a view represents <tt>TableView<T, d1, ..., dk></tt>.
      *
      * If the dimension pack \a dim is empty, then:
      *
-     * - \a type represents <tt>const T</tt>;
-     * - \a view represents <tt>const T&</tt>.
+     * - \a type represents `const T`;
+     * - \a view represents `const T&`.
      */
     template <typename T, size_t... dim>
     struct ConstArrayOf;
@@ -109,7 +109,7 @@ namespace detail {
  *   has a richer interface.
  *
  * - TableView is (for now) only designed to work with fixed-size C-style
- *   arrays of the form <tt>Element[a][b]...[z]</tt>, where the array
+ *   arrays of the form `Element[a][b]...[z]`, where the array
  *   dimensions are compile-time constants.  In contrast, ListView can also
  *   work with rich C++ container classes and variable-sized C-style arrays.
  *
@@ -123,7 +123,7 @@ namespace detail {
  *
  * TableView comes with deduction guides for tables of dimension ≤ 3.
  * This means that you can simply create a TableView using the syntax
- * <tt>TableView(array)</tt>, where \a array is the underlying C-style array,
+ * `TableView(array)`, where \a array is the underlying C-style array,
  * without having to specify any TableView template arguments.
  *
  * TableView objects are small enough to pass by value and swap with
@@ -165,7 +165,7 @@ class TableView {
         /**
          * The type of a slice of the underlying C-style array, when the
          * first array index is fixed.  If this array is one-dimensional,
-         * then this is simply <tt>const Element</tt>.
+         * then this is simply `const Element`.
          */
         using Subarray = typename detail::ConstArrayOf<Element, dim...>::type;
 
@@ -215,7 +215,7 @@ class TableView {
          * The iterator type for this table view.
          *
          * For a TableView \a t, an iterator of this type runs through the
-         * subarrays/elements <tt>t[0]</tt>, <tt>t[1]</tt>, ..., in order
+         * subarrays/elements `t[0]`, `t[1]`, ..., in order
          * from first to last.  See TableView::begin() for further details.
          *
          * This iterator is, in spirit, a bidirectional multipass iterator.
@@ -231,7 +231,7 @@ class TableView {
          *
          * - For a one-dimensional table, the deference operator returns
          *   by reference as usual: \a value_type is Element, and
-         *   \a reference_type is <tt>const Element&</tt>.
+         *   \a reference_type is `const Element&`.
          *
          * Both \a iterator and \a const_iterator are the same type, since
          * TableView only offers read-only access to the underlying data.
@@ -442,7 +442,7 @@ class TableView {
          *
          * Typically this operator would just be used to access an
          * individual element using the syntax
-         * <tt>array[index_1][index_2]...[index_dim]</tt>, where
+         * `array[index_1][index_2]...[index_dim]`, where
          * \a dim is the dimension of this array.
          *
          * \param index indicates which element or sub-array to return;
@@ -458,13 +458,13 @@ class TableView {
          * multi-dimensional array), or the first element (for a
          * one-dimensional array).
          *
-         * For a TableView \a t, the iterator range from <tt>t.begin()</tt>
-         * to <tt>t.end()</tt> runs through the subarrays/elements
-         * <tt>t[0]</tt>, <tt>t[1]</tt>, ..., in order from first to last.
+         * For a TableView \a t, the iterator range from `t.begin()`
+         * to `t.end()` runs through the subarrays/elements
+         * `t[0]`, `t[1]`, ..., in order from first to last.
          *
          * In particular, for a multi-dimensional array, a single iterator
          * will not run through the individual array elements; for this you
-         * will need <tt>t.dimension</tt> nested iterations.
+         * will need `t.dimension` nested iterations.
          *
          * \nopython For Python users, TableView implements the Python iterable
          * interface.  You can iterate over the subarrays or elements of this
@@ -481,9 +481,9 @@ class TableView {
          * multi-dimensional array), or the last element (for a one-dimensional
          * array).
          *
-         * For a TableView \a t, the iterator range from <tt>t.begin()</tt>
-         * to <tt>t.end()</tt> runs through the subarrays/elements
-         * <tt>t[0]</tt>, <tt>t[1]</tt>, ..., in order from first to last.
+         * For a TableView \a t, the iterator range from `t.begin()`
+         * to `t.end()` runs through the subarrays/elements
+         * `t[0]`, `t[1]`, ..., in order from first to last.
          *
          * See begin() for further details.
          *
@@ -504,12 +504,12 @@ class TableView {
          * array).
          *
          * For a TableView \a t, this iterator will run through the
-         * subarrays/elements <tt>t[0]</tt>, <tt>t[1]</tt>, ..., in order
+         * subarrays/elements `t[0]`, `t[1]`, ..., in order
          * from first to last.
          *
          * In particular, for a multi-dimensional array, a single iterator
          * will not run through the individual array elements; for this you
-         * will need <tt>t.dimension</tt> nested iterations.
+         * will need `t.dimension` nested iterations.
          *
          * \nocpp For C++ users, TableView provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over the

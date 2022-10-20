@@ -104,7 +104,7 @@ class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
  * The arguments \a i and \a j do not need to appear in ascending order.
  *
  * \ifacespython Python does not support templates.  Instead, Python users
- * should call this function in the form <tt>faceOppositeEdge(dim, i, j)</tt>;
+ * should call this function in the form `faceOppositeEdge(dim, i, j)`;
  * that is, the template parameter \a dim becomes the first argument of
  * the function.
  *

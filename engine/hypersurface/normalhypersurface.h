@@ -356,12 +356,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * with the given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this hypersurface uses the vector encoding
-         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * described by `HyperEncoding(coords)`.  Be careful with this
          * if you are extracting the vector from some other normal hypersurface,
          * since Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this hypersurface will
-         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         * use `HyperEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include tetrahedron coordinates.
@@ -374,7 +374,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the encoding
-         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         * `HyperEncoding(coords)`.  This will not be checked!
          *
          * \ifacespython Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
@@ -394,12 +394,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * with the given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this hypersurface uses the vector encoding
-         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * described by `HyperEncoding(coords)`.  Be careful with this
          * if you are extracting the vector from some other normal hypersurface,
          * since Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this hypersurface will
-         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         * use `HyperEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include tetrahedron coordinates.
@@ -412,7 +412,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the encoding
-         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         * `HyperEncoding(coords)`.  This will not be checked!
          *
          * \nopython Instead use the version that copies \a vector.
          *
@@ -431,12 +431,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * with the given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this hypersurface uses the vector encoding
-         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * described by `HyperEncoding(coords)`.  Be careful with this
          * if you are extracting the vector from some other normal hypersurface,
          * since Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this hypersurface will
-         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         * use `HyperEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include tetrahedron coordinates.
@@ -444,7 +444,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the encoding
-         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         * `HyperEncoding(coords)`.  This will not be checked!
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
@@ -463,12 +463,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * with the given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this hypersurface uses the vector encoding
-         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * described by `HyperEncoding(coords)`.  Be careful with this
          * if you are extracting the vector from some other normal hypersurface,
          * since Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this hypersurface will
-         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         * use `HyperEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include tetrahedron coordinates.
@@ -476,7 +476,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * hypersurface inside the given triangulation, using the encoding
-         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         * `HyperEncoding(coords)`.  This will not be checked!
          *
          * \nopython Instead use the version that takes a "pure" triangulation
          * and copies \a vector.
@@ -901,7 +901,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * - \a thin is either 0 or 1, indicating how many edges this
          *   hypersurface is a thin link for.  This uses an unsigned type,
-         *   since it will often be compared to <tt>v.size()</tt>.
+         *   since it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this hypersurface is the
          * normalised link of any edge, then \a link will be 0 and \a v will be
@@ -986,7 +986,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * - \a thin is either 0, 1 or 2, indicating how many triangles this
          *   hypersurface is a thin link for.  This uses an unsigned type,
-         *   since it will often be compared to <tt>v.size()</tt>.
+         *   since it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this hypersurface is the
          * normalised link of any triangle, then \a link will be 0 and \a v
@@ -1071,7 +1071,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * - \a thin is either 0, 1 or 2, indicating how many tetrahedra this
          *   hypersurface is a thin link for.  This uses an unsigned type,
-         *   since it will often be compared to <tt>v.size()</tt>.
+         *   since it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this hypersurface is the
          * normalised link of any tetrahedron, then \a link will be 0 and \a v

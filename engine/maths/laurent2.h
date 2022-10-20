@@ -51,14 +51,14 @@ namespace regina {
  * Represents a Laurent polynomial in the two variables \e x, \e y with
  * coefficients of type \a T.  A Laurent polynomial differs from an ordinary
  * polynomial in that it allows negative exponents (so, for example, you can
- * represent a polynomial such as <tt>2 + 3x^2 + y/x - 1/y^3</tt>).
+ * represent a polynomial such as `2 + 3x^2 + y/x - 1/y^3`).
  *
  * The type \a T must represent a ring with no zero divisors.
  * In particular, it must:
  *
  * - support basic arithmetic operations;
- * - support assignments of the form <tt>x = int</tt> and
- *   tests of the form <tt>x == int</tt> and <tt>x < int</tt>;
+ * - support assignments of the form `x = int` and
+ *   tests of the form `x == int` and <tt>x < int</tt>;
  * - have a default constructor that assigns an explicit value of zero.
  *
  * This means that Regina's numerical types such as Integer and Rational
@@ -103,7 +103,7 @@ class Laurent2 :
         std::map<Exponents, T> coeff_;
             /**< Stores all non-zero coefficients of the polynomial.
                  Specifically, coeff_[(i,j)] stores the coefficient of
-                 <tt>x^i y^j</tt>. */
+                 `x^i y^j`. */
 
         static const T zero_;
             /**< A zero coefficient that we can safely make references to. */
@@ -115,7 +115,7 @@ class Laurent2 :
         Laurent2() = default;
 
         /**
-         * Creates the polynomial <tt>x^d y^e</tt> for the given exponents
+         * Creates the polynomial `x^d y^e` for the given exponents
          * \a d and \a e.
          *
          * \param xExp the exponent \a d, which is attached to \a x.
@@ -149,7 +149,7 @@ class Laurent2 :
 
         /**
          * Creates a copy of the given polynomial with all terms
-         * multiplied by <tt>x^d y^e</tt> for some integers \a d and \a e.
+         * multiplied by `x^d y^e` for some integers \a d and \a e.
          *
          * This constructor induces a deep (and modified) copy of \a value.
          *
@@ -182,7 +182,7 @@ class Laurent2 :
          *
          * The coefficients should be presented as a collection of tuples of
          * the form (\a d, \a e, \a v), each representing a term of the form
-         * <tt>v x^d y^e</tt>.
+         * `v x^d y^e`.
          *
          * The tuples may be given in any order.
          * An empty sequence will be treated as the zero polynomial.
@@ -219,7 +219,7 @@ class Laurent2 :
          *
          * The coefficients should be presented as a collection of tuples of
          * the form (\a d, \a e, \a v) each representing a term of the form
-         * <tt>v x^d y^e</tt>.
+         * `v x^d y^e`.
          *
          * The tuples may be given in any order.
          * An empty sequence will be treated as the zero polynomial.
@@ -248,7 +248,7 @@ class Laurent2 :
         void init();
 
         /**
-         * Sets this to become the polynomial <tt>x^d y^e</tt> for the
+         * Sets this to become the polynomial `x^d y^e` for the
          * given exponents \a d and \a e.
          *
          * \param xExp the new exponent \a d, which is attached to \a x.
@@ -269,12 +269,12 @@ class Laurent2 :
          *
          * \ifacespython In Python, this is the square bracket operator,
          * not the round bracket operator; that is, Python users can access
-         * coefficients through the syntax <tt>poly[xExp, yExp]</tt>.
+         * coefficients through the syntax `poly[xExp, yExp]`.
          * Moreover, this operator can also \e set cofficients; that is,
-         * you can write <tt>poly[xExp, yExp] = value</tt>.
+         * you can write `poly[xExp, yExp] = value`.
          * However, when \e getting a coefficient this operator will return
          * by value (to enforce constness), which means for example you
-         * cannot write something like <tt>poly[xExp, yExp].negate()</tt>.
+         * cannot write something like `poly[xExp, yExp].negate()`.
          *
          * \cpp For C++ users, this operator is read-only.  To \e set
          * coefficients, you must use the separate routine set().
@@ -296,7 +296,7 @@ class Laurent2 :
          *
          * \ifacespython This set() routine is available, but you can
          * also set coefficients directly using syntax of the form
-         * <tt>p[xExp, yExp] = value</tt>.
+         * `p[xExp, yExp] = value`.
          *
          * \param xExp the exponent attached to \a x.
          * \param yExp the exponent attached to \a y.
@@ -450,13 +450,13 @@ class Laurent2 :
         void negate();
 
         /**
-         * Replaces <tt>x</tt> with <tt>x^-1</tt> in this polynomial.
+         * Replaces `x` with `x^-1` in this polynomial.
          * This polynomial is changed directly.
          */
         void invertX();
 
         /**
-         * Replaces <tt>y</tt> with <tt>y^-1</tt> in this polynomial.
+         * Replaces `y` with `y^-1` in this polynomial.
          * This polynomial is changed directly.
          */
         void invertY();
@@ -528,9 +528,9 @@ class Laurent2 :
          * \param out the output stream to which to write.
          * \param utf8 \c true if unicode characters may be used.
          * \param varX the symbol to use for the variable \a x.  This may be
-         * \c null, in which case the default symbol <tt>'x'</tt> will be used.
+         * \c null, in which case the default symbol `x` will be used.
          * \param varY the symbol to use for the variable \a y.  This may be
-         * \c null, in which case the default symbol <tt>'y'</tt> will be used.
+         * \c null, in which case the default symbol `y` will be used.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
             const char* varX = nullptr, const char* varY = nullptr) const;
@@ -543,9 +543,9 @@ class Laurent2 :
          * arguments; that variant is inherited from the Output class.
          *
          * \param varX the symbol to use for the variable \a x.  This may be
-         * \c null, in which case the default symbol <tt>'x'</tt> will be used.
+         * \c null, in which case the default symbol `x` will be used.
          * \param varY the symbol to use for the variable \a y.  This may be
-         * \c null, in which case the default symbol <tt>'y'</tt> will be used.
+         * \c null, in which case the default symbol `y` will be used.
          * \return this polynomial as a human-readable string.
          */
         std::string str(const char* varX, const char* varY = nullptr) const;
@@ -565,9 +565,9 @@ class Laurent2 :
          * arguments; that variant is inherited from the Output class.
          *
          * \param varX the symbol to use for the variable \a x.  This may be
-         * \c null, in which case the default symbol <tt>'x'</tt> will be used.
+         * \c null, in which case the default symbol `x` will be used.
          * \param varY the symbol to use for the variable \a y.  This may be
-         * \c null, in which case the default symbol <tt>'y'</tt> will be used.
+         * \c null, in which case the default symbol `y` will be used.
          * \return this polynomial as a unicode-enabled human-readable string.
          */
         std::string utf8(const char* varX, const char* varY = nullptr) const;

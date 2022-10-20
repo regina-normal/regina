@@ -278,10 +278,10 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * \ifacespython The entry() routine gives direct read-write access
          * to matrix elements, but does not allow them to be set using
          * the assignment operator.  In other words, code such as
-         * <tt>matrix.entry(r, c).negate()</tt> will work, but
-         * <tt>matrix.entry(r, c) = value</tt> will not.
+         * `matrix.entry(r, c).negate()` will work, but
+         * `matrix.entry(r, c) = value` will not.
          * To assign values to matrix elements, you should instead use the
-         * syntax <tt>matrix.set(row, column, value)</tt>.
+         * syntax `matrix.set(row, column, value)`.
          * This set() routine returns nothing, and is provided for python
          * only (i.e., it is not part of the C++ calculation engine).
          *
@@ -1039,7 +1039,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * The permutation is returned as an array of columns() integers,
          * such that column \a i of this adjusted matrix corresponds to
-         * column <tt>columnPerm()[i]</tt> of the original matrix.
+         * column `columnPerm()[i]` of the original matrix.
          *
          * If you are imposing additional constraints through the
          * template parameter LPConstraint, then the corresponding extra

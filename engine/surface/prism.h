@@ -121,7 +121,7 @@ struct PrismSpec {
 
 /**
  * Writes the given prism specifier to the given output stream.
- * The prism specifier will be written as a pair <tt>(tetIndex, edge)</tt>.
+ * The prism specifier will be written as a pair `(tetIndex, edge)`.
  *
  * \param out the output stream to which to write.
  * \param spec the prism specifier to write.

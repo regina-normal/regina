@@ -81,9 +81,9 @@ class SigPartialIsomorphism;
  * Cycles are arranged into <i>cycle groups</i>, where a cycle group
  * consists of a series of consecutive cycles all of the same length.
  *
- * An example of a signature is <tt>(abc)(a)(b)(c)</tt>.  This signature
+ * An example of a signature is `(abc)(a)(b)(c)`.  This signature
  * is of order 3 and contains two cycle groups, the first being
- * <tt>(abc)</tt> and the second being <tt>(a)(b)(c)</tt>.
+ * `(abc)` and the second being `(a)(b)(c)`.
  *
  * A signature cannot represent a splitting surface with more than 26
  * quadrilaterals.
@@ -107,8 +107,8 @@ class Signature : public ShortOutput<Signature> {
                  start to finish; letters A,B,... are represented by
                  integers 0,1,... . */
         bool* labelInv;
-            /**< <tt>labelInv[i]</tt> stores the case of the letter
-                 corresponding to <tt>label[i]</tt>.  In this case
+            /**< `labelInv[i]` stores the case of the letter
+                 corresponding to `label[i]`.  In this case
                  \c false represents lower-case and \c true represents
                  upper-case. */
         unsigned nCycles;
@@ -131,8 +131,8 @@ class Signature : public ShortOutput<Signature> {
          * Punctuation characters in the given string will be interpreted
          * as separating cycles.  All whitespace will be ignored.
          * 
-         * Examples of valid signatures are <tt>"(ab)(bC)(Ca)"</tt> and
-         * <tt>"AAb-bc-C"</tt>.  See the class notes for further details
+         * Examples of valid signatures are `"(ab)(bC)(Ca)"` and
+         * `"AAb-bc-C"`.  See the class notes for further details
          * on what constitutes a valid signature.
          *
          * \exception InvalidArgument The given string was not a valid
@@ -265,9 +265,9 @@ class Signature : public ShortOutput<Signature> {
          * make sensible default choices for the three arguments required here.
          *
          * \param cycleOpen the text to write at the beginning of each cycle
-         * (such as <tt>"("</tt>).
+         * (such as `"("`).
          * \param cycleClose the text to write at the end of each cycle
-         * (such as <tt>")"</tt>).
+         * (such as `")"`).
          * \param cycleJoin the text to write between each pair of consecutive
          * cycles.
          */
@@ -283,9 +283,9 @@ class Signature : public ShortOutput<Signature> {
          *
          * \param out the output stream to which to write.
          * \param cycleOpen the text to write at the beginning of a cycle
-         * (such as <tt>"("</tt>).
+         * (such as `"("`).
          * \param cycleClose the text to write at the end of a cycle
-         * (such as <tt>")"</tt>).
+         * (such as `")"`).
          * \param cycleJoin the text to write between two cycles.
          */
         void writeCycles(std::ostream& out, const std::string& cycleOpen,
@@ -336,7 +336,7 @@ class Signature : public ShortOutput<Signature> {
          * This must be less than the total number of cycles in this signature.
          * \param start1 allows the first cycle to be transformed by
          * rotation; this parameter is the new starting position of the first
-         * cycle.  This must be between 0 and <tt>getCycleLength(cycle1)-1</tt>
+         * cycle.  This must be between 0 and `getCycleLength(cycle1)-1`
          * inclusive.
          * \param dir1 allows the first cycle to be transformed by
          * reversal; this parameter must be positive to use an unreversed
@@ -351,7 +351,7 @@ class Signature : public ShortOutput<Signature> {
          * This must be less than the total number of cycles in this signature.
          * \param start2 allows the second cycle to be transformed by
          * rotation; this parameter is the new starting position of the second
-         * cycle.  This must be between 0 and <tt>getCycleLength(cycle2)-1</tt>
+         * cycle.  This must be between 0 and `getCycleLength(cycle2)-1`
          * inclusive.
          * \param dir2 allows the second cycle to be transformed by
          * reversal; this parameter must be positive to use an unreversed

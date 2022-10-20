@@ -229,7 +229,7 @@ class BoundaryComponentBase :
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * `countFaces(subdim)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
@@ -388,7 +388,7 @@ class BoundaryComponentBase :
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>faces(subdim)</tt>.
+         * `faces(subdim)`.
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
          * one of Regina's \ref stddim "standard dimensions", then \a subdim
@@ -508,7 +508,7 @@ class BoundaryComponentBase :
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * `face(subdim, index)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
          * \tparam subdim the dimension of the faces to query.  If \a dim is
@@ -815,7 +815,7 @@ class BoundaryComponentBase :
          *
          * - Let \a i lie between 0 and size()-1 inclusive.  Then simplex \a i
          *   of the returned (<i>dim</i>-1)-dimensional triangulation is
-         *   a copy of <tt>facet(i)</tt> of this boundary component,
+         *   a copy of `facet(i)` of this boundary component,
          *   and its vertices 0,...,<i>dim</i>-1 are numbered in the
          *   same way.  To relate these (<i>dim</i>-1)-face vertex numbers to
          *   the vertex numbers of top-dimensional simplices in the overall

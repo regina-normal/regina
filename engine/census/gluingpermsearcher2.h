@@ -156,7 +156,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * each permutation set precisely once up to equivalence.  These
          * isomorphisms must all be automorphisms of the given edge pairing,
          * and will generally be the set of all such automorphisms (which
-         * you can generate via <tt>pairing.findAutomorphisms()</tt>).
+         * you can generate via `pairing.findAutomorphisms()`).
          * \param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.

@@ -155,7 +155,7 @@ struct DiscType {
 
 /**
  * Writes the given disc type to the given output stream.
- * The disc type will be written as a pair <tt>(tetIndex, type)</tt>.
+ * The disc type will be written as a pair `(tetIndex, type)`.
  *
  * \param out the output stream to which to write.
  * \param type the disc type to write.

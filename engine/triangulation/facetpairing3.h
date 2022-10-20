@@ -89,7 +89,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * are joined together in pairs.
          *
          * Calling <tt>FacetPairing<3>(tri)</tt> is equivalent to calling
-         * <tt>tri.pairing()</tt>.
+         * `tri.pairing()`.
          *
          * \pre The given triangulation is not empty.
          *

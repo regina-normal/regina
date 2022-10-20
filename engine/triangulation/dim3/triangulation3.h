@@ -814,9 +814,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * specification of which root of unity is used (since it
          * returns a numerical real value).  The numerical value
          * obtained by calling
-         * <tt>turaevViroApprox(r, whichRoot)</tt>
+         * `turaevViroApprox(r, whichRoot)`
          * should be the same as
-         * <tt>turaevViro(r, parity).evaluate(whichRoot)</tt>,
+         * `turaevViro(r, parity).evaluate(whichRoot)`,
          * where \a parity is \c true or \c false according to whether
          * \a whichRoot is odd or even respectively.  Of course in practice the
          * numerical values might be very different, since turaevViroApprox()
@@ -875,12 +875,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * The argument \a whichRoot specifies which root of unity is
          * used for \a q0.  Specifically, \a q0 will be the root of unity
-         * <tt>e^(2πi * whichRoot / 2r)</tt>.  There are additional
+         * `e^(2πi * whichRoot / 2r)`.  There are additional
          * preconditions on \a whichRoot to ensure that \a q0^2 is a
          * \e primitive root of unity of degree \a r; see below for details.
          *
          * This same invariant can be computed by calling
-         * <tt>turaevViro(r, parity).evaluate(whichRoot)</tt>,
+         * `turaevViro(r, parity).evaluate(whichRoot)`,
          * where \a parity is \c true or \c false according to whether
          * \a whichRoot is odd or even respectively.
          * Calling turaevViroApprox() is significantly faster (since it avoids
@@ -988,8 +988,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * times the longitude intersects each of the three boundary edges.
          * Specifically, if the returned tuple is \a t and the unique boundary
          * component is \a bc, then for each \a k = 0,1,2, the element
-         * <tt>t[k]</tt> indicates the (absolute) number of times that the
-         * longitude intersects the edge <tt>bc->edge(k)</tt>.
+         * `t[k]` indicates the (absolute) number of times that the
+         * longitude intersects the edge `bc->edge(k)`.
          */
         std::array<long, 3> longitudeCuts() const;
 
@@ -2054,8 +2054,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Checks the eligibility of and/or performs a 0-2 move about the
          * (not necessarily distinct) triangles
-         * <tt>e0.tetrahedron()->triangle( e0.vertices()[t0] )</tt> and
-         * <tt>e1.tetrahedron()->triangle( e1.vertices()[t1] )</tt>.
+         * `e0.tetrahedron()->triangle( e0.vertices()[t0] )` and
+         * `e1.tetrahedron()->triangle( e1.vertices()[t1] )`.
          *
          * This involves fattening up these two triangles into a new pair of
          * tetrahedra around a new degree-two edge \a d; this is the inverse
@@ -2120,19 +2120,19 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - The edge \a e is valid.
          *
          * - The numbers \a t0 and \a t1 are both less than or equal to
-         *   <tt>e->degree()</tt>, and strictly less than <tt>e->degree()</tt>
+         *   `e->degree()`, and strictly less than `e->degree()`
          *   if \a e is non-boundary. This ensures that \a t0 and \a t1
          *   correspond to sensible triangle numbers (as described below).
          *
          * The triangles incident to \a e are numbered as follows:
          *
-         * - For each \a i from 0 up to <tt>e->degree()</tt>, we assign the
+         * - For each \a i from 0 up to `e->degree()`, we assign the
          *   number \a i to the triangle
-         *   <tt>e->embedding(i).tetrahedron()->triangle( e->embedding(i).vertices()[3] )</tt>
+         *   `e->embedding(i).tetrahedron()->triangle( e->embedding(i).vertices()[3] )`
          *
          * - If \a e is a boundary edge, then we additionally assign the
-         *   number <tt>e->degree()</tt> to the boundary triangle
-         *   <tt>e->back().tetrahedron()->triangle( e->back().vertices()[2] )</tt>
+         *   number `e->degree()` to the boundary triangle
+         *   `e->back().tetrahedron()->triangle( e->back().vertices()[2] )`
          *
          * If the routine is asked to both check and perform, the move will
          * only be performed if the check shows it is legal.
@@ -2182,7 +2182,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * of performing a 2-0 move about the edge \a d. This can be done if
          * and only if the following conditions are satisfied:
          *
-         * - The edges <tt>t0->edge(e0)</tt> and <tt>t1->edge(e1)</tt> are
+         * - The edges `t0->edge(e0)` and `t1->edge(e1)` are
          *   the same edge \a e of this triangulation.
          *
          * - The edge \a e is valid.
@@ -3178,7 +3178,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Otherwise the given boundary component will be filled with a
          * solid torus whose meridional curve cuts the edges
-         * <tt>bc->edge(0)</tt>, <tt>bc->edge(1)</tt> and <tt>bc->edge(2)</tt>
+         * `bc->edge(0)`, `bc->edge(1)` and `bc->edge(2)`
          * a total of \a cuts0, \a cuts1 and \a cuts2 times respectively.
          *
          * For the filling to be performed successfully, the integers
@@ -3195,11 +3195,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * indexed in the boundary component.
          *
          * \param cuts0 the number of times that the meridional curve of
-         * the new solid torus should cut the edge <tt>bc->edge(0)</tt>.
+         * the new solid torus should cut the edge `bc->edge(0)`.
          * \param cuts1 the number of times that the meridional curve of
-         * the new solid torus should cut the edge <tt>bc->edge(1)</tt>.
+         * the new solid torus should cut the edge `bc->edge(1)`.
          * \param cuts2 the number of times that the meridional curve of
-         * the new solid torus should cut the edge <tt>bc->edge(2)</tt>.
+         * the new solid torus should cut the edge `bc->edge(2)`.
          * \param bc the boundary component to fill.  If the triangulation
          * has precisely one boundary component then this may be \c null.
          * \return \c true if the boundary component was filled successfully,

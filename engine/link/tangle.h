@@ -93,7 +93,7 @@ class Tangle : public Output<Tangle> {
         MarkedVector<Crossing> crossings_;
             /**< The crossings in this tangle. */
         StrandRef end_[2][2];
-            /**< The member <tt>end_[s][i]</tt> store the crossings
+            /**< The member `end_[s][i]` store the crossings
                  closest to the two endpoints of string \a s, where
                  endpoint <i>i</i>=0 is at the beginning of the string
                  (following its orientation), and the endpoint <i>i</i>=1
@@ -154,16 +154,16 @@ class Tangle : public Output<Tangle> {
          *
          * Specifically, the tangle will consist of two parallel copies
          * of the given knot diagram, which will be broken just before
-         * the starting strand as returned by <tt>knot.component(0)</tt>.
+         * the starting strand as returned by `knot.component(0)`.
          *
          * The two resulting endpoints that appear just before the
          * starting strand will form the top-left and bottom-left
          * endpoints of this tangle, and the endpoints on the other side
          * of the break (which will be just after the parallel copies of the
-         * final strand <tt>knot.component(0).prev()</tt>) will form the
+         * final strand `knot.component(0).prev()`) will form the
          * top-right and bottom-right endpoints of this tangle.
          *
-         * The tangle will contain <tt>4 * knot.size()</tt> crossings in total.
+         * The tangle will contain `4 * knot.size()` crossings in total.
          *
          * \pre The argument contains exactly one component (i.e., it
          * is actually a knot, and not empty or a multiple-component link).
@@ -696,7 +696,7 @@ class Tangle : public Output<Tangle> {
          *   crossing 0 to crossing size()-1;
          *
          * - a description of string 0 and then string 1.  Each string
-         *   will be written in the form <tt>( a b c ... )</tt>, indicating
+         *   will be written in the form `( a b c ... )`, indicating
          *   the crossings that are encountered as we follow the string
          *   in the forward direction from its starting endpoint.  Each element
          *   \a a, \a b, \a c and so on will be written in the format used by
@@ -824,8 +824,8 @@ class Tangle : public Output<Tangle> {
          *       crossing labelled \a k, and the symbol `-` indicates
          *       that you are passing under the crossing labelled \a k;
          *
-         *     * the symbol <tt>&lt;</tt> indicates that the other strand of
-         *       the crossing passes from right to left, and <tt>&gt;</tt>
+         *     * the symbol `<` indicates that the other strand of
+         *       the crossing passes from right to left, and `>`
          *       indicates that the other strand passes from left to right.
          *
          * - Write the token `_` to indicate that the first string has
@@ -895,8 +895,8 @@ class Tangle : public Output<Tangle> {
          * \pre \a Iterator is a random access iterator type.
          *
          * \pre Dereferencing such an iterator produces either a
-         * C-style string (which can be cast to <tt>const char*</tt>) or a
-         * C++-style string (which can be cast to <tt>const std::string&</tt>).
+         * C-style string (which can be cast to `const char*`) or a
+         * C++-style string (which can be cast to `const std::string&`).
          *
          * \pre The tokens in the input sequence do not contain any whitespace.
          *

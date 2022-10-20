@@ -201,8 +201,8 @@ class Cusp : public ShortOutput<Cusp> {
          * SnapPeaTriangulation).
          *
          * Note that cusp and vertex indexing might not be in sync; that is,
-         * SnapPea's <tt>cusp(i)</tt> need not correspond to Regina's
-         * <tt>vertex(i)</tt>.
+         * SnapPea's `cusp(i)` need not correspond to Regina's
+         * `vertex(i)`.
          *
          * This routine can be used to detect if/when cusp numbering
          * and vertex numbering fall out of sync, and to translate
@@ -214,7 +214,7 @@ class Cusp : public ShortOutput<Cusp> {
          * Returns whether this cusp is complete.
          *
          * \snappy In SnapPy, this field corresponds to querying
-         * <tt>Manifold.cusp_info('is_complete')[cusp_number]</tt>.
+         * `Manifold.cusp_info("is_complete")[cusp_number]`.
          *
          * \return \c true if this cusp is complete, or \c false if it is
          * filled.
@@ -226,7 +226,7 @@ class Cusp : public ShortOutput<Cusp> {
          * or 0 if this cusp is complete.
          *
          * \snappy In SnapPy, this field corresponds to querying
-         * <tt>Manifold.cusp_info('filling')[cusp_number][0]</tt>.
+         * `Manifold.cusp_info("filling")[cusp_number][0]`.
          *
          * \return the first filling coefficient.
          */
@@ -237,7 +237,7 @@ class Cusp : public ShortOutput<Cusp> {
          * or 0 if this cusp is complete.
          *
          * \snappy In SnapPy, this field corresponds to querying
-         * <tt>Manifold.cusp_info('filling')[cusp_number][1]</tt>.
+         * `Manifold.cusp_info("filling")[cusp_number][1]`.
          *
          * \return the second filling coefficient.
          */
@@ -795,15 +795,15 @@ class SnapPeaTriangulation :
          * complement of the given link in the 3-sphere.
          *
          * This is \e not the same triangulation that would be produced by
-         * calling <tt>SnapPeaTriangulation(link.complement())</tt>.
-         * By calling <tt>link.complement()</tt>, you through Regina's
+         * calling `SnapPeaTriangulation(link.complement())`.
+         * By calling `link.complement()`, you through Regina's
          * Triangulation<3> class and therefore lose the peripheral curves.
          * Although the SnapPeaTriangulation constructor will install new
          * peripheral curves, there is no guarantee that these are the same
          * curves as before; in particular, there is no guarantee that these
          * new curves will correspond in any way to the original link diagram.
          *
-         * In contrast, by calling <tt>SnapPeaTriangulation(link)</tt> directly,
+         * In contrast, by calling `SnapPeaTriangulation(link)` directly,
          * the link complement will be triangulated by the SnapPea kernel and
          * not by Regina.  As a result, the peripheral curves installed by
          * SnapPea will be precisely the curves from the link diagram.
@@ -974,7 +974,7 @@ class SnapPeaTriangulation :
          * returned.
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.name()</tt>.
+         * `Manifold.name()`.
          *
          * \return SnapPea's name for this triangulation.
          */
@@ -991,7 +991,7 @@ class SnapPeaTriangulation :
          * structure, with respect to the current Dehn filling (if any).
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.solution_type()</tt>.
+         * `Manifold.solution_type()`.
          *
          * \return the solution type.
          */
@@ -1003,7 +1003,7 @@ class SnapPeaTriangulation :
          * Dehn filling (if any).
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.volume()</tt>.
+         * `Manifold.volume()`.
          *
          * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
@@ -1017,7 +1017,7 @@ class SnapPeaTriangulation :
          * This will be with respect to the current Dehn filling (if any).
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.volume(accuracy=True)</tt>.
+         * `Manifold.volume(accuracy=True)`.
          *
          * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
@@ -1059,7 +1059,7 @@ class SnapPeaTriangulation :
          * significant performance penalty.
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.tetrahedra_shapes(part='rect')[tet]</tt>.
+         * `Manifold.tetrahedra_shapes(part="rect")[tet]`.
          *
          * \param tet the index of a tetrahedron; this must be between
          * 0 and size()-1 inclusive.
@@ -1080,7 +1080,7 @@ class SnapPeaTriangulation :
          *
          * \snappy This has no corresponding routine in SnapPy,
          * though the information is easily acessible via
-         * <tt>Manifold.tetrahedra_shapes(part='rect')</tt>.
+         * `Manifold.tetrahedra_shapes(part="rect")`.
          *
          * \return the minimum imaginary part amongst all tetrahedron shapes.
          */
@@ -1102,28 +1102,27 @@ class SnapPeaTriangulation :
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
-         * The matrix will contain <tt>3 * size()</tt> columns.
-         * The first three columns represent shape parameters <tt>z</tt>,
-         * <tt>1/(1-z)</tt> and <tt>(z-1)/z</tt> for the first tetrahedron;
-         * the next three columns represent shape parameters <tt>z</tt>,
-         * <tt>1/(1-z)</tt> and <tt>(z-1)/z</tt> for the second tetrahedron,
+         * The matrix will contain `3 * size()` columns.
+         * The first three columns represent shape parameters `z`,
+         * `1/(1-z)` and `(z-1)/z` for the first tetrahedron;
+         * the next three columns represent shape parameters `z`,
+         * `1/(1-z)` and `(z-1)/z` for the second tetrahedron,
          * and so on.  By Regina's edge numbering conventions,
-         * <tt>z</tt> corresponds to edges 0 and 5 of the tetrahedron,
-         * <tt>1/(1-z)</tt> corresponds to edges 1 and 4 of the tetrahedron, and
-         * <tt>(z-1)/z</tt> corresponds to edges 2 and 3 of the tetrahedron.
+         * `z` corresponds to edges 0 and 5 of the tetrahedron,
+         * `1/(1-z)` corresponds to edges 1 and 4 of the tetrahedron, and
+         * `(z-1)/z` corresponds to edges 2 and 3 of the tetrahedron.
          *
-         * More specifically, a row of the form <tt>a b c d e f ...</tt>
+         * More specifically, a row of the form `a b c d e f ...`
          * describes an equation with left hand side
-         * <tt>a * log(z0) + b * log(1/(1-z0)) + c * log((z0-1)/z) +
-         * d * log(z1) + ...</tt>,
-         * and with right hand side <tt>2πi</tt> for an edge equation
+         * `a log(z0) + b log(1/(1-z0)) + c log((z0-1)/z) + d log(z1) + ...`,
+         * and with right hand side `2πi` for an edge equation
          * or 0 for a cusp equation.
          *
          * See also gluingEquationsRect(), which returns the gluing
          * equations in a more streamlined form.
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.gluing_equations()</tt>.
+         * `Manifold.gluing_equations()`.
          *
          * \pre This is not a null triangulation.
          *
@@ -1143,21 +1142,21 @@ class SnapPeaTriangulation :
          * precise details see the documentation for gluingEquations(),
          * which uses the same ordering.
          *
-         * The matrix will contain <tt>2 * size() + 1</tt>
+         * The matrix will contain `2 * size() + 1`
          * columns.  Let \a k = size()-1, and suppose the
          * shape parameters for tetrahedra 0, 1, ..., k are
          * \a z0, \a z1, ..., \a zk (here each shape parameter corresponds
          * to edges 0 and 5 of the corresponding tetrahedron).
-         * Then a row of the form <tt>a0 a1 ... ak b0 b1 ... bk c</tt>
+         * Then a row of the form `a0 a1 ... ak b0 b1 ... bk c`
          * describes the equation
-         * <tt>z0^a0 z1^a1 ... zk^ak (1-z0)^b0 (1-z1)^b1 ... (1-zk)^bk = c</tt>,
+         * `z0^a0 z1^a1 ... zk^ak (1-z0)^b0 (1-z1)^b1 ... (1-zk)^bk = c`,
          * where \a c will always be 1 or -1.
          *
          * See also gluingEquations(), which returns the gluing
          * equations in a more transparent term-by-term form.
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.gluing_equations(form='rect')</tt>.
+         * `Manifold.gluing_equations(form="rect")`.
          *
          * \pre This is not a null triangulation.
          *
@@ -1245,7 +1244,7 @@ class SnapPeaTriangulation :
          * Triangulation<3>::countBoundaryComponents().
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.num_cusps()</tt>.
+         * `Manifold.num_cusps()`.
          *
          * \return the total number of cusps.
          */
@@ -1255,11 +1254,11 @@ class SnapPeaTriangulation :
          * Returns the total number of complete cusps (that is, unfilled cusps).
          *
          * It is always true that
-         * <tt>countCompleteCusps() + countFilledCusps() == countCusps()</tt>.
+         * `countCompleteCusps() + countFilledCusps() == countCusps()`.
          *
          * \snappy This has no corresponding routine in SnapPy,
          * though the information is easily acessible via
-         * <tt>Manifold.cusp_info('is_complete')</tt>.
+         * `Manifold.cusp_info("is_complete")`.
          *
          * \return the total number of complete cusps.
          */
@@ -1269,11 +1268,11 @@ class SnapPeaTriangulation :
          * Returns the total number of filled cusps.
          *
          * It is always true that
-         * <tt>countCompleteCusps() + countFilledCusps() == countCusps()</tt>.
+         * `countCompleteCusps() + countFilledCusps() == countCusps()`.
          *
          * \snappy This has no corresponding routine in SnapPy,
          * though the information is easily acessible via
-         * <tt>Manifold.cusp_info('is_complete')</tt>.
+         * `Manifold.cusp_info("is_complete")`.
          *
          * \return the total number of filled cusps.
          */
@@ -1285,7 +1284,7 @@ class SnapPeaTriangulation :
          * along with other combinatorial information.
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.cusp_info()[c]</tt>, though the set of
+         * `Manifold.cusp_info()[c]`, though the set of
          * information returned about each cusp is different.
          *
          * These Cusp objects should be considered temporary only; you
@@ -1541,7 +1540,7 @@ class SnapPeaTriangulation :
          *
          * If the triangulation has more than one cusp, these pairs are
          * ordered by cusp index (as stored by SnapPea).  You can examine
-         * <tt>cusp(cusp_number).vertex()</tt> to map these to Regina's
+         * `cusp(cusp_number).vertex()` to map these to Regina's
          * vertex indices if needed.
          *
          * For the purposes of this routine, any fillings on the cusps of
@@ -1701,10 +1700,10 @@ class SnapPeaTriangulation :
          * - enumerating all transitive representations of the fundamental
          *   group into either the symmetric group <i>S(k)</i> or the cyclic
          *   group <i>Z_k</i> (according to the parameter \a type), using the
-         *   SnapPea function <tt>find_representations()</tt>; and then
+         *   SnapPea function `find_representations()`; and then
          *
          * - building the cover that corresponds to each representation,
-         *   using the SnapPea function <tt>construct_cover()</tt>.
+         *   using the SnapPea function `construct_cover()`.
          *
          * If you are only interested in the corresponding index \a k subgroups
          * of the fundamental group and not the triangulated covers themselves,
@@ -1776,11 +1775,11 @@ class SnapPeaTriangulation :
          *
          * \ifacespython There are two versions of this function available
          * in Python.  The first form is
-         * <tt>enumerateCovers(sheets, type, action)</tt>, which mirrors the
+         * `enumerateCovers(sheets, type, action)`, which mirrors the
          * C++ function: it takes \a action which may be a pure Python function,
          * it returns the number of covers found, but it does \e not take an
          * addition argument list (\a args).  The second form is
-         * <tt>enumerateCovers(sheets, type)</tt>, which returns a Python list
+         * `enumerateCovers(sheets, type)`, which returns a Python list
          * containing all of the triangulated covers, each given as a
          * pair (SnapPeaTriangulation, SnapPeaTriangulation::CoverType).
          *
@@ -1829,14 +1828,14 @@ class SnapPeaTriangulation :
          * decomposition: if it fails then then this routine will throw an
          * exception (see below for details).
          *
-         * \snappy The function <tt>canonise()</tt> means different
+         * \snappy The function `canonise()` means different
          * things for SnapPy versus the SnapPea kernel.  Here Regina follows
          * the naming convention used in the SnapPea kernel.  Specifically:
          * Regina's routine SnapPeaTriangulation::protoCanonise()
-         * corresponds to SnapPy's <tt>Manifold.canonize()</tt> and the
-         * SnapPea kernel's <tt>proto_canonize(manifold)</tt>.
+         * corresponds to SnapPy's `Manifold.canonize()` and the
+         * SnapPea kernel's `proto_canonize(manifold)`.
          * Regina's routine SnapPeaTriangulation::canonise()
-         * corresponds to the SnapPea kernel's <tt>canonize(manifold)</tt>,
+         * corresponds to the SnapPea kernel's `canonize(manifold)`,
          * and is not available through SnapPy at all.
          *
          * \warning The SnapPea kernel does not always compute the canonical
@@ -1911,14 +1910,14 @@ class SnapPeaTriangulation :
          * decomposition: if it fails then then this routine will throw an
          * exception (see below for details).
          *
-         * \snappy The function <tt>canonise()</tt> means different
+         * \snappy The function `canonise()` means different
          * things for SnapPy versus the SnapPea kernel.  Here Regina follows
          * the naming convention used in the SnapPea kernel.  Specifically:
          * Regina's routine SnapPeaTriangulation::protoCanonise()
-         * corresponds to SnapPy's <tt>Manifold.canonize()</tt> and the
-         * SnapPea kernel's <tt>proto_canonize(manifold)</tt>.
+         * corresponds to SnapPy's `Manifold.canonize()` and the
+         * SnapPea kernel's `proto_canonize(manifold)`.
          * Regina's routine SnapPeaTriangulation::canonise()
-         * corresponds to the SnapPea kernel's <tt>canonize(manifold)</tt>,
+         * corresponds to the SnapPea kernel's `canonize(manifold)`,
          * and is not available through SnapPy at all.
          *
          * \warning The SnapPea kernel does not always compute the canonical
@@ -1970,7 +1969,7 @@ class SnapPeaTriangulation :
          * If this is a null SnapPea triangulation, this routine does nothing.
          *
          * \snappy In SnapPy, this routine corresponds to calling
-         * <tt>Manifold.randomize()</tt>.
+         * `Manifold.randomize()`.
          */
         void randomise();
 

@@ -258,11 +258,11 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * Suppose this is a bag in a tree decomposition of some graph \a G,
          * whose nodes are numbered 0,1,2,....
-         * Then <tt>element(i)</tt> returns the number of the <i>i</i>th
+         * Then `element(i)` returns the number of the <i>i</i>th
          * node stored in this bag.
          *
          * Nodes are always stored in ascending order.  This means that
-         * <tt>element(0) &lt; element(1) &lt; element(2) &lt; ...</tt>.
+         * `element(0) < element(1) < element(2) < ...`.
          *
          * \param which indicates which node should be returned; this
          * must be between 0 and size()-1 inclusive.
@@ -274,7 +274,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * Suppose this is a bag in a tree decomposition of some graph \a G,
          * whose nodes are numbered 0,1,2,....
-         * Then <tt>contains(x)</tt> queries whether the node numbered \a x
+         * Then `contains(x)` queries whether the node numbered \a x
          * is contained in this bag.
          *
          * \param element the number of some node in the graph \a G.
@@ -293,13 +293,13 @@ class TreeBag : public ShortOutput<TreeBag> {
          * scheme:
          *
          * - for any non-root bag \a b, we have
-         *   <tt>b.index() &lt; b.parent()->index()</tt>;
+         *   `b.index() < b.parent()->index()`;
          *
          * - for any bag \a b with a next sibling, we have
-         *   <tt>b.index() &lt; b.sibling()->index()</tt>;
+         *   `b.index() < b.sibling()->index()`;
          *
          * \return the index of this bag within the full tree decomposition
-         * \a d; this will be between 0 and <tt>d.size()-1</tt> inclusive.
+         * \a d; this will be between 0 and `d.size()-1` inclusive.
          */
         size_t index() const;
 
@@ -385,12 +385,12 @@ class TreeBag : public ShortOutput<TreeBag> {
          * If \a d is a non-empty tree decomposition, then you can complete a
          * full postfix iteration of bags as follows:
          *
-         * - the first bag in a postfix iteration is <tt>d.first()</tt>;
-         * - the next bag after \a b in the iteration is <tt>b.next()</tt>;
-         * - the iteration terminates when <tt>b.next()</tt> is \c null.
+         * - the first bag in a postfix iteration is `d.first()`;
+         * - the next bag after \a b in the iteration is `b.next()`;
+         * - the iteration terminates when `b.next()` is \c null.
          *
          * This iteration processes the children of each bag in order;
-         * that is, it processes each bag \a b before <tt>b.sibling()</tt>
+         * that is, it processes each bag \a b before `b.sibling()`
          * (if the latter exists).
          *
          * The bags in a tree decomposition are indexed as 0,1,2,...,
@@ -411,14 +411,14 @@ class TreeBag : public ShortOutput<TreeBag> {
          * If \a d is a non-empty tree decomposition, then you can complete a
          * full prefix iteration of bags as follows:
          *
-         * - the first bag in a prefix iteration is <tt>d.firstPrefix()</tt>
-         *   (or equivalently, <tt>d.root()</tt>);
+         * - the first bag in a prefix iteration is `d.firstPrefix()`
+         *   (or equivalently, `d.root()`);
          * - the next bag after \a b in the iteration is
-         *   <tt>b.nextPrefix()</tt>;
-         * - the iteration terminates when <tt>b.nextPrefix()</tt> is \c null.
+         *   `b.nextPrefix()`;
+         * - the iteration terminates when `b.nextPrefix()` is \c null.
          *
          * This iteration processes the children of each bag in order;
-         * that is, it processes each bag \a b before <tt>b.sibling()</tt>
+         * that is, it processes each bag \a b before `b.sibling()`
          * (if the latter exists).
          *
          * \return the next bag after this in a prefix iteration of all
@@ -438,8 +438,8 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * If a bag has no children, then children() will be \c null.
          * If a bag has many children, then these will be
-         * <tt>children()</tt>, <tt>children()->sibling()</tt>,
-         * <tt>children()->sibling()->sibling()</tt>, and so on.
+         * `children()`, `children()->sibling()`,
+         * `children()->sibling()->sibling()`, and so on.
          *
          * \return the first child of this bag, or \c null if this is a
          * leaf bag (i.e., it has no children).
@@ -452,8 +452,8 @@ class TreeBag : public ShortOutput<TreeBag> {
          * then sibling() will return the next child after this.
          *
          * More generally, all of the children of a bag \a b can be accessed as
-         * <tt>b.children()</tt>, <tt>b.children()->sibling()</tt>,
-         * <tt>b.children()->sibling()->sibling()</tt>, and so on.
+         * `b.children()`, `b.children()->sibling()`,
+         * `b.children()->sibling()->sibling()`, and so on.
          *
          * \return the next sibling of this bag, or \c null if either
          * (i) this is the final child of the parent bag, or
@@ -946,12 +946,12 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * If \a d is a non-empty tree decomposition, then you can complete a
          * full postfix iteration of bags as follows:
          *
-         * - the first bag in a postfix iteration is <tt>d.first()</tt>;
-         * - the next bag after \a b in the iteration is <tt>b.next()</tt>;
-         * - the iteration terminates when <tt>b.next()</tt> is \c null.
+         * - the first bag in a postfix iteration is `d.first()`;
+         * - the next bag after \a b in the iteration is `b.next()`;
+         * - the iteration terminates when `b.next()` is \c null.
          *
          * This iteration processes the children of each bag in order;
-         * that is, it processes each bag \a b before <tt>b.sibling()</tt>
+         * that is, it processes each bag \a b before `b.sibling()`
          * (if the latter exists).
          *
          * This postfix iteration is equivalent to iterating through bags
@@ -971,13 +971,13 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * If \a d is a non-empty tree decomposition, then you can complete a
          * full prefix iteration of bags as follows:
          *
-         * - the first bag in a prefix iteration is <tt>d.firstPrefix()</tt>;
+         * - the first bag in a prefix iteration is `d.firstPrefix()`;
          * - the next bag after \a b in the iteration is
-         *   <tt>b.nextPrefix()</tt>;
-         * - the iteration terminates when <tt>b.nextPrefix()</tt> is \c null.
+         *   `b.nextPrefix()`;
+         * - the iteration terminates when `b.nextPrefix()` is \c null.
          *
          * This iteration processes the children of each bag in order;
-         * that is, it processes each bag \a b before <tt>b.sibling()</tt>
+         * that is, it processes each bag \a b before `b.sibling()`
          * (if the latter exists).
          *
          * Since the first bag in a prefix iteration must be the root bag,
@@ -1060,11 +1060,11 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * - For an introduce bag \a b, TreeBag::subtype() will indicate
          *   which "new" node was introduced.  Specifically, the new node
-         *   will be <tt>b.element(b.subtype())</tt>.
+         *   will be `b.element(b.subtype())`.
          *
          * - For a forget bag \a b, TreeBag::subtype() will indicate
          *   which "missing" node was forgotten.  Specifically, the missing
-         *   node will be <tt>b.children()->element(b.subtype())</tt>.
+         *   node will be `b.children()->element(b.subtype())`.
          *
          * - For a join bag, TreeBag::subtype() will be undefined.
          *
@@ -1092,7 +1092,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * be passed as a Python list of integers.
          *
          * \param heightHint an optional array where, for each node \a i,
-         * a higher value of <tt>heightHint[i]</tt> indicates that the node
+         * a higher value of `heightHint[i]` indicates that the node
          * should be forgotten closer to the root bag.  If this is non-null,
          * then the size of this array should be the number of nodes in
          * the underlying graph.
@@ -1134,19 +1134,19 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * at index \a i in the original tree decomposition, and let \a p be
          * its parent bag.
          *
-         * - <tt>costSame[i]</tt> indicates the cost of \e preserving the
+         * - `costSame[i]` indicates the cost of \e preserving the
          *   parent-child relationship between \a b and \a p (i.e.,
          *   after rerooting, \a p is still the parent bag of \a b).
          *   If \e b is the root bag of the original tree decomposition
-         *   then <tt>costSame[i]</tt> is ignored.
+         *   then `costSame[i]` is ignored.
          *
-         * - <tt>costReverse[i]</tt> indicates the cost of \e reversing the
+         * - `costReverse[i]` indicates the cost of \e reversing the
          *   parent-child relationship between \a b and \a p (i.e.,
          *   after rerooting, \a b is now the parent bag of \a p).
          *   Again, if \e b is the root bag of the original tree decomposition
-         *   then <tt>costReverse[i]</tt> is ignored.
+         *   then `costReverse[i]` is ignored.
          *
-         * - <tt>costRoot[i]</tt> is an additional cost that is incurred
+         * - `costRoot[i]` is an additional cost that is incurred
          *   if and only if \a b becomes the new root bag.  The argument
          *   \a costRoot may be \c null, in which case these additional
          *   costs are all assumed to be zero.
@@ -1171,14 +1171,14 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * If you wish to estimate a cost per bag, the typical way of
          * doing this would be:
          *
-         * - <tt>costSame[i]</tt> estimates the processing cost at bag \a i
+         * - `costSame[i]` estimates the processing cost at bag \a i
          *   if its relationship with its parent is preserved;
          *
-         * - <tt>costReverse[i]</tt> estimates the processing cost at the
+         * - `costReverse[i]` estimates the processing cost at the
          *   original \e parent of bag \a i if its relationship with bag \a i
          *   is reversed (i.e., it becomes a child of bag \a i);
          *
-         * - <tt>costRoot[i]</tt> estimates the processing cost at bag \a i
+         * - `costRoot[i]` estimates the processing cost at bag \a i
          *   if bag \a i becomes the root.
          *
          * This scheme ensures that, for any possible rerooting, each

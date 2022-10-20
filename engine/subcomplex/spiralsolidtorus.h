@@ -98,7 +98,7 @@ class SpiralSolidTorus : public StandardTriangulation {
         Tetrahedron<3>** tet_;
             /**< The tetrahedra that make up this spiralled solid torus. */
         Perm<4>* vertexRoles_;
-            /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
+            /**< For tetrahedron \a i, `vertexRoles[i]` is a
                  permutation p chosen so that vertices A, B, C and D above
                  correspond to vertices p[0], p[1], p[2] and p[3]. */
 
@@ -176,18 +176,18 @@ class SpiralSolidTorus : public StandardTriangulation {
         /**
          * Returns a permutation represeting the role that each vertex
          * of the requested tetrahedron plays in the solid torus.
-         * The permutation returned (call this <tt>p</tt>) maps 0, 1, 2 and
+         * The permutation returned (call this `p`) maps 0, 1, 2 and
          * 3 to the four vertices of tetrahedron \a index so that
-         * vertices <tt>p[0]</tt>, <tt>p[1]</tt>, <tt>p[2]</tt> and
-         * <tt>p[3]</tt> correspond to vertices A, B, C and D
+         * vertices `p[0]`, `p[1]`, `p[2]` and
+         * `p[3]` correspond to vertices A, B, C and D
          * respectively as described in the general class notes.
          *
          * In particular, the directed edge from vertex
-         * <tt>p[0]</tt> to <tt>p[3]</tt> is an axis edge,
-         * directed edges <tt>p[0]</tt> to <tt>p[2]</tt> and
-         * <tt>p[1]</tt> to <tt>p[3]</tt> are minor edges and
-         * the directed path from vertices <tt>p[0]</tt> to <tt>p[1]</tt>
-         * to <tt>p[2]</tt> to <tt>p[3]</tt> follows the three
+         * `p[0]` to `p[3]` is an axis edge,
+         * directed edges `p[0]` to `p[2]` and
+         * `p[1]` to `p[3]` are minor edges and
+         * the directed path from vertices `p[0]` to `p[1]`
+         * to `p[2]` to `p[3]` follows the three
          * major edges.
          *
          * See the general class notes for further details.
@@ -271,7 +271,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          *
          * Tetrahedron 0 in the spiralled solid torus will be the
          * tetrahedron with the lowest index in the triangulation, and
-         * under permutation <tt>vertexRoles(0)</tt> the image of 0
+         * under permutation `vertexRoles(0)` the image of 0
          * will be less than the image of 3.
          *
          * \return \c true if and only if the representation of this

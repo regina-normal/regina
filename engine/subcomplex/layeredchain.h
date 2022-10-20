@@ -158,12 +158,12 @@ class LayeredChain : public StandardTriangulation {
         /**
          * Returns a permutation represeting the role that each vertex
          * of the bottom tetrahedron plays in the layered chain.
-         * The permutation returned (call this <tt>p</tt>) maps 0, 1, 2 and
+         * The permutation returned (call this `p`) maps 0, 1, 2 and
          * 3 to the four vertices of the bottom tetrahedron so that the
-         * edge from <tt>p[0]</tt> to <tt>p[1]</tt> is the top hinge,
-         * the edge from <tt>p[2]</tt> to <tt>p[3]</tt> is the bottom
-         * hinge, faces <tt>p[1]</tt> and <tt>p[2]</tt> are the (boundary)
-         * bottom faces and faces <tt>p[0]</tt> and <tt>p[3]</tt> are the top
+         * edge from `p[0]` to `p[1]` is the top hinge,
+         * the edge from `p[2]` to `p[3]` is the bottom
+         * hinge, faces `p[1]` and `p[2]` are the (boundary)
+         * bottom faces and faces `p[0]` and `p[3]` are the top
          * faces.
          *
          * See the general class notes for further details.
@@ -176,12 +176,12 @@ class LayeredChain : public StandardTriangulation {
         /**
          * Returns a permutation represeting the role that each vertex
          * of the top tetrahedron plays in the layered chain.
-         * The permutation returned (call this <tt>p</tt>) maps 0, 1, 2 and
+         * The permutation returned (call this `p`) maps 0, 1, 2 and
          * 3 to the four vertices of the top tetrahedron so that the
-         * edge from <tt>p[0]</tt> to <tt>p[1]</tt> is the top hinge,
-         * the edge from <tt>p[2]</tt> to <tt>p[3]</tt> is the bottom
-         * hinge, faces <tt>p[1]</tt> and <tt>p[2]</tt> are the bottom
-         * faces and faces <tt>p[0]</tt> and <tt>p[3]</tt> are the
+         * edge from `p[0]` to `p[1]` is the top hinge,
+         * the edge from `p[2]` to `p[3]` is the bottom
+         * hinge, faces `p[1]` and `p[2]` are the bottom
+         * faces and faces `p[0]` and `p[3]` are the
          * (boundary) top faces.
          *
          * See the general class notes for further details.

@@ -125,13 +125,13 @@ class IntegerBase;
  * the following two functions, which implement tight encodings and decodings
  * via input/output streams:
  *
- * - <tt>void tightEncode(std::ostream&) const</tt>, which writes a tight
+ * - `void tightEncode(std::ostream&) const`, which writes a tight
  *   encoding of the object to the given output stream.  This is allowed
  *   to (but not required to) throw a FailedPrecondition if the object
  *   is in an invalid state; if so then the exception should be documented
  *   in this member function T::tightEncode().
  *
- * - <tt>static T tightDecode(std::istream&)</tt>, which reconstructs an
+ * - `static T tightDecode(std::istream&)`, which reconstructs an
  *   object of type \a T from a tight encoding that is read from the given
  *   input stream.  This routine must not skip leading whitespace, and must
  *   leave the input stream positioned immediately after the encoding
@@ -142,9 +142,9 @@ class IntegerBase;
  * In return, this base class will provide the following two functions,
  * both of which work with strings (and which are documented in full below):
  *
- * - <tt>std::string tightEncoding() const</tt>; and
+ * - `std::string tightEncoding() const`; and
  *
- * - <tt>static T tightDecoding(const std::string&)</tt>.
+ * - `static T tightDecoding(const std::string&)`.
  *
  * A class \a T that supports tight encodings does not \e need to derive from
  * TightEncodable.  However, if it does not then it should implement all four

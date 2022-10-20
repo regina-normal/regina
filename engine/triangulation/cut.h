@@ -145,7 +145,7 @@ class Cut : public ShortOutput<Cut> {
          * an \c int.
          *
          * \warning This routine computes the number of top-dimensional
-         * simplices by subtracting <tt>end - begin</tt>, and so ideally
+         * simplices by subtracting `end - begin`, and so ideally
          * \a iterator should be a random access iterator type for which
          * this operation is constant time.
          *
@@ -183,7 +183,7 @@ class Cut : public ShortOutput<Cut> {
          * Returns the number of top-dimensional simplices on the given
          * side of the partition described by this cut.
          *
-         * It will always be true that <tt>size(0) + size(1) == size()</tt>.
+         * It will always be true that `size(0) + size(1) == size()`.
          *
          * \warning This routine runs in linear time, since the sizes of
          * the individual sides are not cached.  This is in contrast to
@@ -406,7 +406,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * Specifically: let \a from be a trianglation or facet pairing,
          * and let (\a a, \a b) be the result of partitioning \a from
-         * using this cut, so <tt>(a, b) = cut(from)</tt>.
+         * using this cut, so `(a, b) = cut(from)`.
          *
          * Then this routine returns two isomorphisms \a p and \a q,
          * where \a p describes how \a a appears as a subcomplex of \a from,
@@ -434,7 +434,7 @@ class Cut : public ShortOutput<Cut> {
          * same, but the number on each side of the partition may change.
          *
          * To iterate through all cuts of the given size, you should create
-         * a new <tt>Cut(size)</tt> and then make repeated calls to inc().
+         * a new `Cut(size)` and then make repeated calls to inc().
          *
          * If this is already the last partition in such an iteration
          * (i.e., all top-dimensional simplices are already on side 1),
@@ -444,8 +444,8 @@ class Cut : public ShortOutput<Cut> {
          * The order of iteration using inc() is lexicographical in the
          * sequence of sides.  In particular, if you wish to avoid
          * seeing each cut again with sides 0 and 1 swapped, then you
-         * can use the fact that all cuts with <tt>side(0) == 0</tt>
-         * will be seen before any cuts with <tt>side(0) == 1</tt>.
+         * can use the fact that all cuts with `side(0) == 0`
+         * will be seen before any cuts with `side(0) == 1`.
          *
          * \return \c true if the partition was successfully incremented, or
          * \c false if this was already the last partition in such an iteration.
@@ -459,7 +459,7 @@ class Cut : public ShortOutput<Cut> {
          * of the partition will remain the same.
          *
          * To iterate through all cuts with the given parititon sizes, you
-         * should create a new <tt>Cut(side0, side1)</tt> and then make
+         * should create a new `Cut(side0, side1)` and then make
          * repeated calls to incFixedSizes().
          *
          * If this is already the last partition in such an iteration,
@@ -469,8 +469,8 @@ class Cut : public ShortOutput<Cut> {
          * The order of iteration using incFixedSizes() is lexicographical in
          * the sequence of sides.  In particular, if you wish to avoid
          * seeing each cut again with sides 0 and 1 swapped, then you
-         * can use the fact that all cuts with <tt>side(0) == 0</tt>
-         * will be seen before any cuts with <tt>side(0) == 1</tt>.
+         * can use the fact that all cuts with `side(0) == 0`
+         * will be seen before any cuts with `side(0) == 1`.
          *
          * \return \c true if the partition was successfully incremented, or
          * \c false if this was already the last partition in such an iteration.

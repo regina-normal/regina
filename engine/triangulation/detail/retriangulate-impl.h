@@ -77,11 +77,11 @@ namespace regina::detail {
  *   <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>,
  *   as described below;
  *
- * - a static constexpr member <tt>const char* progressStage</tt>, which
+ * - a static constexpr member `const char* progressStage`, which
  *   returns the human-readable description of the processing stage that
  *   will be set up in the progress tracker;
  *
- * - a function <tt>static std::string sig(const Object&)</tt>, which
+ * - a function `static std::string sig(const Object&)`, which
  *   returns the text signature that is used to identify a triangulation
  *   or link up to the appropriate notion of combinatorial equivalence.
  *
@@ -102,10 +102,10 @@ namespace regina::detail {
  * The function should reconstruct a triangulation or link \a obj from \a sig;
  * examine all possible moves from \a obj that do not exceed size \a max; and
  * for each resulting triangulation/link \a alt, it should call
- * <tt>retriangulator->candidate(std::move(alt), sig)</tt>.
+ * `retriangulator->candidate(std::move(alt), sig)`.
  *
  * The function should also check the return value each time it calls
- * <tt>retriangulator->candidate(...)</tt>.  If the \a candidate
+ * `retriangulator->candidate(...)`.  If the \a candidate
  * function ever returns \c true then it should not try any further moves, but
  * instead should clean up and return immediately.
  *

@@ -97,12 +97,12 @@ class SnapshotWriteError : public std::exception {
  *   remains uninvolved in the snapshotting machinery.
  *
  * - At some point in time, a viewer \a V1 wishes to take a snapshot of \a I.
- *   To do this, it creates a <i>snapshot reference</i> <tt>SnapshotRef(I)</tt>.
+ *   To do this, it creates a <i>snapshot reference</i> `SnapshotRef(I)`.
  *   This is a cheap operation that "enrols" \a I in the snapshotting machinery,
  *   by creating a single Snapshot object \a S.
  *
  * - More viewers may take snapshots of \a I, either by creating a new
- *   <tt>SnapshotRef(I)</tt> or by copying other viewers' snapshot references.
+ *   `SnapshotRef(I)` or by copying other viewers' snapshot references.
  *   Again, these are all cheap operations.  All references to \a I will
  *   refer to the same snapshot object \a S.
  *
@@ -113,7 +113,7 @@ class SnapshotWriteError : public std::exception {
  *   snapshotting machinery again; the only way to access the original
  *   snapshot at this point is by copying other references.
  *
- * - After the image was modified, making a new <tt>SnapshotRef(I)</tt> will
+ * - After the image was modified, making a new `SnapshotRef(I)` will
  *   re-enrol \a I and create a completely new Snapshot object.  The original
  *   Snapshot may of course still exist, maintaining its copy of \a I as it
  *   used to be.
@@ -610,7 +610,7 @@ class SnapshotRef {
          * with its internal deep copy of the original object, if it made one)
          * will be destroyed.
          *
-         * Self-assignment (<tt>r = *r</tt>) is harmless, and will never cause
+         * Self-assignment (`r = *r`) is harmless, and will never cause
          * the underlying snapshot to be destroyed.
          *
          * \param src the underlying type \a T object whose current
@@ -636,7 +636,7 @@ class SnapshotRef {
          * with its internal deep copy of the original object, if it made one)
          * will be destroyed.
          *
-         * Self-assignment (<tt>r = r</tt>) is harmless, and will never cause
+         * Self-assignment (`r = r`) is harmless, and will never cause
          * the underlying snapshot to be destroyed.
          *
          * \param src the snapshot reference to copy.
@@ -674,7 +674,7 @@ class SnapshotRef {
          * Swaps this and the given reference so that they refer to each
          * others' snapshots.
          *
-         * Self-swapping (<tt>r.swap(r)</tt>) is harmless, and will never
+         * Self-swapping (`r.swap(r)`) is harmless, and will never
          * cause the underlying snapshot to be destroyed.
          *
          * This is more efficient than a sequence of copies, since it avoids

@@ -72,7 +72,7 @@ class SigCensus {
         unsigned* used;
             /**< The number of times each symbol has been used so far. */
         IsoList* automorph;
-            /**< List <tt>automorph[k]</tt> represents all automorphisms
+            /**< List `automorph[k]` represents all automorphisms
                  of the first \a k cycle groups of the partially formed
                  signature. */
 
@@ -176,16 +176,16 @@ class SigCensus {
 
         /**
          * Extend the automorphisms in list
-         * <tt>automorph[sig.nCycleGroups - 1]</tt> to form the
-         * automorphisms in list <tt>automorph[sig.nCycleGroups]</tt>.
+         * `automorph[sig.nCycleGroups - 1]` to form the
+         * automorphisms in list `automorph[sig.nCycleGroups]`.
          *
          * If in the processing of extending these automorphisms it is
-         * discovered that the partial signature <tt>sig</tt> is not in
+         * discovered that the partial signature `sig` is not in
          * canonical form, \c false will be returned and the contents of
-         * list <tt>automorph[sig.nCycleGroups]</tt> will be undefined.
+         * list `automorph[sig.nCycleGroups]` will be undefined.
          *
          * \return \c true if and only if it was confirmed during
-         * processing that the partial signature <tt>sig</tt> is in
+         * processing that the partial signature `sig` is in
          * canonical form.
          */
         bool extendAutomorphisms();

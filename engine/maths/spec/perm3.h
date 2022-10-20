@@ -187,7 +187,7 @@ class Perm<3> {
          * three elements.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
+         * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 5 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n &ge; 8).
@@ -228,7 +228,7 @@ class Perm<3> {
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
+         * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 5 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n &ge; 8).
@@ -265,7 +265,7 @@ class Perm<3> {
          * two elements.  In each permutation, 2 maps to 2.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be
+         * square bracket operator: `Sn_1[i]`.  The index \a i must be
          * between 0 and 1 inclusive.
          *
          * The permutations with even indices in the array are the even
@@ -447,7 +447,7 @@ class Perm<3> {
          * Returns the composition of this permutation with the given
          * permutation.  If this permutation is <i>p</i>, the
          * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
-         * <tt>(p*q)[x] == p[q[x]]</tt>.
+         * `(p*q)[x] == p[q[x]]`.
          *
          * \param q the permutation with which to compose this.
          * \return the composition of both permutations.
@@ -487,7 +487,7 @@ class Perm<3> {
          *
          * Here \e reverse means that we reverse the images of 0,1,2.
          * In other words, if permutation \a q is the
-         * reverse of \a p, then <tt>p[i] == q[2 - i]</tt> for all \a i.
+         * reverse of \a p, then `p[i] == q[2 - i]` for all \a i.
          */
         constexpr Perm<3> reverse() const;
 
@@ -625,7 +625,7 @@ class Perm<3> {
          * the mutex protecting Regina's global uniform random bit generator.
          * If you are calling this many times in quick succession, consider
          * creating a single RandomEngine object yourself and then calling
-         * <tt>rand(randomEngine.engine(), even)</tt>.
+         * `rand(randomEngine.engine(), even)`.
          *
          * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
@@ -662,7 +662,7 @@ class Perm<3> {
          * Returns a string representation of this permutation.
          * The representation will consist of three adjacent digits
          * representing the images of 0, 1 and 2 respectively.  An
-         * example of a string representation is <tt>120</tt>.
+         * example of a string representation is `120`.
          *
          * \return a string representation of this permutation.
          */
@@ -775,7 +775,7 @@ class Perm<3> {
          * identity map.
          *
          * Specifically, for each \a i in the range <i>from</i>,...,2,
-         * this routine will ensure that <tt>image[i] == i</tt>.  The images of
+         * this routine will ensure that `image[i] == i`.  The images of
          * 0,1,...,<i>from</i>-1 will not be altered.
          *
          * \pre The images of <i>from</i>,...,2 are exactly
@@ -899,8 +899,8 @@ class Perm<3> {
          * Contains the images of every element under every possible
          * permutation.
          *
-         * Specifically, the image of \a x under the permutation <tt>S3[i]</tt>
-         * is <tt>imageTable[i][x]</tt>.
+         * Specifically, the image of \a x under the permutation `S3[i]`
+         * is `imageTable[i][x]`.
          */
         static constexpr Code imageTable[6][3] = {
             { 0, 1, 2 },
@@ -914,8 +914,8 @@ class Perm<3> {
         /**
          * Contains the inverses of the permutations in the array \a S3.
          *
-         * Specifically, the inverse of permutation <tt>S3[i]</tt> is
-         * the permutation <tt>S3[ invS3[i] ]</tt>.
+         * Specifically, the inverse of permutation `S3[i]` is
+         * the permutation `S3[ invS3[i] ]`.
          */
         static constexpr Code invS3[6] = {
             0, 1, 4, 3, 2, 5
@@ -925,8 +925,8 @@ class Perm<3> {
          * Contains the full multiplication table for all possible
          * permutations.
          *
-         * Specifically, the product <tt>S3[x] * S3[y]</tt> is
-         * the permutation <tt>S3[product[x][y]]</tt>.
+         * Specifically, the product `S3[x] * S3[y]` is
+         * the permutation `S3[product[x][y]]`.
          */
         static constexpr Code productTable[6][6] = {
             { 0, 1, 2, 3, 4, 5 },

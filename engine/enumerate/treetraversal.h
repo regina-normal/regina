@@ -624,7 +624,7 @@ class TreeTraversal : public ShortOutput<
  * \e much slower than in quadrilateral or quadrilateral-octagon coordinates
  * respectively.  Instead you should enumerate vertex solutions using
  * quadrilateral or quadrilateral-octagon coordinates, and then use the
- * "transform constructor" <tt>NormalSurfaces(..., NS_CONV_REDUCED_TO_STD)</tt>.
+ * "transform constructor" `NormalSurfaces(..., NS_CONV_REDUCED_TO_STD)`.
  *
  * \headers Parts of this template class are implemented in a separate header
  * (treetraversal-impl.h), which is not included automatically by this file.
@@ -913,7 +913,7 @@ class TreeEnumeration :
          * causes a crash in Python, most likely coming from some confusion
          * in passing a C++ function as a C++ callback via a Python wrapper.
          * Instead you can use a pure python function \a f as a callback,
-         * where <tt>f(tree)</tt> just calls <tt>tree.writeSurface()</tt>.
+         * where `f(tree)` just calls `tree.writeSurface()`.
          *
          * \param tree the tree traversal object from which we are
          * extracting the current vertex normal or almost normal surface.
@@ -1233,7 +1233,7 @@ class TautEnumeration :
          * causes a crash in Python, most likely coming from some confusion
          * in passing a C++ function as a C++ callback via a Python wrapper.
          * Instead you can use a pure python function \a f as a callback,
-         * where <tt>f(tree)</tt> just calls <tt>tree.writeStructure()</tt>.
+         * where `f(tree)` just calls `tree.writeStructure()`.
          *
          * \param tree the tree traversal object from which we are
          * extracting the current taut angle structure.

@@ -157,22 +157,22 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          *
          * - The triangles of the vertex link are numbered as follows.
          *   Let \a i lie between 0 and degree()-1 inclusive, let
-         *   \a tet represent <tt>embedding(i).tetrahedron()</tt>,
-         *   and let \a v represent <tt>embedding(i).vertex()</tt>.
-         *   Then <tt>buildLink()->triangle(i)</tt> is the triangle
+         *   \a tet represent `embedding(i).tetrahedron()`,
+         *   and let \a v represent `embedding(i).vertex()`.
+         *   Then `buildLink()->triangle(i)` is the triangle
          *   in the vertex link that "slices off" vertex \a v from
          *   tetrahedron \a tet.  In other words,
-         *   <tt>buildLink()->triangle(i)</tt> in the vertex link
-         *   is parallel to triangle <tt>tet->triangle(v)</tt> in the
+         *   `buildLink()->triangle(i)` in the vertex link
+         *   is parallel to triangle `tet->triangle(v)` in the
          *   surrounding 3-manifold triangulation.
          *
          * - The vertices of each triangle in the vertex link are
          *   numbered as follows.  Following the discussion above,
-         *   suppose that <tt>buildLink()->triangle(i)</tt> sits within
-         *   \c tet and is parallel to <tt>tet->triangle(v)</tt>.
+         *   suppose that `buildLink()->triangle(i)` sits within
+         *   \c tet and is parallel to `tet->triangle(v)`.
          *   Then vertices 0,1,2 of the triangle in the link will be
          *   parallel to vertices 0,1,2 of the corresponding Triangle<3>.
-         *   The permutation <tt>tet->triangleMapping(v)</tt> will map
+         *   The permutation `tet->triangleMapping(v)` will map
          *   vertices 0,1,2 of the triangle in the link to the
          *   corresponding vertices of \c tet (those opposite \c v),
          *   and will map 3 to \c v itself.
@@ -202,9 +202,9 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * Specifically, this function returns an Isomorphism<3> that describes
          * how the individual triangles of the link sit within the tetrahedra
          * of the original triangulation.  If \a p is the isomorphism returned,
-         * then <tt>p.tetImage(i)</tt> will indicate which tetrahedron
+         * then `p.tetImage(i)` will indicate which tetrahedron
          * \a tet of the 3-manifold triangulation contains the <i>i</i>th
-         * triangle of the link.  Moreover, <tt>p.facePerm(i)</tt> will
+         * triangle of the link.  Moreover, `p.facePerm(i)` will
          * indicate exactly where the <i>i</i>th triangle sits within \a tet:
          * it will send 3 to the vertex of \a t that the triangle links,
          * and it will send 0,1,2 to the vertices of \a tet that are

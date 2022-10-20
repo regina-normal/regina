@@ -290,7 +290,7 @@ class Perm<4> {
          * four elements.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
+         * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 23 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n &ge; 8).
@@ -331,7 +331,7 @@ class Perm<4> {
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
+         * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 23 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n &ge; 8).
@@ -368,7 +368,7 @@ class Perm<4> {
          * three elements.  In each permutation, 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be
+         * square bracket operator: `Sn_1[i]`.  The index \a i must be
          * between 0 and 5 inclusive.
          *
          * The permutations with even indices in the array are the even
@@ -406,7 +406,7 @@ class Perm<4> {
          * elements in lexicographical order.  In each permutation, 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedS3[i]</tt>.  The index \a i
+         * square bracket operator: `orderedS3[i]`.  The index \a i
          * must be between 0 and 5 inclusive.
          *
          * Lexicographical ordering treats each permutation \a p as the
@@ -434,7 +434,7 @@ class Perm<4> {
          * two elements.  In each permutation, 2 maps to 2 and 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>S2[i]</tt>.  The index \a i must be
+         * square bracket operator: `S2[i]`.  The index \a i must be
          * between 0 and 1 inclusive.
          *
          * The permutations with even indices in the array are the even
@@ -705,7 +705,7 @@ class Perm<4> {
          * Returns the composition of this permutation with the given
          * permutation.  If this permutation is <i>p</i>, the
          * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
-         * <tt>(p*q)[x] == p[q[x]]</tt>.
+         * `(p*q)[x] == p[q[x]]`.
          *
          * \param q the permutation with which to compose this.
          * \return the composition of both permutations.
@@ -745,7 +745,7 @@ class Perm<4> {
          *
          * Here \e reverse means that we reverse the images of 0,...,3.
          * In other words, if permutation \a q is the
-         * reverse of \a p, then <tt>p[i] == q[3 - i]</tt> for all \a i.
+         * reverse of \a p, then `p[i] == q[3 - i]` for all \a i.
          */
         constexpr Perm<4> reverse() const;
 
@@ -885,7 +885,7 @@ class Perm<4> {
          * the mutex protecting Regina's global uniform random bit generator.
          * If you are calling this many times in quick succession, consider
          * creating a single RandomEngine object yourself and then calling
-         * <tt>rand(randomEngine.engine(), even)</tt>.
+         * `rand(randomEngine.engine(), even)`.
          *
          * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
@@ -922,7 +922,7 @@ class Perm<4> {
          * Returns a string representation of this permutation.
          * The representation will consist of four adjacent digits
          * representing the images of 0, 1, 2 and 3 respectively.  An
-         * example of a string representation is <tt>1302</tt>.
+         * example of a string representation is `1302`.
          *
          * \return a string representation of this permutation.
          */
@@ -1044,7 +1044,7 @@ class Perm<4> {
          * identity map.
          *
          * Specifically, for each \a i in the range <i>from</i>,...,3,
-         * this routine will ensure that <tt>image[i] == i</tt>.  The images of
+         * this routine will ensure that `image[i] == i`.  The images of
          * 0,1,...,<i>from</i>-1 will not be altered.
          *
          * \pre The images of <i>from</i>,...,3 are exactly
@@ -1174,7 +1174,7 @@ class Perm<4> {
          * This routine returns that induced permutation.
          *
          * Note that, if \a p permutes the four vertices (or equivalently,
-         * the four faces) of a tetrahedron, then <tt>p.pairs()</tt> is
+         * the four faces) of a tetrahedron, then `p.pairs()` is
          * the induced permutation on the six \e edges of the tetrahedron.
          *
          * \return the induced permutation on six pairs of elements.
@@ -1186,8 +1186,8 @@ class Perm<4> {
          * Contains the images of every element under every possible
          * permutation.
          *
-         * Specifically, the image of \a x under the permutation <tt>S4[i]</tt>
-         * is <tt>imageTable[i][x]</tt>.
+         * Specifically, the image of \a x under the permutation `S4[i]`
+         * is `imageTable[i][x]`.
          */
         static constexpr int imageTable[24][4] = {
             { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 0, 2, 3, 1 }, { 0, 2, 1, 3 },
@@ -1201,8 +1201,8 @@ class Perm<4> {
         /**
          * Contains the inverses of the permutations in the array \a S4.
          *
-         * Specifically, the inverse of permutation <tt>S4[i]</tt> is
-         * the permutation <tt>S4[ invS4[i] ]</tt>.
+         * Specifically, the inverse of permutation `S4[i]` is
+         * the permutation `S4[ invS4[i] ]`.
          */
         static constexpr Code2 invS4[24] = {
             0, 1, 4, 3, 2, 5, 6, 7, 12, 19, 18, 13,
@@ -1213,8 +1213,8 @@ class Perm<4> {
          * Contains the full multiplication table for all possible
          * permutations.
          *
-         * Specifically, the product <tt>S4[x] * S4[y]</tt> is the
-         * permutation <tt>S4[product[x][y]]</tt>.
+         * Specifically, the product `S4[x] * S4[y]` is the
+         * permutation `S4[product[x][y]]`.
          */
         static constexpr Code2 productTable[24][24] = {
             // Generated using an older version of Regina in which products
@@ -1249,7 +1249,7 @@ class Perm<4> {
          * Contains a full table of two-element swaps.
          *
          * Specifically, the permutation that swaps \a x and \a y is
-         * <tt>S4[swapTable[x][y]]</tt>.  Here \a x and \a y may be equal.
+         * `S4[swapTable[x][y]]`.  Here \a x and \a y may be equal.
          */
         static constexpr Code2 swapTable[4][4] = {
             {  0, 7, 15, 21 },

@@ -1054,7 +1054,7 @@ class NormalSurfaces :
          * called after this routine returns.
          *
          * Although this is a template function, it is a private
-         * template function and so is only defined in the one <tt>.cpp</tt>
+         * template function and so is only defined in the one `.cpp`
          * file that needs it.
          *
          * \pre The coordinate system for this surface list is set to

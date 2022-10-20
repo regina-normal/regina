@@ -95,22 +95,22 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          *
          * - The triangles of the edge link are numbered as follows.
          *   Let \a i lie between 0 and degree()-1 inclusive, let
-         *   \a pent represent <tt>embedding(i).pentachoron()</tt>,
-         *   and let \a e represent <tt>embedding(i).edge()</tt>.
-         *   Then <tt>buildLink()->triangle(i)</tt> is the triangle
+         *   \a pent represent `embedding(i).pentachoron()`,
+         *   and let \a e represent `embedding(i).edge()`.
+         *   Then `buildLink()->triangle(i)` is the triangle
          *   in the edge link that links edge \a e of pentachoron \a pent.
-         *   In other words, <tt>buildLink()->triangle(i)</tt> in the edge link
-         *   is parallel to triangle <tt>pent->triangle(e)</tt> in the
+         *   In other words, `buildLink()->triangle(i)` in the edge link
+         *   is parallel to triangle `pent->triangle(e)` in the
          *   surrounding 4-manifold triangulation.
          *
          * - The vertices of each triangle in the edge link are
          *   numbered as follows.  Following the discussion above,
-         *   suppose that <tt>buildLink()->triangle(i)</tt>
+         *   suppose that `buildLink()->triangle(i)`
          *   sits within \c pent and is parallel to
-         *   <tt>pent->triangle(e)</tt>.
+         *   `pent->triangle(e)`.
          *   Then vertices 0,1,2 of the triangle in the link will be
          *   parallel to vertices 0,1,2 of the corresponding Triangle<4>.
-         *   The permutation <tt>pent->triangleMapping(e)</tt> will map
+         *   The permutation `pent->triangleMapping(e)` will map
          *   vertices 0,1,2 of the triangle in the link to the
          *   corresponding vertices of \c pent (those opposite \c e),
          *   and will map 3 and 4 to the vertices of \c e itself.
@@ -140,9 +140,9 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          * Specifically, this function returns an Isomorphism<4> that describes
          * how the individual triangles of the link sit within the pentachora
          * of the original triangulation.  If \a p is the isomorphism returned,
-         * then <tt>p.pentImage(i)</tt> will indicate which pentachoron
+         * then `p.pentImage(i)` will indicate which pentachoron
          * \a pent of the 4-manifold triangulation contains the <i>i</i>th
-         * triangle of the link.  Moreover, <tt>p.facetPerm(i)</tt> will
+         * triangle of the link.  Moreover, `p.facetPerm(i)` will
          * indicate exactly where the <i>i</i>th triangle sits within
          * \a pent: (i) it will send 3,4 to the vertices of \a pent that lie
          * on the edge that the triangle links, with 3 and 4 mapping to

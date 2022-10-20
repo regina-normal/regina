@@ -136,7 +136,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
 
         Simplex<dim>* adj_[dim + 1];
             /**< Stores the adjacent simplex glued to each facet of this
-                 simplex.  Specifically, <tt>adj_[f]</tt> represents the
+                 simplex.  Specifically, `adj_[f]` represents the
                  simplex joined to facet \a f of this simplex, or is 0
                  if facet \a f lies on the triangulation boundary. */
         Perm<dim+1> gluing_[dim + 1];
@@ -193,7 +193,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * Returns the index of this simplex in the underlying triangulation.
          *
          * The index will be an integer between 0 and
-         * <tt>triangulation().size()-1</tt> inclusive.
+         * `triangulation().size()-1` inclusive.
          *
          * Note that indexing may change when a simplex is added to or removed
          * from the underlying triangulation.
@@ -361,7 +361,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>face(subdim, face)</tt>; that is, the template parameter
+         * `face(subdim, face)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
          *
          * \param face the <i>subdim</i>-face of this simplex to examine.
@@ -468,7 +468,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *
          * - If \a F also appears as face number \a k in some other simplex
          *   \a s, then for each \a i in the range 0 &le; \a i &le; \a subdim,
-         *   vertex <tt>p[i]</tt> of this simplex will be identified with
+         *   vertex `p[i]` of this simplex will be identified with
          *   vertex <i>s</i>.faceMapping(\a k)[\a i] of simplex \a s.
          *
          * If the link of the underlying <i>subdim</i>-face is orientable,
@@ -492,7 +492,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *   together these directed edges form a directed path or cycle
          *   that follows the link of the face \a F.  Moreover, an iteration
          *   through the corresponding FaceEmbedding<dim, subdim> objects in
-         *   order from <tt>F.begin()</tt> to <tt>F.end()</tt>, will follow
+         *   order from `F.begin()` to `F.end()`, will follow
          *   this directed path in order from start to end.  (In the case where
          *   the link of \a F is a cycle, the start point in the list of
          *   FaceEmbedding objects will be arbitrary.)
@@ -515,7 +515,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * - If \a subdim is equal to (\a dim - 1), then the face \a F can only
          *   belong to either one or two top-dimensional simplices; let
          *   \a s0 and \a s1 be the simplices corresponding to
-         *   <tt>F.embedding(0)</tt> and (if it exists) <tt>F.embedding(1)</tt>
+         *   `F.embedding(0)` and (if it exists) `F.embedding(1)`
          *   respectively.  Then in the simplex \a s0, the sign of the
          *   faceMapping() permutation will match the orientation of \a s0,
          *   and in \a s1 (if it exists), the sign of the faceMapping()
@@ -528,7 +528,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>faceMapping(subdim, face)</tt>; that is, the template
+         * `faceMapping(subdim, face)`; that is, the template
          * parameter \a subdim becomes the first argument of the function.
          *
          * \param face the <i>subdim</i>-face of this simplex to examine.

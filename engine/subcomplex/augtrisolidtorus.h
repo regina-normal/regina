@@ -111,14 +111,14 @@ class AugTriSolidTorus : public StandardTriangulation {
             /**< The layered solid tori attached to the boundary annuli.
                  If one of the layered solid tori is a degenerate (2,1,1)
                  triangle, the corresponding value will be std::nullopt.
-                 Note that <tt>augTorus[i]</tt> will be attached to
+                 Note that `augTorus[i]` will be attached to
                  annulus \c i of the triangular solid torus. */
         Perm<3> edgeGroupRoles_[3];
-            /**< Permutation <tt>edgeGroupRoles[i]</tt> describes the role
+            /**< Permutation `edgeGroupRoles[i]` describes the role
                  played by each top level edge group of layered solid torus
-                 <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
-                 is glued to an axis edge, group <tt>p[1]</tt> is glued to a
-                 major edge and group <tt>p[2]</tt> is glued to a minor edge. */
+                 `i`.  For permutation `p`, group `p[0]`
+                 is glued to an axis edge, group `p[1]` is glued to a
+                 major edge and group `p[2]` is glued to a minor edge. */
         size_t chainIndex_;
             /**< The number of tetrahedra in the layered chain if
                  present, or 0 if there is no layered chain. */
@@ -177,9 +177,9 @@ class AugTriSolidTorus : public StandardTriangulation {
          * requested annulus of the core triangular solid torus.  See
          * LayeredSolidTorus::topEdge() for details regarding edge groups.
          *
-         * If the permutation returned is <tt>p</tt>, edge group <tt>p[0]</tt>
-         * will be glued to an axis edge, group <tt>p[1]</tt> will be
-         * glued to a major edge and group <tt>p[2]</tt> will be glued
+         * If the permutation returned is `p`, edge group `p[0]`
+         * will be glued to an axis edge, group `p[1]` will be
+         * glued to a major edge and group `p[2]` will be glued
          * to a minor edge.
          *
          * Even if the corresponding layered solid torus is a degenerate

@@ -143,13 +143,13 @@ class LayeredSolidTorus : public StandardTriangulation {
          * and a single unidentified edge; these are referred to as
          * groups 3, 2 and 1 respectively.
          *
-         * Note that <tt>baseEdgeGroup(baseEdge(group, index)) ==
-         * group</tt> for all values of \c group and \c index.
+         * Note that `baseEdgeGroup(baseEdge(group, index)) == group`
+         * for all values of \c group and \c index.
          *
-         * Edges <tt>baseEdge(2,0)</tt> and <tt>baseEdge(3,0)</tt>
-         * will both belong to face <tt>baseFace(0)</tt>.
-         * Edges <tt>baseEdge(2,1)</tt> and <tt>baseEdge(3,2)</tt>
-         * will both belong to face <tt>baseFace(1)</tt>.
+         * Edges `baseEdge(2,0)` and `baseEdge(3,0)`
+         * will both belong to face `baseFace(0)`.
+         * Edges `baseEdge(2,1)` and `baseEdge(3,2)`
+         * will both belong to face `baseFace(1)`.
          *
          * \param group the group that the requested edge should belong
          * to; this must be 1, 2 or 3.
@@ -166,8 +166,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * belongs to.  See baseEdge() for further details about
          * groups.
          *
-         * Note that <tt>baseEdgeGroup(baseEdge(group, index)) ==
-         * group</tt> for all values of \c group and \c index.
+         * Note that `baseEdgeGroup(baseEdge(group, index)) == group`
+         * for all values of \c group and \c index.
          *
          * \param edge the edge number in the base tetrahedron of the
          * given edge; this must be between 0 and 5 inclusive.
@@ -215,13 +215,12 @@ class LayeredSolidTorus : public StandardTriangulation {
          * cuts fewest times.  Group 2 represents the boundary edge that
          * the meridinal disc cuts most times.  Group 1 is in the middle.
          *
-         * Note that <tt>topEdgeGroup(topEdge(group, index)) ==
-         * group</tt> for all values of \c group and \c index that
-         * actually correspond to an edge.
+         * Note that `topEdgeGroup(topEdge(group, index)) == group` for all
+         * values of \c group and \c index that actually correspond to an edge.
          *
-         * Edges <tt>topEdge(group, 0)</tt> will all belong to face
-         * <tt>topFace(0)</tt>.  Edges <tt>topEdge(group, 1)</tt>
-         * (if they exist) will all belong to face <tt>topFace(1)</tt>.
+         * Edges `topEdge(group, 0)` will all belong to face
+         * `topFace(0)`.  Edges `topEdge(group, 1)`
+         * (if they exist) will all belong to face `topFace(1)`.
          *
          * \param group the group that the requested edge should belong
          * to; this must be 0, 1 or 2.
@@ -240,9 +239,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * tetrahedron belongs to.  See topEdge() for further details
          * about groups.
          *
-         * Note that <tt>topEdgeGroup(topEdge(group, index)) ==
-         * group</tt> for all values of \c group and \c index that
-         * actually correspond to an edge.
+         * Note that `topEdgeGroup(topEdge(group, index)) == group` for all
+         * values of \c group and \c index that actually correspond to an edge.
          *
          * \param edge the edge number in the top level tetrahedron of
          * the given edge; this must be between 0 and 5 inclusive.

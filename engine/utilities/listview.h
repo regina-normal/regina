@@ -64,22 +64,22 @@ namespace regina {
  *
  * - If your list is stored using a container class (e.g., std::vector or
  *   regina::MarkedVector), then you can create a ListView directly from the
- *   container using the syntax <tt>ListView(container)</tt>.
+ *   container using the syntax `ListView(container)`.
  *   This uses the generic ListView<Container> class template.
  *   There is no need to explicitly specify the ListView template arguments.
  *
  * - If your list is stored using a C-style array whose size is not known at
  *   compile-time, you can create a ListView using either the syntax
- *   <tt>ListView(array, size)</tt> or <tt>ListView(begin, end)</tt>.  Here
+ *   `ListView(array, size)` or `ListView(begin, end)`.  Here
  *   \a array is a pointer to the beginning of the array, and \a begin and
- *   \a end behave as an iterator pair (so <tt>begin == array</tt> and
- *   <tt>end == array + size</tt>).  This syntax uses the specialised
+ *   \a end behave as an iterator pair (so `begin == array` and
+ *   `end == array + size`).  This syntax uses the specialised
  *   ListView<Element*> class template.  Again, there is no need to explicitly
  *   specify the ListView template arguments.
  *
  * - If your list is stored using a C-style array whose size is fixed at
- *   compile-time (i.e., the type is <tt>Element[n]</tt> for some constant
- *   \a n), you can create a ListView using the syntax <tt>ListView(array)</tt>.
+ *   compile-time (i.e., the type is `Element[n]` for some constant
+ *   \a n), you can create a ListView using the syntax `ListView(array)`.
  *   Once again, there is no need to explicitly specify the ListView template
  *   arguments.
  *
@@ -94,7 +94,7 @@ namespace regina {
  * \ifacespython The ListView classes are deliberately difficult to access: they
  * live within their own private Python namespaces, and are all give the same
  * class name (\a ListView).  You would typically only interact with a ListView
- * when it is returned from a function (e.g., <tt>Link.crossings()</tt>),
+ * when it is returned from a function (e.g., `Link.crossings()`),
  * and in most cases you would simply iterate over this resulting ListView
  * without ever knowing its exact type.
  *

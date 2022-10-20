@@ -1097,9 +1097,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \endcode
          *
          * Regina also supplies Python users with a member function
-         * <tt>Packet.subtree()</tt>, which returns an iterable object.
-         * Iterating over <tt>Packet.subtree()</tt> is exactly the same as
-         * iterating the packet itself; the <tt>subtree()</tt> function is
+         * `Packet.subtree()`, which returns an iterable object.
+         * Iterating over `Packet.subtree()` is exactly the same as
+         * iterating the packet itself; the `subtree()` function is
          * offered because the intention may be clearer for readers.
          *
          * See also descendants() for iterating through just the strict
@@ -1677,7 +1677,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * If this packet appears as a key in the \a refs map, or if the
          * \a anon argument indicates that we are in an anonymous block,
-         * then this routine will set <tt>refs[this]</tt> as \c true
+         * then this routine will set `refs[this]` as \c true
          * to record that this packet is now being written to XML.
          *
          * \param out the output stream to which the opening XML tag
@@ -1752,7 +1752,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * done yet.
          *
          * This function simply creates an \c anon XML block, and within
-         * it calls <tt>p.writeXMLPacketData()</tt> with the \a anon
+         * it calls `p.writeXMLPacketData()` with the \a anon
          * argument set to \c true.
          *
          * \param out the output stream to which the anonymous block
@@ -1827,7 +1827,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * this will ensure that the XML header for \a p will include an
          * explicit ID that this packet can then refer to.
          *
-         * Later on, as the XML is written, the value <tt>refs[p]</tt> will be
+         * Later on, as the XML is written, the value `refs[p]` will be
          * changed from \c false to \c true once \a p has been written.
          *
          * If your packet requires that the \e contents of \a p appear
@@ -1919,7 +1919,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * If this packet appears as a key in the \a refs map, or if the
          * \a anon argument indicates that we are in an anonymous block,
-         * then this routine will set <tt>refs[this]</tt> as \c true
+         * then this routine will set `refs[this]` as \c true
          * to record that this packet is now being written to XML.
          *
          * \param out the output stream to which to write.
@@ -2478,7 +2478,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
  * std::shared_ptr, as is required for all packets in Regina.
  *
  * \nopython This routine is too heavily templated for Python.  Instead you
- * can just directly call the constructor <tt>PacketOfHeld(args...)</tt>.
+ * can just directly call the constructor `PacketOfHeld(args...)`.
  *
  * \param args the arguments to be forwarded to the appropriate
  * \a Held constructor.
@@ -2506,7 +2506,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(std::in_place_t, Args&&... args) {
  * std::shared_ptr, as is required for all packets in Regina.
  *
  * \nopython This routine is too heavily templated for Python.  Instead you
- * can just directly call the constructor <tt>PacketOfHeld()</tt>.
+ * can just directly call the constructor `PacketOfHeld()`.
  *
  * \return the new wrapped packet.
  *
@@ -2590,9 +2590,9 @@ const Held& static_packet_cast(const Packet& p) {
  * \ifacespython This function is not automatically imported into the
  * global namespace when running regina-python, or when opening a Python
  * console in the graphical user interface, or even when typing
- * <tt>from regina import *</tt>.  This is to avoid overriding
+ * `from regina import *`.  This is to avoid overriding
  * Python's own built-in open() function.  You can access Regina's open()
- * function by calling <tt>regina.open()</tt>.
+ * function by calling `regina.open()`.
  *
  * \param filename the pathname of the file to read from.
  * \return the packet tree read from file, or \c null on error.
@@ -2638,10 +2638,10 @@ std::shared_ptr<Packet> open(std::istream& in);
  * \ifacespython Instead of the C++ interface described here, in Python
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
- * the single function <tt>__iter__()</tt>, which returns a ChildIterator;
- * then ChildIterator implements <tt>__next__()</tt>, which either returns
+ * the single function `__iter__()`, which returns a ChildIterator;
+ * then ChildIterator implements `__next__()`, which either returns
  * the next child packet in the iteration or else throws a
- * <tt>StopException</tt> if there are no more children to return.
+ * `StopException` if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
  *
@@ -2652,7 +2652,7 @@ class ChildIterator {
     public:
         using value_type = std::conditional_t<const_, const Packet, Packet>;
             /**< Indicates what the iterator points to.
-                 This is either <tt>Packet</tt> or <tt>const Packet</tt>,
+                 This is either `Packet` or `const Packet`,
                  according to the template argument \a const_. */
         using iterator_category = std::forward_iterator_tag;
             /**< Declares this to be a forward iterator type. */
@@ -2788,9 +2788,9 @@ class ChildIterator {
  *
  * \ifacespython Instead of the C++ interface described here, in Python
  * this class implements the Python iterable/iterator interface.  It implements
- * the function <tt>__iter__()</tt>, which returns the iterator object itself;
- * it also implements <tt>__next__()</tt>, which either returns the next packet
- * in the subtree iteration or else throws a <tt>StopException</tt> if there
+ * the function `__iter__()`, which returns the iterator object itself;
+ * it also implements `__next__()`, which either returns the next packet
+ * in the subtree iteration or else throws a `StopException` if there
  * are no more packets to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
@@ -2802,7 +2802,7 @@ class SubtreeIterator {
     public:
         using value_type = std::conditional_t<const_, const Packet, Packet>;
             /**< Indicates what the iterator points to.
-                 This is either <tt>Packet</tt> or <tt>const Packet</tt>,
+                 This is either `Packet` or `const Packet`,
                  according to the template argument \a const_. */
         using iterator_category = std::forward_iterator_tag;
             /**< Declares this to be a forward iterator type. */
@@ -3010,10 +3010,10 @@ class SubtreeIterator {
  * \ifacespython Instead of the C++ interface described here, in Python
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
- * the single function <tt>__iter__()</tt>, which returns a ChildIterator;
- * then ChildIterator implements <tt>__next__()</tt>, which either returns
+ * the single function `__iter__()`, which returns a ChildIterator;
+ * then ChildIterator implements `__next__()`, which either returns
  * the next child packet in the iteration or else throws a
- * <tt>StopException</tt> if there are no more children to return.
+ * `StopException` if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
  *
@@ -3023,7 +3023,7 @@ template <bool const_>
 class PacketChildren {
     public:
         using packet_type = std::conditional_t<const_, const Packet, Packet>;
-            /**< Either <tt>Packet</tt> or <tt>const Packet</tt>, according to
+            /**< Either `Packet` or `const Packet`, according to
                  the template argument \a const_. */
 
     private:
@@ -3156,10 +3156,10 @@ class PacketChildren {
  * \ifacespython Instead of the C++ interface described here, in Python
  * the classes PacketDescendants and SubtreeIterator together implement the
  * Python iterable/iterator interface.  The class PacketDescendants has just
- * the single function <tt>__iter__()</tt>, which returns a SubtreeIterator;
- * then SubtreeIterator implements <tt>__next__()</tt>, which either returns
+ * the single function `__iter__()`, which returns a SubtreeIterator;
+ * then SubtreeIterator implements `__next__()`, which either returns
  * the next descendant packet in the iteration or else throws a
- * <tt>StopException</tt> if there are no more children to return.
+ * `StopException` if there are no more children to return.
  * All iteration in Python is non-const (i.e., Python exclusively uses
  * the classes where \a const_ is \c false).
  *
@@ -3169,7 +3169,7 @@ template <bool const_>
 class PacketDescendants {
     public:
         using packet_type = std::conditional_t<const_, const Packet, Packet>;
-            /**< Either <tt>Packet</tt> or <tt>const Packet</tt>, according to
+            /**< Either `Packet` or `const Packet`, according to
                  the template argument \a const_. */
 
     private:

@@ -99,7 +99,7 @@ class FaceEmbeddingBase :
     public:
         /**
          * Default constructor.  This object is unusable until it has
-         * some data assigned to it using <tt>operator =</tt>.
+         * some data assigned to it using `operator =`.
          *
          * \nopython This is because the C++ assignment operators
          * are not accessible to Python.
@@ -593,8 +593,8 @@ class FaceBase :
          * Returns the first appearance of this face within a top-dimensional
          * simplex of the underlying triangluation.
          *
-         * This is equivalent to calling <tt>*begin()</tt>, or
-         * <tt>embedding(0)</tt>.
+         * This is equivalent to calling `*begin()`, or
+         * `embedding(0)`.
          *
          * In most cases, the ordering of appearances is arbitrary.
          * The exception is for codimension 2, where the appearances of
@@ -611,7 +611,7 @@ class FaceBase :
          * Returns the last appearance of this face within a top-dimensional
          * simplex of the underlying triangluation.
          *
-         * This is equivalent to calling <tt>embedding(degree()-1)</tt>.
+         * This is equivalent to calling `embedding(degree()-1)`.
          *
          * In most cases, the ordering of appearances is arbitrary.
          * The exception is for codimension 2, where the appearances of
@@ -765,7 +765,7 @@ class FaceBase :
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>face(lowerdim, face)</tt>; that is, the template parameter
+         * `face(lowerdim, face)`; that is, the template parameter
          * \a lowerdim becomes the first argument of the function.
          *
          * \param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
@@ -865,7 +865,7 @@ class FaceBase :
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>faceMapping(lowerdim, face)</tt>; that is, the template
+         * `faceMapping(lowerdim, face)`; that is, the template
          * parameter \a lowerdim becomes the first argument of the function.
          *
          * \param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to

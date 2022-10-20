@@ -126,8 +126,8 @@ class LPConstraintBase {
          *
          * - be able to be constructed or assigned from the value 0;
          *
-         * - support multiplication of the form <tt>IntType * Coefficient</tt>
-         *   and assignment of the form <tt>IntType = Coefficient</tt>,
+         * - support multiplication of the form `IntType * Coefficient`
+         *   and assignment of the form `IntType = Coefficient`,
          *   where \a IntType is any integer type that could be used with
          *   the LPData and LPMatrix classes that use these constraints.
          */
@@ -176,7 +176,7 @@ class LPConstraintBase {
          * More precisely: recall that, for each linear function, the initial
          * tableaux acquires one new variable \a x_i that evaluates this linear
          * function f(x).  This routine must create the corresponding row that
-         * sets <tt>f(x) - x_i = 0</tt>.  Thus it must construct the
+         * sets `f(x) - x_i = 0`.  Thus it must construct the
          * coefficients of f(x) in the columns corresponding to normal
          * coordinates, and it must also set a coefficient of -1 in the
          * column for the corresponding new variable.
@@ -255,7 +255,7 @@ class LPConstraintBase {
          * and/or LPData::constrainPositive().
          *
          * The variables for these extra linear functions are stored in
-         * columns <tt>numCols - nConstraints</tt>, ..., <tt>numCols - 1</tt>
+         * columns `numCols - nConstraints`, ..., `numCols - 1`
          * of the given tableaux, and so your calls to LPData::constrainZero()
          * and/or LPData::constrainPositive() should operate on these
          * (and only these) columns.

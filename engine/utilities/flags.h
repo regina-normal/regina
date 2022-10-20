@@ -127,7 +127,7 @@ class Flags {
          * Returns whether the given flag is set.
          *
          * This requires \e all of the bits of the given flag to be set.
-         * The test is equivalent to <tt>(*this & flag) == flag</tt>.
+         * The test is equivalent to `(*this & flag) == flag`.
          *
          * \param flag the flag whose presence will be tested.
          * \return \c true if and only if all of the bits of the given
@@ -142,7 +142,7 @@ class Flags {
          *
          * This requires \e all of the bits of all of the flags in the
          * given set to be present in this set.
-         * The test is equivalent to <tt>(*this & rhs) == rhs</tt>.
+         * The test is equivalent to `(*this & rhs) == rhs`.
          *
          * \param rhs the set whose presence will be tested.
          * \return \c true if and only if all of the bits of the given

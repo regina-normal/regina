@@ -90,7 +90,7 @@ enum ReprStyle {
  * output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <tt>regina::python::add_output(c, style)</tt>, where \a c is the
+ * `regina::python::add_output(c, style)`, where \a c is the
  * pybind11::class_ object that wraps \a T.
  *
  * The wrapped class \a T should either derive from regina::Output, or
@@ -147,14 +147,14 @@ void add_output(pybind11::class_<C, options...>& c,
  * output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <tt>regina::python::add_output_basic(c, doc, style)</tt>, where \a c is the
+ * `regina::python::add_output_basic(c, doc, style)`, where \a c is the
  * pybind11::class_ object that wraps \a T and \a doc is the Python docstring
  * for str().
  *
  * It is assumed that the wrapped class \a T does not derive from
  * regina::Output (otherwise you should use add_output, not add_output_basic).
  * Instead we simply assume that \a T provides a function of the form
- * <tt>std::string T::str() const</tt>.
+ * `std::string T::str() const`.
  */
 template <class C, typename... options>
 void add_output_basic(pybind11::class_<C, options...>& c,
@@ -195,7 +195,7 @@ void add_output_basic(pybind11::class_<C, options...>& c,
  * a \a __repr__ function, using the given output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <tt>regina::python::add_output_ostream(c, style)</tt>, where \a c is the
+ * `regina::python::add_output_ostream(c, style)`, where \a c is the
  * pybind11::class_ object that wraps \a T.
  *
  * It is assumed that the wrapped class \a T does not derive from regina::Output
@@ -241,14 +241,14 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
  * This will add a function \a __str__ to the python class to provide "native"
  * Python string output.  The implementation will call \a outputFunction,
  * which must be a callable object (typically a lambda) that can be called
- * with arguments of the form <tt>outputFunction(const C&, std::ostream&)</tt>.
+ * with arguments of the form `outputFunction(const C&, std::ostream&)`.
  *
  * This will also add a \a __repr__ function.  There is no choice of output
  * style: if you use add_output_custom() then the output style will always be
  * PYTHON_REPR_DETAILED.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <tt>regina::python::add_output_custom(c, style)</tt>, where \a c is the
+ * `regina::python::add_output_custom(c, style)`, where \a c is the
  * pybind11::class_ object that wraps \a T.
  */
 template <class C, typename Function, typename... options>

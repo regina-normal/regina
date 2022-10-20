@@ -200,7 +200,7 @@ class Attachment : public Packet {
          * and it will not insert the new packet into any packet tree).
          *
          * This is safe to call even if \a src does not contain a non-empty
-         * attachment (i.e., if <tt>src.isNull()</tt> returns \c true).
+         * attachment (i.e., if `src.isNull()` returns \c true).
          *
          * \param src the attachment packet whose contents should be copied.
          */
@@ -220,7 +220,7 @@ class Attachment : public Packet {
          * tree).
          *
          * This is safe to call even if \a src does not contain a non-empty
-         * attachment (i.e., if <tt>src.isNull()</tt> returns \c true).
+         * attachment (i.e., if `src.isNull()` returns \c true).
          *
          * \param src the attachment packet whose contents should be copied.
          * \return a reference to this packet.

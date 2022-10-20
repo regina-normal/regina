@@ -402,8 +402,8 @@ class TriangulationBase :
          *
          * The new simplices will become the last \a k simplices in this
          * triangulation.  Specifically, if the return value is the array
-         * \a ret, then each simplex <tt>ret[i]</tt> will have index
-         * <tt>size()-k+i</tt> in the overall triangulation.
+         * \a ret, then each simplex `ret[i]` will have index
+         * `size()-k+i` in the overall triangulation.
          *
          * \ifacespython For Python users, the two variants of newSimplices()
          * are essentially merged: the argument \a k is passed as an ordinary
@@ -480,7 +480,7 @@ class TriangulationBase :
          * Removes the top-dimensional simplex at the given index in
          * this triangulation.
          *
-         * This is equivalent to calling <tt>removeSimplex(simplex(index))</tt>.
+         * This is equivalent to calling `removeSimplex(simplex(index))`.
          *
          * The given simplex will be unglued from any adjacent simplices
          * (if any), and will be destroyed immediately.
@@ -561,7 +561,7 @@ class TriangulationBase :
          * reason relates to the fact that top-dimensional simplices are built
          * manually, whereas lower-dimensional faces are deduced properties).
          *
-         * \nopython Instead use the variant <tt>countFaces(subdim)</tt>.
+         * \nopython Instead use the variant `countFaces(subdim)`.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * \a dim inclusive.
@@ -744,7 +744,7 @@ class TriangulationBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \nopython Instead use the variant <tt>faces(subdim)</tt>.
+         * \nopython Instead use the variant `faces(subdim)`.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
@@ -861,7 +861,7 @@ class TriangulationBase :
          * Returns the requested <i>subdim</i>-face of this triangulation,
          * in a way that is optimised for C++ programmers.
          *
-         * \nopython Instead use the variant <tt>face(subdim, index)</tt>.
+         * \nopython Instead use the variant `face(subdim, index)`.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
@@ -1027,7 +1027,7 @@ class TriangulationBase :
          * Returns the dual graph of this triangulation, expressed as a
          * facet pairing.
          *
-         * Calling <tt>tri.pairing()</tt> is equivalent to calling
+         * Calling `tri.pairing()` is equivalent to calling
          * <tt>FacetPairing<dim>(tri)</tt>.
          *
          * \pre This triangulation is not empty.
@@ -1134,7 +1134,7 @@ class TriangulationBase :
          *   triangulated.
          *
          * \nopython Instead use the variant
-         * <tt>countBoundaryFaces(subdim)</tt>.
+         * `countBoundaryFaces(subdim)`.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
@@ -1210,7 +1210,7 @@ class TriangulationBase :
          * Returns the Euler characteristic of this triangulation.
          * This will be evaluated strictly as the alternating sum
          * of the number of <i>i</i>-faces (that is,
-         * <tt>countVertices() - countEdges() + countTriangles() - ...</tt>).
+         * `countVertices() - countEdges() + countTriangles() - ...`).
          *
          * Note that this routine handles ideal triangulations in a
          * non-standard way.  Since it computes the Euler characteristic of
@@ -1344,7 +1344,7 @@ class TriangulationBase :
          * \exception FailedPrecondition This triangulation is invalid, and
          * the homology dimension \a k is not 1.
          *
-         * \nopython Instead use the variant <tt>homology(k)</tt>.
+         * \nopython Instead use the variant `homology(k)`.
          *
          * \tparam k the dimension of the homology group to return;
          * this must be between 1 and (\a dim - 1) inclusive if \a dim is
@@ -1430,7 +1430,7 @@ class TriangulationBase :
          *
          * \exception FailedPrecondition This triangulation is empty or invalid.
          *
-         * \nopython Instead use the variant <tt>markedHomology(k)</tt>.
+         * \nopython Instead use the variant `markedHomology(k)`.
          *
          * \tparam k the dimension of the homology group to compute; this must
          * be between 1 and (<i>dim</i>-1) inclusive.
@@ -1517,7 +1517,7 @@ class TriangulationBase :
          *
          * \pre This triangulation is valid and non-empty.
          *
-         * \nopython Instead use the variant <tt>homologyMap(subdim)</tt>.
+         * \nopython Instead use the variant `homologyMap(subdim)`.
          *
          * \tparam subdim the face dimension; this must be between 1 and
          * \a dim inclusive.
@@ -1586,11 +1586,11 @@ class TriangulationBase :
          *   (which also appears as the "centre" point of \a d).
          *
          * - Let \a emb be an arbitrary FaceEmbedding<dim-k> for \a f (i.e.,
-         *   chosen from <tt>f.embeddings()</tt>), and let \a s be the
+         *   chosen from `f.embeddings()`), and let \a s be the
          *   corresponding top-dimensional simplex containing \a f (i.e.,
-         *   <tt>emb.simplex()</tt>).  For the special case of dual edges
+         *   `emb.simplex()`).  For the special case of dual edges
          *   (\a k = 1), this choice matters; here we choose \a emb to be the
-         *   first embedding (that is, <tt>f.front()</tt>).  For larger \a k
+         *   first embedding (that is, `f.front()`).  For larger \a k
          *   this choice does not matter; see below for the reasons why.
          *
          * - Now consider how \a d intersects the top-dimensional simplex \a s.
@@ -1607,8 +1607,8 @@ class TriangulationBase :
          *
          * - To orient \a g, we assign the label 0 to \a B, and we
          *   assign the labels 1,...,<i>k</i> to the "unused" vertices
-         *   <tt>v[dim-k+1]</tt>,...,<tt>v[dim]</tt> of \a s respectively,
-         *   where \a v is the permutation <tt>emb.vertices()</tt>.
+         *   `v[dim-k+1]`,...,`v[dim]` of \a s respectively,
+         *   where \a v is the permutation `emb.vertices()`.
          *
          * - Finally, we note that for \a k &gt; 1, the orientation for \a d
          *   does not depend on the particular choice of \a s and \a emb: by
@@ -1623,7 +1623,7 @@ class TriangulationBase :
          *   edge \a d correspond to the two top-dimensional simplices on
          *   either side of the (<i>dim</i>-1)-face \a f, and we orient \a d
          *   by labelling these endpoints (0, 1) in the order
-         *   (<tt>f.back()</tt>, <tt>f.front()</tt>).
+         *   (`f.back()`, `f.front()`).
          *
          * If you wish to convert these boundary maps to homology groups
          * yourself, either the AbelianGroup class (if you do not need
@@ -1688,7 +1688,7 @@ class TriangulationBase :
          * The key feature of this map is that, if a column vector \a v
          * represents a cycle \a c in the dual chain complex (i.e., it is a
          * chain with zero boundary), and if this map is represented by the
-         * matrix \a M, then the vector <tt>M*v</tt> represents a cycle in the
+         * matrix \a M, then the vector `M*v` represents a cycle in the
          * primal chain complex that belongs to the same <i>subdim</i>th
          * homology class as \a c.
          *
@@ -1809,14 +1809,14 @@ class TriangulationBase :
          * See the page on \ref pachner for definitions and terminology
          * relating to Pachner moves.  After the move, the new belt face
          * will be formed from vertices 0,1,...,(\a dim - \a k) of
-         * <tt>simplices().back()</tt>.
+         * `simplices().back()`.
          *
          * \warning For the case \a k = \a dim in Regina's
          * \ref stddim "standard dimensions", the labelling of the belt face
          * has changed as of Regina 5.96 (the first prerelease for Regina 6.0).
          * In versions 5.1 and earlier, the belt face was
-         * <tt>simplices().back()->vertex(dim)</tt>, and as of version 5.96
-         * it is now <tt>simplices().back()->vertex(0)</tt>.
+         * `simplices().back()->vertex(dim)`, and as of version 5.96
+         * it is now `simplices().back()->vertex(0)`.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
@@ -1889,7 +1889,7 @@ class TriangulationBase :
          *
          * If simplex \a s has index \a i in the original triangulation, then
          * its sub-simplex corresponding to permutation \a p will have index
-         * <tt>((dim + 1)! * i + p.orderedSnIndex())</tt> in the resulting
+         * `((dim + 1)! * i + p.orderedSnIndex())` in the resulting
          * triangulation.  In other words: sub-simplices are ordered first
          * according to the original simplex that contains them, and then
          * according to the lexicographical ordering of the corresponding
@@ -2064,7 +2064,7 @@ class TriangulationBase :
          * If the triangulations are isomorphic, then this routine returns
          * one such boundary complete isomorphism (i.e., one such relabelling).
          * Otherwise it returns no value.  Thus, to test whether an isomorphism
-         * exists, you can just call <tt>if (isIsomorphicTo(other))</tt>.
+         * exists, you can just call `if (isIsomorphicTo(other))`.
          *
          * There may be many such isomorphisms between the two triangulations.
          * If you need to find \e all such isomorphisms, you may call
@@ -2107,7 +2107,7 @@ class TriangulationBase :
          *
          * If a boundary incomplete isomorphism is found, the details of
          * this isomorphism are returned.  Thus, to test whether an isomorphism
-         * exists, you can just call <tt>if (isContainedIn(other))</tt>.
+         * exists, you can just call `if (isContainedIn(other))`.
          *
          * If more than one such isomorphism exists, only one will be
          * returned.  For a routine that returns all such isomorphisms,
@@ -2160,11 +2160,11 @@ class TriangulationBase :
          *
          * \ifacespython There are two versions of this function
          * available in Python.  The first form is
-         * <tt>findAllIsomorphisms(other, action)</tt>, which mirrors the C++
+         * `findAllIsomorphisms(other, action)`, which mirrors the C++
          * function: it takes \a action which may be a pure Python function,
          * the return value indicates whether \a action ever terminated the
          * search, but it does \e not take an additonal argument list (\a args).
-         * The second form is <tt>findAllIsomorphisms(other)</tt>, which
+         * The second form is `findAllIsomorphisms(other)`, which
          * returns a Python list containing all of the isomorphisms that were
          * found.
          *
@@ -2217,11 +2217,11 @@ class TriangulationBase :
          *
          * \ifacespython There are two versions of this function
          * available in Python.  The first form is
-         * <tt>findAllSubcomplexesIn(other, action)</tt>, which mirrors the C++
+         * `findAllSubcomplexesIn(other, action)`, which mirrors the C++
          * function: it takes \a action which may be a pure Python function,
          * the return value indicates whether \a action ever terminated the
          * search, but it does \e not take an additonal argument list (\a args).
-         * The second form is <tt>findAllSubcomplexesIn(other)</tt>, which
+         * The second form is `findAllSubcomplexesIn(other)`, which
          * returns a Python list containing all of the isomorphisms that were
          * found.
          *
@@ -2328,9 +2328,9 @@ class TriangulationBase :
          * type \a T are the same.
          *
          * The length of an isomorphism signature is proportional to
-         * <tt>n log n</tt>, where \a n is the number of top-dimenisonal
+         * `n log n`, where \a n is the number of top-dimenisonal
          * simplices.  The time required to construct it is worst-case
-         * <tt>O((dim!) n^2 log^2 n)</tt>.  Whilst this is fine for large
+         * `O((dim!) n^2 log^2 n)`.  Whilst this is fine for large
          * triangulations, it becomes very slow for large \e dimensions;
          * the main reason for introducing different signature types is that
          * some alternative types can be much faster to compute in practice.
@@ -2388,7 +2388,7 @@ class TriangulationBase :
          * signature format for 3-manifold triangulations, see
          * <i>Simplification paths in the Pachner graphs of closed orientable
          * 3-manifold triangulations</i>, Burton, 2011,
-         * <tt>arXiv:1110.6080</tt>.  The format for other dimensions is
+         * `arXiv:1110.6080`.  The format for other dimensions is
          * essentially the same, but with minor dimension-specific adjustments.
          *
          * \ifacespython Although this is a templated function, all of the
@@ -2434,8 +2434,8 @@ class TriangulationBase :
          *
          * Specifically, if this routine returns the pair
          * (\a sig, \a relabelling), this means that the triangulation
-         * reconstructed from <tt>fromIsoSig(sig)</tt> will be identical to
-         * <tt>relabelling(this)</tt>.
+         * reconstructed from `fromIsoSig(sig)` will be identical to
+         * `relabelling(this)`.
          *
          * \ifacespython Although this is a templated function, all of the
          * variants supplied with Regina are available to Python users.  For
@@ -2510,7 +2510,7 @@ class TriangulationBase :
          * \a facet of top-dimensional simplex number \a simp should be glued
          * to top-dimensional simplex number \a adj using the permutation
          * \a gluing.  In other words, such a tuple encodes the same information
-         * as calling <tt>simplex(simp).join(facet, simplex(adj), gluing)</tt>
+         * as calling `simplex(simp).join(facet, simplex(adj), gluing)`
          * upon the triangulation being constructed.
          *
          * Every gluing should be encoded from <i>one direction only</i>.
@@ -2575,7 +2575,7 @@ class TriangulationBase :
          * simplex number \a simp should be glued to top-dimensional simplex
          * number \a adj using the permutation \a gluing.  In other words,
          * such a tuple encodes the same information as calling
-         * <tt>simplex(simp).join(facet, simplex(adj), gluing)</tt>
+         * `simplex(simp).join(facet, simplex(adj), gluing)`
          * upon the triangulation being constructed.
          *
          * Every gluing should be encoded from <i>one direction only</i>.
@@ -2649,7 +2649,7 @@ class TriangulationBase :
          * For a full and precise description of the isomorphism signature
          * format for 3-manifold triangulations, see <i>Simplification paths
          * in the Pachner graphs of closed orientable 3-manifold
-         * triangulations</i>, Burton, 2011, <tt>arXiv:1110.6080</tt>.
+         * triangulations</i>, Burton, 2011, `arXiv:1110.6080`.
          * The format for other dimensions is essentially the same, but with
          * minor dimension-specific adjustments.
          *
@@ -3045,7 +3045,7 @@ class TriangulationBase :
          * contains \a f, if the old mapping from vertices of \a f to vertices
          * of \a s (as returned by Simplex<dim>::faceMapping()) is given by the
          * permutation \a p, then the new mapping will become
-         * <tt>p * adjust</tt>.
+         * `p * adjust`.
          *
          * \pre For each \a i = <i>subdim</i>+1,...,\a dim, the given
          * permutation maps \a i to itself.

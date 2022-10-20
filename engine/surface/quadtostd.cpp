@@ -102,7 +102,7 @@ namespace {
              * \param tri the underlying triangulation.
              * \param whichLink the index of the vertex whose link
              * we should negate; this must be strictly less than
-             * <tt>tri->countVertices()</tt>.
+             * `tri->countVertices()`.
              * \param coordsPerTet the number of standard coordinate
              * positions for each tetrahedron (that is, 7 if we are
              * working with normal surfaces, or 10 if we are working

@@ -49,14 +49,14 @@ namespace regina {
 /**
  * Represents a single-variable polynomial with coefficients of type \a T.
  * All exponents in the polynomial must be non-negative (so you can
- * represent <tt>2+3x</tt> but not <tt>1+1/x</tt>).
+ * represent `2+3x` but not `1+1/x`).
  *
  * The type \a T must represent a ring with no zero divisors.
  * In particular, it must:
  *
  * - support basic arithmetic operations;
- * - support assignments of the form <tt>x = int</tt> and
- *   tests of the form <tt>x == int</tt> and <tt>x < int</tt>;
+ * - support assignments of the form `x = int` and
+ *   tests of the form `x == int` and <tt>x < int</tt>;
  * - have a default constructor that assigns an explicit value of zero.
  *
  * This means that Regina's numerical types such as Integer and Rational
@@ -88,7 +88,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         T* coeff_;
             /**< An array of length (\a degree_ + 1), storing the
                  coefficients of the polynomial.  Specifically,
-                 coeff_[i] stores the coefficient of <tt>x^i</tt>. */
+                 coeff_[i] stores the coefficient of `x^i`. */
 
     public:
         /**
@@ -97,7 +97,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial();
 
         /**
-         * Creates the polynomial <tt>x^d</tt> for the given degree \a d.
+         * Creates the polynomial `x^d` for the given degree \a d.
          *
          * \param degree the degree of the new polynomial.
          */
@@ -194,7 +194,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         void init();
 
         /**
-         * Sets this to become the polynomial <tt>x^d</tt> for the
+         * Sets this to become the polynomial `x^d` for the
          * given degree \a d.
          *
          * \param degree the new degree of this polynomial.
@@ -270,10 +270,10 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Returns the given coefficient of this polynomial.
          *
          * \ifacespython Python users can also use this operator to \e set
-         * cofficients; that is, you can write <tt>poly[exp] = value</tt>.
+         * cofficients; that is, you can write `poly[exp] = value`.
          * However, when \e getting a coefficient this operator will return
          * by value (to enforce constness), which means for example you
-         * cannot write something like <tt>poly[exp].negate()</tt>.
+         * cannot write something like `poly[exp].negate()`.
          *
          * \cpp For C++ users, this operator is read-only.  To \e set
          * coefficients, you must use the separate routine set().
@@ -298,7 +298,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \ifacespython This set() routine is available, but you can
          * also set coefficients directly using syntax of the form
-         * <tt>p[exp] = value</tt>.
+         * `p[exp] = value`.
          *
          * \param exp the exponent of the term whose coefficient should
          * be changed.
@@ -450,7 +450,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Divides this by the given polynomial.
          *
          * More precisely: suppose there exist polynomials \a q and \a r with
-         * coefficients of type \a T for which <tt>this = q.other + r</tt>,
+         * coefficients of type \a T for which `this = q.other + r`,
          * and where \a r has smaller degree than \a other.  Then we call
          * \a q the \e quotient, and \a r the \e remainder.
          *
@@ -482,7 +482,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * quotient and the remainder.
          *
          * More precisely: suppose there exist polynomials \a q and \a r with
-         * coefficients of type \a T for which <tt>this = q.divisor + r</tt>,
+         * coefficients of type \a T for which `this = q.divisor + r`,
          * and where \a r has smaller degree than \a divisor.  Then this
          * routine returns the pair (\a q, \a r); that is, the \e quotient
          * and the \e remainder.
@@ -520,7 +520,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * The greatest common divisor will be a monic polynomial.
          * The polynomials returned in \a u and \a v will satisfy
-         * <tt>u*this + v*other = gcd</tt>.
+         * `u*this + v*other = gcd`.
          *
          * As a special case, gcd(0,0) is considered to be zero.
          *
@@ -854,7 +854,7 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  * Divides the two given polynomials.
  *
  * More precisely: suppose there exist polynomials \a q and \a r with
- * coefficients of type \a T for which <tt>lhs = q.rhs + r</tt>,
+ * coefficients of type \a T for which `lhs = q.rhs + r`,
  * and where \a r has smaller degree than \a rhs.  Then we call
  * \a q the \e quotient, and \a r the \e remainder.
  *

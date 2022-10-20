@@ -220,7 +220,7 @@ class TrieSet : public Output<TrieSet> {
          * \a superset is found in the tree then this will suffice).
          *
          * This routine has a slow running time, which in
-         * pathological cases can grow to either <tt>2^n</tt>
+         * pathological cases can grow to either `2^n`
          * (where \a n is the bitmask length) or the number of sets
          * stored in this collection, whichever is smaller.  However,
          * for "typical" searches in the context of normal surface
@@ -252,7 +252,7 @@ class TrieSet : public Output<TrieSet> {
          * \a subset is found in the tree then this will suffice).
          *
          * This routine has a slow running time, which in
-         * pathological cases can grow to either <tt>2^n</tt>
+         * pathological cases can grow to either `2^n`
          * (where \a n is the bitmask length) or the number of sets
          * stored in this collection, whichever is smaller.  However,
          * for "typical" searches in the context of normal surface

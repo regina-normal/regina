@@ -114,7 +114,7 @@ constexpr void for_constexpr(Action&& action) {
  * The action should be a templated callable object (e.g., a generic lambda)
  * that takes a single argument.  If \a value is equal to the integer \a i,
  * for some \a i in the range <i>from</i>, ..., (<i>to</i>-1) inclusive,
- * then this function will return <tt>action(i)</tt>.  The argument \a i
+ * then this function will return `action(i)`.  The argument \a i
  * will be passed using the type <tt>std::integral_constant<int, i></tt>,
  * which means that the value of \a i will be accessible to \a action as a
  * compile-time constant.
@@ -179,12 +179,12 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  * select_constexpr(), except that you do not need to explicitly give
  * the return type.  Instead, the return type will be
  * <tt>std::variant<R(from), R(from+1), ..., R(to-1)></tt>, where each
- * <tt>R(i)</tt> denotes the type returned by the corresponding call to
- * <tt>action(i)</tt>.
+ * `R(i)` denotes the type returned by the corresponding call to
+ * `action(i)`.
  *
  * This is useful when the return \e type from \a action (not just the
  * return value) depends on \a i.  An example of this is
- * <tt>Triangulation::face(subdim, index)</tt>, whose return type
+ * `Triangulation::face(subdim, index)`, whose return type
  * would normally be <tt>Face<subdim>*</tt>, except for the fact that
  * \a subdim is not known until runtime.  Therefore this function needs
  * to return a std::variant, and so select_constexpr_as_variant()
@@ -192,8 +192,8 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  *
  * See select_constexpr() for further details.
  *
- * \pre All of the possible return types <tt>R(from)</tt>,
- * <tt>R(from+1)</tt>, ..., <tt>R(to-1)</tt> are different.
+ * \pre All of the possible return types `R(from)`,
+ * `R(from+1)`, ..., `R(to-1)` are different.
  *
  * \exception std::runtime_error The given runtime value is not within the
  * range <i>from</i>, ..., (<i>to</i>-1).
@@ -343,8 +343,8 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
  * classes the results are not ideal.
  *
  * For example, the 3-D triangulation class may be displayed as
- * <tt>regina::Triangulation&lt;3&gt;</tt> instead of its "real" Python name
- * <tt>regina.Triangulation3</tt>.  (This kind of problem most commonly
+ * `regina::Triangulation<3>` instead of its "real" Python name
+ * `regina.Triangulation3`.  (This kind of problem most commonly
  * appears in docstrings, where function signatures are generated as each
  * function is bound, which may happen before all of the types in the
  * argument/return list have been bound.)

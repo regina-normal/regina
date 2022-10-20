@@ -82,14 +82,14 @@ class Rational;
  * 
  * \pre Type T has a copy constructor.  That is,
  * if \c a and \c b are of type T, then \c a can be initialised to the value
- * of \c b using <tt>a(b)</tt>.
+ * of \c b using `a(b)`.
  * \pre Type T has a default constructor.  That is,
  * an object of type T can be declared with no arguments.  No specific
  * default value is required.
  * \pre Type T allows for operators `=`, `==`, `+=`,
  * `-=`, `*=`, `+`, `-` and `*`.
  * \pre Type T has an integer constructor.  That is, if \c a is of type T,
- * then \c a can be initialised to an integer \c l using <tt>a(l)</tt>.
+ * then \c a can be initialised to an integer \c l using `a(l)`.
  * \pre An element \c t of type T can be written to an output stream
  * \c out using the standard expression <tt>out << t</tt>.
  *
@@ -177,7 +177,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * dereferenced iterators of type \a iterator.
          *
          * \warning This routine computes the length of the given
-         * sequence by subtracting <tt>end - begin</tt>, and so ideally
+         * sequence by subtracting `end - begin`, and so ideally
          * \a iterator should be a random access iterator type for which
          * this operation is constant time.
          *
@@ -492,7 +492,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \pre This and the given vector have the same size.
          *
          * \param other the vector to add to this vector.
-         * \return the sum <tt>this + other</tt>.
+         * \return the sum `this + other`.
          */
         inline Vector operator + (const Vector<T>& other) const {
             Vector ans(size());
@@ -513,7 +513,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \pre This and the given vector have the same size.
          *
          * \param other the vector to subtract from this vector.
-         * \return the difference <tt>this - other</tt>.
+         * \return the difference `this - other`.
          */
         inline Vector operator - (const Vector<T>& other) const {
             Vector ans(size());
@@ -532,7 +532,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * This vector will not be changed.
          *
          * \param factor the scalar to multiply this vector by.
-         * \return the product <tt>this * factor</tt>.
+         * \return the product `this * factor`.
          */
         inline Vector operator * (const T& factor) const {
             if (factor == 1)

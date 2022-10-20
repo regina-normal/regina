@@ -54,7 +54,7 @@ template <typename> class PacketOf;
  *
  * The packet label of the new triangulation will be the manifold name
  * read from the second line of the Orb / Casson file.  The first line
- * of the Orb / Casson file must simply be: <tt>% orb</tt>
+ * of the Orb / Casson file must simply be: `% orb`
  *
  * If the file could not be read or if the data was not in the correct
  * format, \c null will be returned.

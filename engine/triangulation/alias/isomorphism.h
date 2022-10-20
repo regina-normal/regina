@@ -55,8 +55,8 @@ namespace regina::alias {
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(size_t)</tt>,
- * <tt>int simpImage(size_t) const</tt>,
+ * `int& simpImage(size_t)`,
+ * `int simpImage(size_t) const`,
  * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
  * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
  *
@@ -75,8 +75,8 @@ class IsomorphismImage {
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(size_t)</tt>,
- * <tt>int simpImage(size_t) const</tt>,
+ * `int& simpImage(size_t)`,
+ * `int simpImage(size_t) const`,
  * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
  * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
  *
@@ -125,8 +125,8 @@ class IsomorphismImage<Derived, 2> {
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(size_t)</tt>,
- * <tt>int simpImage(size_t) const</tt>,
+ * `int& simpImage(size_t)`,
+ * `int simpImage(size_t) const`,
  * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
  * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
  *
@@ -175,8 +175,8 @@ class IsomorphismImage<Derived, 3> {
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(size_t)</tt> and
- * <tt>int simpImage(size_t) const</tt>.
+ * `int& simpImage(size_t)` and
+ * `int simpImage(size_t) const`.
  *
  * \ingroup alias
  */

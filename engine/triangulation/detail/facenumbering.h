@@ -150,7 +150,7 @@ class FaceNumberingAPI {
          *
          * In other words, this routine identifies which <i>subdim</i>-face
          * number within a <i>dim</i>-dimensional simplex spans vertices
-         * <tt>vertices[0, ..., \a subdim]</tt>.
+         * `vertices[0, ..., subdim]`.
          *
          * \param vertices a permutation whose first (\a subdim + 1)
          * elements represent some vertex numbers in a <i>dim</i>-simplex.
@@ -200,7 +200,7 @@ class FaceNumberingAPI {
  * This must be between 0 and <i>dim</i>-1 inclusive.
  * \tparam codim the codimension (<i>dim</i>-<i>subdim</i>-1) of the
  * faces being numbered.  Ideally this would be specified directly as
- * <tt>dim-subdim-1</tt> in the partial template specialisation, and this
+ * `dim-subdim-1` in the partial template specialisation, and this
  * \e should be legal according to CWG1315; however, it fails to build
  * under some versions of gcc (e.g., 10.2.0).
  *
@@ -567,13 +567,13 @@ class FaceNumberingImpl<3, 1, 1> : public FaceNumberingAPI<3, 1> {
          * Edges in a tetrahedron are numbered 0,...,5.  This table
          * converts vertices to edge numbers; in particular, the edge
          * joining vertices \a i and \a j of a tetrahedron is edge
-         * number <tt>edgeNumber[i][j]</tt>.  Here \a i and \a j must be
+         * number `edgeNumber[i][j]`.  Here \a i and \a j must be
          * distinct, must be between 0 and 3 inclusive, and may be given
          * in any order.  The resulting edge number will be between 0 and 5
          * inclusive.
          *
-         * \note Accessing <tt>edgeNumber[i][j]</tt> is equivalent to calling
-         * <tt>faceNumber(p)</tt>, where \a p is a permutation that maps 
+         * \note Accessing `edgeNumber[i][j]` is equivalent to calling
+         * `faceNumber(p)`, where \a p is a permutation that maps 
          * 0,1 to \a i,\a j in some order.
          */
         static constexpr int edgeNumber[4][4] = {
@@ -585,16 +585,16 @@ class FaceNumberingImpl<3, 1, 1> : public FaceNumberingAPI<3, 1> {
          *
          * Edges in a tetrahedron are numbered 0,...,5.  This table
          * converts edge numbers to vertices; in particular, edge \a i
-         * in a tetrahedron joins vertices <tt>edgeVertex[i][0]</tt> and
-         * <tt>edgeVertex[i][1]</tt>.  Here \a i must be bewteen 0 and 5
+         * in a tetrahedron joins vertices `edgeVertex[i][0]` and
+         * `edgeVertex[i][1]`.  Here \a i must be bewteen 0 and 5
          * inclusive; the resulting vertex numbers will be between 0 and 3
          * inclusive.
          *
-         * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
-         * be smaller than <tt>edgeVertex[i][1]</tt>.
+         * It is guaranteed that `edgeVertex[i][0]` will always
+         * be smaller than `edgeVertex[i][1]`.
          *
-         * \note Accessing <tt>edgeVertex[i][j]</tt> is equivalent to
-         * calling <tt>ordering(i)[j]</tt>.
+         * \note Accessing `edgeVertex[i][j]` is equivalent to
+         * calling `ordering(i)[j]`.
          */
         static constexpr int edgeVertex[6][2] = {
             { 0, 1 }, { 0, 2 }, { 0, 3 }, { 1, 2 }, { 1, 3 }, { 2, 3 }
@@ -660,13 +660,13 @@ class FaceNumberingImpl<4, 1, 2> : public FaceNumberingAPI<4, 1> {
          * Edges in a pentachoron are numbered 0,...,9.  This table
          * converts vertices to edge numbers; in particular, the edge
          * joining vertices \a i and \a j of a pentachoron is
-         * edge number <tt>edgeNumber[i][j]</tt>.  Here \a i and \a j
+         * edge number `edgeNumber[i][j]`.  Here \a i and \a j
          * must be distinct, must be between 0 and 4 inclusive, and may
          * be given in any order.  The resulting edge number will be
          * between 0 and 9 inclusive.
          *
-         * \note Accessing <tt>edgeNumber[i][j]</tt> is equivalent to calling
-         * <tt>faceNumber(p)</tt>, where \a p is a permutation that maps 
+         * \note Accessing `edgeNumber[i][j]` is equivalent to calling
+         * `faceNumber(p)`, where \a p is a permutation that maps 
          * 0,1 to \a i,\a j in some order.
          */
         static constexpr int edgeNumber[5][5] = {
@@ -679,16 +679,16 @@ class FaceNumberingImpl<4, 1, 2> : public FaceNumberingAPI<4, 1> {
          *
          * Edges in a pentachoron are numbered 0,...,9.  This table
          * converts edge numbers to vertices; in particular, edge \a i
-         * in a pentachoron joins vertices <tt>edgeVertex[i][0]</tt> and
-         * <tt>edgeVertex[i][1]</tt>.  Here \a i must be between 0 and 9
+         * in a pentachoron joins vertices `edgeVertex[i][0]` and
+         * `edgeVertex[i][1]`.  Here \a i must be between 0 and 9
          * inclusive; the resulting vertex numbers will be between 0 and 4
          * inclusive.
          *
-         * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
-         * be smaller than <tt>edgeVertex[i][1]</tt>.
+         * It is guaranteed that `edgeVertex[i][0]` will always
+         * be smaller than `edgeVertex[i][1]`.
          *
-         * \note Accessing <tt>edgeVertex[i][j]</tt> is equivalent to
-         * calling <tt>ordering(i)[j]</tt>.
+         * \note Accessing `edgeVertex[i][j]` is equivalent to
+         * calling `ordering(i)[j]`.
          */
         static constexpr int edgeVertex[10][2] = {
             { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 1, 2 },
@@ -731,13 +731,13 @@ class FaceNumberingImpl<4, 2, 1> : public FaceNumberingAPI<4, 2> {
          * Triangles in a pentachoron are numbered 0,...,9.  This table
          * converts vertices to triangle numbers; in particular, the triangle
          * spanned by vertices \a i, \a j and \a k of a pentachoron is triangle
-         * number <tt>triangleNumber[i][j][k]</tt>.  Here \a i, \a j and \a k
+         * number `triangleNumber[i][j][k]`.  Here \a i, \a j and \a k
          * must be distinct, must be between 0 and 4 inclusive, and may
          * be given in any order.  The resulting triangle number will be
          * between 0 and 9 inclusive.
          *
-         * \note Accessing <tt>triangleNumber[i][j][k]</tt> is equivalent to
-         * calling <tt>faceNumber(p)</tt>, where \a p is a permutation that
+         * \note Accessing `triangleNumber[i][j][k]` is equivalent to
+         * calling `faceNumber(p)`, where \a p is a permutation that
          * maps 0,1,2 to \a i,\a j,\a k in some order.
          */
         static constexpr int triangleNumber[5][5][5] = {
@@ -758,17 +758,17 @@ class FaceNumberingImpl<4, 2, 1> : public FaceNumberingAPI<4, 2> {
          *
          * Triangles in a pentachoron are numbered 0,...,9.  This table converts
          * triangle numbers to vertices; in particular, triangle \a i in a
-         * pentachoron is spanned by vertices <tt>triangleVertex[i][0]</tt>,
-         * <tt>triangleVertex[i][1]</tt> and <tt>triangleVertex[i][2]</tt>.
+         * pentachoron is spanned by vertices `triangleVertex[i][0]`,
+         * `triangleVertex[i][1]` and `triangleVertex[i][2]`.
          * Here \a i must be between 0 and 9 inclusive; the resulting
          * vertex numbers will be between 0 and 4 inclusive.
          *
-         * It is guaranteed that <tt>triangleVertex[i][0]</tt> will always
-         * be smaller than <tt>triangleVertex[i][1]</tt>, which in turn will
-         * always be smaller than <tt>triangleVertex[i][2]</tt>.
+         * It is guaranteed that `triangleVertex[i][0]` will always
+         * be smaller than `triangleVertex[i][1]`, which in turn will
+         * always be smaller than `triangleVertex[i][2]`.
          *
-         * \note Accessing <tt>triangleVertex[i][j]</tt> is equivalent to
-         * calling <tt>ordering(i)[j]</tt>.
+         * \note Accessing `triangleVertex[i][j]` is equivalent to
+         * calling `ordering(i)[j]`.
          */
         static constexpr int triangleVertex[10][3] = {
             { 2, 3, 4 }, { 1, 3, 4 }, { 1, 2, 4 }, { 1, 2, 3 }, { 0, 3, 4 },

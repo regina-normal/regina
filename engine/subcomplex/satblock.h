@@ -565,9 +565,9 @@ class SatBlock : public ShortOutput<SatBlock> {
          * related routines.  It is a generic routine for working with
          * arbitrary list types.
          *
-         * \pre Forward iterators of type <tt>List::const_iterator</tt>
+         * \pre Forward iterators of type `List::const_iterator`
          * that span the given list can be obtained by calling
-         * <tt>list.begin()</tt> and <tt>list.end()</tt>.
+         * `list.begin()` and `list.end()`.
          *
          * \param t the tetrahedron to search for.
          * \param list the list in which to search.

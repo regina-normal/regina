@@ -530,8 +530,8 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          * strands that pass at this crossing.  Which strand we follow
          * is indicated by the argument \a strand.
          *
-         * Note that for a crossing \a c, calling <tt>c.next(s)</tt>
-         * is equivalent to calling <tt>c.strand(s).next()</tt>.
+         * Note that for a crossing \a c, calling `c.next(s)`
+         * is equivalent to calling `c.strand(s).next()`.
          *
          * \param strand either 1 to walk forward along the upper strand,
          * or 0 to walk forward along the lower strand.
@@ -545,8 +545,8 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          * two strands that pass at this crossing.  Which strand we
          * follow is indicated by the argument \a strand.
          *
-         * Note that for a crossing \a c, calling <tt>c.prev(s)</tt>
-         * is equivalent to calling <tt>c.strand(s).prev()</tt>.
+         * Note that for a crossing \a c, calling `c.prev(s)`
+         * is equivalent to calling `c.strand(s).prev()`.
          *
          * \param strand either 1 to walk backward along the upper strand,
          * or 0 to walk backward along the lower strand.
@@ -674,7 +674,7 @@ class Link :
          * of the square root of \a t (encoded in UTF-8).
          *
          * To pretty-print the Jones polynomial for human consumption,
-         * you can call <tt>Laurent::str(Link::jonesVar)</tt>.
+         * you can call `Laurent::str(Link::jonesVar)`.
          */
         static constexpr const char* jonesVar = "\u221At"; // \u221A = root
 
@@ -688,7 +688,7 @@ class Link :
          * (encoded in UTF-8).
          *
          * To pretty-print this HOMFLY polynomial for human consumption, you can
-         * call <tt>Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
+         * call `Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
          */
         static constexpr const char* homflyAZVarX = "\u03B1"; // alpha
 
@@ -701,7 +701,7 @@ class Link :
          * this string just contains the single character \a z.
          *
          * To pretty-print this HOMFLY polynomial for human consumption, you can
-         * call <tt>Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
+         * call `Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
          */
         static constexpr const char* homflyAZVarY = "z";
 
@@ -715,7 +715,7 @@ class Link :
          * (encoded in UTF-8).
          *
          * To pretty-print this HOMFLY polynomial for human consumption, you can
-         * call <tt>Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
+         * call `Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
          */
         static constexpr const char* homflyLMVarX = "\U0001D4C1"; // $\ell$
 
@@ -728,7 +728,7 @@ class Link :
          * this string just contains the single character \a m.
          *
          * To pretty-print this HOMFLY polynomial for human consumption, you can
-         * call <tt>Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
+         * call `Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
          */
         static constexpr const char* homflyLMVarY = "m";
 
@@ -948,8 +948,8 @@ class Link :
          * which means it offers basic container-like functions and supports
          * range-based \c for loops.  Each element of the list will be
          * a starting strand for some components; more precisely, iterating
-         * through this list is equivalent to calling <tt>component(0)</tt>,
-         * <tt>component(1)</tt>, ..., <tt>component(countComponents()-1)</tt>
+         * through this list is equivalent to calling `component(0)`,
+         * `component(1)`, ..., `component(countComponents()-1)`
          * in turn.  As an example, your code might look like:
          *
          * \code{.cpp}
@@ -2097,7 +2097,7 @@ class Link :
          *
          * In this version of writheOfComponent(), the component is
          * indicated by its index.  This function is equivalent to calling
-         * <tt>writheOfComponent(component(index))</tt>.
+         * `writheOfComponent(component(index))`.
          *
          * \param index the index of the requested component.  This must
          * be between 0 and countComponents()-1 inclusive.
@@ -2229,12 +2229,12 @@ class Link :
          * square root of \a t.  So, for example:
          *
          * - The right-hand trefoil has Jones polynomial
-         *   <tt>1/t + 1/t^3 - 1/t^4</tt>, and so this routine returns the
-         *   Laurent polynomial <tt>x^-2 + x^-6 - x^-8</tt>.
+         *   `1/t + 1/t^3 - 1/t^4`, and so this routine returns the
+         *   Laurent polynomial `x^-2 + x^-6 - x^-8`.
          *
          * - The Hopf link has Jones polynomial
-         *   <tt>-1/sqrt(x) - 1/sqrt(x^5)</tt>, and so this routine returns
-         *   the Laurent polynomial <tt>-x^-1 - x^-5</tt>.
+         *   `-1/sqrt(x) - 1/sqrt(x^5)`, and so this routine returns
+         *   the Laurent polynomial `-x^-1 - x^-5`.
          *
          * If this is the empty link, then this routine will return the zero
          * polynomial.
@@ -2249,7 +2249,7 @@ class Link :
          * with the expression -<i>q</i>.
          *
          * To pretty-print this polynomial for human consumption, you can
-         * call <tt>Laurent::str(Link::jonesVar)</tt>.
+         * call `Laurent::str(Link::jonesVar)`.
          *
          * Bear in mind that each time the link changes, all of its
          * polynomials will be deleted.  Thus the reference that is
@@ -2332,7 +2332,7 @@ class Link :
          * polynomial.
          *
          * To pretty-print this polynomial for human consumption, you can call
-         * <tt>Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
+         * `Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)`.
          *
          * The default implementation uses Kauffman's skein-template algorithm;
          * see L. H. Kauffman, "State models for link polynomials",
@@ -2402,7 +2402,7 @@ class Link :
          * polynomial.
          *
          * To pretty-print this polynomial for human consumption, you can call
-         * <tt>Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
+         * `Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)`.
          *
          * The default implementation uses Kauffman's skein-template algorithm;
          * see L. H. Kauffman, "State models for link polynomials",
@@ -2460,7 +2460,7 @@ class Link :
          * documentation for homflyAZ() for further details.
          *
          * To pretty-print this polynomial for human consumption, you can call
-         * <tt>Laurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
+         * `Laurent2::str(Link::homflyVarX, Link::homflyVarY)`.
          *
          * Bear in mind that each time the link changes, all of its
          * polynomials will be deleted.  Thus the reference that is
@@ -2527,7 +2527,7 @@ class Link :
          * the link exterior.
          *
          * This routine builds the Wirtinger presentation, where all relations
-         * are some variant of the form <tt>xy=yz</tt>.
+         * are some variant of the form `xy=yz`.
          *
          * If you pass \a simplify as \c false, it will leave the presentation
          * in exactly this form (i.e., the Wirtinger presentation), and not
@@ -2635,7 +2635,7 @@ class Link :
          *
          * - a description of each component of the link, in order from
          *   component 0 to component countComponents()-1.  Each component
-         *   will be written in the form <tt>( a b c ... )</tt>, indicating
+         *   will be written in the form `( a b c ... )`, indicating
          *   the crossings that are encountered as we follow the component
          *   in the forward direction from its starting strand.  Each element
          *   \a a, \a b, \a c and so on will be written in the format used by
@@ -2651,7 +2651,7 @@ class Link :
          *
          * As a special case, if the link contains no crossings, then
          * the output will not begin with a space; instead it will
-         * simply be a sequence of the form <tt>( ) ( ) ... ( )</tt>.
+         * simply be a sequence of the form `( ) ( ) ... ( )`.
          *
          * The string will not end in a newline.
          *
@@ -2812,8 +2812,8 @@ class Link :
          *       crossing labelled \a k, and the symbol `-` indicates
          *       that you are passing under the crossing labelled \a k;
          *
-         *     * the symbol <tt>&lt;</tt> indicates that the other strand of
-         *       the crossing passes from right to left, and <tt>&gt;</tt>
+         *     * the symbol `<` indicates that the other strand of
+         *       the crossing passes from right to left, and `>`
          *       indicates that the other strand passes from left to right.
          *
          * As an example, you can represent the left-hand trefoil using the
@@ -3101,10 +3101,10 @@ class Link :
          * Although Regina can work with both the numerical and alphabetical
          * variants of Dowker-Thistlethwaite notation, this dtData() routine
          * exports the numerical variant only.  If you wish to export the
-         * alphabetical variant, you can call <tt>dt(true)</tt>.
+         * alphabetical variant, you can call `dt(true)`.
          *
          * This routine returns machine-readable data (as a C++ vector);
-         * in contrast, calling <tt>dt()</tt> returns the same integer
+         * in contrast, calling `dt()` returns the same integer
          * sequence in human-readable format (as a string).
          *
          * \exception NotImplemented This link is empty, or has multiple
@@ -3359,7 +3359,7 @@ class Link :
          * diagrams (hence the choice of NotImplemented as the exception type).
          *
          * The signature is constructed entirely of printable characters,
-         * and has length proportional to <tt>n log n</tt>, where \a n
+         * and has length proportional to `n log n`, where \a n
          * is the number of crossings.
          *
          * The routine fromKnotSig() can be used to recover a knot from
@@ -3573,8 +3573,8 @@ class Link :
          * integers (not an iterator pair).  Likewise, the components should be
          * passed as a Python list of lists of integers (not an iterator pair).
          * In the case of a knot (which has only one component), you are
-         * welcome to replace the list of lists <tt>[[...]]</tt> with a
-         * single list <tt>[...]</tt>.
+         * welcome to replace the list of lists `[[...]]` with a
+         * single list `[...]`.
          *
          * \param beginSigns the beginning of the list of crossing signs.
          * \param endSigns a past-the-end iterator indicating the end of
@@ -3866,8 +3866,8 @@ class Link :
          * \pre \a Iterator is a random access iterator type.
          *
          * \pre Dereferencing such an iterator produces either a
-         * C-style string (which can be cast to <tt>const char*</tt>) or a
-         * C++-style string (which can be cast to <tt>const std::string&</tt>).
+         * C-style string (which can be cast to `const char*`) or a
+         * C++-style string (which can be cast to `const std::string&`).
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
@@ -4270,8 +4270,8 @@ class Link :
          *
          * \pre \a Iterator is a random access iterator type.
          *
-         * \pre If \a it is such an iterator, then <tt>(*it)[0]</tt>,
-         * <tt>(*it)[1]</tt>, <tt>(*it)[2]</tt> and <tt>(*it)[3]</tt>
+         * \pre If \a it is such an iterator, then `(*it)[0]`,
+         * `(*it)[1]`, `(*it)[2]` and `(*it)[3]`
          * will give the elements of the corresponding 4-tuple, which
          * can then be treated as native C++ integers.  (The specific native
          * C++ integer type being used will be deduced from the type
@@ -4540,7 +4540,7 @@ class Link :
          * This optimisation may involve compressing and/or rerooting the
          * given tree decomposition.  The aim is to minimise the estimated
          * processing time and memory consumption of calling
-         * <tt>jones(ALG_TREEWIDTH)</tt> and/or <tt>bracket(ALG_TREEWIDTH)</tt>.
+         * `jones(ALG_TREEWIDTH)` and/or `bracket(ALG_TREEWIDTH)`.
          *
          * The rerooting procedure essentially estimates the number of
          * partial solutions that are expected at each bag in the

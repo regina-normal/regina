@@ -66,8 +66,8 @@ namespace {
      * them to the corresponding faces from some other triangulation \a tri.
      *
      * The iterator relies on an array \a map, where for each face \a f
-     * of the boundary component, <tt>map[f->index()]</tt> is the
-     * corresponding face of \a tri.  Note that <tt>f->index()</tt> is the
+     * of the boundary component, `map[f->index()]` is the
+     * corresponding face of \a tri.  Note that `f->index()` is the
      * index of \a f in the underlying <i>dim</i>-dimensional triangulation,
      * \e not the index of \a f in the boundary component's facet list.
      */

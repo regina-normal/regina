@@ -312,7 +312,7 @@ class Perm {
          * \a n elements.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
+         * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and <i>n</i>!-1 inclusive.
          *
          * The permutations with even indices in the array are the even
@@ -339,7 +339,7 @@ class Perm {
          * \a n elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
+         * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and <i>n</i>!-1 inclusive.
          *
          * Lexicographical ordering treats each permutation \a p as the
@@ -511,7 +511,7 @@ class Perm {
          * Returns the composition of this permutation with the given
          * permutation.  If this permutation is <i>p</i>, the
          * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
-         * <tt>(p*q)[x] == p[q[x]]</tt>.
+         * `(p*q)[x] == p[q[x]]`.
          *
          * \param q the permutation to compose this with.
          * \return the composition of both permutations.
@@ -530,7 +530,7 @@ class Perm {
          *
          * Here \e reverse means that we reverse the images of
          * 0,...,<i>n</i>-1.  In other words, if permutation \a q is the
-         * reverse of \a p, then <tt>p[i] == q[n - 1 - i]</tt> for all \a i.
+         * reverse of \a p, then `p[i] == q[n - 1 - i]` for all \a i.
          */
         constexpr Perm reverse() const;
 
@@ -648,7 +648,7 @@ class Perm {
          * the mutex protecting Regina's global uniform random bit generator.
          * If you are calling this many times in quick succession, consider
          * creating a single RandomEngine object yourself and then calling
-         * <tt>rand(randomEngine.engine(), even)</tt>.
+         * `rand(randomEngine.engine(), even)`.
          *
          * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
@@ -687,7 +687,7 @@ class Perm {
          * representing the images of 0,...,<i>n</i>-1 respectively.
          * If \a n > 10, then lower-case hexadecimal digits will be used.
          *
-         * An example of a string representation for \a n = 5 is <tt>30421</tt>.
+         * An example of a string representation for \a n = 5 is `30421`.
          *
          * \return a string representation of this permutation.
          */
@@ -791,7 +791,7 @@ class Perm {
          * identity map.
          *
          * Specifically, for each \a i in the range <i>from</i>,...,<i>n</i>-1,
-         * this routine will ensure that <tt>image[i] == i</tt>.  The images of
+         * this routine will ensure that `image[i] == i`.  The images of
          * 0,1,...,<i>from</i>-1 will not be altered.
          *
          * \pre The images of <i>from</i>,...,<i>n</i>-1 are exactly

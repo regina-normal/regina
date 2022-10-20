@@ -97,8 +97,8 @@ class Example<4> : public detail::ExampleBase<4> {
          * complex projective plane.  This triangulation is minimal.
          *
          * Under the orientation convention that we use for intersection
-         * forms, this triangulation gives the "plain" <tt>CP²</tt> with
-         * intersection form [1], not the reflected <tt>CP²</tt> with
+         * forms, this triangulation gives the "plain" `CP²` with
+         * intersection form [1], not the reflected `CP²` with
          * intersection form [-1].
          *
          * \return the standard complex projective plane.
@@ -107,7 +107,7 @@ class Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a six-pentachoron triangulation of the standard product
-         * <tt>S² x S²</tt>.  This triangulation is minimal.
+         * `S² x S²`.  This triangulation is minimal.
          *
          * \return the standard product of two 2-spheres.
          */
@@ -115,9 +115,9 @@ class Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a six-pentachoron triangulation of the twisted product
-         * <tt>S² x~ S²</tt>.
-         * This manifold is diffeomorphic to <tt>CP² # -CP²</tt>, where
-         * <tt>-CP²</tt> denotes <tt>CP²</tt> with its orientation reversed.
+         * `S² x~ S²`.
+         * This manifold is diffeomorphic to `CP² # -CP²`, where
+         * `-CP²` denotes `CP²` with its orientation reversed.
          * This triangulation is minimal.
          *
          * \return the twisted product of two 2-spheres.
@@ -126,19 +126,19 @@ class Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a two-pentachoron triangulation of the product space
-         * <tt>S³ x S¹</tt>.  This is identical to calling the
+         * `S³ x S¹`.  This is identical to calling the
          * generic routine sphereBundle().
          *
-         * \return the product <tt>S³ x S¹</tt>.
+         * \return the product `S³ x S¹`.
          */
         static Triangulation<4> s3xs1();
 
         /**
          * Returns a two-pentachoron triangulation of the twisted product
-         * space <tt>S³ x~ S¹</tt>.  This is identical to calling the
+         * space `S³ x~ S¹`.  This is identical to calling the
          * generic routine twistedSphereBundle().
          *
-         * \return the twisted product <tt>S³ x~ S¹</tt>.
+         * \return the twisted product `S³ x~ S¹`.
          */
         static Triangulation<4> s3xs1Twisted();
 
@@ -183,7 +183,7 @@ class Example<4> : public detail::ExampleBase<4> {
         /*@{*/
 
         /**
-         * Returns a triangulation of the product <tt>M x I</tt>,
+         * Returns a triangulation of the product `M x I`,
          * where \a M is the given 3-manifold triangulation.
          *
          * The boundary of this product will consist of two copies of \a M,
@@ -204,12 +204,12 @@ class Example<4> : public detail::ExampleBase<4> {
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
          * \param base the 3-manifold triangulation \a M, as described above.
-         * \return the product <tt>M x I</tt>.
+         * \return the product `M x I`.
          */
         static Triangulation<4> iBundle(const Triangulation<3>& base);
 
         /**
-         * Returns a triangulation of the product <tt>M x S1</tt>,
+         * Returns a triangulation of the product `M x S1`,
          * where \a M is the given 3-manifold triangulation.
          * This simply calls iBundle() and then glues together the
          * two copies of \a M on the boundary.
@@ -224,7 +224,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
          * \param base the 3-manifold triangulation \a M, as described above.
-         * \return the product <tt>M x S1</tt>.
+         * \return the product `M x S1`.
          */
         static Triangulation<4> s1Bundle(const Triangulation<3>& base);
 
@@ -233,7 +233,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * monodromy.
          *
          * Specifically, let \a M be the given 3-manifold triangulation.
-         * This routine builds the bundle <tt>M x I</tt>, and then
+         * This routine builds the bundle `M x I`, and then
          * identifies the two copies of \a M on the boundary according
          * to the given homeomorphism from \a M to itself.
          * The homeomorphism must be expressed as a combinatorial

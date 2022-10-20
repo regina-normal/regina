@@ -469,10 +469,10 @@ void swap(Rational& a, Rational& b) noexcept;
 
 /**
  * Writes the given rational to the given output stream.
- * Infinity will be written as <tt>Inf</tt>.  Undefined will be written
- * as <tt>Undef</tt>.  A rational with denominator one will be written
+ * Infinity will be written as `Inf`.  Undefined will be written
+ * as `Undef`.  A rational with denominator one will be written
  * as a single integer.  All other rationals will be written in the form
- * <tt>r/s</tt>.
+ * `r/s`.
  *
  * \param out the output stream to which to write.
  * \param rat the rational to write.

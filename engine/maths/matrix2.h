@@ -103,7 +103,7 @@ class Matrix2 {
          * Returns a single row of this matrix.
          *
          * This means that the integer in row \a r, column \a c can be
-         * accessed as <tt>myMatrix[r][c]</tt> (where \a r and \a c are
+         * accessed as `myMatrix[r][c]` (where \a r and \a c are
          * each 0 or 1).
          *
          * \param row the index of the requested row; this must be 0 or 1.
@@ -115,7 +115,7 @@ class Matrix2 {
          * Returns a single row of this matrix.
          *
          * This means that the integer in row \a r, column \a c can be
-         * accessed as <tt>myMatrix[r][c]</tt> (where \a r and \a c are
+         * accessed as `myMatrix[r][c]` (where \a r and \a c are
          * each 0 or 1).  Each such element may be modified directly.
          *
          * \param row the index of the requested row; this must be 0 or 1.

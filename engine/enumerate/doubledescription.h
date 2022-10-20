@@ -124,7 +124,7 @@ class DoubleDescription {
          * in Python.  The first version is the same as the C++ function;
          * here you must pass \a action, which may be a pure Python function.
          * The second form does not have an \a action argument; instead you
-         * call <tt>enumerate(subspace, constraints, tracker, initialRows)</tt>,
+         * call `enumerate(subspace, constraints, tracker, initialRows)`,
          * and it returns a Python list containing all extremal rays.
          * In both versions, the argument \a RayClass is fixed as VectorInt.
          * The global interpreter lock will be released while this function
@@ -224,7 +224,7 @@ class DoubleDescription {
                  * intersect the hyperplanes.  The length of this array
                  * must be the number of rows in \a subspace, and the
                  * <i>i</i>th hyperplane to intersect must be described
-                 * by row <tt>hypOrder[i]</tt> of \a subspace.
+                 * by row `hypOrder[i]` of \a subspace.
                  */
                 inline RaySpec(size_t axis, const MatrixInt& subspace,
                     const long* hypOrder);

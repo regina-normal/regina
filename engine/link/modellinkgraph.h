@@ -180,7 +180,7 @@ class ModelLinkGraphArc {
          * this (modulo 4).
          *
          * Note that, for any arc \a a,
-         * <tt>a.opposite().opposite()</tt> is identical to \a a.
+         * `a.opposite().opposite()` is identical to \a a.
          *
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
@@ -200,7 +200,7 @@ class ModelLinkGraphArc {
          * represents the other.
          *
          * Note that, for any arc \a a,
-         * <tt>a.traverse().traverse()</tt> is identical to \a a.
+         * `a.traverse().traverse()` is identical to \a a.
          *
          * \pre This is not a null arc, i.e., node() does not return \c null.
          *
@@ -218,8 +218,8 @@ class ModelLinkGraphArc {
          * arc at the resulting node (i.e., not just pointing backwards along
          * the same edge).
          *
-         * For any arc \a a, calling <tt>a.next()</tt> is equivalent to
-         * calling <tt>a.traverse().opposite()</tt>.
+         * For any arc \a a, calling `a.next()` is equivalent to
+         * calling `a.traverse().opposite()`.
          *
          * \pre This is not a null arc, i.e., node() does not return \c null.
          *
@@ -235,8 +235,8 @@ class ModelLinkGraphArc {
          * and then move to the other endpoint of the graph edge described by
          * that opposite arc.
          *
-         * For any arc \a a, calling <tt>a.prev()</tt> is equivalent to
-         * calling <tt>a.opposite().traverse()</tt>.
+         * For any arc \a a, calling `a.prev()` is equivalent to
+         * calling `a.opposite().traverse()`.
          *
          * \pre This is not a null arc, i.e., node() does not return \c null.
          *
@@ -405,8 +405,8 @@ class ModelLinkGraphNode : public MarkedElement,
          * \e other object, which is the ModelLinkGraphArc describing the other
          * endpoint of \a e.
          *
-         * Note that for a node \a n, calling <tt>n.adj(i)</tt>
-         * is equivalent to calling <tt>n.arc(i).traverse()</tt>.
+         * Note that for a node \a n, calling `n.adj(i)`
+         * is equivalent to calling `n.arc(i).traverse()`.
          *
          * \param which an integer in the range 0 to 3 inclusive, indicating
          * which of the four arcs exiting this node we should examine.
@@ -784,8 +784,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \pre Neither of the arcs \a left or \a right, when followed in the
          * direction away from the disc, end back at the node on the left of
-         * the diagram.  That is, neither <tt>left.traverse().node()</tt> nor
-         * <tt>right.traverse().node()</tt> is equal to <tt>from.node()</tt>.
+         * the diagram.  That is, neither `left.traverse().node()` nor
+         * `right.traverse().node()` is equal to `from.node()`.
          * (If this fails, then either the flype simply reflects the entire
          * graph, or else the graph models a composition of two non-trivial
          * knot diagrams.)
@@ -921,7 +921,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * can be used to enumerate 4-valent planar graphs (amongst many
          * other things).  This routine outputs this graph in a format
          * that mimics \e plantri's own dual ASCII format (i.e., the format
-         * that \e plantri outputs when run with the flags <tt>-adq</tt>).
+         * that \e plantri outputs when run with the flags `-adq`).
          *
          * Specifically, the output will be a comma-separated sequence
          * of alphabetical strings.  The <i>i</i>th such string will consist
@@ -942,9 +942,9 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * This routine is an inverse to fromPlantri(): for any graph \a g
          * that satisfies the preconditions below,
-         * <tt>fromPlantri(g.plantri())</tt> is identical to \a g.  Likewise,
+         * `fromPlantri(g.plantri())` is identical to \a g.  Likewise,
          * for any string \a s that satisfies the preconditions for
-         * fromPlantri(), calling <tt>fromPlantri(s).plantri()</tt> will
+         * fromPlantri(), calling `fromPlantri(s).plantri()` will
          * recover the original string \a s.
          *
          * It is important to note the preconditions below: in particular,
@@ -1070,7 +1070,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * If you are converting output from \e plantri, this output must be
          * in ASCII format, and must be the dual graph of a simple
          * quadrangulation of the sphere.  The corresponding flags that must
-         * be passed to \e plantri to obtain such output are <tt>-adq</tt>
+         * be passed to \e plantri to obtain such output are `-adq`
          * (although you will may wish to pass additional flags to expand or
          * restrict the classes of graphs that \e plantri builds).
          *
@@ -1119,7 +1119,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \e plantri always outputs graphs with a particular canonical
          * labelling, this function can accept an arbitrary ordering of nodes
          * and arcs - in particular, it can accept the string
-         * <tt>g.plantri()</tt> for any graph \a g that meets the preconditions
+         * `g.plantri()` for any graph \a g that meets the preconditions
          * below.  Nevertheless, the graph must still meet these preconditions,
          * since otherwise the \e plantri format might not be enough to
          * uniquely reconstruct the graph and its planar embedding.
@@ -1325,7 +1325,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * is \a a then this describes an outgoing arc from a.node()).
          * It follows that, if the underlying graph has \a n nodes, then
          * each of the 4<i>n</i> possible ModelLinkGraphArc values
-         * appears exactly once as <tt>arc(cell, which)</tt> for some
+         * appears exactly once as `arc(cell, which)` for some
          * integers \a cell and \a which.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
@@ -1337,7 +1337,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * between 0 and countCells()-1 inclusive.
          * \param which indicates which arc along the boundary of the
          * corresponding cell to return; this must be between 0 and
-         * <tt>size(cell)-1</tt> inclusive.
+         * `size(cell)-1` inclusive.
          * \return the requested arc on the boundary of the given 2-cell.
          */
         const ModelLinkGraphArc& arc(size_t cell, size_t which) const;
@@ -1365,8 +1365,8 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * for (const ModelLinkGraphArc& a : cells.arcs(cell)) { ... }
          * \endcode
          *
-         * Using <tt>arcs(cell)</tt> is equivalent to iterating over the
-         * iterator range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>).
+         * Using `arcs(cell)` is equivalent to iterating over the
+         * iterator range (`begin(cell)`, `end(cell)`).
          * Using arcs() generates a tiny amount of extra overhead, but you may
          * also find it more readable.
          *
@@ -1381,16 +1381,16 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * boundary of the given 2-cell.
          *
          * Suppose that the <i>i</i>th cell is a <i>k</i>-gon.  Then the
-         * iterator range described by <tt>begin(i)</tt> and <tt>end(i)</tt>
+         * iterator range described by `begin(i)` and `end(i)`
          * will iterate through the \a k arcs along the boundary of the
          * <i>i</i>th cell in the same order as described by arc(); that
          * is, walking anticlockwise around the cell boundary with the
          * cell to the left of each arc.
          *
          * Dereferencing the <i>j</i>th iterator in this range gives the
-         * same result as calling <tt>arc(cell, j)</tt>, and iterating
-         * over the entire range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>)
-         * is equivalent to iterating over <tt>arcs(cell)</tt>.
+         * same result as calling `arc(cell, j)`, and iterating
+         * over the entire range (`begin(cell)`, `end(cell)`)
+         * is equivalent to iterating over `arcs(cell)`.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
          * and describes a planar graph embedding.  Note that connectivity
@@ -1410,16 +1410,16 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * cannot be dereferenced).
          *
          * Suppose that the <i>i</i>th cell is a <i>k</i>-gon.  Then the
-         * iterator range described by <tt>begin(i)</tt> and <tt>end(i)</tt>
+         * iterator range described by `begin(i)` and `end(i)`
          * will iterate through the \a k arcs along the boundary of the
          * <i>i</i>th cell in the same order as described by arc(); that
          * is, walking anticlockwise around the cell boundary with the
          * cell to the left of each arc.
          *
          * Dereferencing the <i>j</i>th iterator in this range gives the
-         * same result as calling <tt>arc(cell, j)</tt>, and iterating
-         * over the entire range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>)
-         * is equivalent to iterating over <tt>arcs(cell)</tt>.
+         * same result as calling `arc(cell, j)`, and iterating
+         * over the entire range (`begin(cell)`, `end(cell)`)
+         * is equivalent to iterating over `arcs(cell)`.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
          * and describes a planar graph embedding.  Note that connectivity
@@ -1438,9 +1438,9 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * Specifically, this function returns the number of the cell
          * that lies to the left of the given arc as you walk along it
-         * away from <tt>arc.node()</tt>.
+         * away from `arc.node()`.
          *
-         * For any arc \a a, calling <tt>arc(cell(a), cellPos(a))</tt>
+         * For any arc \a a, calling `arc(cell(a), cellPos(a))`
          * will return the same arc \a a again.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
@@ -1451,7 +1451,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * \param arc the given arc of the underlying graph.
          * \return the number of the cell that lies to the left of the
          * given arc; this will be an integer between 0 and
-         * <tt>countCells()-1</tt> inclusive.
+         * `countCells()-1` inclusive.
          */
         size_t cell(const ModelLinkGraphArc& arc) const;
         /**
@@ -1459,13 +1459,13 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * 2-cell to its left.
          *
          * Consider the cell \a c to the left of the given arc as you follow
-         * the arc away from <tt>arc.node()</tt>.  The routine arc()
+         * the arc away from `arc.node()`.  The routine arc()
          * can be used to enumerate the sequence of arcs along the boundary of
          * this cell \a c, in order as you walk anticlockwise around the cell
          * boundary.  The purpose of this routine is to identify \e where in
          * this sequence the given arc occurs.
          *
-         * For any arc \a a, calling <tt>arc(cell(a), cellPos(a))</tt>
+         * For any arc \a a, calling `arc(cell(a), cellPos(a))`
          * will return the same arc \a a again.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
@@ -1476,7 +1476,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * \param arc the given arc of the underlying graph.
          * \return the position of the given arc on the boundary of the
          * cell to its left; this will be an integer between 0 and
-         * <tt>size(cell(arc))-1</tt> inclusive.
+         * `size(cell(arc))-1` inclusive.
          */
         size_t cellPos(const ModelLinkGraphArc& arc) const;
 
@@ -1563,9 +1563,9 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * Creates a duplicate copy of the given cellular decomposition.
          * Both decompositions will refer to the same underlying ModelLinkGraph.
          *
-         * It is allowed for <tt>cloneMe.isValid()</tt> to return \c false;
+         * It is allowed for `cloneMe.isValid()` to return \c false;
          * in this case, the validity data will be carried across to the
-         * new decomposition and <tt>this->isValid()</tt> will return
+         * new decomposition and `this->isValid()` will return
          * \c false also.
          *
          * \param cloneMe the cellular decomposition to clone.

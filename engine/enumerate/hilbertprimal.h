@@ -139,10 +139,10 @@ class HilbertPrimal {
          *
          * \ifacespython There are two versions of this function available
          * in Python.  The first version is
-         * <tt>enumerate(action, rays, constraints, tracker)</tt>, which
+         * `enumerate(action, rays, constraints, tracker)`, which
          * mirrors the C++ function; here \a action may be a pure Python
          * function.  The second version does not have an \a action argument;
-         * instead you call <tt>enumerate(rays, constraints, tracker)</tt>,
+         * instead you call `enumerate(rays, constraints, tracker)`,
          * and it returns a Python list containing all Hilbert basis elements.
          * In both versions, the extremal rays must be passed as a Python list
          * of VectorInt objects, and the output type \a RayClass is likewise

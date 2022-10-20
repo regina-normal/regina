@@ -80,7 +80,7 @@ namespace regina {
  * be indistinguishable (since both would take two integer arguments).
  * Here Perm<2> takes an approach that is consistent with the generic Perm<n>
  * class: <tt>Perm<2>(a,b)</tt> is interpreted as the \e transposition of
- * \a a and \a b.  In particular, <tt>Perm(0,1)</tt> is \e not the
+ * \a a and \a b.  In particular, `Perm(0,1)` is \e not the
  * identity permutation.
  *
  * \ifacespython Since Python does not support templates, this class is
@@ -175,7 +175,7 @@ class Perm<2> {
          * two elements.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
+         * square bracket operator: `Sn[i]`.  The index \a i must be
          * between 0 and 1 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n &ge; 8).
@@ -218,7 +218,7 @@ class Perm<2> {
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
+         * square bracket operator: `orderedSn[i]`.  The index \a i
          * must be between 0 and 1 inclusive.
          * This element access is extremely fast (a fact that is not true for
          * the larger permutation classes Perm<n> with \a n &ge; 8).
@@ -263,7 +263,7 @@ class Perm<2> {
          * larger permutation classes Perm<n>.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be 0.
+         * square bracket operator: `Sn_1[i]`.  The index \a i must be 0.
          *
          * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
          * since Regina 7.0 it has changed type, but accessing elements as
@@ -380,7 +380,7 @@ class Perm<2> {
          * Returns the composition of this permutation with the given
          * permutation.  If this permutation is <i>p</i>, the
          * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
-         * <tt>(p*q)[x] == p[q[x]]</tt>.
+         * `(p*q)[x] == p[q[x]]`.
          *
          * \param q the permutation with which to compose this.
          * \return the composition of both permutations.
@@ -420,7 +420,7 @@ class Perm<2> {
          *
          * Here \e reverse means that we reverse the images of 0 and 1.
          * In other words, if permutation \a q is the
-         * reverse of \a p, then <tt>p[i] == q[1 - i]</tt> for all \a i.
+         * reverse of \a p, then `p[i] == q[1 - i]` for all \a i.
          */
         constexpr Perm<2> reverse() const;
 
@@ -553,7 +553,7 @@ class Perm<2> {
          * the mutex protecting Regina's global uniform random bit generator.
          * If you are calling this many times in quick succession, consider
          * creating a single RandomEngine object yourself and then calling
-         * <tt>rand(randomEngine.engine(), even)</tt>.
+         * `rand(randomEngine.engine(), even)`.
          *
          * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (which means, for a permutation on two
@@ -590,7 +590,7 @@ class Perm<2> {
          * Returns a string representation of this permutation.
          * The representation will consist of two adjacent digits
          * representing the images of 0 and 1 respectively.  An
-         * example of a string representation is <tt>10</tt>.
+         * example of a string representation is `10`.
          *
          * \return a string representation of this permutation.
          */
@@ -694,7 +694,7 @@ class Perm<2> {
          * identity map.
          *
          * Specifically, for each \a i in the range <i>from</i>,...,1,
-         * this routine will ensure that <tt>image[i] == i</tt>.  The images of
+         * this routine will ensure that `image[i] == i`.  The images of
          * 0,1,...,<i>from</i>-1 will not be altered.
          *
          * \pre The images of <i>from</i>,...,1 are exactly

@@ -1005,7 +1005,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Suppose this integer is \a n and we pass the divisor \a d.
          * The <em>division algorithm</em> describes the result of
          * dividing \a n by \a d; in particular, it expresses
-         * <tt>n = qd + r</tt>, where \a q is the quotient and
+         * `n = qd + r`, where \a q is the quotient and
          * \a r is the remainder.
          *
          * The division algorithm is precise about which values of \a q
@@ -1308,9 +1308,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * returns the tuple (\a d, \a u, \a v), where \a u and \a v are
          * coefficients for which:
          *
-         * - <tt>u*this + v*other = d</tt>;
+         * - `u*this + v*other = d`;
          * - <tt>-abs(this)/d < v*sign(other) ≤ 0</tt>; and
-         * - <tt>1 ≤ u*sign(this) ≤ abs(other)/d</tt>.
+         * - `1 ≤ u*sign(this) ≤ abs(other)/d`.
          *
          * These equations are not satisfied when either of \a this or
          * \a other are zero, but in this case \a u and \a v will both be
@@ -1344,9 +1344,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If \a d is the gcd of \a this and \a other, the values placed
          * into \a u and \a v will be coefficients for which:
          *
-         * - <tt>u*this + v*other = d</tt>;
+         * - `u*this + v*other = d`;
          * - <tt>-abs(this)/d < v*sign(other) ≤ 0</tt>; and
-         * - <tt>1 ≤ u*sign(this) ≤ abs(other)/d</tt>.
+         * - `1 ≤ u*sign(this) ≤ abs(other)/d`.
          *
          * These equations are not satisfied when either of \a this or
          * \a other are zero, but in this case \a u and \a v will both be
@@ -2183,7 +2183,7 @@ class NativeInteger {
          * Suppose this integer is \a n and we pass the divisor \a d.
          * The <em>division algorithm</em> describes the result of
          * dividing \a n by \a d; in particular, it expresses
-         * <tt>n = qd + r</tt>, where \a q is the quotient and
+         * `n = qd + r`, where \a q is the quotient and
          * \a r is the remainder.
          *
          * The division algorithm is precise about which values of \a q

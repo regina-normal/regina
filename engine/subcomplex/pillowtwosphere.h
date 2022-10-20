@@ -105,8 +105,8 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * triangles are joined.
          *
          * The permutation will map vertices (0,1,2) of
-         * <tt>triangle(0)</tt> to vertices (0,1,2) of
-         * <tt>triangle(1)</tt>.  The map will represent how the vertices
+         * `triangle(0)` to vertices (0,1,2) of
+         * `triangle(1)`.  The map will represent how the vertices
          * of the triangles are identified by the three edge gluings.
          *
          * \return a permutation describing how the triangle boundaries are

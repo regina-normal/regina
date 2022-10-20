@@ -354,7 +354,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \ifacespython Python users can only access the read-only version
          * of this function that returns by value: you cannot use permIndex()
          * to edit the gluing permutations.  As an alternative however, you
-         * can call <tt>setPermIndex(source, index)</tt> instead.
+         * can call `setPermIndex(source, index)` instead.
          *
          * \param source the simplex facet under investigation.
          * \return a reference to the corresponding array index.
@@ -380,7 +380,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \ifacespython Python users can only access the read-only version
          * of this function that returns by value: you cannot use permIndex()
          * to edit the gluing permutations.  As an alternative however, you
-         * can call <tt>setPermIndex(simp, facet, index)</tt> instead.
+         * can call `setPermIndex(simp, facet, index)` instead.
          *
          * \param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under

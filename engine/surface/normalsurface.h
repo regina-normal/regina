@@ -68,8 +68,8 @@ class NormalSurfaces;
  * As outlined in NormalSurface::quads(), there are three quadrilateral types
  * in a tetrahedron, numbered 0, 1 and 2.  Each quadrilateral type separates
  * the four tetrahedron vertices 0,1,2,3 into two pairs.
- * <tt>quadSeparating[i][j]</tt> is the number of the quadrilateral type that
- * keeps vertices <tt>i</tt> and <tt>j</tt> together.
+ * `quadSeparating[i][j]` is the number of the quadrilateral type that
+ * keeps vertices `i` and `j` together.
  *
  * It is guaranteed that quadrilateral type \a i will keep the vertices of
  * edge \a i together (and will therefore also keep the vertices of edge
@@ -86,9 +86,9 @@ inline constexpr int quadSeparating[4][4] = {
  * See regina::quadSeparating and NormalSurface::quads() for more
  * information on quadrilateral types.
  *
- * <tt>quadMeeting[i][j][0,1]</tt> are the numbers of the two
+ * `quadMeeting[i][j][0,1]` are the numbers of the two
  * quadrilateral types that meet the edge joining tetrahedron vertices
- * <tt>i</tt> and <tt>j</tt>.
+ * `i` and `j`.
  *
  * \ingroup surfaces
  */
@@ -105,8 +105,8 @@ inline constexpr int quadMeeting[4][4][2] = {
  * information on quadrilateral types.
  *
  * Quadrilateral type \c i splits the vertex pairs
- * <tt>quadDefn[i][0,1]</tt> and
- * <tt>quadDefn[i][2,3]</tt>.
+ * `quadDefn[i][0,1]` and
+ * `quadDefn[i][2,3]`.
  *
  * It is guaranteed that:
  *
@@ -132,7 +132,7 @@ inline constexpr int quadDefn[3][4] = {
  * information on quadrilateral types.
  *
  * Quadrilateral type \c i pairs vertex \c v with
- * vertex <tt>quadPartner[i][v]</tt>.
+ * vertex `quadPartner[i][v]`.
  *
  * \ingroup surfaces
  */
@@ -146,8 +146,8 @@ inline constexpr int quadPartner[3][4] = {
  * See regina::quadSeparating and NormalSurface::quads() for more
  * information on quadrilateral types.
  *
- * The string describing quadrilateral type \c i is <tt>quadString[i]</tt> and
- * is of the form <tt>02/13</tt>, which in this case is the quadrilateral type
+ * The string describing quadrilateral type \c i is `quadString[i]` and
+ * is of the form `02/13`, which in this case is the quadrilateral type
  * that splits vertices 0,2 from vertices 1,3.
  *
  * \ingroup surfaces
@@ -157,10 +157,10 @@ inline constexpr char quadString[3][6] = { "01/23", "02/13", "03/12" };
 /**
  * Lists in consecutive order the directed normal arcs that form the
  * boundary of each type of triangular normal disc.  Each permutation \a p
- * represents an arc about vertex <tt>p[0]</tt> parallel to the directed
- * edge from <tt>p[1]</tt> to <tt>p[2]</tt>.
+ * represents an arc about vertex `p[0]` parallel to the directed
+ * edge from `p[1]` to `p[2]`.
  *
- * Array <tt>triDiscArcs[i]</tt> lists the boundary arcs of the
+ * Array `triDiscArcs[i]` lists the boundary arcs of the
  * triangular disc of type <i>i</i>.  See NormalSurface::triangles()
  * for further details.
  *
@@ -178,15 +178,15 @@ inline constexpr Perm<4> triDiscArcs[4][3] = {
 /**
  * Lists in consecutive order the directed normal arcs that form the
  * boundary of each type of quadrilateral normal disc.  Each permutation \a p
- * represents an arc about vertex <tt>p[0]</tt> parallel to the directed
- * edge from <tt>p[1]</tt> to <tt>p[2]</tt>.
+ * represents an arc about vertex `p[0]` parallel to the directed
+ * edge from `p[1]` to `p[2]`.
  *
- * Array <tt>quadDiscArcs[i]</tt> lists the boundary arcs of the
+ * Array `quadDiscArcs[i]` lists the boundary arcs of the
  * quadrilateral disc of type <i>i</i>.  See NormalSurface::quads()
  * for further details.
  *
- * Note that permutation <tt>quadDiscArcs[i][j]</tt> will be even
- * precisely when <tt>j</tt> is even.
+ * Note that permutation `quadDiscArcs[i][j]` will be even
+ * precisely when `j` is even.
  *
  * \ingroup surfaces
  */
@@ -199,15 +199,15 @@ inline constexpr Perm<4> quadDiscArcs[3][4] = {
 /**
  * Lists in consecutive order the directed normal arcs that form the
  * boundary of each type of octagonal normal disc.  Each permutation \a p
- * represents an arc about vertex <tt>p[0]</tt> parallel to the directed
- * edge from <tt>p[1]</tt> to <tt>p[2]</tt>.
+ * represents an arc about vertex `p[0]` parallel to the directed
+ * edge from `p[1]` to `p[2]`.
  *
- * Array <tt>octDiscArcs[i]</tt> lists the boundary arcs of the
+ * Array `octDiscArcs[i]` lists the boundary arcs of the
  * octagonal disc of type <i>i</i>.  See NormalSurface::octs()
  * for further details.
  *
- * Note that permutation <tt>octDiscArcs[i][j]</tt> will be even
- * precisely when <tt>j</tt> is 0, 1, 4 or 5.
+ * Note that permutation `octDiscArcs[i][j]` will be even
+ * precisely when `j` is 0, 1, 4 or 5.
  *
  * \ingroup surfaces
  */
@@ -526,12 +526,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this surface uses the vector encoding described
-         * by <tt>NormalEncoding(coords)</tt>.  Be careful with this if you
+         * by `NormalEncoding(coords)`.  Be careful with this if you
          * are extracting the vector from some other normal surface, since
          * Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this surface will
-         * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
+         * use `NormalEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include triangle coordinates.
@@ -544,7 +544,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the encoding
-         * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
+         * `NormalEncoding(coords)`.  This will not be checked!
          *
          * \ifacespython Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
@@ -563,12 +563,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this surface uses the vector encoding described
-         * by <tt>NormalEncoding(coords)</tt>.  Be careful with this if you
+         * by `NormalEncoding(coords)`.  Be careful with this if you
          * are extracting the vector from some other normal surface, since
          * Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this surface will
-         * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
+         * use `NormalEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include triangle coordinates.
@@ -581,7 +581,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the encoding
-         * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
+         * `NormalEncoding(coords)`.  This will not be checked!
          *
          * \nopython Instead use the version that copies \a vector.
          *
@@ -599,12 +599,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this surface uses the vector encoding described
-         * by <tt>NormalEncoding(coords)</tt>.  Be careful with this if you
+         * by `NormalEncoding(coords)`.  Be careful with this if you
          * are extracting the vector from some other normal surface, since
          * Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this surface will
-         * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
+         * use `NormalEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include triangle coordinates.
@@ -612,7 +612,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the encoding
-         * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
+         * `NormalEncoding(coords)`.  This will not be checked!
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
@@ -631,12 +631,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * given coordinate vector, using the given coordinate system.
          *
          * It is assumed that this surface uses the vector encoding described
-         * by <tt>NormalEncoding(coords)</tt>.  Be careful with this if you
+         * by `NormalEncoding(coords)`.  Be careful with this if you
          * are extracting the vector from some other normal surface, since
          * Regina may internally convert to use a different encoding from
          * whatever was used during enumeration and/or read from file.
          * In the same spirit, there is no guarantee that this surface will
-         * use <tt>NormalEncoding(coords)</tt> as its internal encoding method.
+         * use `NormalEncoding(coords)` as its internal encoding method.
          *
          * Despite what is said in the class notes, it is okay if the
          * given coordinate system does not include triangle coordinates.
@@ -644,7 +644,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre The given coordinate vector does indeed represent a normal
          * surface inside the given triangulation, using the encoding
-         * <tt>NormalEncoding(coords)</tt>.  This will not be checked!
+         * `NormalEncoding(coords)`.  This will not be checked!
          *
          * \nopython Instead use the version that takes a "pure" triangulation
          * and copies \a vector.
@@ -1183,7 +1183,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * - \a thin is either 0, 1 or 2, indicating how many edges this
          *   surface is a thin link for.  This uses an unsigned type, since
-         *   it will often be compared to <tt>v.size()</tt>.
+         *   it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this surface is the normalised
          * link of any edge, then \a link will be 0 and \a v will be the
@@ -1266,7 +1266,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * - \a thin is either 0, 1 or 2, indicating how many triangles this
          *   surface is a thin link for.  This uses an unsigned type, since
-         *   it will often be compared to <tt>v.size()</tt>.
+         *   it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this surface is the normalised
          * link of any triangle, then \a link will be 0 and \a v will be the
@@ -1474,7 +1474,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * triangulation \a t, where \a t is homeomorphic to the triangulation
          * containing this surface, and where \a s is a normal (not
          * almost normal) surface isotopic to this.  Only the surface \a s is
-         * returned; you can access \a t by calling <tt>s.triangulation()</tt>.
+         * returned; you can access \a t by calling `s.triangulation()`.
          *
          * If this surface is already normal (i.e., it does not contain
          * any octagons), then the surface returned will simply be a copy
@@ -1707,8 +1707,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * with the meridian and \a L with the longitude.  Equivalently,
          * the boundary curves pass \a L times around the meridian and
          * <i>-M</i> times around the longitude.
-         * The rational boundary slope is therefore <tt>-L/M</tt>, and
-         * there are <tt>gcd(L,M)</tt> boundary curves with this slope.
+         * The rational boundary slope is therefore `-L/M`, and
+         * there are `gcd(L,M)` boundary curves with this slope.
          *
          * The orientations of the boundary curves of a
          * spun-normal surface are chosen so that \e if meridian and

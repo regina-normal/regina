@@ -150,7 +150,7 @@ class HilbertDual {
          * in Python.  The first version is the same as the C++ function;
          * here you must pass \a action, which may be a pure Python function.
          * The second form does not have an \a action argument; instead you
-         * call <tt>enumerate(subspace, constraints, tracker, initialRows)</tt>,
+         * call `enumerate(subspace, constraints, tracker, initialRows)`,
          * and it returns a Python list containing all Hilbert basis elements.
          * In both versions, the argument \a RayClass is fixed as VectorInt.
          * The global interpreter lock will be released while this function
@@ -272,8 +272,8 @@ class HilbertDual {
                 /**
                  * Sets this to the sum of the two given vectors.
                  *
-                 * \pre <tt>pos.nextHyp() &gt; 0</tt>, and
-                 * <tt>neg.nextHyp() &lt; 0</tt>.
+                 * \pre `pos.nextHyp() > 0`, and
+                 * `neg.nextHyp() < 0`.
                  *
                  * \param pos the first vector to add, which must lie on
                  * the strictly positive side of the current hyperplane.
@@ -310,10 +310,10 @@ class HilbertDual {
                  *
                  * Specifically: Suppose this vector was created using
                  * formSum().  If nextHyp() &ge; 0, then this routine returns
-                 * <tt>pos.nextHyp()</tt> where \a pos was the
+                 * `pos.nextHyp()` where \a pos was the
                  * positive summand passed to formSum().
                  * If nextHyp() &lt; 0, then this routine returns
-                 * <tt>neg.nextHyp()</tt> where \a neg was the
+                 * `neg.nextHyp()` where \a neg was the
                  * negative summand passed to formSum().
                  *
                  * If this vector was not created using formSum(),
@@ -374,12 +374,12 @@ class HilbertDual {
          * We say that \a vec reduces against a candidate basis vector
          * \a b if and only if:
          *
-         * - the vector <tt>vec-b</tt> is non-negative;
-         * - if \a listSign is 0, then <tt>vec-b</tt> lies on the
+         * - the vector `vec-b` is non-negative;
+         * - if \a listSign is 0, then `vec-b` lies on the
          *   hyperplane currently under investigation;
-         * - if \a listSign is positive, then <tt>vec-b</tt> lies either
+         * - if \a listSign is positive, then `vec-b` lies either
          *   on or to the positive side of the hyperplane under investigation;
-         * - if \a listSign is negative, then <tt>vec-b</tt> lies either
+         * - if \a listSign is negative, then `vec-b` lies either
          *   on or to the negative side of the hyperplane under investigation.
          *
          * This routine uses VecSpec::nextHyp() to determine the

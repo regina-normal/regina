@@ -226,7 +226,7 @@ enum NormalCoords {
  * surface cannot contain any vertex linking components).
  *
  * For convenience, there is also a special encoding that identifies an angle
- * structure vector; this can be created via <tt>NormalEncoding(NS_ANGLE)</tt>,
+ * structure vector; this can be created via `NormalEncoding(NS_ANGLE)`,
  * and can be recognised via storesAngles().  However, like NS_ANGLE itself,
  * this special angle structure encoding does \e not represent a normal surface,
  * cannot be combined with other encodings, and must not be used with any of
@@ -317,7 +317,7 @@ class NormalEncoding {
          * in quad or quad-oct coordinates, Regina computes and stores
          * triangle coordinates also, and so for its own \e internal choice of
          * encoding, storesTriangles() will return \c true.  In contrast,
-         * if you simply create a <tt>NormalEncoding(NS_QUAD)</tt>, then the
+         * if you simply create a `NormalEncoding(NS_QUAD)`, then the
          * resulting encoding will have storesTriangles() return \c false.
          *
          * If \a coords is not one of the coordinate systems that Regina
@@ -444,7 +444,7 @@ class NormalEncoding {
          * Identifies whether this is the special angle structure encoding.
          *
          * This routine is used to recognise the "special case" encoding
-         * <tt>NormalEncoding(NS_ANGLE)</tt>.  Such an encoding does not
+         * `NormalEncoding(NS_ANGLE)`.  Such an encoding does not
          * represent a normal surface, and cannot be used anywhere in Regina
          * unless explicitly allowed in the documentation.  See the class
          * notes for further details.
@@ -650,7 +650,7 @@ class NormalEncoding {
          * Reconstructs an encoding from an integer value.
          *
          * This is a partner routine to intValue(): for any encoding \a enc,
-         * the encoding <tt>fromIntValue(enc.intValue())</tt> is always equal
+         * the encoding `fromIntValue(enc.intValue())` is always equal
          * to \a enc.
          *
          * The main purpose of intValue() and fromIntValue() is to support

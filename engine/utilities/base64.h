@@ -143,7 +143,7 @@ inline constexpr char base64Spare[] = "_-.";
  * many output characters will be required.
  *
  * \ifacespython These base64 encoding routines are made available to Python
- * in the form <tt>base64Encode(input_bytes)</tt>, where \a input_bytes is a
+ * in the form `base64Encode(input_bytes)`, where \a input_bytes is a
  * a Python \c bytes object, and the return value is a Python string.
  * You do not need to supply any input or output buffer lengths.
  *
@@ -173,7 +173,7 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
  * will overflow a \c size_t), the \a out pointer will be set to \c null.
  *
  * \ifacespython These base64 encoding routines are made available to Python
- * in the form <tt>base64Encode(input_bytes)</tt>, where \a input_bytes is a
+ * in the form `base64Encode(input_bytes)`, where \a input_bytes is a
  * a Python \c bytes object, and the return value is a Python string.
  * You do not need to supply any input or output buffer lengths.
  *
@@ -210,7 +210,7 @@ size_t base64Encode(const char* in, size_t inlen, char** out);
  * array is not terminated in any special way.
  *
  * \ifacespython These base64 decoding routines are made available to Python
- * in the form <tt>base64Decode(input_string)</tt>, where \a input_string is a
+ * in the form `base64Decode(input_string)`, where \a input_string is a
  * base64 string, and the return value is a Python \c bytes object.
  * You do not need to supply any input or output buffer lengths.
  * If the decoding is unsuccessful, this routine will return \c None.
@@ -255,7 +255,7 @@ bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
  * that the output array is not terminated in any special way.
  *
  * \ifacespython These base64 decoding routines are made available to Python
- * in the form <tt>base64Decode(input_string)</tt>, where \a input_string is a
+ * in the form `base64Decode(input_string)`, where \a input_string is a
  * base64 string, and the return value is a Python \c bytes object.
  * You do not need to supply any input or output buffer lengths.
  * If the decoding is unsuccessful, this routine will return \c None.

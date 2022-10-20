@@ -363,10 +363,10 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * it has one vertex per boundary component and no internal vertices.
          *
          * The proof is based on a simple Euler characteristic calculation,
-         * whereby the number of triangles <tt>T</tt> is
-         * <tt>T = 2Vi + Vb - 2C</tt>, where <tt>Vi</tt> and <tt>Vb</tt>
+         * whereby the number of triangles `T` is
+         * `T = 2Vi + Vb - 2C`, where `Vi` and `Vb`
          * are the number of internal and boundary vertices respectively,
-         * and where <tt>C</tt> is the Euler characteristic of the
+         * and where `C` is the Euler characteristic of the
          * underlying manifold.
          *
          * \return \c true if and only if this is a minimal triangulation.

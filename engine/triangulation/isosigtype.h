@@ -79,7 +79,7 @@ namespace regina {
  * and you can advance to the next combination by calling next().
  *
  * This classic signature type is trivial, in that it considers \a all
- * possible simplices \a s and all <tt>(dim+1)!</tt> possible permutations \a p.
+ * possible simplices \a s and all `(dim+1)!` possible permutations \a p.
  *
  * This class is designed to be used as a template parameter for
  * Triangulation<dim>::isoSig() and Triangulation<dim>::isoSigDetail().
