@@ -76,7 +76,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * of common types.  Here a vertex link is considered only up to its
          * topology (not the combinatorics of its triangulation).
          *
-         * @see link
+         * \see link
          */
         enum LinkType {
             /**

@@ -126,9 +126,8 @@ class Locale {
  * \nopython
  *
  * \author Parts of this code are modified from the cxxtools library
- * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is
- * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
- * General Public License.
+ * (http://www.tntnet.org/cxxutils.html), which is copyright (c) 2003 by
+ * Tommi Maekitalo, and covered by the GNU Lesser General Public License.
  *
  * \ingroup utilities
  */
@@ -254,9 +253,8 @@ class IConvStreamBuffer : public std::streambuf {
  * \nopython
  *
  * \author Parts of this code are modified from the cxxtools library
- * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is
- * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
- * General Public License.
+ * (http://www.tntnet.org/cxxutils.html), which is copyright (c) 2003 by
+ * Tommi Maekitalo, and covered by the GNU Lesser General Public License.
  *
  * \ingroup utilities
  */

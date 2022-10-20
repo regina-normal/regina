@@ -566,7 +566,7 @@ class FacetPairingBase :
          * This feature is currently experimental, and the default is
          * \c false.
          *
-         * @see http://www.graphviz.org/
+         * \see http://www.graphviz.org/
          */
         void writeDot(std::ostream& out, const char* prefix = nullptr,
             bool subgraph = false, bool labels = false) const;
@@ -659,7 +659,7 @@ class FacetPairingBase :
          * @param graphName the name of the graph in the DOT file.
          * If this is null or empty then a default graph name will be used.
          *
-         * @see http://www.graphviz.org/
+         * \see http://www.graphviz.org/
          */
         static void writeDotHeader(std::ostream& out,
             const char* graphName = nullptr);

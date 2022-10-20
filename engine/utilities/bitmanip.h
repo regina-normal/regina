@@ -56,7 +56,7 @@ namespace regina {
  * \nopython Only the end-user class BitManipulator<unsigned long> is
  * available to Python users.
  *
- * @tparam T an unsigned integral numeric type, which we treat as a
+ * \tparam T an unsigned integral numeric type, which we treat as a
  * sequence of \c true and/or \c false bits.
  *
  * \ingroup utilities
@@ -176,9 +176,9 @@ class BitManipulatorByType<unsigned long long> {
  * \nopython Only the end-user class BitManipulator<unsigned long> is
  * available to Python users.
  *
- * @tparam T an unsigned integral numeric type, which we treat as a
+ * \tparam T an unsigned integral numeric type, which we treat as a
  * sequence of \c true and/or \c false bits.
- * @tparam size the number of \e bytes of \a T to examine.  Any higher-order
+ * \tparam size the number of \e bytes of \a T to examine.  Any higher-order
  * bits will be ignored by the implementations in this class.
  */
 template <typename T, unsigned size = sizeof(T)>

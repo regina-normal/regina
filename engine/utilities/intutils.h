@@ -228,7 +228,7 @@ inline constexpr IntType minSafeFactor =
  *
  * \nopython
  *
- * @see IntOfMinSize
+ * \see IntOfMinSize
  *
  * \ingroup utilities
  */
@@ -262,7 +262,7 @@ struct IntOfSize {
  *
  * \nopython
  *
- * @see IntOfSize
+ * \see IntOfSize
  *
  * \ingroup utilities
  */

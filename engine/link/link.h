@@ -977,7 +977,7 @@ class Link :
          * @param id an integer between -1 and 2*size()-1 inclusive.
          * @return the strand of this link with the corresponding ID.
          *
-         * @see StrandRef::id()
+         * \see StrandRef::id()
          */
         StrandRef strand(ssize_t id) const;
 
@@ -3309,7 +3309,7 @@ class Link :
          *
          * @param out the output stream to which to write.
          *
-         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
         void writePACE(std::ostream& out) const;
         /**
@@ -3326,7 +3326,7 @@ class Link :
          *
          * @return the output of writePACE(), as outlined above.
          *
-         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
         std::string pace() const;
 

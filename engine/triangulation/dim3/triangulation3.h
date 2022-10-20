@@ -856,7 +856,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * field element if the calculation was cancelled via the given
          * progress tracker.
          *
-         * @see allCalculatedTuraevViro
+         * \see allCalculatedTuraevViro
          */
         Cyclotomic turaevViro(unsigned long r, bool parity = true,
             Algorithm alg = ALG_DEFAULT,
@@ -909,7 +909,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * then Regina will use another algorithm instead.
          * @return the requested Turaev-Viro invariant.
          *
-         * @see allCalculatedTuraevViro
+         * \see allCalculatedTuraevViro
          */
         double turaevViroApprox(unsigned long r, unsigned long whichRoot = 1,
             Algorithm alg = ALG_DEFAULT) const;
@@ -943,7 +943,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @return the cache of all Turaev-Viro invariants that have
          * already been calculated.
          *
-         * @see turaevViro
+         * \see turaevViro
          */
         const TuraevViroSet& allCalculatedTuraevViro() const;
 
@@ -3278,7 +3278,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * numbers.
          * @return the tetrahedron containing the boundary torus.
          *
-         * @see LayeredSolidTorus
+         * \see LayeredSolidTorus
          */
         Tetrahedron<3>* insertLayeredSolidTorus(unsigned long cuts0,
             unsigned long cuts1);

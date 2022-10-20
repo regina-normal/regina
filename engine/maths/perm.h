@@ -165,7 +165,7 @@ enum PermCodeType {
  * \a n = 2,...,16, this class is available in Python under the
  * corresponding name Perm2, Perm3, ..., Perm16.
  *
- * @tparam n the number of objects being permuted.
+ * \tparam n the number of objects being permuted.
  * This must be between 2 and 16 inclusive.
  *
  * \ingroup maths
@@ -896,7 +896,7 @@ class Perm {
  * @param p the permutation to write.
  * @return a reference to \a out.
  *
- * @tparam n the number of objects being permuted.
+ * \tparam n the number of objects being permuted.
  * This must be between 3 and 16 inclusive.
  *
  * \ingroup maths

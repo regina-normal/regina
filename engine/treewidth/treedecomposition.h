@@ -1238,7 +1238,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * @param out the output stream to which to write.
          *
-         * @see http://www.graphviz.org/
+         * \see http://www.graphviz.org/
          */
         void writeDot(std::ostream& out) const;
 
@@ -1272,7 +1272,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * @param out the output stream to which to write.
          *
-         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
         void writePACE(std::ostream& out) const;
         /**
@@ -1290,7 +1290,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * @return the output of writePACE(), as outlined above.
          *
-         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
         std::string pace() const;
 
@@ -1376,7 +1376,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * decomposition using the PACE text format.
          * @return the corresponding tree decomposition.
          *
-         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
         static TreeDecomposition fromPACE(const std::string& str);
         /**
@@ -1408,7 +1408,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * representation of the tree decomposition using the PACE text format.
          * @return the corresponding tree decomposition.
          *
-         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
         static TreeDecomposition fromPACE(std::istream& in);
 

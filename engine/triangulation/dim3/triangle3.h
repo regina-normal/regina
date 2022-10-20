@@ -77,7 +77,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * of a triangle are considered unlabelled (so a relabelling
          * will not change the triangle type).
          *
-         * @see type
+         * \see type
          */
         enum Type {
             /**

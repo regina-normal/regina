@@ -3596,7 +3596,7 @@ class PacketListener {
          * The default implementation of this routine is to do nothing.
          *
          * @param packet the packet being listened to.
-         * @see childToBeRenamed()
+         * \see childToBeRenamed()
          */
         virtual void packetToBeRenamed(Packet& packet) {};
         /**
@@ -3607,7 +3607,7 @@ class PacketListener {
          * The default implementation of this routine is to do nothing.
          *
          * @param packet the packet being listened to.
-         * @see childWasRenamed()
+         * \see childWasRenamed()
          */
         virtual void packetWasRenamed(Packet& packet) {};
         /**
@@ -3730,7 +3730,7 @@ class PacketListener {
          *
          * @param packet the packet being listened to.
          * @param child the child packet to be renamed.
-         * @see packetToBeRenamed()
+         * \see packetToBeRenamed()
          */
         virtual void childToBeRenamed(Packet& packet, Packet& child) {};
         /**
@@ -3742,7 +3742,7 @@ class PacketListener {
          *
          * @param packet the packet being listened to.
          * @param child the child packet that was renamed.
-         * @see packetWasRenamed()
+         * \see packetWasRenamed()
          */
         virtual void childWasRenamed(Packet& packet, Packet& child) {};
 
