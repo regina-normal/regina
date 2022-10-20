@@ -42,6 +42,7 @@ def test(g):
 					s = f.plantri()
 				else:
 					s = str(f)
+				
 				print(n.index(), i, s)
 	
 	print()
