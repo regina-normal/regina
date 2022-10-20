@@ -99,9 +99,9 @@ struct XMLLegacyTriangulationTags<2> {
 /**
  * Helper class that reads the XML element for a single top-dimensional
  * simplex in a <i>dim</i>-dimensional triangulation.
- * In other words, this reads the contents of a single &lt;simplex&gt;
- * element for dimension \a dim ≥ 5, or a single &lt;triangle&gt;,
- * &lt;tet&gt; or &lt;pent&gt; element for dimension \a dim = 2, 3 or 4.
+ * In other words, this reads the contents of a single `<simplex>`
+ * element for dimension \a dim ≥ 5, or a single `<triangle>`,
+ * `<tet>` or `<pent>` element for dimension \a dim = 2, 3 or 4.
  *
  * It is assumed that the underlying triangulation and its simplices
  * have already been created.  The task of this reader is to flesh out
@@ -152,9 +152,9 @@ class XMLSimplexReader : public XMLElementReader {
  * Helper class that reads the XML element in the old second-generation format
  * for the set of all top-dimensional simplices in a <i>dim</i>-dimensional
  * triangulation.
- * In other words, this reads the contents of a single &lt;simplices&gt;
- * element for dimension \a dim ≥ 5, or a single &lt;triangles&gt;,
- * &lt;tetrahedra&gt; or &lt;pentachora&gt; element for dimension
+ * In other words, this reads the contents of a single `<simplices>`
+ * element for dimension \a dim ≥ 5, or a single `<triangles>`,
+ * `<tetrahedra>` or `<pentachora>` element for dimension
  * \a dim = 2, 3 or 4.
  *
  * It is assumed that the underlying triangulation has already been created,
