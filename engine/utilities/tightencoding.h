@@ -589,7 +589,7 @@ namespace detail {
      * encoding that is compatible with tightEncodeIndex().  Note that this is
      * \e not compatible with Regina's general integer encodings.
      *
-     * This is identical to calling <tt>tightEncodeIndex<ssize_t>(out, -1)</tt>.
+     * This is identical to calling `tightEncodeIndex<ssize_t>(out, -1)`.
      *
      * \nopython
      *

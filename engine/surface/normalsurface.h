@@ -110,9 +110,9 @@ inline constexpr int quadMeeting[4][4][2] = {
  *
  * It is guaranteed that:
  *
- * - <tt>quadDefn[i][0] < quadDefn[i][1]</tt>;
- * - <tt>quadDefn[i][2] < quadDefn[i][3]</tt>;
- * - <tt>quadDefn[i][0] < quadDefn[i][2]</tt>.
+ * - `quadDefn[i][0] < quadDefn[i][1]`;
+ * - `quadDefn[i][2] < quadDefn[i][3]`;
+ * - `quadDefn[i][0] < quadDefn[i][2]`.
  *
  * This array contains similar information to the function Edge<3>::ordering().
  * Instead of quadDefn[\a i][\a j], you can call Edge<3>::ordering(\a i)[\a j];

@@ -871,7 +871,7 @@ class FacetPairingBase :
          * `dest(t,i)` is greater than `dest(t,i+1)` is where
          * facets `(t,i)` and `(t,i+1)` are paired together.
          * \pre For each simplex \a t > 0, it is true that
-         * <tt>dest(t,0).simp < t</tt>.
+         * `dest(t,0).simp < t`.
          * \pre The sequence `dest(1,0)`, `dest(2,0)`,
          * ..., `dest(n-1,0)` is strictly increasing, where
          * \a n is the total number of simplices under investigation.

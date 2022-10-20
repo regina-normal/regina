@@ -87,7 +87,7 @@ struct EnableIf<false, T, defaultValue> {
  * The action should be a templated callable object (e.g., a generic lambda)
  * that takes a single argument whose type depends on the value of \a i.
  * Any return value will be ignored.  For each integer \a i, the argument will
- * be of type <tt>std::integral_constant<int, i></tt>, which means that \a i
+ * be of type `std::integral_constant<int, i>`, which means that \a i
  * is accessible as a compile-time constant.
  *
  * If \a from is not less than \a to, then this routine safely does nothing.
@@ -115,7 +115,7 @@ constexpr void for_constexpr(Action&& action) {
  * that takes a single argument.  If \a value is equal to the integer \a i,
  * for some \a i in the range <i>from</i>, ..., (<i>to</i>-1) inclusive,
  * then this function will return `action(i)`.  The argument \a i
- * will be passed using the type <tt>std::integral_constant<int, i></tt>,
+ * will be passed using the type `std::integral_constant<int, i>`,
  * which means that the value of \a i will be accessible to \a action as a
  * compile-time constant.
  *
@@ -178,14 +178,14 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  * selection function works.  This routine behaves exactly the same as
  * select_constexpr(), except that you do not need to explicitly give
  * the return type.  Instead, the return type will be
- * <tt>std::variant<R(from), R(from+1), ..., R(to-1)></tt>, where each
+ * `std::variant<R(from), R(from+1), ..., R(to-1)>`, where each
  * `R(i)` denotes the type returned by the corresponding call to
  * `action(i)`.
  *
  * This is useful when the return \e type from \a action (not just the
  * return value) depends on \a i.  An example of this is
  * `Triangulation::face(subdim, index)`, whose return type
- * would normally be <tt>Face<subdim>*</tt>, except for the fact that
+ * would normally be `Face<subdim>*`, except for the fact that
  * \a subdim is not known until runtime.  Therefore this function needs
  * to return a std::variant, and so select_constexpr_as_variant()
  * can be used for its internal implementation.

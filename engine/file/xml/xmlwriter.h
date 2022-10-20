@@ -180,7 +180,7 @@ class XMLWriter :
          * being written.
          *
          * This will output an XML snippet of the form
-         * <tt>\<foo bar="..." baz="..."</tt>, \e without the closing angle
+         * `<foo bar="..." baz="..."`, \e without the closing angle
          * brackets.  This means that the caller can inject additional
          * attributes into the opening XML element tag simply by writing
          * them to the output stream (with a preceding space) after the

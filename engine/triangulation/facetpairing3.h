@@ -88,7 +88,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * This describes how the tetrahedron faces of the given triangulation
          * are joined together in pairs.
          *
-         * Calling <tt>FacetPairing<3>(tri)</tt> is equivalent to calling
+         * Calling `FacetPairing<3>(tri)` is equivalent to calling
          * `tri.pairing()`.
          *
          * \pre The given triangulation is not empty.

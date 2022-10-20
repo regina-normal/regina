@@ -91,7 +91,7 @@ class Rational;
  * \pre Type T has an integer constructor.  That is, if \c a is of type T,
  * then \c a can be initialised to an integer \c l using `a(l)`.
  * \pre An element \c t of type T can be written to an output stream
- * \c out using the standard expression <tt>out << t</tt>.
+ * \c out using the standard expression `out << t`.
  *
  * \ifacespython Only the specific types Vector<Integer> and
  * Vector<LargeInteger> are available, under the names VectorInt and

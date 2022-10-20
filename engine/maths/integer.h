@@ -1010,7 +1010,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * The division algorithm is precise about which values of \a q
          * and \a r are chosen; in particular it chooses the unique \a r
-         * in the range <tt>0 ≤ r < |d|</tt>.
+         * in the range `0 ≤ r < |d|`.
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
@@ -1309,7 +1309,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * coefficients for which:
          *
          * - `u*this + v*other = d`;
-         * - <tt>-abs(this)/d < v*sign(other) ≤ 0</tt>; and
+         * - `-abs(this)/d < v*sign(other) ≤ 0`; and
          * - `1 ≤ u*sign(this) ≤ abs(other)/d`.
          *
          * These equations are not satisfied when either of \a this or
@@ -1345,7 +1345,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * into \a u and \a v will be coefficients for which:
          *
          * - `u*this + v*other = d`;
-         * - <tt>-abs(this)/d < v*sign(other) ≤ 0</tt>; and
+         * - `-abs(this)/d < v*sign(other) ≤ 0`; and
          * - `1 ≤ u*sign(this) ≤ abs(other)/d`.
          *
          * These equations are not satisfied when either of \a this or
@@ -2188,7 +2188,7 @@ class NativeInteger {
          *
          * The division algorithm is precise about which values of \a q
          * and \a r are chosen; in particular it chooses the unique \a r
-         * in the range <tt>0 ≤ r < |d|</tt>.
+         * in the range `0 ≤ r < |d|`.
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.

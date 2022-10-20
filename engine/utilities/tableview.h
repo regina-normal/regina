@@ -62,7 +62,7 @@ namespace detail {
      * \a d1, ..., \a dk, then:
      *
      * - \a type represents `const T[d1]...[dk]`;
-     * - \a view represents <tt>TableView<T, d1, ..., dk></tt>.
+     * - \a view represents `TableView<T, d1, ..., dk>`.
      *
      * If the dimension pack \a dim is empty, then:
      *

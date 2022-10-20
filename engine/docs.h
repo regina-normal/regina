@@ -221,7 +221,7 @@ namespace regina {
  * <h3>Triangulations</h3>
  *
  * After including the header triangulation/graph.h, any object of type
- * <tt>regina::Triangulation<dim></tt> can be used directly as a graph with
+ * `regina::Triangulation<dim>` can be used directly as a graph with
  * the BGL.  Here the graph will be the <i>dual graph</i> of the triangulation:
  * this is an undirected multigraph in which each node represents a
  * <i>dim</i>-simplex of the triangulation, and each arc represents a gluing
@@ -240,7 +240,7 @@ namespace regina {
  *
  * Dual vertices of the graph represent <i>dim</i>-dimensional simplices
  * of the underlying triangulation, and so are represented directly by a
- * pointer of type <tt>regina::Simplex<dim>*</tt>.  Dual edges (when
+ * pointer of type `regina::Simplex<dim>*`.  Dual edges (when
  * accessed through the BGL) must come with an orientation, and so are
  * represented by lightweight objects of type regina::graph::DualEdge<dim>.
  *

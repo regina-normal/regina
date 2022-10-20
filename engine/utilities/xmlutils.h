@@ -86,7 +86,7 @@ std::string xmlEncodeComment(const std::string& comment);
 
 /**
  * Returns an XML tag with a single property containing the given value.
- * The tag will be of the form <tt>\<tagName value="..."/\></tt>.
+ * The tag will be of the form `<tagName value="..."/>`.
  *
  * The value itself will be written to the tag string using the standard
  * output stream operator `<<`.

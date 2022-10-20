@@ -57,8 +57,8 @@ namespace regina::alias {
  * of the form
  * `int& simpImage(size_t)`,
  * `int simpImage(size_t) const`,
- * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
- * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
+ * `Perm<dim+1>& facetPerm(size_t)` and
+ * `Perm<dim+1> facetPerm(size_t) const`.
  *
  * The names of the aliases are determined by the dimension \a dim,
  * and these aliases are only provided for sufficiently small \a dim.
@@ -77,8 +77,8 @@ class IsomorphismImage {
  * of the form
  * `int& simpImage(size_t)`,
  * `int simpImage(size_t) const`,
- * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
- * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
+ * `Perm<dim+1>& facetPerm(size_t)` and
+ * `Perm<dim+1> facetPerm(size_t) const`.
  *
  * \ingroup alias
  */
@@ -127,8 +127,8 @@ class IsomorphismImage<Derived, 2> {
  * of the form
  * `int& simpImage(size_t)`,
  * `int simpImage(size_t) const`,
- * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
- * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
+ * `Perm<dim+1>& facetPerm(size_t)` and
+ * `Perm<dim+1> facetPerm(size_t) const`.
  *
  * \ingroup alias
  */

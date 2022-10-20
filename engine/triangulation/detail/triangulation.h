@@ -422,7 +422,7 @@ class TriangulationBase :
          * Creates \a k new top-dimensional simplices and adds them to this
          * triangulation.
          *
-         * This is similar to the templated routine <tt>newSimplices<k>()</tt>,
+         * This is similar to the templated routine `newSimplices<k>()`,
          * but with two key differences:
          *
          * - This routine has the disadvantage that it does not return the new
@@ -1028,7 +1028,7 @@ class TriangulationBase :
          * facet pairing.
          *
          * Calling `tri.pairing()` is equivalent to calling
-         * <tt>FacetPairing<dim>(tri)</tt>.
+         * `FacetPairing<dim>(tri)`.
          *
          * \pre This triangulation is not empty.
          *
@@ -2138,7 +2138,7 @@ class TriangulationBase :
          * \a action (which must be a function or some other callable object).
          *
          * - The first argument to \a action must be of type
-         *   <tt>(const Isomorphism<dim>&)</tt>; this will be a reference to
+         *   `(const Isomorphism<dim>&)`; this will be a reference to
          *   the isomorphism that was found.  If \a action wishes to keep the
          *   isomorphism, it should take a deep copy (not a reference), since
          *   the isomorphism may be changed and reused after \a action returns.
@@ -2195,7 +2195,7 @@ class TriangulationBase :
          * \a action (which must be a function or some other callable object).
          *
          * - The first argument to \a action must be of type
-         *   <tt>(const Isomorphism<dim>&)</tt>; this will be a reference to
+         *   `(const Isomorphism<dim>&)`; this will be a reference to
          *   the isomorphism that was found.  If \a action wishes to keep the
          *   isomorphism, it should take a deep copy (not a reference), since
          *   the isomorphism may be changed and reused after \a action returns.

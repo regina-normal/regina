@@ -166,7 +166,7 @@ struct Output {
  * Writes the short text representation of the given object to the
  * given output stream.
  *
- * This is equivalent to calling <tt>out << object.str()</tt>.
+ * This is equivalent to calling `out << object.str()`.
  *
  * \param out the output stream to which to write.
  * \param object the object to write.
@@ -235,13 +235,13 @@ struct ShortOutput : public Output<T, supportsUtf8> {
  * output functions T::str() and T::detail() are implemented.
  *
  * If \a T is a class derived (directly or indirectly) from some class
- * Output<...>, then <tt>OutputBase<T>::type</tt> is defined to be this
+ * Output<...>, then `OutputBase<T>::type` is defined to be this
  * parent class Output<...>.  If \a T is derived from multiple Output<...>
  * classes (like SnapPeaTriangulation is), then this ambiguity will be
  * resolved if possible by prioritising Output<T, ...>.
  *
  * If \a T is not derived from any class Output<...>, then
- * <tt>OutputBase<T>::type</tt> is defined to be \a T itself.
+ * `OutputBase<T>::type` is defined to be \a T itself.
  *
  * This helper class can be useful when trying to disambiguate between the
  * implementation of str() that is inherited from Output, versus an extended

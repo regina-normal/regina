@@ -73,13 +73,13 @@ namespace regina {
  * To use this class, simply include the main permutation header maths/perm.h.
  *
  * \warning Every permutation class Perm<n> provides a transposition
- * (i.e., pair swap) constructor <tt>Perm<n>(a,b).</tt>  In addition, the
+ * (i.e., pair swap) constructor `Perm<n>(a,b).`  In addition, the
  * specialised classes Perm<3>, Perm<4> and Perm<5> provide "list of images"
- * constructors <tt>Perm<3>(a,b,c)</tt>, <tt>Perm<4>(a,b,c,d)</tt> and
- * <tt>Perm<5>(a,b,c,d,e)</tt>.  For Perm<2>, these two constructors would
+ * constructors `Perm<3>(a,b,c)`, `Perm<4>(a,b,c,d)` and
+ * `Perm<5>(a,b,c,d,e)`.  For Perm<2>, these two constructors would
  * be indistinguishable (since both would take two integer arguments).
  * Here Perm<2> takes an approach that is consistent with the generic Perm<n>
- * class: <tt>Perm<2>(a,b)</tt> is interpreted as the \e transposition of
+ * class: `Perm<2>(a,b)` is interpreted as the \e transposition of
  * \a a and \a b.  In particular, `Perm(0,1)` is \e not the
  * identity permutation.
  *

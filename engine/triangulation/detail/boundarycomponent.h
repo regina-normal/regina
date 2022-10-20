@@ -826,7 +826,7 @@ class BoundaryComponentBase :
          *   if the class constant \a allFaces is \c true), then a similar
          *   correspondence holds for these lower-dimensional faces also:
          *   for each \a i, <i>k</i>-face \a i of the returned triangulation is
-         *   a copy of <tt>face<k>(i)</tt> of this boundary component,
+         *   a copy of `face<k>(i)` of this boundary component,
          *   and its vertices are numbered in the same way.  As an exception,
          *   this correspondence will not hold for dimensions \a k where
          *   there exist \e pinched <i>k</i>-faces on the boundary (i.e.,

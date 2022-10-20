@@ -171,7 +171,7 @@ class FaceEmbeddingBase :
          * FaceEmbedding objects for the same underlying <i>subdim</i>-face.
          *
          * This routine returns the same permutation as
-         * <tt>simplex().faceMapping<subdim>(face())</tt> (and this
+         * `simplex().faceMapping<subdim>(face())` (and this
          * routine is faster if you already have a FaceEmbedding).
          * See Simplex<dim>::faceMapping() for details.
          *

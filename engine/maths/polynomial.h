@@ -56,7 +56,7 @@ namespace regina {
  *
  * - support basic arithmetic operations;
  * - support assignments of the form `x = int` and
- *   tests of the form `x == int` and <tt>x < int</tt>;
+ *   tests of the form `x == int` and `x < int`;
  * - have a default constructor that assigns an explicit value of zero.
  *
  * This means that Regina's numerical types such as Integer and Rational

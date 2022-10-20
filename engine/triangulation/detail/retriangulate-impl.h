@@ -74,7 +74,7 @@ namespace regina::detail {
  * The specialisation should provide:
  *
  * - a template function
- *   <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>,
+ *   `static void propagateFrom<T>(sig, max, retriangulator)`,
  *   as described below;
  *
  * - a static constexpr member `const char* progressStage`, which
@@ -85,7 +85,7 @@ namespace regina::detail {
  *   returns the text signature that is used to identify a triangulation
  *   or link up to the appropriate notion of combinatorial equivalence.
  *
- * The function <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>
+ * The function `static void propagateFrom<T>(sig, max, retriangulator)`
  * takes the following arguments:
  *
  * - \a sig is the isomorphism signature of a triangulation or the knot

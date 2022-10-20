@@ -134,7 +134,7 @@ class XMLParserCallback {
         /**
          * Called when an element's closing tag is encountered.
          * This is called immediately after start_element() if the
-         * opening tag is in <tt>\<tag/\></tt> format.
+         * opening tag is in `<tag/>` format.
          *
          * \param n the name of the tag.
          */

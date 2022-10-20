@@ -269,7 +269,7 @@ namespace graph {
              * \param end the end of the iterator range for all
              * (<i>dim</i>-1)-faces of the underlying triangulation.
              * If the underlying triangulation is \a t, then this should be
-             * <tt>t.faces<dim-1>().end()</tt>.
+             * `t.faces<dim-1>().end()`.
              */
             DualEdgeIterator(const InternalIterator& it,
                 const InternalIterator& end);

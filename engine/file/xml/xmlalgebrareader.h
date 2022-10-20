@@ -50,7 +50,7 @@ namespace regina {
 /**
  * An XML element reader that reads a single abelian group.
  * An abelian group is generally contained within an
- * <tt>\<abeliangroup\></tt> ... <tt>\</abeliangroup\></tt> pair.
+ * `<abeliangroup>` ... `</abeliangroup>` pair.
  *
  * \nopython
  */
@@ -83,7 +83,7 @@ class XMLAbelianGroupReader : public XMLElementReader {
 /**
  * An XML element reader that reads a single group presentation.
  * A group presentation is generally contained within a
- * <tt>\<group\></tt> ... <tt>\</group\></tt> pair.
+ * `<group>` ... `</group>` pair.
  *
  * \nopython
  */

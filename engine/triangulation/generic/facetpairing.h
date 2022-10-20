@@ -136,7 +136,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * simplices in the given triangulation are joined together, as
          * described in the class notes.
          *
-         * Calling <tt>FacetPairing<dim>(tri)</tt> is equivalent to calling
+         * Calling `FacetPairing<dim>(tri)` is equivalent to calling
          * `tri.pairing()`.
          *
          * \pre The given triangulation is not empty.

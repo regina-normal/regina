@@ -424,7 +424,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * This is a convenience routine to avoid more cumbersome calls to
          * Edge<dim>::faceNumber().  In dimensions 3 and 4 (where the array
          * Edge<dim>::edgeNumber is defined), this routine is identical to
-         * calling <tt>edge(Edge<dim>::edgeNumber[i][j])</tt>.
+         * calling `edge(Edge<dim>::edgeNumber[i][j])`.
          *
          * \param i the vertex of this simplex that forms one endpoint
          * of the edge; this must be between 0 and \a dim inclusive.
