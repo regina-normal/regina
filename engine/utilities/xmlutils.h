@@ -59,12 +59,10 @@
 namespace regina::xml {
 
 /**
- * Returns the given string with special characters converted to XML
- * entities.  For instance, the string <tt>"a \< b"</tt> would be
- * converted to <tt>"a \&lt; b"</tt>.
+ * Returns the given string with special characters converted to XML entities.
+ * For instance, the string `"a < b"` would be converted to `"a &lt; b"`.
  *
- * \param original the string to convert; this string will not be
- * changed.
+ * \param original the string to convert; this string will not be changed.
  * \return the converted string with special characters replaced by
  * XML entities.
  *
@@ -91,10 +89,10 @@ std::string xmlEncodeComment(const std::string& comment);
  * The tag will be of the form <tt>\<tagName value="..."/\></tt>.
  *
  * The value itself will be written to the tag string using the standard
- * output stream operator \<\<.
+ * output stream operator `<<`.
  *
  * \pre The property value when written to an output stream does not
- * contain any special characters (such as <tt>\<</tt> or <tt>\&</tt>)
+ * contain any special characters (such as `<` or `&`)
  * that need to be encoded as XML entities.
  *
  * \nopython

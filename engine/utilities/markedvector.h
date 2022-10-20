@@ -286,7 +286,7 @@ class MarkedVector : private std::vector<T*> {
          * range of iterators.
          *
          * \tparam Iterator an input iterator type, whose dereference
-         * operator returns a pointer of type <tt>T*</tt>.
+         * operator returns a pointer of type `T*`.
          *
          * \param begin an iterator that points to the beginning of the range
          * of items with which to refill this vector.

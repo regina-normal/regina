@@ -74,14 +74,14 @@ class LightweightSequence {
             /**< An iterator type for read-write access to the elements
                 of a sequence.  Such a type can be dereferenced
                 (yielding a reference to type \a T), and manipulated
-                using the usual pointer arithmetic (such as <tt>p++</tt>,
-                <tt>--p</tt>, <tt>p += n</tt>, and so on). */
+                using the usual pointer arithmetic (such as `p++`,
+                `--p`, `p += n`, and so on). */
         using const_iterator = const T*;
             /**< An iterator type for read-only access to the elements
                 of a sequence.  Such a type can be dereferenced
                 (yielding a const reference to type \a T), and manipulated
-                using the usual pointer arithmetic (such as <tt>p++</tt>,
-                <tt>--p</tt>, <tt>p += n</tt>, and so on). */
+                using the usual pointer arithmetic (such as `p++`,
+                `--p`, `p += n`, and so on). */
 
     private:
         T* data_;
@@ -320,9 +320,9 @@ class LightweightSequence {
          * More precisely: suppose the indices of the elements to
          * compare are \a i0, \a i1, \a i2, ..., and that we are comparing
          * iterators \a a, \a b.  Then this function object will consider the
-         * sequences <tt>s = a->first</tt> and <tt>t = b->first</tt>,
+         * sequences `s = a->first` and `t = b->first`,
          * and will lexicographically compare their subsequences
-         * <tt>s[i0], s[i1], ...</tt> and <tt>t[i0], t[i1], ...</tt>.
+         * `s[i0], s[i1], ...` and `t[i0], t[i1], ...`.
          *
          * Note that the indices \a i0, \a i1, ... do not need to be in
          * increasing order.
@@ -484,10 +484,10 @@ class LightweightSequence {
  * Writes the given sequence to the given output stream.  No newline
  * will be written.
  *
- * The sequence will be written in the form <tt>(a, b, c, ...)</tt>.
+ * The sequence will be written in the form `(a, b, c, ...)`.
  *
  * \pre An object \a x of type \a T can be written to an output stream
- * using the syntax <tt>out << x</tt>.
+ * using the syntax `out << x`.
  *
  * \param out the output stream to which to write.
  * \param s the sequence to write.

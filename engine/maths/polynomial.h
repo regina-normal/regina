@@ -418,7 +418,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \warning This routine may trigger a deep copy (currently this
          * happens when \a other has higher degree than this).  Consider using
-         * the binary <tt>+</tt> operator instead, which is better able to
+         * the binary `+` operator instead, which is better able to
          * avoid this deep copy where possible.
          *
          * \param other the polynomial to add to this.
@@ -710,7 +710,7 @@ Polynomial<T> operator / (Polynomial<T> poly,
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the first polynomial to add.
@@ -725,7 +725,7 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the first polynomial to add.
@@ -740,7 +740,7 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the first polynomial to add.
@@ -755,7 +755,7 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the first polynomial to add.
@@ -781,7 +781,7 @@ Polynomial<T> operator - (Polynomial<T> arg);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the polynomial to sutract \a rhs from.
@@ -796,7 +796,7 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the polynomial to sutract \a rhs from.
@@ -811,7 +811,7 @@ Polynomial<T> operator - (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the polynomial to sutract \a rhs from.
@@ -826,7 +826,7 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the polynomial to sutract \a rhs from.

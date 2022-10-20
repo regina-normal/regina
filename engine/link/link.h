@@ -384,9 +384,9 @@ class StrandRef {
 /**
  * Writes a depiction of the given strand reference to the given output stream.
  *
- * The reference will be written in the form <tt>^n</tt> or <tt>_n</tt>,
+ * The reference will be written in the form `^n` or `_n`,
  * denoting the upper or lower strand at crossing \a n respectively.
- * For example, the upper strand of crossing 7 will be written as <tt>^7</tt>.
+ * For example, the upper strand of crossing 7 will be written as `^7`.
  *
  * \param out the output stream to which to write.
  * \param s the reference to write.
@@ -2629,7 +2629,7 @@ class Link :
          * The output will contain the following elements, separated by
          * single spaces:
          *
-         * - a sequence of signs (<tt>+</tt> or <tt>-</tt>), concatenated
+         * - a sequence of signs (`+` or `-`), concatenated
          *   together, giving the signs of the crossings in order from
          *   crossing 0 to crossing size()-1;
          *
@@ -2639,8 +2639,8 @@ class Link :
          *   the crossings that are encountered as we follow the component
          *   in the forward direction from its starting strand.  Each element
          *   \a a, \a b, \a c and so on will be written in the format used by
-         *   the StrandRef class: either <tt>^n</tt> when passing over
-         *   crossing \a n, or <tt>_n</tt> when passing under crossing \a n.
+         *   the StrandRef class: either `^n` when passing over
+         *   crossing \a n, or `_n` when passing under crossing \a n.
          *
          * For example, the Whitehead link as returned by
          * ExampleLink.whitehead() will give the following brief output:
@@ -2808,8 +2808,8 @@ class Link :
          *   <tt>+&lt;<i>k</i></tt>, <tt>-&lt;<i>k</i></tt>,
          *   <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt>, where:
          *
-         *     * the symbol <tt>+</tt> indicates that you are passing over the
-         *       crossing labelled \a k, and the symbol <tt>-</tt> indicates
+         *     * the symbol `+` indicates that you are passing over the
+         *       crossing labelled \a k, and the symbol `-` indicates
          *       that you are passing under the crossing labelled \a k;
          *
          *     * the symbol <tt>&lt;</tt> indicates that the other strand of

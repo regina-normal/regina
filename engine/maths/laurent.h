@@ -548,7 +548,7 @@ class Laurent :
          *
          * \warning This routine may trigger a deep copy (depending upon
          * the range of exponents used in \a other).  Consider using
-         * the binary <tt>+</tt> operator instead, which is better able to
+         * the binary `+` operator instead, which is better able to
          * avoid this deep copy where possible.
          *
          * \param other the polynomial to add to this.
@@ -816,7 +816,7 @@ Laurent<T> operator / (Laurent<T> poly,
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the first polynomial to add.
@@ -831,7 +831,7 @@ Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs);
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the first polynomial to add.
@@ -846,7 +846,7 @@ Laurent<T> operator + (Laurent<T>&& lhs, const Laurent<T>& rhs);
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the first polynomial to add.
@@ -861,7 +861,7 @@ Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs);
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * This operator `+` is sometimes faster than using `+=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the first polynomial to add.
@@ -887,7 +887,7 @@ Laurent<T> operator - (Laurent<T> arg);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the polynomial to sutract \a rhs from.
@@ -902,7 +902,7 @@ Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the polynomial to sutract \a rhs from.
@@ -917,7 +917,7 @@ Laurent<T> operator - (Laurent<T>&& lhs, const Laurent<T>& rhs);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the polynomial to sutract \a rhs from.
@@ -932,7 +932,7 @@ Laurent<T> operator - (const Laurent<T>& lhs, Laurent<T>&& rhs);
 /**
  * Subtracts the two given polynomials.
  *
- * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * This operator `-` is sometimes faster than using `-=`,
  * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the polynomial to sutract \a rhs from.

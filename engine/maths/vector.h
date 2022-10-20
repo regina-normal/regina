@@ -86,8 +86,8 @@ class Rational;
  * \pre Type T has a default constructor.  That is,
  * an object of type T can be declared with no arguments.  No specific
  * default value is required.
- * \pre Type T allows for operators <tt>=</tt>, <tt>==</tt>, <tt>+=</tt>,
- * <tt>-=</tt>, <tt>*=</tt>, <tt>+</tt>, <tt>-</tt> and <tt>*</tt>.
+ * \pre Type T allows for operators `=`, `==`, `+=`,
+ * `-=`, `*=`, `+`, `-` and `*`.
  * \pre Type T has an integer constructor.  That is, if \c a is of type T,
  * then \c a can be initialised to an integer \c l using <tt>a(l)</tt>.
  * \pre An element \c t of type T can be written to an output stream

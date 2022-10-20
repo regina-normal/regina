@@ -140,8 +140,8 @@ template <class> class Vector;
  *
  * If \a ring is \c true, then in addition to this:
  *
- * - \a T must support binary operators <tt>+</tt>, <tt>-</tt> and <tt>*</tt>,
- *   and unary operators <tt>+=</tt>, <tt>-=</tt> and <tt>*=</tt>.
+ * - \a T must support binary operators `+`, `-` and `*`,
+ *   and unary operators `+=`, `-=` and `*=`.
  *
  * - \a T must be able to be constructed or assigned to from the integers
  *   0 and 1 (representing the additive and multiplicative identities in the

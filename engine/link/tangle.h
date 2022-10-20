@@ -87,7 +87,7 @@ class Tangle : public Output<Tangle> {
     private:
         char type_;
             /**< Indicates how the four endpoints connect; this will be
-                 one of the symbols <tt>-</tt>, <tt>|</tt> or <tt>x</tt>,
+                 one of the symbols `-`, `|` or `x`,
                  representing a horizontal, vertical or diagonal type as
                  described in the class notes. */
         MarkedVector<Crossing> crossings_;
@@ -207,8 +207,8 @@ class Tangle : public Output<Tangle> {
         /**
          * Returns the type of this tangle.
          *
-         * This will be one of the characters <tt>-</tt>, <tt>|</tt> or
-         * <tt>x</tt>, indicating a horizontal, vertical or diagonal type as
+         * This will be one of the characters `-`, `|` or
+         * `x`, indicating a horizontal, vertical or diagonal type as
          * described in the class notes.
          *
          * \return the type of this crossing.
@@ -687,11 +687,11 @@ class Tangle : public Output<Tangle> {
          * The output will contain the following elements, separated by
          * single spaces:
          *
-         * - one of the symbols <tt>-</tt>, <tt>|</tt> or <tt>x</tt>,
+         * - one of the symbols `-`, `|` or `x`,
          *   indicating that the tangle is of horizontal, vertical or
          *   diagonal type respectively (as described in the class notes);
          *
-         * - a sequence of signs (<tt>+</tt> or <tt>-</tt>), concatenated
+         * - a sequence of signs (`+` or `-`), concatenated
          *   together, giving the signs of the crossings in order from
          *   crossing 0 to crossing size()-1;
          *
@@ -700,8 +700,8 @@ class Tangle : public Output<Tangle> {
          *   the crossings that are encountered as we follow the string
          *   in the forward direction from its starting endpoint.  Each element
          *   \a a, \a b, \a c and so on will be written in the format used by
-         *   the StrandRef class: either <tt>^n</tt> when passing over
-         *   crossing \a n, or <tt>_n</tt> when passing under crossing \a n.
+         *   the StrandRef class: either `^n` when passing over
+         *   crossing \a n, or `_n` when passing under crossing \a n.
          *
          * For example, the rational tangle 3/2 as returned by
          * Tangle(3,2) will give the following brief output:
@@ -812,7 +812,7 @@ class Tangle : public Output<Tangle> {
          *
          * - Label the crossings arbitrarily as 1, 2, ..., \a n.
          *
-         * - Write one of the tokens <tt>-</tt>, <tt>|</tt> or <tt>x</tt> to
+         * - Write one of the tokens `-`, `|` or `x` to
          *   represent a horizontal, vertical or diagonal tangle respectively.
          *
          * - Start at the top-left endpoint and follow this string to
@@ -820,15 +820,15 @@ class Tangle : public Output<Tangle> {
          *   token of the form <tt>+&lt;<i>k</i></tt>, <tt>-&lt;<i>k</i></tt>,
          *   <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt>, where:
          *
-         *     * the symbol <tt>+</tt> indicates that you are passing over the
-         *       crossing labelled \a k, and the symbol <tt>-</tt> indicates
+         *     * the symbol `+` indicates that you are passing over the
+         *       crossing labelled \a k, and the symbol `-` indicates
          *       that you are passing under the crossing labelled \a k;
          *
          *     * the symbol <tt>&lt;</tt> indicates that the other strand of
          *       the crossing passes from right to left, and <tt>&gt;</tt>
          *       indicates that the other strand passes from left to right.
          *
-         * - Write the token <tt>_</tt> to indicate that the first string has
+         * - Write the token `_` to indicate that the first string has
          *   finished.
          *
          * - Start at the beginning of the other string (for horizontal

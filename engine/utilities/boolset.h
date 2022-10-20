@@ -88,10 +88,8 @@ class BoolSet {
          * Creates a set specifying whether \c true and/or \c false
          * should be a member.
          *
-         * \param insertTrue should the new set include the element
-         * <tt>true</tt>?
-         * \param insertFalse should the new set include the element
-         * <tt>false</tt>?
+         * \param insertTrue should the new set include the element `true`?
+         * \param insertFalse should the new set include the element `false`?
          */
         constexpr BoolSet(bool insertTrue, bool insertFalse);
 
@@ -330,7 +328,7 @@ class BoolSet {
          * Every string code contains precisely two characters (plus a
          * terminating null).
          * Sets {}, {true}, {false} and {true, false} have string codes
-         * <tt>--</tt>, <tt>T-</tt>, <tt>-F</tt> and <tt>TF</tt> respectively.
+         * `--`, `T-`, `-F` and `TF` respectively.
          *
          * \return the two-character string code representing this set.
          */
@@ -354,8 +352,7 @@ class BoolSet {
 /**
  * Writes the given boolean set to the given output stream.
  * The set will be written in the form
- * <tt>{ true, false }</tt>, <tt>{ true }</tt>,
- * <tt>{ false }</tt> or <tt>{ }</tt>.
+ * `{ true, false }`, `{ true }`, `{ false }` or `{ }`.
  *
  * \param out the output stream to which to write.
  * \param set the boolean set to write.

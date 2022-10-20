@@ -517,7 +517,7 @@ class Snapshottable {
  *   original type \a T object has since been modified or destroyed.
  *
  * - The user of a SnapshotRef \a R must only access the snapshotted image
- *   through the dereference operators <tt>*R</tt> and <tt>R-&gt;</tt>.
+ *   through the dereference operators `*R` and `R->`.
  *   This access must remain read-only, and any attempt to circumvent it
  *   could lead to a regina::SnapshotWriteError exception being thrown.
  *

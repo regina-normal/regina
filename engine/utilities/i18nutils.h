@@ -55,9 +55,9 @@ namespace regina::i18n {
 /**
  * Identifies the longest prefix of the given string that is valid UTF-8.
  *
- * The substring from <tt>s.begin()</tt> to the iterator that is
+ * The substring from `s.begin()` to the iterator that is
  * returned is guaranteed to be valid UTF-8.  If the entire string is
- * valid UTF-8, then this routine will return <tt>s.end()</tt>.
+ * valid UTF-8, then this routine will return `s.end()`.
  *
  * \ifacespython This routine returns the \e length of the longest valid
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
@@ -176,7 +176,7 @@ class IConvStreamBuffer : public std::streambuf {
          *
          * See the \e iconv documentation for information on what
          * encodings are supported.  For the GNU C library implementation,
-         * valid encodings can be found by running <tt>iconv --list</tt>.
+         * valid encodings can be found by running `iconv --list`.
          *
          * \pre The destination output stream is already open.
          *
@@ -273,7 +273,7 @@ class IConvStream : public std::ostream {
          *
          * See the \e iconv documentation for information on what
          * encodings are supported.  For the GNU C library implementation,
-         * valid encodings can be found by running <tt>iconv --list</tt>.
+         * valid encodings can be found by running `iconv --list`.
          *
          * \pre The destination output stream is already open.
          *

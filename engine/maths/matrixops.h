@@ -83,10 +83,10 @@ void smithNormalForm(MatrixInt& matrix);
  * normal form of \a M.  After this routine exits:
  *
  * - The argument \a matrix will contain the Smith normal form \a S;
- * - <tt>colSpaceBasis * M * rowSpaceBasis = S</tt>;
- * - <tt>colSpaceBasisInv * S * rowSpaceBasisInv = M</tt>;
- * - <tt>colSpaceBasis * colSpaceBasisInv</tt> and
- *   <tt>rowSpaceBasis * rowSpaceBasisInv</tt> are both identity matrices.
+ * - `colSpaceBasis * M * rowSpaceBasis = S`;
+ * - `colSpaceBasisInv * S * rowSpaceBasisInv = M`;
+ * - `colSpaceBasis * colSpaceBasisInv` and
+ *   `rowSpaceBasis * rowSpaceBasisInv` are both identity matrices.
  *
  * Thus, one obtains the Smith normal form of the original matrix by multiplying
  * on the left by ColSpaceBasis and on the right by RowSpaceBasis.
@@ -128,10 +128,10 @@ void smithNormalForm(MatrixInt& matrix,
  * normal form of \a M.  After this routine exits:
  *
  * - The argument \a matrix will contain the Smith normal form \a S;
- * - <tt>colSpaceBasis * M * rowSpaceBasis = S</tt>;
- * - <tt>colSpaceBasisInv * S * rowSpaceBasisInv = M</tt>;
- * - <tt>colSpaceBasis * colSpaceBasisInv</tt> and
- *   <tt>rowSpaceBasis * rowSpaceBasisInv</tt> are both identity matrices.
+ * - `colSpaceBasis * M * rowSpaceBasis = S`;
+ * - `colSpaceBasisInv * S * rowSpaceBasisInv = M`;
+ * - `colSpaceBasis * colSpaceBasisInv` and
+ *   `rowSpaceBasis * rowSpaceBasisInv` are both identity matrices.
  *
  * Thus, one obtains the Smith normal form the original matrix by multiplying
  * on the left by ColSpaceBasis and on the right by RowSpaceBasis.
@@ -234,8 +234,8 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  * matrices \a R and \a Ri:
  *
  * - If \a R and \a Ri are passed as identity matrices, the returned
- *   matrices will be such that <tt>original_M * R = final_M</tt> and
- *   <tt>final_M * Ri = original_M</tt> (and of course <tt>final_M</tt> is
+ *   matrices will be such that `original_M * R = final_M` and
+ *   `final_M * Ri = original_M` (and of course `final_M` is
  *   in column echelon form with respect to the given row list).
  * - If \a R and \a Ri are already non-trivial coordinate transformations,
  *   they are modified appropriately by the algorithm.
@@ -289,7 +289,7 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
  *
  * The homomorphism from Z^n to Z^k is described by the given
  * \a k by \a n matrix \a hom.  The sublattice is of the form
- * <tt>(p1 Z) * (p2 Z) * ... * (pk Z)</tt>, where the non-negative integers
+ * `(p1 Z) * (p2 Z) * ... * (pk Z)`, where the non-negative integers
  * \a p1, ..., \a pk are passed in the given list \a sublattice.
  *
  * An equivalent problem is to consider \a hom to be a homomorphism
@@ -319,14 +319,14 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
  * Given an automorphism of an abelian group,
  * this procedure computes the inverse automorphism.
  *
- * The abelian group is of the form <tt>Z_p1 + Z_p2 + ... + Z_pn</tt>.
+ * The abelian group is of the form `Z_p1 + Z_p2 + ... + Z_pn`.
  * The input is an n-by-n matrix \a A which represents a lift of the
  * automorphism to just some n-by-n matrix.  Specifically, you have a little
- * commutative diagram with <tt>Z^n --A--> Z^n</tt> covering the automorphism
- * of <tt>Z_p1 + Z_p2 + ... + Z_pn</tt>, where the maps down are the direct
- * sum of the standard quotients <tt>Z --> Z_pi</tt>.  So if you want this
+ * commutative diagram with `Z^n --A--> Z^n` covering the automorphism
+ * of `Z_p1 + Z_p2 + ... + Z_pn`, where the maps down are the direct
+ * sum of the standard quotients `Z --> Z_pi`.  So if you want this
  * procedure to give you meaningful output, \a A must be a lift of a genuine
- * automorphism of <tt>Z_p1 + ... + Z_pn</tt>.
+ * automorphism of `Z_p1 + ... + Z_pn`.
  *
  * \pre The list p1, p2, ..., pn is a list of invariant factors,
  * which means that p1|p2, ..., p{n-1}|pn.

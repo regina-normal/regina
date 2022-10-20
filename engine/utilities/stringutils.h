@@ -317,9 +317,9 @@ bool valueOf(const std::string& str, double& dest);
  * Converts the entire given string to a boolean and reports whether
  * this conversion was successful.
  *
- * If the given string begins with <tt>T</tt>, <tt>t</tt> or <tt>1</tt>,
+ * If the given string begins with `T`, `t` or `1`,
  * then the string will be successfully converted to \c true.
- * If the given string begins with <tt>F</tt>, <tt>f</tt> or <tt>0</tt>,
+ * If the given string begins with `F`, `f` or `0`,
  * then the string will be successfully converted to \c false.
  * Otherwise the conversion will be unsuccessful and argument \a dest will
  * be set to \c false.
@@ -341,7 +341,7 @@ bool valueOf(const std::string& str, bool& dest);
  * this conversion was successful.
  *
  * A set of booleans is represented by one of the four string codes
- * <tt>--</tt>, <tt>T-</tt>, <tt>-F</tt> or <tt>TF</tt>, as returned by
+ * `--`, `T-`, `-F` or `TF`, as returned by
  * BoolSet::stringCode().  If the conversion is unsuccessful, argument
  * \a dest will be set to the empty set and \c false will be returned.
  *

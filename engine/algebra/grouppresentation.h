@@ -1031,14 +1031,14 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * Examples of the format of the returned string are:
          *
-         * - <tt>0</tt> for the trivial group;
-         * - <tt>Z_n</tt> for cyclic groups with \a n > 1;
-         * - <tt>Free(n)</tt> for free groups with \a n > 1 generators - see
+         * - `0` for the trivial group;
+         * - `Z_n` for cyclic groups with \a n > 1;
+         * - `Free(n)` for free groups with \a n > 1 generators - see
          *   AbelianGroup::str() for how abelian groups are presented;
-         * - <tt>FreeProduct(G1, G2, ... , Gk)</tt> for free products, where
+         * - `FreeProduct(G1, G2, ... , Gk)` for free products, where
          *   one replaces \a G1 through \a Gk by text strings representing the
          *   free summands;
-         * - <tt>Z~G w/ monodromy H</tt> for extensions over Z,
+         * - `Z~G w/ monodromy H` for extensions over Z,
          *   where \a G is a description of the kernel of the homomorphism
          *   to the integers, and \a H is a text string representing the
          *   monodromy - see HomMarkedAbelianGroup.str() for details on
