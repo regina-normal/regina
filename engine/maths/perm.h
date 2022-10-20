@@ -607,7 +607,7 @@ class Perm {
 
         /**
          * Returns the <i>i</i>th rotation.
-         * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod \a n)
+         * This maps <i>k</i> to <i>k</i> + <i>i</i> (mod \a n)
          * for all \a k.
          *
          * \param i the image of 0; this must be between 0 and <i>n</i>-1

@@ -148,7 +148,7 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * Represents a <i>subdim</i>-face in the skeleton of a <i>dim</i>-dimensional
  * triangulation.  There are two substantially different cases:
  *
- * - The case \a subdim &lt; \a dim represents a lower-dimensional face
+ * - The case \a subdim \< \a dim represents a lower-dimensional face
  *   in a triangulation.  This is implemented by the generic class
  *   template (as documented here), and is specialised for Regina's
  *   \ref stddim "standard dimensions" (as discussed below).

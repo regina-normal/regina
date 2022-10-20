@@ -204,9 +204,9 @@
  *  is due to inefficiencies that grow with dimension (e.g., the exponential
  *  growth in the size of the face lattice).  Partly this is due to the
  *  intrinsic difficulty of solving even simple problems in higher dimensions
- *  (for instance, in dimension&nbsp;5 it is not known how to reliably test
+ *  (for instance, in dimension 5 it is not known how to reliably test
  *  whether a given triangulation represents a closed 5-manifold, and
- *  in dimensions ≥&nbsp;6 this is provably undecidable).
+ *  in dimensions ≥ 6 this is provably undecidable).
  */
 
 // Put ourselves in the regina namespace so that automatic links work.

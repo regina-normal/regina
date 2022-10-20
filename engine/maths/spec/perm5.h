@@ -959,7 +959,7 @@ class Perm<5> {
 
         /**
          * Returns the <i>i</i>th rotation.
-         * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod 5)
+         * This maps <i>k</i> to <i>k</i> + <i>i</i> (mod 5)
          * for all \a k.
          *
          * \param i the image of 0; this must be between 0 and 4 inclusive.

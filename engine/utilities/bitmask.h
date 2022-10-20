@@ -421,7 +421,7 @@ class Bitmask {
          *
          * \pre This and the given bitmask have the same length.
          *
-         * \warning We do not use &lt; for this operation, since &lt;=
+         * \warning We do not use \< for this operation, since ≤
          * represents the subset operation.
          *
          * \param other the bitmask to compare against this.
@@ -858,7 +858,7 @@ class Bitmask1 {
          * Here the bit at index 0 is least significant, and the bit at
          * index \a length-1 is most significant.
          *
-         * \warning We do not use &lt; for this operation, since &lt;=
+         * \warning We do not use \< for this operation, since ≤
          * represents the subset operation.
          *
          * \param other the bitmask to compare against this.
@@ -1315,7 +1315,7 @@ class Bitmask2 {
          * Here the bit at index 0 is least significant, and the bit at
          * index \a length-1 is most significant.
          *
-         * \warning We do not use &lt; for this operation, since &lt;=
+         * \warning We do not use \< for this operation, since ≤
          * represents the subset operation.
          *
          * \param other the bitmask to compare against this.

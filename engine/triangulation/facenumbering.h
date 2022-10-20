@@ -50,7 +50,7 @@ namespace regina {
  *
  * Regina uses the following general scheme for numbering faces:
  *
- * - For low-dimensional faces (\a subdim &lt; \a dim / 2), faces are
+ * - For low-dimensional faces (\a subdim \< \a dim / 2), faces are
  *   numbered in lexicographical order according to their vertices.
  *   For example, in a 3-dimensional triangulation, edges 0,...,5 contain
  *   vertices 01, 02, 03, 12, 13, 23 respectively.
