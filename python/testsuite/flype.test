@@ -43,6 +43,7 @@ def test(g):
 				else:
 					s = str(f)
 				print(n.index(), i, s)
+	
 	print()
 
 test(ExampleLink.figureEight().graph())
