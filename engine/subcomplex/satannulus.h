@@ -155,7 +155,7 @@ struct SatAnnulus {
     /**
      * Sets this to be a copy of the given structure.
      *
-     * @return a reference to this structure.
+     * \return a reference to this structure.
      */
     SatAnnulus& operator = (const SatAnnulus&) = default;
 
@@ -172,7 +172,7 @@ struct SatAnnulus {
      * \param which identifies whether we are querying information for
      * the first or second triangle of this annulus.  This argument
      * must be 0 or 1 respectively.
-     * @return the tetrahedron that provides the given triangle.
+     * \return the tetrahedron that provides the given triangle.
      */
     const Tetrahedron<3>* tet(int which) const;
     /**
@@ -188,7 +188,7 @@ struct SatAnnulus {
      * \param which identifies whether we are querying information for
      * the first or second triangle of this annulus.  This argument
      * must be 0 or 1 respectively.
-     * @return the permutation that describes how the given triangle matches
+     * \return the permutation that describes how the given triangle matches
      * up with the individual vertices of its corresponding tetrahedron.
      */
     Perm<4> roles(int which) const;
@@ -239,7 +239,7 @@ struct SatAnnulus {
      * saturated annuli from different triangulations.
      *
      * \param other the structure to compare with this.
-     * @return \c true if and only if both structures describe the same
+     * \return \c true if and only if both structures describe the same
      * specific presentation of a saturated annulus.
      */
     bool operator == (const SatAnnulus& other) const;
@@ -256,7 +256,7 @@ struct SatAnnulus {
      * saturated annuli from different triangulations.
      *
      * \param other the structure to compare with this.
-     * @return \c true if and only if both structures describe different
+     * \return \c true if and only if both structures describe different
      * specific presentations of a saturated annulus.
      */
     bool operator != (const SatAnnulus& other) const;
@@ -269,7 +269,7 @@ struct SatAnnulus {
      * to determine whether any triangles of the annulus lie on the
      * triangulation boundary.
      *
-     * @return the number of triangles of this annulus that lie on the boundary
+     * \return the number of triangles of this annulus that lie on the boundary
      * of the triangulation; this will be 0, 1 or 2.
      */
     int meetsBoundary() const;
@@ -295,7 +295,7 @@ struct SatAnnulus {
      * \pre Neither triangle of this annulus is a boundary triangle of the
      * triangulation.
      *
-     * @return a new representation of this annulus from the other side.
+     * \return a new representation of this annulus from the other side.
      */
     SatAnnulus otherSide() const;
 
@@ -311,7 +311,7 @@ struct SatAnnulus {
      * direction of the fibres has been reversed.  This structure will
      * not be changed.  See reflectVertical() for further details.
      *
-     * @return a new representation of this annulus in which fibres have
+     * \return a new representation of this annulus in which fibres have
      * been reversed.
      */
     SatAnnulus verticalReflection() const;
@@ -328,7 +328,7 @@ struct SatAnnulus {
      * This structure will not be changed.  See reflectHorizontal() for
      * further details.
      *
-     * @return a new left-to-right reflection of this annulus.
+     * \return a new left-to-right reflection of this annulus.
      */
     SatAnnulus horizontalReflection() const;
 
@@ -346,7 +346,7 @@ struct SatAnnulus {
      * This structure will not be changed.  See rotateHalfTurn() for
      * further details.
      *
-     * @return a new 180 degree rotation of this annulus.
+     * \return a new 180 degree rotation of this annulus.
      */
     SatAnnulus halfTurnRotation() const;
 
@@ -375,7 +375,7 @@ struct SatAnnulus {
      * for example.
      *
      * \param other the annulus to compare with this.
-     * @return a tuple of booleans (\a adj, \a refVert, \a refHoriz), where:
+     * \return a tuple of booleans (\a adj, \a refVert, \a refHoriz), where:
      * \a adj is \c true iff some adjacency was found (either with or
      * without reflections); \a refVert is \c true iff a vertical reflection
      * is required; and \a refHoriz is \c true iff a horizontal reflection is
@@ -423,7 +423,7 @@ struct SatAnnulus {
      * \param matching returns details on how the curves on each annulus
      * are related.  If the this and the given annulus are not joined,
      * then this matrix is not touched.
-     * @return \c true if this and the given annulus are found to be
+     * \return \c true if this and the given annulus are found to be
      * joined, or \c false if they are not.
      */
     bool isJoined(const SatAnnulus& other, Matrix2& matching) const;
@@ -439,7 +439,7 @@ struct SatAnnulus {
      *   of the torus do not become identified within the larger triangulation);
      * - this torus is two-sided within the surrounding triangulation.
      *
-     * @return \c true if this annulus forms an embedded two-sided torus as
+     * \return \c true if this annulus forms an embedded two-sided torus as
      * described above, or \c false if it does not.
      */
     bool isTwoSidedTorus() const;

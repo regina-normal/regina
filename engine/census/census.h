@@ -113,7 +113,7 @@ class CensusDB {
         /**
          * Returns the filename where this database is stored.
          *
-         * @return the database filename.
+         * \return the database filename.
          */
         const std::string& filename() const;
 
@@ -124,7 +124,7 @@ class CensusDB {
          * giving a list of all available databases, or when identifying
          * in which particular database a match was found.
          *
-         * @return the database description.
+         * \return the database description.
          */
         const std::string& desc() const;
 
@@ -157,7 +157,7 @@ class CensusDB {
          * \param isoSig the isomorphism signature to search for.
          * \param action a function (or other callable object) that will
          * be called for each match in the database.
-         * @return \c true if the lookup was correctly performed, or \c false
+         * \return \c true if the lookup was correctly performed, or \c false
          * if some error occurred (e.g., the database could not be opened).
          * Note in particular that if there were no matches but no errors,
          * then the return value will be \c true.
@@ -193,7 +193,7 @@ class CensusDB {
          * descriptions are irrelevant here.
          *
          * \param rhs the database to compare this against.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * the same database.
          */
         bool operator == (const CensusDB& rhs) const;
@@ -206,7 +206,7 @@ class CensusDB {
          * descriptions are irrelevant here.
          *
          * \param rhs the database to compare this against.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * different databases.
          */
         bool operator != (const CensusDB& rhs) const;
@@ -281,14 +281,14 @@ class CensusHit {
          * triangulation in the database.  This typically contains the name of
          * the triangulation and/or the name of the underlying manifold.
          *
-         * @return the human-readable name for this hit.
+         * \return the human-readable name for this hit.
          */
         const std::string& name() const;
         /**
          * Returns details of the census database in which the
          * triangulation was found.
          *
-         * @return the database for this hit.
+         * \return the database for this hit.
          */
         const CensusDB& db() const;
 
@@ -301,7 +301,7 @@ class CensusHit {
          * (as identified by the CensusDB comparison operators).
          *
          * \param rhs the census hit to compare this against.
-         * @return \c true if and only if this and the given hit are the same.
+         * \return \c true if and only if this and the given hit are the same.
          */
         bool operator == (const CensusHit& rhs) const;
         /**
@@ -313,7 +313,7 @@ class CensusHit {
          * (as identified by the CensusDB comparison operators).
          *
          * \param rhs the census hit to compare this against.
-         * @return \c true if and only if this and the given hit are different.
+         * \return \c true if and only if this and the given hit are different.
          */
         bool operator != (const CensusHit& rhs) const;
 
@@ -412,7 +412,7 @@ class Census {
          * means logarithmic in the size of the database).
          *
          * \param tri the triangulation that you wish to search for.
-         * @return a list of all database matches.
+         * \return a list of all database matches.
          */
         static std::list<CensusHit> lookup(const Triangulation<3>& tri);
         /**
@@ -440,7 +440,7 @@ class Census {
          *
          * \param isoSig the isomorphism signature of the triangulation
          * that you wish to search for.
-         * @return a list of all database matches.
+         * \return a list of all database matches.
          */
         static std::list<CensusHit> lookup(const std::string& isoSig);
 
@@ -457,7 +457,7 @@ class Census {
          * information.  This routine will build the full pathname by joining
          * the given filename with the standard census database directory.
          * \param desc a human-readable description for the database.
-         * @return the new database specifier.
+         * \return the new database specifier.
          */
         static CensusDB* standardDB(const char* filename, const char* desc);
 };

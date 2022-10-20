@@ -371,7 +371,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * but inAnyPacket() will return \a q (since the triangulation is
          * still "indirectly" held by a different type of packet).
          *
-         * @return the packet that holds this data (directly or indirectly),
+         * \return the packet that holds this data (directly or indirectly),
          * or \c null if this data is not held by either a 3-dimensional
          * triangulation packet or a SnapPea triangulation packet.
          */
@@ -393,7 +393,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * but inAnyPacket() will return \a q (since the triangulation is
          * still "indirectly" held by a different type of packet).
          *
-         * @return the packet that holds this data (directly or indirectly),
+         * \return the packet that holds this data (directly or indirectly),
          * or \c null if this data is not held by either a 3-dimensional
          * triangulation packet or a SnapPea triangulation packet.
          */
@@ -410,7 +410,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * (through its inherited Triangulation<3> interface), then this
          * routine will return \a t.  Otherwise it will return \c null.
          *
-         * @return the SnapPea triangulation that holds this data, or
+         * \return the SnapPea triangulation that holds this data, or
          * \c null if this data is not part of a SnapPea triangulation.
          */
         SnapPeaTriangulation* isSnapPea();
@@ -425,7 +425,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * (through its inherited Triangulation<3> interface), then this
          * routine will return \a t.  Otherwise it will return \c null.
          *
-         * @return the SnapPea triangulation that holds this data, or
+         * \return the SnapPea triangulation that holds this data, or
          * \c null if this data is not part of a SnapPea triangulation.
          */
         const SnapPeaTriangulation* isSnapPea() const;
@@ -484,7 +484,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Sets this to be a (deep) copy of the given triangulation.
          *
          * \param src the triangulation to copy.
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation& src);
 
@@ -512,7 +512,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src);
 
@@ -565,7 +565,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Determines if this triangulation contains any two-sphere
          * boundary components.
          *
-         * @return \c true if and only if there is at least one
+         * \return \c true if and only if there is at least one
          * two-sphere boundary component.
          */
         bool hasTwoSphereBoundaryComponents() const;
@@ -573,7 +573,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Determines if this triangulation contains any ideal boundary
          * components with negative Euler characteristic.
          *
-         * @return \c true if and only if there is at least one such
+         * \return \c true if and only if there is at least one such
          * boundary component.
          */
         bool hasNegativeIdealBoundaryComponents() const;
@@ -595,7 +595,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
-         * @return \c true if and only if the boundary contains the
+         * \return \c true if and only if the boundary contains the
          * smallest possible number of triangles.
          */
         bool hasMinimalBoundary() const;
@@ -619,7 +619,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
-         * @return \c true if and only if this triangulation contains
+         * \return \c true if and only if this triangulation contains
          * the smallest possible number of vertices.
          */
         bool hasMinimalVertices() const;
@@ -650,7 +650,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * For triangulations whose vertex links are all spheres or discs,
          * this routine and eulerCharTri() give identical results.
          *
-         * @return the Euler characteristic of the corresponding compact
+         * \return the Euler characteristic of the corresponding compact
          * manifold.
          */
         long eulerCharManifold() const;
@@ -661,7 +661,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is closed and not a 2-sphere.
          * Note that the triangulation is not required to be valid.
          *
-         * @return \c true if and only if this triangulation is ideal.
+         * \return \c true if and only if this triangulation is ideal.
          */
         bool isIdeal() const;
         /**
@@ -669,7 +669,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This is the case if and only if every vertex is standard.
          * See Vertex<3>::isStandard() for further details.
          *
-         * @return \c true if and only if this triangulation is
+         * \return \c true if and only if this triangulation is
          * standard.
          */
         bool isStandard() const;
@@ -678,7 +678,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This is the case if and only if it has no boundary.
          * Note that ideal triangulations are not closed.
          *
-         * @return \c true if and only if this triangulation is closed.
+         * \return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
 
@@ -694,7 +694,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * cannot be ordered at all.  The routine order() will attempt
          * to relabel tetrahedron vertices to give an ordered triangulation.
          *
-         * @return \c true if and only if all gluing permutations are
+         * \return \c true if and only if all gluing permutations are
          * order preserving on the tetrahedron faces.
          *
          * \author Matthias Goerner
@@ -722,7 +722,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \exception FailedPrecondition This triangulation is invalid.
          *
-         * @return the relative first homology group with respect to the
+         * \return the relative first homology group with respect to the
          * boundary.
          */
         const AbelianGroup& homologyRel() const;
@@ -745,7 +745,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \exception FailedPrecondition This triangulation is invalid.
          *
-         * @return the first homology group of the boundary.
+         * \return the first homology group of the boundary.
          */
         const AbelianGroup& homologyBdry() const;
         /**
@@ -765,7 +765,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \exception FailedPrecondition This triangulation is invalid.
          *
-         * @return the number of Z_2 terms in the second homology group
+         * \return the number of Z_2 terms in the second homology group
          * with coefficients in Z_2.
          */
         unsigned long homologyH2Z2() const;
@@ -852,7 +852,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * then Regina will use another algorithm instead.
          * \param tracker a progress tracker through will progress will
          * be reported, or \c nullptr if no progress reporting is required.
-         * @return the requested Turaev-Viro invariant, or an uninitialised
+         * \return the requested Turaev-Viro invariant, or an uninitialised
          * field element if the calculation was cancelled via the given
          * progress tracker.
          *
@@ -907,7 +907,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This should be treated as a hint only: if the algorithm you choose
          * is not supported for the given parameters (\a r and \a whichRoot),
          * then Regina will use another algorithm instead.
-         * @return the requested Turaev-Viro invariant.
+         * \return the requested Turaev-Viro invariant.
          *
          * \see allCalculatedTuraevViro
          */
@@ -940,7 +940,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Turaev-Viro invariants are computed later on, the dictionary
          * that was originally returned will not change as a result).
          *
-         * @return the cache of all Turaev-Viro invariants that have
+         * \return the cache of all Turaev-Viro invariants that have
          * already been calculated.
          *
          * \see turaevViro
@@ -984,7 +984,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception UnsolvedCase An integer overflow occurred during
          * the computation.
          *
-         * @return a triple of non-negative integers indicating how many
+         * \return a triple of non-negative integers indicating how many
          * times the longitude intersects each of the three boundary edges.
          * Specifically, if the returned tuple is \a t and the unique boundary
          * component is \a bc, then for each \a k = 0,1,2, the element
@@ -1048,7 +1048,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception UnsolvedCase An integer overflow occurred during
          * the computation.
          *
-         * @return the boundary edge representing the algebraic
+         * \return the boundary edge representing the algebraic
          * longitude of the knot (after this triangulation has
          * been modified if necessary).
          */
@@ -1111,7 +1111,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception UnsolvedCase An integer overflow occurred during
          * the computation.
          *
-         * @return the boundary edge representing the meridian (after this
+         * \return the boundary edge representing the meridian (after this
          * triangulation has been modified if necessary).
          */
         Edge<3>* meridian();
@@ -1174,7 +1174,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception UnsolvedCase An integer overflow occurred during
          * the computation.
          *
-         * @return a pair (\a m, \a l), where \a m is the boundary edge
+         * \return a pair (\a m, \a l), where \a m is the boundary edge
          * representing the meridian and \a l is the boundary edge representing
          * the algebraic longitude of the knot complement (after this
          * triangulation has been modified if necessary).
@@ -1203,7 +1203,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given face is a face of this triangulation.
          *
-         * @return a pair (\a s, \a thin), where \a s is the face linking
+         * \return a pair (\a s, \a thin), where \a s is the face linking
          * normal surface, and \a thin is \c true if and only if this link
          * is thin (i.e., no additional normalisation steps were required).
          */
@@ -1217,7 +1217,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * discs are vertex linking, and if it has no 2-sphere boundary
          * components.
          *
-         * @return \c true if and only if this triangulation is
+         * \return \c true if and only if this triangulation is
          * 0-efficient.
          */
         bool isZeroEfficient() const;
@@ -1234,7 +1234,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this triangulation is 0-efficient; it merely tells you whether
          * the answer has already been computed.
          *
-         * @return \c true if and only if this property is already known.
+         * \return \c true if and only if this property is already known.
          */
         bool knowsZeroEfficient() const;
         /**
@@ -1249,7 +1249,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * time), and works even for triangulations with more than one
          * connected component.  Thanks to Robert Haraway.
          *
-         * @return \c true if and only if this triangulation has a
+         * \return \c true if and only if this triangulation has a
          * normal splitting surface.
          */
         bool hasSplittingSurface() const;
@@ -1258,7 +1258,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * within this triangulation.  If such a surface exists within
          * this triangulation, this routine is guaranteed to find one.
          *
-         * @return a non-vertex-linking normal sphere or disc, or no value if
+         * \return a non-vertex-linking normal sphere or disc, or no value if
          * none exists.
          */
         std::optional<NormalSurface> nonTrivialSphereOrDisc() const;
@@ -1271,7 +1271,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and 0-efficient.  These preconditions are almost certainly more
          * restrictive than they need to be, but we stay safe for now.
          *
-         * @return an octagonal almost normal 2-sphere, or no value if
+         * \return an octagonal almost normal 2-sphere, or no value if
          * none exists.
          */
         std::optional<NormalSurface> octagonalAlmostNormalSphere() const;
@@ -1310,7 +1310,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NoSolution No strict angle structure exists on
          * this triangulation.
          *
-         * @return a strict angle structure on this triangulation, if
+         * \return a strict angle structure on this triangulation, if
          * one exists.
          */
         const AngleStructure& strictAngleStructure() const;
@@ -1335,7 +1335,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \e not enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
          *
-         * @return \c true if and only if a strict angle structure exists on
+         * \return \c true if and only if a strict angle structure exists on
          * this triangulation.
          */
         bool hasStrictAngleStructure() const;
@@ -1353,7 +1353,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * tells you whether the answer has already been computed (or is
          * very easily computed).
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsStrictAngleStructure() const;
@@ -1402,7 +1402,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NoSolution No generalised angle structure exists on
          * this triangulation.
          *
-         * @return a generalised angle structure on this triangulation, if
+         * \return a generalised angle structure on this triangulation, if
          * one exists.
          */
         const AngleStructure& generalAngleStructure() const;
@@ -1440,7 +1440,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the extra work to compute an explicit solution (in order to fulfil
          * the promise made in the generalAngleStructure() documentation).
          *
-         * @return \c true if and only if a generalised angle structure exists
+         * \return \c true if and only if a generalised angle structure exists
          * on this triangulation.
          */
         bool hasGeneralAngleStructure() const;
@@ -1458,7 +1458,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Note that the edge pointers returned will become invalid once the
          * triangulation has changed.
          *
-         * @return a set containing the edges of the maximal forest.
+         * \return a set containing the edges of the maximal forest.
          */
         std::set<Edge<3>*> maximalForestInBoundary() const;
         /**
@@ -1477,7 +1477,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \param canJoinBoundaries \c true if and only if different
          * boundary components are allowed to be joined by the maximal forest.
-         * @return a set containing the edges of the maximal forest.
+         * \return a set containing the edges of the maximal forest.
          */
         std::set<Edge<3>*> maximalForestInSkeleton(
                 bool canJoinBoundaries = true) const;
@@ -1507,7 +1507,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \todo \opt Include random 2-3 moves to get out of wells.
          *
-         * @return \c true if and only if the triangulation was successfully
+         * \return \c true if and only if the triangulation was successfully
          * simplified.  Otherwise this triangulation will not be changed.
          */
         bool intelligentSimplify();
@@ -1537,7 +1537,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
          * whether simplifications are possible (defaults to \c true).
-         * @return if \a perform is \c true, this routine returns
+         * \return if \a perform is \c true, this routine returns
          * \c true if and only if the triangulation was changed to
          * reduce the number of tetrahedra; if \a perform is \c false,
          * this routine returns \c true if and only if it determines
@@ -1617,7 +1617,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c nullptr if no progress reporting is required.
-         * @return \c true if and only if the triangulation was successfully
+         * \return \c true if and only if the triangulation was successfully
          * simplified to fewer tetrahedra.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
@@ -1727,7 +1727,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * for each triangulation that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
-         * @return \c true if some call to \a action returned \c true (thereby
+         * \return \c true if some call to \a action returned \c true (thereby
          * terminating the search early), or \c false if the search ran to
          * completion.
          */
@@ -1771,7 +1771,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \exception FailedPrecondition This triangulation is not valid.
          *
-         * @return \c true if the triangulation was changed, or \c false if
+         * \return \c true if the triangulation was changed, or \c false if
          * every boundary component was already minimal to begin with.
          */
         bool minimiseBoundary();
@@ -1785,7 +1785,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
-         * @return \c true if the triangulation was changed, or \c false if
+         * \return \c true if the triangulation was changed, or \c false if
          * every boundary component was already minimal to begin with.
          */
         bool minimizeBoundary();
@@ -1828,7 +1828,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \exception FailedPrecondition This triangulation is not valid.
          *
-         * @return \c true if the triangulation was changed, or \c false if
+         * \return \c true if the triangulation was changed, or \c false if
          * the number of vertices was already minimal to begin with.
          */
         bool minimiseVertices();
@@ -1842,7 +1842,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
-         * @return \c true if the triangulation was changed, or \c false if
+         * \return \c true if the triangulation was changed, or \c false if
          * the number of vertices was already minimal to begin with.
          */
         bool minimizeVertices();
@@ -1888,7 +1888,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -1939,7 +1939,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -1984,7 +1984,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -2044,7 +2044,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -2097,7 +2097,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move (defaults to
          * \c true).
-         * @return If \a check is \c true, the function returns \c true if
+         * \return If \a check is \c true, the function returns \c true if
          * and only if the requested move may be performed without changing
          * the topology of the manifold. If \a check is false, the function
          * simply returns \c true.
@@ -2164,7 +2164,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move (defaults to
          * \c true).
-         * @return If \a check is \c true, the function returns \c true if
+         * \return If \a check is \c true, the function returns \c true if
          * and only if the requested move may be performed without changing
          * the topology of the manifold. If \a check is false, the function
          * simply returns \c true.
@@ -2218,7 +2218,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move (defaults to
          * \c true).
-         * @return If \a check is \c true, the function returns \c true if
+         * \return If \a check is \c true, the function returns \c true if
          * and only if the requested move may be performed without changing
          * the topology of the manifold. If \a check is false, the function
          * simply returns \c true.
@@ -2268,7 +2268,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -2316,7 +2316,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -2362,7 +2362,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -2415,7 +2415,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the given edge may be collapsed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -2468,7 +2468,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * both ordered and \e oriented, in which case this routine will
          * return \c false if the triangulation cannot be oriented and
          * ordered at the same time.  See orient() for further details.
-         * @return \c true if the triangulation has been successfully ordered
+         * \return \c true if the triangulation has been successfully ordered
          * as described above, or \c false if not.
          *
          * \author Matthias Goerner
@@ -2548,7 +2548,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and contains one or more embedded two-sided projective planes,
          * and this routine was not able to recover from this situation.
          *
-         * @return a list of triangulations of prime summands.
+         * \return a list of triangulations of prime summands.
          */
         std::vector<Triangulation<3>> summands() const;
 
@@ -2566,7 +2566,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * property is already known or if it happens to be very fast to
          * calculate for this triangulation.
          *
-         * @return \c true if and only if this is a 3-sphere triangulation.
+         * \return \c true if and only if this is a 3-sphere triangulation.
          */
         bool isSphere() const;
         /**
@@ -2590,7 +2590,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this triangulation forms a 3-sphere; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsSphere() const;
@@ -2608,7 +2608,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * property is already known or if it happens to be very fast to
          * calculate for this triangulation.
          *
-         * @return \c true if and only if this is a triangulation of a
+         * \return \c true if and only if this is a triangulation of a
          * 3-dimensional ball.
          */
         bool isBall() const;
@@ -2633,7 +2633,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this triangulation forms a ball; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsBall() const;
@@ -2651,7 +2651,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * property is already known or if it happens to be very fast to
          * calculate for this triangulation.
          *
-         * @return \c true if and only if this is either a real (compact)
+         * \return \c true if and only if this is either a real (compact)
          * or ideal (non-compact) triangulation of the solid torus.
          */
         bool isSolidTorus() const;
@@ -2677,7 +2677,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this triangulation forms a solid torus; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsSolidTorus() const;
@@ -2697,7 +2697,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * known or if it happens to be very fast to calculate for this
          * triangulation.
          *
-         * @return the genus if this is a triangulation of an orientable
+         * \return the genus if this is a triangulation of an orientable
          * handlebody, or -1 otherwise.
          *
          * \author Alex He
@@ -2726,7 +2726,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * whether the answer has already been computed (or is very easily
          * computed).
          *
-         * @return \c true if and only if this property is already known or
+         * \return \c true if and only if this property is already known or
          * trivial to calculate.
          *
          * \author Alex He
@@ -2749,7 +2749,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \warning This algorithm ultimately relies on isSolidTorus(),
          * which might run slowly for large triangulations.
          *
-         * @return \c true if and only if this is a triangulation (either
+         * \return \c true if and only if this is a triangulation (either
          * real, ideal or a combination) of the product of the torus with an
          * interval.
          */
@@ -2776,7 +2776,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * it merely tells you whether the answer has already been computed
          * (or is very easily computed).
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsTxI() const;
@@ -2797,7 +2797,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed, orientable and connected.
          *
-         * @return \c true if and only if the underlying 3-manifold is
+         * \return \c true if and only if the underlying 3-manifold is
          * irreducible.
          */
         bool isIrreducible() const;
@@ -2816,7 +2816,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed, orientable and connected.
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsIrreducible() const;
@@ -2867,7 +2867,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * them.  See hasSimpleCompressingDisc() for a "heuristic shortcut"
          * that is faster but might not give a definitive answer.
          *
-         * @return \c true if the underlying 3-manifold contains a
+         * \return \c true if the underlying 3-manifold contains a
          * compressing disc, or \c false if it does not.
          */
         bool hasCompressingDisc() const;
@@ -2897,7 +2897,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre This triangulation is valid and is not ideal.
          * \pre The underlying 3-manifold is irreducible.
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsCompressingDisc() const;
@@ -2916,7 +2916,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \warning This routine could be very slow for larger triangulations.
          *
-         * @return \c true if and only if the underlying 3-manifold is
+         * \return \c true if and only if the underlying 3-manifold is
          * irreducible and Haken.
          */
         bool isHaken() const;
@@ -2934,7 +2934,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed, orientable and connected.
          *
-         * @return \c true if and only if this property is already known
+         * \return \c true if and only if this property is already known
          * or trivial to calculate.
          */
         bool knowsHaken() const;
@@ -2983,7 +2983,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid and is not ideal.
          *
-         * @return \c true if a simple compressing disc was found,
+         * \return \c true if a simple compressing disc was found,
          * or \c false if not.  Note that even with a return value of
          * \c false, there might still be a compressing disc (just not
          * one with a simple combinatorial structure).
@@ -3010,7 +3010,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * been changed) then the same tree decomposition will be returned
          * immediately.
          *
-         * @return a nice tree decomposition of the face pairing graph
+         * \return a nice tree decomposition of the face pairing graph
          * of this triangulation.
          */
         const TreeDecomposition& niceTreeDecomposition() const;
@@ -3042,7 +3042,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \todo \optlong Have this routine only use as many tetrahedra
          * as are necessary, leaving finite vertices alone.
          *
-         * @return \c true if and only if the triangulation was changed.
+         * \return \c true if and only if the triangulation was changed.
          * \author David Letscher
          */
         bool idealToFinite();
@@ -3159,7 +3159,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and the two boundary triangles on either side of it are distinct.
          *
          * \param edge the boundary edge upon which to layer.
-         * @return the new tetrahedron provided by the layering.
+         * \return the new tetrahedron provided by the layering.
          */
         Tetrahedron<3>* layerOn(Edge<3>* edge);
 
@@ -3202,7 +3202,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the new solid torus should cut the edge <tt>bc->edge(2)</tt>.
          * \param bc the boundary component to fill.  If the triangulation
          * has precisely one boundary component then this may be \c null.
-         * @return \c true if the boundary component was filled successfully,
+         * \return \c true if the boundary component was filled successfully,
          * or \c false if one of the required conditions as described
          * above is not satisfied.
          */
@@ -3246,7 +3246,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the new solid torus should cut the edge \a e1.
          * \param cuts2 the number of times that the meridional curve of
          * the new solid torus should cut the edge \a e2.
-         * @return \c true if the boundary component was filled successfully,
+         * \return \c true if the boundary component was filled successfully,
          * or \c false if one of the required conditions as described
          * above is not satisfied.
          */
@@ -3276,7 +3276,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param cuts0 the smallest of the three desired intersection numbers.
          * \param cuts1 the second smallest of the three desired intersection
          * numbers.
-         * @return the tetrahedron containing the boundary torus.
+         * \return the tetrahedron containing the boundary torus.
          *
          * \see LayeredSolidTorus
          */
@@ -3350,7 +3350,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented Either this triangulation is disconnected,
          * it has boundary triangles, or it contains more than 25 tetrahedra.
          *
-         * @return a dehydrated representation of this triangulation
+         * \return a dehydrated representation of this triangulation
          * (or an isomorphic variant of this triangulation).
          */
         std::string dehydrate() const;
@@ -3390,7 +3390,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either empty,
          * invalid, or has boundary triangles.
          *
-         * @return a string containing the contents of the corresponding
+         * \return a string containing the contents of the corresponding
          * SnapPea data file.
          */
         std::string snapPea() const;
@@ -3470,7 +3470,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * routines.  The \e contents of the file will be written using UTF-8.
          *
          * \param filename the name of the SnapPea file to which to write.
-         * @return \c true if and only if the file was successfully written.
+         * \return \c true if and only if the file was successfully written.
          */
         bool saveSnapPea(const char* filename) const;
 
@@ -3485,7 +3485,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either invalid
          * or has boundary triangles.
          *
-         * @return a string containing the 3-manifold recogniser data.
+         * \return a string containing the 3-manifold recogniser data.
          */
         std::string recogniser() const;
 
@@ -3501,7 +3501,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception NotImplemented This triangulation is either invalid
          * or has boundary triangles.
          *
-         * @return a string containing the 3-manifold recogniser data.
+         * \return a string containing the 3-manifold recogniser data.
          */
         std::string recognizer() const;
 
@@ -3559,7 +3559,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * routines.  The \e contents of the file will be written using UTF-8.
          *
          * \param filename the name of the Recogniser file to which to write.
-         * @return \c true if and only if the file was successfully written.
+         * \return \c true if and only if the file was successfully written.
          */
         bool saveRecogniser(const char* filename) const;
 
@@ -3576,7 +3576,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * routines.  The \e contents of the file will be written using UTF-8.
          *
          * \param filename the name of the Recogniser file to which to write.
-         * @return \c true if and only if the file was successfully written.
+         * \return \c true if and only if the file was successfully written.
          */
         bool saveRecognizer(const char* filename) const;
 
@@ -3606,7 +3606,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param dehydration a dehydrated representation of the
          * triangulation to construct.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
-         * @return the rehydrated triangulation.
+         * \return the rehydrated triangulation.
          */
         static Triangulation<3> rehydrate(const std::string& dehydration);
 
@@ -3641,7 +3641,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \param snapPeaData a string containing the full contents of a
          * SnapPea data file.
-         * @return a native Regina triangulation extracted from the given
+         * \return a native Regina triangulation extracted from the given
          * SnapPea data.
          */
         static Triangulation<3> fromSnapPea(const std::string& snapPeaData);
@@ -3750,7 +3750,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
  * \nopython Casting is unnecessary in Python.
  *
  * \param p a reference, presented as a packet.
- * @return the same reference, presented using the type \a Held.
+ * \return the same reference, presented using the type \a Held.
  *
  * \ingroup dim3
  */
@@ -3777,7 +3777,7 @@ Triangulation<3>& static_triangulation3_cast(Packet& p);
  * \nopython Casting is unnecessary in Python.
  *
  * \param p a reference, presented as a packet.
- * @return the same reference, presented using the type \a Held.
+ * \return the same reference, presented using the type \a Held.
  *
  * \ingroup dim3
  */

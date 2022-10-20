@@ -73,7 +73,7 @@
  * You may call this removeFile multiple times (though of course this only makes sense if you
  * have created the file multiple times).
  *
- * @return \c true if and only if the file was removed from the filesystem, or
+ * \return \c true if and only if the file was removed from the filesystem, or
  * \c false if an error occured (e.g., if the file was never created in the first place).
  */
 - (BOOL)removeFile;

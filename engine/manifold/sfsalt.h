@@ -193,7 +193,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
         /**
          * Sets this to be a copy of the given alternative.
          *
-         * @return a reference to this alternative.
+         * \return a reference to this alternative.
          */
         SFSAlt& operator = (const SFSAlt&) = default;
         /**
@@ -202,7 +202,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          *
          * The alternative that was passed will no longer be usable.
          *
-         * @return a reference to this alternative.
+         * \return a reference to this alternative.
          */
         SFSAlt& operator = (SFSAlt&&) noexcept = default;
 
@@ -234,7 +234,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * boundary.
          *
          * \param sfs the original Seifert fibred space.
-         * @return the resulting set of alternative representations for \a sfs.
+         * \return the resulting set of alternative representations for \a sfs.
          */
         static std::vector<SFSAlt> altSet(const SFSpace& sfs);
 
@@ -251,7 +251,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          *
          * \param sfs the Seifert fibred space that we are attempting to
          * represent.
-         * @return \c true if and only if it is possible to set the
+         * \return \c true if and only if it is possible to set the
          * negation argument to \c true in the SFSAlt class constructor.
          */
         static bool canNegate(const SFSpace& sfs);
@@ -260,21 +260,21 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * Returns the alternative representation of the original
          * Seifert fibred space.
          *
-         * @return the alternative representation.
+         * \return the alternative representation.
          */
         const SFSpace& alt() const&;
         /**
          * Returns a non-const reference to the alternative representation of
          * the original Seifert fibred space.
          *
-         * @return the alternative representation.
+         * \return the alternative representation.
          */
         SFSpace& alt() &;
         /**
          * Returns an rvalue reference to the alternative representation of
          * the original Seifert fibred space.
          *
-         * @return the alternative representation.
+         * \return the alternative representation.
          */
         SFSpace&& alt() &&;
         /**
@@ -290,7 +290,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * on whether a reflection has been used or not.  See reflected()
          * or the class notes for details.
          *
-         * @return the conversion matrix for this alternative space.
+         * \return the conversion matrix for this alternative space.
          */
         const Matrix2& conversion() const;
         /**
@@ -311,7 +311,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * whether the conversion matrix has determinant 1 or -1.
          * However, calling reflected() is both simpler and a little faster.
          *
-         * @return \c true if a reflection was used in creating this
+         * \return \c true if a reflection was used in creating this
          * alternative space, or \c false if no reflection was used.
          */
         bool reflected() const;
@@ -327,7 +327,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * testing all of alt(), conversion() and reflected() for equality.
          *
          * \param other the alternative to compare against this.
-         * @return \c true if and only if this and the given alternative
+         * \return \c true if and only if this and the given alternative
          * have identical presentations, as described above.
          */
         bool operator == (const SFSAlt& other) const;
@@ -343,7 +343,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * testing all of alt(), conversion() and reflected() for equality.
          *
          * \param other the alternative to compare against this.
-         * @return \c true if and only if this and the given alternative
+         * \return \c true if and only if this and the given alternative
          * do not have identical presentations, as described above.
          */
         bool operator != (const SFSAlt& other) const;

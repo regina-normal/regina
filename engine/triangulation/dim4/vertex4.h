@@ -129,7 +129,7 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          * deep copy of the vertex link.  You are free to modify the
          * triangulation that is returned.
          *
-         * @return the read-only triangulated link of this vertex.
+         * \return the read-only triangulated link of this vertex.
          */
         const Triangulation<3>& buildLink() const;
 
@@ -162,7 +162,7 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          * This is the same isomorphism that was accessible through the
          * old buildLinkDetail() function in Regina 6.0.1 and earlier.
          *
-         * @return details of how buildLink() labels the tetrahedra of
+         * \return details of how buildLink() labels the tetrahedra of
          * the vertex link.
          */
         Isomorphism<4> buildLinkInclusion() const;
@@ -172,7 +172,7 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          * To be an ideal, a vertex must (i) be valid, and (ii) have
          * a closed vertex link that is not a 3-sphere.
          *
-         * @return \c true if and only if this is an ideal vertex.
+         * \return \c true if and only if this is an ideal vertex.
          */
         bool isIdeal() const;
 
@@ -184,7 +184,7 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          * (i.e., after constructing the frontier of a regular neighbourhood
          * of the vertex, no further normalisation steps are required).
          *
-         * @return the corresponding vertex linking normal hypersurface.
+         * \return the corresponding vertex linking normal hypersurface.
          */
         NormalHypersurface linkingSurface() const;
 

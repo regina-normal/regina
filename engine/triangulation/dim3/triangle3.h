@@ -139,7 +139,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * enumeration, indicating how the edges and vertices of the
          * triangle are identified.
          *
-         * @return the type of this triangle.  This routine will never
+         * \return the type of this triangle.  This routine will never
          * return UNKNOWN_TYPE.
          */
         Type type();
@@ -150,7 +150,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * only relevant for some triangle types.  The triangle type is
          * returned by type().
          *
-         * @return The vertex or edge that plays a special role (this
+         * \return The vertex or edge that plays a special role (this
          * will be 0, 1 or 2), or -1 if this triangle type has no special
          * vertex or edge.
          */
@@ -163,7 +163,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * type()) can produce this result.
          * Note also that a triangle can be both a Mobius band \a and a cone.
          *
-         * @return \c true if and only if this triangle is a Mobius band.
+         * \return \c true if and only if this triangle is a Mobius band.
          */
         bool isMobiusBand();
 
@@ -174,7 +174,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * type()) can produce this result.
          * Note also that a triangle can be both a Mobius band \a and a cone.
          *
-         * @return \c true if and only if this triangle is a cone.
+         * \return \c true if and only if this triangle is a cone.
          */
         bool isCone();
 
@@ -189,11 +189,11 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          * change the topology of the surface, and in some pathological
          * cases could even reduce it to the empty surface.
          *
-         * @return a pair (\a s, \a thin), where \a s is the triangle linking
+         * \return a pair (\a s, \a thin), where \a s is the triangle linking
          * normal surface, and \a thin is \c true if and only if this link
          * is thin (i.e., no additional normalisation steps were required).
          *
-         * @return the corresponding triangle linking normal surface.
+         * \return the corresponding triangle linking normal surface.
          */
         std::pair<NormalSurface, bool> linkingSurface() const;
 

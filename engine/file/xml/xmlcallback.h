@@ -112,7 +112,7 @@ class XMLCallback : public regina::xml::XMLParserCallback {
          * The returned value will be one of the state constants defined
          * in this class.
          *
-         * @return the current state of this callback object.
+         * \return the current state of this callback object.
          */
         State state() const;
 
@@ -146,7 +146,7 @@ class XMLCallback : public regina::xml::XMLParserCallback {
          * Returns the element reader processing the deepest-level
          * XML element that is currently being parsed.
          *
-         * @return the current deepest element reader.
+         * \return the current deepest element reader.
          */
         XMLElementReader* currentReader();
 };

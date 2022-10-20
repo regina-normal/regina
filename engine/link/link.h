@@ -187,7 +187,7 @@ class StrandRef {
          * The information returned by crossing() and strand() together
          * pinpoint exactly which strand of the link this reference points to.
          *
-         * @return the crossing, or \c null if this is a null reference.
+         * \return the crossing, or \c null if this is a null reference.
          */
         Crossing* crossing() const;
 
@@ -202,7 +202,7 @@ class StrandRef {
          * The information returned by crossing() and strand() together
          * pinpoint exactly which strand of the link this reference points to.
          *
-         * @return either 0 or 1 to indicate the strand.
+         * \return either 0 or 1 to indicate the strand.
          */
         int strand() const;
 
@@ -217,7 +217,7 @@ class StrandRef {
          *
          * A strand can be restored from its ID by calling Link::strand().
          *
-         * @return the unique ID of this strand within the link.
+         * \return the unique ID of this strand within the link.
          */
         ssize_t id() const;
 
@@ -252,7 +252,7 @@ class StrandRef {
         /**
          * Sets this to be a copy of the given strand reference.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         StrandRef& operator = (const StrandRef&) = default;
 
@@ -271,7 +271,7 @@ class StrandRef {
          * \nopython The postincrement operator is available in Python
          * under the name inc().
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         StrandRef& operator ++ ();
         /**
@@ -288,7 +288,7 @@ class StrandRef {
          *
          * \ifacespython This routine is available under the name inc().
          *
-         * @return a copy of this object before the change took place.
+         * \return a copy of this object before the change took place.
          */
         StrandRef operator ++ (int);
         /**
@@ -306,7 +306,7 @@ class StrandRef {
          * \nopython The postincrement operator is available in Python
          * under the name dec().
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         StrandRef& operator -- ();
         /**
@@ -323,7 +323,7 @@ class StrandRef {
          *
          * \ifacespython This routine is available under the name dec().
          *
-         * @return a copy of this object before the change took place.
+         * \return a copy of this object before the change took place.
          */
         StrandRef operator -- (int);
 
@@ -339,7 +339,7 @@ class StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * @return the crossing reference that follows this.
+         * \return the crossing reference that follows this.
          */
         StrandRef next() const;
         /**
@@ -354,7 +354,7 @@ class StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * @return the crossing reference that precedes this.
+         * \return the crossing reference that precedes this.
          */
         StrandRef prev() const;
 
@@ -370,7 +370,7 @@ class StrandRef {
         /**
          * Tests whether this is a non-null reference.
          *
-         * @return \c true if this is not a null reference (i.e., crossing()
+         * \return \c true if this is not a null reference (i.e., crossing()
          * does not return a null pointer), or \c false if this is a null
          * reference.
          */
@@ -390,7 +390,7 @@ class StrandRef {
  *
  * \param out the output stream to which to write.
  * \param s the reference to write.
- * @return a reference to the given output stream.
+ * \return a reference to the given output stream.
  *
  * \ingroup link
  */
@@ -462,7 +462,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          * \warning The index of this crossing might change if other
          * crossings are added or removed.
          *
-         * @return the index of this crossing.
+         * \return the index of this crossing.
          */
         size_t index() const;
         /**
@@ -472,7 +472,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          * See the Crossing class notes for diagrams of positive and
          * negative crossings
          *
-         * @return the sign of this crossing.
+         * \return the sign of this crossing.
          */
         int sign() const;
         /**
@@ -481,7 +481,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          *
          * Note that upper() and over() are synonyms.
          *
-         * @return a reference to the upper strand for this crossing.
+         * \return a reference to the upper strand for this crossing.
          */
         StrandRef upper();
         /**
@@ -490,7 +490,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          *
          * Note that lower() and under() are synonyms.
          *
-         * @return a reference to the lower strand for this crossing.
+         * \return a reference to the lower strand for this crossing.
          */
         StrandRef lower();
         /**
@@ -499,7 +499,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          *
          * Note that upper() and over() are synonyms.
          *
-         * @return a reference to the upper strand for this crossing.
+         * \return a reference to the upper strand for this crossing.
          */
         StrandRef over();
         /**
@@ -508,7 +508,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          *
          * Note that lower() and under() are synonyms.
          *
-         * @return a reference to the lower strand for this crossing.
+         * \return a reference to the lower strand for this crossing.
          */
         StrandRef under();
         /**
@@ -521,7 +521,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          *
          * \param which either 1 to indicate the upper strand,
          * or 0 to indicate the lower strand.
-         * @return a reference to the given strand at this crossing.
+         * \return a reference to the given strand at this crossing.
          */
         StrandRef strand(int which);
         /**
@@ -535,7 +535,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          *
          * \param strand either 1 to walk forward along the upper strand,
          * or 0 to walk forward along the lower strand.
-         * @return a reference to the next crossing after this along the
+         * \return a reference to the next crossing after this along the
          * given strand.
          */
         StrandRef next(int strand) const;
@@ -550,7 +550,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          *
          * \param strand either 1 to walk backward along the upper strand,
          * or 0 to walk backward along the lower strand.
-         * @return a reference to the previous crossing before this along the
+         * \return a reference to the previous crossing before this along the
          * given strand.
          */
         StrandRef prev(int strand) const;
@@ -849,7 +849,7 @@ class Link :
          * Determines whether this link is empty.
          * An empty link is one with no components at all.
          *
-         * @return \c true if and only if this link is empty.
+         * \return \c true if and only if this link is empty.
          */
         bool isEmpty() const;
 
@@ -859,14 +859,14 @@ class Link :
          * Note that a link can have more components than crossings
          * (since it may contain additional zero-crossing unknot components).
          *
-         * @return the number of crossings.
+         * \return the number of crossings.
          */
         size_t size() const;
 
         /**
          * Returns the number of components in this link.
          *
-         * @return the number of components.
+         * \return the number of components.
          */
         size_t countComponents() const;
 
@@ -884,7 +884,7 @@ class Link :
          *
          * \param index the index of the requested crossing.  This must
          * be between 0 and size()-1 inclusive.
-         * @return the crossing at the given index.
+         * \return the crossing at the given index.
          */
         Crossing* crossing(size_t index) const;
 
@@ -911,7 +911,7 @@ class Link :
          * Nevertheless, it is recommended to treat this object as temporary
          * only, and to call crossings() again each time you need it.
          *
-         * @return access to the list of all crossings.
+         * \return access to the list of all crossings.
          */
         auto crossings() const;
 
@@ -930,7 +930,7 @@ class Link :
          *
          * \param index the index of the requested component.  This must
          * be between 0 and countComponents()-1 inclusive.
-         * @return a "starting strand" for traversing the component at
+         * \return a "starting strand" for traversing the component at
          * the given index, or a null reference if the requested component
          * has no crossings.
          */
@@ -962,7 +962,7 @@ class Link :
          * Nevertheless, it is recommended to treat this object as temporary
          * only, and to call components() again each time you need it.
          *
-         * @return access to the list of all components.
+         * \return access to the list of all components.
          */
         auto components() const;
 
@@ -975,7 +975,7 @@ class Link :
          * indicate 0-crossing unknot components) has an ID of -1.
          *
          * \param id an integer between -1 and 2*size()-1 inclusive.
-         * @return the strand of this link with the corresponding ID.
+         * \return the strand of this link with the corresponding ID.
          *
          * \see StrandRef::id()
          */
@@ -1001,7 +1001,7 @@ class Link :
          * both links would actually be combinatorially identical).
          *
          * \param other the strand reference to translate.
-         * @return the corresponding strand reference for this link.
+         * \return the corresponding strand reference for this link.
          */
         StrandRef translate(const StrandRef& other) const;
 
@@ -1026,7 +1026,7 @@ class Link :
          *
          * \param a the first of the two crossings to examine.
          * \param b the second of the two crossings to examine.
-         * @return \c true if and only if the two given crossings are
+         * \return \c true if and only if the two given crossings are
          * connected.
          */
         bool connected(const Crossing* a, const Crossing* b) const;
@@ -1051,7 +1051,7 @@ class Link :
          *   in both diagrams.
          *
          * \param other the link diagram to compare with this.
-         * @return \c true if and only if the two link diagrams are
+         * \return \c true if and only if the two link diagrams are
          * combinatorially identical.
          */
         bool operator == (const Link& other) const;
@@ -1076,7 +1076,7 @@ class Link :
          *   in both diagrams.
          *
          * \param other the link diagram to compare with this.
-         * @return \c true if and only if the two link diagrams are
+         * \return \c true if and only if the two link diagrams are
          * not combinatorially identical.
          */
         bool operator != (const Link& other) const;
@@ -1093,7 +1093,7 @@ class Link :
          * Calling graph() is identical to passing this link to the
          * ModelLinkGraph constructor.
          *
-         * @return the graph that models this link.
+         * \return the graph that models this link.
          */
         ModelLinkGraph graph() const;
 
@@ -1107,7 +1107,7 @@ class Link :
          * Sets this to be a (deep) copy of the given link.
          *
          * \param src the link to copy.
-         * @return a reference to this link.
+         * \return a reference to this link.
          */
         Link& operator = (const Link& src);
 
@@ -1128,7 +1128,7 @@ class Link :
          * to be destroyed (which will fire a destruction event instead).
          *
          * \param src the link to move.
-         * @return a reference to this link.
+         * \return a reference to this link.
          */
         Link& operator = (Link&& src);
 
@@ -1261,7 +1261,7 @@ class Link :
          * \param check \c true if we are to check whether the move can
          * be performed at the given location.
          * \param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -1329,7 +1329,7 @@ class Link :
          * \param check \c true if we are to check whether the move can
          * be performed at the given location.
          * \param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -1393,7 +1393,7 @@ class Link :
          * which the move will be performed, as described above.
          * \param check \c true if we are to check whether the move is legal.
          * \param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the requested move is legal.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -1459,7 +1459,7 @@ class Link :
          * the "upper" arc that features in this move, as described above.
          * \param check \c true if we are to check whether the move is legal.
          * \param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the requested move is legal.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -1547,7 +1547,7 @@ class Link :
          * \param check \c true if we are to check whether the move can
          * be performed at the given location.
          * \param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -1617,7 +1617,7 @@ class Link :
          * \param check \c true if we are to check whether the move can
          * be performed at the given location.
          * \param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -1689,7 +1689,7 @@ class Link :
          * \param check \c true if we are to check whether the move can
          * be performed at the given location.
          * \param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -1718,7 +1718,7 @@ class Link :
          * \pre This link is actually a knot (i.e., it contains exactly
          * one component).
          *
-         * @return \c true if and only if there is a pass move that
+         * \return \c true if and only if there is a pass move that
          * reduces the number of crossings.
          */
         bool hasReducingPass() const;
@@ -1781,7 +1781,7 @@ class Link :
          * \param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
          * whether simplifications are possible (defaults to \c true).
-         * @return if \a perform is \c true, this routine returns
+         * \return if \a perform is \c true, this routine returns
          * \c true if and only if the link was changed to
          * reduce the number of crossings; if \a perform is \c false,
          * this routine returns \c true if and only if it determines
@@ -1868,7 +1868,7 @@ class Link :
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return \c true if and only if this diagram was successfully
+         * \return \c true if and only if this diagram was successfully
          * simplified to fewer crossings.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
@@ -1984,7 +1984,7 @@ class Link :
          * for each knot diagram that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial knot argument(s).
-         * @return \c true if some call to \a action returned \c true (thereby
+         * \return \c true if some call to \a action returned \c true (thereby
          * terminating the search early), or \c false if the search ran to
          * completion.
          */
@@ -2035,7 +2035,7 @@ class Link :
          * The empty diagram and any zero-crossing unknot components
          * will be considered alternating.
          *
-         * @return \c true if this is an alternating diagram, or \c false
+         * \return \c true if this is an alternating diagram, or \c false
          * if this is a non-alternating diagram.
          */
         bool isAlternating() const;
@@ -2048,7 +2048,7 @@ class Link :
          *
          * The algorithm to compute linking number is linear time.
          *
-         * @return the linking number.
+         * \return the linking number.
          */
         long linking() const;
 
@@ -2060,7 +2060,7 @@ class Link :
          * of the signs of all crossings.  It is preserved under
          * Reidemeister moves II and III, but not I.
          *
-         * @return the writhe.
+         * \return the writhe.
          */
         long writhe() const;
 
@@ -2083,7 +2083,7 @@ class Link :
          * unknot components.
          *
          * \param component any strand along the component of interest.
-         * @return the writhe of the component containing the given strand,
+         * \return the writhe of the component containing the given strand,
          * or 0 if the given strand is a null strand.
          */
         long writheOfComponent(StrandRef component) const;
@@ -2101,7 +2101,7 @@ class Link :
          *
          * \param index the index of the requested component.  This must
          * be between 0 and countComponents()-1 inclusive.
-         * @return the writhe of the given component.
+         * \return the writhe of the given component.
          */
         long writheOfComponent(size_t index) const;
 
@@ -2127,7 +2127,7 @@ class Link :
          *
          * \param simplify \c true if and only if the triangulation of the
          * complement should be simplified to use as few tetrahedra as possible.
-         * @return the complement of this link.
+         * \return the complement of this link.
          */
         Triangulation<3> complement(bool simplify = true) const;
 
@@ -2148,7 +2148,7 @@ class Link :
          * \param k the number of parallel copies to create.
          * This must be non-negative.
          * \param framing the framing under which these copies will be parallel.
-         * @return \a k parallel copies of this link.
+         * \return \a k parallel copies of this link.
          */
         Link parallel(int k, Framing framing = FRAMING_SEIFERT) const;
 
@@ -2204,7 +2204,7 @@ class Link :
          * treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the bracket polynomial, or the zero polynomial if the
+         * \return the bracket polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT,
@@ -2216,7 +2216,7 @@ class Link :
          * If this property is already known, future calls to bracket() will
          * be very fast (simply returning the precalculated value).
          *
-         * @return \c true if and only if this property is already known.
+         * \return \c true if and only if this property is already known.
          */
         bool knowsBracket() const;
 
@@ -2294,7 +2294,7 @@ class Link :
          * treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the Jones polynomial, or the zero polynomial if the
+         * \return the Jones polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT,
@@ -2306,7 +2306,7 @@ class Link :
          * If this property is already known, future calls to jones() will be
          * very fast (simply returning the precalculated value).
          *
-         * @return \c true if and only if this property is already known.
+         * \return \c true if and only if this property is already known.
          */
         bool knowsJones() const;
 
@@ -2377,7 +2377,7 @@ class Link :
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the HOMFLY polynomial, or the zero polynomial if the
+         * \return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homflyAZ(Algorithm alg = ALG_DEFAULT,
@@ -2447,7 +2447,7 @@ class Link :
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the HOMFLY polynomial, or the zero polynomial if the
+         * \return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homflyLM(Algorithm alg = ALG_DEFAULT,
@@ -2486,7 +2486,7 @@ class Link :
          * fixed-parameter tractable treewidth-based algorithm.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the HOMFLY polynomial, or the zero polynomial if the
+         * \return the HOMFLY polynomial, or the zero polynomial if the
          * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homfly(Algorithm alg = ALG_DEFAULT,
@@ -2499,7 +2499,7 @@ class Link :
          * homflyAZ() and homflyLM() will all be very fast (simply returning
          * the precalculated values).
          *
-         * @return \c true if and only if this property is already known.
+         * \return \c true if and only if this property is already known.
          */
         bool knowsHomfly() const;
 
@@ -2516,7 +2516,7 @@ class Link :
          * \param homflyAZ the HOMFLY polynomial of a link as a polynomial in
          * \a alpha and \a z, where (\a alpha, \a z) are represented by
          * (\a x, \a y) in the class Laurent2<Integer>.
-         * @return the HOMFLY polynomial of the same link as a polynomial in
+         * \return the HOMFLY polynomial of the same link as a polynomial in
          * \a l and \a m, where (\a l, \a m) are represented by (\a x, \a y)
          * in the class Laurent2<Integer>.
          */
@@ -2545,7 +2545,7 @@ class Link :
          * every time this function is called.  This behaviour may change in
          * future versions of Regina.
          *
-         * @return the group of this link.
+         * \return the group of this link.
          */
         GroupPresentation group(bool simplify = true) const;
 
@@ -2573,7 +2573,7 @@ class Link :
          * to relying on the greedy heuristics that Regina implements),
          * then you can supply it by calling useTreeDecomposition().
          *
-         * @return a nice tree decomposition of this link diagram.
+         * \return a nice tree decomposition of this link diagram.
          */
         const TreeDecomposition& niceTreeDecomposition() const;
 
@@ -2658,7 +2658,7 @@ class Link :
          * There is also a variant of brief() that writes directly to an
          * output stream.
          *
-         * @return a description of this link in Regina's brief format.
+         * \return a description of this link in Regina's brief format.
          */
         std::string brief() const;
 
@@ -2738,7 +2738,7 @@ class Link :
          * \exception NotImplemented This link is empty or has multiple
          * components.
          *
-         * @return a classical Gauss code as described above.
+         * \return a classical Gauss code as described above.
          */
         std::string gauss() const;
 
@@ -2757,7 +2757,7 @@ class Link :
          * components, or has so many crossings that the Gauss code
          * cannot be expressed using native C++ integers.
          *
-         * @return a classical Gauss code for this knot in machine-readable
+         * \return a classical Gauss code for this knot in machine-readable
          * form.
          */
         std::vector<int> gaussData() const;
@@ -2843,7 +2843,7 @@ class Link :
          * \exception NotImplemented This link is empty or has multiple
          * components.
          *
-         * @return an oriented Gauss code as described above.
+         * \return an oriented Gauss code as described above.
          */
         std::string orientedGauss() const;
 
@@ -2873,7 +2873,7 @@ class Link :
          * \exception NotImplemented This link is empty or has multiple
          * components.
          *
-         * @return an oriented Gauss code for this knot in machine-readable
+         * \return an oriented Gauss code for this knot in machine-readable
          * form.
          */
         std::vector<std::string> orientedGaussData() const;
@@ -2963,7 +2963,7 @@ class Link :
          * used here (a string).  There is also another variant of jenkins()
          * that writes directly to an output stream.
          *
-         * @return a description of this link using Jenkins' text format.
+         * \return a description of this link using Jenkins' text format.
          */
         std::string jenkins() const;
 
@@ -2982,7 +2982,7 @@ class Link :
          * and/or components that its description in Jenkins' format
          * cannot be expressed using native C++ integers.
          *
-         * @return a description of this link using Jenkins' format
+         * \return a description of this link using Jenkins' format
          * in machine-readable form.
          */
         std::vector<int> jenkinsData() const;
@@ -3087,7 +3087,7 @@ class Link :
          *
          * \param alpha \c true to use alphabetical notation, or \c false
          * (the default) to use numerical notation.
-         * @return the Dowker-Thistlethwaite notation for this knot diagram.
+         * \return the Dowker-Thistlethwaite notation for this knot diagram.
          */
         std::string dt(bool alpha = false) const;
 
@@ -3111,7 +3111,7 @@ class Link :
          * components, or has so many crossings that the Dowker-Thistlethwaite
          * notation cannot be expressed using native C++ integers.
          *
-         * @return the numerical Dowker-Thistlethwaite notation in
+         * \return the numerical Dowker-Thistlethwaite notation in
          * machine-readable form.
          */
         std::vector<int> dtData() const;
@@ -3228,7 +3228,7 @@ class Link :
          * human-readable format used here (a single string).  There is also
          * another variant of pd() that writes directly to an output stream.
          *
-         * @return the planar diagram code, as described above.
+         * \return the planar diagram code, as described above.
          */
         std::string pd() const;
 
@@ -3246,7 +3246,7 @@ class Link :
          * \exception NotImplemented This link has so many crossings that the
          * planar diagram code cannot be expressed using native C++ integers.
          *
-         * @return the planar diagram code in machine-readable form.
+         * \return the planar diagram code in machine-readable form.
          */
         std::vector<std::array<int, 4>> pdData() const;
 
@@ -3324,7 +3324,7 @@ class Link :
          *
          * See the writePACE() notes for further details.
          *
-         * @return the output of writePACE(), as outlined above.
+         * \return the output of writePACE(), as outlined above.
          *
          * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
@@ -3340,7 +3340,7 @@ class Link :
          * initialiser lists, which can be tedious and error-prone to write
          * by hand.
          *
-         * @return the C++ code that was generated.
+         * \return the C++ code that was generated.
          */
         std::string dumpConstruction() const;
 
@@ -3381,7 +3381,7 @@ class Link :
          * should have the same signature as the original, or \c false
          * if these should be distinct (assuming the diagram is not symmetric
          * under reversal).
-         * @return the signature for this knot diagram.
+         * \return the signature for this knot diagram.
          */
         std::string knotSig(bool useReflection = true, bool useReversal = true)
             const;
@@ -3508,7 +3508,7 @@ class Link :
          * \param components one list for each link component that
          * describes the crossings that are visited along that component,
          * as described in the detailed notes above.
-         * @return the reconstructed link.
+         * \return the reconstructed link.
          */
         template <typename... Args>
         static Link fromData(std::initializer_list<int> crossingSigns,
@@ -3583,7 +3583,7 @@ class Link :
          * describing each link component.
          * \param endComponents a past-the-end iterator indicating the
          * end of the list of link components.
-         * @return the reconstructed link.
+         * \return the reconstructed link.
          */
         template <typename SignIterator, typename ComponentIterator>
         static Link fromData(SignIterator beginSigns, SignIterator endSigns,
@@ -3604,7 +3604,7 @@ class Link :
          *
          * \param sig the signature of the knot diagram to construct.
          * Note that signatures are case-sensitive.
-         * @return the reconstructed knot.
+         * \return the reconstructed knot.
          */
         static Link fromKnotSig(const std::string& sig);
 
@@ -3622,7 +3622,7 @@ class Link :
          *
          * \param sig the signature of the knot diagram to construct.
          * Note that signatures are case-sensitive.
-         * @return the reconstructed knot.
+         * \return the reconstructed knot.
          */
         static Link fromSig(const std::string& sig);
 
@@ -3646,7 +3646,7 @@ class Link :
          *
          * \param input an input stream that begins with the tight encoding
          * for a link.
-         * @return the link represented by the given tight encoding.
+         * \return the link represented by the given tight encoding.
          */
         static Link tightDecode(std::istream& input);
 
@@ -3717,7 +3717,7 @@ class Link :
          * \author Adam Gowty
          *
          * \param str a classical Gauss code for a knot, as described above.
-         * @return the reconstructed knot.
+         * \return the reconstructed knot.
          */
         static Link fromGauss(const std::string& str);
 
@@ -3769,7 +3769,7 @@ class Link :
          * sequence of integers for a classical Gauss code.
          * \param end an iterator that points past the end of the
          * sequence of integers for a classical Gauss code.
-         * @return the reconstructed knot.
+         * \return the reconstructed knot.
          */
         template <typename Iterator>
         static Link fromGauss(Iterator begin, Iterator end);
@@ -3830,7 +3830,7 @@ class Link :
          * performed here are not exhaustive.
          *
          * \param str an "oriented" Gauss code for a knot, as described above.
-         * @return the reconstructed knot.
+         * \return the reconstructed knot.
          */
         static Link fromOrientedGauss(const std::string& str);
 
@@ -3888,7 +3888,7 @@ class Link :
          * sequence of tokens for an "oriented" Gauss code.
          * \param end an iterator that points past the end of the
          * sequence of tokens for an "oriented" Gauss code.
-         * @return the reconstructed knot.
+         * \return the reconstructed knot.
          */
         template <typename Iterator>
         static Link fromOrientedGauss(Iterator begin, Iterator end);
@@ -3937,7 +3937,7 @@ class Link :
          *
          * \param str a string describing a link in Jenkins' format,
          * as described above.
-         * @return the reconstructed link.
+         * \return the reconstructed link.
          */
         static Link fromJenkins(const std::string& str);
 
@@ -3977,7 +3977,7 @@ class Link :
          *
          * \param in an input stream that begins with a sequence of integers
          * separated by whitespace that describes a link.
-         * @return the reconstructed link.
+         * \return the reconstructed link.
          */
         static Link fromJenkins(std::istream& in);
 
@@ -4019,7 +4019,7 @@ class Link :
          * sequence of integers that describes a link.
          * \param end an iterator that points past the end of the
          * sequence of integers that describes a link.
-         * @return the reconstructed link.
+         * \return the reconstructed link.
          */
         template <typename Iterator>
         static Link fromJenkins(Iterator begin, Iterator end);
@@ -4087,7 +4087,7 @@ class Link :
          *
          * \param str either the alphabetical or numerical
          * Dowker-Thistlethwaite notation for a knot, as described above.
-         * @return the reconstructed knot.
+         * \return the reconstructed knot.
          */
         static Link fromDT(const std::string& str);
 
@@ -4147,7 +4147,7 @@ class Link :
          * \param end an iterator that points past the end of the
          * sequence of integers for the Dowker-Thistlethwaite notation
          * for a knot.
-         * @return the reconstructed knot.
+         * \return the reconstructed knot.
          */
         template <typename Iterator>
         static Link fromDT(Iterator begin, Iterator end);
@@ -4250,7 +4250,7 @@ class Link :
          * are not exhaustive.
          *
          * \param str a planar diagram code for a link, as described above.
-         * @return the reconstructed link.
+         * \return the reconstructed link.
          */
         static Link fromPD(const std::string& str);
 
@@ -4306,7 +4306,7 @@ class Link :
          * sequence of 4-tuples for a planar diagram code.
          * \param end an iterator that points past the end of the
          * sequence of 4-tuples for a planar diagram code.
-         * @return the reconstructed link.
+         * \return the reconstructed link.
          */
         template <typename Iterator>
         static Link fromPD(Iterator begin, Iterator end);
@@ -4350,7 +4350,7 @@ class Link :
          * crossing respectively.
          * \param sign used to return the sign of this crossing (either
          * +1 or -1).
-         * @return \c true if and only if no errors were detected when
+         * \return \c true if and only if no errors were detected when
          * parsing the token.
          */
         static bool parseOrientedGaussTerm(const std::string& s,
@@ -4370,7 +4370,7 @@ class Link :
          * crossing respectively.
          * \param sign used to return the sign of this crossing (either
          * +1 or -1).
-         * @return \c true if and only if no errors were detected when
+         * \return \c true if and only if no errors were detected when
          * parsing the token.
          */
         static bool parseOrientedGaussTerm(const char* s,
@@ -4385,7 +4385,7 @@ class Link :
          *
          * See the source code for further documentation.
          *
-         * @return \c true if and only if a planar embedding was found.
+         * \return \c true if and only if a planar embedding was found.
          *
          * \author This routine is based on the Dowker-Thistlethwaite
          * implementation from the SnapPea/SnapPy kernel.
@@ -4476,7 +4476,7 @@ class Link :
          * that the caller must put an upper bound on the number of loops
          * in advance, before calling this routine.
          *
-         * @return the resulting number of loops after all crossings are
+         * \return the resulting number of loops after all crossings are
          * resolved.
          */
         size_t resolutionLoops(uint64_t mask, size_t* loopIDs = nullptr,

@@ -177,7 +177,7 @@ struct TightEncodable {
      * documentation for \a T, under the member function T::tightEncode().
      * See FacetPairing::tightEncode() for an example of this.
      *
-     * @return the resulting encoded string.
+     * \return the resulting encoded string.
      */
     std::string tightEncoding() const {
         std::ostringstream out;
@@ -198,7 +198,7 @@ struct TightEncodable {
      * of an object of type \a T.
      *
      * \param enc the tight encoding for an object of type \a T.
-     * @return the object represented by the given tight encoding.
+     * \return the object represented by the given tight encoding.
      */
     static T tightDecoding(const std::string& enc) {
         std::istringstream in(enc);
@@ -233,7 +233,7 @@ void tightEncode(std::ostream& out, int value);
  * See the page on \ref tight "tight encodings" for details.
  *
  * \param value the integer to encode.
- * @return the resulting encoded string.
+ * \return the resulting encoded string.
  *
  * \ingroup utilities
  */
@@ -257,7 +257,7 @@ void tightEncode(std::ostream& out, long value);
  * See the page on \ref tight "tight encodings" for details.
  *
  * \param value the integer to encode.
- * @return the resulting encoded string.
+ * \return the resulting encoded string.
  *
  * \ingroup utilities
  */
@@ -282,7 +282,7 @@ void tightEncode(std::ostream& out, long long value);
  * See the page on \ref tight "tight encodings" for details.
  *
  * \param value the integer to encode.
- * @return the resulting encoded string.
+ * \return the resulting encoded string.
  *
  * \ingroup utilities
  */
@@ -306,7 +306,7 @@ void tightEncode(std::ostream& out, unsigned value);
  * See the page on \ref tight "tight encodings" for details.
  *
  * \param value the integer to encode.
- * @return the resulting encoded string.
+ * \return the resulting encoded string.
  *
  * \ingroup utilities
  */
@@ -330,7 +330,7 @@ void tightEncode(std::ostream& out, unsigned long value);
  * See the page on \ref tight "tight encodings" for details.
  *
  * \param value the integer to encode.
- * @return the resulting encoded string.
+ * \return the resulting encoded string.
  *
  * \ingroup utilities
  */
@@ -356,7 +356,7 @@ void tightEncode(std::ostream& out, unsigned long long value);
  * See the page on \ref tight "tight encodings" for details.
  *
  * \param value the integer to encode.
- * @return the resulting encoded string.
+ * \return the resulting encoded string.
  *
  * \ingroup utilities
  */
@@ -386,7 +386,7 @@ void tightEncode(std::ostream& out, bool value);
  * tight encodings as the integers 1 and 0 respectively.
  *
  * \param value the boolean to encode.
- * @return the resulting encoded string.
+ * \return the resulting encoded string.
  *
  * \ingroup utilities
  */
@@ -436,7 +436,7 @@ std::string tightEncoding(bool value);
  * precision integer types (i.e., regina::Integer or regina::LargeInteger).
  *
  * \param enc the tight encoding for an integer or boolean.
- * @return the integer or boolean represented by the given tight encoding.
+ * \return the integer or boolean represented by the given tight encoding.
  */
 template<typename Int>
 Int tightDecoding(const std::string& enc);
@@ -480,7 +480,7 @@ Int tightDecoding(const std::string& enc);
  *
  * \param input an input stream that begins with the tight encoding for an
  * integer or boolean.
- * @return the integer or boolean represented by the given tight encoding.
+ * \return the integer or boolean represented by the given tight encoding.
  */
 template<typename Int>
 Int tightDecode(std::istream& input);
@@ -551,7 +551,7 @@ namespace detail {
      * \param noTrailingData \c true if iteration should reach \a limit
      * immediately after the encoding is read, or \c false if there is
      * allowed to be additional unread data.
-     * @return the integer represented by the given tight encoding.
+     * \return the integer represented by the given tight encoding.
      *
      * \ingroup utilities
      */
@@ -626,7 +626,7 @@ namespace detail {
      * This list of types may be expanded in future versions of Regina.
      *
      * \param input an input stream that begins with a tight encoding.
-     * @return the integer represented by the given tight encoding.
+     * \return the integer represented by the given tight encoding.
      *
      * \ingroup utilities
      */

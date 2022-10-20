@@ -217,7 +217,7 @@ class AngleStructures :
          * Sets this to be a (deep) copy of the given list.
          *
          * \param src the list to copy.
-         * @return a reference to this list.
+         * \return a reference to this list.
          */
         AngleStructures& operator = (const AngleStructures& src);
 
@@ -234,7 +234,7 @@ class AngleStructures :
          * to be destroyed (which will fire a destruction event instead).
          *
          * \param src the list to move.
-         * @return a reference to this list.
+         * \return a reference to this list.
          */
         AngleStructures& operator = (AngleStructures&& src);
 
@@ -279,7 +279,7 @@ class AngleStructures :
          * structure lists can now be kept anywhere in the packet tree, or
          * can be kept as standalone objects outside the packet tree entirely.
          *
-         * @return a reference to the underlying triangulation.
+         * \return a reference to the underlying triangulation.
          */
         const Triangulation<3>& triangulation() const;
 
@@ -287,7 +287,7 @@ class AngleStructures :
          * Returns whether this list was produced by enumerating taut angle
          * structures only.
          *
-         * @return \c true if this list was produced by enumerating
+         * \return \c true if this list was produced by enumerating
          * taut angle structures only, or \c false if the enumeration
          * procedure allowed for any angle structures.
          */
@@ -304,7 +304,7 @@ class AngleStructures :
          * of algorithm flags will be replaced with whatever algorithm was
          * actually used.
          *
-         * @return details of the algorithm used to enumerate this list.
+         * \return details of the algorithm used to enumerate this list.
          */
         AngleAlg algorithm() const;
 
@@ -314,7 +314,7 @@ class AngleStructures :
          * \ifacespython This is also used to implement the Python special
          * method __len__().
          *
-         * @return the number of angle structures.
+         * \return the number of angle structures.
          */
         size_t size() const;
         /**
@@ -323,7 +323,7 @@ class AngleStructures :
          *
          * \param index the index of the requested angle structure in
          * this list; this must be between 0 and size()-1 inclusive.
-         * @return the angle structure at the requested index.
+         * \return the angle structure at the requested index.
          */
         const AngleStructure& structure(size_t index) const;
         /**
@@ -332,7 +332,7 @@ class AngleStructures :
          *
          * \param index the index of the requested angle structure in
          * this list; this must be between 0 and size()-1 inclusive.
-         * @return the angle structure at the requested index.
+         * \return the angle structure at the requested index.
          */
         const AngleStructure& operator [](size_t index) const;
 
@@ -358,7 +358,7 @@ class AngleStructures :
          * this list in the same way that you would iterate over any native
          * Python container.
          *
-         * @return an iterator at the beginning of this list.
+         * \return an iterator at the beginning of this list.
          */
         auto begin() const;
         /**
@@ -374,7 +374,7 @@ class AngleStructures :
          * this list in the same way that you would iterate over any native
          * Python container.
          *
-         * @return an iterator beyond the end of this list.
+         * \return an iterator beyond the end of this list.
          */
         auto end() const;
 #ifdef __APIDOCS
@@ -395,7 +395,7 @@ class AngleStructures :
          * the angle structures in this list in the usual way using a
          * range-based \c for loop.
          *
-         * @return an iterator over the angle structures in this list.
+         * \return an iterator over the angle structures in this list.
          */
         auto __iter__() const;
 #endif
@@ -406,7 +406,7 @@ class AngleStructures :
          * See AngleStructure::isStrict() for details on strict angle
          * structures.
          *
-         * @return \c true if and only if a strict angle structure can
+         * \return \c true if and only if a strict angle structure can
          * be produced.
          */
         bool spansStrict() const;
@@ -419,7 +419,7 @@ class AngleStructures :
          *
          * See AngleStructure::isTaut() for details on taut structures.
          *
-         * @return \c true if and only if a taut structure can be produced.
+         * \return \c true if and only if a taut structure can be produced.
          */
         bool spansTaut() const;
 
@@ -444,7 +444,7 @@ class AngleStructures :
          *   comparison will return \c false.
          *
          * \param other the list to be compared with this list.
-         * @return \c true if both lists represent the same multiset of
+         * \return \c true if both lists represent the same multiset of
          * angle structures, or \c false if not.
          */
         bool operator == (const AngleStructures& other) const;
@@ -471,7 +471,7 @@ class AngleStructures :
          *   considered different).
          *
          * \param other the list to be compared with this list.
-         * @return \c true if both lists do not represent the same multiset of
+         * \return \c true if both lists do not represent the same multiset of
          * angle structures, or \c false if they do.
          */
         bool operator != (const AngleStructures& other) const;
@@ -577,7 +577,7 @@ void swap(AngleStructures& lhs, AngleStructures& rhs);
  *
  * \param tri the triangulation upon which these angle structure
  * equations will be based.
- * @return the resulting set of angle structure equations.
+ * \return the resulting set of angle structure equations.
  *
  * \ingroup angle
  */

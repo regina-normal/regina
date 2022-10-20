@@ -233,14 +233,14 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * For the purposes of this class, the zero polynomial is
          * considered to have degree zero.
          *
-         * @return the degree of this polynomial.
+         * \return the degree of this polynomial.
          */
         size_t degree() const;
 
         /**
          * Returns whether this is the zero polynomial.
          *
-         * @return \c true if and only if this is the zero polynomial.
+         * \return \c true if and only if this is the zero polynomial.
          */
         bool isZero() const;
 
@@ -249,7 +249,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * polynomial is a non-zero polynomial whose leading coefficient
          * is one.
          *
-         * @return \c true if and only if this is monic.
+         * \return \c true if and only if this is monic.
          */
         bool isMonic() const;
 
@@ -262,7 +262,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * since constness is important here and Python cannot enforce
          * it otherwise.
          *
-         * @return the leading coefficient of this polynomial.
+         * \return the leading coefficient of this polynomial.
          */
         const T& leading() const;
 
@@ -280,7 +280,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \param exp the exponent of the term whose coefficient should
          * be returned.  This must be between 0 and degree() inclusive.
-         * @return the coefficient of the given term.
+         * \return the coefficient of the given term.
          */
         const T& operator [] (size_t exp) const;
 
@@ -310,7 +310,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Tests whether this and the given polynomial are equal.
          *
          * \param rhs the polynomial to compare with this.
-         * @return \c true if and only if this and the given polynomial
+         * \return \c true if and only if this and the given polynomial
          * are equal.
          */
         bool operator == (const Polynomial& rhs) const;
@@ -319,7 +319,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Tests whether this and the given polynomial are not equal.
          *
          * \param rhs the polynomial to compare with this.
-         * @return \c true if and only if this and the given polynomial
+         * \return \c true if and only if this and the given polynomial
          * are not equal.
          */
         bool operator != (const Polynomial& rhs) const;
@@ -338,7 +338,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * See the copy constructor for further details.
          *
          * \param value the polynomial to copy.
-         * @return a reference to this polynomial.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator = (const Polynomial& value);
 
@@ -352,7 +352,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * This operator induces a deep copy of the given polynomial.
          *
          * \param value the polynomial to copy.
-         * @return a reference to this polynomial.
+         * \return a reference to this polynomial.
          */
         template <typename U>
         Polynomial& operator = (const Polynomial<U>& value);
@@ -368,7 +368,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * The polynomial that was passed (\a value) will no longer be usable.
          *
          * \param value the polynomial to move.
-         * @return a reference to this polynomial.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator = (Polynomial&& value) noexcept;
 
@@ -393,7 +393,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Multiplies this polynomial by the given constant.
          *
          * \param scalar the scalar factor to multiply by.
-         * @return a reference to this polynomial.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator *= (const T& scalar);
 
@@ -405,7 +405,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \pre The argument \a scalar is non-zero.
          *
          * \param scalar the scalar factor to divide by.
-         * @return a reference to this polynomial.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator /= (const T& scalar);
 
@@ -422,7 +422,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * avoid this deep copy where possible.
          *
          * \param other the polynomial to add to this.
-         * @return a reference to this polynomial.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator += (const Polynomial& other);
 
@@ -434,7 +434,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * result of this operation.
          *
          * \param other the polynomial to subtract from this.
-         * @return a reference to this polynomial.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator -= (const Polynomial& other);
 
@@ -442,7 +442,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Multiplies this by the given polynomial.
          *
          * \param other the polynomial to multiply this by.
-         * @return a reference to this polynomial.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator *= (const Polynomial& other);
 
@@ -473,7 +473,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * prior knowledge about the arguments.
          *
          * \param other the polynomial to divide this by.
-         * @return a reference to this polynomial.
+         * \return a reference to this polynomial.
          */
         Polynomial& operator /= (const Polynomial& other);
 
@@ -507,7 +507,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * prior knowledge about the arguments.
          *
          * \param divisor the polynomial to divide this by.
-         * @return a pair holding the quotient and remainder, as described
+         * \return a pair holding the quotient and remainder, as described
          * above.
          */
         std::pair<Polynomial, Polynomial> divisionAlg(
@@ -570,7 +570,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
-         * @return this polynomial as a human-readable string.
+         * \return this polynomial as a human-readable string.
          */
         std::string str(const char* variable) const;
 
@@ -590,7 +590,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
-         * @return this polynomial as a unicode-enabled human-readable string.
+         * \return this polynomial as a unicode-enabled human-readable string.
          */
         std::string utf8(const char* variable) const;
 
@@ -621,7 +621,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * result of this operation.
          *
          * \param other the polynomial to subtract this from.
-         * @return a reference to this polynomial.
+         * \return a reference to this polynomial.
          */
         Polynomial& subtractFrom(const Polynomial& other);
 
@@ -663,7 +663,7 @@ void swap(Polynomial<T>& a, Polynomial<T>& b) noexcept;
  *
  * \param poly the polynomial to multiply by.
  * \param scalar the scalar to multiply by.
- * @return the product of the given polynomial and scalar.
+ * \return the product of the given polynomial and scalar.
  *
  * \ingroup maths
  */
@@ -679,7 +679,7 @@ Polynomial<T> operator * (Polynomial<T> poly,
  *
  * \param scalar the scalar to multiply by.
  * \param poly the polynomial to multiply by.
- * @return the product of the given polynomial and scalar.
+ * \return the product of the given polynomial and scalar.
  *
  * \ingroup maths
  */
@@ -699,7 +699,7 @@ Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
  *
  * \param poly the polynomial to divide by the given scalar.
  * \param scalar the scalar factor to divide by.
- * @return the quotient of the given polynomial by the given scalar.
+ * \return the quotient of the given polynomial by the given scalar.
  *
  * \ingroup maths
  */
@@ -715,7 +715,7 @@ Polynomial<T> operator / (Polynomial<T> poly,
  *
  * \param lhs the first polynomial to add.
  * \param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -730,7 +730,7 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  *
  * \param lhs the first polynomial to add.
  * \param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -745,7 +745,7 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
  *
  * \param lhs the first polynomial to add.
  * \param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -760,7 +760,7 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
  *
  * \param lhs the first polynomial to add.
  * \param rhs the second polynomial to add.
- * @return the sum of both polynomials.
+ * \return the sum of both polynomials.
  *
  * \ingroup maths
  */
@@ -771,7 +771,7 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
  * Returns the negative of the given polynomial.
  *
  * \param arg the polynomial to negate.
- * @return the negative of \a arg.
+ * \return the negative of \a arg.
  *
  * \ingroup maths
  */
@@ -786,7 +786,7 @@ Polynomial<T> operator - (Polynomial<T> arg);
  *
  * \param lhs the polynomial to sutract \a rhs from.
  * \param rhs the polynomial to subtract from \a lhs.
- * @return the difference of the two given polynomials.
+ * \return the difference of the two given polynomials.
  *
  * \ingroup maths
  */
@@ -801,7 +801,7 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  *
  * \param lhs the polynomial to sutract \a rhs from.
  * \param rhs the polynomial to subtract from \a lhs.
- * @return the difference of the two given polynomials.
+ * \return the difference of the two given polynomials.
  *
  * \ingroup maths
  */
@@ -816,7 +816,7 @@ Polynomial<T> operator - (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
  *
  * \param lhs the polynomial to sutract \a rhs from.
  * \param rhs the polynomial to subtract from \a lhs.
- * @return the difference of the two given polynomials.
+ * \return the difference of the two given polynomials.
  *
  * \ingroup maths
  */
@@ -831,7 +831,7 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
  *
  * \param lhs the polynomial to sutract \a rhs from.
  * \param rhs the polynomial to subtract from \a lhs.
- * @return the difference of the two given polynomials.
+ * \return the difference of the two given polynomials.
  *
  * \ingroup maths
  */
@@ -843,7 +843,7 @@ Polynomial<T> operator - (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
  *
  * \param lhs the first polynomial to multiply.
  * \param rhs the second polynomial to multiply.
- * @return the product of both polynomials.
+ * \return the product of both polynomials.
  *
  * \ingroup maths
  */
@@ -878,7 +878,7 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  *
  * \param lhs the polynomial to divide by \a rhs.
  * \param rhs the polynomial that we will divide \a lhs by.
- * @return the quotient, as described above.
+ * \return the quotient, as described above.
  *
  * \ingroup maths
  */

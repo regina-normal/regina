@@ -78,7 +78,7 @@ class SnappedBall : public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         SnappedBall& operator = (const SnappedBall&) = default;
 
@@ -93,7 +93,7 @@ class SnappedBall : public StandardTriangulation {
         /**
          * Returns the tetrahedron that forms this snapped ball.
          *
-         * @return the tetrahedron.
+         * \return the tetrahedron.
          */
         Tetrahedron<3>* tetrahedron() const;
 
@@ -106,7 +106,7 @@ class SnappedBall : public StandardTriangulation {
          *
          * \param index specifies which of the two boundary faces to return;
          * this must be either 0 or 1.
-         * @return the corresponding face number in the tetrahedron.
+         * \return the corresponding face number in the tetrahedron.
          */
         int boundaryFace(int index) const;
         /**
@@ -118,20 +118,20 @@ class SnappedBall : public StandardTriangulation {
          *
          * \param index specifies which of the two internal faces to return;
          * this must be either 0 or 1.
-         * @return the corresponding face number in the tetrahedron.
+         * \return the corresponding face number in the tetrahedron.
          */
         int internalFace(int index) const;
         /**
          * Returns the edge that forms the equator of the boundary sphere
          * of this ball.
          *
-         * @return the corresponding edge number in the tetrahedron.
+         * \return the corresponding edge number in the tetrahedron.
          */
         int equatorEdge() const;
         /**
          * Returns the edge internal to this snapped ball.
          *
-         * @return the corresponding edge number in the tetrahedron.
+         * \return the corresponding edge number in the tetrahedron.
          */
         int internalEdge() const;
 
@@ -153,7 +153,7 @@ class SnappedBall : public StandardTriangulation {
          * snapped 3-balls within different triangulations.
          *
          * \param other the snapped 3-ball to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * the same specific presentation of a snapped 3-ball.
          */
         bool operator == (const SnappedBall& other) const;
@@ -175,7 +175,7 @@ class SnappedBall : public StandardTriangulation {
          * snapped 3-balls within different triangulations.
          *
          * \param other the snapped 3-ball to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * different specific presentations of a snapped 3-ball.
          */
         bool operator != (const SnappedBall& other) const;
@@ -196,7 +196,7 @@ class SnappedBall : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param tet the tetrahedron to examine as a potential 3-ball.
-         * @return a structure containing details of the snapped 3-ball, or
+         * \return a structure containing details of the snapped 3-ball, or
          * \c null if the given tetrahedron is not a snapped 3-ball.
          */
         static std::unique_ptr<SnappedBall> recognise(Tetrahedron<3>* tet);

@@ -103,7 +103,7 @@ class Component<4> : public detail::ComponentBase<4> {
          * \tparam subdim the face dimension; this must be between 0 and 4
          * inclusive.
          *
-         * @return the number of <i>subdim</i>-faces.
+         * \return the number of <i>subdim</i>-faces.
          */
         template <int subdim>
         size_t countFaces() const;
@@ -140,7 +140,7 @@ class Component<4> : public detail::ComponentBase<4> {
          * \tparam subdim the face dimension; this must be between 0 and 3
          * inclusive.
          *
-         * @return access to the list of all <i>subdim</i>-faces.
+         * \return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
         auto faces() const;
@@ -161,7 +161,7 @@ class Component<4> : public detail::ComponentBase<4> {
          *
          * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
-         * @return the requested face.
+         * \return the requested face.
          */
         template <int subdim>
         Face<4, subdim>* face(size_t index) const;
@@ -185,7 +185,7 @@ class Component<4> : public detail::ComponentBase<4> {
          * This is the case if and only if it contains an ideal vertex
          * as described by Vertex<4>::isIdeal().
          *
-         * @return \c true if and only if this component is ideal.
+         * \return \c true if and only if this component is ideal.
          */
         bool isIdeal() const;
 
@@ -197,7 +197,7 @@ class Component<4> : public detail::ComponentBase<4> {
          * components with invalid vertices are not closed.
          * See Vertex<4>::isBoundary() for details.
          *
-         * @return \c true if and only if this component is closed.
+         * \return \c true if and only if this component is closed.
          */
         bool isClosed() const;
 

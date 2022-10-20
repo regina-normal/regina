@@ -77,7 +77,7 @@ namespace regina {
  * null terminator) by the routine base64Encode(const char*, size_t, char**).
  *
  * \param bytes the number of raw input bytes.
- * @return the corresponding number of base64 printable output characters.
+ * \return the corresponding number of base64 printable output characters.
  *
  * \ingroup utilities
  */
@@ -93,7 +93,7 @@ size_t base64Length(size_t bytes);
  * this routine to be a base64 printable character.
  *
  * \param ch any character.
- * @return \c true if the given character is one of the base64 printable
+ * \return \c true if the given character is one of the base64 printable
  * characters used in Regina, or \c false if it is not.
  *
  * \ingroup utilities
@@ -182,7 +182,7 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
  * \param inlen the length of the input sequence.
  * \param out the address of a pointer which will be set to the output
  * array of base64 characters.
- * @return the length of the output array, not counting the terminating null.
+ * \return the length of the output array, not counting the terminating null.
  *
  * \author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
@@ -222,7 +222,7 @@ size_t base64Encode(const char* in, size_t inlen, char** out);
  * will be written.
  * \param outlen must contain the length of the output buffer on entry, and
  * on exit contains the number of output bytes that were successfully written.
- * @return \c true if decoding was successful, or \c false if the output
+ * \return \c true if decoding was successful, or \c false if the output
  * buffer was exhausted or an unexpected input character was found.
  *
  * \author This routine is based on the \a Base64 project at
@@ -267,7 +267,7 @@ bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
  * array of raw bytes (or which will be set to \c null on failure).
  * \param outlen the address of an integer which will be set to the
  * length of the output array (or which will be left undefined on failure).
- * @return \c true if decoding was successful, or \c false if an unexpected
+ * \return \c true if decoding was successful, or \c false if an unexpected
  * input character was found or some other error occurred.
  *
  * \author This routine is based on the \a Base64 project at

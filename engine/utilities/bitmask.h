@@ -167,7 +167,7 @@ class Bitmask {
          *
          * \param index indicates which bit to query; this must be at least
          * zero and strictly less than the length of this bitmask.
-         * @return the value of the (\a index)th bit.
+         * \return the value of the (\a index)th bit.
          */
         bool get(size_t index) const;
 
@@ -284,7 +284,7 @@ class Bitmask {
          * reset(size_t) or this assignment operator.
          *
          * \param other the bitmask to clone.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator = (const Bitmask& other);
 
@@ -298,7 +298,7 @@ class Bitmask {
          * The bitmask that was passed (\a src) will no longer be usable.
          *
          * \param src the bitmask whose contents should be moved.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator = (Bitmask&& src) noexcept;
 
@@ -330,7 +330,7 @@ class Bitmask {
          * \pre This and the given bitmask have the same length.
          *
          * \param other the bitmask to intersect with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator &= (const Bitmask& other);
 
@@ -341,7 +341,7 @@ class Bitmask {
          * \pre This and the given bitmask have the same length.
          *
          * \param other the bitmask to union with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator |= (const Bitmask& other);
 
@@ -353,7 +353,7 @@ class Bitmask {
          * \pre This and the given bitmask have the same length.
          *
          * \param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator ^= (const Bitmask& other);
 
@@ -364,7 +364,7 @@ class Bitmask {
          * \pre This and the given bitmask have the same length.
          *
          * \param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         Bitmask& operator -= (const Bitmask& other);
 
@@ -392,7 +392,7 @@ class Bitmask {
          * \e and the extra bits in the longer bitmask are all \c false.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \return \c true if and only if this and the given bitmask are
          * identical.
          */
         bool operator == (const Bitmask& other) const;
@@ -408,7 +408,7 @@ class Bitmask {
          * \e and the extra bits in the longer bitmask are all \c false.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \return \c true if and only if this and the given bitmask are
          * different.
          */
         bool operator != (const Bitmask& other) const;
@@ -425,7 +425,7 @@ class Bitmask {
          * represents the subset operation.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this is lexicographically
+         * \return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
         bool lessThan(const Bitmask& other) const;
@@ -445,7 +445,7 @@ class Bitmask {
          * lexicographically, use lessThan() instead.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \return \c true if and only if this bitmask is entirely contained
          * within the given bitmask.
          */
         bool operator <= (const Bitmask& other) const;
@@ -461,7 +461,7 @@ class Bitmask {
          *
          * \param x the first bitmask used to form the union.
          * \param y the first bitmask used to form the union.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
         bool inUnion(const Bitmask& x, const Bitmask& y) const;
@@ -477,7 +477,7 @@ class Bitmask {
          *
          * \param x the first bitmask used to form the intersection.
          * \param y the first bitmask used to form the intersection.
-         * @return \c true if and only if this bitmask entirely contains
+         * \return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
         bool containsIntn(const Bitmask& x, const Bitmask& y) const;
@@ -486,7 +486,7 @@ class Bitmask {
          * Returns the number of bits currently set to \c true in this
          * bitmask.
          *
-         * @return the number of \c true bits.
+         * \return the number of \c true bits.
          */
         size_t bits() const;
 
@@ -494,7 +494,7 @@ class Bitmask {
          * Returns the index of the first \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the first \c true bit.
+         * \return the index of the first \c true bit.
          */
         ssize_t firstBit() const;
 
@@ -502,7 +502,7 @@ class Bitmask {
          * Returns the index of the last \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the last \c true bit.
+         * \return the index of the last \c true bit.
          */
         ssize_t lastBit() const;
 
@@ -514,7 +514,7 @@ class Bitmask {
          * to \c true, then this routine will return \c true.  Otherwise
          * this routine will return \c false.
          *
-         * @return \c true if and only if at most one bit is set to \c true.
+         * \return \c true if and only if at most one bit is set to \c true.
          */
         bool atMostOneBit() const;
 
@@ -545,7 +545,7 @@ void swap(Bitmask& a, Bitmask& b) noexcept;
  *
  * \param out the output stream to which to write.
  * \param mask the bitmask to write.
- * @return a reference to the given output stream.
+ * \return a reference to the given output stream.
  *
  * \ingroup utilities
  */
@@ -563,7 +563,7 @@ class Bitmask1;
  *
  * \param out the output stream to which to write.
  * \param mask the bitmask to write.
- * @return a reference to the given output stream.
+ * \return a reference to the given output stream.
  *
  * \ingroup utilities
  */
@@ -669,7 +669,7 @@ class Bitmask1 {
          * Sets this bitmask to a copy of the given bitmask.
          *
          * \param other the bitmask to clone.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         Bitmask1<T>& operator = (const Bitmask1<T>& other) = default;
 
@@ -693,7 +693,7 @@ class Bitmask1 {
          *
          * \param index indicates which bit to query; this must be between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
-         * @return the value of the (\a index)th bit.
+         * \return the value of the (\a index)th bit.
          */
         inline bool get(size_t index) const {
             return (mask & (T(1) << index));
@@ -773,7 +773,7 @@ class Bitmask1 {
          * Every bit that is unset in \a other will be unset in this bitmask.
          *
          * \param other the bitmask to intersect with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         inline Bitmask1<T>& operator &= (const Bitmask1<T>& other) {
             mask &= other.mask;
@@ -785,7 +785,7 @@ class Bitmask1 {
          * Every bit that is set in \a other will be set in this bitmask.
          *
          * \param other the bitmask to union with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         inline Bitmask1<T>& operator |= (const Bitmask1<T>& other) {
             mask |= other.mask;
@@ -798,7 +798,7 @@ class Bitmask1 {
          * flipped in this bitmask.
          *
          * \param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         inline Bitmask1<T>& operator ^= (const Bitmask1<T>& other) {
             mask ^= other.mask;
@@ -810,7 +810,7 @@ class Bitmask1 {
          * Every bit that is set in \a other will be cleared in this bitmask.
          *
          * \param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         inline Bitmask1<T>& operator -= (const Bitmask1<T>& other) {
             mask |= other.mask;
@@ -834,7 +834,7 @@ class Bitmask1 {
          * Determines whether this and the given bitmask are identical.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \return \c true if and only if this and the given bitmask are
          * identical.
          */
         inline bool operator == (const Bitmask1<T>& other) const {
@@ -845,7 +845,7 @@ class Bitmask1 {
          * Determines whether this and the given bitmask are different.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \return \c true if and only if this and the given bitmask are
          * different.
          */
         inline bool operator != (const Bitmask1<T>& other) const {
@@ -862,7 +862,7 @@ class Bitmask1 {
          * represents the subset operation.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this is lexicographically
+         * \return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
         inline bool lessThan(const Bitmask1<T>& other) const {
@@ -882,7 +882,7 @@ class Bitmask1 {
          * lexicographically, use lessThan() instead.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \return \c true if and only if this bitmask is entirely contained
          * within the given bitmask.
          */
         inline bool operator <= (const Bitmask1<T>& other) const {
@@ -898,7 +898,7 @@ class Bitmask1 {
          *
          * \param x the first bitmask used to form the union.
          * \param y the first bitmask used to form the union.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
         inline bool inUnion(const Bitmask1<T>& x, const Bitmask1<T>& y)
@@ -915,7 +915,7 @@ class Bitmask1 {
          *
          * \param x the first bitmask used to form the intersection.
          * \param y the first bitmask used to form the intersection.
-         * @return \c true if and only if this bitmask entirely contains
+         * \return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
         inline bool containsIntn(const Bitmask1<T>& x, const Bitmask1<T>& y)
@@ -927,7 +927,7 @@ class Bitmask1 {
          * Returns the number of bits currently set to \c true in this
          * bitmask.
          *
-         * @return the number of \c true bits.
+         * \return the number of \c true bits.
          */
         inline size_t bits() const {
             return BitManipulator<T>::bits(mask);
@@ -937,7 +937,7 @@ class Bitmask1 {
          * Returns the index of the first \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the first \c true bit.
+         * \return the index of the first \c true bit.
          */
         inline ssize_t firstBit() const {
             return BitManipulator<T>::firstBit(mask);
@@ -947,7 +947,7 @@ class Bitmask1 {
          * Returns the index of the last \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the last \c true bit.
+         * \return the index of the last \c true bit.
          */
         inline ssize_t lastBit() const {
             return BitManipulator<T>::lastBit(mask);
@@ -961,7 +961,7 @@ class Bitmask1 {
          * to \c true, then this routine will return \c true.  Otherwise
          * this routine will return \c false.
          *
-         * @return \c true if and only if at most one bit is set to \c true.
+         * \return \c true if and only if at most one bit is set to \c true.
          */
         inline bool atMostOneBit() const {
             return BitManipulator<T>::bits(mask) <= 1;
@@ -983,7 +983,7 @@ class Bitmask2;
  *
  * \param out the output stream to which to write.
  * \param mask the bitmask to write.
- * @return a reference to the given output stream.
+ * \return a reference to the given output stream.
  *
  * \ingroup utilities
  */
@@ -1096,7 +1096,7 @@ class Bitmask2 {
          * Sets this bitmask to a copy of the given bitmask.
          *
          * \param other the bitmask to clone.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         Bitmask2<T, U>& operator = (const Bitmask2<T, U>& other) = default;
 
@@ -1126,7 +1126,7 @@ class Bitmask2 {
          *
          * \param index indicates which bit to query; this must be between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
-         * @return the value of the (\a index)th bit.
+         * \return the value of the (\a index)th bit.
          */
         inline bool get(size_t index) const {
             if (index < 8 * sizeof(T))
@@ -1224,7 +1224,7 @@ class Bitmask2 {
          * Every bit that is unset in \a other will be unset in this bitmask.
          *
          * \param other the bitmask to intersect with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         inline Bitmask2<T, U>& operator &= (const Bitmask2<T, U>& other) {
             low &= other.low;
@@ -1237,7 +1237,7 @@ class Bitmask2 {
          * Every bit that is set in \a other will be set in this bitmask.
          *
          * \param other the bitmask to union with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         inline Bitmask2<T, U>& operator |= (const Bitmask2<T, U>& other) {
             low |= other.low;
@@ -1251,7 +1251,7 @@ class Bitmask2 {
          * flipped in this bitmask.
          *
          * \param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         inline Bitmask2<T, U>& operator ^= (const Bitmask2<T, U>& other) {
             low ^= other.low;
@@ -1264,7 +1264,7 @@ class Bitmask2 {
          * Every bit that is set in \a other will be cleared in this bitmask.
          *
          * \param other the bitmask to XOR with this.
-         * @return a reference to this bitmask.
+         * \return a reference to this bitmask.
          */
         inline Bitmask2<T, U>& operator -= (const Bitmask2<T, U>& other) {
             low |= other.low;
@@ -1291,7 +1291,7 @@ class Bitmask2 {
          * Determines whether this and the given bitmask are identical.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \return \c true if and only if this and the given bitmask are
          * identical.
          */
         inline bool operator == (const Bitmask2<T, U>& other) const {
@@ -1302,7 +1302,7 @@ class Bitmask2 {
          * Determines whether this and the given bitmask are different.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this and the given bitmask are
+         * \return \c true if and only if this and the given bitmask are
          * different.
          */
         inline bool operator != (const Bitmask2<T, U>& other) const {
@@ -1319,7 +1319,7 @@ class Bitmask2 {
          * represents the subset operation.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this is lexicographically
+         * \return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
         inline bool lessThan(const Bitmask2<T, U>& other) const {
@@ -1340,7 +1340,7 @@ class Bitmask2 {
          * lexicographically, use lessThan() instead.
          *
          * \param other the bitmask to compare against this.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \return \c true if and only if this bitmask is entirely contained
          * within the given bitmask.
          */
         inline bool operator <= (const Bitmask2<T, U>& other) const {
@@ -1357,7 +1357,7 @@ class Bitmask2 {
          *
          * \param x the first bitmask used to form the union.
          * \param y the first bitmask used to form the union.
-         * @return \c true if and only if this bitmask is entirely contained
+         * \return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
         inline bool inUnion(const Bitmask2<T, U>& x, const Bitmask2<T, U>& y)
@@ -1375,7 +1375,7 @@ class Bitmask2 {
          *
          * \param x the first bitmask used to form the intersection.
          * \param y the first bitmask used to form the intersection.
-         * @return \c true if and only if this bitmask entirely contains
+         * \return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
         inline bool containsIntn(const Bitmask2<T, U>& x,
@@ -1388,7 +1388,7 @@ class Bitmask2 {
          * Returns the number of bits currently set to \c true in this
          * bitmask.
          *
-         * @return the number of \c true bits.
+         * \return the number of \c true bits.
          */
         inline size_t bits() const {
             return BitManipulator<T>::bits(low) + BitManipulator<U>::bits(high);
@@ -1398,7 +1398,7 @@ class Bitmask2 {
          * Returns the index of the first \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the first \c true bit.
+         * \return the index of the first \c true bit.
          */
         inline ssize_t firstBit() const {
             // -1 case does not work out of the box in the second IF branch
@@ -1415,7 +1415,7 @@ class Bitmask2 {
          * Returns the index of the last \c true bit in this bitmask,
          * or -1 if there are no \c true bits.
          *
-         * @return the index of the last \c true bit.
+         * \return the index of the last \c true bit.
          */
         inline ssize_t lastBit() const {
             // -1 case works out of the box in the second IF branch.
@@ -1433,7 +1433,7 @@ class Bitmask2 {
          * to \c true, then this routine will return \c true.  Otherwise
          * this routine will return \c false.
          *
-         * @return \c true if and only if at most one bit is set to \c true.
+         * \return \c true if and only if at most one bit is set to \c true.
          */
         inline bool atMostOneBit() const {
             return (BitManipulator<T>::bits(low) +

@@ -127,7 +127,7 @@ class IsoSigClassic {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return the index of the current starting simplex with
+         * \return the index of the current starting simplex with
          * respect to the triangulation component under consideration.
          * Note that, for a disconnected triangulation, this is \e not
          * necessarily the same as Simplex::index() (which gives the
@@ -144,7 +144,7 @@ class IsoSigClassic {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return the starting labelling, given as a permutation that
+         * \return the starting labelling, given as a permutation that
          * maps the current vertex labels of the starting simplex \a s
          * to the "canonical" labels 0,1,...,\a dim.
          */
@@ -158,7 +158,7 @@ class IsoSigClassic {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return \c true if this was successful, or \c false if there
+         * \return \c true if this was successful, or \c false if there
          * is no next candidate pair (i.e., the current candidate pair
          * is the last).
          */
@@ -291,7 +291,7 @@ class IsoSigDegrees {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return the index of the current starting simplex with
+         * \return the index of the current starting simplex with
          * respect to the triangulation component under consideration.
          * Note that, for a disconnected triangulation, this is \e not
          * necessarily the same as Simplex::index() (which gives the
@@ -308,7 +308,7 @@ class IsoSigDegrees {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return the starting labelling, given as a permutation that
+         * \return the starting labelling, given as a permutation that
          * maps the current vertex labels of the starting simplex \a s
          * to the "canonical" labels 0,1,...,\a dim.
          */
@@ -322,7 +322,7 @@ class IsoSigDegrees {
          * \pre This object is holding a valid candidate pair (\a s, \a p);
          * that is, next() has not yet returned \c false.
          *
-         * @return \c true if this was successful, or \c false if there
+         * \return \c true if this was successful, or \c false if there
          * is no next candidate pair (i.e., the current candidate pair
          * is the last).
          */

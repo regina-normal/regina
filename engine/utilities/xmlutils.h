@@ -65,7 +65,7 @@ namespace regina::xml {
  *
  * \param original the string to convert; this string will not be
  * changed.
- * @return the converted string with special characters replaced by
+ * \return the converted string with special characters replaced by
  * XML entities.
  *
  * \ingroup utilities
@@ -80,7 +80,7 @@ std::string xmlEncodeSpecialChars(const std::string& original);
  *
  * \param comment the string to convert; this string will not be
  * changed.
- * @return the string converted to be usable inside an XML comment.
+ * \return the string converted to be usable inside an XML comment.
  *
  * \ingroup utilities
  */
@@ -101,7 +101,7 @@ std::string xmlEncodeComment(const std::string& comment);
  *
  * \param tagName the name of the XML tag to create.
  * \param value the value to assign to the <i>value</i> property of the tag.
- * @return the corresponding XML tag.
+ * \return the corresponding XML tag.
  *
  * \ingroup utilities
  */

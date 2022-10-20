@@ -113,7 +113,7 @@ class TxICore : public Output<TxICore> {
          * same triangulation (i.e., it is not recreated each time this
          * function is called).
          *
-         * @return the full triangulation.
+         * \return the full triangulation.
          */
         const Triangulation<3>& core() const;
         /**
@@ -177,7 +177,7 @@ class TxICore : public Output<TxICore> {
          * or 1 if the lower boundary should be examined.
          * \param whichTri 0 if the first boundary triangle should be
          * examined, or 1 if the second boundary triangle should be examined.
-         * @return the permutation mapping roles 0, 1 and 2 in the
+         * \return the permutation mapping roles 0, 1 and 2 in the
          * diagram above to real tetrahedron vertex numbers.
          */
         Perm<4> bdryRoles(int whichBdry, int whichTri) const;
@@ -206,7 +206,7 @@ class TxICore : public Output<TxICore> {
          *
          * \param whichBdry 0 if the upper boundary should be examined,
          * or 1 if the lower boundary should be examined.
-         * @return the relationship between the boundary curves and
+         * \return the relationship between the boundary curves and
          * tetrahedron edges.
          */
         const Matrix2& bdryReln(int whichBdry) const;
@@ -234,7 +234,7 @@ class TxICore : public Output<TxICore> {
          *     [ b_l ]                      [ b_u ]
          * </pre>
          *
-         * @return the relationship between the upper and lower boundary curves.
+         * \return the relationship between the upper and lower boundary curves.
          */
         const Matrix2& parallelReln() const;
 
@@ -242,7 +242,7 @@ class TxICore : public Output<TxICore> {
          * Returns the name of this specific triangulation of
          * <tt>T x I</tt> as a human-readable string.
          *
-         * @return the name of this triangulation.
+         * \return the name of this triangulation.
          */
         std::string name() const;
         /**
@@ -250,7 +250,7 @@ class TxICore : public Output<TxICore> {
          * <tt>T x I</tt> in TeX format.  No leading or trailing dollar
          * signs will be included.
          *
-         * @return the name of this triangulation in TeX format.
+         * \return the name of this triangulation in TeX format.
          */
         std::string texName() const;
 
@@ -262,7 +262,7 @@ class TxICore : public Output<TxICore> {
          * by core() should also be combinatorially identical.
          *
          * \param other the <tt>T x I</tt> triangulation to compare with this.
-         * @return \c true if and only if this and the given triangulation
+         * \return \c true if and only if this and the given triangulation
          * are of the same type and have the same parameters.
          */
         virtual bool operator == (const TxICore& other) const = 0;
@@ -276,7 +276,7 @@ class TxICore : public Output<TxICore> {
          * combinatorially identical.
          *
          * \param other the <tt>T x I</tt> triangulation to compare with this.
-         * @return \c true if and only if this and the given triangulation
+         * \return \c true if and only if this and the given triangulation
          * are of different types and/or have different parameters.
          */
         bool operator != (const TxICore& other) const;
@@ -290,7 +290,7 @@ class TxICore : public Output<TxICore> {
          * and returns a string.
          *
          * \param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         /**
@@ -302,7 +302,7 @@ class TxICore : public Output<TxICore> {
          * and returns a string.
          *
          * \param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
@@ -478,7 +478,7 @@ class TxIDiagonalCore : public TxICore {
          * Sets this to be a copy of the given <tt>T x I</tt> triangulation.
          * This will induce a deep copy.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         TxIDiagonalCore& operator = (const TxIDiagonalCore& src) = default;
 
@@ -488,7 +488,7 @@ class TxIDiagonalCore : public TxICore {
          *
          * The triangulation that was passed will no longer be usable.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         TxIDiagonalCore& operator = (TxIDiagonalCore&& src) noexcept = default;
 
@@ -496,7 +496,7 @@ class TxIDiagonalCore : public TxICore {
          * Returns the total number of tetrahedra in this <tt>T x I</tt>
          * triangulation.
          *
-         * @return the total number of tetrahedra.
+         * \return the total number of tetrahedra.
          */
         size_t size() const;
 
@@ -504,7 +504,7 @@ class TxIDiagonalCore : public TxICore {
          * Returns the additional parameter \a k as described in the
          * class notes.
          *
-         * @return the additional parameter \a k.
+         * \return the additional parameter \a k.
          */
         size_t k() const;
 
@@ -598,7 +598,7 @@ class TxIParallelCore : public TxICore {
          * Sets this to be a copy of the given <tt>T x I</tt> triangulation.
          * This will induce a deep copy.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         TxIParallelCore& operator = (const TxIParallelCore& src) = default;
 
@@ -608,7 +608,7 @@ class TxIParallelCore : public TxICore {
          *
          * The triangulation that was passed will no longer be usable.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         TxIParallelCore& operator = (TxIParallelCore&& src) noexcept = default;
 

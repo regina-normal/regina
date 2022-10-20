@@ -223,7 +223,7 @@ class Attachment : public Packet {
          * attachment (i.e., if <tt>src.isNull()</tt> returns \c true).
          *
          * \param src the attachment packet whose contents should be copied.
-         * @return a reference to this packet.
+         * \return a reference to this packet.
          */
         Attachment& operator = (const Attachment& src);
 
@@ -247,7 +247,7 @@ class Attachment : public Packet {
          * Determines whether this packet is currently holding a non-empty
          * attachment.
          *
-         * @return \c true if and only if this packet is holding a
+         * \return \c true if and only if this packet is holding a
          * non-empty attachment.
          */
         bool isNull() const;
@@ -266,7 +266,7 @@ class Attachment : public Packet {
          * a deep copy of the raw data (so this routine becomes slower, but
          * the resulting byte sequence can be freely modified).
          *
-         * @return the raw attachment data.
+         * \return the raw attachment data.
          */
         const char* data() const;
 
@@ -277,7 +277,7 @@ class Attachment : public Packet {
          * (i.e., if isNull() returns \c true), then this routine will return
          * zero.
          *
-         * @return the number of bytes.
+         * \return the number of bytes.
          */
         size_t size() const;
 
@@ -296,7 +296,7 @@ class Attachment : public Packet {
          * that this could be the empty string, or could be some other string
          * that is not a valid filename on the current platform.
          *
-         * @return the filename associated with this attachment.
+         * \return the filename associated with this attachment.
          */
         const std::string& filename() const;
 
@@ -316,7 +316,7 @@ class Attachment : public Packet {
          * occurred when attempting to deduce it, then this routine will
          * return the empty string.
          *
-         * @return the extension of the filename for this attachment.
+         * \return the extension of the filename for this attachment.
          */
         std::string extension() const;
 
@@ -370,7 +370,7 @@ class Attachment : public Packet {
          * simply passes it unchanged to low-level C/C++ file I/O routines.
          *
          * \param pathname the full pathname of the file to write.
-         * @return \c true if the file was successfully written, or
+         * \return \c true if the file was successfully written, or
          * \c false otherwise.
          */
         bool save(const char* pathname) const;
@@ -385,7 +385,7 @@ class Attachment : public Packet {
          * attachment will compare as equal to any other empty attachment.
          *
          * \param other the attachment to compare with this.
-         * @return \c true if and only if this and the given attachment
+         * \return \c true if and only if this and the given attachment
          * contain identical data.
          */
         bool operator == (const Attachment& other) const;
@@ -400,7 +400,7 @@ class Attachment : public Packet {
          * attachment will compare as equal to any other empty attachment.
          *
          * \param other the attachment to compare with this.
-         * @return \c true if and only if this and the given attachment
+         * \return \c true if and only if this and the given attachment
          * contain different data.
          */
         bool operator != (const Attachment& other) const;

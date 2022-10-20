@@ -119,7 +119,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          *
          * \nopython
          *
-         * @return a reference to the global URBG.
+         * \return a reference to the global URBG.
          */
         std::default_random_engine& engine();
 
@@ -142,7 +142,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          *
          * \param range the size of the range of possible results;
          * this must be strictly positive.
-         * @return a random integer between 0 and (\a range - 1) inclusive.
+         * \return a random integer between 0 and (\a range - 1) inclusive.
          */
         template <typename Int>
         static Int rand(Int range);

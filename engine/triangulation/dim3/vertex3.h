@@ -141,7 +141,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * and earlier.  It was renamed to linkType() in Regina 7.0, to clear
          * the way for a different routine to be called link() in the future.
          *
-         * @return a broad categorisation of the vertex link.
+         * \return a broad categorisation of the vertex link.
          */
         LinkType linkType() const;
 
@@ -186,7 +186,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * deep copy of the vertex link).  You are free to modify the
          * triangulation that is returned.
          *
-         * @return the read-only triangulated link of the vertex.
+         * \return the read-only triangulated link of the vertex.
          */
         const Triangulation<2>& buildLink() const;
 
@@ -219,7 +219,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * This is the same isomorphism that was accessible through the
          * old buildLinkDetail() function in Regina 6.0.1 and earlier.
          *
-         * @return details of how buildLink() labels the triangles of
+         * \return details of how buildLink() labels the triangles of
          * the vertex link.
          */
         Isomorphism<3> buildLinkInclusion() const;
@@ -227,7 +227,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
         /**
          * Determines if the link of this vertex is closed.
          *
-         * @return \c true if and only if the link of this vertex is
+         * \return \c true if and only if the link of this vertex is
          * closed.
          */
         bool isLinkClosed() const;
@@ -237,7 +237,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * This requires the vertex link to be closed and not a
          * 2-sphere.
          *
-         * @return \c true if and only if this is an ideal vertex.
+         * \return \c true if and only if this is an ideal vertex.
          */
         bool isIdeal() const;
 
@@ -246,7 +246,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * This requires the vertex link to be a sphere, disc, torus or
          * Klein bottle.
          *
-         * @return \c true if and only if this vertex is standard.
+         * \return \c true if and only if this vertex is standard.
          */
         bool isStandard() const;
 
@@ -257,7 +257,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * vertex link, and so can be much faster than calling
          * buildLink().eulerChar().
          *
-         * @return the Euler characteristic of the vertex link.
+         * \return the Euler characteristic of the vertex link.
          */
         long linkEulerChar() const;
 
@@ -269,7 +269,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * (i.e., after constructing the frontier of a regular neighbourhood
          * of the vertex, no further normalisation steps are required).
          *
-         * @return the corresponding vertex linking normal surface.
+         * \return the corresponding vertex linking normal surface.
          */
         NormalSurface linkingSurface() const;
 

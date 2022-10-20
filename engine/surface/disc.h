@@ -118,7 +118,7 @@ struct DiscSpec {
      * Copies the values from the given disc specifier into this specifier.
      *
      * \param cloneMe the disc specifier whose values should be copied.
-     * @return a reference to this disc specifier.
+     * \return a reference to this disc specifier.
      */
     DiscSpec& operator = (const DiscSpec& cloneMe) = default;
     /**
@@ -126,7 +126,7 @@ struct DiscSpec {
      * information.
      *
      * \param other the disc specifier to compare with this.
-     * @return \c true if and only if this and the given disc specifier
+     * \return \c true if and only if this and the given disc specifier
      * contain identical information.
      */
     bool operator == (const DiscSpec& other) const;
@@ -135,7 +135,7 @@ struct DiscSpec {
      * information.
      *
      * \param other the disc specifier to compare with this.
-     * @return \c true if and only if this and the given disc specifier
+     * \return \c true if and only if this and the given disc specifier
      * contain different information.
      */
     bool operator != (const DiscSpec& other) const;
@@ -150,7 +150,7 @@ struct DiscSpec {
  *
  * \param out the output stream to which to write.
  * \param spec the disc specifier to write.
- * @return a reference to \a out.
+ * \return a reference to \a out.
  *
  * \ingroup surfaces
  */
@@ -165,7 +165,7 @@ std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
  * class notes.
  * \param vertex the vertex under consideration; this should be
  * between 0 and 3 inclusive.
- * @return \c true if normal discs of the given type are
+ * \return \c true if normal discs of the given type are
  * numbered away from the given vertex, or \c false if they are
  * numbered towards the given vertex.
  *
@@ -279,7 +279,7 @@ class DiscSetTet {
          * Sets this to be a copy of the given set of normal discs.
          *
          * \param src the disc set to copy.
-         * @return a reference to this disc set.
+         * \return a reference to this disc set.
          */
         DiscSetTet& operator = (const DiscSetTet& src) = default;
 
@@ -291,7 +291,7 @@ class DiscSetTet {
          * tetrahedra are the same; it merely compares the ten disc
          * counts in each set.
          *
-         * @return \c true if and only if both sets are the same, as
+         * \return \c true if and only if both sets are the same, as
          * described above.
          */
         bool operator == (const DiscSetTet& other) const;
@@ -304,7 +304,7 @@ class DiscSetTet {
          * tetrahedra are the same; it merely compares the ten disc
          * counts in each set.
          *
-         * @return \c true if and only if both sets are not the same, as
+         * \return \c true if and only if both sets are not the same, as
          * described above.
          */
         bool operator != (const DiscSetTet& other) const;
@@ -316,7 +316,7 @@ class DiscSetTet {
          * \param type the disc type to examine; this should be between
          * 0 and 9 inclusive.  Disc types are outlined in
          * the DiscSpec class notes
-         * @return the number of discs of the given type inside this
+         * \return the number of discs of the given type inside this
          * tetrahedron.
          */
         unsigned long nDiscs(int type) const;
@@ -339,7 +339,7 @@ class DiscSetTet {
          * \param discNumber indicates which normal disc of the given disc
          * type is referred to (between 0 and <tt>nDiscs(discType)-1</tt>
          * inclusive).
-         * @return the number of the normal arc of the given type that belongs
+         * \return the number of the normal arc of the given type that belongs
          * to the given normal disc.
          * Arcs of a given type (where \a arcFace and \a arcVertex
          * together define the arc type) are numbered starting at 0 from the
@@ -365,7 +365,7 @@ class DiscSetTet {
          * Arcs of a given type (where \a arcFace and \a arcVertex
          * together define the arc type) are numbered starting at 0 from the
          * tetrahedron vertex outwards.
-         * @return a pair (\a discType, \a discNumber), where \a discType gives
+         * \return a pair (\a discType, \a discNumber), where \a discType gives
          * the disc type of the normal disc that meets the given normal arc
          * (between 0 and 9 inclusive), and \a discNumber indicates which
          * normal disc of the returned disc type (<tt>discType</tt>)
@@ -537,7 +537,7 @@ class DiscSetTetData : public DiscSetTet {
          * assignment operator for type \a T.
          *
          * \param src the disc set to copy.
-         * @return a reference to this disc set.
+         * \return a reference to this disc set.
          */
         DiscSetTetData& operator = (const DiscSetTetData& src) {
             // std::copy() exhibits undefined behaviour with self-assignment.
@@ -573,7 +573,7 @@ class DiscSetTetData : public DiscSetTet {
          * The disc set that was passed (\a src) will no longer be usable.
          *
          * \param src the disc set to move from.
-         * @return a reference to this disc set.
+         * \return a reference to this disc set.
          */
         DiscSetTetData& operator = (DiscSetTetData&& src) noexcept {
             // Swap the data arrays, and leave the originals for src to destroy:
@@ -597,7 +597,7 @@ class DiscSetTetData : public DiscSetTet {
          * The associated data (of type \a T) will be compared using the
          * equality operator (==).
          *
-         * @return \c true if and only if both sets are the same, as
+         * \return \c true if and only if both sets are the same, as
          * described above.
          */
         bool operator == (const DiscSetTetData& other) const {
@@ -622,7 +622,7 @@ class DiscSetTetData : public DiscSetTet {
          * The associated data (of type \a T) will be compared using the
          * equality operator (==).
          *
-         * @return \c true if and only if both sets are not the same, as
+         * \return \c true if and only if both sets are not the same, as
          * described above.
          */
         bool operator != (const DiscSetTetData& other) const {
@@ -649,7 +649,7 @@ class DiscSetTetData : public DiscSetTet {
          * \param discNumber indicates which normal disc of the given disc
          * type is referred to; this should be between 0 and
          * <tt>nDiscs(discType)-1</tt> inclusive.
-         * @return a reference to the data corresponding to the given
+         * \return a reference to the data corresponding to the given
          * normal disc.
          */
         T& data(int discType, unsigned long discNumber) {
@@ -826,7 +826,7 @@ class DiscSetSurfaceDataImpl {
          * assignment operator for type \a T.
          *
          * \param src the disc set to copy.
-         * @return a reference to this disc set.
+         * \return a reference to this disc set.
          */
         DiscSetSurfaceDataImpl& operator = (const DiscSetSurfaceDataImpl& src) {
             // The code below will break badly with self-assignment.
@@ -867,7 +867,7 @@ class DiscSetSurfaceDataImpl {
          * The disc set that was passed (\a src) will no longer be usable.
          *
          * \param src the disc set to move from.
-         * @return a reference to this disc set.
+         * \return a reference to this disc set.
          */
         DiscSetSurfaceDataImpl& operator = (DiscSetSurfaceDataImpl&& src)
                 noexcept {
@@ -914,7 +914,7 @@ class DiscSetSurfaceDataImpl {
          * The associated data (of type \a T) will be compared using the
          * equality operator (==).
          *
-         * @return \c true if and only if both sets are the same, as
+         * \return \c true if and only if both sets are the same, as
          * described above.
          */
         bool operator == (const DiscSetSurfaceDataImpl& other) const {
@@ -941,7 +941,7 @@ class DiscSetSurfaceDataImpl {
          * The associated data (of type \a T) will be compared using the
          * equality operator (==).
          *
-         * @return \c true if and only if both sets are not the same, as
+         * \return \c true if and only if both sets are not the same, as
          * described above.
          */
         bool operator != (const DiscSetSurfaceDataImpl& other) const {
@@ -951,7 +951,7 @@ class DiscSetSurfaceDataImpl {
         /**
          * Returns the number of tetrahedra in the underlying triangulation.
          *
-         * @return the number of tetrahedra.
+         * \return the number of tetrahedra.
          */
         size_t nTets() const {
             return triangulation_->size();
@@ -966,7 +966,7 @@ class DiscSetSurfaceDataImpl {
          * \param type the disc type to examine; this should be between
          * 0 and 9 inclusive.  Disc types are outlined in
          * the DiscSpec class notes.
-         * @return the number of discs of the given type inside the
+         * \return the number of discs of the given type inside the
          * given tetrahedron.
          */
         unsigned long nDiscs(size_t tetIndex, int type) const {
@@ -979,7 +979,7 @@ class DiscSetSurfaceDataImpl {
          *
          * \param tetIndex the index in the triangulation of the given
          * tetrahedron.
-         * @return the set of discs inside the given tetrahedron.
+         * \return the set of discs inside the given tetrahedron.
          */
         TetData& tetDiscs(size_t tetIndex) const {
             return *(discSets[tetIndex]);
@@ -998,7 +998,7 @@ class DiscSetSurfaceDataImpl {
          *
          * \param disc the disc whose data we require; this must refer
          * to a disc within this disc set.
-         * @return a reference to the data corresponding to the given
+         * \return a reference to the data corresponding to the given
          * normal disc.
          */
         typename TetData::Data& data(const DiscSpec& disc) {
@@ -1020,7 +1020,7 @@ class DiscSetSurfaceDataImpl {
          * \param arc the given normal arc; this must actually be an arc
          * on the boundary of the given normal disc (although it may run
          * in either direction).
-         * @return a pair (\a adj, \a perm), where \a adj is the normal disc
+         * \return a pair (\a adj, \a perm), where \a adj is the normal disc
          * adjacent to the given disc along the given arc, and \a perm represents
          * the same directed normal arc that was passed but expressed in terms
          * of the vertices of the adjacent tetrahedron.  This will be no value
@@ -1062,7 +1062,7 @@ class DiscSetSurfaceDataImpl {
          * surface in the same way that you would iterate over any native
          * Python container.
          *
-         * @return an iterator at the beginning of the range of all
+         * \return an iterator at the beginning of the range of all
          * normal discs.
          */
         DiscSpecIterator<TetData> begin() const {
@@ -1081,7 +1081,7 @@ class DiscSetSurfaceDataImpl {
          * surface in the same way that you would iterate over any native
          * Python container.
          *
-         * @return an iterator at the end of the range of all normal discs.
+         * \return an iterator at the end of the range of all normal discs.
          */
         DiscSpecIterator<TetData> end() const {
             DiscSpecIterator<TetData> ans(*this);
@@ -1108,7 +1108,7 @@ class DiscSetSurfaceDataImpl {
          * all normal discs in the underlying normal surface in the usual way
          * using a range-based \c for loop.
          *
-         * @return an iterator over all normal discs.
+         * \return an iterator over all normal discs.
          */
         auto __iter__() const;
 #endif
@@ -1251,7 +1251,7 @@ class DiscSpecIterator {
         /**
          * Sets this to be a copy of the given iterator.
          *
-         * @return a reference to this iterator.
+         * \return a reference to this iterator.
          */
         DiscSpecIterator& operator = (const DiscSpecIterator&) = default;
 
@@ -1263,7 +1263,7 @@ class DiscSpecIterator {
          * \nopython For Python users, DiscSpecIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return a reference to this iterator.
+         * \return a reference to this iterator.
          */
         DiscSpecIterator& operator++() {
             ++current.number;
@@ -1278,7 +1278,7 @@ class DiscSpecIterator {
          * \nopython For Python users, DiscSpecIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return a copy of this iterator before it was incremented.
+         * \return a copy of this iterator before it was incremented.
          */
         DiscSpecIterator operator++(int) {
             DiscSpecIterator ans = *this;
@@ -1297,7 +1297,7 @@ class DiscSpecIterator {
          * \exception StopIteration The iterator is already past-the-end
          * when this function is called.
          *
-         * @return a reference to the disc that this iterator is pointing to,
+         * \return a reference to the disc that this iterator is pointing to,
          * before the increment takes place.
          */
         auto __next__();
@@ -1310,7 +1310,7 @@ class DiscSpecIterator {
          * \nopython For Python users, DiscSpecIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return a reference to the disc pointed to by this iterator.
+         * \return a reference to the disc pointed to by this iterator.
          */
         const DiscSpec& operator *() const {
             return current;
@@ -1321,7 +1321,7 @@ class DiscSpecIterator {
          * \nopython For Python users, DiscSpecIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return \c true if and only if this iterator is past-the-end.
+         * \return \c true if and only if this iterator is past-the-end.
          */
         bool done() const {
             return (current.tetIndex == internalDiscSet->nTets());
@@ -1335,7 +1335,7 @@ class DiscSpecIterator {
          * point to the same disc of the same tetrahedron.
          *
          * \param other the iterator to compare with this.
-         * @return \c true if and only if this and the given iterator
+         * \return \c true if and only if this and the given iterator
          * are equal.
          */
         bool operator == (const DiscSpecIterator& other) const {
@@ -1351,7 +1351,7 @@ class DiscSpecIterator {
          * point to the same disc of the same tetrahedron.
          *
          * \param other the iterator to compare with this.
-         * @return \c true if and only if this and the given iterator
+         * \return \c true if and only if this and the given iterator
          * are equal.
          */
         bool operator != (const DiscSpecIterator& other) const {

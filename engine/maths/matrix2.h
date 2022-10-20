@@ -88,7 +88,7 @@ class Matrix2 {
         /**
          * Sets this matrix to be a copy of the given matrix.
          *
-         * @return a reference to this matrix.
+         * \return a reference to this matrix.
          */
         Matrix2& operator = (const Matrix2&) = default;
 
@@ -107,7 +107,7 @@ class Matrix2 {
          * each 0 or 1).
          *
          * \param row the index of the requested row; this must be 0 or 1.
-         * @return a two-integer array containing the elements of the
+         * \return a two-integer array containing the elements of the
          * requested row.
          */
         const std::array<long, 2>& operator [] (unsigned row) const;
@@ -119,7 +119,7 @@ class Matrix2 {
          * each 0 or 1).  Each such element may be modified directly.
          *
          * \param row the index of the requested row; this must be 0 or 1.
-         * @return a two-integer array containing the elements of the
+         * \return a two-integer array containing the elements of the
          * requested row.
          */
         std::array<long, 2>& operator [] (unsigned row);
@@ -129,7 +129,7 @@ class Matrix2 {
          * Neither this nor the given matrix is changed.
          *
          * \param other the matrix that this should be multiplied by.
-         * @return the product \a this * \a other.
+         * \return the product \a this * \a other.
          */
         Matrix2 operator * (const Matrix2& other) const;
         /**
@@ -137,7 +137,7 @@ class Matrix2 {
          * integer.  This matrix is not changed.
          *
          * \param scalar the integer that this matrix should be multiplied by.
-         * @return the product \a this * \a scalar.
+         * \return the product \a this * \a scalar.
          */
         Matrix2 operator * (long scalar) const;
         /**
@@ -145,7 +145,7 @@ class Matrix2 {
          * Neither this nor the given matrix is changed.
          *
          * \param other the matrix to add to this.
-         * @return the sum \a this + \a other.
+         * \return the sum \a this + \a other.
          */
         Matrix2 operator + (const Matrix2& other) const;
         /**
@@ -153,21 +153,21 @@ class Matrix2 {
          * Neither this nor the given matrix is changed.
          *
          * \param other the matrix to subtract from this.
-         * @return the difference \a this - \a other.
+         * \return the difference \a this - \a other.
          */
         Matrix2 operator - (const Matrix2& other) const;
         /**
          * Determines the negative of this matrix.
          * This matrix is not changed.
          *
-         * @return the negative of this matrix.
+         * \return the negative of this matrix.
          */
         Matrix2 operator - () const;
         /**
          * Returns the transpose of this matrix.
          * This matrix is not changed.
          *
-         * @return the transpose of this matrix.
+         * \return the transpose of this matrix.
          */
         Matrix2 transpose() const;
         /**
@@ -177,7 +177,7 @@ class Matrix2 {
          * This routine only works for integer matrices whose determinant is
          * either +1 or -1.
          *
-         * @return the inverse of this matrix.  If this matrix does not
+         * \return the inverse of this matrix.  If this matrix does not
          * have determinant +1 or -1, the zero matrix will be returned
          * instead.
          */
@@ -188,7 +188,7 @@ class Matrix2 {
          * This matrix is changed to reflect the result.
          *
          * \param other the matrix to add to this.
-         * @return a reference to this matrix with its new value.
+         * \return a reference to this matrix with its new value.
          */
         Matrix2& operator += (const Matrix2& other);
         /**
@@ -196,7 +196,7 @@ class Matrix2 {
          * This matrix is changed to reflect the result.
          *
          * \param other the matrix to subtract from this.
-         * @return a reference to this matrix with its new value.
+         * \return a reference to this matrix with its new value.
          */
         Matrix2& operator -= (const Matrix2& other);
         /**
@@ -204,7 +204,7 @@ class Matrix2 {
          * This matrix is changed to reflect the result.
          *
          * \param other the matrix by which this should be multiplied.
-         * @return a reference to this matrix with its new value.
+         * \return a reference to this matrix with its new value.
          */
         Matrix2& operator *= (const Matrix2& other);
         /**
@@ -212,7 +212,7 @@ class Matrix2 {
          * This matrix is changed to reflect the result.
          *
          * \param scalar the scalar by which this should be multiplied.
-         * @return a reference to this matrix with its new value.
+         * \return a reference to this matrix with its new value.
          */
         Matrix2& operator *= (long scalar);
         /**
@@ -226,7 +226,7 @@ class Matrix2 {
          * This routine only works for integer matrices whose determinant is
          * either +1 or -1.  Otherwise this matrix is left unchanged.
          *
-         * @return \c true if this matrix was successfully inverted
+         * \return \c true if this matrix was successfully inverted
          * (i.e., its determinant was +1 or -1), or \c false otherwise.
          */
         bool invert();
@@ -235,14 +235,14 @@ class Matrix2 {
          * Determines if this is equal to the given matrix.
          *
          * \param compare the matrix with which this will be compared.
-         * @return \c true if and only if this matrix is equal to \a compare.
+         * \return \c true if and only if this matrix is equal to \a compare.
          */
         bool operator == (const Matrix2& compare) const;
         /**
          * Determines if this is not equal to the given matrix.
          *
          * \param compare the matrix with which this will be compared.
-         * @return \c true if and only if this matrix is not equal to
+         * \return \c true if and only if this matrix is not equal to
          * \a compare.
          */
         bool operator != (const Matrix2& compare) const;
@@ -250,20 +250,20 @@ class Matrix2 {
         /**
          * Returns the determinant of this matrix.
          *
-         * @return the determinant of this matrix.
+         * \return the determinant of this matrix.
          */
         long determinant() const;
         /**
          * Determines if this is the 2-by-2 identity matrix.
          *
-         * @return \c true if this is the identity matrix, or \c false
+         * \return \c true if this is the identity matrix, or \c false
          * otherwise.
          */
         bool isIdentity() const;
         /**
          * Determines if this is the 2-by-2 zero matrix.
          *
-         * @return \c true if this is the zero matrix, or \c false
+         * \return \c true if this is the zero matrix, or \c false
          * otherwise.
          */
         bool isZero() const;
@@ -291,7 +291,7 @@ void swap(Matrix2& a, Matrix2& b) noexcept;
  *
  * \param out the output stream to which to write.
  * \param mat the matrix to write.
- * @return a reference to \a out.
+ * \return a reference to \a out.
  *
  * \ingroup maths
  */
@@ -305,7 +305,7 @@ std::ostream& operator << (std::ostream& out, const Matrix2& mat);
  *
  * \param m1 the first matrix to examine.
  * \param m2 the second matrix to examine.
- * @return \c true if \a m1 is deemed to be more pleasing than \a m2,
+ * \return \c true if \a m1 is deemed to be more pleasing than \a m2,
  * or \c false if either the matrices are equal or \a m2 is more
  * pleasing than \a m1.
  *
@@ -326,7 +326,7 @@ bool simpler(const Matrix2& m1, const Matrix2& m2);
  * \param pair1second the second matrix of the first pair to examine.
  * \param pair2first the first matrix of the second pair to examine.
  * \param pair2second the second matrix of the second pair to examine.
- * @return \c true if the first pair is deemed to be more pleasing than
+ * \return \c true if the first pair is deemed to be more pleasing than
  * the second pair, or \c false if either the ordered pairs are equal or
  * the second pair is more pleasing than the first.
  *

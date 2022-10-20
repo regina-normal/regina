@@ -119,7 +119,7 @@ class MaxAdmissible {
          * \param constraints a set of validity constraints as described above.
          * This may be ValidityConstraints::none to indicate no constraints
          * (in which case there will be just one maximal admissible face).
-         * @return a vector containing one bitmask representing each
+         * \return a vector containing one bitmask representing each
          * maximal admissible face, as described above.
          */
         template <class BitmaskType, class RayIterator>

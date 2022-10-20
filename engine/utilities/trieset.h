@@ -155,7 +155,7 @@ class TrieSet : public Output<TrieSet> {
          * This will induce a deep copy of \a src.
          *
          * \param src the collection of sets to copy.
-         * @return a reference to this collection.
+         * \return a reference to this collection.
          */
         TrieSet& operator = (const TrieSet& src);
 
@@ -166,7 +166,7 @@ class TrieSet : public Output<TrieSet> {
          * The collection that was passed (\a src) will no longer be usable.
          *
          * \param src the collection of sets whose contents should be moved.
-         * @return a reference to this collection.
+         * \return a reference to this collection.
          */
         TrieSet& operator = (TrieSet&& src) noexcept;
 
@@ -183,7 +183,7 @@ class TrieSet : public Output<TrieSet> {
          * exactly the same sets.
          *
          * \param other the collection to compare with this.
-         * @return \c true if and only if both collections store the same sets.
+         * \return \c true if and only if both collections store the same sets.
          */
         bool operator == (const TrieSet& other) const;
 
@@ -192,7 +192,7 @@ class TrieSet : public Output<TrieSet> {
          * exactly the same sets.
          *
          * \param other the collection to compare with this.
-         * @return \c true if and only if both collections do not store the
+         * \return \c true if and only if both collections do not store the
          * same sets.
          */
         bool operator != (const TrieSet& other) const;

@@ -123,7 +123,7 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          * pointer <tt>this->block()</tt> after the move will be the
          * same as the pointer <tt>src.block()</tt> before the move.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         SatBlockSpec& operator = (SatBlockSpec&& src) noexcept;
 
@@ -152,7 +152,7 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          * refHoriz()).
          *
          * \param other the structure to compare against this.
-         * @return \c true if and only if this and \a other contain
+         * \return \c true if and only if this and \a other contain
          * combinatorially equivalent information.
          */
         bool operator == (const SatBlockSpec& other) const;
@@ -168,7 +168,7 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
          * refHoriz()).
          *
          * \param other the structure to compare against this.
-         * @return \c true if and only if this and \a other do not contain
+         * \return \c true if and only if this and \a other do not contain
          * combinatorially equivalent information.
          */
         bool operator != (const SatBlockSpec& other) const;
@@ -176,21 +176,21 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
         /**
          * Returns the full combinatorial structure of the saturated block.
          *
-         * @return the saturated block structure.
+         * \return the saturated block structure.
          */
         const SatBlock* block() const;
         /**
          * Returns whether the block is reflected vertically within
          * the larger region.  See the class notes for details.
          *
-         * @return \c true if and only if the block is reflected vertically.
+         * \return \c true if and only if the block is reflected vertically.
          */
         bool refVert() const;
         /**
          * Returns whether the block is reflected horizontally within
          * the larger region.  See the class notes for details.
          *
-         * @return \c true if and only if the block is reflected horizontally.
+         * \return \c true if and only if the block is reflected horizontally.
          */
         bool refHoriz() const;
 
@@ -356,7 +356,7 @@ class SatRegion : public Output<SatRegion> {
          * Sets this to be a copy of the given region.
          *
          * \param src the region to copy.
-         * @return a reference to this region.
+         * \return a reference to this region.
          */
         SatRegion& operator = (const SatRegion& src);
         /**
@@ -365,7 +365,7 @@ class SatRegion : public Output<SatRegion> {
          *
          * The region that was passed will no longer be usable.
          *
-         * @return a reference to this region.
+         * \return a reference to this region.
          */
         SatRegion& operator = (SatRegion&&) noexcept = default;
 
@@ -380,7 +380,7 @@ class SatRegion : public Output<SatRegion> {
          * Returns the number of saturated blocks that come together
          * to form this saturated region.
          *
-         * @return the total number of blocks.
+         * \return the total number of blocks.
          */
         size_t countBlocks() const;
         /**
@@ -393,7 +393,7 @@ class SatRegion : public Output<SatRegion> {
          * \param which indicates which of the constituent blocks should
          * be returned; this must be between 0 and countBlocks()-1
          * inclusive.
-         * @return details of the requested saturated block.
+         * \return details of the requested saturated block.
          */
         const SatBlockSpec& block(size_t which) const;
         /**
@@ -405,7 +405,7 @@ class SatRegion : public Output<SatRegion> {
          * the blocks in this region one by one until the given block is
          * found (or until all blocks are exhausted).
          *
-         * @return the index of the given block (as an integer between
+         * \return the index of the given block (as an integer between
          * 0 and countBlocks()-1 inclusive), or -1 if the block is
          * not part of this region.
          */
@@ -415,7 +415,7 @@ class SatRegion : public Output<SatRegion> {
          * Returns the number of saturated annuli that together form the
          * boundary components of this region.
          *
-         * @return the number of boundary annuli.
+         * \return the number of boundary annuli.
          */
         size_t countBoundaryAnnuli() const;
         /**
@@ -459,7 +459,7 @@ class SatRegion : public Output<SatRegion> {
          *
          * \param which specifies which boundary annulus of this region to
          * return; this must be between 0 and countBoundaryAnnuli()-1 inclusive.
-         * @return a tuple (\a block, annulus, refVert, refHoriz), where:
+         * \return a tuple (\a block, annulus, refVert, refHoriz), where:
          * \a block is a pointer to the the particular saturated block
          * containing the requested annulus;
          * \a annulus indicates which annulus number in the returned block
@@ -494,7 +494,7 @@ class SatRegion : public Output<SatRegion> {
          * region can be presented.
          *
          * \param other the saturated region to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * the same combinatorial presentation of a saturated region.
          */
         bool operator == (const SatRegion& other) const;
@@ -519,7 +519,7 @@ class SatRegion : public Output<SatRegion> {
          * region can be presented.
          *
          * \param other the saturated region to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * different combinatorial presentations of a saturated region.
          */
         bool operator != (const SatRegion& other) const;
@@ -570,7 +570,7 @@ class SatRegion : public Output<SatRegion> {
          *
          * \param reflect \c true if this region is to be reflected
          * as the Seifert fibred space is created, or \c false if not.
-         * @return the structure of the underlying Seifert fibred space.
+         * \return the structure of the underlying Seifert fibred space.
          */
         SFSpace createSFS(bool reflect) const;
 
@@ -587,7 +587,7 @@ class SatRegion : public Output<SatRegion> {
          *
          * \param tex \c true if the output should be formatted for TeX,
          * or \c false if it should be written as plain text.
-         * @return the abbreviated list of all blocks.
+         * \return the abbreviated list of all blocks.
          */
         std::string blockAbbrs(bool tex = false) const;
 
@@ -714,7 +714,7 @@ class SatRegion : public Output<SatRegion> {
          * \param args any additional arguments that should be passed to
          * \a action, following the initial region and tetrahedron list
          * arguments.
-         * @return \c true if \a action ever terminated the search by returning
+         * \return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
@@ -747,7 +747,7 @@ class SatRegion : public Output<SatRegion> {
          * part of the new saturated region.
          * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated region if one was found, or
+         * \return details of the saturated region if one was found, or
          * \c null if none was found.
          */
         static std::unique_ptr<SatRegion> beginsRegion(
@@ -855,7 +855,7 @@ class SatRegion : public Output<SatRegion> {
          * routine to exit early if this is not possible, or \c false
          * (the default) if you simply wish to expand this region as far
          * as you can.  See above for further discussion.
-         * @return \c false if the optional argument \a stopIfIncomplete
+         * \return \c false if the optional argument \a stopIfIncomplete
          * was passed as \c true but expansion did not fill the entire
          * triangulation component as described above, or \c true in all
          * other cases.

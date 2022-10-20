@@ -95,7 +95,7 @@ class LayeredChainPair : public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         LayeredChainPair& operator = (const LayeredChainPair&) = default;
 
@@ -114,7 +114,7 @@ class LayeredChainPair : public StandardTriangulation {
          *
          * \param which specifies which chain to return; this must be 0
          * or 1.
-         * @return the requested layered chain.
+         * \return the requested layered chain.
          */
         const LayeredChain& chain(int which) const;
 
@@ -134,7 +134,7 @@ class LayeredChainPair : public StandardTriangulation {
          * to the ordering requirement).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of layered chain pair.
          */
         bool operator == (const LayeredChainPair& other) const;
@@ -155,7 +155,7 @@ class LayeredChainPair : public StandardTriangulation {
          * to the ordering requirement).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different types of layered chain pair.
          */
         bool operator != (const LayeredChainPair& other) const;
@@ -169,7 +169,7 @@ class LayeredChainPair : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param comp the triangulation component to examine.
-         * @return a structure containing details of the layered chain pair,
+         * \return a structure containing details of the layered chain pair,
          * or \c null if the given component is not a layered chain pair.
          */
         static std::unique_ptr<LayeredChainPair> recognise(

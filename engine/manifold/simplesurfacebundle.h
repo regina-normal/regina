@@ -96,7 +96,7 @@ class SimpleSurfaceBundle : public Manifold {
         /**
          * Returns the specific type of surface bundle being represented.
          *
-         * @return the type of surface bundle.  This will be one of the
+         * \return the type of surface bundle.  This will be one of the
          * 3-manifold constants defined in this class.
          */
         int type() const;
@@ -105,7 +105,7 @@ class SimpleSurfaceBundle : public Manifold {
          * the same type (i.e., they represent the same 3-manifold).
          *
          * \param compare the surface bundle with which this will be compared.
-         * @return \c true if and only if this and the given surface bundle
+         * \return \c true if and only if this and the given surface bundle
          * are of the same type.
          */
         bool operator == (const SimpleSurfaceBundle& compare) const;
@@ -114,7 +114,7 @@ class SimpleSurfaceBundle : public Manifold {
          * different types (i.e., they represent different 3-manifolds).
          *
          * \param compare the surface bundle with which this will be compared.
-         * @return \c true if and only if this and the given surface bundle
+         * \return \c true if and only if this and the given surface bundle
          * are of different types.
          */
         bool operator != (const SimpleSurfaceBundle& compare) const;
@@ -122,7 +122,7 @@ class SimpleSurfaceBundle : public Manifold {
         /**
          * Sets this to be a copy of the given surface bundle.
          *
-         * @return a reference to this surface bundle.
+         * \return a reference to this surface bundle.
          */
         SimpleSurfaceBundle& operator = (const SimpleSurfaceBundle&) = default;
 

@@ -95,7 +95,7 @@ class Text : public Packet {
          * or change this packet's location in any packet tree).
          *
          * \param src the text packet whose contents should be copied.
-         * @return a reference to this packet.
+         * \return a reference to this packet.
          */
         Text& operator = (const Text& src);
 
@@ -114,7 +114,7 @@ class Text : public Packet {
         /**
          * Returns the string stored in the packet.
          *
-         * @return the stored string.
+         * \return the stored string.
          */
         const std::string& text() const;
 
@@ -129,7 +129,7 @@ class Text : public Packet {
          * Determines if this and the given packet contain the same text.
          *
          * \param other the text packet to compare with this.
-         * @return \c true if and only if this and the given packet
+         * \return \c true if and only if this and the given packet
          * contain the same text.
          */
         bool operator == (const Text& other) const;
@@ -138,7 +138,7 @@ class Text : public Packet {
          * Determines if this and the given packet do not contain the same text.
          *
          * \param other the text packet to compare with this.
-         * @return \c true if and only if this and the given packet
+         * \return \c true if and only if this and the given packet
          * do not contain the same text.
          */
         bool operator != (const Text& other) const;

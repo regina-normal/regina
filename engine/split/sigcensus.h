@@ -138,7 +138,7 @@ class SigCensus {
          * \param args any additional arguments that should be passed to
          * \a action, following the initial signature and automorphism
          * arguments.
-         * @return the total number of non-equivalent signatures that were
+         * \return the total number of non-equivalent signatures that were
          * found.
          */
         template <typename Action, typename... Args>
@@ -169,7 +169,7 @@ class SigCensus {
          * copy of this routine should be running at any given time for
          * a particular SigCensus.
          *
-         * @return the total number of non-equivalent signatures that were
+         * \return the total number of non-equivalent signatures that were
          * found.
          */
         size_t run();
@@ -184,7 +184,7 @@ class SigCensus {
          * canonical form, \c false will be returned and the contents of
          * list <tt>automorph[sig.nCycleGroups]</tt> will be undefined.
          *
-         * @return \c true if and only if it was confirmed during
+         * \return \c true if and only if it was confirmed during
          * processing that the partial signature <tt>sig</tt> is in
          * canonical form.
          */

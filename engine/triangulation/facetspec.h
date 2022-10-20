@@ -116,14 +116,14 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \param nSimplices the number of simplices under consideration.
      * Note that the boundary is represented in this specifier as
      * simplex \a nSimplices, facet 0.
-     * @return \c true if and only if this specifier represents the
+     * \return \c true if and only if this specifier represents the
      * overall boundary.
      */
     bool isBoundary(size_t nSimplices) const;
     /**
      * Determines if this specifier represents a before-the-start value.
      *
-     * @return \c true if and only if this specifier is before-the-start.
+     * \return \c true if and only if this specifier is before-the-start.
      */
     bool isBeforeStart() const;
     /**
@@ -137,7 +137,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \param boundaryAlso \c true if the overall boundary should be
      * considered past-the-end in addition to the predefined past-the-end
      * value.
-     * @return \c true if and only if this specifier is past-the-end.
+     * \return \c true if and only if this specifier is past-the-end.
      */
     bool isPastEnd(size_t nSimplices, bool boundaryAlso) const;
 
@@ -170,7 +170,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Sets this specifier to the value of the given specifier.
      *
      * \param other the given specifier.
-     * @return a reference to this specifier.
+     * \return a reference to this specifier.
      */
     FacetSpec& operator = (const FacetSpec<dim>& other) = default;
     /**
@@ -185,7 +185,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \nopython The postincrement operator is present in Python as the
      * member function inc().
      *
-     * @return A reference to this specifier.
+     * \return A reference to this specifier.
      */
     FacetSpec& operator ++ ();
     /**
@@ -200,7 +200,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \ifacespython This routine is named inc() since python does not
      * support the increment operator.
      *
-     * @return A copy of this specifier before it was incremented.
+     * \return A copy of this specifier before it was incremented.
      */
     FacetSpec operator ++ (int);
     /**
@@ -215,7 +215,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \nopython The postdecrement operator is present in Python as the
      * member function dec().
      *
-     * @return A reference to this specifier.
+     * \return A reference to this specifier.
      */
     FacetSpec& operator -- ();
     /**
@@ -230,7 +230,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \ifacespython This routine is named dec() since python does not
      * support the decrement operator.
      *
-     * @return A copy of this specifier before it was decremented.
+     * \return A copy of this specifier before it was decremented.
      */
     FacetSpec operator -- (int);
 
@@ -238,7 +238,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Determines if this and the given specifier are identical.
      *
      * \param other the specifier to compare with this.
-     * @return \c true if and only if this and the given specifier are
+     * \return \c true if and only if this and the given specifier are
      * equal.
      */
     bool operator == (const FacetSpec<dim>& other) const;
@@ -246,7 +246,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Determines if this and the given specifier are not identical.
      *
      * \param other the specifier to compare with this.
-     * @return \c true if and only if this and the given specifier are
+     * \return \c true if and only if this and the given specifier are
      * not equal.
      */
     bool operator != (const FacetSpec<dim>& other) const;
@@ -254,7 +254,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Determines if this is less than the given specifier.
      *
      * \param other the specifier to compare with this.
-     * @return \c true if and only if this is less than the given
+     * \return \c true if and only if this is less than the given
      * specifier.
      */
     bool operator < (const FacetSpec<dim>& other) const;
@@ -262,7 +262,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * Determines if this is less than or equal to the given specifier.
      *
      * \param other the specifier to compare with this.
-     * @return \c true if and only if this is less than or equal to
+     * \return \c true if and only if this is less than or equal to
      * the given specifier.
      */
     bool operator <= (const FacetSpec<dim>& other) const;
@@ -303,7 +303,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \param input an input stream that begins with the tight encoding
      * for a <i>dim</i>-dimensional facet specifier.
-     * @return the specifier represented by the given tight encoding.
+     * \return the specifier represented by the given tight encoding.
      */
     static FacetSpec<dim> tightDecode(std::istream& input);
 };
@@ -313,7 +313,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
  *
  * \param out the output stream to which to write.
  * \param spec the specifier to write.
- * @return a reference to \a out.
+ * \return a reference to \a out.
  *
  * \ingroup triangulation
  */

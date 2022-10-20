@@ -75,7 +75,7 @@ class Handlebody : public Manifold {
         /**
          * Returns the genus of this handlebody.
          *
-         * @return the genus; that is, number of handles.
+         * \return the genus; that is, number of handles.
          */
         size_t genus() const;
         /**
@@ -85,7 +85,7 @@ class Handlebody : public Manifold {
          * Handlebodies with the same genus are homeomorphic as 3-manifolds.
          *
          * \param compare the handlebody with which this will be compared.
-         * @return \c true if and only if this and the given handlebody
+         * \return \c true if and only if this and the given handlebody
          * have the same genus.
          */
         bool operator == (const Handlebody& compare) const;
@@ -96,7 +96,7 @@ class Handlebody : public Manifold {
          * Handlebodies with the same genus are homeomorphic as 3-manifolds.
          *
          * \param compare the handlebody with which this will be compared.
-         * @return \c true if and only if this and the given handlebody
+         * \return \c true if and only if this and the given handlebody
          * do not have the same genus.
          */
         bool operator != (const Handlebody& compare) const;
@@ -104,7 +104,7 @@ class Handlebody : public Manifold {
         /**
          * Sets this to be a copy of the given handlebody.
          *
-         * @return a reference to this handlebody.
+         * \return a reference to this handlebody.
          */
         Handlebody& operator = (const Handlebody&) = default;
 

@@ -181,7 +181,7 @@ class Layering : public ShortOutput<Layering> {
          * within different triangulations.
          *
          * \param other the layering to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * the same layering, as described above.
          */
         bool operator == (const Layering& other) const;
@@ -206,7 +206,7 @@ class Layering : public ShortOutput<Layering> {
          * within different triangulations.
          *
          * \param other the layering to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * different layerings, as described above.
          */
         bool operator != (const Layering& other) const;
@@ -225,7 +225,7 @@ class Layering : public ShortOutput<Layering> {
          * The copied structure will describe the same layering within the
          * same underlying triangulation.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         Layering& operator = (const Layering&) = default;
 
@@ -238,7 +238,7 @@ class Layering : public ShortOutput<Layering> {
          * it increases if the routines extend() or extendOne() find that
          * additional layerings have taken place.
          *
-         * @return the number of layered tetrahedra.
+         * \return the number of layered tetrahedra.
          */
         unsigned long size() const;
 
@@ -252,7 +252,7 @@ class Layering : public ShortOutput<Layering> {
          *
          * \param which specifies which tetrahedron to return; this must
          * be either 0 or 1.
-         * @return the requested tetrahedron of the old boundary.
+         * \return the requested tetrahedron of the old boundary.
          */
         const Tetrahedron<3>* oldBoundaryTet(unsigned which) const;
         /**
@@ -265,7 +265,7 @@ class Layering : public ShortOutput<Layering> {
          *
          * \param which specifies which permutation to return; this must
          * be either 0 or 1.
-         * @return the requested permutation describing the old boundary.
+         * \return the requested permutation describing the old boundary.
          */
         Perm<4> oldBoundaryRoles(unsigned which) const;
         /**
@@ -278,7 +278,7 @@ class Layering : public ShortOutput<Layering> {
          *
          * \param which specifies which tetrahedron to return; this must
          * be either 0 or 1.
-         * @return the requested tetrahedron of the new boundary.
+         * \return the requested tetrahedron of the new boundary.
          */
         const Tetrahedron<3>* newBoundaryTet(unsigned which) const;
         /**
@@ -291,7 +291,7 @@ class Layering : public ShortOutput<Layering> {
          *
          * \param which specifies which permutation to return; this must
          * be either 0 or 1.
-         * @return the requested permutation describing the new boundary.
+         * \return the requested permutation describing the new boundary.
          */
         Perm<4> newBoundaryRoles(unsigned which) const;
 
@@ -341,7 +341,7 @@ class Layering : public ShortOutput<Layering> {
          *
          * Note that the determinant of this matrix will always be 1.
          *
-         * @return the matrix relating the old and new boundary curves.
+         * \return the matrix relating the old and new boundary curves.
          */
         const Matrix2& boundaryReln() const;
 
@@ -362,7 +362,7 @@ class Layering : public ShortOutput<Layering> {
          * new boundary will become the remaining two faces of this
          * additional tetrahedron.
          * 
-         * @return \c true if a tetrahedron was found as described above
+         * \return \c true if a tetrahedron was found as described above
          * and this structure was extended accordingly, or \c false otherwise.
          */
         bool extendOne();
@@ -381,7 +381,7 @@ class Layering : public ShortOutput<Layering> {
          * upon it.  That is, if extendOne() were called again then it
          * would return \c false.
          *
-         * @return the number of additional layered tetrahedra that were
+         * \return the number of additional layered tetrahedra that were
          * discovered.
          */
         unsigned long extend();
@@ -463,7 +463,7 @@ class Layering : public ShortOutput<Layering> {
          * \param upperReln the matrix that is changed to reflect the
          * relationship between the old boundary of this structure and
          * the given boundary.
-         * @return \c true if the given boundary is found to matche the
+         * \return \c true if the given boundary is found to matche the
          * new boundary of this structure, or \c false otherwise.
          */
         bool matchesTop(const Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,

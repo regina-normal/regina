@@ -101,7 +101,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Returns the name of this specific triangulation as a
          * human-readable string.
          *
-         * @return the name of this triangulation.
+         * \return the name of this triangulation.
          */
         std::string name() const;
         /**
@@ -112,7 +112,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * @return the name of this triangulation in TeX format.
+         * \return the name of this triangulation in TeX format.
          */
         std::string texName() const;
         /**
@@ -129,7 +129,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * underlying 3-manifolds can be recognised will grow between
          * releases.
          *
-         * @return the underlying 3-manifold.
+         * \return the underlying 3-manifold.
          */
         virtual std::unique_ptr<Manifold> manifold() const;
         /**
@@ -169,7 +169,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * for the subclass SnapPeaCensusTri, which reads its results from
          * the SnapPea census databases that are installed with Regina.
          *
-         * @return the first homology group of this triangulation, if this
+         * \return the first homology group of this triangulation, if this
          * functionality has been implemented.
          */
         virtual AbelianGroup homology() const;
@@ -182,7 +182,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * and returns a string.
          *
          * \param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         /**
@@ -198,7 +198,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * and returns a string.
          *
          * \param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
@@ -247,7 +247,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * triangulation allows access to more information.
          *
          * \param component the triangulation component under examination.
-         * @return the details of the standard triangulation if the
+         * \return the details of the standard triangulation if the
          * given component is recognised, or \c null otherwise.
          */
         static std::unique_ptr<StandardTriangulation> recognise(
@@ -268,7 +268,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * triangulation allows access to more information.
          *
          * \param tri the triangulation under examination.
-         * @return the details of the standard triangualation if the
+         * \return the details of the standard triangualation if the
          * given triangulation is recognised, or \c null otherwise.
          */
         static std::unique_ptr<StandardTriangulation> recognise(

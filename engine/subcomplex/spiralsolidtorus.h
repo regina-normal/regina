@@ -131,7 +131,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * This will induce a deep copy of \a src.
          *
          * \param src the structure to copy.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         SpiralSolidTorus& operator = (const SpiralSolidTorus& src);
 
@@ -142,7 +142,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * The structure that was passed (\a src) will no longer be usable.
          *
          * \param src the structure to move from.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         SpiralSolidTorus& operator = (SpiralSolidTorus&& src) noexcept;
 
@@ -157,7 +157,7 @@ class SpiralSolidTorus : public StandardTriangulation {
         /**
          * Returns the number of tetrahedra in this spiralled solid torus.
          *
-         * @return the number of tetrahedra.
+         * \return the number of tetrahedra.
          */
         size_t size() const;
 
@@ -169,7 +169,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          *
          * \param index specifies which tetrahedron to return; this must
          * be between 0 and size()-1 inclusive.
-         * @return the requested tetrahedron.
+         * \return the requested tetrahedron.
          */
         Tetrahedron<3>* tetrahedron(size_t index) const;
 
@@ -194,7 +194,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          *
          * \param index specifies which tetrahedron in the solid torus
          * to examine; this must be between 0 and size()-1 inclusive.
-         * @return a permutation representing the roles of the vertices
+         * \return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
          */
         Perm<4> vertexRoles(size_t index) const;
@@ -214,7 +214,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * subclass means they describe isomorphic structures).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of spiralled solid torus.
          */
         bool operator == (const SpiralSolidTorus& other) const;
@@ -234,7 +234,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * subclass means they describe isomorphic structures).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different types of spiralled solid torus.
          */
         bool operator != (const SpiralSolidTorus& other) const;
@@ -274,7 +274,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * under permutation <tt>vertexRoles(0)</tt> the image of 0
          * will be less than the image of 3.
          *
-         * @return \c true if and only if the representation of this
+         * \return \c true if and only if the representation of this
          * spiralled solid torus was actually changed.
          */
         bool makeCanonical();
@@ -284,7 +284,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * form.  Canonical form is described in detail in the
          * description for makeCanonical().
          *
-         * @return \c true if and only if this spiralled solid torus is
+         * \return \c true if and only if this spiralled solid torus is
          * in canonical form.
          */
         bool isCanonical() const;
@@ -307,7 +307,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * \param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by vertexRoles().
-         * @return a structure containing details of the solid torus with the
+         * \return a structure containing details of the solid torus with the
          * given tetrahedron as tetrahedron 0, or \c null if the given
          * tetrahedron is not part of a spiralled solid torus with the given
          * vertex roles.

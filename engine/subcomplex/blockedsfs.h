@@ -100,7 +100,7 @@ class BlockedSFS : public StandardTriangulation {
          * This will induce a deep copy of \a src.
          *
          * \param src the structure to copy.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         BlockedSFS& operator = (const BlockedSFS& src) = default;
         /**
@@ -110,7 +110,7 @@ class BlockedSFS : public StandardTriangulation {
          * The structure that was passed (\a src) will no longer be usable.
          *
          * \param src the structure to move from.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         BlockedSFS& operator = (BlockedSFS&& src) noexcept = default;
         /**
@@ -125,7 +125,7 @@ class BlockedSFS : public StandardTriangulation {
          * Returns details of the single saturated region that
          * fills this triangulation.
          *
-         * @return the single saturated region.
+         * \return the single saturated region.
          */
         const SatRegion& region() const;
 
@@ -147,7 +147,7 @@ class BlockedSFS : public StandardTriangulation {
          * blocked Seifert fibred space).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of blocked Seifert fibred space.
          */
         bool operator == (const BlockedSFS& other) const;
@@ -170,7 +170,7 @@ class BlockedSFS : public StandardTriangulation {
          * blocked Seifert fibred space).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * do not represent the same type of blocked Seifert fibred space.
          */
         bool operator != (const BlockedSFS& other) const;
@@ -182,7 +182,7 @@ class BlockedSFS : public StandardTriangulation {
          * 3-manifold triangulations", Benjamin A. Burton,
          * J. Knot Theory Ramifications 16 (2007), 545--574.
          *
-         * @return the name of the plugged thin/thick I-bundle, if the
+         * \return the name of the plugged thin/thick I-bundle, if the
          * triangulation is of this form, or no value if it is not.
          */
         std::optional<std::string> isPluggedIBundle() const;
@@ -201,7 +201,7 @@ class BlockedSFS : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param tri the triangulation to examine.
-         * @return a structure containing details of the blocked Seifert
+         * \return a structure containing details of the blocked Seifert
          * fibred space, or \c null if the given triangulation is not a
          * blocked Seifert fibred space.
          */
@@ -264,7 +264,7 @@ class BlockedSFS : public StandardTriangulation {
          * horizontal edges of the adjacent block (not the block
          * \a torus1, but its neighbour), or \c false if the vertical
          * and diagonal edges should be used instead.
-         * @return the full parameterised name of this triangulation, if the
+         * \return the full parameterised name of this triangulation, if the
          * two given blocks are both solid torus plugs (either layered
          * solid tori or Mobius bands), or no value otherwise.
          */

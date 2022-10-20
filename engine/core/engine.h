@@ -56,7 +56,7 @@ namespace regina {
  * Returns the full version number of this calculation engine.
  * For instance, version 2.3.1 would have full version <tt>"2.3.1"</tt>.
  *
- * @return the version of this calculation engine.
+ * \return the version of this calculation engine.
  *
  * \ingroup engine
  */
@@ -66,7 +66,7 @@ const char* versionString();
  * Returns the major version number of this calculation engine.
  * For instance, version 2.3.1 would have major version 2.
  *
- * @return the major version number of this calculation engine.
+ * \return the major version number of this calculation engine.
  *
  * \ingroup engine
  */
@@ -76,7 +76,7 @@ int versionMajor();
  * Returns the minor version number of this calculation engine.
  * For instance, version 2.3.1 would have minor version 3.
  *
- * @return the minor version number of this calculation engine.
+ * \return the minor version number of this calculation engine.
  *
  * \ingroup engine
  */
@@ -94,7 +94,7 @@ int versionMinor();
  * If no such information was supplied at build time, then this string
  * will be empty.
  *
- * @return any additional information supplied at build time.
+ * \return any additional information supplied at build time.
  *
  * \ingroup engine
  */
@@ -122,7 +122,7 @@ const char* buildInfo();
  *
  * \param version a version string from some release of Regina, such as "4.2".
  * This must not contain any whitespace padding.
- * @return \c true if the given version uses UTF-8 consistently, or
+ * \return \c true if the given version uses UTF-8 consistently, or
  * \c false if the given version is an older version that did not pay
  * attention to character encodings.
  *
@@ -141,7 +141,7 @@ bool versionUsesUTF8(const char* version);
  * In Regina, you can access the SnapPea kernel through the
  * SnapPeaTriangulation class.
  *
- * @return the version of SnapPy whose underlying SnapPea kernel is
+ * \return the version of SnapPy whose underlying SnapPea kernel is
  * built into Regina.
  *
  * \ingroup engine
@@ -154,7 +154,7 @@ const char* versionSnapPy();
  *
  * See versionSnapPy() for details.
  *
- * @return the version of SnapPy whose underlying SnapPea kernel is
+ * \return the version of SnapPy whose underlying SnapPea kernel is
  * built into Regina.
  *
  * \ingroup engine
@@ -168,7 +168,7 @@ const char* versionSnapPea();
  * expensive algorithms (in particular for normal surface enumeration)
  * are optimised to run significantly faster in some cases.
  *
- * @return \c true if and only if this build supports native 128-bit arithmetic.
+ * \return \c true if and only if this build supports native 128-bit arithmetic.
  *
  * \ingroup engine
  */
@@ -181,7 +181,7 @@ bool hasInt128();
  * The current implementation returns approximately half the number of
  * cores available on the machine.
  *
- * @return the suggested number of threads to use.
+ * \return the suggested number of threads to use.
  *
  * \ingroup engine
  */
@@ -196,7 +196,7 @@ int politeThreads();
  * the interface and the C++ engine are working properly.
  *
  * \param value any integer; this same integer will be returned.
- * @return the same integer that was passed as \a value.
+ * \return the same integer that was passed as \a value.
  *
  * \ingroup engine
  */

@@ -76,7 +76,7 @@ class PythonCompleter {
          *
          * \param s the new completion.  This string will begin with the
          * original text that was passed to PythonCompleter::complete().
-         * @return \c true to indicate that PythonCompleter::complete()
+         * \return \c true to indicate that PythonCompleter::complete()
          * should continue searching for more completions, or \c false
          * if PythonCompleter::complete() can finish now.
          */
@@ -114,7 +114,7 @@ class PrefixCompleter : public PythonCompleter {
          * The common prefix is computed in terms of unicode characters,
          * and the return value will be a valid UTF-8 string.
          *
-         * @return the longest common prefix for all completions.
+         * \return the longest common prefix for all completions.
          */
         const std::string& prefix() const;
 
@@ -222,7 +222,7 @@ class PythonInterpreter {
          * \pre This is called from the same C++ thread that created
          * this Python interpreter.
          *
-         * @return \c true on success or \c false on failure.
+         * \return \c true on success or \c false on failure.
          */
         bool importRegina(bool fixPythonPath = true);
 
@@ -233,7 +233,7 @@ class PythonInterpreter {
          * \pre This is called from the same C++ thread that created
          * this Python interpreter.
          *
-         * @return \c true on success or \c false on failure.
+         * \return \c true on success or \c false on failure.
          */
         bool setVar(const char* name, std::shared_ptr<Packet> value);
 
@@ -249,7 +249,7 @@ class PythonInterpreter {
          * \pre This is called from the same C++ thread that created
          * this Python interpreter.
          *
-         * @return \c true on success or \c false on failure.
+         * \return \c true on success or \c false on failure.
          */
         bool runScript(const regina::Script* script);
 
@@ -296,7 +296,7 @@ class PythonInterpreter {
          * \param text the Python text to complete.
          * \param completer the callback object that will receive the
          * resulting completions (if any).
-         * @return the number of completions that were passed to \a completer,
+         * \return the number of completions that were passed to \a completer,
          * or -1 if the completion process failed (e.g., the \c plainCompleter
          * Python module could not be imported).  In particular, if the
          * completion process ran succesfully and determined that the given

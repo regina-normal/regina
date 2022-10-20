@@ -171,7 +171,7 @@ class FacetPairingBase :
          * This operator induces a deep copy of \a src.
          *
          * \param src the facet pairing to copy.
-         * @return a reference to this facet pairing.
+         * \return a reference to this facet pairing.
          */
         FacetPairingBase& operator = (const FacetPairingBase& src);
 
@@ -186,7 +186,7 @@ class FacetPairingBase :
          * The facet pairing that is passed (\a src) will no longer be usable.
          *
          * \param src the facet pairing to move.
-         * @return a reference to this facet pairing.
+         * \return a reference to this facet pairing.
          */
         FacetPairingBase& operator = (FacetPairingBase&& src) noexcept;
 
@@ -211,7 +211,7 @@ class FacetPairingBase :
          * \ifacespython This is also used to implement the Python special
          * method __len__().
          *
-         * @return the number of simplices under consideration.
+         * \return the number of simplices under consideration.
          */
         size_t size() const;
 
@@ -228,7 +228,7 @@ class FacetPairingBase :
          * since Python cannot enforce constness otherwise.
          *
          * \param source the facet under investigation.
-         * @return the other facet to which the given facet is paired.
+         * \return the other facet to which the given facet is paired.
          */
         const FacetSpec<dim>& dest(const FacetSpec<dim>& source) const;
 
@@ -246,7 +246,7 @@ class FacetPairingBase :
          * consideration).
          * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
-         * @return the other facet to which the given facet is paired.
+         * \return the other facet to which the given facet is paired.
          */
         const FacetSpec<dim>& dest(size_t simp, int facet) const;
 
@@ -266,7 +266,7 @@ class FacetPairingBase :
          * since Python cannot enforce constness otherwise.
          *
          * \param source the facet under investigation.
-         * @return the other facet to which the given facet is paired.
+         * \return the other facet to which the given facet is paired.
          */
         const FacetSpec<dim>& operator [](const FacetSpec<dim>& source) const;
 
@@ -278,7 +278,7 @@ class FacetPairingBase :
          * before-the-start or past-the-end).
          *
          * \param source the facet under investigation.
-         * @return \c true if the given facet has been left unmatched, or
+         * \return \c true if the given facet has been left unmatched, or
          * \c false if the given facet is paired with some other facet.
          */
         bool isUnmatched(const FacetSpec<dim>& source) const;
@@ -292,7 +292,7 @@ class FacetPairingBase :
          * consideration).
          * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
-         * @return \c true if the given facet has been left unmatched, or
+         * \return \c true if the given facet has been left unmatched, or
          * \c false if the given facet is paired with some other facet.
          */
         bool isUnmatched(size_t simp, int facet) const;
@@ -307,7 +307,7 @@ class FacetPairingBase :
          * Determines if this and the given facet pairing are identical.
          *
          * \param other the facet pairing to compare with this.
-         * @return \c true if and only if this and the given facet pairing
+         * \return \c true if and only if this and the given facet pairing
          * are identical.
          */
         bool operator == (const FacetPairing<dim>& other) const;
@@ -316,7 +316,7 @@ class FacetPairingBase :
          * Determines if this and the given facet pairing are not identical.
          *
          * \param other the facet pairing to compare with this.
-         * @return \c true if and only if this and the given facet pairing
+         * \return \c true if and only if this and the given facet pairing
          * are not identical.
          */
         bool operator != (const FacetPairing<dim>& other) const;
@@ -336,7 +336,7 @@ class FacetPairingBase :
          * For this purpose, the empty facet pairing is considered to be
          * connected.
          *
-         * @return \c true if and only if this pairing is connected.
+         * \return \c true if and only if this pairing is connected.
          */
         bool isConnected() const;
 
@@ -362,7 +362,7 @@ class FacetPairingBase :
          *
          * \param minSide the minimum number of simplices in each of the
          * two connected pieces; this must be at least 1.
-         * @return the best possible cut as described above, or no value
+         * \return the best possible cut as described above, or no value
          * if no such cut exists.
          */
         std::optional<Cut> divideConnected(size_t minSide) const;
@@ -383,7 +383,7 @@ class FacetPairingBase :
          * to reach any simplex from any other simplex via a
          * series of matched facet pairs.
          *
-         * @return \c true if and only if this facet pairing is in
+         * \return \c true if and only if this facet pairing is in
          * canonical form.
          */
         bool isCanonical() const;
@@ -404,7 +404,7 @@ class FacetPairingBase :
          * to reach any simplex from any other simplex via a
          * series of matched facet pairs.
          *
-         * @return a pair (\a c, \a iso), where \a c is the canonical form
+         * \return a pair (\a c, \a iso), where \a c is the canonical form
          * and \a iso is one isomorphism that converts this facet pairing
          * into \a c.
          */
@@ -429,7 +429,7 @@ class FacetPairingBase :
          * to reach any simplex from any other simplex via a
          * series of matched facet pairs.
          *
-         * @return a pair (\a c, \a isos), where \a c is the canonical form
+         * \return a pair (\a c, \a isos), where \a c is the canonical form
          * and \a isos is the list of all isomorphisms that convert this
          * facet pairing into \a c.
          */
@@ -450,7 +450,7 @@ class FacetPairingBase :
          * since this routine uses optimisations that can cause unpredictable
          * breakages if this facet pairing is not in canonical form.
          *
-         * @return the list of all automorphisms.
+         * \return the list of all automorphisms.
          */
         IsoList findAutomorphisms() const;
 
@@ -482,7 +482,7 @@ class FacetPairingBase :
          *
          * The string returned will contain no newlines.
          *
-         * @return a text-based representation of this facet pairing.
+         * \return a text-based representation of this facet pairing.
          */
         std::string textRep() const;
 
@@ -493,7 +493,7 @@ class FacetPairingBase :
          * \deprecated This routine has been renamed to textRep().
          * See the textRep() documentation for further details.
          *
-         * @return a text-based representation of this facet pairing.
+         * \return a text-based representation of this facet pairing.
          */
         [[deprecated]] std::string toTextRep() const;
 
@@ -581,7 +581,7 @@ class FacetPairingBase :
          * All arguments are the same as for writeDot(); see the
          * writeDot() notes for further details.
          *
-         * @return the output of writeDot(), as outlined above.
+         * \return the output of writeDot(), as outlined above.
          */
         std::string dot(const char* prefix = nullptr, bool subgraph = false,
             bool labels = false) const;
@@ -599,7 +599,7 @@ class FacetPairingBase :
          *
          * \param rep a text-based representation of a facet pairing, as
          * produced by routine textRep().
-         * @return the corresponding facet pairing.
+         * \return the corresponding facet pairing.
          */
         static FacetPairing<dim> fromTextRep(const std::string& rep);
 
@@ -624,7 +624,7 @@ class FacetPairingBase :
          *
          * \param input an input stream that begins with the tight encoding
          * for a <i>dim</i>-dimensional facet pairing.
-         * @return the facet pairing represented by the given tight encoding.
+         * \return the facet pairing represented by the given tight encoding.
          */
         static FacetPairing<dim> tightDecode(std::istream& input);
 
@@ -674,7 +674,7 @@ class FacetPairingBase :
          * All arguments are the same as for writeDotHeader(); see the
          * writeDotHeader() notes for further details.
          *
-         * @return the output of writeDotHeader(), as outlined above.
+         * \return the output of writeDotHeader(), as outlined above.
          */
         static std::string dotHeader(const char* graphName = nullptr);
 
@@ -788,7 +788,7 @@ class FacetPairingBase :
          * before-the-start or past-the-end).
          *
          * \param source the facet under investigation.
-         * @return the other facet to which the given facet is paired.
+         * \return the other facet to which the given facet is paired.
          */
         FacetSpec<dim>& dest(const FacetSpec<dim>& source);
 
@@ -803,7 +803,7 @@ class FacetPairingBase :
          * consideration).
          * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
-         * @return the other facet to which the given facet is paired.
+         * \return the other facet to which the given facet is paired.
          */
         FacetSpec<dim>& dest(size_t simp, int facet);
 
@@ -820,7 +820,7 @@ class FacetPairingBase :
          * before-the-start or past-the-end).
          *
          * \param source the facet under investigation.
-         * @return the other facet to which the given facet is paired.
+         * \return the other facet to which the given facet is paired.
          */
         FacetSpec<dim>& operator [](const FacetSpec<dim>& source);
 
@@ -833,7 +833,7 @@ class FacetPairingBase :
          * before-the-start or past-the-end).
          *
          * \param source the facet under investigation.
-         * @return \c true if the matching for the given facet has not yet
+         * \return \c true if the matching for the given facet has not yet
          * been determined, or \c false otherwise.
          */
         bool noDest(const FacetSpec<dim>& source) const;
@@ -848,7 +848,7 @@ class FacetPairingBase :
          * consideration).
          * \param facet the facet of the given simplex under
          * investigation (between 0 and \a dim inclusive).
-         * @return \c true if the matching for the given facet has not yet
+         * \return \c true if the matching for the given facet has not yet
          * been determined, or \c false otherwise.
          */
         bool noDest(size_t simp, int facet) const;
@@ -879,7 +879,7 @@ class FacetPairingBase :
          * \param list the list into which automorphisms will be placed
          * if this facet pairing is indeed canonical, or \a null if the
          * automorphisms are not requred.
-         * @return \c true if and only if this facet pairing is in
+         * \return \c true if and only if this facet pairing is in
          * canonical form.
          */
         bool isCanonicalInternal(IsoList* list = nullptr) const;

@@ -105,7 +105,7 @@ class ComponentBase :
          * Returns the index of this component within the underlying
          * triangulation.
          *
-         * @return the index of this component.
+         * \return the index of this component.
          */
         size_t index() const;
 
@@ -113,7 +113,7 @@ class ComponentBase :
          * Returns the number of top-dimensional simplices in this
          * component.
          *
-         * @return The number of top-dimensional simplices.
+         * \return The number of top-dimensional simplices.
          */
         size_t size() const;
         /**
@@ -141,7 +141,7 @@ class ComponentBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call simplices() again each time you need it.
          *
-         * @return access to the list of all top-dimensional simplices.
+         * \return access to the list of all top-dimensional simplices.
          */
         auto simplices() const;
         /**
@@ -153,7 +153,7 @@ class ComponentBase :
          *
          * \param index specifies which simplex to return; this
          * value should be between 0 and size()-1 inclusive.
-         * @return the <i>index</i>th top-dimensional simplex.
+         * \return the <i>index</i>th top-dimensional simplex.
          */
         Simplex<dim>* simplex(size_t index) const;
 
@@ -210,7 +210,7 @@ class ComponentBase :
         /**
          * Returns the number of boundary components in this component.
          *
-         * @return the number of boundary components.
+         * \return the number of boundary components.
          */
         size_t countBoundaryComponents() const;
 
@@ -292,7 +292,7 @@ class ComponentBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call boundaryComponents() again each time you need it.
          *
-         * @return access to the list of all boundary components.
+         * \return access to the list of all boundary components.
          */
         auto boundaryComponents() const;
 
@@ -354,7 +354,7 @@ class ComponentBase :
          *
          * \param index specifies which boundary component to return;
          * this should be between 0 and countBoundaryComponents()-1 inclusive.
-         * @return the requested boundary component.
+         * \return the requested boundary component.
          */
         BoundaryComponent<dim>* boundaryComponent(size_t index) const;
 
@@ -368,7 +368,7 @@ class ComponentBase :
          * in all dimensions, but only tests for bad links in Regina's
          * \ref stddim "standard dimensions".
          *
-         * @return \c true if and only if this component is valid.
+         * \return \c true if and only if this component is valid.
          */
         bool isValid() const;
 
@@ -378,7 +378,7 @@ class ComponentBase :
          * This routine runs in constant time (since orientability is
          * determined in advance, when the component is first created).
          * 
-         * @return \c true if and only if this component is orientable.
+         * \return \c true if and only if this component is orientable.
          */
         bool isOrientable() const;
 
@@ -389,7 +389,7 @@ class ComponentBase :
          * contains some top-dimensional simplex with at least one facet
          * that is not glued to an adjacent simplex.
          *
-         * @return \c true if and only if this component has boundary facet(s).
+         * \return \c true if and only if this component has boundary facet(s).
          */
         bool hasBoundaryFacets() const;
         /**
@@ -402,7 +402,7 @@ class ComponentBase :
          * This routine runs in constant time (since the result is
          * computed in advance, when the component is first created).
          *
-         * @return the total number of boundary facets.
+         * \return the total number of boundary facets.
          */
         size_t countBoundaryFacets() const;
 

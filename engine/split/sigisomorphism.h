@@ -137,7 +137,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * This operator induces a deep copy of \a src.
          *
          * \param src the partial isomorphism to copy.
-         * @return a reference to this partial isomorphism.
+         * \return a reference to this partial isomorphism.
          */
         SigPartialIsomorphism& operator = (const SigPartialIsomorphism& src);
 
@@ -153,7 +153,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * usable.
          *
          * \param src the partial isomorphism to move.
-         * @return a reference to this partial isomorphism.
+         * \return a reference to this partial isomorphism.
          */
         SigPartialIsomorphism& operator = (SigPartialIsomorphism&& src)
             noexcept;
@@ -193,7 +193,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * identical.
          *
          * \param other the partial isomorphism to compare with this.
-         * @return \c true if and only if this and \a other are identical.
+         * \return \c true if and only if this and \a other are identical.
          */
         bool operator == (const SigPartialIsomorphism& other) const;
 
@@ -202,7 +202,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * not identical.
          *
          * \param other the partial isomorphism to compare with this.
-         * @return \c true if and only if this and \a other are not identical.
+         * \return \c true if and only if this and \a other are not identical.
          */
         bool operator != (const SigPartialIsomorphism& other) const;
 
@@ -228,7 +228,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * This parameter should not exceed the number of cycle groups
          * whose cycles are mapped by this partial isomorphism.
          *
-         * @return -1, 1 or 0 if the image of the given signature under
+         * \return -1, 1 or 0 if the image of the given signature under
          * this isomorphism is lexicographically less than, greater than
          * or equal to its image under the given isomorphism respectively.
          */
@@ -252,7 +252,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
          * This parameter should not exceed the number of cycle groups
          * whose cycles are mapped by this partial isomorphism.
          *
-         * @return -1, 1 or 0 if the image of the given signature under
+         * \return -1, 1 or 0 if the image of the given signature under
          * this isomorphism is lexicographically less than, greater than
          * or equal to its image under the identity isomorphism respectively.
          */
@@ -332,7 +332,7 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
              * this must be less than the total number of cycles mapped
              * by the isomorphism concerned and less than the total number
              * of cycles in the signature concerned.
-             * @return \c true if and only if the image of the first
+             * \return \c true if and only if the image of the first
              * cycle is less than the image of the second cycle.
              */
             bool operator () (unsigned cycle1, unsigned cycle2) const;

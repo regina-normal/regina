@@ -108,7 +108,7 @@ class IntersectionForm : public Output<IntersectionForm> {
         /**
          * Sets this to be a clone of the given intersection form.
          *
-         * @return a reference to this intersection form.
+         * \return a reference to this intersection form.
          */
         IntersectionForm& operator = (const IntersectionForm&) = default;
 
@@ -118,7 +118,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          *
          * The intersection form that was passed will no longer be usable.
          *
-         * @return a reference to this intersection form.
+         * \return a reference to this intersection form.
          */
         IntersectionForm& operator = (IntersectionForm&&) noexcept = default;
 
@@ -137,7 +137,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * This will be an exact copy of the matrix that was passed to
          * the class constructor.
          *
-         * @return a matrix describing this bilinear form.
+         * \return a matrix describing this bilinear form.
          */
         const MatrixInt& matrix() const;
 
@@ -145,7 +145,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * Returns the rank of this bilinear form.  This is the rank of
          * the underlying symmetric square matrix.
          *
-         * @return the rank of this bilinear form.
+         * \return the rank of this bilinear form.
          */
         size_t rank() const;
 
@@ -154,7 +154,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * number of positive eigenvalues minus the number of negative
          * eigenvalues of the underlying symmetric square matrix.
          *
-         * @return the signature of this bilinear form.
+         * \return the signature of this bilinear form.
          */
         long signature() const;
 
@@ -163,7 +163,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          *
          * A form \a Q is \e even if and only if `Q(x,x)` is even for all \a x.
          *
-         * @return \c true if this bilinear form is of even type, or \c false
+         * \return \c true if this bilinear form is of even type, or \c false
          * if it is of odd type.
          */
         bool even() const;
@@ -173,7 +173,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          *
          * A form \a Q is \e odd if and only if `Q(x,x)` is odd for some \a x.
          *
-         * @return \c true if this bilinear form is of odd type, or \c false
+         * \return \c true if this bilinear form is of odd type, or \c false
          * if it is of even type.
          */
         bool odd() const;
@@ -188,7 +188,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * whether `matrix() == other.matrix()`.
          *
          * \param other the bilinear form to compare with this.
-         * @return \c true if and only if this and the given bilinear form
+         * \return \c true if and only if this and the given bilinear form
          * are represented by identical matrices.
          */
         bool operator == (const IntersectionForm& other) const;
@@ -203,7 +203,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * whether `matrix() != other.matrix()`.
          *
          * \param other the bilinear form to compare with this.
-         * @return \c true if and only if this and the given bilinear form
+         * \return \c true if and only if this and the given bilinear form
          * are not represented by identical matrices.
          */
         bool operator != (const IntersectionForm& other) const;

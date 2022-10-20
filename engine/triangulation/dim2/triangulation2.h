@@ -219,7 +219,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation&) = default;
 
@@ -247,7 +247,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src) = default;
 
@@ -313,7 +313,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * dimensional triangulations, and to assist with writing
          * dimension-agnostic code.
          *
-         * @return \c true.
+         * \return \c true.
          */
         bool isValid() const;
         /**
@@ -322,14 +322,14 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          *
          * This returns the same result as eulerCharTri().
          *
-         * @return the Euler characteristic of this triangulation.
+         * \return the Euler characteristic of this triangulation.
          */
         long eulerChar() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary components.
          *
-         * @return \c true if and only if this triangulation is closed.
+         * \return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
         /**
@@ -345,7 +345,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * dimensional triangulations, and to assist with writing
          * dimension-agnostic code.
          *
-         * @return \c false.
+         * \return \c false.
          */
         bool isIdeal() const;
 
@@ -369,7 +369,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * and where <tt>C</tt> is the Euler characteristic of the
          * underlying manifold.
          *
-         * @return \c true if and only if this is a minimal triangulation.
+         * \return \c true if and only if this is a minimal triangulation.
          */
         bool isMinimal() const;
 

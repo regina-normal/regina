@@ -136,7 +136,7 @@ class Script : public Packet {
          * or change this packet's location in any packet tree).
          *
          * \param src the script packet whose contents should be copied.
-         * @return a reference to this packet.
+         * \return a reference to this packet.
          */
         Script& operator = (const Script& src);
 
@@ -158,7 +158,7 @@ class Script : public Packet {
          * Variables are not considered part of the text; you can get
          * and set them through other member functions (see below).
          *
-         * @return the complete text of this script.
+         * \return the complete text of this script.
          */
         const std::string& text() const;
 
@@ -183,7 +183,7 @@ class Script : public Packet {
         /**
          * Returns the number of variables associated with this script.
          *
-         * @return the number of variables.
+         * \return the number of variables.
          */
         size_t countVariables() const;
         /**
@@ -192,7 +192,7 @@ class Script : public Packet {
          *
          * \param index the index of the requested variable; this must
          * be between 0 and countVariables()-1 inclusive.
-         * @return the name of the requested variable.
+         * \return the name of the requested variable.
          */
         const std::string& variableName(size_t index) const;
         /**
@@ -200,7 +200,7 @@ class Script : public Packet {
          *
          * \param name the name of the requested variable; note that
          * names are case sensitive.
-         * @return the index of the requested variable as an integer
+         * \return the index of the requested variable as an integer
          * between 0 and countVariables()-1 inclusive, or -1 if
          * there is no variable with the given name.
          */
@@ -211,7 +211,7 @@ class Script : public Packet {
          *
          * \param index the index of the requested variable; this must
          * be between 0 and countVariables()-1 inclusive.
-         * @return the value of the requested variable.
+         * \return the value of the requested variable.
          */
         std::shared_ptr<Packet> variableValue(size_t index) const;
         /**
@@ -223,7 +223,7 @@ class Script : public Packet {
          *
          * \param name the name of the requested variable; note that
          * names are case sensitive.
-         * @return the value of the requested variable.
+         * \return the value of the requested variable.
          */
         std::shared_ptr<Packet> variableValue(const std::string& name) const;
 
@@ -270,7 +270,7 @@ class Script : public Packet {
          * \param value the value of the new variable.  This is allowed
          * to be a null pointer, and if the argument is omitted then a
          * null pointer will be used.
-         * @return \c true if the variable was successfully added, or
+         * \return \c true if the variable was successfully added, or
          * \c false if a variable with the given name was already stored.
          */
         bool addVariable(const std::string& name,
@@ -292,7 +292,7 @@ class Script : public Packet {
          * \param value the value of the new variable.  This is allowed
          * to be a null pointer, and if the argument is omitted then a
          * null pointer will be used.
-         * @return the name of the variable that was added; this might
+         * \return the name of the variable that was added; this might
          * or might not be equal to \a name.
          */
         const std::string& addVariableName(const std::string& name,
@@ -364,7 +364,7 @@ class Script : public Packet {
          * both pointers to the same packet.
          *
          * \param other the script to compare with this.
-         * @return \c true if and only if this and the given script are
+         * \return \c true if and only if this and the given script are
          * identical.
          */
         bool operator == (const Script& other) const;
@@ -379,7 +379,7 @@ class Script : public Packet {
          * both pointers to the same packet.
          *
          * \param other the script to compare with this.
-         * @return \c true if and only if this and the given script are
+         * \return \c true if and only if this and the given script are
          * not identical.
          */
         bool operator != (const Script& other) const;

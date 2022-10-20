@@ -196,7 +196,7 @@ class Rational {
          * Sets this rational to the given rational value.
          *
          * \param value the new value of this rational.
-         * @return a reference to this rational with its new value.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator = (const Rational& value);
         /**
@@ -204,7 +204,7 @@ class Rational {
          * The given integer may be infinite.
          *
          * \param value the new value of this rational.
-         * @return a reference to this rational with its new value.
+         * \return a reference to this rational with its new value.
          */
         template <bool supportInfinity>
         Rational& operator = (const IntegerBase<supportInfinity>& value);
@@ -212,7 +212,7 @@ class Rational {
          * Sets this rational to the given integer value.
          *
          * \param value the new value of this rational.
-         * @return a reference to this rational with its new value.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator = (long value);
         /**
@@ -222,7 +222,7 @@ class Rational {
          * The rational that is passed (\a src) will no longer be usable.
          *
          * \param src the rational to move.
-         * @return a reference to this rational.
+         * \return a reference to this rational.
          */
         Rational& operator = (Rational&& src) noexcept;
         /**
@@ -237,7 +237,7 @@ class Rational {
          * Note that rationals are always stored in lowest terms with
          * non-negative denominator.  Infinity will be stored as 1/0.
          *
-         * @return the numerator.
+         * \return the numerator.
          */
         Integer numerator() const;
         /**
@@ -245,7 +245,7 @@ class Rational {
          * Note that rationals are always stored in lowest terms with
          * non-negative denominator.  Infinity will be stored as 1/0.
          *
-         * @return the denominator.
+         * \return the denominator.
          */
         Integer denominator() const;
 
@@ -254,7 +254,7 @@ class Rational {
          * This rational is not changed.
          *
          * \param r the rational with which to multiply this.
-         * @return the product \a this * \a r.
+         * \return the product \a this * \a r.
          */
         Rational operator *(const Rational& r) const;
         /**
@@ -262,7 +262,7 @@ class Rational {
          * This rational is not changed.
          *
          * \param r the rational to divide this by.
-         * @return the ratio \a this / \a r.
+         * \return the ratio \a this / \a r.
          */
         Rational operator /(const Rational& r) const;
         /**
@@ -270,7 +270,7 @@ class Rational {
          * This rational is not changed.
          *
          * \param r the rational to add to this.
-         * @return the sum \a this + \a r.
+         * \return the sum \a this + \a r.
          */
         Rational operator +(const Rational& r) const;
         /**
@@ -278,28 +278,28 @@ class Rational {
          * This rational is not changed.
          *
          * \param r the rational to subtract from this.
-         * @return the difference \a this - \a r.
+         * \return the difference \a this - \a r.
          */
         Rational operator -(const Rational& r) const;
         /**
          * Determines the negative of this rational.
          * This rational is not changed.
          *
-         * @return the negative of this rational.
+         * \return the negative of this rational.
          */
         Rational operator - () const;
         /**
          * Calculates the inverse of this rational.
          * This rational is not changed.
          *
-         * @return the inverse 1 / \a this.
+         * \return the inverse 1 / \a this.
          */
         Rational inverse() const;
         /**
          * Determines the absolute value of this rational.
          * This rational is not changed.
          *
-         * @return the absolute value of this rational.
+         * \return the absolute value of this rational.
          */
         Rational abs() const;
 
@@ -308,7 +308,7 @@ class Rational {
          * This rational is changed to reflect the result.
          *
          * \param other the rational to add to this.
-         * @return a reference to this rational with its new value.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator += (const Rational& other);
         /**
@@ -316,7 +316,7 @@ class Rational {
          * This rational is changed to reflect the result.
          *
          * \param other the rational to subtract from this.
-         * @return a reference to this rational with its new value.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator -= (const Rational& other);
         /**
@@ -324,7 +324,7 @@ class Rational {
          * This rational is changed to reflect the result.
          *
          * \param other the rational to multiply by this.
-         * @return a reference to this rational with its new value.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator *= (const Rational& other);
         /**
@@ -332,7 +332,7 @@ class Rational {
          * This rational is changed to reflect the result.
          *
          * \param other the rational to divide this by.
-         * @return a reference to this rational with its new value.
+         * \return a reference to this rational with its new value.
          */
         Rational& operator /= (const Rational& other);
         /**
@@ -350,7 +350,7 @@ class Rational {
          * Determines if this is equal to the given rational.
          *
          * \param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is equal to
+         * \return \c true if and only if this rational is equal to
          * \a compare.
          */
         bool operator == (const Rational& compare) const;
@@ -358,7 +358,7 @@ class Rational {
          * Determines if this is not equal to the given rational.
          *
          * \param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is not equal to
+         * \return \c true if and only if this rational is not equal to
          * \a compare.
          */
         bool operator != (const Rational& compare) const;
@@ -366,7 +366,7 @@ class Rational {
          * Determines if this is less than the given rational.
          *
          * \param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is less than
+         * \return \c true if and only if this rational is less than
          * \a compare.
          */
         bool operator < (const Rational& compare) const;
@@ -374,7 +374,7 @@ class Rational {
          * Determines if this is greater than the given rational.
          *
          * \param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is greater than
+         * \return \c true if and only if this rational is greater than
          * \a compare.
          */
         bool operator > (const Rational& compare) const;
@@ -382,7 +382,7 @@ class Rational {
          * Determines if this is less than or equal to the given rational.
          *
          * \param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is less than or
+         * \return \c true if and only if this rational is less than or
          * equal to \a compare.
          */
         bool operator <= (const Rational& compare) const;
@@ -390,7 +390,7 @@ class Rational {
          * Determines if this is greater than or equal to the given rational.
          *
          * \param compare the rational with which this will be compared.
-         * @return \c true if and only if this rational is greater than
+         * \return \c true if and only if this rational is greater than
          * or equal to \a compare.
          */
         bool operator >= (const Rational& compare) const;
@@ -413,7 +413,7 @@ class Rational {
          * \exception UnsolvedCase This rational lies outside double's
          * allowable range.
          *
-         * @return the double approximation to this rational.
+         * \return the double approximation to this rational.
          *
          * \author Ryan Budney, B.B.
          */
@@ -423,7 +423,7 @@ class Rational {
          * Returns this rational as written using TeX formatting.
          * No leading or trailing dollar signs will be included.
          *
-         * @return this rational as written using TeX formatting.
+         * \return this rational as written using TeX formatting.
          *
          * \author Ryan Budney
          */
@@ -437,7 +437,7 @@ class Rational {
          * that takes no arguments and returns a string.
          *
          * \param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \return a reference to the given output stream.
          *
          * \author Ryan Budney
          */
@@ -476,7 +476,7 @@ void swap(Rational& a, Rational& b) noexcept;
  *
  * \param out the output stream to which to write.
  * \param rat the rational to write.
- * @return a reference to \a out.
+ * \return a reference to \a out.
  *
  * \ingroup maths
  */

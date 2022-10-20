@@ -87,7 +87,7 @@ class LayeredLensSpace : public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         LayeredLensSpace& operator = (const LayeredLensSpace&) = default;
 
@@ -102,13 +102,13 @@ class LayeredLensSpace : public StandardTriangulation {
         /**
          * Returns the first parameter \a p of this lens space L(p,q).
          *
-         * @return the first parameter \a p.
+         * \return the first parameter \a p.
          */
         unsigned long p() const;
         /**
          * Returns the second parameter \a q of this lens space L(p,q).
          *
-         * @return the second parameter \a q.
+         * \return the second parameter \a q.
          */
         unsigned long q() const;
 
@@ -116,7 +116,7 @@ class LayeredLensSpace : public StandardTriangulation {
          * Returns the layered solid torus to which the mobius strip is
          * glued.
          *
-         * @return the layered solid torus.
+         * \return the layered solid torus.
          */
         const LayeredSolidTorus& torus() const;
         /**
@@ -128,7 +128,7 @@ class LayeredLensSpace : public StandardTriangulation {
          * LayeredSolidTorus::topEdge() for further details about
          * edge groups.
          *
-         * @return the top level edge group of the layered solid torus to
+         * \return the top level edge group of the layered solid torus to
          * which the mobius strip boundary is glued.
          */
         int mobiusBoundaryGroup() const;
@@ -136,14 +136,14 @@ class LayeredLensSpace : public StandardTriangulation {
          * Determines if the layered solid torus that forms the basis for
          * this lens space is snapped shut (folded closed without a twist).
          *
-         * @return \c true if and only if the torus is snapped shut.
+         * \return \c true if and only if the torus is snapped shut.
          */
         bool isSnapped() const;
         /**
          * Determines if the layered solid torus that forms the basis for
          * this lens space is twisted shut (folded closed with a twist).
          *
-         * @return \c true if and only if the torus is twisted shut.
+         * \return \c true if and only if the torus is twisted shut.
          */
         bool isTwisted() const;
 
@@ -164,7 +164,7 @@ class LayeredLensSpace : public StandardTriangulation {
          * torus starting at either of its two "ends").
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of layered lens space.
          */
         bool operator == (const LayeredLensSpace& other) const;
@@ -186,7 +186,7 @@ class LayeredLensSpace : public StandardTriangulation {
          * torus starting at either of its two "ends").
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different types of layered lens space.
          */
         bool operator != (const LayeredLensSpace& other) const;
@@ -200,7 +200,7 @@ class LayeredLensSpace : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param comp the triangulation component to examine.
-         * @return a structure containing details of the layered lens space,
+         * \return a structure containing details of the layered lens space,
          * or \c null if the given component is not a layered lens space.
          */
         static std::unique_ptr<LayeredLensSpace> recognise(

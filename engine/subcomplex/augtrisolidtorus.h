@@ -139,7 +139,7 @@ class AugTriSolidTorus : public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         AugTriSolidTorus& operator = (const AugTriSolidTorus&) = default;
 
@@ -155,7 +155,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * Returns the triangular solid torus at the core of this
          * triangulation.
          *
-         * @return the core triangular solid torus.
+         * \return the core triangular solid torus.
          */
         const TriSolidTorus& core() const;
         /**
@@ -167,7 +167,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          *
          * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
-         * @return the corresponding layered solid torus.
+         * \return the corresponding layered solid torus.
          */
         const std::optional<LayeredSolidTorus>& augTorus(int annulus) const;
 
@@ -190,7 +190,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.  It is the layered solid torus glued to this
          * annulus whose edge groups will be described.
-         * @return a permutation describing the roles of the
+         * \return a permutation describing the roles of the
          * corresponding top level edge groups.
          */
         Perm<3> edgeGroupRoles(int annulus) const;
@@ -201,7 +201,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * Note that this count does not include any of the tetrahedra
          * actually belonging to the triangular solid torus.
          *
-         * @return the number of tetrahedra in the layered chain, or 0
+         * \return the number of tetrahedra in the layered chain, or 0
          * if there is no layered chain linking two boundary annuli.
          */
         size_t chainLength() const;
@@ -212,7 +212,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * This will be one of the chain type constants defined in this
          * class.
          *
-         * @return the type of layered chain, or \a CHAIN_NONE
+         * \return the type of layered chain, or \a CHAIN_NONE
          * if there is no layered chain linking two boundary annuli.
          */
         int chainType() const;
@@ -227,7 +227,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * TriSolidTorus class notes for how the boundary annuli are
          * numbered.
          *
-         * @return the single annulus to which the layered solid torus
+         * \return the single annulus to which the layered solid torus
          * is attached, or -1 if there is no layered chain (and thus all
          * three annuli have layered solid tori attached).
          */
@@ -238,7 +238,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * its boundary annuli linked by a layered chain as described in
          * the general class notes.
          *
-         * @return \c true if and only if the layered chain described in
+         * \return \c true if and only if the layered chain described in
          * the class notes is present.
          */
         bool hasLayeredChain() const;
@@ -267,7 +267,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * augmented triangular solid torus).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of augmented triangular solid torus.
          */
         bool operator == (const AugTriSolidTorus& other) const;
@@ -296,7 +296,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * augmented triangular solid torus).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different types of augmented triangular solid torus.
          */
         bool operator != (const AugTriSolidTorus& other) const;
@@ -310,7 +310,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param comp the triangulation component to examine.
-         * @return a structure containing details of the augmented triangular
+         * \return a structure containing details of the augmented triangular
          * solid torus, or \c null if the given component is not an augmented
          * triangular solid torus.
          */
@@ -336,7 +336,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * \param out the output stream to which to write.
          * \param tex \c true if this routine is called from
          * writeTeXName() or \c false if it is called from writeName().
-         * @return a reference to \a out.
+         * \return a reference to \a out.
          */
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };

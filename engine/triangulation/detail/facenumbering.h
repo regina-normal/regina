@@ -139,7 +139,7 @@ class FaceNumberingAPI {
          * \param face identifies which <i>subdim</i>-face of a
          * <i>dim</i>-dimensional simplex to query.  This must be between
          * 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
-         * @return the corresponding canonical ordering of the simplex vertices.
+         * \return the corresponding canonical ordering of the simplex vertices.
          */
         static constexpr Perm<dim + 1> ordering(int face);
 
@@ -154,7 +154,7 @@ class FaceNumberingAPI {
          *
          * \param vertices a permutation whose first (\a subdim + 1)
          * elements represent some vertex numbers in a <i>dim</i>-simplex.
-         * @return the corresponding <i>subdim</i>-face number in the
+         * \return the corresponding <i>subdim</i>-face number in the
          * <i>dim</i>-simplex.  This will be between 0 and
          * (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
          */
@@ -170,7 +170,7 @@ class FaceNumberingAPI {
          * inclusive.
          * \param vertex a vertex number in a <i>dim</i>-simplex; this must be
          * between 0 and \a dim inclusive.
-         * @return \c true if and only if the given <i>subdim</i>-face
+         * \return \c true if and only if the given <i>subdim</i>-face
          * contains the given vertex.
          */
         static constexpr bool containsVertex(int face, int vertex);

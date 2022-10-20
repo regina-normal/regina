@@ -115,7 +115,7 @@ class IsoSigPrintable : public Base64SigEncoding {
          * \param joinDest an array whose elements are indices of
          * top-dimensional simplices to which gluings are being made.
          * \param joinGluing an array of gluing permutations.
-         * @return the encoding of the component being described.
+         * \return the encoding of the component being described.
          */
         static Signature encode(size_t size,
             size_t nFacetActions, const uint8_t* facetAction,

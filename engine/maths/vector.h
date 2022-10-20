@@ -241,7 +241,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \ifacespython This is also used to implement the Python special
          * method __len__().
          *
-         * @return the vector size.
+         * \return the vector size.
          */
         inline size_t size() const {
             return end_ - elts_;
@@ -254,7 +254,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \pre \c index is between 0 and size()-1 inclusive.
          *
          * \param index the vector index to examine.
-         * @return the vector element at the given index.
+         * \return the vector element at the given index.
          */
         inline const T& operator[](size_t index) const {
             return elts_[index];
@@ -265,7 +265,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \pre \c index is between 0 and size()-1 inclusive.
          *
          * \param index the vector index to access.
-         * @return a reference to the vector element at the given index.
+         * \return a reference to the vector element at the given index.
          */
         inline T& operator[](size_t index) {
             return elts_[index];
@@ -284,7 +284,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * interface.  You can iterate over the elements of this vector in the
          * same way that you would iterate over any native Python container.
          *
-         * @return an iterator pointing to the first element of this vector.
+         * \return an iterator pointing to the first element of this vector.
          */
         inline iterator begin() {
             return elts_;
@@ -303,7 +303,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * interface.  You can iterate over the elements of this vector in the
          * same way that you would iterate over any native Python container.
          *
-         * @return an iterator pointing to the first element of this vector.
+         * \return an iterator pointing to the first element of this vector.
          */
         inline const_iterator begin() const {
             return elts_;
@@ -322,7 +322,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * interface.  You can iterate over the elements of this vector in the
          * same way that you would iterate over any native Python container.
          *
-         * @return an iterator beyond the last element of this vector.
+         * \return an iterator beyond the last element of this vector.
          */
         inline iterator end() {
             return end_;
@@ -341,7 +341,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * interface.  You can iterate over the elements of this vector in the
          * same way that you would iterate over any native Python container.
          *
-         * @return an iterator beyond the last element of this vector.
+         * \return an iterator beyond the last element of this vector.
          */
         inline const_iterator end() const {
             return end_;
@@ -354,7 +354,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * functions instead.  In particular, you can iterate over the elements
          * of this list in the usual way using a range-based \c for loop.
          *
-         * @return an iterator over the elements of this vector.
+         * \return an iterator over the elements of this vector.
          */
         auto __iter__() const;
 #endif
@@ -366,7 +366,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * different sizes (in which case the return value will be \c false).
          *
          * \param compare the vector with which this will be compared.
-         * @return \c true if and only if the this and the given vector
+         * \return \c true if and only if the this and the given vector
          * are equal.
          */
         inline bool operator == (const Vector<T>& compare) const {
@@ -379,7 +379,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * different sizes (in which case the return value will be \c true).
          *
          * \param compare the vector with which this will be compared.
-         * @return \c true if and only if the this and the given vector
+         * \return \c true if and only if the this and the given vector
          * are not equal.
          */
         inline bool operator != (const Vector<T>& compare) const {
@@ -420,7 +420,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * The vector that is passed (\a src) will no longer be usable.
          *
          * \param src the vector to move.
-         * @return a reference to this vector.
+         * \return a reference to this vector.
          */
         inline Vector& operator = (Vector&& src) noexcept {
             std::swap(elts_, src.elts_);
@@ -445,7 +445,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \pre This and the given vector have the same size.
          *
          * \param other the vector to add to this vector.
-         * @return a reference to this vector.
+         * \return a reference to this vector.
          */
         inline Vector& operator += (const Vector<T>& other) {
             T* e = elts_;
@@ -462,7 +462,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \pre This and the given vector have the same size.
          *
          * \param other the vector to subtract from this vector.
-         * @return a reference to this vector.
+         * \return a reference to this vector.
          */
         inline Vector& operator -= (const Vector<T>& other) {
             T* e = elts_;
@@ -476,7 +476,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * This vector will be changed directly.
          *
          * \param factor the scalar with which this will be multiplied.
-         * @return a reference to this vector.
+         * \return a reference to this vector.
          */
         inline Vector& operator *= (const T& factor) {
             if (factor == 1)
@@ -492,7 +492,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \pre This and the given vector have the same size.
          *
          * \param other the vector to add to this vector.
-         * @return the sum <tt>this + other</tt>.
+         * \return the sum <tt>this + other</tt>.
          */
         inline Vector operator + (const Vector<T>& other) const {
             Vector ans(size());
@@ -513,7 +513,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \pre This and the given vector have the same size.
          *
          * \param other the vector to subtract from this vector.
-         * @return the difference <tt>this - other</tt>.
+         * \return the difference <tt>this - other</tt>.
          */
         inline Vector operator - (const Vector<T>& other) const {
             Vector ans(size());
@@ -532,7 +532,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * This vector will not be changed.
          *
          * \param factor the scalar to multiply this vector by.
-         * @return the product <tt>this * factor</tt>.
+         * \return the product <tt>this * factor</tt>.
          */
         inline Vector operator * (const T& factor) const {
             if (factor == 1)
@@ -554,7 +554,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \pre This and the given vector have the same size.
          *
          * \param other the vector with which this will be multiplied.
-         * @return the dot product of this and the given vector.
+         * \return the dot product of this and the given vector.
          */
         inline T operator * (const Vector<T>& other) const {
             T ans(0);
@@ -583,7 +583,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * Returns the norm of this vector.
          * This is the dot product of the vector with itself.
          *
-         * @return the norm of this vector.
+         * \return the norm of this vector.
          */
         inline T norm() const {
             T ans(0);
@@ -594,7 +594,7 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Returns the sum of all elements of this vector.
          *
-         * @return the sum of the elements of this vector.
+         * \return the sum of the elements of this vector.
          */
         inline T elementSum() const {
             T ans(0);
@@ -659,7 +659,7 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Determines whether this is the zero vector.
          *
-         * @return \c true if and only if all elements of the vector are zero.
+         * \return \c true if and only if all elements of the vector are zero.
          */
         bool isZero() const {
             for (const T* e = elts_; e != end_; ++e)
@@ -699,7 +699,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * This routine is only available when \a T is one of Regina's
          * own integer classes (Integer, LargeInteger, or NativeInteger).
          *
-         * @return the integer by which this vector was divided (i.e.,
+         * \return the integer by which this vector was divided (i.e.,
          * the gcd of its original elements).  This will be strictly positive.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) scaleDown() {
@@ -734,7 +734,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \param coordinate the coordinate position that should hold
          * the value 1; this must be between 0 and (\a dimension - 1)
          * inclusive.
-         * @return the requested unit vector.
+         * \return the requested unit vector.
          */
         static Vector unit(size_t dimension, size_t coordinate) {
             if constexpr (IsReginaInteger<T>::value) {
@@ -773,7 +773,7 @@ inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
  *
  * \param out the output stream to which to write.
  * \param vector the vector to write.
- * @return a reference to \a out.
+ * \return a reference to \a out.
  *
  * \ingroup maths
  */

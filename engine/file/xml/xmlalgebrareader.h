@@ -69,7 +69,7 @@ class XMLAbelianGroupReader : public XMLElementReader {
          * Returns a reference to the abelian group that has been read by
          * this element reader.
          *
-         * @return the group that has been read, or no value if an error
+         * \return the group that has been read, or no value if an error
          * occurred.
          */
         std::optional<AbelianGroup>& group();
@@ -102,7 +102,7 @@ class XMLGroupPresentationReader : public XMLElementReader {
          * Returns a reference to the group presentation that has been read by
          * this element reader.
          *
-         * @return the group that has been read, or no value if an error
+         * \return the group that has been read, or no value if an error
          * occurred.
          */
         std::optional<GroupPresentation>& group();

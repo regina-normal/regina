@@ -206,7 +206,7 @@ class GraphPair : public Manifold {
          *
          * \param which 0 if the first Seifert fibred space is to be
          * returned, or 1 if the second space is to be returned.
-         * @return a reference to the requested Seifert fibred space.
+         * \return a reference to the requested Seifert fibred space.
          */
         const SFSpace& sfs(unsigned which) const;
         /**
@@ -214,7 +214,7 @@ class GraphPair : public Manifold {
          * two Seifert fibred spaces are joined together.  See the class
          * notes for details on precisely how this matrix is represented.
          *
-         * @return a reference to the matching matrix.
+         * \return a reference to the matching matrix.
          */
         const Matrix2& matchingReln() const;
 
@@ -233,7 +233,7 @@ class GraphPair : public Manifold {
          * ordering graph manifold representations.
          *
          * \param compare the representation with which this will be compared.
-         * @return \c true if and only if this is "smaller" than the
+         * \return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
         bool operator < (const GraphPair& compare) const;
@@ -241,7 +241,7 @@ class GraphPair : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphPair& operator = (const GraphPair&) = default;
         /**
@@ -250,7 +250,7 @@ class GraphPair : public Manifold {
          *
          * The graph manifold that was passed will no longer be usable.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphPair& operator = (GraphPair&&) noexcept = default;
 
@@ -274,7 +274,7 @@ class GraphPair : public Manifold {
          * they will be treated as not equal by this routine.
          *
          * \param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object contain
+         * \return \c true if and only if this and the given object contain
          * identical presentations of the same graph manifold.
          */
         bool operator == (const GraphPair& compare) const;
@@ -291,7 +291,7 @@ class GraphPair : public Manifold {
          * they will be treated as not equal by this routine.
          *
          * \param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object do not
+         * \return \c true if and only if this and the given object do not
          * contain identical presentations of the same graph manifold.
          */
         bool operator != (const GraphPair& compare) const;

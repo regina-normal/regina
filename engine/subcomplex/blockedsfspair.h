@@ -129,7 +129,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * This will induce a deep copy of \a src.
          *
          * \param src the structure to copy.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         BlockedSFSPair& operator = (const BlockedSFSPair& src) = default;
         /**
@@ -139,7 +139,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * The structure that was passed (\a src) will no longer be usable.
          *
          * \param src the structure to move from.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         BlockedSFSPair& operator = (BlockedSFSPair&& src) noexcept = default;
         /**
@@ -157,7 +157,7 @@ class BlockedSFSPair : public StandardTriangulation {
          *
          * \param which 0 if the first region should be returned, or
          * 1 if the second region should be returned.
-         * @return details of the requested saturated region.
+         * \return details of the requested saturated region.
          */
         const SatRegion& region(int which) const;
 
@@ -171,7 +171,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * See the class notes above for precise information on how this
          * matrix is presented.
          *
-         * @return the matrix describing how the region boundaries are
+         * \return the matrix describing how the region boundaries are
          * joined.
          */
         const Matrix2& matchingReln() const;
@@ -195,7 +195,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * blocked Seifert fibred space).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of blocked pair of Seifert fibred spaces.
          */
         bool operator == (const BlockedSFSPair& other) const;
@@ -219,7 +219,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * blocked Seifert fibred space).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * do not represent the same type of blocked pair of Seifert fibred
          * spaces.
          */
@@ -239,7 +239,7 @@ class BlockedSFSPair : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param tri the triangulation to examine.
-         * @return a structure containing details of the blocked pair, or
+         * \return a structure containing details of the blocked pair, or
          * \c null if the given triangulation is not of this form.
          */
         static std::unique_ptr<BlockedSFSPair> recognise(

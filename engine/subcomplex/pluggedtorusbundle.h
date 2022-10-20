@@ -169,7 +169,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * This will induce a deep copy of \a src.
          *
          * \param src the structure to copy.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         PluggedTorusBundle& operator = (const PluggedTorusBundle& src) =
             default;
@@ -180,7 +180,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * The structure that was passed (\a src) will no longer be usable.
          *
          * \param src the structure to move from.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         PluggedTorusBundle& operator = (PluggedTorusBundle&& src) noexcept =
             default;
@@ -200,7 +200,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * information on how the thin I-bundle is embedded within this
          * triangulation, see the routine bundleIso().
          *
-         * @return the an isomorphic copy of the thin I-bundle within
+         * \return the an isomorphic copy of the thin I-bundle within
          * this triangulation.
          */
         const TxICore& bundle() const;
@@ -218,7 +218,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * showing how the thin I-bundle appears as a subcomplex of this
          * structure.
          *
-         * @return an isomorphism from the thin I-bundle described
+         * \return an isomorphism from the thin I-bundle described
          * by bundle() to the tetrahedra of this triangulation.
          */
         const Isomorphism<3>& bundleIso() const;
@@ -228,7 +228,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * (as opposed to the thin I-bundle, which refers to a separate
          * external triangulation).
          *
-         * @return the saturated region.
+         * \return the saturated region.
          */
         const SatRegion& region() const;
         /**
@@ -236,7 +236,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * the saturated region are joined by the thin I-bundle and
          * layerings.  See the class notes above for details.
          *
-         * @return the matching relation between the two region boundaries.
+         * \return the matching relation between the two region boundaries.
          */
         const Matrix2& matchingReln() const;
 
@@ -265,7 +265,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * plugged torus bundle).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of plugged torus bundle.
          */
         bool operator == (const PluggedTorusBundle& other) const;
@@ -295,7 +295,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * plugged torus bundle).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * do not represent the same type of plugged torus bundle.
          */
         bool operator != (const PluggedTorusBundle& other) const;
@@ -315,7 +315,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param tri the triangulation to examine.
-         * @return an object containing details of the structure that was
+         * \return an object containing details of the structure that was
          * found, or \c null if the given triangulation is not of the form
          * described by this class.
          */
@@ -376,7 +376,7 @@ class PluggedTorusBundle : public StandardTriangulation {
          * \param tri the triangulation to examine.
          * \param bundle the thin I-bundle whose isomorphic copy must be
          * used in the given triangulation.
-         * @return an object containing details of the structure that was
+         * \return an object containing details of the structure that was
          * found, or \c null if the given triangulation is not of the form
          * described by this class using an isomorphic copy of the given
          * thin I-bundle.

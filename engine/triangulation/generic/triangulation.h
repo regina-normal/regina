@@ -243,7 +243,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation&) = default;
 
@@ -271,7 +271,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src) = default;
 
@@ -373,7 +373,7 @@ class DegreeLessThan {
          * within the triangulation.
          * \param b the index of the second <i>subdim</i>-dimensional face
          * within the triangulation.
-         * @return \c true if and only if face \a a has smaller degree than
+         * \return \c true if and only if face \a a has smaller degree than
          * face \a b within the given triangulation.
          */
         bool operator() (unsigned a, unsigned b) const;
@@ -438,7 +438,7 @@ class DegreeGreaterThan {
          * within the triangulation.
          * \param b the index of the second <i>subdim</i>-dimensional face
          * within the triangulation.
-         * @return \c true if and only if face \a a has greater degree than
+         * \return \c true if and only if face \a a has greater degree than
          * face \a b within the given triangulation.
          */
         bool operator() (unsigned a, unsigned b) const;

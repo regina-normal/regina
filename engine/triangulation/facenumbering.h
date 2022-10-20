@@ -115,7 +115,7 @@ class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
  * This must be between 0 and \a dim inclusive.
  * \param j the second vertex of an edge in a <i>dim</i>-dimensional simplex.
  * This must be between 0 and \a dim inclusive, and must be different from \a i.
- * @return the number of the (<i>dim</i>-2)-face opposite the given edge.
+ * \return the number of the (<i>dim</i>-2)-face opposite the given edge.
  *
  * \ingroup triangulation
  */

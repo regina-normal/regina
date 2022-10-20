@@ -178,7 +178,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * This operator induces a deep copy of \a src.
          *
          * \param src the facet pairing to copy.
-         * @return a reference to this facet pairing.
+         * \return a reference to this facet pairing.
          */
         FacetPairing& operator = (const FacetPairing& src) = default;
 
@@ -193,7 +193,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * The facet pairing that is passed (\a src) will no longer be usable.
          *
          * \param src the facet pairing to move.
-         * @return a reference to this facet pairing.
+         * \return a reference to this facet pairing.
          */
         FacetPairing& operator = (FacetPairing&& src) noexcept = default;
 

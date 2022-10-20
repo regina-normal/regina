@@ -90,7 +90,7 @@ class MarkedElement {
          * MarkedVector.  If this object does not belong to an
          * MarkedVector, the return value is undefined.
          *
-         * @return the index at which this object is stored.
+         * \return the index at which this object is stored.
          */
         inline size_t markedIndex() const;
 
@@ -191,7 +191,7 @@ class MarkedVector : private std::vector<T*> {
          *
          * The vector that was passed will no longer be usable.
          *
-         * @return a reference to this vector.
+         * \return a reference to this vector.
          */
         MarkedVector& operator = (MarkedVector&&) noexcept = default;
 
@@ -199,7 +199,7 @@ class MarkedVector : private std::vector<T*> {
          * Casts this vector to a const std::vector, thus providing
          * access to the entire const functionality of std::vector.
          *
-         * @return a reference to this vector, cast as a const std::vector.
+         * \return a reference to this vector, cast as a const std::vector.
          */
         inline const std::vector<T*>& operator ()() const {
             return *this;
@@ -232,7 +232,7 @@ class MarkedVector : private std::vector<T*> {
          * \pre The given iterator points to an element of this vector.
          *
          * \param pos an iterator pointing to the element to erase.
-         * @return an iterator pointing to the element immediately
+         * \return an iterator pointing to the element immediately
          * after the element that was erased.
          */
         inline typename std::vector<T*>::iterator erase(
@@ -254,7 +254,7 @@ class MarkedVector : private std::vector<T*> {
          * \param first an iterator pointing to the first element to erase.
          * \param last an iterator pointing just beyond the last element
          * to erase.
-         * @return an iterator pointing to the element immediately
+         * \return an iterator pointing to the element immediately
          * after the elements that were erased.
          */
         inline typename std::vector<T*>::iterator erase(

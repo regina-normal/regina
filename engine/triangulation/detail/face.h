@@ -139,7 +139,7 @@ class FaceEmbeddingBase :
          * also access this simplex through a dimension-specific alias
          * (e.g., tetrahedron() in the case \a dim = 3).
          *
-         * @return the top-dimensional simplex.
+         * \return the top-dimensional simplex.
          */
         Simplex<dim>* simplex() const;
 
@@ -153,7 +153,7 @@ class FaceEmbeddingBase :
          * access this face number through a dimension-specific alias
          * (e.g., edge() in the case \a subdim = 1).
          *
-         * @return the corresponding face number of the top-dimensional simplex.
+         * \return the corresponding face number of the top-dimensional simplex.
          * This will be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
          * inclusive.
          */
@@ -175,7 +175,7 @@ class FaceEmbeddingBase :
          * routine is faster if you already have a FaceEmbedding).
          * See Simplex<dim>::faceMapping() for details.
          *
-         * @return a mapping from the vertices of the underlying
+         * \return a mapping from the vertices of the underlying
          * <i>subdim</i>-face to the corresponding vertices of simplex().
          */
         Perm<dim+1> vertices() const;
@@ -201,7 +201,7 @@ class FaceEmbeddingBase :
          * performance cost).
          *
          * \param rhs the object to compare with this.
-         * @return \c true if and only if both object are identical.
+         * \return \c true if and only if both object are identical.
          */
         bool operator == (const FaceEmbeddingBase& rhs) const;
 
@@ -226,7 +226,7 @@ class FaceEmbeddingBase :
          * performance cost).
          *
          * \param rhs the object to compare with this.
-         * @return \c true if and only if both object are identical.
+         * \return \c true if and only if both object are identical.
          */
         bool operator != (const FaceEmbeddingBase& rhs) const;
 
@@ -394,20 +394,20 @@ class FaceBase :
          * Returns the index of this face within the underlying
          * triangulation.
          *
-         * @return the index of this face.
+         * \return the index of this face.
          */
         size_t index() const;
         /**
          * Returns the triangulation to which this face belongs.
          *
-         * @return a reference to the triangulation containing this face.
+         * \return a reference to the triangulation containing this face.
          */
         Triangulation<dim>& triangulation() const;
         /**
          * Returns the component of the triangulation to which this
          * face belongs.
          *
-         * @return the component containing this face.
+         * \return the component containing this face.
          */
         Component<dim>* component() const;
         /**
@@ -425,7 +425,7 @@ class FaceBase :
          * an invalid vertex boundary component if the invalid vertex does
          * not already belong to some real boundary component.
          *
-         * @return the boundary component containing this face, or \c null if
+         * \return the boundary component containing this face, or \c null if
          * this face does not lie entirely within the boundary of the
          * triangulation.
          */
@@ -438,7 +438,7 @@ class FaceBase :
          * both possible and recognised: both ideal and invalid vertices
          * are considered to be on the boundary.
          *
-         * @return \c true if and only if this face lies on the boundary.
+         * \return \c true if and only if this face lies on the boundary.
          */
         bool isBoundary() const;
 
@@ -452,7 +452,7 @@ class FaceBase :
          * top-dimensional simplex, then it will be counted multiple
          * times by this routine.
          *
-         * @return the degree of this face.
+         * \return the degree of this face.
          */
         size_t degree() const;
         /**
@@ -470,7 +470,7 @@ class FaceBase :
          *
          * \param index the index of the requested appearance.  This
          * must be between 0 and degree()-1 inclusive.
-         * @return details of the requested appearance.
+         * \return details of the requested appearance.
          */
         const FaceEmbedding<dim, subdim>& embedding(size_t index) const;
 
@@ -517,7 +517,7 @@ class FaceBase :
          * }
          * \endcode
          *
-         * @return access to the list of all appearances of this face
+         * \return access to the list of all appearances of this face
          * within a top-dimensional simplex of the underlying triangulation.
          */
         auto embeddings() const;
@@ -566,7 +566,7 @@ class FaceBase :
          *
          * \nopython Python users can iterate over embeddings() instead.
          *
-         * @return a iterator that points to the first appearance.
+         * \return a iterator that points to the first appearance.
          */
         auto begin() const;
         /**
@@ -584,7 +584,7 @@ class FaceBase :
          *
          * \nopython Python users can iterate over embeddings() instead.
          *
-         * @return a "beyond the end" iterator that comes immediately
+         * \return a "beyond the end" iterator that comes immediately
          * after the last appearance.
          */
         auto end() const;
@@ -604,7 +604,7 @@ class FaceBase :
          * front() and back() will refer to the two appearances of this
          * face on the (<i>dim</i>-1)-dimensional boundary.
          *
-         * @return details of the first appearance.
+         * \return details of the first appearance.
          */
         const FaceEmbedding<dim, subdim>& front() const;
         /**
@@ -621,7 +621,7 @@ class FaceBase :
          * front() and back() will refer to the two appearances of this
          * face on the (<i>dim</i>-1)-dimensional boundary.
          *
-         * @return details of the last appearance.
+         * \return details of the last appearance.
          */
         const FaceEmbedding<dim, subdim>& back() const;
 
@@ -654,7 +654,7 @@ class FaceBase :
          *
          * \pre The facial dimension \a subdim is precisely <i>dim</i>-1.
          *
-         * @return \c true if and only if this (<i>dim</i>-1)-face represents
+         * \return \c true if and only if this (<i>dim</i>-1)-face represents
          * a dual edge in the maximal forest.
          */
         bool inMaximalForest() const;
@@ -669,7 +669,7 @@ class FaceBase :
          * non-identity permutation (which makes the face invalid), then
          * the return value of this routine is undefined.
          *
-         * @return \c true if and only if the link is orientable.
+         * \return \c true if and only if the link is orientable.
          */
         bool isLinkOrientable() const;
 
@@ -703,7 +703,7 @@ class FaceBase :
          * functions hasBadIdentification() and/or hasBadLink() to determine
          * whether the failure is due to conditions (1) or (2) respectively.
          *
-         * @return for standard dimensions \a dim, returns \c true if and only
+         * \return for standard dimensions \a dim, returns \c true if and only
          * if this face is valid according to both conditions (1) and (2) above;
          * for non-standard dimensions \a dim, returns \c true if and only if
          * this face is valid according to condition (1).
@@ -721,7 +721,7 @@ class FaceBase :
          * types of invalid faces also.  See isValid() for a full
          * discussion of what it means for a face to be valid.
          *
-         * @return \c true if and only if this face is identified with
+         * \return \c true if and only if this face is identified with
          * itself under a non-identity permutation.
          */
         bool hasBadIdentification() const;
@@ -742,7 +742,7 @@ class FaceBase :
          * This is because testing for bad links in higher dimensions can
          * require solutions to problems that are proven to be undecidable.
          *
-         * @return \c true if the link of this face is not appropriate (thereby
+         * \return \c true if the link of this face is not appropriate (thereby
          * making the face invalid), or \c false if the link is appropriate.
          */
         bool hasBadLink() const;
@@ -771,7 +771,7 @@ class FaceBase :
          * \param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
          * examine.  This should be between 0 and
          * (<i>subdim</i>+1 choose <i>lowerdim</i>+1)-1 inclusive.
-         * @return the corresponding <i>lowerdim</i>-face of the triangulation.
+         * \return the corresponding <i>lowerdim</i>-face of the triangulation.
          */
         template <int lowerdim>
         Face<dim, lowerdim>* face(int face) const;
@@ -871,7 +871,7 @@ class FaceBase :
          * \param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
          * examine.  This should be between 0 and
          * (<i>subdim</i>+1 choose <i>lowerdim</i>+1)-1 inclusive.
-         * @return a mapping from the vertices of the underlying
+         * \return a mapping from the vertices of the underlying
          * <i>lowerdim</i>-face of the triangulation to the vertices of
          * this <i>subdim</i>-face.
          */

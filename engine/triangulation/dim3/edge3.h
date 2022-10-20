@@ -82,7 +82,7 @@ class Face<3, 1> : public detail::FaceBase<3, 1> {
          * change the topology of the surface, and in some pathological
          * cases could even reduce it to the empty surface.
          *
-         * @return a pair (\a s, \a thin), where \a s is the edge linking
+         * \return a pair (\a s, \a thin), where \a s is the edge linking
          * normal surface, and \a thin is \c true if and only if this link
          * is thin (i.e., no additional normalisation steps were required).
          */

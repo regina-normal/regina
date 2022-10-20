@@ -167,7 +167,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * Returns the number of annuli on the boundary of this
          * saturated block.
          *
-         * @return the number of boundary annuli.
+         * \return the number of boundary annuli.
          */
         size_t countAnnuli() const;
 
@@ -178,7 +178,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * \param which indicates which boundary annulus is requested;
          * this must be between 0 and countAnnuli()-1 inclusive.
-         * @return a reference to the requested boundary annulus.
+         * \return a reference to the requested boundary annulus.
          */
         const SatAnnulus& annulus(size_t which) const;
 
@@ -189,7 +189,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * Recall from the class notes that the twist occurs between
          * boundary annuli countAnnuli()-1 and 0.
          *
-         * @return \c true if the ring of boundary annuli is twisted, or
+         * \return \c true if the ring of boundary annuli is twisted, or
          * \c false if not.
          */
         bool twistedBoundary() const;
@@ -201,7 +201,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * \param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
-         * @return \c true if the given boundary annulus has an adjacent
+         * \return \c true if the given boundary annulus has an adjacent
          * block listed, or \c false otherwise.
          */
         bool hasAdjacentBlock(size_t whichAnnulus) const;
@@ -213,7 +213,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * \param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
-         * @return the other block adjacent along this annulus, or \c null
+         * \return the other block adjacent along this annulus, or \c null
          * if there is no adjacent block listed.
          */
         const SatBlock* adjacentBlock(size_t whichAnnulus) const;
@@ -229,7 +229,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * \param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
-         * @return the corresponding annulus number on the other block
+         * \return the corresponding annulus number on the other block
          * that is adjacent along this annulus.
          */
         size_t adjacentAnnulus(size_t whichAnnulus) const;
@@ -245,7 +245,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * \param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
-         * @return \c true if the corresponding adjacency is reflected,
+         * \return \c true if the corresponding adjacency is reflected,
          * or \c false if it is not.
          */
         bool adjacentReflected(size_t whichAnnulus) const;
@@ -261,7 +261,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * \param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
-         * @return \c true if the corresponding adjacency is backwards,
+         * \return \c true if the corresponding adjacency is backwards,
          * or \c false if it is not.
          */
         bool adjacentBackwards(size_t whichAnnulus) const;
@@ -377,7 +377,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * inclusive.
          * \param followPrev \c true if we should find the previous boundary
          * annulus, or \c false if we should find the next boundary annulus.
-         * @return a tuple (\a nextBlock, \a nextAnnulus, \a refVert,
+         * \return a tuple (\a nextBlock, \a nextAnnulus, \a refVert,
          * \a refHoriz), where: \a nextBlock is the block containing the next
          * boundary annulus around from \a thisAnnulus; \a nextAnnulus is the
          * specific annulus number within \a nextBlock of the next annulus
@@ -401,7 +401,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * \param tex \c true if the name should be formatted for TeX,
          * or \c false if it should be in plain text format.
-         * @return an abbreviated name for this block.
+         * \return an abbreviated name for this block.
          */
         std::string abbr(bool tex = false) const;
 
@@ -429,7 +429,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * \param compare the saturated block with which this will be
          * compared.
-         * @return \c true if this block comes before the given block
+         * \return \c true if this block comes before the given block
          * according to the ordering of saturated blocks, or \c false
          * if either the blocks are identical or this block comes after
          * the given block.
@@ -457,7 +457,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *   annulus in the same way.
          *
          * \param other the saturated block to compare with this.
-         * @return \c true if and only if this and the given object
+         * \return \c true if and only if this and the given object
          * represent blocks of the same type with the same parameters.
          */
         virtual bool operator == (const SatBlock& other) const = 0;
@@ -471,7 +471,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * meant by "the same combinatorial parameters".
          *
          * \param other the saturated block to compare with this.
-         * @return \c true if and only if this and the given object
+         * \return \c true if and only if this and the given object
          * do not represent blocks of the same type with the same parameters.
          */
         bool operator != (const SatBlock& other) const;
@@ -526,7 +526,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * For this reason, each subclass of SatBlock must implement this
          * routine.
          *
-         * @return a new clone of this block.
+         * \return a new clone of this block.
          */
         virtual SatBlock* clone() const = 0;
 
@@ -540,7 +540,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * annuli appear in the same order.
          *
          * \param other the block to compare with this.
-         * @return \c true if and only if this and the given block have
+         * \return \c true if and only if this and the given block have
          * identical boundaries, as described above.
          */
         bool identicalBoundary(const SatBlock& other) const;
@@ -554,7 +554,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * \param t the tetrahedron to search for.
          * \param list the list in which to search.
-         * @return \c true if and only if the given tetrahedron was found.
+         * \return \c true if and only if the given tetrahedron was found.
          */
         static bool isBad(const Tetrahedron<3>* t, const TetList& list);
         /**
@@ -571,7 +571,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * \param t the tetrahedron to search for.
          * \param list the list in which to search.
-         * @return \c true if and only if the given tetrahedron was found.
+         * \return \c true if and only if the given tetrahedron was found.
          */
         template <class List>
         static bool isBad(const Tetrahedron<3>* t, const List& list) {
@@ -595,7 +595,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * more tetrahedra as arguments.
          *
          * \param test the tetrahedron pointer to test.
-         * @return \c true if \a test is null, or \c false otherwise.
+         * \return \c true if \a test is null, or \c false otherwise.
          */
         static bool notUnique(const Tetrahedron<3>* test);
         /**
@@ -609,7 +609,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * \param test the tetrahedron pointer to test.
          * \param other1 another tetrahedron that will be compared with \a test.
-         * @return \c true if \a test is null or equal to \a other1,
+         * \return \c true if \a test is null or equal to \a other1,
          * or \c false otherwise.
          */
         static bool notUnique(const Tetrahedron<3>* test,
@@ -626,7 +626,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * \param test the tetrahedron pointer to test.
          * \param other1 another tetrahedron that will be compared with \a test.
          * \param other2 another tetrahedron that will be compared with \a test.
-         * @return \c true if \a test is null or equal to \a other1 or
+         * \return \c true if \a test is null or equal to \a other1 or
          * \a other2, or \c false otherwise.
          */
         static bool notUnique(const Tetrahedron<3>* test,
@@ -644,7 +644,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * \param other1 another tetrahedron that will be compared with \a test.
          * \param other2 another tetrahedron that will be compared with \a test.
          * \param other3 another tetrahedron that will be compared with \a test.
-         * @return \c true if \a test is null or equal to \a other1,
+         * \return \c true if \a test is null or equal to \a other1,
          * \a other2 or \a other3, or \c false otherwise.
          */
         static bool notUnique(const Tetrahedron<3>* test,
@@ -664,7 +664,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * \param other2 another tetrahedron that will be compared with \a test.
          * \param other3 another tetrahedron that will be compared with \a test.
          * \param other4 another tetrahedron that will be compared with \a test.
-         * @return \c true if \a test is null or equal to \a other1,
+         * \return \c true if \a test is null or equal to \a other1,
          * \a other2, \a other3 or \a other4, or \c false otherwise.
          */
         static bool notUnique(const Tetrahedron<3>* test,
@@ -682,7 +682,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * \param triangulation an explicit triangulation of this block
          * structure.
-         * @return a model that holds this block and the given triangulation.
+         * \return a model that holds this block and the given triangulation.
          */
         SatBlockModel modelWith(Triangulation<3>* triangulation);
 
@@ -804,7 +804,7 @@ class SatBlockModel : public ShortOutput<SatBlockModel> {
          * block structure.
          *
          * \param src the model to copy.
-         * @return a reference to this model.
+         * \return a reference to this model.
          */
         SatBlockModel& operator = (const SatBlockModel& src);
 
@@ -815,7 +815,7 @@ class SatBlockModel : public ShortOutput<SatBlockModel> {
          * The model that was passed (\a src) will no longer be usable.
          *
          * \param src the model whose contents should be moved.
-         * @return a reference to this model.
+         * \return a reference to this model.
          */
         SatBlockModel& operator = (SatBlockModel&& src) noexcept;
 
@@ -829,14 +829,14 @@ class SatBlockModel : public ShortOutput<SatBlockModel> {
         /**
          * Returns the triangulation of the saturated block.
          *
-         * @return the block triangulation.
+         * \return the block triangulation.
          */
         const Triangulation<3>& triangulation() const;
 
         /**
          * Returns the structure of the saturated block.
          *
-         * @return the block structure.
+         * \return the block structure.
          */
         const SatBlock& block() const;
 
@@ -856,7 +856,7 @@ class SatBlockModel : public ShortOutput<SatBlockModel> {
          * yield non-identical (and moreover non-isomorphic) triangulations.
          *
          * \param other the model to compare with this.
-         * @return \c true if and only if this and the given object
+         * \return \c true if and only if this and the given object
          * model the same block type with the same combinatorial parameters.
          */
         bool operator == (const SatBlockModel& other) const;
@@ -877,7 +877,7 @@ class SatBlockModel : public ShortOutput<SatBlockModel> {
          * yield non-identical (and moreover non-isomorphic) triangulations.
          *
          * \param other the model to compare with this.
-         * @return \c true if and only if this and the given object do not
+         * \return \c true if and only if this and the given object do not
          * model the same block type with the same combinatorial parameters.
          */
         bool operator != (const SatBlockModel& other) const;

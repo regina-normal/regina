@@ -100,7 +100,7 @@ class Container : public Packet {
          * the packet infrastructure (e.g., it will not copy the packet label,
          * or change this packet's location in any packet tree).
          *
-         * @return a reference to this packet.
+         * \return a reference to this packet.
          */
         Container& operator = (const Container&) = default;
 

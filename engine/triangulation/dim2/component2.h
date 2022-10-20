@@ -96,7 +96,7 @@ class Component<2> : public detail::ComponentBase<2> {
          * \tparam subdim the face dimension; this must be between 0 and 2
          * inclusive.
          *
-         * @return the number of <i>subdim</i>-faces.
+         * \return the number of <i>subdim</i>-faces.
          */
         template <int subdim>
         size_t countFaces() const;
@@ -132,7 +132,7 @@ class Component<2> : public detail::ComponentBase<2> {
          *
          * \tparam subdim the face dimension; this must be either 0 or 1.
          *
-         * @return access to the list of all <i>subdim</i>-faces.
+         * \return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
         auto faces() const;
@@ -152,7 +152,7 @@ class Component<2> : public detail::ComponentBase<2> {
          *
          * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
-         * @return the requested face.
+         * \return the requested face.
          */
         template <int subdim>
         Face<2, subdim>* face(size_t index) const;
@@ -175,7 +175,7 @@ class Component<2> : public detail::ComponentBase<2> {
          * Determines if this component is closed.
          * This is the case if and only if it has no boundary.
          *
-         * @return \c true if and only if this component is closed.
+         * \return \c true if and only if this component is closed.
          */
         bool isClosed() const;
 

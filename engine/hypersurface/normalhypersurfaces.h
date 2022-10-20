@@ -258,7 +258,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * Sets this to be a (deep) copy of the given list.
          *
          * \param src the list to copy.
-         * @return a reference to this list.
+         * \return a reference to this list.
          */
         NormalHypersurfaces& operator = (const NormalHypersurfaces& src);
 
@@ -275,7 +275,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * to be destroyed (which will fire a destruction event instead).
          *
          * \param src the list to move.
-         * @return a reference to this list.
+         * \return a reference to this list.
          */
         NormalHypersurfaces& operator = (NormalHypersurfaces&& src);
 
@@ -297,7 +297,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * Returns the coordinate system that was originally used to enumerate
          * the hypersurfaces in this list.
          *
-         * @return the coordinate system used.
+         * \return the coordinate system used.
          */
         HyperCoords coords() const;
         /**
@@ -309,7 +309,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * filled in (such as HS_VERTEX and/or HS_EMBEDDED_ONLY), and
          * invalid and/or redundant values will have been removed.
          *
-         * @return details of what this list represents.
+         * \return details of what this list represents.
          */
         HyperList which() const;
         /**
@@ -323,7 +323,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * of algorithm flags will be replaced with whatever algorithm
          * was actually used.
          *
-         * @return details of the algorithm used to enumerate this list.
+         * \return details of the algorithm used to enumerate this list.
          */
         HyperAlg algorithm() const;
         /**
@@ -334,7 +334,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * list are actually non-compact; it simply returns a basic
          * property of the coordinate system that was used for enumeration.
          *
-         * @return \c true if and only if non-compact normal hypersurfaces
+         * \return \c true if and only if non-compact normal hypersurfaces
          * are supported.
          */
         bool allowsNonCompact() const;
@@ -347,7 +347,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * that they were not deliberately excluded (for instance, the
          * prism constraints were not enforced).
          *
-         * @return \c true if this list was constructed to contain only
+         * \return \c true if this list was constructed to contain only
          * properly embedded hypersurfaces, or \c false otherwise.
          */
         bool isEmbeddedOnly() const;
@@ -378,7 +378,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * hypersurface lists can now be kept anywhere in the packet tree, or
          * can be kept as standalone objects outside the packet tree entirely.
          *
-         * @return a reference to the underlying triangulation.
+         * \return a reference to the underlying triangulation.
          */
         const Triangulation<4>& triangulation() const;
 
@@ -388,7 +388,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * \ifacespython This is also used to implement the Python special
          * method __len__().
          *
-         * @return the number of hypersurfaces.
+         * \return the number of hypersurfaces.
          */
         size_t size() const;
         /**
@@ -398,7 +398,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * \param index the index of the requested hypersurface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
-         * @return the normal hypersurface at the requested index in this list.
+         * \return the normal hypersurface at the requested index in this list.
          */
         const NormalHypersurface& hypersurface(size_t index) const;
         /**
@@ -408,7 +408,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * \param index the index of the requested hypersurface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
-         * @return the normal hypersurface at the requested index in this list.
+         * \return the normal hypersurface at the requested index in this list.
          */
         const NormalHypersurface& operator [](size_t index) const;
         /**
@@ -433,7 +433,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * this list in the same way that you would iterate over any native
          * Python container.
          *
-         * @return an iterator at the beginning of this list.
+         * \return an iterator at the beginning of this list.
          */
         auto begin() const;
         /**
@@ -448,7 +448,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * this list in the same way that you would iterate over any native
          * Python container.
          *
-         * @return an iterator beyond the end of this list.
+         * \return an iterator beyond the end of this list.
          */
         auto end() const;
 #ifdef __APIDOCS
@@ -469,7 +469,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * the normal hypersurfaces in this list in the usual way using a
          * range-based \c for loop.
          *
-         * @return an iterator over the normal hypersurfaces in this list.
+         * \return an iterator over the normal hypersurfaces in this list.
          */
         auto __iter__() const;
 #endif
@@ -502,7 +502,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *   comparison will return \c false.
          *
          * \param other the list to be compared with this list.
-         * @return \c true if both lists represent the same multiset of
+         * \return \c true if both lists represent the same multiset of
          * normal hypersurfaces, or \c false if not.
          */
         bool operator == (const NormalHypersurfaces& other) const;
@@ -536,7 +536,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *   considered different).
          *
          * \param other the list to be compared with this list.
-         * @return \c true if both lists do not represent the same multiset of
+         * \return \c true if both lists do not represent the same multiset of
          * normal hypersurfaces, or \c false if they do.
          */
         bool operator != (const NormalHypersurfaces& other) const;
@@ -598,7 +598,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * then this normal hypersurface list would not have been created
          * in the first place.
          *
-         * @return the matching equations used to create this normal
+         * \return the matching equations used to create this normal
          * hypersurface list.
          */
         MatrixInt recreateMatchingEquations() const;
@@ -610,7 +610,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * \nopython Use vectors() instead, which returns an iterable object
          * for iterating over these same raw vectors.
          *
-         * @return an iterator at the beginning of this hypersurface list.
+         * \return an iterator at the beginning of this hypersurface list.
          */
         VectorIterator beginVectors() const;
 
@@ -622,7 +622,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * \nopython Use vectors() instead, which returns an iterable object
          * for iterating over these same raw vectors.
          *
-         * @return an iterator past the end of this hypersurface list.
+         * \return an iterator past the end of this hypersurface list.
          */
         VectorIterator endVectors() const;
 
@@ -641,7 +641,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * and endVectors() instead, which together define an iterator range
          * over these same raw vectors.
          *
-         * @return an iterator over the normal hypersurfaces in this list.
+         * \return an iterator over the normal hypersurfaces in this list.
          */
         auto vectors() const;
 #endif
@@ -690,7 +690,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                  * Makes this a copy of the given iterator.
                  *
                  * \param cloneMe the iterator to clone.
-                 * @return a reference to this iterator.
+                 * \return a reference to this iterator.
                  */
                 VectorIterator& operator = (const VectorIterator& cloneMe) =
                     default;
@@ -699,7 +699,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                  * Compares this with the given iterator for equality.
                  *
                  * \param other the iterator to compare this with.
-                 * @return \c true if the iterators point to the same
+                 * \return \c true if the iterators point to the same
                  * element of the same normal surface list, or \c false
                  * if they do not.
                  */
@@ -709,7 +709,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                  * Compares this with the given iterator for inequality.
                  *
                  * \param other the iterator to compare this with.
-                 * @return \c false if the iterators point to the same
+                 * \return \c false if the iterators point to the same
                  * element of the same normal surface list, or \c true
                  * if they do not.
                  */
@@ -722,21 +722,21 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                  * \pre This iterator is dereferenceable (in particular,
                  * it is not past-the-end).
                  *
-                 * @return the corresponding normal hypersurface vector.
+                 * \return the corresponding normal hypersurface vector.
                  */
                 const Vector<LargeInteger>& operator *() const;
 
                 /**
                  * The preincrement operator.
                  *
-                 * @return a reference to this iterator after the increment.
+                 * \return a reference to this iterator after the increment.
                  */
                 VectorIterator& operator ++();
 
                 /**
                  * The postincrement operator.
                  *
-                 * @return a copy of this iterator before the
+                 * \return a copy of this iterator before the
                  * increment took place.
                  */
                 VectorIterator operator ++(int);
@@ -744,14 +744,14 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                 /**
                  * The predecrement operator.
                  *
-                 * @return a reference to this iterator after the decrement.
+                 * \return a reference to this iterator after the decrement.
                  */
                 VectorIterator& operator --();
 
                 /**
                  * The postdecrement operator.
                  *
-                 * @return a copy of this iterator before the
+                 * \return a copy of this iterator before the
                  * decrement took place.
                  */
                 VectorIterator operator --(int);
@@ -977,7 +977,7 @@ void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs);
  * \param triangulation the triangulation upon which these matching equations
  * will be based.
  * \param coords the coordinate system to be used.
- * @return the resulting set of matching equations.
+ * \return the resulting set of matching equations.
  *
  * \ingroup hypersurface
  */
@@ -999,7 +999,7 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
  * \param coords the coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NormalHypersurfaces.
- * @return the set of validity constraints.
+ * \return the set of validity constraints.
  *
  * \ingroup hypersurface
  */

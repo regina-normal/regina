@@ -109,7 +109,7 @@ struct DiscType {
      * The implementation will assume that a non-null disc type
      * has non-negative \a type (as explained in the class notes).
      *
-     * @return \c true if and only if this is not a null disc type.
+     * \return \c true if and only if this is not a null disc type.
      */
     constexpr operator bool() const;
 
@@ -117,7 +117,7 @@ struct DiscType {
      * Sets this to a copy of the given disc type.
      *
      * \param cloneMe the disc type to clone.
-     * @return a reference to this disc type.
+     * \return a reference to this disc type.
      */
     DiscType& operator = (const DiscType& cloneMe) = default;
     /**
@@ -128,7 +128,7 @@ struct DiscType {
      * each other, and will not be equal to any "meaningful" disc type
      * (where \a type is non-negative).
      *
-     * @return \c true if this and the given disc type are identical, or
+     * \return \c true if this and the given disc type are identical, or
      * \c false if they are different.
      */
     constexpr bool operator == (const DiscType& compare) const;
@@ -138,7 +138,7 @@ struct DiscType {
      * This is the negation of the equality test; see operator == for
      * further details.
      *
-     * @return \c true if this and the given disc type are different, or
+     * \return \c true if this and the given disc type are different, or
      * \c false if they are identical.
      */
     constexpr bool operator != (const DiscType& compare) const;
@@ -147,7 +147,7 @@ struct DiscType {
      * \a tetrahedron and then by \a type.  The null disc type is considered
      * less than all "meaningful" disc types.
      *
-     * @return \c true if this disc type appears before the given disc type
+     * \return \c true if this disc type appears before the given disc type
      * in the ordering, or \c false if not.
      */
     constexpr bool operator < (const DiscType& compare) const;
@@ -159,7 +159,7 @@ struct DiscType {
  *
  * \param out the output stream to which to write.
  * \param type the disc type to write.
- * @return a reference to the given output stream.
+ * \return a reference to the given output stream.
  *
  * \ingroup surfaces
  */

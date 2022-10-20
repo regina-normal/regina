@@ -114,7 +114,7 @@ namespace graph {
         /**
          * Sets this to be a copy of the given dual edge object.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         DualEdge& operator = (const DualEdge&) = default;
 
@@ -134,7 +134,7 @@ namespace graph {
          * directions are also considered unequal.
          *
          * \param rhs the dual edge object to compare with this.
-         * @return \c true if and only if the two dual edges are
+         * \return \c true if and only if the two dual edges are
          * equal, as described above.
          */
         bool operator == (const DualEdge& rhs) const;
@@ -147,7 +147,7 @@ namespace graph {
          * considered equal.
          *
          * \param rhs the dual edge object to compare with this.
-         * @return \c true if and only if the two dual edges are
+         * \return \c true if and only if the two dual edges are
          * not equal.
          */
         bool operator != (const DualEdge& rhs) const;
@@ -162,7 +162,7 @@ namespace graph {
          * Note that a dual vertex corresponds to a top-dimensional
          * simplex of the underlying triangulation.
          *
-         * @return the top-dimensional simplex corresponding to
+         * \return the top-dimensional simplex corresponding to
          * the dual vertex at the beginning of this dual edge.
          */
         Simplex<dim>* source() const;
@@ -177,7 +177,7 @@ namespace graph {
          * Note that a dual vertex corresponds to a top-dimensional
          * simplex of the underlying triangulation.
          *
-         * @return the top-dimensional simplex corresponding to
+         * \return the top-dimensional simplex corresponding to
          * the dual vertex at the end of this dual edge.
          */
         Simplex<dim>* target() const;
@@ -277,14 +277,14 @@ namespace graph {
             /**
              * Preincrement operator.
              *
-             * @return a reference to this iterator.
+             * \return a reference to this iterator.
              */
             DualEdgeIterator& operator ++ ();
 
             /**
              * Postincrement operator.
              *
-             * @return a copy of this iterator before it was incremented.
+             * \return a copy of this iterator before it was incremented.
              */
             DualEdgeIterator operator ++ (int);
 
@@ -298,14 +298,14 @@ namespace graph {
              *
              * \pre This iterator is not past-the-end.
              *
-             * @return the dual edge to which this iterator points.
+             * \return the dual edge to which this iterator points.
              */
             DualEdge<dim> operator * () const;
 
             /**
              * Sets this to be a copy of the given iterator.
              *
-             * @return a reference to this iterator.
+             * \return a reference to this iterator.
              */
             DualEdgeIterator& operator = (const DualEdgeIterator&) = default;
 
@@ -313,14 +313,14 @@ namespace graph {
              * Tests whether this and the given iterator are equal.
              *
              * \param rhs the iterator to compare with this.
-             * @return \c true if and only if the two iterators are equal.
+             * \return \c true if and only if the two iterators are equal.
              */
             bool operator == (const DualEdgeIterator& rhs) const;
             /**
              * Tests whether this and the given iterator are different.
              *
              * \param rhs the iterator to compare with this.
-             * @return \c true if and only if the two iterators are different.
+             * \return \c true if and only if the two iterators are different.
              */
             bool operator != (const DualEdgeIterator& rhs) const;
 
@@ -424,13 +424,13 @@ namespace graph {
             /**
              * Preincrement operator.
              *
-             * @return a reference to this iterator.
+             * \return a reference to this iterator.
              */
             IncidentDualEdgeIterator& operator ++ ();
             /**
              * Postincrement operator.
              *
-             * @return a copy of this iterator before it was incremented.
+             * \return a copy of this iterator before it was incremented.
              */
             IncidentDualEdgeIterator operator ++ (int);
 
@@ -446,14 +446,14 @@ namespace graph {
              *
              * \pre This iterator is not past-the-end.
              *
-             * @return the dual edge to which this iterator points.
+             * \return the dual edge to which this iterator points.
              */
             DualEdge<dim> operator * () const;
 
             /**
              * Sets this to be a copy of the given iterator.
              *
-             * @return a reference to this iterator.
+             * \return a reference to this iterator.
              */
             IncidentDualEdgeIterator& operator = (
                     const IncidentDualEdgeIterator&) = default;
@@ -462,14 +462,14 @@ namespace graph {
              * Tests whether this and the given iterator are equal.
              *
              * \param rhs the iterator to compare with this.
-             * @return \c true if and only if the two iterators are equal.
+             * \return \c true if and only if the two iterators are equal.
              */
             bool operator == (const IncidentDualEdgeIterator& rhs) const;
             /**
              * Tests whether this and the given iterator are different.
              *
              * \param rhs the iterator to compare with this.
-             * @return \c true if and only if the two iterators are different.
+             * \return \c true if and only if the two iterators are different.
              */
             bool operator != (const IncidentDualEdgeIterator& rhs) const;
 
@@ -566,13 +566,13 @@ namespace graph {
             /**
              * Preincrement operator.
              *
-             * @return a reference to this iterator.
+             * \return a reference to this iterator.
              */
             AdjacentDualVertexIterator& operator ++ ();
             /**
              * Postincrement operator.
              *
-             * @return a copy of this iterator before it was incremented.
+             * \return a copy of this iterator before it was incremented.
              */
             AdjacentDualVertexIterator operator ++ (int);
 
@@ -582,14 +582,14 @@ namespace graph {
              *
              * \pre This iterator is not past-the-end.
              *
-             * @return the dual vertex to which this iterator points.
+             * \return the dual vertex to which this iterator points.
              */
             Simplex<dim>* operator * () const;
 
             /**
              * Sets this to be a copy of the given iterator.
              *
-             * @return a reference to this iterator.
+             * \return a reference to this iterator.
              */
             AdjacentDualVertexIterator& operator = (
                     const AdjacentDualVertexIterator&) = default;
@@ -598,14 +598,14 @@ namespace graph {
              * Tests whether this and the given iterator are equal.
              *
              * \param rhs the iterator to compare with this.
-             * @return \c true if and only if the two iterators are equal.
+             * \return \c true if and only if the two iterators are equal.
              */
             bool operator == (const AdjacentDualVertexIterator& rhs) const;
             /**
              * Tests whether this and the given iterator are different.
              *
              * \param rhs the iterator to compare with this.
-             * @return \c true if and only if the two iterators are different.
+             * \return \c true if and only if the two iterators are different.
              */
             bool operator != (const AdjacentDualVertexIterator& rhs) const;
 
@@ -650,7 +650,7 @@ namespace graph {
      * can be used directly as the underlying graph type.
      *
      * \param t the triangulation whose dual graph we are studying.
-     * @return the range of all dual vertices of \a t, presented as a
+     * \return the range of all dual vertices of \a t, presented as a
      * std::pair of simplex iterators.
      */
     template <int dim>
@@ -663,7 +663,7 @@ namespace graph {
      * can be used directly as the underlying graph type.
      *
      * \param t the triangulation whose dual graph we are studying.
-     * @return the range of all dual edges of \a t.
+     * \return the range of all dual edges of \a t.
      */
     template <int dim>
     std::pair<graph::DualEdgeIterator<dim>, graph::DualEdgeIterator<dim>>
@@ -676,7 +676,7 @@ namespace graph {
      * type.
      *
      * \param t the triangulation whose dual graph we are studying.
-     * @return the number of dual vertices of \a t.
+     * \return the number of dual vertices of \a t.
      */
     template <int dim>
     size_t num_vertices(const Triangulation<dim>& t);
@@ -688,7 +688,7 @@ namespace graph {
      * type.
      *
      * \param t the triangulation whose dual graph we are studying.
-     * @return the number of dual edges of \a t.
+     * \return the number of dual edges of \a t.
      */
     template <int dim>
     size_t num_edges(const Triangulation<dim>& t);
@@ -708,7 +708,7 @@ namespace graph {
      *
      * \param e the edge of the dual graph that we are examining.
      * \param t the dual graph itself (i.e., the underlying triangulation).
-     * @return the source vertex of the dual edge \a e.
+     * \return the source vertex of the dual edge \a e.
      */
     template <int dim>
     Simplex<dim>* source(graph::DualEdge<dim> e, const Triangulation<dim>& t);
@@ -728,7 +728,7 @@ namespace graph {
      *
      * \param e the edge of the dual graph that we are examining.
      * \param t the dual graph itself (i.e., the underlying triangulation).
-     * @return the target vertex of the dual edge \a e.
+     * \return the target vertex of the dual edge \a e.
      */
     template <int dim>
     Simplex<dim>* target(graph::DualEdge<dim> e, const Triangulation<dim>& t);
@@ -745,7 +745,7 @@ namespace graph {
      *
      * \param v the vertex of the dual graph that we are examining.
      * \param t the dual graph itself (i.e., the underlying triangulation).
-     * @return the degree of the dual vertex \a v.
+     * \return the degree of the dual vertex \a v.
      */
     template <int dim>
     unsigned degree(Simplex<dim>* v, const Triangulation<dim>& t);
@@ -762,7 +762,7 @@ namespace graph {
      *
      * \param v the vertex of the dual graph that we are examining.
      * \param t the dual graph itself (i.e., the underlying triangulation).
-     * @return the degree of the dual vertex \a v.
+     * \return the degree of the dual vertex \a v.
      */
     template <int dim>
     unsigned in_degree(Simplex<dim>* v, const Triangulation<dim>& t);
@@ -779,7 +779,7 @@ namespace graph {
      *
      * \param v the vertex of the dual graph that we are examining.
      * \param t the dual graph itself (i.e., the underlying triangulation).
-     * @return the degree of the dual vertex \a v.
+     * \return the degree of the dual vertex \a v.
      */
     template <int dim>
     unsigned out_degree(Simplex<dim>* v, const Triangulation<dim>& t);
@@ -792,7 +792,7 @@ namespace graph {
      *
      * \param v the vertex of the dual graph that we are examining.
      * \param t the dual graph itself (i.e., the underlying triangulation).
-     * @return the range of all dual vertices adjacent to \a v.
+     * \return the range of all dual vertices adjacent to \a v.
      */
     template <int dim>
     std::pair<graph::AdjacentDualVertexIterator<dim>,
@@ -813,7 +813,7 @@ namespace graph {
      *
      * \param v the vertex of the dual graph that we are examining.
      * \param t the dual graph itself (i.e., the underlying triangulation).
-     * @return the range of all dual edges incident with \a v.
+     * \return the range of all dual edges incident with \a v.
      */
     template <int dim>
     std::pair<graph::IncidentDualEdgeIterator<dim, false>,
@@ -834,7 +834,7 @@ namespace graph {
      *
      * \param v the vertex of the dual graph that we are examining.
      * \param t the dual graph itself (i.e., the underlying triangulation).
-     * @return the range of all dual edges incident with \a v.
+     * \return the range of all dual edges incident with \a v.
      */
     template <int dim>
     std::pair<graph::IncidentDualEdgeIterator<dim, true>,
@@ -851,7 +851,7 @@ namespace graph {
      * type information (to indicate which graph property is being queried).
      *
      * \param v the vertex of the dual graph that we are examining.
-     * @return the index of the top-dimensional simplex corresponding to
+     * \return the index of the top-dimensional simplex corresponding to
      * \a v in the underlying triangulation.
      */
     template <int dim>
@@ -869,7 +869,7 @@ namespace graph {
      * type information (to indicate which graph property is being queried).
      *
      * \param v the vertex of the dual graph that we are examining.
-     * @return the description of the top-dimensional simplex corresponding to
+     * \return the description of the top-dimensional simplex corresponding to
      * \a v in the underlying triangulation.
      */
     template <int dim>
@@ -889,7 +889,7 @@ namespace graph {
      * property map carries no data; however, it would typically be the
      * triangulation whose dual graph we are studying.
      *
-     * @return a property map for querying indices of dual vertices.
+     * \return a property map for querying indices of dual vertices.
      */
     template <int dim>
     graph::InherentTriangulationPropertyMap<dim, boost::vertex_index_t> get(
@@ -907,7 +907,7 @@ namespace graph {
      * property map carries no data; however, it would typically be the
      * triangulation whose dual graph we are studying.
      *
-     * @return a property map for querying descriptions of dual vertices.
+     * \return a property map for querying descriptions of dual vertices.
      */
     template <int dim>
     graph::InherentTriangulationPropertyMap<dim, boost::vertex_name_t> get(
@@ -925,7 +925,7 @@ namespace graph {
      * would be the triangulation whose dual graph we are studying).
      *
      * \param v the vertex of the dual graph that we are examining.
-     * @return the index of the top-dimensional simplex corresponding to
+     * \return the index of the top-dimensional simplex corresponding to
      * \a v in the underlying triangulation.
      */
     template <int dim>
@@ -944,7 +944,7 @@ namespace graph {
      * would be the triangulation whose dual graph we are studying).
      *
      * \param v the vertex of the dual graph that we are examining.
-     * @return the description of the top-dimensional simplex corresponding to
+     * \return the description of the top-dimensional simplex corresponding to
      * \a v in the underlying triangulation.
      */
     template <int dim>

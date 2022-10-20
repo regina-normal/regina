@@ -97,7 +97,7 @@ class LayeredLoop : public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         LayeredLoop& operator = (const LayeredLoop&) = default;
 
@@ -113,14 +113,14 @@ class LayeredLoop : public StandardTriangulation {
          * Returns the length of this layered loop.
          * See the general class notes for further details.
          *
-         * @return the length of this layered loop.
+         * \return the length of this layered loop.
          */
         unsigned long length() const;
         /**
          * Determines if this layered loop contains a twist.
          * See the general class notes for further details.
          *
-         * @return \c true if and only if this layered loop contains a
+         * \return \c true if and only if this layered loop contains a
          * twist.
          */
         bool isTwisted() const;
@@ -132,7 +132,7 @@ class LayeredLoop : public StandardTriangulation {
          *
          * \param which specifies which hinge to return; this must be 0
          * or 1.
-         * @return the requested hinge edge.
+         * \return the requested hinge edge.
          */
         Edge<3>* hinge(int which) const;
 
@@ -151,7 +151,7 @@ class LayeredLoop : public StandardTriangulation {
          * subclass means they describe isomorphic structures).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of layered loop.
          */
         bool operator == (const LayeredLoop& other) const;
@@ -171,7 +171,7 @@ class LayeredLoop : public StandardTriangulation {
          * subclass means they describe isomorphic structures).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different types of layered loop.
          */
         bool operator != (const LayeredLoop& other) const;
@@ -184,7 +184,7 @@ class LayeredLoop : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param comp the triangulation component to examine.
-         * @return a structure containing details of the layered loop, or
+         * \return a structure containing details of the layered loop, or
          * \c null if the given component is not a layered loop.
          */
         static std::unique_ptr<LayeredLoop> recognise(const Component<3>* comp);

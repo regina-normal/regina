@@ -290,7 +290,7 @@ class TreeTraversal : public ShortOutput<
          *
          * \param enc the vector encoding being queried.  In particular,
          * this may be the special angle structure encoding.
-         * @return \c true if and only if the given vector encoding is
+         * \return \c true if and only if the given vector encoding is
          * supported.
          */
         static bool supported(NormalEncoding enc);
@@ -315,7 +315,7 @@ class TreeTraversal : public ShortOutput<
          * at time), then this will be the partial count of how many nodes
          * have been visited so far.
          *
-         * @return the number of nodes visited so far.
+         * \return the number of nodes visited so far.
          */
         size_t visited() const;
 
@@ -383,7 +383,7 @@ class TreeTraversal : public ShortOutput<
          * almost normal surfaces (i.e., the coordinate system passed to the
          * TreeTraversal constructor was NS_ANGLE).
          *
-         * @return a normal surface that has been found at the current stage
+         * \return a normal surface that has been found at the current stage
          * of the search.
          */
         NormalSurface buildSurface() const;
@@ -410,7 +410,7 @@ class TreeTraversal : public ShortOutput<
          * structure coordinates (i.e., the coordinate system passed to the
          * TreeTraversal constructor was not NS_ANGLE).
          *
-         * @return the taut angle structure that has been found at the
+         * \return the taut angle structure that has been found at the
          * current stage of the search.
          */
         AngleStructure buildStructure() const;
@@ -508,7 +508,7 @@ class TreeTraversal : public ShortOutput<
          *
          * \param startFrom the index into the type vector of the triangle type
          * from which we begin searching.
-         * @return the index into the type vector of the next unmarked
+         * \return the index into the type vector of the next unmarked
          * triangle type from \a startFrom onwards, or -1 if there are no
          * more remaining.
          */
@@ -536,7 +536,7 @@ class TreeTraversal : public ShortOutput<
          * nothing to eliminate the zero solution.)
          *
          * \param quadType the quadrilateral or angle type to examine.
-         * @return the number of type values 0, 1, 2 or 3 that yield a
+         * \return the number of type values 0, 1, 2 or 3 that yield a
          * feasible system; this will be between 0 and 4 inclusive for
          * quadrilateral types, or between 0 and 3 inclusive for angle types.
          */
@@ -552,7 +552,7 @@ class TreeTraversal : public ShortOutput<
          * This allows it to be more efficient (in particular, by only
          * examining the branches closest to the root of the search tree).
          *
-         * @return the percentage, as a number between 0 and 100 inclusive.
+         * \return the percentage, as a number between 0 and 100 inclusive.
          */
         double percent() const;
 };
@@ -756,7 +756,7 @@ class TreeEnumeration :
          * surface at time, this will be the partial count of how many
          * vertex surfaces have been found until now.
          *
-         * @return the number of solutions found so far.
+         * \return the number of solutions found so far.
          */
         size_t solutions() const;
 
@@ -809,7 +809,7 @@ class TreeEnumeration :
          * call for each vertex surface that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial tree enumeration argument.
-         * @return \c true if \a action ever terminated the search by returning
+         * \return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
@@ -861,7 +861,7 @@ class TreeEnumeration :
          *
          * \param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
-         * @return \c true if we found another vertex surface, or
+         * \return \c true if we found another vertex surface, or
          * \c false if the search has now finished and no more vertex
          * surfaces were found.
          */
@@ -885,7 +885,7 @@ class TreeEnumeration :
          *
          * \param tree the tree traversal object from which we are
          * extracting the current type vector.
-         * @return \c false (which indicates to run() that we should
+         * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
         static bool writeTypes(const TreeEnumeration& tree);
@@ -917,7 +917,7 @@ class TreeEnumeration :
          *
          * \param tree the tree traversal object from which we are
          * extracting the current vertex normal or almost normal surface.
-         * @return \c false (which indicates to run() that we should
+         * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
         static bool writeSurface(const TreeEnumeration& tree);
@@ -1075,7 +1075,7 @@ class TautEnumeration :
          * one surface at time, this will be the partial count of how many
          * taut angle structures have been found until now.
          *
-         * @return the number of solutions found so far.
+         * \return the number of solutions found so far.
          */
         size_t solutions() const;
 
@@ -1128,7 +1128,7 @@ class TautEnumeration :
          * call for each taut angle structure that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial tree enumeration argument.
-         * @return \c true if \a action ever terminated the search by returning
+         * \return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
@@ -1180,7 +1180,7 @@ class TautEnumeration :
          *
          * \param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
-         * @return \c true if we found another vertex surface, or
+         * \return \c true if we found another vertex surface, or
          * \c false if the search has now finished and no more taut angle
          * strutures were found.
          */
@@ -1204,7 +1204,7 @@ class TautEnumeration :
          *
          * \param tree the tree traversal object from which we are
          * extracting the current type vector.
-         * @return \c false (which indicates to run() that we should
+         * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
         static bool writeTypes(const TautEnumeration& tree);
@@ -1237,7 +1237,7 @@ class TautEnumeration :
          *
          * \param tree the tree traversal object from which we are
          * extracting the current taut angle structure.
-         * @return \c false (which indicates to run() that we should
+         * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
         static bool writeStructure(const TautEnumeration& tree);
@@ -1473,7 +1473,7 @@ class TreeSingleSoln :
          * \pre The algorithm has not yet been run, i.e., you have not called
          * find() before.
          *
-         * @return \c true if we found a non-trivial solution as described
+         * \return \c true if we found a non-trivial solution as described
          * in the class notes, or \c false if no such solution exists.
          */
         bool find();
@@ -1498,7 +1498,7 @@ class TreeSingleSoln :
          *
          * See cancel() for details on how cancellation works.
          *
-         * @return \c true if some thread has called cancel() on this object.
+         * \return \c true if some thread has called cancel() on this object.
          */
         bool cancelled();
 };

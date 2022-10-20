@@ -370,7 +370,7 @@ class NormalEncoding {
         /**
          * Sets this to be a copy of the given encoding.
          *
-         * @return a reference to this encoding.
+         * \return a reference to this encoding.
          */
         NormalEncoding& operator = (const NormalEncoding&) = default;
 
@@ -378,7 +378,7 @@ class NormalEncoding {
          * Determines whether this and the given encoding are identical.
          *
          * \param other the encoding to compare with this.
-         * @return \c true if and only if both encodings are identical.
+         * \return \c true if and only if both encodings are identical.
          */
         constexpr bool operator == (const NormalEncoding& other) const {
             return flags_ == other.flags_;
@@ -387,7 +387,7 @@ class NormalEncoding {
          * Determines whether this and the given encoding are different.
          *
          * \param other the encoding to compare with this.
-         * @return \c true if and only if both encodings are different.
+         * \return \c true if and only if both encodings are different.
          */
         constexpr bool operator != (const NormalEncoding& other) const {
             return flags_ != other.flags_;
@@ -405,7 +405,7 @@ class NormalEncoding {
          * For the special angle structure encoding (described in the class
          * notes), this routine will return \c true.
          *
-         * @return \c true if and only if this is a valid encoding.
+         * \return \c true if and only if this is a valid encoding.
          */
         constexpr bool valid() const {
             return ! (flags_ & INVALID);
@@ -413,7 +413,7 @@ class NormalEncoding {
         /**
          * Returns the number of coordinates stored for each tetrahedron.
          *
-         * @return The number of coordinates per tetrahedron.
+         * \return The number of coordinates per tetrahedron.
          */
         constexpr int block() const {
             return flags_ & SIZE_MASK;
@@ -424,7 +424,7 @@ class NormalEncoding {
          * For the special angle structure encoding (described in the class
          * notes), this routine will return \c false.
          *
-         * @return \c true if triangle coordinates are stored.
+         * \return \c true if triangle coordinates are stored.
          */
         constexpr bool storesTriangles() const {
             return flags_ & STORES_TRIANGLES;
@@ -435,7 +435,7 @@ class NormalEncoding {
          * For the special angle structure encoding (described in the class
          * notes), this routine will return \c false.
          *
-         * @return \c true if octagon coordinates are stored.
+         * \return \c true if octagon coordinates are stored.
          */
         constexpr bool storesOctagons() const {
             return flags_ & STORES_OCTAGONS;
@@ -469,7 +469,7 @@ class NormalEncoding {
          * For the special angle structure encoding (described in the class
          * notes), this routine will return \c false.
          *
-         * @return \c true if it is possible that the surface might
+         * \return \c true if it is possible that the surface might
          * contain one or more vertex linking components.
          */
         constexpr bool couldBeVertexLink() const {
@@ -493,7 +493,7 @@ class NormalEncoding {
          * For the special angle structure encoding (described in the class
          * notes), this routine will return \c false.
          *
-         * @return \c true if it is possible that the surface might
+         * \return \c true if it is possible that the surface might
          * be non-compact.
          */
         constexpr bool couldBeNonCompact() const {
@@ -514,7 +514,7 @@ class NormalEncoding {
          * \pre This is not the special angle structure encoding (see the
          * class notes for details).
          *
-         * @return an extension of this encoding that stores triangle
+         * \return an extension of this encoding that stores triangle
          * coordinates.
          */
         constexpr NormalEncoding withTriangles() const {
@@ -539,7 +539,7 @@ class NormalEncoding {
          * \pre This is not the special angle structure encoding (see the
          * class notes for details).
          *
-         * @return a restriction of this encoding that does not store triangle
+         * \return a restriction of this encoding that does not store triangle
          * coordinates.
          */
         constexpr NormalEncoding withoutTriangles() const {
@@ -564,7 +564,7 @@ class NormalEncoding {
          * \pre This is not the special angle structure encoding (see the
          * class notes for details).
          *
-         * @return an extension of this encoding that stores octagon
+         * \return an extension of this encoding that stores octagon
          * coordinates.
          */
         constexpr NormalEncoding withOctagons() const {
@@ -588,7 +588,7 @@ class NormalEncoding {
          * \pre This is not the special angle structure encoding (see the
          * class notes for details).
          *
-         * @return a restriction of this encoding that does not store octagon
+         * \return a restriction of this encoding that does not store octagon
          * coordinates.
          */
         constexpr NormalEncoding withoutOctagons() const {
@@ -609,7 +609,7 @@ class NormalEncoding {
          * structure encoding (see the class notes for details).
          *
          * \param rhs the encoding to combine with this.
-         * @return the "sum" of this and the given encoding, as defined above.
+         * \return the "sum" of this and the given encoding, as defined above.
          */
         constexpr NormalEncoding operator + (NormalEncoding rhs) const {
             int propFlags = ((flags_ | rhs.flags_) & PROPERTY_MASK);
@@ -622,7 +622,7 @@ class NormalEncoding {
          * Returns an encoding that is suitable for representing the
          * empty surface, whose normal coordinates are all zero.
          *
-         * @return a suitable encoding for the empty surface.
+         * \return a suitable encoding for the empty surface.
          */
         static constexpr NormalEncoding empty() {
             return { 7 | STORES_TRIANGLES };
@@ -641,7 +641,7 @@ class NormalEncoding {
          * It is guaranteed that 0 will never be the integer value of
          * a (correctly constructed) encoding.
          *
-         * @return an integer that represents this encoding.
+         * \return an integer that represents this encoding.
          */
         constexpr int intValue() const {
             return flags_;
@@ -658,7 +658,7 @@ class NormalEncoding {
          *
          * \param value an integer that represents an encoding, typically
          * obtained by calling intValue().
-         * @return the corresponding encoding.
+         * \return the corresponding encoding.
          */
         constexpr static NormalEncoding fromIntValue(int value) {
             return NormalEncoding(value);
@@ -688,7 +688,7 @@ class NormalInfo {
          *
          * \param coordSystem the coordinate system being queried; this
          * may be any of the NormalCoords enumeration values.
-         * @return the name of the given coordinate system.
+         * \return the name of the given coordinate system.
          */
         constexpr static const char* name(NormalCoords coordSystem) {
             switch (coordSystem) {

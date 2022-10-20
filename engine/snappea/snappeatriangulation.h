@@ -99,7 +99,7 @@ class SnapPeaFatalError : public std::runtime_error {
         /**
          * Sets this to be a copy of the given exception.
          *
-         * @return a reference to this exception.
+         * \return a reference to this exception.
          */
         SnapPeaFatalError& operator = (const SnapPeaFatalError&) noexcept =
             default;
@@ -134,7 +134,7 @@ class SnapPeaMemoryFull : public std::exception {
         /**
          * Sets this to be a copy of the given exception.
          *
-         * @return a reference to this exception.
+         * \return a reference to this exception.
          */
         SnapPeaMemoryFull& operator = (const SnapPeaMemoryFull&) noexcept =
             default;
@@ -142,7 +142,7 @@ class SnapPeaMemoryFull : public std::exception {
         /**
          * Returns a human-readable description of the error that occurred.
          *
-         * @return a description of the error.
+         * \return a description of the error.
          */
         const char* what() const noexcept override {
             return "SnapPea reports that memory is full";
@@ -191,7 +191,7 @@ class Cusp : public ShortOutput<Cusp> {
         /**
          * Sets this to be a copy of the given cusp information.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         Cusp& operator = (const Cusp&) = default;
 
@@ -216,7 +216,7 @@ class Cusp : public ShortOutput<Cusp> {
          * \snappy In SnapPy, this field corresponds to querying
          * <tt>Manifold.cusp_info('is_complete')[cusp_number]</tt>.
          *
-         * @return \c true if this cusp is complete, or \c false if it is
+         * \return \c true if this cusp is complete, or \c false if it is
          * filled.
          */
         bool complete() const;
@@ -228,7 +228,7 @@ class Cusp : public ShortOutput<Cusp> {
          * \snappy In SnapPy, this field corresponds to querying
          * <tt>Manifold.cusp_info('filling')[cusp_number][0]</tt>.
          *
-         * @return the first filling coefficient.
+         * \return the first filling coefficient.
          */
         int m() const;
 
@@ -239,7 +239,7 @@ class Cusp : public ShortOutput<Cusp> {
          * \snappy In SnapPy, this field corresponds to querying
          * <tt>Manifold.cusp_info('filling')[cusp_number][1]</tt>.
          *
-         * @return the second filling coefficient.
+         * \return the second filling coefficient.
          */
         int l() const;
 
@@ -254,7 +254,7 @@ class Cusp : public ShortOutput<Cusp> {
          * to compare cusps from different triangulations).
          *
          * \param other the cusp information to compare with this.
-         * @return \c true if and only this and the given object hold
+         * \return \c true if and only this and the given object hold
          * the same cusp information.
          */
         bool operator == (const Cusp& other) const;
@@ -270,7 +270,7 @@ class Cusp : public ShortOutput<Cusp> {
          * to compare cusps from different triangulations).
          *
          * \param other the cusp information to compare with this.
-         * @return \c true if and only this and the given object do not hold
+         * \return \c true if and only this and the given object do not hold
          * the same cusp information.
          */
         bool operator != (const Cusp& other) const;
@@ -866,7 +866,7 @@ class SnapPeaTriangulation :
          * be reset to a null triangulation.  See the SnapPeaTriangulation
          * class notes for further discussion.
          *
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         SnapPeaTriangulation& operator = (const SnapPeaTriangulation& src);
 
@@ -904,7 +904,7 @@ class SnapPeaTriangulation :
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         SnapPeaTriangulation& operator = (SnapPeaTriangulation&& src);
 
@@ -959,7 +959,7 @@ class SnapPeaTriangulation :
          * SnapPea format, or when reading broken SnapPea data files.
          * See the SnapPeaTriangulation class notes for details.
          *
-         * @return \c true if this is a null triangulation, or \c false
+         * \return \c true if this is a null triangulation, or \c false
          * if this triangulation contains valid SnapPea data.
          */
         bool isNull() const;
@@ -976,7 +976,7 @@ class SnapPeaTriangulation :
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.name()</tt>.
          *
-         * @return SnapPea's name for this triangulation.
+         * \return SnapPea's name for this triangulation.
          */
         std::string name() const;
 
@@ -993,7 +993,7 @@ class SnapPeaTriangulation :
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.solution_type()</tt>.
          *
-         * @return the solution type.
+         * \return the solution type.
          */
         SolutionType solutionType() const;
 
@@ -1007,7 +1007,7 @@ class SnapPeaTriangulation :
          *
          * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * @return the estimated volume of the underlying 3-manifold.
+         * \return the estimated volume of the underlying 3-manifold.
          */
         double volume() const;
 
@@ -1021,7 +1021,7 @@ class SnapPeaTriangulation :
          *
          * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * @return a pair whose first element is the estimated volume of the
+         * \return a pair whose first element is the estimated volume of the
          * underlying 3-manifold, and whose second element is an estimate
          * of the number of decimal places of accuracy in this volume.
          */
@@ -1036,7 +1036,7 @@ class SnapPeaTriangulation :
          * within SnapPea's own estimated precision, and (iii) SnapPea's
          * estimated precision to be sufficiently good in an absolute sense.
          *
-         * @return \c true if and only if the volume of the current
+         * \return \c true if and only if the volume of the current
          * solution is approximately zero according to the constraints
          * outlined above.
          */
@@ -1063,7 +1063,7 @@ class SnapPeaTriangulation :
          *
          * \param tet the index of a tetrahedron; this must be between
          * 0 and size()-1 inclusive.
-         * @return the shape of the given tetrahedron, in rectangular form.
+         * \return the shape of the given tetrahedron, in rectangular form.
          */
         const std::complex<double>& shape(size_t tet) const;
 
@@ -1082,7 +1082,7 @@ class SnapPeaTriangulation :
          * though the information is easily acessible via
          * <tt>Manifold.tetrahedra_shapes(part='rect')</tt>.
          *
-         * @return the minimum imaginary part amongst all tetrahedron shapes.
+         * \return the minimum imaginary part amongst all tetrahedron shapes.
          */
         double minImaginaryShape() const;
 
@@ -1127,7 +1127,7 @@ class SnapPeaTriangulation :
          *
          * \pre This is not a null triangulation.
          *
-         * @return a matrix with (\a number_of_rows + \a number_of_cusps) rows
+         * \return a matrix with (\a number_of_rows + \a number_of_cusps) rows
          * and (3 * \a number_of_tetrahedra) columns as described above.
          */
         MatrixInt gluingEquations() const;
@@ -1161,7 +1161,7 @@ class SnapPeaTriangulation :
          *
          * \pre This is not a null triangulation.
          *
-         * @return a matrix with (\a number_of_rows + \a number_of_cusps) rows
+         * \return a matrix with (\a number_of_rows + \a number_of_cusps) rows
          * and (2 * \a number_of_tetrahedra + 1) columns as described above.
          */
         MatrixInt gluingEquationsRect() const;
@@ -1194,7 +1194,7 @@ class SnapPeaTriangulation :
          * Two null SnapPea triangulations will be considered equal.
          *
          * \param other the SnapPea triangulation to compare with this.
-         * @return \c true if and only this and the given triangulation
+         * \return \c true if and only this and the given triangulation
          * are the same, according to the criteria described above.
          */
         bool operator == (const SnapPeaTriangulation& other) const;
@@ -1227,7 +1227,7 @@ class SnapPeaTriangulation :
          * Two null SnapPea triangulations will be considered equal.
          *
          * \param other the SnapPea triangulation to compare with this.
-         * @return \c true if and only this and the given triangulation
+         * \return \c true if and only this and the given triangulation
          * are different, according to the criteria described above.
          */
         bool operator != (const SnapPeaTriangulation& other) const;
@@ -1247,7 +1247,7 @@ class SnapPeaTriangulation :
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.num_cusps()</tt>.
          *
-         * @return the total number of cusps.
+         * \return the total number of cusps.
          */
         unsigned countCusps() const;
 
@@ -1261,7 +1261,7 @@ class SnapPeaTriangulation :
          * though the information is easily acessible via
          * <tt>Manifold.cusp_info('is_complete')</tt>.
          *
-         * @return the total number of complete cusps.
+         * \return the total number of complete cusps.
          */
         unsigned countCompleteCusps() const;
 
@@ -1275,7 +1275,7 @@ class SnapPeaTriangulation :
          * though the information is easily acessible via
          * <tt>Manifold.cusp_info('is_complete')</tt>.
          *
-         * @return the total number of filled cusps.
+         * \return the total number of filled cusps.
          */
         unsigned countFilledCusps() const;
 
@@ -1305,7 +1305,7 @@ class SnapPeaTriangulation :
          *
          * \param whichCusp the index of a cusp according to SnapPea;
          * this must be between 0 and countCusps()-1 inclusive.
-         * @return information about the given cusp.
+         * \return information about the given cusp.
          */
         const Cusp& cusp(unsigned whichCusp = 0) const;
 
@@ -1340,7 +1340,7 @@ class SnapPeaTriangulation :
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
-         * @return access to the list of all cusps of this manifold.
+         * \return access to the list of all cusps of this manifold.
          */
         auto cusps() const;
 
@@ -1379,7 +1379,7 @@ class SnapPeaTriangulation :
          * \param l the second (longitudinal) filling coefficient.
          * \param whichCusp the index of the cusp to fill according to
          * SnapPea; this must be between 0 and countCusps()-1 inclusive.
-         * @return \c true if and only if the filling coefficients were
+         * \return \c true if and only if the filling coefficients were
          * accepted (according to the conditions outlined above).
          */
         bool fill(int m, int l, unsigned whichCusp = 0);
@@ -1454,7 +1454,7 @@ class SnapPeaTriangulation :
          *
          * \param whichCusp the index of the cusp to permanently fill according
          * to SnapPea; this must be between 0 and countCusps()-1 inclusive.
-         * @return the filled triangulation.
+         * \return the filled triangulation.
          */
         SnapPeaTriangulation filledPartial(unsigned whichCusp) const;
 
@@ -1498,7 +1498,7 @@ class SnapPeaTriangulation :
          * \exception FailedPrecondition All cusps of this manifold are
          * non-complete.
          *
-         * @return the filled triangulation.
+         * \return the filled triangulation.
          */
         SnapPeaTriangulation filledPartial() const;
 
@@ -1527,7 +1527,7 @@ class SnapPeaTriangulation :
          * \exception FailedPrecondition Some cusp of this manifold
          * is complete.
          *
-         * @return the filled triangulation.
+         * \return the filled triangulation.
          */
         Triangulation<3> filledAll() const;
 
@@ -1581,7 +1581,7 @@ class SnapPeaTriangulation :
          *
          * \author William Pettersson and Stephan Tillmann
          *
-         * @return a matrix with (2 * \a number_of_cusps) rows
+         * \return a matrix with (2 * \a number_of_cusps) rows
          * and (3 * \a number_of_tetrahedra) columns as described above.
          */
         MatrixInt slopeEquations() const;
@@ -1638,7 +1638,7 @@ class SnapPeaTriangulation :
          * \exception SnapPeaUnsolvedCase SnapPea detected an overflow
          * when attempting to create the filled relation matrix.
          *
-         * @return the first homology group of the filled manifold.
+         * \return the first homology group of the filled manifold.
          */
         const AbelianGroup& homologyFilled() const;
 
@@ -1683,7 +1683,7 @@ class SnapPeaTriangulation :
          * simplification code should try to reduce the length of the relations
          * by inserting one relation into another.  In general this is a
          * good thing, but it can be very costly for large presentations.
-         * @return the fundamental group of the filled manifold.
+         * \return the fundamental group of the filled manifold.
          */
         const GroupPresentation& fundamentalGroupFilled(
             bool simplifyPresentation = true,
@@ -1793,7 +1793,7 @@ class SnapPeaTriangulation :
          * for each cover that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation and type arguments.
-         * @return the total number of covers found.
+         * \return the total number of covers found.
          */
         template <typename Action, typename... Args>
         size_t enumerateCovers(int sheets, CoverEnumerationType type,
@@ -1851,7 +1851,7 @@ class SnapPeaTriangulation :
          * \exception UnsolvedCase The SnapPea kernel was unable to
          * triangulate the canonical cell decomposition.
          *
-         * @return a triangulation of the canonical cell decomposition.
+         * \return a triangulation of the canonical cell decomposition.
          */
         SnapPeaTriangulation protoCanonise() const;
 
@@ -1869,7 +1869,7 @@ class SnapPeaTriangulation :
          * \exception UnsolvedCase The SnapPea kernel was unable to
          * triangulate the canonical cell decomposition.
          *
-         * @return a triangulation of the canonical cell decomposition.
+         * \return a triangulation of the canonical cell decomposition.
          */
         SnapPeaTriangulation protoCanonize() const;
 
@@ -1933,7 +1933,7 @@ class SnapPeaTriangulation :
          * \exception UnsolvedCase The SnapPea kernel was unable to
          * compute the canonical cell decomposition.
          *
-         * @return the canonical triangulation of the canonical cell
+         * \return the canonical triangulation of the canonical cell
          * decomposition.
          */
         Triangulation<3> canonise() const;
@@ -1952,7 +1952,7 @@ class SnapPeaTriangulation :
          * \exception UnsolvedCase The SnapPea kernel was unable to
          * compute the canonical cell decomposition.
          *
-         * @return the canonical triangulation of the canonical cell
+         * \return the canonical triangulation of the canonical cell
          * decomposition.
          */
         Triangulation<3> canonize() const;
@@ -1999,7 +1999,7 @@ class SnapPeaTriangulation :
          *
          * This routine (which interacts with static data) is thread-safe.
          *
-         * @return \c true if and only if diagonstic messages are enabled.
+         * \return \c true if and only if diagonstic messages are enabled.
          */
         static bool kernelMessagesEnabled();
 
@@ -2053,7 +2053,7 @@ class SnapPeaTriangulation :
          *
          * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
-         * @return a string containing the contents of the corresponding
+         * \return a string containing the contents of the corresponding
          * SnapPea data file.
          */
         std::string snapPea() const;
@@ -2102,7 +2102,7 @@ class SnapPeaTriangulation :
          * routines.  The \e contents of the file will be written using UTF-8.
          *
          * \param filename the name of the SnapPea file to which to write.
-         * @return \c true if and only if the file was successfully written.
+         * \return \c true if and only if the file was successfully written.
          */
         bool saveSnapPea(const char* filename) const;
 

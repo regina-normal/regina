@@ -235,7 +235,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * been initialised (for instance, it was created using the
          * default constructor).
          *
-         * @return the order of the underlying cyclotomic field.
+         * \return the order of the underlying cyclotomic field.
          */
         size_t field() const;
         /**
@@ -253,7 +253,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \ifacespython This is also used to implement the Python special
          * method __len__().
          *
-         * @return the degree of the polynomial that defines the
+         * \return the degree of the polynomial that defines the
          * underlying field.
          */
         size_t degree() const;
@@ -276,7 +276,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * \param exp indicates which coefficient to return; this must
          * be between 0 and degree()-1 inclusive.
-         * @return a constant reference to the corresponding
+         * \return a constant reference to the corresponding
          * rational coefficient.
          */
         const Rational& operator [] (size_t exp) const;
@@ -301,7 +301,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * \param exp indicates which coefficient to access; this must
          * be between 0 and degree()-1 inclusive.
-         * @return a reference to the corresponding rational coefficient.
+         * \return a reference to the corresponding rational coefficient.
          */
         Rational& operator [] (size_t exp);
         /**
@@ -317,7 +317,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * a non-default constructor, an assignment operator, or by
          * calling init()).
          *
-         * @return the full polynomial representation of this field element.
+         * \return the full polynomial representation of this field element.
          */
         Polynomial<Rational> polynomial() const;
         /**
@@ -349,7 +349,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \param whichRoot indicates which root of unity will be used
          * to convert the polynomial representation of this field
          * element into a complex number.
-         * @return a floating-point approximation of this cyclotomic field
+         * \return a floating-point approximation of this cyclotomic field
          * element as a complex number.
          */
         std::complex<double> evaluate(size_t whichRoot = 1) const;
@@ -369,7 +369,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * return \c true.
          *
          * \param rhs the value to compare with this.
-         * @return \c true if and only if this and \a rhs are the same
+         * \return \c true if and only if this and \a rhs are the same
          * element of the same cyclotomic field.
          */
         bool operator == (const Cyclotomic& rhs) const;
@@ -390,7 +390,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * return \c false.
          *
          * \param rhs the value to compare with this.
-         * @return \c false if this and \a rhs are the same element of the
+         * \return \c false if this and \a rhs are the same element of the
          * same cyclotomic field, or \c true if they are not.
          */
         bool operator != (const Cyclotomic& rhs) const;
@@ -409,7 +409,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * This operator induces a deep copy of \a value.
          *
          * \param value the new value to assign to this field element.
-         * @return a reference to this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator = (const Cyclotomic& value);
 
@@ -428,7 +428,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * The element that was passed (\a value) will no longer be usable.
          *
          * \param value the field element to move.
-         * @return a reference to this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator = (Cyclotomic&& value) noexcept;
 
@@ -443,7 +443,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * it already has specified an underlying cyclotomic field).
          *
          * \param scalar the new rational value of this field element.
-         * @return a reference to this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator = (const Rational& scalar);
 
@@ -496,7 +496,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * by a scalar constant.
          *
          * \param scalar the rational to multiply this by.
-         * @return a reference to this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator *= (const Rational& scalar);
 
@@ -509,7 +509,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \pre The given rational is non-zero.
          *
          * \param scalar the rational to divide this by.
-         * @return a reference to this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator /= (const Rational& scalar);
 
@@ -520,7 +520,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * as this.
          *
          * \param other the field element to add to this.
-         * @return a reference to this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator += (const Cyclotomic& other);
 
@@ -531,7 +531,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * as this.
          *
          * \param other the field element to subtract from this.
-         * @return a reference to this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator -= (const Cyclotomic& other);
 
@@ -542,7 +542,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * as this.
          *
          * \param other the field element to multiply this by.
-         * @return a reference to this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator *= (const Cyclotomic& other);
 
@@ -554,7 +554,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * as this.
          *
          * \param other the field element to divide this by.
-         * @return a reference to this field element.
+         * \return a reference to this field element.
          */
         Cyclotomic& operator /= (const Cyclotomic& other);
 
@@ -576,7 +576,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * not by reference).
          *
          * \param n indicates which cyclotomic polynomial to return.
-         * @return the cyclotomic polynomial <tt>Φ_n</tt>.
+         * \return the cyclotomic polynomial <tt>Φ_n</tt>.
          */
         static const Polynomial<Integer>& cyclotomic(size_t n);
 
@@ -620,7 +620,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \param variable the symbol to use for the polynomial variable.
          * This may be \c null, in which case the default variable \c x
          * will be used.
-         * @return this field element as a human-readable string.
+         * \return this field element as a human-readable string.
          */
         std::string str(const char* variable) const;
 
@@ -645,7 +645,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \param variable the symbol to use for the polynomial variable.
          * This may be \c null, in which case the default variable \c x
          * will be used.
-         * @return this field element as a unicode-enabled human-readable
+         * \return this field element as a unicode-enabled human-readable
          * string.
          */
         std::string utf8(const char* variable) const;
@@ -683,7 +683,7 @@ void swap(Cyclotomic& a, Cyclotomic& b) noexcept;
  *
  * \param elt the field element to multiply by.
  * \param scalar the rational to multiply by.
- * @return the product of the given field element and rational.
+ * \return the product of the given field element and rational.
  *
  * \ingroup maths
  */
@@ -694,7 +694,7 @@ Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
  *
  * \param scalar the rational to multiply by.
  * \param elt the field element to multiply by.
- * @return the product of the given field element and rational.
+ * \return the product of the given field element and rational.
  *
  * \ingroup maths
  */
@@ -707,7 +707,7 @@ Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
  *
  * \param elt the field element to divide by the given rational.
  * \param scalar the rational to divide by.
- * @return the quotient of the given field element by the given rational.
+ * \return the quotient of the given field element by the given rational.
  *
  * \ingroup maths
  */
@@ -720,7 +720,7 @@ Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
  *
  * \param lhs the first field element to add.
  * \param rhs the second field element to add.
- * @return the sum of both field elements.
+ * \return the sum of both field elements.
  *
  * \ingroup maths
  */
@@ -733,7 +733,7 @@ Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
  *
  * \param lhs the first field element to add.
  * \param rhs the second field element to add.
- * @return the sum of both field elements.
+ * \return the sum of both field elements.
  *
  * \ingroup maths
  */
@@ -746,7 +746,7 @@ Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
  *
  * \param lhs the first field element to add.
  * \param rhs the second field element to add.
- * @return the sum of both field elements.
+ * \return the sum of both field elements.
  *
  * \ingroup maths
  */
@@ -759,7 +759,7 @@ Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
  *
  * \param lhs the first field element to add.
  * \param rhs the second field element to add.
- * @return the sum of both field elements.
+ * \return the sum of both field elements.
  *
  * \ingroup maths
  */
@@ -769,7 +769,7 @@ Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
  * Returns the negative of the given field element.
  *
  * \param arg the field element to negate.
- * @return the negative of \a arg.
+ * \return the negative of \a arg.
  *
  * \ingroup maths
  */
@@ -782,7 +782,7 @@ Cyclotomic operator - (Cyclotomic arg);
  *
  * \param lhs the field element to subtract from.
  * \param rhs the field element to subtract.
- * @return the first field element minus the second.
+ * \return the first field element minus the second.
  *
  * \ingroup maths
  */
@@ -795,7 +795,7 @@ Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
  *
  * \param lhs the field element to subtract from.
  * \param rhs the field element to subtract.
- * @return the first field element minus the second.
+ * \return the first field element minus the second.
  *
  * \ingroup maths
  */
@@ -808,7 +808,7 @@ Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs);
  *
  * \param lhs the field element to subtract from.
  * \param rhs the field element to subtract.
- * @return the first field element minus the second.
+ * \return the first field element minus the second.
  *
  * \ingroup maths
  */
@@ -821,7 +821,7 @@ Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs);
  *
  * \param lhs the field element to subtract from.
  * \param rhs the field element to subtract.
- * @return the first field element minus the second.
+ * \return the first field element minus the second.
  *
  * \ingroup maths
  */
@@ -834,7 +834,7 @@ Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
  *
  * \param lhs the first field element to multiply.
  * \param rhs the second field element to multiply.
- * @return the product of both field elements.
+ * \return the product of both field elements.
  *
  * \ingroup maths
  */
@@ -848,7 +848,7 @@ Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
  *
  * \param lhs the field element to divide by \a rhs.
  * \param rhs the field element to divide \a lhs by.
- * @return the result of dividing \a lhs by \a rhs.
+ * \return the result of dividing \a lhs by \a rhs.
  *
  * \ingroup maths
  */

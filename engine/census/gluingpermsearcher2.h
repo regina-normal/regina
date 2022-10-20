@@ -287,7 +287,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * This may assist the \a action routine when running partial
          * depth-based searches.  See partialSearch() for further details.
          *
-         * @return \c true if a complete gluing permutation set is held,
+         * \return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
          */
         bool isComplete() const;
@@ -335,7 +335,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * @return all of this object's internal data in plain text format.
+         * \return all of this object's internal data in plain text format.
          */
         std::string taggedData() const;
 
@@ -400,7 +400,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * input stream constructor is not.  Python users should use
          * taggedData() and fromTaggedData() instead.
          *
-         * @return all of this object's internal data in plain text format.
+         * \return all of this object's internal data in plain text format.
          */
         std::string data() const;
 
@@ -467,7 +467,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
-         * @return the new search manager.
+         * \return the new search manager.
          */
         static std::unique_ptr<GluingPermSearcher<2>> bestSearcher(
                 FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
@@ -496,7 +496,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * its input as a string.
          *
          * \param in the input stream from which to read.
-         * @return the new search manager, or \c null if the data in the
+         * \return the new search manager, or \c null if the data in the
          * input stream was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<2>> fromTaggedData(
@@ -523,7 +523,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          *
          * \param data the tagged data from which to reconstruct a
          * search manager.
-         * @return the new search manager, or \c null if the data in the
+         * \return the new search manager, or \c null if the data in the
          * given string was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<2>> fromTaggedData(
@@ -554,7 +554,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * in order to see whether the current set is in canonical form
          * (i.e., is lexicographically smallest).
          *
-         * @return \c true if the current set is in canonical form,
+         * \return \c true if the current set is in canonical form,
          * or \c false otherwise.
          */
         bool isCanonical() const;
@@ -563,7 +563,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * Returns the character used to identify this class when
          * storing tagged data in text format.
          *
-         * @return the class tag.
+         * \return the class tag.
          */
         virtual char dataTagInternal() const;
 };

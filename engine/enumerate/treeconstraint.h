@@ -287,7 +287,7 @@ class LPConstraintBase {
          * return \c false.
          *
          * \param s the surface to test.
-         * @return \c true if the given surface satisfies these linear
+         * \return \c true if the given surface satisfies these linear
          * constraints, or \c false if it does not.
          */
         static bool verify(const NormalSurface& s);
@@ -305,7 +305,7 @@ class LPConstraintBase {
          * return \c false.
          *
          * \param s the angle structure to test.
-         * @return \c true if the given angle structure satisfies these linear
+         * \return \c true if the given angle structure satisfies these linear
          * constraints, or \c false if it does not.
          */
         static bool verify(const AngleStructure& s);
@@ -332,7 +332,7 @@ class LPConstraintBase {
          * be one of the vector encodings known to be supported by the
          * generic TreeTraversal infrastructure, and in particular it
          * may be the special angle structure encoding.
-         * @return \c true if and only if this vector encoding is
+         * \return \c true if and only if this vector encoding is
          * also supported by this specific constraint class.
          */
         static bool supported(NormalEncoding enc);
@@ -723,7 +723,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * the columns corresponding to a normal or angle structure coordinate,
          * not one of the extra columns induced by an LPConstraint parameter
          * for the tree traversal class.
-         * @return \c true if and only if the given column corresponds
+         * \return \c true if and only if the given column corresponds
          * to a marked coordinate.
          */
         bool marked(size_t column) const;
@@ -743,7 +743,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * not equal.
          *
          * \param other the object to compare with this.
-         * @return \c true if and only if this and the object ban and
+         * \return \c true if and only if this and the object ban and
          * mark the same tableaux coordinates, as described above.
          */
         bool operator == (const BanConstraintBase& other) const;
@@ -764,7 +764,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * not equal.
          *
          * \param other the object to compare with this.
-         * @return \c true if and only if this and the object do not ban and
+         * \return \c true if and only if this and the object do not ban and
          * mark the same tableaux coordinates, as described above.
          */
         bool operator != (const BanConstraintBase& other) const;
@@ -802,7 +802,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * be one of the vector encodings known to be supported by the
          * generic TreeTraversal infrastructure, and in particular it
          * may be the special angle structure encoding.
-         * @return \c true if and only if this vector encoding is
+         * \return \c true if and only if this vector encoding is
          * also supported by this specific constraint class.
          */
         static bool supported(NormalEncoding enc);

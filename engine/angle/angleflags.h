@@ -127,7 +127,7 @@ using AngleAlg = regina::Flags<AngleAlgFlags>;
  *
  * \param lhs the first flag to combine.
  * \param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \return the combination of both flags.
  *
  * \ingroup angle
  */

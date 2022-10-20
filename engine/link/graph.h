@@ -111,14 +111,14 @@ class CrossingIterator {
         /**
          * Preincrement operator.
          *
-         * @return a reference to this iterator.
+         * \return a reference to this iterator.
          */
         CrossingIterator& operator ++ ();
 
         /**
          * Postincrement operator.
          *
-         * @return a copy of this iterator before it was incremented.
+         * \return a copy of this iterator before it was incremented.
          */
         CrossingIterator operator ++ (int);
 
@@ -127,14 +127,14 @@ class CrossingIterator {
          *
          * \pre This iterator is not past-the-end.
          *
-         * @return the crossing to which this iterator points.
+         * \return the crossing to which this iterator points.
          */
         Crossing* operator * () const;
 
         /**
          * Sets this to be a copy of the given iterator.
          *
-         * @return a reference to this iterator.
+         * \return a reference to this iterator.
          */
         CrossingIterator& operator = (const CrossingIterator&) = default;
 
@@ -146,7 +146,7 @@ class CrossingIterator {
          * to the same underlying link.
          *
          * \param rhs the iterator to compare with this.
-         * @return \c true if and only if the two iterators are equal.
+         * \return \c true if and only if the two iterators are equal.
          */
         bool operator == (const CrossingIterator& rhs) const;
         /**
@@ -157,7 +157,7 @@ class CrossingIterator {
          * to the same underlying link.
          *
          * \param rhs the iterator to compare with this.
-         * @return \c true if and only if the two iterators are different.
+         * \return \c true if and only if the two iterators are different.
          */
         bool operator != (const CrossingIterator& rhs) const;
 };
@@ -233,14 +233,14 @@ class ArcIterator {
         /**
          * Preincrement operator.
          *
-         * @return a reference to this iterator.
+         * \return a reference to this iterator.
          */
         ArcIterator& operator ++ ();
 
         /**
          * Postincrement operator.
          *
-         * @return a copy of this iterator before it was incremented.
+         * \return a copy of this iterator before it was incremented.
          */
         ArcIterator operator ++ (int);
 
@@ -252,14 +252,14 @@ class ArcIterator {
          *
          * \pre This iterator is not past-the-end.
          *
-         * @return the directed arc to which this iterator points.
+         * \return the directed arc to which this iterator points.
          */
         StrandRef operator * () const;
 
         /**
          * Sets this to be a copy of the given iterator.
          *
-         * @return a reference to this iterator.
+         * \return a reference to this iterator.
          */
         ArcIterator& operator = (const ArcIterator&) = default;
 
@@ -271,7 +271,7 @@ class ArcIterator {
          * this and the given iterator refer to the same underlying link.
          *
          * \param rhs the iterator to compare with this.
-         * @return \c true if and only if the two iterators are equal.
+         * \return \c true if and only if the two iterators are equal.
          */
         bool operator == (const ArcIterator& rhs) const;
         /**
@@ -282,7 +282,7 @@ class ArcIterator {
          * this and the given iterator refer to the same underlying link.
          *
          * \param rhs the iterator to compare with this.
-         * @return \c true if and only if the two iterators are different.
+         * \return \c true if and only if the two iterators are different.
          */
         bool operator != (const ArcIterator& rhs) const;
 };
@@ -361,13 +361,13 @@ class ArcIterator {
             /**
              * Preincrement operator.
              *
-             * @return a reference to this iterator.
+             * \return a reference to this iterator.
              */
             IncidentArcIterator& operator ++ ();
             /**
              * Postincrement operator.
              *
-             * @return a copy of this iterator before it was incremented.
+             * \return a copy of this iterator before it was incremented.
              */
             IncidentArcIterator operator ++ (int);
 
@@ -379,14 +379,14 @@ class ArcIterator {
              *
              * \pre This iterator is not past-the-end.
              *
-             * @return the directed arc to which this iterator points.
+             * \return the directed arc to which this iterator points.
              */
             StrandRef operator * () const;
 
             /**
              * Sets this to be a copy of the given iterator.
              *
-             * @return a reference to this iterator.
+             * \return a reference to this iterator.
              */
             IncidentArcIterator& operator = (
                     const IncidentArcIterator&) = default;
@@ -400,7 +400,7 @@ class ArcIterator {
              * passed to each constructor.
              *
              * \param rhs the iterator to compare with this.
-             * @return \c true if and only if the two iterators are equal.
+             * \return \c true if and only if the two iterators are equal.
              */
             bool operator == (const IncidentArcIterator& rhs) const;
             /**
@@ -412,7 +412,7 @@ class ArcIterator {
              * passed to each constructor.
              *
              * \param rhs the iterator to compare with this.
-             * @return \c true if and only if the two iterators are different.
+             * \return \c true if and only if the two iterators are different.
              */
             bool operator != (const IncidentArcIterator& rhs) const;
     };
@@ -481,13 +481,13 @@ class ArcIterator {
             /**
              * Preincrement operator.
              *
-             * @return a reference to this iterator.
+             * \return a reference to this iterator.
              */
             AdjacentCrossingIterator& operator ++ ();
             /**
              * Postincrement operator.
              *
-             * @return a copy of this iterator before it was incremented.
+             * \return a copy of this iterator before it was incremented.
              */
             AdjacentCrossingIterator operator ++ (int);
 
@@ -496,14 +496,14 @@ class ArcIterator {
              *
              * \pre This iterator is not past-the-end.
              *
-             * @return the adacent crossing to which this iterator points.
+             * \return the adacent crossing to which this iterator points.
              */
             Crossing* operator * () const;
 
             /**
              * Sets this to be a copy of the given iterator.
              *
-             * @return a reference to this iterator.
+             * \return a reference to this iterator.
              */
             AdjacentCrossingIterator& operator = (
                     const AdjacentCrossingIterator&) = default;
@@ -517,7 +517,7 @@ class ArcIterator {
              * were passed to each constructor.
              *
              * \param rhs the iterator to compare with this.
-             * @return \c true if and only if the two iterators are equal.
+             * \return \c true if and only if the two iterators are equal.
              */
             bool operator == (const AdjacentCrossingIterator& rhs) const;
             /**
@@ -529,7 +529,7 @@ class ArcIterator {
              * were passed to each constructor.
              *
              * \param rhs the iterator to compare with this.
-             * @return \c true if and only if the two iterators are different.
+             * \return \c true if and only if the two iterators are different.
              */
             bool operator != (const AdjacentCrossingIterator& rhs) const;
     };
@@ -567,7 +567,7 @@ class ArcIterator {
      * underlying knot/link.
      *
      * \param l the knot or link whose graph we are studying.
-     * @return the range of all vertices of the corresponding graph.
+     * \return the range of all vertices of the corresponding graph.
      */
     std::pair<CrossingIterator, CrossingIterator> vertices(const Link& l);
 
@@ -581,7 +581,7 @@ class ArcIterator {
      * underlying knot/link, excluding any zero-crossing unknot components.
      *
      * \param l the knot or link whose graph we are studying.
-     * @return the range of all edges of the corresponding graph.
+     * \return the range of all edges of the corresponding graph.
      */
     std::pair<ArcIterator, ArcIterator> edges(const Link& l);
 
@@ -595,7 +595,7 @@ class ArcIterator {
      * crossings in the underlying knot/link.
      *
      * \param l the knot or link whose graph we are studying.
-     * @return the number of vertices in the graph.
+     * \return the number of vertices in the graph.
      */
     size_t num_vertices(const Link& l);
 
@@ -610,7 +610,7 @@ class ArcIterator {
      * vertices (i.e., crossings).
      *
      * \param l the knot or link whose graph we are studying.
-     * @return the number of edges in the graph.
+     * \return the number of edges in the graph.
      */
     size_t num_edges(const Link& l);
 
@@ -622,7 +622,7 @@ class ArcIterator {
      *
      * \param e the edge of the knot/link graph that we are examining.
      * \param l the graph itself (i.e., the underlying knot or link).
-     * @return the source vertex of the edge \a e.
+     * \return the source vertex of the edge \a e.
      */
     Crossing* source(const StrandRef& e, const Link& l);
 
@@ -634,7 +634,7 @@ class ArcIterator {
      *
      * \param e the edge of the knot/link graph that we are examining.
      * \param l the graph itself (i.e., the underlying knot or link).
-     * @return the target vertex of the edge \a e.
+     * \return the target vertex of the edge \a e.
      */
     Crossing* target(const StrandRef& e, const Link& l);
 
@@ -648,7 +648,7 @@ class ArcIterator {
      *
      * \param v the vertex of the knot/link graph that we are examining.
      * \param l the graph itself (i.e., the underlying knot or link).
-     * @return the degree of the vertex \a v.
+     * \return the degree of the vertex \a v.
      */
     unsigned degree(Crossing* v, const Link& l);
 
@@ -662,7 +662,7 @@ class ArcIterator {
      *
      * \param v the vertex of the knot/link graph that we are examining.
      * \param l the graph itself (i.e., the underlying knot or link).
-     * @return the number of directed arcs of the graph that enter \a v.
+     * \return the number of directed arcs of the graph that enter \a v.
      */
     unsigned in_degree(Crossing* v, const Link& l);
 
@@ -676,7 +676,7 @@ class ArcIterator {
      *
      * \param v the vertex of the knot/link graph that we are examining.
      * \param l the graph itself (i.e., the underlying knot or link).
-     * @return the number of directed arcs of the graph that exit \a v.
+     * \return the number of directed arcs of the graph that exit \a v.
      */
     unsigned out_degree(Crossing* v, const Link& l);
 
@@ -689,7 +689,7 @@ class ArcIterator {
      *
      * \param v the vertex of the knot/link graph that we are examining.
      * \param l the graph itself (i.e., the underlying knot or link).
-     * @return the range of all vertices adjacent to \a v.
+     * \return the range of all vertices adjacent to \a v.
      */
     std::pair<graph::AdjacentCrossingIterator, graph::AdjacentCrossingIterator>
         adjacent_vertices(Crossing* v, const Link& l);
@@ -702,7 +702,7 @@ class ArcIterator {
      *
      * \param v the vertex of the knot/link graph that we are examining.
      * \param l the graph itself (i.e., the underlying knot or link).
-     * @return the range of all directed edges entering \a v.
+     * \return the range of all directed edges entering \a v.
      */
     std::pair<graph::IncidentArcIterator<false>,
             graph::IncidentArcIterator<false>>
@@ -716,7 +716,7 @@ class ArcIterator {
      *
      * \param v the vertex of the knot/link graph that we are examining.
      * \param l the graph itself (i.e., the underlying knot or link).
-     * @return the range of all directed edges exiting \a v.
+     * \return the range of all directed edges exiting \a v.
      */
     std::pair<graph::IncidentArcIterator<true>,
             graph::IncidentArcIterator<true>>
@@ -734,7 +734,7 @@ class ArcIterator {
      * type information (to indicate which graph property is being queried).
      *
      * \param v the vertex of the knot/link graph that we are examining.
-     * @return the index of the \a v in the knot/link graph.
+     * \return the index of the \a v in the knot/link graph.
      */
     size_t get(graph::InherentLinkPropertyMap<boost::vertex_index_t>,
         Crossing* v);
@@ -754,7 +754,7 @@ class ArcIterator {
      * property map carries no data; however, it would typically be the
      * knot or link whose graph we are studying.
      *
-     * @return a property map for querying indices of vertices.
+     * \return a property map for querying indices of vertices.
      */
     graph::InherentLinkPropertyMap<boost::vertex_index_t> get(
         boost::vertex_index_t, const Link&);
@@ -773,7 +773,7 @@ class ArcIterator {
      * would be the knot or link whose graph we are studying).
      *
      * \param v the vertex of the knot/link graph that we are examining.
-     * @return the index of the \a v in the knot/link graph.
+     * \return the index of the \a v in the knot/link graph.
      */
     size_t get(boost::vertex_index_t, const Link&, Crossing* v);
 

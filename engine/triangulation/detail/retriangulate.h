@@ -117,7 +117,7 @@ using RetriangulateActionFunc = std::conditional_t<withSig,
  * \param tracker a progress tracker through which progress will be reported,
  * or \c null if no progress reporting is required.
  * \param action a function to call for each triangulation that is found.
- * @return \c true if some call to \a action returned \c true (thereby
+ * \return \c true if some call to \a action returned \c true (thereby
  * terminating the search early), or \c false if the search ran to completion.
  *
  * \ingroup detail

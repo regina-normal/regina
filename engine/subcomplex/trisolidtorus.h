@@ -109,7 +109,7 @@ class TriSolidTorus : public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         TriSolidTorus& operator = (const TriSolidTorus&) = default;
 
@@ -127,7 +127,7 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * \param index specifies which tetrahedron in the solid torus
          * to return; this must be 0, 1 or 2.
-         * @return the requested tetrahedron.
+         * \return the requested tetrahedron.
          */
         Tetrahedron<3>* tetrahedron(int index) const;
 
@@ -156,7 +156,7 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * \param index specifies which tetrahedron in the solid torus
          * to examine; this must be 0, 1 or 2.
-         * @return a permutation representing the roles of the vertices
+         * \return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
          */
         Perm<4> vertexRoles(int index) const;
@@ -181,7 +181,7 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * \param index specifies which annulus on the solid torus
          * boundary to examine; this must be 0, 1 or 2.
-         * @return a permutation that describes the gluing of vertex roles,
+         * \return a permutation that describes the gluing of vertex roles,
          * or \c nullopt if the two triangles of the requested annulus are
          * not glued together.
          */
@@ -213,7 +213,7 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * \param otherAnnulus the annulus on the solid torus boundary
          * \a not to be examined; this must be 0, 1 or 2.
-         * @return the number of tetrahedra in the layered chain if the
+         * \return the number of tetrahedra in the layered chain if the
          * two annuli are linked as described, or 0 otherwise.
          */
         size_t areAnnuliLinkedMajor(int otherAnnulus) const;
@@ -246,7 +246,7 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * \param otherAnnulus the annulus on the solid torus boundary
          * \a not to be examined; this must be 0, 1 or 2.
-         * @return the number of tetrahedra in the layered chain if the
+         * \return the number of tetrahedra in the layered chain if the
          * two annuli are linked as described, or 0 otherwise.
          */
         size_t areAnnuliLinkedAxis(int otherAnnulus) const;
@@ -270,7 +270,7 @@ class TriSolidTorus : public StandardTriangulation {
          * triangulations.
          *
          * \param other the triangular solid torus to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * the same specific presentation of a triangular solid torus.
          */
         bool operator == (const TriSolidTorus& other) const;
@@ -294,7 +294,7 @@ class TriSolidTorus : public StandardTriangulation {
          * triangulations.
          *
          * \param other the triangular solid torus to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * different specific presentations of a triangular solid torus.
          */
         bool operator != (const TriSolidTorus& other) const;
@@ -318,7 +318,7 @@ class TriSolidTorus : public StandardTriangulation {
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by
          * vertexRoles().
-         * @return a structure containing details of the solid torus with the
+         * \return a structure containing details of the solid torus with the
          * given tetrahedron as tetrahedron 0, or \c null if the given
          * tetrahedron is not part of a triangular solid torus with the given
          * vertex roles.

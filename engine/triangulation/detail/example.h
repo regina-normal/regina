@@ -93,7 +93,7 @@ class ExampleFromLowDim {
          * a (<i>dim</i>-1)-ball, you will obtain an invalid
          * <i>dim</i>-manifold triangulation as a result.
          *
-         * @return a double cone over the given triangulation.
+         * \return a double cone over the given triangulation.
          */
         static Triangulation<dim> doubleCone(const Triangulation<dim-1>& base);
 
@@ -112,7 +112,7 @@ class ExampleFromLowDim {
          * a (<i>dim</i>-1)-ball, you will obtain an invalid
          * <i>dim</i>-manifold triangulation as a result.
          *
-         * @return a single cone over the given triangulation.
+         * \return a single cone over the given triangulation.
          */
         static Triangulation<dim> singleCone(const Triangulation<dim-1>& base);
 
@@ -173,7 +173,7 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         /**
          * Returns a two-simplex triangulation of the <i>dim</i>-sphere.
          *
-         * @return a two-simplex <i>dim</i>-sphere.
+         * \return a two-simplex <i>dim</i>-sphere.
          */
         static Triangulation<dim> sphere();
 
@@ -181,7 +181,7 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
          * Returns the standard (<i>dim</i>+2)-simplex triangulation of the
          * <i>dim</i>-sphere as the boundary of a (<i>dim</i>+1)-simplex.
          *
-         * @return the standard simplicial <i>dim</i>-sphere.
+         * \return the standard simplicial <i>dim</i>-sphere.
          */
         static Triangulation<dim> simplicialSphere();
 
@@ -189,7 +189,7 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
          * Returns a two-simplex triangulation of the product space
          * <tt>S^(<i>dim</i>-1) x S¹</tt>.
          *
-         * @return the product <tt>S^(<i>dim</i>-1) x S¹</tt>.
+         * \return the product <tt>S^(<i>dim</i>-1) x S¹</tt>.
          */
         static Triangulation<dim> sphereBundle();
 
@@ -197,7 +197,7 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
          * Returns a two-simplex triangulation of the twisted product
          * space <tt>S^(<i>dim</i>-1) x~ S¹</tt>.
          *
-         * @return the twisted product <tt>S^(<i>dim</i>-1) x~ S¹</tt>.
+         * \return the twisted product <tt>S^(<i>dim</i>-1) x~ S¹</tt>.
          */
         static Triangulation<dim> twistedSphereBundle();
 
@@ -210,7 +210,7 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         /**
          * Returns a one-simplex triangulation of the <i>dim</i>-ball.
          *
-         * @return a one-simplex <i>dim</i>-ball.
+         * \return a one-simplex <i>dim</i>-ball.
          */
         static Triangulation<dim> ball();
 
@@ -220,7 +220,7 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
          * This will use one simplex in odd dimensions, or two simplices
          * in even dimensions.
          *
-         * @return the product <tt>B^(<i>dim</i>-1) x S¹</tt>.
+         * \return the product <tt>B^(<i>dim</i>-1) x S¹</tt>.
          */
         static Triangulation<dim> ballBundle();
 
@@ -230,7 +230,7 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
          * This will use one simplex in even dimensions, or two simplices
          * in odd dimensions.
          *
-         * @return the twisted product <tt>B^(<i>dim</i>-1) x~ S¹</tt>.
+         * \return the twisted product <tt>B^(<i>dim</i>-1) x~ S¹</tt>.
          */
         static Triangulation<dim> twistedBallBundle();
 

@@ -137,7 +137,7 @@ class SnapPeaCensusManifold : public Manifold {
          * manifold belongs.  This will be one of the section constants
          * defined in this class.
          *
-         * @return the section of the SnapPea census.
+         * \return the section of the SnapPea census.
          */
         char section() const;
         /**
@@ -145,7 +145,7 @@ class SnapPeaCensusManifold : public Manifold {
          * section of the SnapPea census.  Note that indices for each
          * section begin counting at zero.
          *
-         * @return the index of this manifold within its section.
+         * \return the index of this manifold within its section.
          */
         unsigned long index() const;
         /**
@@ -158,7 +158,7 @@ class SnapPeaCensusManifold : public Manifold {
          * Experimental Mathematics, 23:170-173, 2014.
          *
          * \param compare the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same SnapPea census manifold.
          */
         bool operator == (const SnapPeaCensusManifold& compare) const;
@@ -172,7 +172,7 @@ class SnapPeaCensusManifold : public Manifold {
          * Experimental Mathematics, 23:170-173, 2014.
          *
          * \param compare the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different SnapPea census manifolds.
          */
         bool operator != (const SnapPeaCensusManifold& compare) const;
@@ -180,7 +180,7 @@ class SnapPeaCensusManifold : public Manifold {
         /**
          * Sets this to be a copy of the given SnapPea census manifold.
          *
-         * @return a reference to this SnapPea census manifold.
+         * \return a reference to this SnapPea census manifold.
          */
         SnapPeaCensusManifold& operator = (const SnapPeaCensusManifold&) =
             default;

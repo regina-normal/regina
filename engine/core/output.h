@@ -132,7 +132,7 @@ struct Output {
      * will use precisely this function, and for most classes the Python
      * <tt>__repr__()</tt> function will incorporate this into its output.
      *
-     * @return a short text representation of this object.
+     * \return a short text representation of this object.
      */
     std::string str() const;
     /**
@@ -145,7 +145,7 @@ struct Output {
      * output more pleasant to read.  The string that is returned
      * will be encoded in UTF-8.
      *
-     * @return a short text representation of this object.
+     * \return a short text representation of this object.
      */
     std::string utf8() const;
     /**
@@ -157,7 +157,7 @@ struct Output {
      * and should end with a final newline.  There are no restrictions
      * on the underlying character set.
      *
-     * @return a detailed text representation of this object.
+     * \return a detailed text representation of this object.
      */
     std::string detail() const;
 };
@@ -170,7 +170,7 @@ struct Output {
  *
  * \param out the output stream to which to write.
  * \param object the object to write.
- * @return a reference to the given output stream.
+ * \return a reference to the given output stream.
  *
  * \ingroup engine
  */

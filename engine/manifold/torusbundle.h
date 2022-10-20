@@ -129,14 +129,14 @@ class TorusBundle : public Manifold {
          * torus boundaries are identified.  See the class notes for
          * details.
          *
-         * @return the monodromy for this torus bundle.
+         * \return the monodromy for this torus bundle.
          */
         const Matrix2& monodromy() const;
 
         /**
          * Sets this to be a copy of the given torus bundle.
          *
-         * @return a reference to this torus bundle.
+         * \return a reference to this torus bundle.
          */
         TorusBundle& operator = (const TorusBundle&) = default;
 
@@ -158,7 +158,7 @@ class TorusBundle : public Manifold {
          * be treated as not equal by this routine.
          *
          * \param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object contain
+         * \return \c true if and only if this and the given object contain
          * identical presentations of the same torus bundle.
          */
         bool operator == (const TorusBundle& compare) const;
@@ -173,7 +173,7 @@ class TorusBundle : public Manifold {
          * be treated as not equal by this routine.
          *
          * \param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object do not
+         * \return \c true if and only if this and the given object do not
          * contain identical presentations of the same torus bundle.
          */
         bool operator != (const TorusBundle& compare) const;
@@ -249,7 +249,7 @@ class TorusBundle : public Manifold {
          *
          * \param m1 the first monodromy matrix to examine.
          * \param m2 the second monodromy matrix to examine.
-         * @return \c true if \a m1 is deemed to be more pleasing than \a m2,
+         * \return \c true if \a m1 is deemed to be more pleasing than \a m2,
          * or \c false if either the matrices are equal or \a m2 is more
          * pleasing than \a m1.
          */

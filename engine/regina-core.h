@@ -50,7 +50,7 @@ namespace regina {
  * triangulations than generic dimensions.
  *
  * \param dim the dimension in question.
- * @return \c true if and only if \a dim is one of Regina's standard dimensions.
+ * \return \c true if and only if \a dim is one of Regina's standard dimensions.
  *
  * \ingroup engine
  */
@@ -64,7 +64,7 @@ constexpr bool standardDim(int dim) {
  * If Regina was built with the \c REGINA_HIGHDIM option, then this will be 15;
  * otherwise it will be 8 (the default for ordinary builds).
  *
- * @return Regina's maximum dimension of triangulation.
+ * \return Regina's maximum dimension of triangulation.
  *
  * \ingroup engine
  */

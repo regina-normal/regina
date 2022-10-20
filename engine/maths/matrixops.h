@@ -175,7 +175,7 @@ void metricalSmithNormalForm(MatrixInt& matrix,
  * wanted to.
  *
  * \param matrix the matrix to examine and rearrange.
- * @return the rank of the given matrix.
+ * \return the rank of the given matrix.
  *
  * \ingroup maths
  */
@@ -214,7 +214,7 @@ size_t rowBasis(MatrixInt& matrix);
  * matrix will be changed (though only by swapping rows).
  * \param complement the square matrix that will be re-filled with the
  * "incremental" basis for the orthogonal complement of \a input.
- * @return the rank of the given matrix \a input.
+ * \return the rank of the given matrix \a input.
  *
  * \ingroup maths
  */
@@ -305,7 +305,7 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
  * \param sublattice a list of length \a k describing the sublattice of Z^k;
  * the elements of this list must be the non-negative integers
  * \a p1, ..., \a pk as described above.
- * @return a new matrix whose columns are a basis for the preimage lattice.
+ * \return a new matrix whose columns are a basis for the preimage lattice.
  * This matrix will have precisely \a n rows.
  *
  * \author Ryan Budney
@@ -334,7 +334,7 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
  * \param input the n-by-n matrix \a A, which must be a lift of a genuine
  * automorphism as described above.
  * \param invF the list p1, p2, ..., pn.
- * @return the inverse automorphism, also described as an n-by-n matrix
+ * \return the inverse automorphism, also described as an n-by-n matrix
  * as per the discussion above.
  *
  * \author Ryan Budney

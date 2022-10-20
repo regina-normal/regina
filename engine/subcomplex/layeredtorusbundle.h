@@ -104,7 +104,7 @@ class LayeredTorusBundle : public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         LayeredTorusBundle& operator = (const LayeredTorusBundle&) = default;
 
@@ -130,7 +130,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * been permuted.  For a precise mapping from the TxICore::core()
          * triangulation to this triangulation, see the routine coreIso().
          *
-         * @return the core <tt>T x I</tt> triangulation.
+         * \return the core <tt>T x I</tt> triangulation.
          */
         const TxICore& core() const;
 
@@ -148,7 +148,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * returned by LayeredTorusBundle::core().core()) to the
          * tetrahedra and vertices of this overall layered torus bundle.
          *
-         * @return the isomorphism from the core <tt>T x I</tt> to this
+         * \return the isomorphism from the core <tt>T x I</tt> to this
          * layered torus bundle.
          */
         const Isomorphism<3>& coreIso() const;
@@ -209,7 +209,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * case it describes a direct identification between the upper
          * and lower boundary tori.
          *
-         * @return the relationship through the layering between the
+         * \return the relationship through the layering between the
          * upper and lower boundary curves of the core <tt>T x I</tt>.
          */
         const Matrix2& layeringReln() const;
@@ -235,7 +235,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * symmetries within the <tt>T x I</tt> core).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of layered torus bundle.
          */
         bool operator == (const LayeredTorusBundle& other) const;
@@ -261,7 +261,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * symmetries within the <tt>T x I</tt> core).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different types of layered torus bundle.
          */
         bool operator != (const LayeredTorusBundle& other) const;
@@ -274,7 +274,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param tri the triangulation to examine.
-         * @return a structure containing details of the layered torus bundle,
+         * \return a structure containing details of the layered torus bundle,
          * or \c null if the given triangulation is not a layered torus bundle.
          */
         static std::unique_ptr<LayeredTorusBundle> recognise(
@@ -310,7 +310,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * \param out the output stream to which to write.
          * \param tex \c true if this routine is called from
          * writeTeXName() or \c false if it is called from writeName().
-         * @return a reference to \a out.
+         * \return a reference to \a out.
          */
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 
@@ -326,7 +326,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          *
          * \param tri the triangulation to examine.
          * \param core the core <tt>T x I</tt> to search for.
-         * @return a structure containing details of the layered torus bundle,
+         * \return a structure containing details of the layered torus bundle,
          * or \c null if the given triangulation is
          * not a layered torus bundle with the given <tt>T x I</tt> core.
          */

@@ -69,7 +69,7 @@ struct Base64SigEncoding {
      *
      * \param c a base64 character, which must be one of the 64 printable
      * characters described in the class notes.
-     * @return the corresponding integer, which will be between 0 and 63
+     * \return the corresponding integer, which will be between 0 and 63
      * inclusive.
      */
     static constexpr unsigned decodeSingle(char c) {
@@ -90,7 +90,7 @@ struct Base64SigEncoding {
      * The inverse to this routine is decodeSingle().
      *
      * \param c an integer between 0 and 63 inclusive.
-     * @return the corresponding printable base64 character.
+     * \return the corresponding printable base64 character.
      */
     static constexpr char encodeSingle(unsigned c) {
         if (c < 26)
@@ -107,7 +107,7 @@ struct Base64SigEncoding {
     /**
      * Is the given character a valid base64 character?
      *
-     * @return \c true if and only if the given character is one of the
+     * \return \c true if and only if the given character is one of the
      * 64 printable characters described in the class notes.
      */
     static constexpr bool isValid(char c) {
@@ -167,7 +167,7 @@ struct Base64SigEncoding {
      * \param s the string from which the encoded base64 characters
      * should be read.
      * \param nChars the number of base64 characters to read.
-     * @return the native integer that was encoded.
+     * \return the native integer that was encoded.
      */
     template <typename IntType>
     static IntType decodeInt(const char* s, unsigned nChars) {
@@ -195,7 +195,7 @@ struct Base64SigEncoding {
      * \a nTrits times.  Each trit will be cast to a \c uint8_t, and must take
      * the value 0, 1 or 2.
      * \param nTrits the number of trits to encode; this must be at most 3.
-     * @return the resulting printable base64 character.
+     * \return the resulting printable base64 character.
      */
     template <typename InputIterator>
     static char encodeTrits(InputIterator trits, unsigned nTrits) {
@@ -224,7 +224,7 @@ struct Base64SigEncoding {
      *
      * \param trits the array of trits to encode.  Each trit must take
      * the value 0, 1 or 2.
-     * @return the resulting printable base64 character.
+     * \return the resulting printable base64 character.
      */
     template <int nTrits>
     static constexpr char encodeTrits(
@@ -274,7 +274,7 @@ struct Base64SigEncoding {
      * for details of the encoding.
      *
      * \param c the base64 character to decode.
-     * @return an array containing the three trits that had been
+     * \return an array containing the three trits that had been
      * encoded in the given base64 character.
      */
     static constexpr std::array<uint8_t, 3> decodeTrits(char c) {

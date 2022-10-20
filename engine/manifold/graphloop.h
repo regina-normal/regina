@@ -198,7 +198,7 @@ class GraphLoop : public Manifold {
          * Returns a reference to the bounded Seifert fibred space that
          * is joined to itself.
          *
-         * @return a reference to the bounded Seifert fibred space.
+         * \return a reference to the bounded Seifert fibred space.
          */
         const SFSpace& sfs() const;
         /**
@@ -207,7 +207,7 @@ class GraphLoop : public Manifold {
          * See the class notes for details on precisely how this matrix is
          * represented.
          *
-         * @return a reference to the matching matrix.
+         * \return a reference to the matching matrix.
          */
         const Matrix2& matchingReln() const;
 
@@ -226,7 +226,7 @@ class GraphLoop : public Manifold {
          * ordering graph manifold representations.
          *
          * \param compare the representation with which this will be compared.
-         * @return \c true if and only if this is "smaller" than the
+         * \return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
         bool operator < (const GraphLoop& compare) const;
@@ -234,7 +234,7 @@ class GraphLoop : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphLoop& operator = (const GraphLoop&) = default;
         /**
@@ -243,7 +243,7 @@ class GraphLoop : public Manifold {
          *
          * The graph manifold that was passed will no longer be usable.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphLoop& operator = (GraphLoop&&) noexcept = default;
 
@@ -267,7 +267,7 @@ class GraphLoop : public Manifold {
          * they will be treated as not equal by this routine.
          *
          * \param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object contain
+         * \return \c true if and only if this and the given object contain
          * identical presentations of the same graph manifold.
          */
         bool operator == (const GraphLoop& compare) const;
@@ -284,7 +284,7 @@ class GraphLoop : public Manifold {
          * they will be treated as not equal by this routine.
          *
          * \param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object do not
+         * \return \c true if and only if this and the given object do not
          * contain identical presentations of the same graph manifold.
          */
         bool operator != (const GraphLoop& compare) const;

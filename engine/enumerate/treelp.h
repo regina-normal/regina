@@ -189,7 +189,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * The matrix that is passed (\a src) will no longer be usable.
          *
          * \param src the matrix to move.
-         * @return a reference to this matrix.
+         * \return a reference to this matrix.
          */
         inline LPMatrix& operator = (LPMatrix&& src) noexcept;
 
@@ -307,7 +307,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * the currently assigned matrix size, not the total amount of
          * memory that was originally reserved.
          *
-         * @return the number of rows.
+         * \return the number of rows.
          */
         inline size_t rows() const;
 
@@ -316,7 +316,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * the currently assigned matrix size, not the total amount of
          * memory that was originally reserved.
          *
-         * @return the number of columns.
+         * \return the number of columns.
          */
         inline size_t columns() const;
 
@@ -331,7 +331,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * Two uninitialised matrices will compare as equal.
          *
          * \param other the matrix to compare with this.
-         * @return \c true if and only if the two matrices are equal.
+         * \return \c true if and only if the two matrices are equal.
          */
         inline bool operator == (const LPMatrix& other) const;
 
@@ -346,7 +346,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * Two uninitialised matrices will compare as equal.
          *
          * \param other the matrix to compare with this.
-         * @return \c true if and only if the two matrices are not equal.
+         * \return \c true if and only if the two matrices are not equal.
          */
         inline bool operator != (const LPMatrix& other) const;
 
@@ -412,7 +412,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * the linear combination.
          * \param src the index of the other row used in this linear
          * combination.  This must be between 0 and rows()-1 inclusive.
-         * @return the positive gcd that row \a dest was scaled down by,
+         * \return the positive gcd that row \a dest was scaled down by,
          * or 0 if row \a dest is entirely zero.
          */
         IntType combRowAndNorm(const IntType& destCoeff,
@@ -542,7 +542,7 @@ struct LPCol {
     /**
      * Sets this to be a copy of the given column.
      *
-     * @return a reference to this column.
+     * \return a reference to this column.
      */
     LPCol& operator = (const LPCol&) = default;
 
@@ -554,7 +554,7 @@ struct LPCol {
      *
      * After this operation, the given column will no longer be usable.
      *
-     * @return a reference to this column.
+     * \return a reference to this column.
      */
     LPCol& operator = (LPCol&&) = default;
 
@@ -635,7 +635,7 @@ class LPSystem : public ShortOutput<LPSystem> {
         /**
          * Sets this to be a copy of the given class of vector encodings.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         LPSystem& operator = (const LPSystem&) = default;
         /**
@@ -643,7 +643,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          * same class of vector encodings.
          *
          * \param other the object to compare with this.
-         * @return \c true if and only if both objects represent the same
+         * \return \c true if and only if both objects represent the same
          * class of encodings.
          */
         constexpr bool operator == (const LPSystem& other) const {
@@ -654,7 +654,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          * different classes of vector encodings.
          *
          * \param other the object to compare with this.
-         * @return \c true if and only if both objects represent
+         * \return \c true if and only if both objects represent
          * different classes of encodings.
          */
         constexpr bool operator != (const LPSystem& other) const {
@@ -669,7 +669,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          *
          * Exactly one of normal() and angle() will return \c true.
          *
-         * @return \c true if this is a class of normal or almost normal
+         * \return \c true if this is a class of normal or almost normal
          * surface encodings.
          */
         constexpr bool normal() const {
@@ -681,7 +681,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          *
          * Exactly one of normal() and angle() will return \c true.
          *
-         * @return \c true if this is the class of angle encodings.
+         * \return \c true if this is the class of angle encodings.
          */
         constexpr bool angle() const {
             return (system_ == LP_ANGLE);
@@ -691,7 +691,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          *
          * Exactly one of standard(), quad() and angle() will return \c true.
          *
-         * @return \c true if this is the class of standard encodings.
+         * \return \c true if this is the class of standard encodings.
          */
         constexpr bool standard() const {
             return (system_ == LP_STANDARD);
@@ -701,7 +701,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          *
          * Exactly one of standard(), quad() and angle() will return \c true.
          *
-         * @return \c true if this is the class of quad encodings.
+         * \return \c true if this is the class of quad encodings.
          */
         constexpr bool quad() const {
             return (system_ == LP_QUAD);
@@ -712,7 +712,7 @@ class LPSystem : public ShortOutput<LPSystem> {
          * triangulation.
          *
          * \param nTet the number of tetrahedra in the triangulation.
-         * @return the corresponding number of coordinate columns in the
+         * \return the corresponding number of coordinate columns in the
          * tableaux.
          */
         constexpr size_t coords(size_t nTet) const {
@@ -946,7 +946,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * properties will be copied across also.
          *
          * \param src the matrix to copy.
-         * @return a reference to this matrix.
+         * \return a reference to this matrix.
          */
         inline LPInitialTableaux& operator = (const LPInitialTableaux& src);
 
@@ -961,7 +961,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * The matrix that is passed (\a src) will no longer be usable.
          *
          * \param src the matrix to move.
-         * @return a reference to this matrix.
+         * \return a reference to this matrix.
          */
         inline LPInitialTableaux& operator = (LPInitialTableaux&& src) noexcept;
 
@@ -980,7 +980,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * Returns the underlying 3-manifold triangulation from which the
          * matching equations were derived.
          *
-         * @return the underlying triangulation.
+         * \return the underlying triangulation.
          */
         inline const Triangulation<3>& tri() const;
 
@@ -993,7 +993,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * See the LPInitialTableaux class notes for more information on
          * these three broad classes and how they affect the tableaux.
          *
-         * @return the class of vector encodings used by this tableaux.
+         * \return the class of vector encodings used by this tableaux.
          */
         LPSystem system() const;
 
@@ -1005,7 +1005,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * to enforce these, and so the rank will be larger than the rank of
          * the original matching equation matrix.
          *
-         * @return the matrix rank.
+         * \return the matrix rank.
          */
         inline size_t rank() const;
 
@@ -1017,7 +1017,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * to enforce these, and so the number of columns will be larger than
          * in the original matching equation matrix.
          *
-         * @return the number of columns.
+         * \return the number of columns.
          */
         inline size_t columns() const;
 
@@ -1026,7 +1026,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * or angle structure coordinates.  This is precisely the number of
          * columns in the original matrix of matching equations.
          *
-         * @return the number of normal or angle structure coordinate columns.
+         * \return the number of normal or angle structure coordinate columns.
          */
         inline size_t coordinateColumns() const;
 
@@ -1084,7 +1084,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * \ifacespython This routine returns a Python list.
          *
-         * @return details of the permutation describing how columns
+         * \return details of the permutation describing how columns
          * were reordered.
          */
         inline const size_t* columnPerm() const;
@@ -1101,7 +1101,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * \param m the matrix whose row we will use in the inner product.
          * \param mRow the row of the matrix \a m to use in the inner product.
          * \param thisCol the column of this matrix to use in the inner product.
-         * @return the resulting inner product.
+         * \return the resulting inner product.
          */
         template <typename IntType>
         inline IntType multColByRow(const LPMatrix<IntType>& m, size_t mRow,
@@ -1152,7 +1152,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * inner product.
          * \param thisCol the column of this matrix to use in the adjusted
          * inner product.
-         * @return the resulting adjusted inner product.
+         * \return the resulting adjusted inner product.
          */
         template <typename IntType>
         inline IntType multColByRowOct(const LPMatrix<IntType>& m,
@@ -1478,7 +1478,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * The tableaux that is passed (\a src) will no longer be usable.
          *
          * \param src the tableaux to move.
-         * @return a reference to this tableaux.
+         * \return a reference to this tableaux.
          */
         inline LPData& operator = (LPData&& src) noexcept;
 
@@ -1546,7 +1546,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * to enforce these, and so the number of columns will be larger than
          * in the original matching equation matrix.
          *
-         * @return the number of columns.
+         * \return the number of columns.
          */
         inline size_t columns() const;
 
@@ -1556,7 +1556,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * precisely the number of columns in the original matrix of
          * matching equations.
          *
-         * @return the number of normal or angle structure coordinate columns.
+         * \return the number of normal or angle structure coordinate columns.
          */
         inline size_t coordinateColumns() const;
 
@@ -1572,7 +1572,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * infeasible then any queries or operations (other than calling
          * isFeasible() itself) are undefined.
          *
-         * @return \c true if this system is feasible, or \c false if it
+         * \return \c true if this system is feasible, or \c false if it
          * is infeasible.
          */
         inline bool isFeasible() const;
@@ -1606,7 +1606,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * The index should be with respect to this tableaux (i.e., it must
          * take into account any permutation of columns from the original
          * matching equations).
-         * @return the sign of the variable as described above;
+         * \return the sign of the variable as described above;
          * this will be either 1, 0 or -1.
          */
         inline int sign(size_t pos) const;
@@ -1757,7 +1757,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * As a special case, when extracting a strict angle structure
          * one may pass \a type = \c null, in which case this routine will
          * assume that \e every coordinate was constrained as positive.
-         * @return a vector containing the values of all the variables.
+         * \return a vector containing the values of all the variables.
          * This vector will have length origTableaux_->coordinateColumns().
          */
         template <class RayClass>
@@ -1802,7 +1802,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * and rank_-1 inclusive.
          * \param the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
-         * @return the requested entry in this tableaux.
+         * \return the requested entry in this tableaux.
          */
         inline IntType entry(size_t row, size_t col) const;
 
@@ -1837,7 +1837,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * and rank_-1 inclusive.
          * \param the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
-         * @return +1, -1 or 0 according to whether the requested entry
+         * \return +1, -1 or 0 according to whether the requested entry
          * is positive, negative or zero.
          */
         inline int entrySign(size_t row, size_t col) const;

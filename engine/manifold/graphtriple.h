@@ -227,7 +227,7 @@ class GraphTriple : public Manifold {
          *
          * \param which 0 if the first end space is to be returned, or
          * 1 if the second end space is to be returned.
-         * @return a reference to the requested Seifert fibred space.
+         * \return a reference to the requested Seifert fibred space.
          */
         const SFSpace& end(unsigned which) const;
         /**
@@ -236,7 +236,7 @@ class GraphTriple : public Manifold {
          * to which the two end spaces are joined.  See the class notes
          * for further discussion.
          *
-         * @return a reference to the requested Seifert fibred space.
+         * \return a reference to the requested Seifert fibred space.
          */
         const SFSpace& centre() const;
         /**
@@ -254,7 +254,7 @@ class GraphTriple : public Manifold {
          *
          * \param which indicates which particular join should be
          * examined; this should be 0 or 1 as described above.
-         * @return a reference to the requested matching matrix.
+         * \return a reference to the requested matching matrix.
          */
         const Matrix2& matchingReln(unsigned which) const;
 
@@ -273,7 +273,7 @@ class GraphTriple : public Manifold {
          * ordering graph manifold representations.
          *
          * \param compare the representation with which this will be compared.
-         * @return \c true if and only if this is "smaller" than the
+         * \return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
         bool operator < (const GraphTriple& compare) const;
@@ -281,7 +281,7 @@ class GraphTriple : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphTriple& operator = (const GraphTriple&) = default;
         /**
@@ -290,7 +290,7 @@ class GraphTriple : public Manifold {
          *
          * The graph manifold that was passed will no longer be usable.
          *
-         * @return a reference to this graph manifold.
+         * \return a reference to this graph manifold.
          */
         GraphTriple& operator = (GraphTriple&&) noexcept = default;
 
@@ -314,7 +314,7 @@ class GraphTriple : public Manifold {
          * they will be treated as not equal by this routine.
          *
          * \param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object contain
+         * \return \c true if and only if this and the given object contain
          * identical presentations of the same graph manifold.
          */
         bool operator == (const GraphTriple& compare) const;
@@ -331,7 +331,7 @@ class GraphTriple : public Manifold {
          * they will be treated as not equal by this routine.
          *
          * \param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object do not
+         * \return \c true if and only if this and the given object do not
          * contain identical presentations of the same graph manifold.
          */
         bool operator != (const GraphTriple& compare) const;

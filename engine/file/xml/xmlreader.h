@@ -72,7 +72,7 @@ class XMLPropertyDict : private std::map<std::string, std::string> {
          * key does not exist in the map.
          *
          * \param key the key to look up.
-         * @return the value associated with the given key, or the
+         * \return the value associated with the given key, or the
          * empty string if the key does not exist in the map.
          */
         const std::string& lookup(const std::string& key) const;
@@ -294,7 +294,7 @@ class XMLParser {
  * \param str the string to convert.
  * \param free \c true if the original libxml string \a str should be
  * deallocated, or \c false if it should be preserved.
- * @return the given string as a C++ string.
+ * \return the given string as a C++ string.
  */
 std::string xmlString(xmlChar* str, bool free = true);
 

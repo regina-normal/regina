@@ -189,7 +189,7 @@ private:
             /**
              * Return the number of elements in this array.
              *
-             * @return the number of elements.
+             * \return the number of elements.
              */
             inline size_t size() const {
                 return data_.size();
@@ -199,7 +199,7 @@ private:
              *
              * \param index the requested array index; this must be
              * between 0 and size()-1 inclusive.
-             * @return the corresponding element of this array.
+             * \return the corresponding element of this array.
              */
             inline unsigned long operator [] (size_t index) const {
                 return data_[index];
@@ -211,7 +211,7 @@ private:
              * binary search).
              *
              * \param value the integer to search for.
-             * @return the array index that holds the given integer,
+             * \return the array index that holds the given integer,
              * or -1 if the given integer is not stored in this array.
              */
             inline ssize_t index(unsigned long value) const {
@@ -552,7 +552,7 @@ public:
      * This operator induces a deep copy of the given object; moreover,
      * this is expensive since HomologicalData objects are \e very large.
      *
-     * @return a reference to this normal surface.
+     * \return a reference to this normal surface.
      */
     HomologicalData& operator = (const HomologicalData&) = default;
     /**
@@ -563,7 +563,7 @@ public:
      *
      * The object that was passed will no longer be usable.
      *
-     * @return a reference to this object.
+     * \return a reference to this object.
      */
     HomologicalData& operator = (HomologicalData&&) noexcept = default;
 
@@ -607,7 +607,7 @@ public:
      * presentations.
      *
      * \param q the dimension of the homology group: can be 0, 1, 2 or 3.
-     * @return the q-th homology group, computed in the standard
+     * \return the q-th homology group, computed in the standard
      * CW-decomposition.
      */
     const MarkedAbelianGroup& homology(unsigned q);
@@ -616,7 +616,7 @@ public:
      * of the manifold, computed with the regular CW-decomposition.
      *
      * \param q the dimension of the homology group: can be 0, 1 or 2.
-     * @return the q-th boundary homology group, in standard cellular
+     * \return the q-th boundary homology group, in standard cellular
      * homology coordinates
      */
     const MarkedAbelianGroup& bdryHomology(unsigned q);
@@ -626,7 +626,7 @@ public:
      * homology of the boundary to the homology of the manifold.
      *
      * \param q the dimension of the map: can be 0, 1 or 2.
-     * @return the map from H_q of the boundary to H_q of the manifold,
+     * \return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
     const HomMarkedAbelianGroup& bdryHomologyMap(unsigned q);
@@ -643,7 +643,7 @@ public:
      * presentations.
      *
      * \param q the dimension of the homology group: can be 0, 1, 2 or 3.
-     * @return the q-th homology group, computed in the dual CW-decomposition.
+     * \return the q-th homology group, computed in the dual CW-decomposition.
      */
     const MarkedAbelianGroup& dualHomology(unsigned q);
 
@@ -651,7 +651,7 @@ public:
      * Returns the isomorphism from dualHomology(1) to homology(1)
      * given by a cellular approximation to the identity map on the manifold.
      *
-     * @return The isomorphism from dualHomology(1) to homology(1)
+     * \return The isomorphism from dualHomology(1) to homology(1)
      * computed via a cellular approximation of the identity map from
      * the first 1-skeleton to the second.
      */
@@ -672,7 +672,7 @@ public:
      *
      * \param dimension the dimension of the cells in question; this must
      * be 0, 1, 2 or 3.
-     * @return the number of cells of the given dimension in the standard
+     * \return the number of cells of the given dimension in the standard
      * CW-decomposition of the closed manifold.
      */
     unsigned long countStandardCells(unsigned dimension);
@@ -683,7 +683,7 @@ public:
      *
      * \param dimension the dimension of the cells in question; this must
      * be 0, 1, 2 or 3.
-     * @return the number of cells of the given dimension in the dual
+     * \return the number of cells of the given dimension in the dual
      * CW-decomposition to the triangulation.
      */
     unsigned long countDualCells(unsigned dimension);
@@ -694,7 +694,7 @@ public:
      *
      * \param dimension the dimension of the cells in question; this must
      * be 0, 1 or 2.
-     * @return the number of cells of the given dimension in the standard
+     * \return the number of cells of the given dimension in the standard
      * CW-decomposition of the boundary.
      */
     unsigned long countBdryCells(unsigned dimension);
@@ -715,7 +715,7 @@ public:
      * in a non-standard way (treating each ideal vertex as just a single
      * vertex).
      *
-     * @return the Euler characteristic of the corresponding compact
+     * \return the Euler characteristic of the corresponding compact
      * triangulated 3-manifold.
      */
     long eulerChar();
@@ -745,7 +745,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return the torsion form rank vector.
+     * \return the torsion form rank vector.
      */
     const std::vector< std::pair< Integer,
         std::vector< unsigned long > > >& torsionRankVector();
@@ -764,7 +764,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return human-readable prime power factorization of the order of
+     * \return human-readable prime power factorization of the order of
      * the torsion subgroup of H1.
      */
     const std::string& torsionRankVectorString();
@@ -788,7 +788,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return the Kawauchi-Kojima sigma-vector.
+     * \return the Kawauchi-Kojima sigma-vector.
      */
     const std::vector<LargeInteger>& torsionSigmaVector();
     /**
@@ -807,7 +807,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return the Kawauchi-Kojima sigma-vector in human readable form.
+     * \return the Kawauchi-Kojima sigma-vector in human readable form.
      */
     const std::string& torsionSigmaVectorString();
 
@@ -831,7 +831,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return the Legendre symbol vector associated to the torsion
+     * \return the Legendre symbol vector associated to the torsion
      * linking form.
      */
     const std::vector< std::pair< Integer, std::vector< int > > >&
@@ -852,7 +852,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return the Legendre symbol vector in human-readable form.
+     * \return the Legendre symbol vector in human-readable form.
      */
     const std::string& torsionLegendreSymbolVectorString();
 
@@ -880,7 +880,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return \c true iff the torsion linking form is hyperbolic.
+     * \return \c true iff the torsion linking form is hyperbolic.
      */
     bool formIsHyperbolic();
     /**
@@ -898,7 +898,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return \c true iff the linking form is split.
+     * \return \c true iff the linking form is split.
      */
     bool formIsSplit();
     /**
@@ -922,7 +922,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return \c true iff the form satisfies the 2-torsion
+     * \return \c true iff the form satisfies the 2-torsion
      * condition of Kawauchi-Kojima.
      */
     bool formSatKK();
@@ -953,7 +953,7 @@ public:
      * This should be rare: the only way it can occur is during an internal
      * rational-to-double conversion if the rational is out of range.
      *
-     * @return a string giving a one-line description of what
+     * \return a string giving a one-line description of what
      * is known about where this manifold embeds, based solely
      * on the manifold's homological data.
      */

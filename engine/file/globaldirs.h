@@ -75,7 +75,7 @@ class GlobalDirs {
          * are running directly out of the source tre), you \e must call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's primary home directory.
+         * \return Regina's primary home directory.
          */
         static std::string home();
 
@@ -89,7 +89,7 @@ class GlobalDirs {
          * are running directly out of the source tre), you \e must call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's python module directory.
+         * \return Regina's python module directory.
          */
         static std::string pythonModule();
 
@@ -107,7 +107,7 @@ class GlobalDirs {
          * are running directly out of the source tre), you \e must call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's calculation engine data directory.
+         * \return Regina's calculation engine data directory.
          */
         static std::string census();
 
@@ -126,7 +126,7 @@ class GlobalDirs {
          * are running directly out of the source tre), you \e must call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's example and census data directory.
+         * \return Regina's example and census data directory.
          */
         static std::string examples();
 
@@ -151,7 +151,7 @@ class GlobalDirs {
          * are running directly out of the source tre), you \e must call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's calculation engine documentation directory.
+         * \return Regina's calculation engine documentation directory.
          */
         static std::string engineDocs();
 
@@ -170,7 +170,7 @@ class GlobalDirs {
          * are running directly out of the source tre), you \e must call
          * either setDirs() or deduceDirs() before calling this routine.
          *
-         * @return Regina's calculation engine data directory.
+         * \return Regina's calculation engine data directory.
          */
         static std::string data();
 

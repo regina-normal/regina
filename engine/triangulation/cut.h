@@ -175,7 +175,7 @@ class Cut : public ShortOutput<Cut> {
          * In other words, this returns the size of the underlying
          * triangulation or facet pairing.
          *
-         * @return the total number of top-dimensional simplices.
+         * \return the total number of top-dimensional simplices.
          */
         size_t size() const;
 
@@ -194,7 +194,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * \param whichSide the side of the partition to query; this
          * must be either 0 or 1.
-         * @return the number of top-dimensional simplices on the given side.
+         * \return the number of top-dimensional simplices on the given side.
          */
         size_t size(int whichSide) const;
 
@@ -203,7 +203,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * \param simplex the simplex being queried; this must be
          * between 0 and size()-1 inclusive.
-         * @return the corresponding side of the partition; this will be
+         * \return the corresponding side of the partition; this will be
          * either 0 or 1.
          */
         int side(size_t simplex) const;
@@ -225,7 +225,7 @@ class Cut : public ShortOutput<Cut> {
          * Determines whether this cut places all top-dimensional simplices
          * on the same side of the partition.
          *
-         * @return \c true if all simplices are on side 0 or all simplices
+         * \return \c true if all simplices are on side 0 or all simplices
          * are on side 1, or \c false if both sides of the partition are
          * non-empty.
          */
@@ -247,7 +247,7 @@ class Cut : public ShortOutput<Cut> {
          * have precisely size() top-dimensional simplices.
          *
          * \param tri the triangulation under consideration.
-         * @return the weight of this cut with respect to \a tri.
+         * \return the weight of this cut with respect to \a tri.
          */
         template <int dim>
         size_t weight(const Triangulation<dim>& tri) const;
@@ -269,7 +269,7 @@ class Cut : public ShortOutput<Cut> {
          * have precisely size() top-dimensional simplices.
          *
          * \param pairing the facet pairing under consideration.
-         * @return the weight of this cut with respect to \a pairing.
+         * \return the weight of this cut with respect to \a pairing.
          */
         template <int dim>
         size_t weight(const FacetPairing<dim>& pairing) const;
@@ -282,7 +282,7 @@ class Cut : public ShortOutput<Cut> {
          * simplices); if they do then this cut will be resized as a result.
          *
          * \param src the cut to copy.
-         * @return a reference to this cut.
+         * \return a reference to this cut.
          */
         Cut& operator = (const Cut& src);
 
@@ -297,7 +297,7 @@ class Cut : public ShortOutput<Cut> {
          * The cut that is passed (\a src) will no longer be usable.
          *
          * \param src the cut to move.
-         * @return a reference to this cut.
+         * \return a reference to this cut.
          */
         Cut& operator = (Cut&& src) noexcept;
 
@@ -318,7 +318,7 @@ class Cut : public ShortOutput<Cut> {
          * sizes; in this case they will be considered different.
          *
          * \param rhs the cut to compare with this.
-         * @return \c true if and only if this and the given cut are identical.
+         * \return \c true if and only if this and the given cut are identical.
          */
         bool operator == (const Cut& rhs) const;
 
@@ -332,7 +332,7 @@ class Cut : public ShortOutput<Cut> {
          * sizes; in this case they will be considered different.
          *
          * \param rhs the cut to compare with this.
-         * @return \c true if and only if this and the given cut are different.
+         * \return \c true if and only if this and the given cut are different.
          */
         bool operator != (const Cut& rhs) const;
 
@@ -358,7 +358,7 @@ class Cut : public ShortOutput<Cut> {
          * have precisely size() top-dimensional simplices.
          *
          * \param tri the triangulation to partition.
-         * @return the two resulting triangulations, one for each side
+         * \return the two resulting triangulations, one for each side
          * of the partition.
          */
         template <int dim>
@@ -392,7 +392,7 @@ class Cut : public ShortOutput<Cut> {
          * top-dimensional simplices on the same side.
          *
          * \param pairing the facet pairing to partition.
-         * @return the two resulting facet pairings, one for each side
+         * \return the two resulting facet pairings, one for each side
          * of the partition.
          */
         template <int dim>
@@ -422,7 +422,7 @@ class Cut : public ShortOutput<Cut> {
          * \ifacespython Since Python does not support templates, the
          * dimension \a dim should be passed as an argument to this function.
          *
-         * @return the two inclusion maps corresponding to this partition.
+         * \return the two inclusion maps corresponding to this partition.
          */
         template <int dim>
         std::pair<Isomorphism<dim>, Isomorphism<dim>> inclusion() const;
@@ -447,7 +447,7 @@ class Cut : public ShortOutput<Cut> {
          * can use the fact that all cuts with <tt>side(0) == 0</tt>
          * will be seen before any cuts with <tt>side(0) == 1</tt>.
          *
-         * @return \c true if the partition was successfully incremented, or
+         * \return \c true if the partition was successfully incremented, or
          * \c false if this was already the last partition in such an iteration.
          */
         bool inc();
@@ -472,7 +472,7 @@ class Cut : public ShortOutput<Cut> {
          * can use the fact that all cuts with <tt>side(0) == 0</tt>
          * will be seen before any cuts with <tt>side(0) == 1</tt>.
          *
-         * @return \c true if the partition was successfully incremented, or
+         * \return \c true if the partition was successfully incremented, or
          * \c false if this was already the last partition in such an iteration.
          */
         bool incFixedSizes();

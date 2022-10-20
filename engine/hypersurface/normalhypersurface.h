@@ -502,7 +502,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * This operator induces a deep copy of the given normal hypersurface.
          *
-         * @return a reference to this normal hypersurface.
+         * \return a reference to this normal hypersurface.
          */
         NormalHypersurface& operator = (const NormalHypersurface&) = default;
 
@@ -518,7 +518,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * The hypersurface that was passed will no longer be usable.
          *
-         * @return a reference to this normal hypersurface.
+         * \return a reference to this normal hypersurface.
          */
         NormalHypersurface& operator = (NormalHypersurface&&) noexcept =
             default;
@@ -545,7 +545,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * constants.  In particular, this routine has exactly the same
          * effect as multiplying the hypersurface by 2.
          *
-         * @return the double of this normal hypersurface.
+         * \return the double of this normal hypersurface.
          */
         [[deprecated]] NormalHypersurface doubleHypersurface() const;
 
@@ -563,7 +563,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * underlying triangulation.
          *
          * \param rhs the hypersurface to sum with this.
-         * @return the sum of both normal hypersurfaces.
+         * \return the sum of both normal hypersurfaces.
          */
         NormalHypersurface operator + (const NormalHypersurface& rhs) const;
 
@@ -575,7 +575,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \param coeff the coefficient to multiply this hypersurface by;
          * this must be non-negative.
-         * @return the resulting multiple of this hypersurface.
+         * \return the resulting multiple of this hypersurface.
          */
         NormalHypersurface operator * (const LargeInteger& coeff) const;
 
@@ -587,7 +587,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \param coeff the coefficient to multiply this hypersurface by;
          * this must be non-negative.
-         * @return a reference to this hypersurface.
+         * \return a reference to this hypersurface.
          */
         NormalHypersurface& operator *= (const LargeInteger& coeff);
 
@@ -601,7 +601,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * are enough to guarantee integer tetrahedron coordinates (which
          * might or might not be stored).
          *
-         * @return the integer by which the original hypersurface was divided
+         * \return the integer by which the original hypersurface was divided
          * (i.e., the gcd of all normal coordinates in the original
          * hypersurface).  This will always be strictly positive.
          */
@@ -620,7 +620,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vertex the vertex of the given pentachoron around
          * which the requested pieces lie; this should be between 0
          * and 4 inclusive.
-         * @return the number of tetrahedron pieces of the given type.
+         * \return the number of tetrahedron pieces of the given type.
          */
         LargeInteger tetrahedra(size_t pentIndex, int vertex) const;
         /**
@@ -637,7 +637,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param prismType specifies the edge of the given pentachoron that
          * this prism separates from the opposite triangle;
          * this should be between 0 and 9 inclusive.
-         * @return the number of prism pieces of the given type.
+         * \return the number of prism pieces of the given type.
          */
         LargeInteger prisms(size_t pentIndex, int prismType) const;
         /**
@@ -647,7 +647,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
          * Triangulation<4>::countEdges()-1 inclusive.
-         * @return the number of times this normal hypersurface crosses the
+         * \return the number of times this normal hypersurface crosses the
          * given edge.
          */
         LargeInteger edgeWeight(size_t edgeIndex) const;
@@ -674,7 +674,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   process detects modifications, and modifying the frozen
          *   snapshot may result in an exception being thrown.
          *
-         * @return a reference to the underlying triangulation.
+         * \return a reference to the underlying triangulation.
          */
         const Triangulation<4>& triangulation() const;
 
@@ -683,7 +683,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Names are optional and need not be unique.
          * The default name for a hypersurface is the empty string.
          *
-         * @return the name of associated with this hypersurface.
+         * \return the name of associated with this hypersurface.
          */
         const std::string& name() const;
         /**
@@ -735,7 +735,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * @return \c true if and only if this normal hypersurface is compact.
+         * \return \c true if and only if this normal hypersurface is compact.
          */
         bool isCompact() const;
         /**
@@ -754,7 +754,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return \c true if this hypersurface is orientable, or \c false if
+         * \return \c true if this hypersurface is orientable, or \c false if
          * this hypersurface is non-orientable.
          */
         bool isOrientable() const;
@@ -774,7 +774,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return \c true if this hypersurface is two-sided, or \c false if
+         * \return \c true if this hypersurface is two-sided, or \c false if
          * this hypersurface is one-sided.
          */
         bool isTwoSided() const;
@@ -794,7 +794,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return \c true if this hypersurface is connected, or \c false if
+         * \return \c true if this hypersurface is connected, or \c false if
          * this hypersurface is disconnected.
          */
         bool isConnected() const;
@@ -806,7 +806,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * @return \c true if and only if this hypersurface has real boundary.
+         * \return \c true if and only if this hypersurface has real boundary.
          */
         bool hasRealBoundary() const;
         /**
@@ -822,7 +822,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return \c true if and only if this hypersurface is vertex linking.
+         * \return \c true if and only if this hypersurface is vertex linking.
          */
         bool isVertexLinking() const;
         /**
@@ -838,7 +838,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return the vertex linked by a positive rational multiple of this
+         * \return the vertex linked by a positive rational multiple of this
          * hypersurface, or \c null if this hypersurface is not a multiple of
          * a single vertex link.
          */
@@ -865,7 +865,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return the edge linked by a positive rational multiple of this
+         * \return the edge linked by a positive rational multiple of this
          * hypersurface, or \c null if this hypersurface is not a multiple
          * of a single thin edge link.
          */
@@ -911,7 +911,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a vector containing the edge(s) linked by a positive rational
+         * \return a vector containing the edge(s) linked by a positive rational
          * multiple of this hypersurface and an integer indicating how many
          * of these links are thin, as described above.
          */
@@ -948,7 +948,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a pair containing the triangle(s) linked by a positive
+         * \return a pair containing the triangle(s) linked by a positive
          * rational multiple of this hypersurface, as described above.
          */
         std::pair<const Triangle<4>*, const Triangle<4>*> isThinTriangleLink()
@@ -996,7 +996,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a vector containing the triangle(s) linked by a positive
+         * \return a vector containing the triangle(s) linked by a positive
          * rational multiple of this hypersurface and an integer indicating
          * how many of these links are thin, as described above.
          */
@@ -1033,7 +1033,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a pair containing the tetrahedra linked by a positive
+         * \return a pair containing the tetrahedra linked by a positive
          * rational multiple of this hypersurface, as described above.
          */
         std::pair<const Tetrahedron<4>*, const Tetrahedron<4>*>
@@ -1081,7 +1081,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * @return a vector containing the tetrahedra linked by a positive
+         * \return a vector containing the tetrahedra linked by a positive
          * rational multiple of this hypersurface and an integer indicating
          * how many of these links are thin, as described above.
          */
@@ -1110,7 +1110,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * and so may run out of memory if the normal coordinates
          * are extremely large.
          *
-         * @return the first homology group.
+         * \return the first homology group.
          */
         const AbelianGroup& homology() const;
 
@@ -1129,7 +1129,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre This normal hypersurface is compact and embedded.
          *
-         * @return a triangulation of this normal hypersurface.
+         * \return a triangulation of this normal hypersurface.
          */
         Triangulation<3> triangulate() const;
 
@@ -1158,7 +1158,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   routine will return \c false.
          *
          * \param other the hypersurface to be compared with this hypersurface.
-         * @return \c true if both hypersurfaces represent the same normal
+         * \return \c true if both hypersurfaces represent the same normal
          * hypersurface, or \c false if not.
          */
         bool operator == (const NormalHypersurface& other) const;
@@ -1188,7 +1188,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   routine will return \c true.
          *
          * \param other the hypersurface to be compared with this hypersurface.
-         * @return \c true if both hypersurfaces represent different normal
+         * \return \c true if both hypersurfaces represent different normal
          * hypersurface, or \c false if not.
          */
         bool operator != (const NormalHypersurface& other) const;
@@ -1213,7 +1213,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * See the equality test operator==() for further details.
          *
          * \param other the hypersurface to be compared with this hypersurface.
-         * @return \c true if and only if this appears before the given
+         * \return \c true if and only if this appears before the given
          * hypersurface in the total order.
          */
         bool operator < (const NormalHypersurface& other) const;
@@ -1222,7 +1222,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Determines whether this hypersurface is embedded.  This is true if
          * and only if the surface contains no conflicting prism types.
          *
-         * @return \c true if and only if this hypersurface is embedded.
+         * \return \c true if and only if this hypersurface is embedded.
          */
         bool embedded() const;
 
@@ -1253,7 +1253,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \param other the other hypersurface to test for local compatibility
          * with this hypersurface.
-         * @return \c true if the two hypersurfaces are locally compatible, or
+         * \return \c true if the two hypersurfaces are locally compatible, or
          * \c false if they are not.
          */
         bool locallyCompatible(const NormalHypersurface& other) const;
@@ -1277,7 +1277,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * which do not require any knowledge of the internal vector
          * encoding that this hypersurface uses.
          *
-         * @return the underlying integer vector.
+         * \return the underlying integer vector.
          */
         const Vector<LargeInteger>& vector() const;
 
@@ -1289,7 +1289,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Note that this might differ from the encoding originally
          * passed to the class constructor.
          *
-         * @return the internal vector encoding.
+         * \return the internal vector encoding.
          */
         HyperEncoding encoding() const;
 
@@ -1310,7 +1310,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector an integer vector that encodes a normal hypersurface
          * within \a tri; this will be modified directly.
          * \param enc the encoding used by the given integer vector.
-         * @return the new encoding used by the modified \a vector.
+         * \return the new encoding used by the modified \a vector.
          */
         static HyperEncoding reconstructTetrahedra(const Triangulation<4>& tri,
             Vector<LargeInteger>& vector, HyperEncoding enc);
@@ -1342,7 +1342,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \pre This hypersurface is non-empty.
          *
-         * @return the precise multiple of this hypersurface that \e could be a
+         * \return the precise multiple of this hypersurface that \e could be a
          * normalised non-vertex face link, or no value if we can prove
          * that this hypersurface is not such a link.
          */

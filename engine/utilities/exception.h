@@ -92,7 +92,7 @@ class ReginaException : public std::runtime_error {
         /**
          * Sets this to be a copy of the given exception.
          *
-         * @return a reference to this exception.
+         * \return a reference to this exception.
          */
         ReginaException& operator = (const ReginaException&) noexcept = default;
 };
@@ -216,7 +216,7 @@ class NoSolution : public ReginaException {
         /**
          * Sets this to be a copy of the given exception.
          *
-         * @return a reference to this exception.
+         * \return a reference to this exception.
          */
         NoSolution& operator = (const NoSolution&) noexcept = default;
 };
@@ -301,7 +301,7 @@ class SnapPeaIsNull : public ReginaException {
         /**
          * Sets this to be a copy of the given exception.
          *
-         * @return a reference to this exception.
+         * \return a reference to this exception.
          */
         SnapPeaIsNull& operator = (const SnapPeaIsNull&) noexcept = default;
 };

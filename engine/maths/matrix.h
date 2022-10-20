@@ -350,7 +350,7 @@ class Matrix : public Output<Matrix<T>> {
          * (in which case this matrix will become uninitialised also).
          *
          * \param src the matrix to copy.
-         * @return a reference to this matrix.
+         * \return a reference to this matrix.
          */
         Matrix& operator = (const Matrix& src) {
             // std::copy() exhibits undefined behaviour with self-assignment.
@@ -399,7 +399,7 @@ class Matrix : public Output<Matrix<T>> {
          * (in which case this matrix will become uninitialised also).
          *
          * \param src the matrix to move.
-         * @return a reference to this matrix.
+         * \return a reference to this matrix.
          */
         Matrix& operator = (Matrix&& src) noexcept {
             // We need to swap rows_, because src needs this information in
@@ -437,7 +437,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Returns the number of rows in this matrix.
          *
-         * @return the number of rows.
+         * \return the number of rows.
          */
         size_t rows() const {
             return rows_;
@@ -445,7 +445,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Returns the number of columns in this matrix.
          *
-         * @return the number of columns.
+         * \return the number of columns.
          */
         size_t columns() const {
             return cols_;
@@ -470,7 +470,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \param row the row of the desired entry.
          * \param column the column of the desired entry.
-         * @return a reference to the entry in the given row and column.
+         * \return a reference to the entry in the given row and column.
          */
         T& entry(size_t row, size_t column) {
             return data_[row][column];
@@ -484,7 +484,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \param row the row of the desired entry.
          * \param column the column of the desired entry.
-         * @return a reference to the entry in the given row and column.
+         * \return a reference to the entry in the given row and column.
          */
         const T& entry(size_t row, size_t column) const {
             return data_[row][column];
@@ -493,7 +493,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Returns the transpose of this matrix.  This matrix is not changed.
          *
-         * @return the transpose.
+         * \return the transpose.
          */
         Matrix<T> transpose() const {
             Matrix<T> ans(cols_, rows_);
@@ -523,7 +523,7 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The type \a T provides an equality operator (==).
          *
          * \param other the matrix to compare with this.
-         * @return \c true if the matrices are equal as described above,
+         * \return \c true if the matrices are equal as described above,
          * or \c false otherwise.
          */
         bool operator == (const Matrix& other) const {
@@ -556,7 +556,7 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The type \a T provides an equality operator (==).
          *
          * \param other the matrix to compare with this.
-         * @return \c true if the matrices are different as described above,
+         * \return \c true if the matrices are different as described above,
          * or \c false otherwise.
          */
         bool operator != (const Matrix& other) const {
@@ -659,7 +659,7 @@ class Matrix : public Output<Matrix<T>> {
          * is \c true.
          *
          * \param size the number of rows and columns of the matrix to build.
-         * @return an identity matrix of the given size.
+         * \return an identity matrix of the given size.
          */
         REGINA_ENABLE_FOR_RING_STATIC(Matrix) identity(size_t size) {
             Matrix ans(size, size);
@@ -696,7 +696,7 @@ class Matrix : public Output<Matrix<T>> {
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
-         * @return \c true if and only if this is a square identity matrix.
+         * \return \c true if and only if this is a square identity matrix.
          */
         REGINA_ENABLE_FOR_RING(bool) isIdentity() const {
             if (this->rows_ != this->cols_)
@@ -720,7 +720,7 @@ class Matrix : public Output<Matrix<T>> {
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
-         * @return \c true if and only if all entries in the matrix are zero.
+         * \return \c true if and only if all entries in the matrix are zero.
          */
         REGINA_ENABLE_FOR_RING(bool) isZero() const {
             for (size_t r=0; r<this->rows_; ++r)
@@ -1046,7 +1046,7 @@ class Matrix : public Output<Matrix<T>> {
          * of rows in the given matrix.
          *
          * \param other the other matrix to multiply this matrix by.
-         * @return the product matrix <tt>this * other</tt>.
+         * \return the product matrix <tt>this * other</tt>.
          */
         template <typename U>
         Matrix<decltype(T() * U())> operator * (
@@ -1087,7 +1087,7 @@ class Matrix : public Output<Matrix<T>> {
          * columns in this matrix.
          *
          * \param other the vector to multiply this matrix by.
-         * @return the product <tt>this * other</tt>, which will be a
+         * \return the product <tt>this * other</tt>, which will be a
          * vector whose length is the number of rows in this matrix.
          */
         template <typename U>
@@ -1129,7 +1129,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \exception FailedPrecondition This matrix is not square.
          *
-         * @return the determinant of this matrix.
+         * \return the determinant of this matrix.
          */
         REGINA_ENABLE_FOR_RING(T) det() const {
             size_t n = this->rows_;
@@ -1248,7 +1248,7 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The given row number is between 0 and rows()-1 inclusive.
          *
          * \param row the index of the row whose gcd should be computed.
-         * @return the greatest common divisor of all elements of this row.
+         * \return the greatest common divisor of all elements of this row.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdRow(size_t row) {
             T* x = this->data_[row];
@@ -1272,7 +1272,7 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The given column number is between 0 and columns()-1 inclusive.
          *
          * \param col the index of the column whose gcd should be computed.
-         * @return the greatest common divisor of all elements of this column.
+         * \return the greatest common divisor of all elements of this column.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdCol(size_t col) {
             T** row = this->data_;
@@ -1345,7 +1345,7 @@ class Matrix : public Output<Matrix<T>> {
          * This routine is only available when \a T is one of Regina's
          * own integer classes (Integer, LargeInteger, or NativeIntgeger).
          *
-         * @return the rank of this matrix, i.e., the number of non-zero rows
+         * \return the rank of this matrix, i.e., the number of non-zero rows
          * remaining.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, size_t) rowEchelonForm() {
@@ -1436,7 +1436,7 @@ class Matrix : public Output<Matrix<T>> {
          * This routine is only available when \a T is one of Regina's
          * own integer classes (Integer, LargeInteger, or NativeIntgeger).
          *
-         * @return the rank of this matrix, i.e., the number of non-zero
+         * \return the rank of this matrix, i.e., the number of non-zero
          * columns remaining.
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, size_t) columnEchelonForm() {

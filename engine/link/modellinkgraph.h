@@ -117,7 +117,7 @@ class ModelLinkGraphArc {
         /**
          * The node of the model graph from which this arc exits.
          *
-         * @return the corresponding node, or \c null if this is a null arc.
+         * \return the corresponding node, or \c null if this is a null arc.
          */
         ModelLinkGraphNode* node() const;
 
@@ -128,7 +128,7 @@ class ModelLinkGraphArc {
          * For each node of a model graph, the four arcs exiting that
          * node are numbered 0,1,2,3 in a clockwise order.
          *
-         * @return an integer between 0 and 3 inclusive indicating one
+         * \return an integer between 0 and 3 inclusive indicating one
          * of the four arcs exiting node().
          */
         int arc() const;
@@ -166,7 +166,7 @@ class ModelLinkGraphArc {
         /**
          * Sets this to be a copy of the given arc reference.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         ModelLinkGraphArc& operator = (const ModelLinkGraphArc&) = default;
 
@@ -185,7 +185,7 @@ class ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * @return the opposite arc exiting the same node.
+         * \return the opposite arc exiting the same node.
          */
         ModelLinkGraphArc opposite() const;
 
@@ -204,7 +204,7 @@ class ModelLinkGraphArc {
          *
          * \pre This is not a null arc, i.e., node() does not return \c null.
          *
-         * @return the arc at the other end of the underlying edge of the
+         * \return the arc at the other end of the underlying edge of the
          * model graph.
          */
         ModelLinkGraphArc traverse() const;
@@ -223,7 +223,7 @@ class ModelLinkGraphArc {
          *
          * \pre This is not a null arc, i.e., node() does not return \c null.
          *
-         * @return the next arc after this when walking through the graph as
+         * \return the next arc after this when walking through the graph as
          * though it were a link.
          */
         ModelLinkGraphArc next() const;
@@ -240,7 +240,7 @@ class ModelLinkGraphArc {
          *
          * \pre This is not a null arc, i.e., node() does not return \c null.
          *
-         * @return the previous arc before this when walking through the graph
+         * \return the previous arc before this when walking through the graph
          * as though it were a link.
          */
         ModelLinkGraphArc prev() const;
@@ -261,7 +261,7 @@ class ModelLinkGraphArc {
          * \nopython The postincrement operator is available in Python
          * under the name inc().
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         ModelLinkGraphArc& operator ++ ();
         /**
@@ -279,7 +279,7 @@ class ModelLinkGraphArc {
          *
          * \ifacespython This routine is available under the name inc().
          *
-         * @return a copy of this object before the change took place.
+         * \return a copy of this object before the change took place.
          */
         ModelLinkGraphArc operator ++ (int);
         /**
@@ -298,7 +298,7 @@ class ModelLinkGraphArc {
          * \nopython The postdecrement operator is available in Python
          * under the name dec().
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         ModelLinkGraphArc& operator -- ();
         /**
@@ -316,14 +316,14 @@ class ModelLinkGraphArc {
          *
          * \ifacespython This routine is available under the name dec().
          *
-         * @return a copy of this object before the change took place.
+         * \return a copy of this object before the change took place.
          */
         ModelLinkGraphArc operator -- (int);
 
         /**
          * Tests whether this is a non-null arc.
          *
-         * @return \c true if this is not a null arc (i.e., node()
+         * \return \c true if this is not a null arc (i.e., node()
          * does not return a null pointer), or \c false if this is a null
          * arc.
          */
@@ -337,7 +337,7 @@ class ModelLinkGraphArc {
  *
  * \param out the output stream to which to write.
  * \param a the arc reference to write.
- * @return a reference to the given output stream.
+ * \return a reference to the given output stream.
  *
  * \ingroup link
  */
@@ -377,7 +377,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * \warning The index of this node might change if other
          * nodes are added or removed.
          *
-         * @return the index of this node.
+         * \return the index of this node.
          */
         size_t index() const;
         /**
@@ -390,7 +390,7 @@ class ModelLinkGraphNode : public MarkedElement,
          *
          * \param which an integer in the range 0 to 3 inclusive, indicating
          * which of the four arcs exiting this node we should return.
-         * @return a reference to the corresponding arc exiting this node.
+         * \return a reference to the corresponding arc exiting this node.
          */
         ModelLinkGraphArc arc(int which);
         /**
@@ -410,7 +410,7 @@ class ModelLinkGraphNode : public MarkedElement,
          *
          * \param which an integer in the range 0 to 3 inclusive, indicating
          * which of the four arcs exiting this node we should examine.
-         * @return a reference to the other end of the same undirected
+         * \return a reference to the other end of the same undirected
          * edge of the underlying model graph.
          */
         const ModelLinkGraphArc& adj(int which) const;
@@ -518,7 +518,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         /**
          * Returns the number of nodes in this graph.
          *
-         * @return the number of nodes.
+         * \return the number of nodes.
          */
         size_t size() const;
 
@@ -535,7 +535,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \param index the index of the requested node.  This must
          * be between 0 and size()-1 inclusive.
-         * @return the node at the given index.
+         * \return the node at the given index.
          */
         ModelLinkGraphNode* node(size_t index) const;
         /**
@@ -561,7 +561,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Nevertheless, it is recommended to treat this object as temporary
          * only, and to call nodes() again each time you need it.
          *
-         * @return access to the list of all nodes.
+         * \return access to the list of all nodes.
          */
         auto nodes() const;
 
@@ -569,7 +569,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Sets this to be a (deep) copy of the given graph.
          *
          * \param src the graph to copy.
-         * @return a reference to this graph.
+         * \return a reference to this graph.
          */
         ModelLinkGraph& operator = (const ModelLinkGraph& src);
         /**
@@ -583,7 +583,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * The graph that is passed (\a src) will no longer be usable.
          *
          * \param src the graph to move.
-         * @return a reference to this graph.
+         * \return a reference to this graph.
          */
         ModelLinkGraph& operator = (ModelLinkGraph&& src) noexcept;
 
@@ -612,7 +612,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * numbered nodes are connected by edges.
          *
          * \param other the graph to compare with this.
-         * @return \c true if and only if the two graphs are
+         * \return \c true if and only if the two graphs are
          * combinatorially identical.
          */
         bool operator == (const ModelLinkGraph& other) const;
@@ -626,7 +626,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * numbered nodes are connected by edges.
          *
          * \param other the graph to compare with this.
-         * @return \c true if and only if the two graphs are
+         * \return \c true if and only if the two graphs are
          * not combinatorially identical.
          */
         bool operator != (const ModelLinkGraph& other) const;
@@ -650,7 +650,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \pre This graph is connected.
          *
-         * @return the induced cellular decomposition of the sphere.
+         * \return the induced cellular decomposition of the sphere.
          */
         const ModelLinkGraphCells& cells() const;
 
@@ -703,7 +703,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * three-argument flype() function: it is the lower of the two arcs
          * that enter the flype disc from the node \a X to the left of the
          * disc.  This should be presented as an arc of the node \a X.
-         * @return the pair (\a left, \a right) representing the smallest
+         * \return the pair (\a left, \a right) representing the smallest
          * suitable flype beginning at \a from, or a pair of null arcs
          * if there are no suitable pairs (\a left, \a right).
          */
@@ -812,7 +812,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \param right the third arc that indicates where the flype should
          * take place, as labelled on the diagram above.  This should be
          * presented as an arc of the node that it meets inside the disc.
-         * @return the graph obtained by performing the flype.
+         * \return the graph obtained by performing the flype.
          */
         ModelLinkGraph flype(const ModelLinkGraphArc& from,
             const ModelLinkGraphArc& left, const ModelLinkGraphArc& right)
@@ -843,7 +843,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * three-argument flype() function: it is the lower of the two arcs
          * that enter the flype disc from the node \a X to the left of the
          * disc.  This should be presented as an arc of the node \a X.
-         * @return the graph obtained by performing the flype.
+         * \return the graph obtained by performing the flype.
          */
         ModelLinkGraph flype(const ModelLinkGraphArc& from) const;
 
@@ -970,7 +970,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \exception FailedPrecondition This graph has more than 52 nodes.
          *
-         * @return a \e plantri format ASCII representation of this graph.
+         * \return a \e plantri format ASCII representation of this graph.
          */
         std::string plantri() const;
 
@@ -1031,7 +1031,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \param tight \c false if the usual \e plantri ASCII format should
          * be used (as described by plantri() and fromPlantri()), or \c true
          * if the abbreviated format should be used as described above.
-         * @return an optionally compressed \e plantri ASCII representation
+         * \return an optionally compressed \e plantri ASCII representation
          * of this graph.
          */
         std::string canonicalPlantri(bool useReflection = true,
@@ -1148,7 +1148,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \param plantri a string containing the comma-separated sequence of
          * alphabetical strings in \e plantri format, as described above.
-         * @return the resulting graph.
+         * \return the resulting graph.
          */
         static ModelLinkGraph fromPlantri(const std::string& plantri);
 
@@ -1276,7 +1276,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * should not attempt to query the details of the cell decomposition.
          * See the preconditions on individual routines for further details.
          *
-         * @return \c true if and only if the underlying ModelLinkGraph
+         * \return \c true if and only if the underlying ModelLinkGraph
          * describes a planar embedding of a non-empty graph.
          */
         bool isValid() const;
@@ -1293,7 +1293,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * will always return <i>n</i>+2 where \a n is the number of
          * nodes in the underlying graph.
          *
-         * @return a strictly positive number of 2-cells if isValid()
+         * \return a strictly positive number of 2-cells if isValid()
          * returns \c true, or 0 if isValid() returns \c false.
          */
         size_t countCells() const;
@@ -1310,7 +1310,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * \param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
-         * @return the size of the correpsonding 2-cell.
+         * \return the size of the correpsonding 2-cell.
          */
         size_t size(size_t cell) const;
         /**
@@ -1338,7 +1338,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * \param which indicates which arc along the boundary of the
          * corresponding cell to return; this must be between 0 and
          * <tt>size(cell)-1</tt> inclusive.
-         * @return the requested arc on the boundary of the given 2-cell.
+         * \return the requested arc on the boundary of the given 2-cell.
          */
         const ModelLinkGraphArc& arc(size_t cell, size_t which) const;
         /**
@@ -1372,7 +1372,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * \param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
-         * @return access to the list of all arcs along the boundary of
+         * \return access to the list of all arcs along the boundary of
          * the given cell.
          */
         auto arcs(size_t cell) const;
@@ -1399,7 +1399,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * \nopython Python users can iterate over arcs(\a cell) instead.
          *
-         * @return the beginning of an iterator range for the boundary
+         * \return the beginning of an iterator range for the boundary
          * of the given cell.
          */
         ArcIterator begin(size_t cell) const;
@@ -1428,7 +1428,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * \nopython Python users can iterate over arcs(\a cell) instead.
          *
-         * @return the end of an iterator range for the boundary
+         * \return the end of an iterator range for the boundary
          * of the given cell.
          */
         ArcIterator end(size_t cell) const;
@@ -1449,7 +1449,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * the remaining conditions by calling isValid().
          *
          * \param arc the given arc of the underlying graph.
-         * @return the number of the cell that lies to the left of the
+         * \return the number of the cell that lies to the left of the
          * given arc; this will be an integer between 0 and
          * <tt>countCells()-1</tt> inclusive.
          */
@@ -1474,7 +1474,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * the remaining conditions by calling isValid().
          *
          * \param arc the given arc of the underlying graph.
-         * @return the position of the given arc on the boundary of the
+         * \return the position of the given arc on the boundary of the
          * cell to its left; this will be an integer between 0 and
          * <tt>size(cell(arc))-1</tt> inclusive.
          */
@@ -1491,7 +1491,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * the same starting points on each cell boundary.
          *
          * \param other the cellular decomposition to compare with this.
-         * @return \c true if and only if the two cellular decompositions are
+         * \return \c true if and only if the two cellular decompositions are
          * combinatorially identical.
          */
         bool operator == (const ModelLinkGraphCells& other) const;
@@ -1507,7 +1507,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * the same starting points on each cell boundary.
          *
          * \param other the cellular decomposition to compare with this.
-         * @return \c true if and only if the two cellular decompositions are
+         * \return \c true if and only if the two cellular decompositions are
          * not combinatorially identical.
          */
         bool operator != (const ModelLinkGraphCells& other) const;

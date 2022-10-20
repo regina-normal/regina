@@ -181,14 +181,14 @@ class ListView {
         /**
          * Sets this to be a copy of the given list view.
          *
-         * @return a reference to this list view.
+         * \return a reference to this list view.
          */
         ListView& operator = (const ListView&) = default;
 
         /**
          * Determines if this list is empty.
          *
-         * @return \c true if and only if this list is empty.
+         * \return \c true if and only if this list is empty.
          */
         bool empty() const;
         /**
@@ -197,7 +197,7 @@ class ListView {
          * \ifacespython This is also used to implement the Python special
          * method __len__().
          *
-         * @return the number of elements.
+         * \return the number of elements.
          */
         size_type size() const;
         /**
@@ -205,7 +205,7 @@ class ListView {
          *
          * \param index indicates which element to return; this must be
          * between 0 and size()-1 inclusive.
-         * @return the (\a index)th element in this list.
+         * \return the (\a index)th element in this list.
          */
         const_reference operator [](size_type index) const;
         /**
@@ -213,7 +213,7 @@ class ListView {
          *
          * \pre This list is not empty.
          *
-         * @return the first element in this list.
+         * \return the first element in this list.
          */
         const_reference front() const;
         /**
@@ -221,7 +221,7 @@ class ListView {
          *
          * \pre This list is not empty.
          *
-         * @return the last element in this list.
+         * \return the last element in this list.
          */
         const_reference back() const;
         /**
@@ -234,7 +234,7 @@ class ListView {
          * interface.  You can iterate over the elements of this list in the
          * same way that you would iterate over any native Python container.
          *
-         * @return an iterator at the beginning of this list.
+         * \return an iterator at the beginning of this list.
          */
         const_iterator begin() const;
         /**
@@ -247,7 +247,7 @@ class ListView {
          * interface.  You can iterate over the elements of this list in the
          * same way that you would iterate over any native Python container.
          *
-         * @return an iterator beyond the end of this list.
+         * \return an iterator beyond the end of this list.
          */
         const_iterator end() const;
 #ifdef __APIDOCS
@@ -258,7 +258,7 @@ class ListView {
          * functions instead.  In particular, you can iterate over the elements
          * of this list in the usual way using a range-based \c for loop.
          *
-         * @return an iterator over the elements of this list.
+         * \return an iterator over the elements of this list.
          */
         auto __iter__() const;
 #endif
@@ -271,7 +271,7 @@ class ListView {
          * it is not enough to be two containers with identical contents).
          *
          * \param other the list view to compare with this.
-         * @return \c true if and only if this and the given list use
+         * \return \c true if and only if this and the given list use
          * the same underlying container.
          */
         bool operator == (const ListView& other) const;
@@ -285,7 +285,7 @@ class ListView {
          * identical contents).
          *
          * \param other the list view to compare with this.
-         * @return \c true if and only if this and the given list use
+         * \return \c true if and only if this and the given list use
          * different underlying containers.
          */
         bool operator != (const ListView& other) const;
@@ -395,20 +395,20 @@ class ListView<Element*> {
         /**
          * Sets this to be a copy of the given list view.
          *
-         * @return a reference to this list view.
+         * \return a reference to this list view.
          */
         ListView& operator = (const ListView&) = default;
 
         /**
          * Determines if this list is empty.
          *
-         * @return \c true if and only if this list is empty.
+         * \return \c true if and only if this list is empty.
          */
         bool empty() const;
         /**
          * Returns the number of elements in this list.
          *
-         * @return the number of elements.
+         * \return the number of elements.
          */
         size_type size() const;
         /**
@@ -416,7 +416,7 @@ class ListView<Element*> {
          *
          * \param index indicates which element to return; this must be
          * between 0 and size()-1 inclusive.
-         * @return the (\a index)th element in this list.
+         * \return the (\a index)th element in this list.
          */
         const_reference operator [](size_type index) const;
         /**
@@ -424,7 +424,7 @@ class ListView<Element*> {
          *
          * \pre This list is not empty.
          *
-         * @return the first element in this list.
+         * \return the first element in this list.
          */
         const_reference front() const;
         /**
@@ -432,19 +432,19 @@ class ListView<Element*> {
          *
          * \pre This list is not empty.
          *
-         * @return the last element in this list.
+         * \return the last element in this list.
          */
         const_reference back() const;
         /**
          * Returns an iterator pointing to the first element.
          *
-         * @return an iterator at the beginning of this list.
+         * \return an iterator at the beginning of this list.
          */
         const_iterator begin() const;
         /**
          * Returns an iterator pointing beyond the last element.
          *
-         * @return an iterator beyond the end of this list.
+         * \return an iterator beyond the end of this list.
          */
         const_iterator end() const;
         /**
@@ -458,7 +458,7 @@ class ListView<Element*> {
          * identical contents.
          *
          * \param other the list view to compare with this.
-         * @return \c true if and only if this and the given list use
+         * \return \c true if and only if this and the given list use
          * the same underlying array.
          */
         bool operator == (const ListView& other) const;
@@ -473,7 +473,7 @@ class ListView<Element*> {
          * identical contents.
          *
          * \param other the list view to compare with this.
-         * @return \c true if and only if this and the given list use
+         * \return \c true if and only if this and the given list use
          * different underlying arrays.
          */
         bool operator != (const ListView& other) const;
@@ -566,20 +566,20 @@ class ListView<Element[n]> {
         /**
          * Sets this to be a copy of the given list view.
          *
-         * @return a reference to this list view.
+         * \return a reference to this list view.
          */
         ListView& operator = (const ListView&) = default;
 
         /**
          * Determines if this list is empty.
          *
-         * @return \c true if and only if this list is empty.
+         * \return \c true if and only if this list is empty.
          */
         bool empty() const;
         /**
          * Returns the number of elements in this list.
          *
-         * @return the number of elements.
+         * \return the number of elements.
          */
         size_type size() const;
         /**
@@ -587,7 +587,7 @@ class ListView<Element[n]> {
          *
          * \param index indicates which element to return; this must be
          * between 0 and size()-1 inclusive.
-         * @return the (\a index)th element in this list.
+         * \return the (\a index)th element in this list.
          */
         const_reference operator [](size_type index) const;
         /**
@@ -595,7 +595,7 @@ class ListView<Element[n]> {
          *
          * \pre This list is not empty.
          *
-         * @return the first element in this list.
+         * \return the first element in this list.
          */
         const_reference front() const;
         /**
@@ -603,19 +603,19 @@ class ListView<Element[n]> {
          *
          * \pre This list is not empty.
          *
-         * @return the last element in this list.
+         * \return the last element in this list.
          */
         const_reference back() const;
         /**
          * Returns an iterator pointing to the first element.
          *
-         * @return an iterator at the beginning of this list.
+         * \return an iterator at the beginning of this list.
          */
         const_iterator begin() const;
         /**
          * Returns an iterator pointing beyond the last element.
          *
-         * @return an iterator beyond the end of this list.
+         * \return an iterator beyond the end of this list.
          */
         const_iterator end() const;
         /**
@@ -628,7 +628,7 @@ class ListView<Element[n]> {
          * just to have identical contents.
          *
          * \param other the list view to compare with this.
-         * @return \c true if and only if this and the given list use
+         * \return \c true if and only if this and the given list use
          * the same underlying array.
          */
         bool operator == (const ListView& other) const;
@@ -642,7 +642,7 @@ class ListView<Element[n]> {
          * just to have identical contents.
          *
          * \param other the list view to compare with this.
-         * @return \c true if and only if this and the given list use
+         * \return \c true if and only if this and the given list use
          * different underlying arrays.
          */
         bool operator != (const ListView& other) const;

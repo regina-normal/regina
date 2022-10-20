@@ -131,7 +131,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * This operator induces a deep copy of \a src.
          *
          * \param src the facet pairing to copy.
-         * @return a reference to this face pairing.
+         * \return a reference to this face pairing.
          */
         FacetPairing& operator = (const FacetPairing& src) = default;
 
@@ -146,7 +146,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * The face pairing that is passed (\a src) will no longer be usable.
          *
          * \param src the face pairing to move.
-         * @return a reference to this face pairing.
+         * \return a reference to this face pairing.
          */
         FacetPairing& operator = (FacetPairing&& src) noexcept = default;
 
@@ -236,7 +236,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * enumeration", Benjamin A. Burton, J. Knot Theory Ramifications
          * 13 (2004), 1057--1101.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * triple edge.
          */
         bool hasTripleEdge() const;
@@ -274,7 +274,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * graphs and 3-manifold enumeration", Benjamin A. Burton,
          * J. Knot Theory Ramifications 13 (2004), 1057--1101.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * broken double-ended chain that is not part of a complete
          * double-ended chain.
          */
@@ -307,7 +307,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * Benjamin A. Burton, J. Knot Theory Ramifications 13 (2004),
          * 1057--1101.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * one-ended chain with a double handle.
          */
         bool hasOneEndedChainWithDoubleHandle() const;
@@ -360,7 +360,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * graphs and union-find", Benjamin A. Burton,
          * Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * wedged double-ended chain.
          */
         bool hasWedgedDoubleEndedChain() const;
@@ -404,7 +404,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * graphs and union-find", Benjamin A. Burton,
          * Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * one-ended chain with a stray bigon.
          */
         bool hasOneEndedChainWithStrayBigon() const;
@@ -434,7 +434,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * graphs and union-find", Benjamin A. Burton,
          * Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * triple one-ended chain.
          */
         bool hasTripleOneEndedChain() const;
@@ -449,7 +449,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * none of the eight tetrahedra described in this structure are
          * the same).
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * single-edged star.
          */
         bool hasSingleStar() const;
@@ -464,7 +464,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * tetrahedra (so that none of the six tetrahedra described in
          * this structure are the same).
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * double-edged star.
          */
         bool hasDoubleStar() const;
@@ -481,7 +481,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * (one from each tetrahedron) remain unaccounted for by this
          * structure.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * double-edged square.
          */
         bool hasDoubleSquare() const;
@@ -513,7 +513,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * broken double-ended chain as described above.
          */
         bool hasBrokenDoubleEndedChain(size_t tet, int face) const;
@@ -533,7 +533,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * one-ended chain with a double handle as described above.
          */
         bool hasOneEndedChainWithDoubleHandle(size_t tet, int face) const;
@@ -553,7 +553,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * wedged double-ended chain as described above.
          */
         bool hasWedgedDoubleEndedChain(size_t tet, int face) const;
@@ -573,7 +573,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * one-ended chain with stray bigon as described above.
          */
         bool hasOneEndedChainWithStrayBigon(size_t tet, int face) const;
@@ -593,7 +593,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * \param face the number of the given face in the tetrahedron;
          * this must be between 0 and 3 inclusive.
          *
-         * @return \c true if and only if this face pairing contains a
+         * \return \c true if and only if this face pairing contains a
          * triple one-ended chain as described above.
          */
         bool hasTripleOneEndedChain(size_t tet, int face) const;

@@ -284,7 +284,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
              * \param in the input stream from which to read.
              * \param nStates the total number of edge states under
              * consideration (this must be ten times the number of tetrahedra).
-             * @return \c false if any errors were encountered during
+             * \return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, size_t nStates);
@@ -388,7 +388,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
              * \param in the input stream from which to read.
              * \param nStates the total number of triangle states under
              * consideration (this must be ten times the number of pentachora).
-             * @return \c false if any errors were encountered during
+             * \return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, size_t nStates);
@@ -668,7 +668,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * This may assist the \a action routine when running partial
          * depth-based searches.  See partialSearch() for further details.
          *
-         * @return \c true if a complete gluing permutation set is held,
+         * \return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
          */
         bool isComplete() const;
@@ -716,7 +716,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * @return all of this object's internal data in plain text format.
+         * \return all of this object's internal data in plain text format.
          */
         std::string taggedData() const;
 
@@ -781,7 +781,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * input stream constructor is not.  Python users should use
          * taggedData() and fromTaggedData() instead.
          *
-         * @return all of this object's internal data in plain text format.
+         * \return all of this object's internal data in plain text format.
          */
         std::string data() const;
 
@@ -848,7 +848,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * by FacetPairing<4>::isCanonical().  Note that all facet pairings
          * constructed by FacetPairing<4>::findAllPairings() are of this form.
          *
-         * @return the new search manager.
+         * \return the new search manager.
          */
         static std::unique_ptr<GluingPermSearcher<4>> bestSearcher(
                 FacetPairing<4> pairing, FacetPairing<4>::IsoList autos,
@@ -877,7 +877,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * its input as a string.
          *
          * \param in the input stream from which to read.
-         * @return the new search manager, or \c null if the data in the
+         * \return the new search manager, or \c null if the data in the
          * input stream was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<4>> fromTaggedData(
@@ -904,7 +904,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          *
          * \param data the tagged data from which to reconstruct a
          * search manager.
-         * @return the new search manager, or \c null if the data in the
+         * \return the new search manager, or \c null if the data in the
          * given string was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<4>> fromTaggedData(
@@ -935,7 +935,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * in order to see whether the current set is in canonical form
          * (i.e., is lexicographically smallest).
          *
-         * @return \c true if the current set is in canonical form,
+         * \return \c true if the current set is in canonical form,
          * or \c false otherwise.
          */
         bool isCanonical() const;
@@ -955,7 +955,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          *
          * \param facet the specific pentachoron facet upon which tests
          * will be based.
-         * @return \c true if the permutations under construction will
+         * \return \c true if the permutations under construction will
          * lead to a triangle identified with itself using a non-trivial
          * rotation or reflection, or \c false if no such triangle is found.
          */
@@ -965,7 +965,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * Returns the character used to identify this class when
          * storing tagged data in text format.
          *
-         * @return the class tag.
+         * \return the class tag.
          */
         virtual char dataTagInternal() const;
 
@@ -982,7 +982,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * must be between 0 and 10p-1 inclusive, where \a p is the
          * number of pentachora.  See the PentTriangleState class notes for
          * details on triangle indexing.
-         * @return the index of the pentachoron triangle at the root of the
+         * \return the index of the pentachoron triangle at the root of the
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
@@ -1012,7 +1012,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * described above.  This must be a mapping from (0,1,2) to (0,1,2)
          * as it is passed into the function, and it will also be a mapping
          * from (0,1,2) to (0,1,2) upon returning from the function.
-         * @return the index of the pentachoron triangle at the root of the
+         * \return the index of the pentachoron triangle at the root of the
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
@@ -1029,7 +1029,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * with itself in reverse, or whose link is something other than a
          * (possibly) punctured 2-sphere).
          *
-         * @return \c true if this merge creates an invalid edge, or
+         * \return \c true if this merge creates an invalid edge, or
          * \c false if not.
          */
         bool mergeEdgeClasses();
@@ -1044,7 +1044,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * merge creates an invalid triangle (i.e., a triangle identified with
          * itself using a non-trivial rotation or reflection).
          *
-         * @return \c true if this merge creates an invalid triangle, or
+         * \return \c true if this merge creates an invalid triangle, or
          * \c false if not.
          */
         bool mergeTriangleClasses();
@@ -1216,7 +1216,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * \param edgeID the pentachoron edge to examine; this must
          * be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
-         * @return \c true if a one-edge boundary component is formed as
+         * \return \c true if a one-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
         bool edgeBdryLength1(size_t edgeID);
@@ -1235,7 +1235,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * \param edgeID2 the second pentachoron edge to examine; this
          * must be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
-         * @return \c true if a two-edge boundary component is formed as
+         * \return \c true if a two-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
         bool edgeBdryLength2(size_t edgeID1, size_t edgeID2);

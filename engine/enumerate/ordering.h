@@ -98,7 +98,7 @@ class PosOrder {
          * the matrix passed to the class constructor.
          * \param j the second matrix row index; this must also be
          * between 0 and matrix.rows()-1 inclusive.
-         * @return \c true if and only if the hyperplane described by
+         * \return \c true if and only if the hyperplane described by
          * row \a i is smaller than the hyperplane described by row \a j.
          */
         inline bool operator () (size_t i, size_t j) const;

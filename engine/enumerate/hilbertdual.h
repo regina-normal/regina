@@ -299,7 +299,7 @@ class HilbertDual {
                  * with the hyperplane currently being processed.  This
                  * is simply the sign of the data member \a nextHyp_.
                  *
-                 * @return 1, 0 or -1 according to the sign of \a nextHyp_.
+                 * \return 1, 0 or -1 according to the sign of \a nextHyp_.
                  */
                 inline int sign() const;
 
@@ -320,7 +320,7 @@ class HilbertDual {
                  * or if initNextHyp() has since been called, then this
                  * routine returns zero.
                  *
-                 * @return the summand information as described above.
+                 * \return the summand information as described above.
                  */
                 inline const IntegerType& srcNextHyp() const;
 #endif
@@ -329,7 +329,7 @@ class HilbertDual {
                  * Determines if this and the given vector are identical.
                  *
                  * \param other the vector to compare with this.
-                 * @return \c true if this vector is identical to the
+                 * \return \c true if this vector is identical to the
                  * given vector, or \c false if not.
                  */
                 inline bool operator == (const VecSpec& other) const;
@@ -339,7 +339,7 @@ class HilbertDual {
                  * than or equal to every element of the given vector.
                  *
                  * \param other the vector to compare with this.
-                 * @return \c true if every element of this vector is
+                 * \return \c true if every element of this vector is
                  * less than or equal to every element of \a other, or
                  * \c false otherwise.
                  */
@@ -390,7 +390,7 @@ class HilbertDual {
          * \a vec against.
          * \param listSign an integer indicating which sign of the
          * current hyperplane we are working on.
-         * @return \c true if the given vector can be reduced, or \c false 
+         * \return \c true if the given vector can be reduced, or \c false 
          * otherwise.
          */
         template <class IntegerType, class BitmaskType>

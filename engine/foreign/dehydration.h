@@ -89,7 +89,7 @@ class Container;
  * strings themselves will be used as packet labels.
  * \param ignoreLines the number of lines at the beginning of the text
  * file that should be ignored completely.
- * @return a new container as described above, or \c null if an I/O error
+ * \return a new container as described above, or \c null if an I/O error
  * occurred whilst reading the given file.
  *
  * \ingroup foreign

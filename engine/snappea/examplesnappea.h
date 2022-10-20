@@ -56,35 +56,35 @@ class ExampleSnapPea {
         /**
          * Returns a new triangulation of the Gieseking manifold.
          *
-         * @return the Gieseking manifold.
+         * \return the Gieseking manifold.
          */
         static SnapPeaTriangulation gieseking();
 
         /**
          * Returns a new triangulation of the figure eight knot complement.
          *
-         * @return the figure eight knot complement.
+         * \return the figure eight knot complement.
          */
         static SnapPeaTriangulation figureEight();
 
         /**
          * Returns a new triangulation of the trefoil knot complement.
          *
-         * @return the trefoil knot complement.
+         * \return the trefoil knot complement.
          */
         static SnapPeaTriangulation trefoil();
 
         /**
          * Returns a new triangulation of the Whitehead link complement.
          *
-         * @return the Whitehead link complement.
+         * \return the Whitehead link complement.
          */
         static SnapPeaTriangulation whiteheadLink();
 
         /**
          * Returns a new triangulation of the SnapPea census manifold \c x101.
          *
-         * @return the SnapPea census manifold \c x101.
+         * \return the SnapPea census manifold \c x101.
          */
         static SnapPeaTriangulation x101();
 

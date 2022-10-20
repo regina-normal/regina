@@ -55,7 +55,7 @@ class IntegerBase;
  *
  * \param str the full C++ string to examine.
  * \param prefix the prefix whose presence we are testing for.
- * @return \c true if and only if \a str begins with \a prefix.
+ * \return \c true if and only if \a str begins with \a prefix.
  *
  * \ingroup utilities
  */
@@ -72,7 +72,7 @@ bool startsWith(const std::string& str, const std::string& prefix);
  * international characters at your own peril.
  *
  * \param str the string to be stripped.
- * @return the resulting stripped string.
+ * \return the resulting stripped string.
  *
  * \ingroup utilities
  */
@@ -93,7 +93,7 @@ std::string stripWhitespace(const std::string& str);
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting 8-bit integer.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -115,7 +115,7 @@ bool valueOf(const std::string& str, int8_t& dest);
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting unsigned
  * 8-bit integer.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -136,7 +136,7 @@ bool valueOf(const std::string& str, uint8_t& dest);
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting short integer.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -158,7 +158,7 @@ bool valueOf(const std::string& str, short& dest);
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting unsigned
  * short integer.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -179,7 +179,7 @@ bool valueOf(const std::string& str, unsigned short& dest);
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting integer.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -200,7 +200,7 @@ bool valueOf(const std::string& str, int& dest);
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting unsigned integer.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -221,7 +221,7 @@ bool valueOf(const std::string& str, unsigned& dest);
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting long integer.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -243,7 +243,7 @@ bool valueOf(const std::string& str, long& dest);
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting unsigned long
  * integer.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -264,7 +264,7 @@ bool valueOf(const std::string& str, unsigned long& dest);
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting long long integer.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -286,7 +286,7 @@ bool valueOf(const std::string& str, long long& dest);
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting unsigned long long
  * integer.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -307,7 +307,7 @@ bool valueOf(const std::string& str, unsigned long long& dest);
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting real number.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -330,7 +330,7 @@ bool valueOf(const std::string& str, double& dest);
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting boolean.
- * @return \c true if the conversion was completely successful or \c false
+ * \return \c true if the conversion was completely successful or \c false
  * otherwise.
  *
  * \ingroup utilities
@@ -352,7 +352,7 @@ bool valueOf(const std::string& str, bool& dest);
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting set of booleans.
- * @return \c true if the conversion was successful or \c false otherwise.
+ * \return \c true if the conversion was successful or \c false otherwise.
  *
  * \ingroup utilities
  */
@@ -371,7 +371,7 @@ bool valueOf(const std::string& str, BoolSet& dest);
  * international characters at your own peril.
  *
  * \param str the string to decompose.
- * @return the resulting list of tokens.
+ * \return the resulting list of tokens.
  *
  * \ingroup utilities
  */
@@ -383,7 +383,7 @@ std::vector<std::string> basicTokenise(const std::string& str);
  * an underscore.
  *
  * \param str the string on which to base the token.
- * @return the corresponding token.
+ * \return the corresponding token.
  *
  * \ingroup utilities
  */

@@ -122,7 +122,7 @@ class SurfaceFilter : public Packet {
          * The default implementation simply returns \c true.
          *
          * \param surface the normal surface under investigation.
-         * @return \c true if and only if the given surface is accepted
+         * \return \c true if and only if the given surface is accepted
          * by this filter.
          */
         virtual bool accept(const NormalSurface& surface) const = 0;
@@ -131,14 +131,14 @@ class SurfaceFilter : public Packet {
          * Returns the unique integer ID corresponding to the filtering
          * method that is this particular subclass of SurfaceFilter.
          *
-         * @return the unique integer filtering method ID.
+         * \return the unique integer filtering method ID.
          */
         virtual SurfaceFilterType filterType() const = 0;
         /**
          * Returns a string description of the filtering method that is
          * this particular subclass of SurfaceFilter.
          *
-         * @return a string description of this filtering method.
+         * \return a string description of this filtering method.
          */
         virtual std::string filterTypeName() const = 0;
 
@@ -209,7 +209,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
          * or change this packet's location in any packet tree).
          *
          * \param src the filter whose contents should be copied.
-         * @return a reference to this filter.
+         * \return a reference to this filter.
          */
         SurfaceFilterCombination& operator = (
             const SurfaceFilterCombination& src);
@@ -228,7 +228,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
         /**
          * Determines whether this is an \a and or an \a or combination.
          *
-         * @return \c true if this is an \a and combination, or \c false
+         * \return \c true if this is an \a and combination, or \c false
          * if this is an \a or combination.
          */
         bool usesAnd() const;
@@ -245,7 +245,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
          * operation.
          *
          * \param other the filter to compare with this.
-         * @return \c true if and only if this and the given filter
+         * \return \c true if and only if this and the given filter
          * use the same boolean operation.
          */
         bool operator == (const SurfaceFilterCombination& other) const;
@@ -255,7 +255,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
          * boolean operation.
          *
          * \param other the filter to compare with this.
-         * @return \c true if and only if this and the given filter
+         * \return \c true if and only if this and the given filter
          * use different boolean operations.
          */
         bool operator != (const SurfaceFilterCombination& other) const;
@@ -341,7 +341,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * or change this packet's location in any packet tree).
          *
          * \param src the filter whose contents should be copied.
-         * @return a reference to this filter.
+         * \return a reference to this filter.
          */
         SurfaceFilterProperties& operator = (
             const SurfaceFilterProperties& src);
@@ -366,14 +366,14 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * If this set is empty, all Euler characteristics will be
          * accepted.
          *
-         * @return the set of allowable Euler characteristics.
+         * \return the set of allowable Euler characteristics.
          */
         const std::set<LargeInteger>& eulerChars() const;
         /**
          * Returns the number of allowable Euler characteristics.
          * See eulerChars() for further details.
          *
-         * @return the number of allowable Euler characteristics.
+         * \return the number of allowable Euler characteristics.
          */
         size_t countEulerChars() const;
         /**
@@ -383,7 +383,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * \param index the index in the set of allowable Euler
          * characteristics; this must be between 0 and countEulerChars()-1
          * inclusive.
-         * @return the requested allowable Euler characteristic.
+         * \return the requested allowable Euler characteristic.
          */
         LargeInteger eulerChar(size_t index) const;
         /**
@@ -392,7 +392,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Any surface whose orientability is not in this set will not be
          * accepted by this filter.
          *
-         * @return the set of allowable orientabilities.
+         * \return the set of allowable orientabilities.
          */
         BoolSet orientability() const;
         /**
@@ -401,7 +401,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Any surface whose compactness property is not in this set will
          * not be accepted by this filter.
          *
-         * @return the set of allowable compactness properties.
+         * \return the set of allowable compactness properties.
          */
         BoolSet compactness() const;
         /**
@@ -410,7 +410,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Any surface whose has-real-boundary property is not in this set
          * will not be accepted by this filter.
          *
-         * @return the set of allowable has-real-boundary properties.
+         * \return the set of allowable has-real-boundary properties.
          */
         BoolSet realBoundary() const;
 
@@ -496,7 +496,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * not their deduced behaviour.
          *
          * \param other the filter to compare with this.
-         * @return \c true if and only if this and the given filters are
+         * \return \c true if and only if this and the given filters are
          * identical.
          */
         bool operator == (const SurfaceFilterProperties& other) const;
@@ -513,7 +513,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * not their deduced behaviour.
          *
          * \param other the filter to compare with this.
-         * @return \c true if and only if this and the given filters are
+         * \return \c true if and only if this and the given filters are
          * not identical.
          */
         bool operator != (const SurfaceFilterProperties& other) const;

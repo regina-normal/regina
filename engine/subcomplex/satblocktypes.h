@@ -99,7 +99,7 @@ class SatMobius : public SatBlock {
          * - 2 means that the weight two edge is joined to the vertical
          *   edge of the annulus (markings 0 and 1).
          *
-         * @return the value 0, 1 or 2 as described above.
+         * \return the value 0, 1 or 2 as described above.
          */
         int position() const;
 
@@ -139,7 +139,7 @@ class SatMobius : public SatBlock {
          * part of the new saturated block.
          * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
+         * \return details of the saturated block if one was found, or
          * \c null if none was found.
          */
         static SatMobius* beginsRegion(const SatAnnulus& annulus,
@@ -180,7 +180,7 @@ class SatLST : public SatBlock {
          * Returns details of the layered solid torus that this block
          * represents.
          *
-         * @return details of the layered solid torus.
+         * \return details of the layered solid torus.
          */
         const LayeredSolidTorus& lst() const;
         /**
@@ -198,7 +198,7 @@ class SatLST : public SatBlock {
          * - edge group \a r[1] is attached to the horizontal annulus edges;
          * - edge group \a r[2] is attached to the diagonal annulus edges.
          *
-         * @return a description of how the layered solid torus is
+         * \return a description of how the layered solid torus is
          * attached to the boundary annulus.
          */
         Perm<3> roles() const;
@@ -241,7 +241,7 @@ class SatLST : public SatBlock {
          * part of the new saturated block.
          * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
+         * \return details of the saturated block if one was found, or
          * \c null if none was found.
          */
         static SatLST* beginsRegion(const SatAnnulus& annulus,
@@ -282,7 +282,7 @@ class SatTriPrism : public SatBlock {
          * some compilers that name clashes with a macro for isolating
          * major/minor bytes.
          *
-         * @return \c true if this prism is of major type, or \c false
+         * \return \c true if this prism is of major type, or \c false
          * if it is of minor type.
          */
         bool isMajor() const;
@@ -297,7 +297,7 @@ class SatTriPrism : public SatBlock {
          *
          * \param major \c true if a block of major type should be created,
          * or \c false if a block of minor type should be created.
-         * @return a full triangulated model of this type of block.
+         * \return a full triangulated model of this type of block.
          */
         static SatBlockModel model(bool major);
 
@@ -330,7 +330,7 @@ class SatTriPrism : public SatBlock {
          * part of the new saturated block.
          * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
+         * \return details of the saturated block if one was found, or
          * \c null if none was found.
          */
         static SatTriPrism* beginsRegion(const SatAnnulus& annulus,
@@ -344,7 +344,7 @@ class SatTriPrism : public SatBlock {
          * part of the new saturated block.
          * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
+         * \return details of the saturated block if one was found, or
          * \c null if none was found.
          */
         static SatTriPrism* beginsRegionMajor(const SatAnnulus& annulus,
@@ -385,7 +385,7 @@ class SatCube : public SatBlock {
         /**
          * Creates a new model of a cube block.
          *
-         * @return a full triangulated model of this type of block.
+         * \return a full triangulated model of this type of block.
          */
         static SatBlockModel model();
 
@@ -413,7 +413,7 @@ class SatCube : public SatBlock {
          * part of the new saturated block.
          * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
+         * \return details of the saturated block if one was found, or
          * \c null if none was found.
          */
         static SatCube* beginsRegion(const SatAnnulus& annulus,
@@ -470,7 +470,7 @@ class SatReflectorStrip : public SatBlock {
          * \param twisted \c true if the new reflector strip should be twisted
          * (causing its ring of boundary annuli to be twisted also), or
          * \c false if the new strip should not be twisted.
-         * @return a full triangulated model of this type of block.
+         * \return a full triangulated model of this type of block.
          */
         static SatBlockModel model(unsigned length, bool twisted);
 
@@ -505,7 +505,7 @@ class SatReflectorStrip : public SatBlock {
          * part of the new saturated block.
          * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
+         * \return details of the saturated block if one was found, or
          * \c null if none was found.
          */
         static SatReflectorStrip* beginsRegion(const SatAnnulus& annulus,
@@ -598,7 +598,7 @@ class SatLayering : public SatBlock {
          * part of the new saturated block.
          * \param avoidTets the list of tetrahedra that should not be
          * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
+         * \return details of the saturated block if one was found, or
          * \c null if none was found.
          */
         static SatLayering* beginsRegion(const SatAnnulus& annulus,

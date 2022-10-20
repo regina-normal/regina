@@ -172,7 +172,7 @@ class Isomorphism :
          * This operator induces a deep copy of \a src.
          *
          * \param src the isomorphism to copy.
-         * @return a reference to this isomorphism.
+         * \return a reference to this isomorphism.
          */
         Isomorphism& operator = (const Isomorphism& src);
         /**
@@ -186,7 +186,7 @@ class Isomorphism :
          * The isomorphism that is passed (\a src) will no longer be usable.
          *
          * \param src the isomorphism to move.
-         * @return a reference to this isomorphism.
+         * \return a reference to this isomorphism.
          */
         Isomorphism& operator = (Isomorphism&& src) noexcept;
 
@@ -210,7 +210,7 @@ class Isomorphism :
          * \ifacespython This is also used to implement the Python special
          * method __len__().
          *
-         * @return the number of simplices in the source triangulation.
+         * \return the number of simplices in the source triangulation.
          */
         size_t size() const;
 
@@ -233,7 +233,7 @@ class Isomorphism :
          *
          * \param sourceSimp the index of the source simplex; this must
          * be between 0 and <tt>size()-1</tt> inclusive.
-         * @return a reference to the index of the destination simplex
+         * \return a reference to the index of the destination simplex
          * that the source simplex maps to.
          */
         ssize_t& simpImage(size_t sourceSimp);
@@ -247,7 +247,7 @@ class Isomorphism :
          *
          * \param sourceSimp the index of the source simplex; this must
          * be between 0 and <tt>size()-1</tt> inclusive.
-         * @return the index of the destination simplex
+         * \return the index of the destination simplex
          * that the source simplex maps to.
          */
         ssize_t simpImage(size_t sourceSimp) const;
@@ -271,7 +271,7 @@ class Isomorphism :
          * \param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
          * <tt>size()-1</tt> inclusive.
-         * @return a read-write reference to the permutation applied to the
+         * \return a read-write reference to the permutation applied to the
          * facets of the source simplex.
          */
         Perm<dim+1>& facetPerm(size_t sourceSimp);
@@ -289,7 +289,7 @@ class Isomorphism :
          * \param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
          * <tt>size()-1</tt> inclusive.
-         * @return the permutation applied to the facets of the
+         * \return the permutation applied to the facets of the
          * source simplex.
          */
         Perm<dim+1> facetPerm(size_t sourceSimp) const;
@@ -301,7 +301,7 @@ class Isomorphism :
          * \param source the given source simplex facet; this must
          * be one of the (\a dim + 1) facets of one of the size()
          * simplices in the source triangulation.
-         * @return the image of the source simplex facet under this
+         * \return the image of the source simplex facet under this
          * isomorphism.
          */
         FacetSpec<dim> operator [] (const FacetSpec<dim>& source) const;
@@ -313,7 +313,7 @@ class Isomorphism :
          * and within each simplex the facet/vertex permutation is
          * the identity permutation.
          *
-         * @return \c true if this is an identity isomorphism, or
+         * \return \c true if this is an identity isomorphism, or
          * \c false otherwise.
          */
         bool isIdentity() const;
@@ -347,7 +347,7 @@ class Isomorphism :
          *
          * \param tri the triangulation to which this isomorphism
          * should be applied.
-         * @return the new isomorphic triangulation.
+         * \return the new isomorphic triangulation.
          */
         Triangulation<dim> operator ()(const Triangulation<dim>& tri) const;
 
@@ -381,7 +381,7 @@ class Isomorphism :
          *
          * \param f the facet-of-simplex which should be transformed by
          * this isomorphism.
-         * @return the image of \a f under this isomorphism.
+         * \return the image of \a f under this isomorphism.
          */
         FacetSpec<dim> operator ()(const FacetSpec<dim>& f) const;
 
@@ -413,7 +413,7 @@ class Isomorphism :
          *
          * \param p the facet pairing to which this isomorphism should be
          * applied.
-         * @return the new isomorphic facet pairing.
+         * \return the new isomorphic facet pairing.
          */
         FacetPairing<dim> operator ()(const FacetPairing<dim>& p) const;
 
@@ -435,7 +435,7 @@ class Isomorphism :
          *
          * \param tri the triangulation to which this isomorphism
          * should be applied.
-         * @return the new isomorphic triangulation.
+         * \return the new isomorphic triangulation.
          */
         [[deprecated]] Triangulation<dim> apply(const Triangulation<dim>& tri)
             const;
@@ -475,7 +475,7 @@ class Isomorphism :
          * value of <tt>rhs.simpImage(i)</tt> over all \a i must be less than
          * <tt>this->size()</tt>.
          *
-         * @return the composition of both isomorphisms.
+         * \return the composition of both isomorphisms.
          */
         Isomorphism operator * (const Isomorphism& rhs) const;
 
@@ -493,7 +493,7 @@ class Isomorphism :
          * value of <tt>rhs.simpImage(i)</tt> over all \a i must be less than
          * <tt>this->size()</tt>.
          *
-         * @return the composition of both isomorphisms.
+         * \return the composition of both isomorphisms.
          */
         Isomorphism operator * (Isomorphism&& rhs) const;
 
@@ -506,7 +506,7 @@ class Isomorphism :
          * <tt>simpImage(0)</tt>, ..., <tt>simpImage(size()-1)</tt> must be
          * a permutation of 0, ..., <tt>size()-1</tt>.
          *
-         * @return the inverse isomorphism.
+         * \return the inverse isomorphism.
          */
         Isomorphism inverse() const;
 
@@ -535,7 +535,7 @@ class Isomorphism :
          * significantly more expensive.  To avoid confusion, the python
          * inc() function returns \c None (not this isomorphism).
          *
-         * @return a reference to this isomorphism after the increment.
+         * \return a reference to this isomorphism after the increment.
          */
         Isomorphism<dim>& operator ++();
 
@@ -568,7 +568,7 @@ class Isomorphism :
          * Regina classes, where inc() typically wraps the postincrement
          * operator instead.  See the preincrement documentation for details.)
          *
-         * @return a copy of this isomorphism before the increment took place.
+         * \return a copy of this isomorphism before the increment took place.
          */
         Isomorphism<dim> operator ++(int);
 
@@ -604,7 +604,7 @@ class Isomorphism :
          *
          * \param input an input stream that begins with the tight encoding
          * for an isomorphism on <i>dim</i>-dimensional triangulations.
-         * @return the isomorphism represented by the given tight encoding.
+         * \return the isomorphism represented by the given tight encoding.
          */
         static Isomorphism tightDecode(std::istream& input);
 
@@ -645,7 +645,7 @@ class Isomorphism :
          * which case this routine will return \c false).
          *
          * \param other the isomorphism to compare with this.
-         * @return \c true if and only if this and the given isomorphism
+         * \return \c true if and only if this and the given isomorphism
          * are identical.
          */
         bool operator == (const Isomorphism& other) const;
@@ -668,7 +668,7 @@ class Isomorphism :
          * which case this routine will return \c true).
          *
          * \param other the isomorphism to compare with this.
-         * @return \c true if and only if this and the given isomorphism
+         * \return \c true if and only if this and the given isomorphism
          * are not identical.
          */
         bool operator != (const Isomorphism& other) const;
@@ -679,7 +679,7 @@ class Isomorphism :
          *
          * \param nSimplices the number of simplices that the new
          * isomorphism should operate upon.
-         * @return the identity isomorphism.
+         * \return the identity isomorphism.
          */
         static Isomorphism<dim> identity(size_t nSimplices);
 
@@ -702,7 +702,7 @@ class Isomorphism :
          * vertices permuted with an even permutation.  This means that,
          * if the random isomorphism is applied to an oriented triangulation,
          * it will preserve the orientation.
-         * @return the new random isomorphism.
+         * \return the new random isomorphism.
          */
         static Isomorphism<dim> random(size_t nSimplices, bool even = false);
 };

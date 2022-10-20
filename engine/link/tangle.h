@@ -211,14 +211,14 @@ class Tangle : public Output<Tangle> {
          * <tt>x</tt>, indicating a horizontal, vertical or diagonal type as
          * described in the class notes.
          *
-         * @return the type of this crossing.
+         * \return the type of this crossing.
          */
         char type() const;
 
         /**
          * Returns the number of crossings in this tangle.
          *
-         * @return the number of crossings.
+         * \return the number of crossings.
          */
         size_t size() const;
 
@@ -236,7 +236,7 @@ class Tangle : public Output<Tangle> {
          *
          * \param index the index of the requested crossing.  This must
          * be between 0 and size()-1 inclusive.
-         * @return the crossing at the given index.
+         * \return the crossing at the given index.
          */
         Crossing* crossing(size_t index) const;
 
@@ -263,7 +263,7 @@ class Tangle : public Output<Tangle> {
          * the tangle.  Nevertheless, it is recommended to treat this object as
          * temporary only, and to call crossings() again each time you need it.
          *
-         * @return access to the list of all crossings.
+         * \return access to the list of all crossings.
          */
         auto crossings() const;
 
@@ -277,7 +277,7 @@ class Tangle : public Output<Tangle> {
          *
          * \param string indicates which of the two strings in this
          * tangle to query; this must be either 0 or 1.
-         * @return the crossing closest to the beginning of the given string,
+         * \return the crossing closest to the beginning of the given string,
          * or a null reference if the given string contains no crossings.
          */
         StrandRef begin(int string) const;
@@ -292,7 +292,7 @@ class Tangle : public Output<Tangle> {
          *
          * \param string indicates which of the two strings in this
          * tangle to query; this must be either 0 or 1.
-         * @return the crossing closest to the end of the given string,
+         * \return the crossing closest to the end of the given string,
          * or a null reference if the given string contains no crossings.
          */
         StrandRef end(int string) const;
@@ -314,7 +314,7 @@ class Tangle : public Output<Tangle> {
          *   order.
          *
          * \param other the tangle to compare with this.
-         * @return \c true if and only if the two tangles are
+         * \return \c true if and only if the two tangles are
          * combinatorially identical.
          */
         bool operator == (const Tangle& other) const;
@@ -336,7 +336,7 @@ class Tangle : public Output<Tangle> {
          *   order.
          *
          * \param other the tangle to compare with this.
-         * @return \c true if and only if the two tangles are
+         * \return \c true if and only if the two tangles are
          * not combinatorially identical.
          */
         bool operator != (const Tangle& other) const;
@@ -361,7 +361,7 @@ class Tangle : public Output<Tangle> {
          * both tangles would actually be combinatorially identical).
          *
          * \param other the strand reference to translate.
-         * @return the corresponding strand reference for this tangle.
+         * \return the corresponding strand reference for this tangle.
          */
         StrandRef translate(const StrandRef& other) const;
 
@@ -375,7 +375,7 @@ class Tangle : public Output<Tangle> {
          * Sets this to be a (deep) copy of the given tangle.
          *
          * \param src the tangle to copy.
-         * @return a reference to this tangle.
+         * \return a reference to this tangle.
          */
         Tangle& operator = (const Tangle& src);
 
@@ -390,7 +390,7 @@ class Tangle : public Output<Tangle> {
          * The tangle that is passed (\a src) will no longer be usable.
          *
          * \param src the tangle to move.
-         * @return a reference to this tangle.
+         * \return a reference to this tangle.
          */
         Tangle& operator = (Tangle&& src) noexcept;
 
@@ -459,7 +459,7 @@ class Tangle : public Output<Tangle> {
          * \param check \c true if we are to check whether the move can
          * be performed at the given location.
          * \param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the move can be performed.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -485,7 +485,7 @@ class Tangle : public Output<Tangle> {
          * which the move will be performed.
          * \param check \c true if we are to check whether the move is legal.
          * \param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the requested move is legal.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -511,7 +511,7 @@ class Tangle : public Output<Tangle> {
          * the "upper" arc that features in this move.
          * \param check \c true if we are to check whether the move is legal.
          * \param perform \c true if we should actually perform the move.
-         * @return If \a check is \c true, this function returns \c true
+         * \return If \a check is \c true, this function returns \c true
          * if and only if the requested move is legal.  If \a check is \c false,
          * this function always returns \c true.
          */
@@ -533,7 +533,7 @@ class Tangle : public Output<Tangle> {
          * \param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
          * whether simplifications are possible (defaults to \c true).
-         * @return if \a perform is \c true, this routine returns
+         * \return if \a perform is \c true, this routine returns
          * \c true if and only if the link was changed to
          * reduce the number of crossings; if \a perform is \c false,
          * this routine returns \c true if and only if it determines
@@ -627,7 +627,7 @@ class Tangle : public Output<Tangle> {
          * This is the link created by joining the two top endpoints of
          * this tangle, and also joining the two bottom endpoints.
          *
-         * @return the numerator closure of this tangle.
+         * \return the numerator closure of this tangle.
          */
         Link numClosure() const;
 
@@ -637,7 +637,7 @@ class Tangle : public Output<Tangle> {
          * This is the link created by joining the two left endpoints of
          * this tangle, and also joining the two right endpoints.
          *
-         * @return the denominator closure of this tangle.
+         * \return the denominator closure of this tangle.
          */
         Link denClosure() const;
 
@@ -721,7 +721,7 @@ class Tangle : public Output<Tangle> {
          * There is also a variant of brief() that writes directly to an
          * output stream.
          *
-         * @return a description of this tangle in Regina's brief format.
+         * \return a description of this tangle in Regina's brief format.
          */
         std::string brief() const;
 
@@ -763,7 +763,7 @@ class Tangle : public Output<Tangle> {
          * \note There is another variant of this routine that, instead
          * of returning a string, writes directly to an output stream.
          *
-         * @return an oriented Gauss code for this tangle.
+         * \return an oriented Gauss code for this tangle.
          */
         std::string orientedGauss() const;
 
@@ -870,7 +870,7 @@ class Tangle : public Output<Tangle> {
          * not exhaustive.
          *
          * \param str an oriented Gauss code for a tangle, as described above.
-         * @return the resulting tangle.
+         * \return the resulting tangle.
          */
         static Tangle fromOrientedGauss(const std::string& str);
 
@@ -918,7 +918,7 @@ class Tangle : public Output<Tangle> {
          * sequence of tokens for an oriented Gauss code.
          * \param end an iterator that points past the end of the
          * sequence of tokens for an oriented Gauss code.
-         * @return the resulting tangle.
+         * \return the resulting tangle.
          */
         template <typename Iterator>
         static Tangle fromOrientedGauss(Iterator begin, Iterator end);

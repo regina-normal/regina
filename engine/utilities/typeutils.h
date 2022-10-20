@@ -132,7 +132,7 @@ constexpr void for_constexpr(Action&& action) {
  * \param action the action to perform for whichever integer \a i matches
  * the given runtime value.  See above for the interface that \a action
  * should adhere to.
- * @return the value returned from \a action.
+ * \return the value returned from \a action.
  *
  * \ingroup utilities
  */
@@ -203,7 +203,7 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  * \param action the action to perform for whichever integer \a i matches
  * the given runtime value.  See above for the interface that \a action
  * should adhere to.
- * @return the value returned from \a action, given as a variant that
+ * \return the value returned from \a action, given as a variant that
  * encapsulates all (\a to - \a from) possible return types.
  *
  * \ingroup utilities
@@ -359,7 +359,7 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
  *
  * \param t an object that references the C++ type whose display name we
  * wish to obtain.
- * @return the preferred display name for this type in Python, or \c nullptr
+ * \return the preferred display name for this type in Python, or \c nullptr
  * if the default C++-to-Python name conversion mechanism should be used.
  */
 const char* pythonTypename(const std::type_info* t);

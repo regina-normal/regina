@@ -90,7 +90,7 @@ class Manifold : public Output<Manifold> {
          * Returns the common name of this 3-manifold as a
          * human-readable string.
          *
-         * @return the common name of this 3-manifold.
+         * \return the common name of this 3-manifold.
          */
         std::string name() const;
         /**
@@ -101,7 +101,7 @@ class Manifold : public Output<Manifold> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * @return the common name of this 3-manifold in TeX format.
+         * \return the common name of this 3-manifold in TeX format.
          */
         std::string texName() const;
         /**
@@ -113,7 +113,7 @@ class Manifold : public Output<Manifold> {
          * This routine may return the empty string if no additional
          * details are deemed necessary.
          *
-         * @return a string describing additional structural details.
+         * \return a string describing additional structural details.
          */
         std::string structure() const;
         /**
@@ -135,7 +135,7 @@ class Manifold : public Output<Manifold> {
          * triangulations from the SnapPea census databases that are installed
          * with Regina.
          *
-         * @return a triangulation of this 3-manifold, if this
+         * \return a triangulation of this 3-manifold, if this
          * construction has been implemented.
          */
         virtual Triangulation<3> construct() const;
@@ -157,7 +157,7 @@ class Manifold : public Output<Manifold> {
          * for the subclass SnapPeaCensusManifold, which reads its results from
          * the SnapPea census databases that are installed with Regina.
          *
-         * @return the first homology group of this 3-manifold, if this
+         * \return the first homology group of this 3-manifold, if this
          * functionality has been implemented.
          */
         virtual AbelianGroup homology() const;
@@ -165,7 +165,7 @@ class Manifold : public Output<Manifold> {
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.
          *
-         * @return \c true if this is a finite-volume hyperbolic
+         * \return \c true if this is a finite-volume hyperbolic
          * manifold, or \c false if not.
          */
         virtual bool isHyperbolic() const = 0;
@@ -193,7 +193,7 @@ class Manifold : public Output<Manifold> {
          *
          * \param compare the 3-manifold representation with which this
          * will be compared.
-         * @return \c true if and only if this is "smaller" than the
+         * \return \c true if and only if this is "smaller" than the
          * given 3-manifold representation.
          */
         bool operator < (const Manifold& compare) const;
@@ -206,7 +206,7 @@ class Manifold : public Output<Manifold> {
          * and returns a string.
          *
          * \param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         /**
@@ -222,7 +222,7 @@ class Manifold : public Output<Manifold> {
          * and returns a string.
          *
          * \param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
         /**
@@ -239,7 +239,7 @@ class Manifold : public Output<Manifold> {
          * arguments and returns a string.
          *
          * \param out the output stream to which to write.
-         * @return a reference to the given output stream.
+         * \return a reference to the given output stream.
          */
         virtual std::ostream& writeStructure(std::ostream& out) const;
 

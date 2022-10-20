@@ -273,7 +273,7 @@ class TableView {
                 /**
                  * Makes this a copy of the given iterator.
                  *
-                 * @return a reference to this iterator.
+                 * \return a reference to this iterator.
                  */
                 iterator& operator = (const iterator&) = default;
 
@@ -281,7 +281,7 @@ class TableView {
                  * Compares this with the given iterator for equality.
                  *
                  * \param rhs the iterator to compare this with.
-                 * @return \c true if the iterators point to the same
+                 * \return \c true if the iterators point to the same
                  * subarray/element of the underlying table, or \c false
                  * if they do not.
                  */
@@ -292,7 +292,7 @@ class TableView {
                  * Compares this with the given iterator for equality.
                  *
                  * \param rhs the iterator to compare this with.
-                 * @return \c false if the iterators point to the same
+                 * \return \c false if the iterators point to the same
                  * subarray/element of the underlying table, or \c true
                  * if they do not.
                  */
@@ -303,7 +303,7 @@ class TableView {
                 /**
                  * The preincrement operator.
                  *
-                 * @return a reference to this iterator after the increment.
+                 * \return a reference to this iterator after the increment.
                  */
                 iterator& operator ++ () {
                     ++current_;
@@ -312,7 +312,7 @@ class TableView {
                 /**
                  * The postincrement operator.
                  *
-                 * @return a copy of this iterator before the increment took
+                 * \return a copy of this iterator before the increment took
                  * place.
                  */
                 iterator operator ++ (int) {
@@ -323,7 +323,7 @@ class TableView {
                 /**
                  * The predecrement operator.
                  *
-                 * @return a reference to this iterator after the decrement.
+                 * \return a reference to this iterator after the decrement.
                  */
                 iterator& operator -- () {
                     --current_;
@@ -332,7 +332,7 @@ class TableView {
                 /**
                  * The postdecrement operator.
                  *
-                 * @return a copy of this iterator before the decrement took
+                 * \return a copy of this iterator before the decrement took
                  * place.
                  */
                 iterator operator -- (int) {
@@ -356,7 +356,7 @@ class TableView {
                  * \pre This iterator is dereferenceable (in particular,
                  * it is not past-the-end).
                  *
-                 * @return the corresponding subarray or table element.
+                 * \return the corresponding subarray or table element.
                  */
                 Subview operator * () const {
                     return *current_;
@@ -407,7 +407,7 @@ class TableView {
         /**
          * Sets this to be a copy of the given table view.
          *
-         * @return a reference to this table view.
+         * \return a reference to this table view.
          */
         TableView& operator = (const TableView&) = default;
 
@@ -422,7 +422,7 @@ class TableView {
          * \a s_1.  That is, it indicates the allowed range for the
          * \e first array subscript.
          *
-         * @return the size of this array, across all of the array dimensions.
+         * \return the size of this array, across all of the array dimensions.
          */
         constexpr std::array<size_t, dimension> size() const {
             return { dim1, dim... };
@@ -447,7 +447,7 @@ class TableView {
          *
          * \param index indicates which element or sub-array to return;
          * this must be between 0 and (\a dim1-1) inclusive.
-         * @return the (\a index)th sub-array.
+         * \return the (\a index)th sub-array.
          */
         constexpr Subview operator [](size_t index) const {
             return array_[index];
@@ -471,7 +471,7 @@ class TableView {
          * table in the same way that you would iterate over any native Python
          * container.
          *
-         * @return an iterator at the beginning of this table.
+         * \return an iterator at the beginning of this table.
          */
         const_iterator begin() const {
             return iterator(array_);
@@ -492,7 +492,7 @@ class TableView {
          * table in the same way that you would iterate over any native Python
          * container.
          *
-         * @return an iterator beyond the end of this table.
+         * \return an iterator beyond the end of this table.
          */
         const_iterator end() const {
             return array_ + dim1;
@@ -516,7 +516,7 @@ class TableView {
          * subarrays or elements of this table in the usual way using a
          * range-based \c for loop.
          *
-         * @return an iterator over the subarrays or elements of this table.
+         * \return an iterator over the subarrays or elements of this table.
          */
         auto __iter__() const;
 #endif
@@ -530,7 +530,7 @@ class TableView {
          * just to have identical contents.
          *
          * \param other the table view to compare with this.
-         * @return \c true if and only if this and the given table use
+         * \return \c true if and only if this and the given table use
          * the same underlying C-style array.
          */
         constexpr bool operator == (const TableView& other) const {
@@ -547,7 +547,7 @@ class TableView {
          * just to have identical contents.
          *
          * \param other the table view to compare with this.
-         * @return \c true if and only if this and the given table use
+         * \return \c true if and only if this and the given table use
          * different underlying C-style arrays.
          */
         constexpr bool operator != (const TableView& other) const {

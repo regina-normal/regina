@@ -73,7 +73,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * than or equal to zero.
          * \param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
-         * @return the requested orientable surface.
+         * \return the requested orientable surface.
          */
         static Triangulation<2> orientable(
             unsigned genus, unsigned punctures);
@@ -90,7 +90,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * than or equal to one.
          * \param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
-         * @return the requested non-orientable surface.
+         * \return the requested non-orientable surface.
          *
          * \author Alex He, B.B.
          */
@@ -102,7 +102,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * of a tetrahedron.  This is isomorphic to the triangulation
          * returned by the generic routine simplicialSphere().
          *
-         * @return the tetrahedral sphere.
+         * \return the tetrahedral sphere.
          */
         static Triangulation<2> sphereTetrahedron();
 
@@ -110,7 +110,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * Returns the eight-triangle 2-sphere formed from the boundary
          * of an octahedron.
          *
-         * @return the octahedral sphere.
+         * \return the octahedral sphere.
          */
         static Triangulation<2> sphereOctahedron();
 
@@ -119,7 +119,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * This is isomorphic to the triangulation returned by the generic
          * routine ball().
          *
-         * @return the disc.
+         * \return the disc.
          */
         static Triangulation<2> disc();
 
@@ -128,7 +128,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * This is isomorphic to the triangulation returned by the generic
          * routine ballBundle().
          *
-         * @return the annulus.
+         * \return the annulus.
          */
         static Triangulation<2> annulus();
 
@@ -136,7 +136,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * Returns a one-triangle Mobius band.  This is isomorphic to the
          * triangulation returned by the generic routine twistedBallBundle().
          *
-         * @return the Mobius band.
+         * \return the Mobius band.
          */
         static Triangulation<2> mobius();
 
@@ -145,14 +145,14 @@ class Example<2> : public detail::ExampleBase<2> {
          * This is isomorphic to the triangulation returned by the generic
          * routine sphereBundle().
          *
-         * @return the torus.
+         * \return the torus.
          */
         static Triangulation<2> torus();
 
         /**
          * Returns a two-triangle projective plane.
          *
-         * @return the projective plane.
+         * \return the projective plane.
          */
         static Triangulation<2> rp2();
 
@@ -160,7 +160,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * Returns a two-triangle Klein bottle.  This is isomorphic to the
          * triangulation returned by the generic routine twistedSphereBundle().
          *
-         * @return the Klein bottle.
+         * \return the Klein bottle.
          */
         static Triangulation<2> kb();
 };

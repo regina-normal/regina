@@ -173,7 +173,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
         /**
          * Sets this to be a copy of the given constraint set.
          *
-         * @return a reference to this constraint set.
+         * \return a reference to this constraint set.
          */
         ValidityConstraints& operator = (const ValidityConstraints&) = default;
         /**
@@ -182,7 +182,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * The constraint set that was passed will no longer be usable.
          *
-         * @return a reference to this constraint set.
+         * \return a reference to this constraint set.
          */
         ValidityConstraints& operator = (ValidityConstraints&&) noexcept =
             default;
@@ -317,7 +317,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          *
          * \param len the total number of coordinates in the vectors being
          * constrained.  Each bitmask will be created with this length.
-         * @return the list of bitmasks describing the full set of validity
+         * \return the list of bitmasks describing the full set of validity
          * constraints.
          */
         template <typename BitmaskType>
@@ -355,7 +355,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * this must be one of Regina's own bitmask types, such as Bitmask,
          * Bitmask1 or Bitmask2.
          *
-         * @return the list of bitmasks describing the full set of validity
+         * \return the list of bitmasks describing the full set of validity
          * constraints.
          */
         template <typename BitmaskType>
@@ -377,7 +377,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * because typical constraint sets are extremely small.
          *
          * \param other the constraint set to compare against this.
-         * @return \c true if and only if this and the given set
+         * \return \c true if and only if this and the given set
          * contain the same constraints.
          */
         bool operator == (const ValidityConstraints& other) const;
@@ -398,7 +398,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * because typical constraint sets are extremely small.
          *
          * \param other the constraint set to compare against this.
-         * @return \c true if and only if this and the given set
+         * \return \c true if and only if this and the given set
          * do not contain the same constraints.
          */
         bool operator != (const ValidityConstraints& other) const;

@@ -71,7 +71,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * Returns a two-pentachoron triangulation of the 4-sphere.
          * This is identical to calling the generic routine sphere().
          *
-         * @return a two-pentachoron 4-sphere.
+         * \return a two-pentachoron 4-sphere.
          */
         static Triangulation<4> fourSphere();
 
@@ -80,7 +80,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * as the boundary of a 5-simplex.
          * This is identical to calling the generic routine simplicialSphere().
          *
-         * @return the standard simplicial 4-sphere.
+         * \return the standard simplicial 4-sphere.
          */
         static Triangulation<4> simplicialFourSphere();
 
@@ -88,7 +88,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * Returns a four-pentachoron triangulation of real projective
          * 4-space.
          *
-         * @return real projective 4-space.
+         * \return real projective 4-space.
          */
         static Triangulation<4> rp4();
 
@@ -101,7 +101,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * intersection form [1], not the reflected <tt>CP²</tt> with
          * intersection form [-1].
          *
-         * @return the standard complex projective plane.
+         * \return the standard complex projective plane.
          */
         static Triangulation<4> cp2();
 
@@ -109,7 +109,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * Returns a six-pentachoron triangulation of the standard product
          * <tt>S² x S²</tt>.  This triangulation is minimal.
          *
-         * @return the standard product of two 2-spheres.
+         * \return the standard product of two 2-spheres.
          */
         static Triangulation<4> s2xs2();
 
@@ -120,7 +120,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * <tt>-CP²</tt> denotes <tt>CP²</tt> with its orientation reversed.
          * This triangulation is minimal.
          *
-         * @return the twisted product of two 2-spheres.
+         * \return the twisted product of two 2-spheres.
          */
         static Triangulation<4> s2xs2Twisted();
 
@@ -129,7 +129,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * <tt>S³ x S¹</tt>.  This is identical to calling the
          * generic routine sphereBundle().
          *
-         * @return the product <tt>S³ x S¹</tt>.
+         * \return the product <tt>S³ x S¹</tt>.
          */
         static Triangulation<4> s3xs1();
 
@@ -138,7 +138,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * space <tt>S³ x~ S¹</tt>.  This is identical to calling the
          * generic routine twistedSphereBundle().
          *
-         * @return the twisted product <tt>S³ x~ S¹</tt>.
+         * \return the twisted product <tt>S³ x~ S¹</tt>.
          */
         static Triangulation<4> s3xs1Twisted();
 
@@ -147,7 +147,7 @@ class Example<4> : public detail::ExampleBase<4> {
          *
          * Be warned: this triangulation is extremely large.
          *
-         * @return the K3 surface.
+         * \return the K3 surface.
          */
         static Triangulation<4> k3();
 
@@ -168,7 +168,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * Budney, Burton and Hillman, Mathematical Research Letters 19 (2012),
          * no. 5, 1117-1126.
          *
-         * @return a Cappell-Shaneson 2-knot complement.
+         * \return a Cappell-Shaneson 2-knot complement.
          */
         static Triangulation<4> cappellShaneson();
 
@@ -204,7 +204,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
          * \param base the 3-manifold triangulation \a M, as described above.
-         * @return the product <tt>M x I</tt>.
+         * \return the product <tt>M x I</tt>.
          */
         static Triangulation<4> iBundle(const Triangulation<3>& base);
 
@@ -224,7 +224,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
          * \param base the 3-manifold triangulation \a M, as described above.
-         * @return the product <tt>M x S1</tt>.
+         * \return the product <tt>M x S1</tt>.
          */
         static Triangulation<4> s1Bundle(const Triangulation<3>& base);
 
@@ -256,7 +256,7 @@ class Example<4> : public detail::ExampleBase<4> {
          * \param base the 3-manifold triangulation \a M, as described above.
          * \param monodromy the homeomorphism from \a M to itself, as
          * described above.
-         * @return the requested bundle.
+         * \return the requested bundle.
          */
         static Triangulation<4> bundleWithMonodromy(
             const Triangulation<3>& base,

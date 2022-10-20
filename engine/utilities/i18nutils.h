@@ -62,7 +62,7 @@ namespace regina::i18n {
  * \ifacespython This routine returns the \e length of the longest valid
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
  *
- * @return an iterator marking the end of the longest valid UTF-8 prefix.
+ * \return an iterator marking the end of the longest valid UTF-8 prefix.
  *
  * \ingroup utilities
  */
@@ -78,7 +78,7 @@ std::string::const_iterator utf8ValidTo(const std::string& s);
  * \ifacespython This routine returns the \e length of the longest valid
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
  *
- * @return a pointer marking the end of the longest valid UTF-8 prefix.
+ * \return a pointer marking the end of the longest valid UTF-8 prefix.
  *
  * \ingroup utilities
  */
@@ -104,7 +104,7 @@ class Locale {
          * Returns the character encoding used in the current locale.
          * This is a plain string, such as "UTF-8" or "ISO-8859-1".
          *
-         * @return the character encoding for the current locale.
+         * \return the character encoding for the current locale.
          */
         static const char* codeset();
 
@@ -185,14 +185,14 @@ class IConvStreamBuffer : public std::streambuf {
          * written into this stream buffer.
          * \param destCode the character encoding for the translated data
          * that will subsequently be written to the destination output stream.
-         * @return this stream buffer on success, or \c null on error.
+         * \return this stream buffer on success, or \c null on error.
          */
         IConvStreamBuffer* open(std::ostream& dest,
             const char* srcCode, const char* destCode);
         /**
          * Closes this stream buffer.
          *
-         * @return this stream buffer on success, or \c null on error.
+         * \return this stream buffer on success, or \c null on error.
          */
         IConvStreamBuffer* close() noexcept;
 
@@ -208,20 +208,20 @@ class IConvStreamBuffer : public std::streambuf {
          *
          * \param c an extra character to send that did not fit in the
          * internal buffer, or EOF if we simply wish to flush the buffer.
-         * @return 0 on success, or EOF on error.
+         * \return 0 on success, or EOF on error.
          */
         int_type overflow(int_type c) override;
         /**
          * Simply returns EOF (since this is not an input stream).
          *
-         * @return EOF.
+         * \return EOF.
          */
         int_type underflow() override;
         /**
          * Flushes all output buffers.  The buffers for both this stream
          * and the destination output stream will be flushed.
          *
-         * @return 0 on success, or -1 on error.
+         * \return 0 on success, or -1 on error.
          */
         int sync() override;
 

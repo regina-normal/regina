@@ -174,7 +174,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * This will induce a deep copy of \a src.
          *
          * \param src the structure to copy.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         BlockedSFSTriple& operator = (const BlockedSFSTriple& src) = default;
         /**
@@ -184,7 +184,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * The structure that was passed (\a src) will no longer be usable.
          *
          * \param src the structure to move from.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         BlockedSFSTriple& operator = (BlockedSFSTriple&& src) noexcept =
             default;
@@ -206,7 +206,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * (marked as end region 0 in the class notes), or 1 if the
          * second end region should be returned (marked as end region 1
          * in the class notes).
-         * @return details of the requested end region.
+         * \return details of the requested end region.
          */
         const SatRegion& end(int which) const;
 
@@ -216,7 +216,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * two boundary annuli, each of which is joined to one of the
          * end regions.
          *
-         * @return details of the central region.
+         * \return details of the central region.
          */
         const SatRegion& centre() const;
 
@@ -235,7 +235,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * region 0 in the class notes), or 1 if the matrix returned
          * should describe how the central region is joined to the
          * second end region (marked end region 1 in the class notes).
-         * @return the matrix describing how the requested region
+         * \return the matrix describing how the requested region
          * boundaries are joined.
          */
         const Matrix2& matchingReln(int which) const;
@@ -259,7 +259,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * blocked Seifert fibred space).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of blocked sequence of three Seifert
          * fibred spaces.
          */
@@ -284,7 +284,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * blocked Seifert fibred space).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * do not represent the same type of blocked sequence of three
          * Seifert fibred spaces.
          */
@@ -305,7 +305,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param tri the triangulation to examine.
-         * @return a structure containing details of the blocked triple, or
+         * \return a structure containing details of the blocked triple, or
          * \c null if the given triangulation is not of this form.
          */
         static std::unique_ptr<BlockedSFSTriple> recognise(

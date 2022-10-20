@@ -253,7 +253,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         /**
          * Sets this to be a clone of the given group.
          *
-         * @return a reference to this group.
+         * \return a reference to this group.
          */
         MarkedAbelianGroup& operator = (const MarkedAbelianGroup&) = default;
 
@@ -263,7 +263,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * The group that was passed will no longer be usable.
          *
-         * @return a reference to this group.
+         * \return a reference to this group.
          */
         MarkedAbelianGroup& operator = (MarkedAbelianGroup&&) noexcept =
             default;
@@ -284,7 +284,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * class constructor.  See the class overview for further details on
          * matrices \a M and \a N and their roles in defining the chain complex.
          *
-         * @return a reference to the defining matrix \a M.
+         * \return a reference to the defining matrix \a M.
          */
         const MatrixInt& m() const;
 
@@ -297,7 +297,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * class constructor.  See the class overview for further details on
          * matrices \a M and \a N and their roles in defining the chain complex.
          *
-         * @return a reference to the defining matrix \a N.
+         * \return a reference to the defining matrix \a N.
          */
         const MatrixInt& n() const;
 
@@ -307,7 +307,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * coefficients in Z_p.  If we use coefficients in the integers Z,
          * then this routine returns 0.
          *
-         * @return the coefficients used in the homology calculation.
+         * \return the coefficients used in the homology calculation.
          */
         const Integer& coefficients() const;
 
@@ -319,7 +319,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * elements, and it indicates the size of the largest free abelian
          * subgroup.  The rank effectively ignores all torsion elements.
          *
-         * @return the rank of the group.
+         * \return the rank of the group.
          */
         size_t rank() const;
 
@@ -337,7 +337,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \pre The given degree is at least 2.
          *
          * \param degree the degree of the torsion term to query.
-         * @return the rank in the group of the given torsion term.
+         * \return the rank in the group of the given torsion term.
          */
         size_t torsionRank(const Integer& degree) const;
 
@@ -355,7 +355,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \pre The given degree is at least 2.
          *
          * \param degree the degree of the torsion term to query.
-         * @return the rank in the group of the given torsion term.
+         * \return the rank in the group of the given torsion term.
          */
         size_t torsionRank(unsigned long degree) const;
 
@@ -365,7 +365,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * of torsion generators.
          * See the MarkedAbelianGroup class notes for further details.
          *
-         * @return the number of invariant factors.
+         * \return the number of invariant factors.
          */
         size_t countInvariantFactors() const;
 
@@ -373,7 +373,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Returns just the underlying abelian group, without any of the
          * chain complex information.
          *
-         * @return the abelian group.
+         * \return the abelian group.
          */
         AbelianGroup unmarked() const;
 
@@ -386,7 +386,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * where \a M and \a N are the matrices used to define the chain
          * complex.
          *
-         * @return the rank of the chain complex.
+         * \return the rank of the chain complex.
          */
         size_t ccRank() const;
 
@@ -396,7 +396,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * This is the dimension of a vector in SNF coordinates.
          * It will always be equal to rank() + countInvariantFactors().
          *
-         * @return the minimum number of generators.
+         * \return the minimum number of generators.
          */
         size_t snfRank() const;
 
@@ -411,21 +411,21 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * \param index the index of the invariant factor to return;
          * this must be between 0 and countInvariantFactors()-1 inclusive.
-         * @return the requested invariant factor.
+         * \return the requested invariant factor.
          */
         const Integer& invariantFactor(size_t index) const;
 
         /**
          * Determines whether this is the trivial (zero) group.
          *
-         * @return \c true if and only if this is the trivial group.
+         * \return \c true if and only if this is the trivial group.
          */
         bool isTrivial() const;
 
         /**
          * Determines whether this is the infinite cyclic group (Z).
          *
-         * @return \c true if and only if this is the infinite cyclic group.
+         * \return \c true if and only if this is the infinite cyclic group.
          */
         bool isZ() const;
 
@@ -434,7 +434,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * isomorphic.
          *
          * \param other the group with which this should be compared.
-         * @return \c true if and only if the two groups are isomorphic.
+         * \return \c true if and only if the two groups are isomorphic.
          */
         bool isIsomorphicTo(const MarkedAbelianGroup &other) const;
 
@@ -447,7 +447,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * matrices \a M and \a N, using homology with the same coefficients.
          *
          * \param other the group with which this should be compared.
-         * @return \c true if and only if the this and the given group have
+         * \return \c true if and only if the this and the given group have
          * identical chain complex definitions.
          */
         bool operator == (const MarkedAbelianGroup& other) const;
@@ -462,7 +462,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * matrices \a M and \a N, using homology with the same coefficients.
          *
          * \param other the group with which this should be compared.
-         * @return \c true if and only if the this and the given group
+         * \return \c true if and only if the this and the given group
          * do not have identical chain complex definitions.
          */
         bool operator != (const MarkedAbelianGroup& other) const;
@@ -481,7 +481,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * \param index specifies which free generator to look up;
          * this must be between 0 and rank()-1 inclusive.
-         * @return the (\a index)th free generator, presented in
+         * \return the (\a index)th free generator, presented in
          * chain complex coordinates.
          */
         Vector<Integer> freeRep(size_t index) const;
@@ -500,7 +500,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * \param index specifies which generator in the torsion subgroup;
          * this must be between 0 and countInvariantFactors()-1 inclusive.
-         * @return the (\a index)th torsion generator, presented in
+         * \return the (\a index)th torsion generator, presented in
          * chain complex coordinates.
          */
         Vector<Integer> torsionRep(size_t index) const;
@@ -519,7 +519,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * not precisely snfRank().
          *
          * \param snf any vector in SNF coordinates.
-         * @return a corresponding vector in chain complex coordinates.
+         * \return a corresponding vector in chain complex coordinates.
          */
         Vector<Integer> ccRep(const Vector<Integer>& snf) const;
 
@@ -541,7 +541,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * \param snfGen specifies which standard basis vector to use from
          * SNF coordinates; this must be between 0 and snfRank()-1 inclusive.
-         * @return a corresponding vector in chain complex coordinates.
+         * \return a corresponding vector in chain complex coordinates.
          */
         Vector<Integer> ccRep(size_t snfGen) const;
 
@@ -577,7 +577,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * size, or is not a cycle (i.e., not in the kernel of \a M).
          *
          * \param cycle a cycle, presented in chain complex coordinates.
-         * @return the group element corresponding to \a cycle, expressed in
+         * \return the group element corresponding to \a cycle, expressed in
          * SNF coordinates.
          */
         Vector<Integer> snfRep(const Vector<Integer>& cycle) const;
@@ -593,7 +593,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * chain complex coordinates).
          *
          * \param ccelt any vector in chain complex coordinates.
-         * @return a corresponding vector, also in the chain complex
+         * \return a corresponding vector, also in the chain complex
          * coordinates.
          */
         Vector<Integer> cycleProjection(const Vector<Integer>& ccelt) const;
@@ -610,7 +610,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * \param ccindx the index of the standard basis vector in chain
          * complex coordinates.
-         * @return the resulting projection, in the chain complex
+         * \return the resulting projection, in the chain complex
          * coordinates.
          */
         Vector<Integer> cycleProjection(size_t ccindx) const;
@@ -620,7 +620,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * chain complex.
          *
          * \param chain any vector in chain complex coordinates.
-         * @return \c true if and only if the given vector represents a cycle.
+         * \return \c true if and only if the given vector represents a cycle.
          */
         bool isCycle(const Vector<Integer>& chain) const;
 
@@ -634,7 +634,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * complex coordinates; that is, its length is not M.columns().
          *
          * \param chain any vector in chain complex coordinates.
-         * @return the differential, expressed as a vector of length M.rows().
+         * \return the differential, expressed as a vector of length M.rows().
          */
         Vector<Integer> boundaryOf(const Vector<Integer>& chain) const;
 
@@ -643,7 +643,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * chain complex.
          *
          * \param chain any vector in chain complex coordinates.
-         * @return \c true if and only if the given vector represents a
+         * \return \c true if and only if the given vector represents a
          * boundary.
          */
         bool isBoundary(const Vector<Integer>& chain) const;
@@ -662,7 +662,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The given vector is not a boundary.
          *
          * \param bdry a boundary vector, given in chain complex coordinates.
-         * @return a vector \a v such that `N×v=bdry`.
+         * \return a vector \a v such that `N×v=bdry`.
          */
         Vector<Integer> asBoundary(const Vector<Integer>& bdry) const;
 
@@ -670,7 +670,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Returns the number of generators of the kernel of \a M, where
          * \a M is the "right" matrix used to define the chain complex.
          *
-         * @return the number of generators of ker(\a M).
+         * \return the number of generators of ker(\a M).
          */
         size_t cycleRank() const;
 
@@ -686,7 +686,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * \param index indicates which generator to return; this must be
          * between 0 and cycleRank()-1 inclusive.
-         * @return the (\a index)th generator of the cycles, expressed in
+         * \return the (\a index)th generator of the cycles, expressed in
          * chain complex coordinates.
          */
         Vector<Integer> cycleGen(size_t index) const;
@@ -694,7 +694,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         /**
          * Returns the torsion subgroup of this group.
          *
-         * @return the torsion subgroup.
+         * \return the torsion subgroup.
          */
         MarkedAbelianGroup torsionSubgroup() const;
 
@@ -702,7 +702,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Returns a map representing the inclusion of the torsion subgroup
          * into this group.
          *
-         * @return the inclusion map for the torsion subgroup.
+         * \return the inclusion map for the torsion subgroup.
          */
         HomMarkedAbelianGroup torsionInclusion() const;
 
@@ -878,7 +878,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
         /**
          * Sets this to be a clone of the given homomorphism.
          *
-         * @return a reference to this homomorphism.
+         * \return a reference to this homomorphism.
          */
         HomMarkedAbelianGroup& operator = (const HomMarkedAbelianGroup&)
             = default;
@@ -889,7 +889,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * The homomorphism that was passed will no longer be usable.
          *
-         * @return a reference to this homomorphism.
+         * \return a reference to this homomorphism.
          */
         HomMarkedAbelianGroup& operator = (HomMarkedAbelianGroup&&) noexcept
             = default;
@@ -918,7 +918,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * \param other the other homomorphism to analyse in conjunction
          * with this.
-         * @return true if and only if c=g, M1=N3, f=j, M2=N4,
+         * \return true if and only if c=g, M1=N3, f=j, M2=N4,
          * and the diagram commutes.
          */
         bool isChainMap(const HomMarkedAbelianGroup &other) const;
@@ -930,38 +930,38 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * only checks that cycles are sent to cycles, since it only has access
          * to three of the four maps you need to verify you have a cycle map.
          *
-         * @return \c true if and only if this is a chain map.
+         * \return \c true if and only if this is a chain map.
          */
         bool isCycleMap() const;
 
         /**
          * Is this an epic homomorphism?
          *
-         * @return true if this homomorphism is epic.
+         * \return true if this homomorphism is epic.
          */
         bool isEpic() const;
         /**
          * Is this a monic homomorphism?
          *
-         * @return true if this homomorphism is monic.
+         * \return true if this homomorphism is monic.
          */
         bool isMonic() const;
         /**
          * Is this an isomorphism?
          *
-         * @return true if this homomorphism is an isomorphism.
+         * \return true if this homomorphism is an isomorphism.
          */
         bool isIsomorphism() const;
         /**
          * Is this the zero map?
          *
-         * @return true if this homomorphism is the zero map.
+         * \return true if this homomorphism is the zero map.
          */
         bool isZero() const;
         /**
          * Is this the identity automorphism?
          *
-         * @return true if and only if the domain and codomain are defined via
+         * \return true if and only if the domain and codomain are defined via
          * the same chain complexes and the induced map on homology is the
          * identity.
          */
@@ -970,19 +970,19 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
         /**
          * Returns the kernel of this homomorphism.
          *
-         * @return the kernel of the homomorphism.
+         * \return the kernel of the homomorphism.
          */
         const AbelianGroup& kernel() const;
         /**
          * Returns the cokernel of this homomorphism.
          *
-         * @return the cokernel of the homomorphism.
+         * \return the cokernel of the homomorphism.
          */
         const AbelianGroup& cokernel() const;
         /**
          * Returns the image of this homomorphism.
          *
-         * @return the image of the homomorphism.
+         * \return the image of the homomorphism.
          */
         const AbelianGroup& image() const;
 
@@ -997,7 +997,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * - if it is not epic, describes the co-kernel;
          * - if it is neither monic nor epic, describes the image.
          *
-         * @return a brief summary.
+         * \return a brief summary.
          */
         std::string summary() const;
 
@@ -1038,19 +1038,19 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
         /**
          * Returns the domain of this homomorphism.
          *
-         * @return the domain that was used to define the homomorphism.
+         * \return the domain that was used to define the homomorphism.
          */
         const MarkedAbelianGroup& domain() const;
         /**
          * Returns the codomain of this homomorphism.
          *
-         * @return the codomain that was used to define the homomorphism.
+         * \return the codomain that was used to define the homomorphism.
          */
         const MarkedAbelianGroup& codomain() const;
         /**
          * Returns the defining matrix for the homomorphism.
          *
-         * @return the matrix that was used to define the homomorphism.
+         * \return the matrix that was used to define the homomorphism.
          */
         const MatrixInt& definingMatrix() const;
 
@@ -1068,7 +1068,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *   torsion elements of the group, where
          *   1 < \a d1 | \a d2 | ... | \a dk.
          *
-         * @return a copy of the internal representation of the homomorphism.
+         * \return a copy of the internal representation of the homomorphism.
          */
         const MatrixInt& reducedMatrix() const;
 
@@ -1083,7 +1083,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * \param input an input vector in the domain chain complex's
          * coordinates, of length domain().M().columns().
-         * @return the image of this vector in the codomain chain complex's
+         * \return the image of this vector in the codomain chain complex's
          * coordinates, of length codomain().M().columns().
          */
         Vector<Integer> evalCC(const Vector<Integer>& input) const;
@@ -1102,7 +1102,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * \param input an input vector in the domain SNF coordinates,
          * of length domain().snfRank().
-         * @return the image of this vector in the codomain chain complex's
+         * \return the image of this vector in the codomain chain complex's
          * coordinates, of length codomain().snfRank().
          */
         Vector<Integer> evalSNF(const Vector<Integer>& input) const;
@@ -1119,7 +1119,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * since we're only using this to construct maps between
          * homology groups in different coordinate systems.
          *
-         * @return the inverse homomorphism, or the zero homomorphism if
+         * \return the inverse homomorphism, or the zero homomorphism if
          * this is not invertible.
          */
         HomMarkedAbelianGroup inverseHom() const;
@@ -1132,7 +1132,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * domain of this homomorphism.
          *
          * \param X the homomorphism to compose this with.
-         * @return the composite homomorphism.
+         * \return the composite homomorphism.
          */
         HomMarkedAbelianGroup operator * (const HomMarkedAbelianGroup& X) const;
 
@@ -1144,7 +1144,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * domain of this homomorphism.
          *
          * \param X the homomorphism to compose this with.
-         * @return the composite homomorphism.
+         * \return the composite homomorphism.
          */
         HomMarkedAbelianGroup operator * (HomMarkedAbelianGroup&& X) const;
 

@@ -71,7 +71,7 @@ class XMLAngleStructureReader : public XMLElementReader {
         /**
          * Returns a reference to the angle structure that has been read.
          *
-         * @return the angle structure, or no value if an error occurred.
+         * \return the angle structure, or no value if an error occurred.
          */
         std::optional<AngleStructure>& structure();
 

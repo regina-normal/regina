@@ -129,7 +129,7 @@ class XMLElementReader {
          * \param subTagName the name of the subelement opening tag.
          * \param subTagProps the properties associated with the
          * subelement opening tag.
-         * @return a newly created element reader that will be used to
+         * \return a newly created element reader that will be used to
          * parse the subelement.  This class should \e not take care of
          * the new reader's destruction; that will be done by the parser.
          */
@@ -213,7 +213,7 @@ class XMLCharsReader : public XMLElementReader {
          * Returns the characters stored in the XML element that has
          * been read.
          *
-         * @return the characters stored in the XML element.
+         * \return the characters stored in the XML element.
          */
         const std::string& chars();
 

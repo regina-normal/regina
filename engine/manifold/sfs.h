@@ -116,7 +116,7 @@ struct SFSFibre {
      * and the same values for \a beta.
      *
      * \param compare the fibre with which this will be compared.
-     * @return \c true if and only if this and the given fibre are
+     * \return \c true if and only if this and the given fibre are
      * identical.
      */
     bool operator == (const SFSFibre& compare) const;
@@ -126,7 +126,7 @@ struct SFSFibre {
      * to have different values for \a beta.
      *
      * \param compare the fibre with which this will be compared.
-     * @return \c true if and only if this and the given fibre are
+     * \return \c true if and only if this and the given fibre are
      * different.
      */
     bool operator != (const SFSFibre& compare) const;
@@ -135,7 +135,7 @@ struct SFSFibre {
      * fibre.  Fibres are sorted by \a alpha and then by \a beta.
      *
      * \param compare the fibre with which this will be compared.
-     * @return \c true if and only if this is smaller than the given fibre.
+     * \return \c true if and only if this is smaller than the given fibre.
      */
     bool operator < (const SFSFibre& compare) const;
 };
@@ -146,7 +146,7 @@ struct SFSFibre {
  *
  * \param out the output stream to which to write.
  * \param f the fibre to write.
- * @return the output stream \a out.
+ * \return the output stream \a out.
  *
  * \ingroup manifold
  */
@@ -397,7 +397,7 @@ class SFSpace : public Manifold {
          *
          * The space that was passed will no longer be usable.
          *
-         * @return a reference to this space.
+         * \return a reference to this space.
          */
         SFSpace& operator = (SFSpace&&) noexcept = default;
         /**
@@ -420,7 +420,7 @@ class SFSpace : public Manifold {
          * For more information on the eleven predefined classes, see the
          * SFSpace class notes or the ClassType enumeration notes.
          *
-         * @return the particular class to which this space belongs.
+         * \return the particular class to which this space belongs.
          */
         ClassType baseClass() const;
         /**
@@ -433,7 +433,7 @@ class SFSpace : public Manifold {
          * base surface is formed from.  In particular, if the base
          * surface is non-orientable then this is the non-orientable genus.
          *
-         * @return the genus of the base orbifold.
+         * \return the genus of the base orbifold.
          */
         unsigned long baseGenus() const;
         /**
@@ -444,14 +444,14 @@ class SFSpace : public Manifold {
          * The orientability of the base surface can be (indirectly)
          * modified by calling addCrosscap().
          *
-         * @return \c true if and only if the base surface is orientable.
+         * \return \c true if and only if the base surface is orientable.
          */
         bool baseOrientable() const;
         /**
          * Returns whether or not this space contains any fibre-reversing
          * paths.
          *
-         * @return \c true if and only if a fibre-reversing path exists.
+         * \return \c true if and only if a fibre-reversing path exists.
          */
         bool fibreReversing() const;
         /**
@@ -471,7 +471,7 @@ class SFSpace : public Manifold {
          * overall 3-manifold non-orientable, have no bearing on the
          * outcome of this routine.
          *
-         * @return \c true if and only an exceptional fibre can be
+         * \return \c true if and only an exceptional fibre can be
          * reflected as described above.
          */
         bool fibreNegating() const;
@@ -489,7 +489,7 @@ class SFSpace : public Manifold {
          * and Klein bottle boundaries respectively in the 3-manifold)
          * are counted by this routine.
          *
-         * @return the total number of punctures.
+         * \return the total number of punctures.
          */
         unsigned long punctures() const;
         /**
@@ -511,7 +511,7 @@ class SFSpace : public Manifold {
          * bottle boundaries), or \c false if only untwisted punctures
          * should be counted (those that are fibre-preserving and give
          * torus boundaries).
-         * @return the number of punctures of the given type.
+         * \return the number of punctures of the given type.
          */
         unsigned long punctures(bool twisted) const;
         /**
@@ -519,7 +519,7 @@ class SFSpace : public Manifold {
          * base orbifold.  This includes both twisted and untwisted
          * reflector boundaries.
          *
-         * @return the total number of reflector boundary components.
+         * \return the total number of reflector boundary components.
          */
         unsigned long reflectors() const;
         /**
@@ -530,7 +530,7 @@ class SFSpace : public Manifold {
          * \param twisted \c true if only twisted reflector boundaries
          * should be counted (those that give fibre-reversing paths), or
          * \c false if only untwisted reflector boundaries should be counted.
-         * @return the number of reflector boundaries of the given type.
+         * \return the number of reflector boundaries of the given type.
          */
         unsigned long reflectors(bool twisted) const;
 
@@ -541,7 +541,7 @@ class SFSpace : public Manifold {
          * Note that the obstruction parameter \a b is not included in
          * this count.  That is, any (1,k) fibres are ignored.
          *
-         * @return the number of exceptional fibres.
+         * \return the number of exceptional fibres.
          */
         unsigned long fibreCount() const;
         /**
@@ -554,7 +554,7 @@ class SFSpace : public Manifold {
          *
          * \param which determines which fibre to return; this must be between
          * 0 and getFibreCount()-1 inclusive.
-         * @return the requested fibre.
+         * \return the requested fibre.
          */
         SFSFibre fibre(unsigned long which) const;
 
@@ -569,7 +569,7 @@ class SFSpace : public Manifold {
          * range (\a beta < 0 or \a beta ≥ \a alpha), since each exceptional
          * fibre must be stored in standard form (0 ≤ \a beta < \a alpha).
          *
-         * @return the obstruction constant \a b.
+         * \return the obstruction constant \a b.
          */
         long obstruction() const;
 
@@ -750,7 +750,7 @@ class SFSpace : public Manifold {
         /**
          * Determines if this Seifert fibred space is a Lens space.
          *
-         * @return a structure containing the details of this Lens
+         * \return a structure containing the details of this Lens
          * space, or no value if this is not a Lens space.
          */
         std::optional<LensSpace> isLensSpace() const;
@@ -767,7 +767,7 @@ class SFSpace : public Manifold {
          * space, they will be treated as not equal by this routine.
          *
          * \param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object contain
+         * \return \c true if and only if this and the given object contain
          * identical presentations of the same Seifert fibred space.
          */
         bool operator == (const SFSpace& compare) const;
@@ -784,7 +784,7 @@ class SFSpace : public Manifold {
          * space, they will be treated as not equal by this routine.
          *
          * \param compare the presentation with which this will be compared.
-         * @return \c true if and only if this and the given object do not
+         * \return \c true if and only if this and the given object do not
          * contain identical presentations of the same Seifert fibred space.
          */
         bool operator != (const SFSpace& compare) const;
@@ -804,7 +804,7 @@ class SFSpace : public Manifold {
          * ordering Seifert fibred space representations.
          *
          * \param compare the representation with which this will be compared.
-         * @return \c true if and only if this is "smaller" than the given
+         * \return \c true if and only if this is "smaller" than the given
          * Seifert fibred space representation.
          */
         bool operator < (const SFSpace& compare) const;
@@ -829,7 +829,7 @@ class SFSpace : public Manifold {
          * \pre The fibre at the given iterator satisfies
          * \a beta * 2 > \a alpha.
          *
-         * @return the iterator that was immediately after the given
+         * \return the iterator that was immediately after the given
          * iterator before this routine was called.  Note that the given
          * iterator will be invalidated.
          */
@@ -851,7 +851,7 @@ class SFSpace : public Manifold {
          * \param out the output stream to which to write.
          * \param tex \c true if we are writing in TeX format, or
          * \c false if we are writing in plain text format.
-         * @return a reference to \a out.
+         * \return a reference to \a out.
          */
         std::ostream& writeCommonBase(std::ostream& out, bool tex) const;
 
@@ -863,7 +863,7 @@ class SFSpace : public Manifold {
          * \param out the output stream to which to write.
          * \param tex \c true if we are writing in TeX format, or
          * \c false if we are writing in plain text format.
-         * @return a reference to \a out.
+         * \return a reference to \a out.
          */
         std::ostream& writeCommonStructure(std::ostream& out, bool tex) const;
 
@@ -875,7 +875,7 @@ class SFSpace : public Manifold {
          * \param out the output stream to which to write.
          * \param tex \c true if we are handling writeTeXName(), or
          * \c false if we are handling writeName().
-         * @return a reference to \a out.
+         * \return a reference to \a out.
          */
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };

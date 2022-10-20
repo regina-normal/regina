@@ -126,7 +126,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         SnapPeaCensusTri& operator = (const SnapPeaCensusTri&) = default;
 
@@ -143,7 +143,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * triangulation belongs.  This will be one of the section constants
          * defined in this class.
          *
-         * @return the section of the SnapPea census.
+         * \return the section of the SnapPea census.
          */
         char section() const;
 
@@ -152,7 +152,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * section of the SnapPea census.  Note that indices for each
          * section begin counting at zero.
          *
-         * @return the index of this triangulation within its section.
+         * \return the index of this triangulation within its section.
          */
         unsigned long index() const;
 
@@ -172,7 +172,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * subclass means they describe isomorphic structures).
          *
          * \param compare the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same SnapPea census triangulation.
          */
         bool operator == (const SnapPeaCensusTri& compare) const;
@@ -193,7 +193,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * subclass means they describe isomorphic structures).
          *
          * \param compare the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different SnapPea census triangulations.
          */
         bool operator != (const SnapPeaCensusTri& compare) const;
@@ -213,7 +213,7 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param comp the triangulation component to examine.
-         * @return a structure representing the small SnapPea census
+         * \return a structure representing the small SnapPea census
          * triangulation, or \c null if the given component is not one of
          * the few SnapPea census triangulations recognised by this routine.
          */

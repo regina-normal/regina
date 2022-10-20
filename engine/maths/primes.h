@@ -110,7 +110,7 @@ class Primes {
          * whether larger primes are requested), but it will never
          * decrease.
          *
-         * @return the number of primes or suspected primes currently stored.
+         * \return the number of primes or suspected primes currently stored.
          */
         static unsigned long size();
 
@@ -138,7 +138,7 @@ class Primes {
          * \param which indicates which prime is requested.
          * \param autoGrow specifies what to do if the requested
          * prime lies beyond the list currently stored (see above).
-         * @return the requested prime (or suspected prime), or zero if
+         * \return the requested prime (or suspected prime), or zero if
          * \a which was too large and \a autoGrow was \c false.
          */
         static Integer prime(unsigned long which, bool autoGrow = true);
@@ -185,7 +185,7 @@ class Primes {
          * the C++ long integer range (otherwise the behaviour is undefined).
          *
          * \param n the integer to factorise.
-         * @return the list of prime factors as described above.
+         * \return the list of prime factors as described above.
          */
         static std::vector<Integer> primeDecomp(const Integer& n);
 
@@ -238,7 +238,7 @@ class Primes {
          * the C++ long integer range (otherwise the behaviour is undefined).
          *
          * \param n the integer to factorise.
-         * @return the list of prime power factors as described above.
+         * \return the list of prime power factors as described above.
          */
         static std::vector<std::pair<Integer, unsigned long> >
             primePowerDecomp(const Integer& n);

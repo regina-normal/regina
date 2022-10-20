@@ -215,7 +215,7 @@ class HilbertPrimal {
          * \param input the extreme rays of a single maximal admissible face,
          * presented in a form that Normaliz can understand (i.e., as vectors
          * of GMP integers).
-         * @return the Hilbert basis for the given maximal admissible face.
+         * \return the Hilbert basis for the given maximal admissible face.
          */
         static std::vector<std::vector<mpz_class>> normaliz(
             const std::vector<std::vector<mpz_class>>& input);
@@ -232,7 +232,7 @@ class HilbertPrimal {
          *
          * \param ray the ray to test, given as a vector of integers.
          * \param face the face to test, given as a bitmask.
-         * @return \c true if the given ray lies within the given face,
+         * \return \c true if the given ray lies within the given face,
          * or \c false otherwise.
          */
         template <class VectorClass, class BitmaskType>

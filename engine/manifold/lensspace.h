@@ -93,7 +93,7 @@ class LensSpace : public Manifold {
          * Returns the first parameter \a p of this lens space L(p,q).
          * See the class notes for details.
          *
-         * @return the first parameter.
+         * \return the first parameter.
          */
         unsigned long p() const;
         /**
@@ -118,7 +118,7 @@ class LensSpace : public Manifold {
          * could have different presentations that compare as not equal.
          *
          * \param compare the lens space with which this should be compared.
-         * @return \c true if and only if this and the given lens space
+         * \return \c true if and only if this and the given lens space
          * have the same presentation (i.e., are homeomorphic).
          */
         bool operator == (const LensSpace& compare) const;
@@ -134,7 +134,7 @@ class LensSpace : public Manifold {
          * could have different presentations that compare as not equal.
          *
          * \param compare the lens space with which this should be compared.
-         * @return \c true if and only if this and the given lens space
+         * \return \c true if and only if this and the given lens space
          * have different presentations (i.e., are non-homeomorphic).
          */
         bool operator != (const LensSpace& compare) const;
@@ -142,7 +142,7 @@ class LensSpace : public Manifold {
         /**
          * Sets this to be a copy of the given lens space.
          *
-         * @return a reference to this lens space.
+         * \return a reference to this lens space.
          */
         LensSpace& operator = (const LensSpace&) = default;
 

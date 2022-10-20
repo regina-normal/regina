@@ -149,7 +149,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Sets this to be a clone of the given homomorphism.
          *
-         * @return a reference to this homomorphism.
+         * \return a reference to this homomorphism.
          */
         HomGroupPresentation& operator = (const HomGroupPresentation&) =
             default;
@@ -160,7 +160,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          *
          * The homomorphism that was passed will no longer be usable.
          *
-         * @return a reference to this homomorphism.
+         * \return a reference to this homomorphism.
          */
         HomGroupPresentation& operator = (HomGroupPresentation&&) noexcept =
             default;
@@ -194,7 +194,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * the words that the corresponding generators map to).
          *
          * \param other the homomorphism to compare with this.
-         * @return \c true if and only if this and the given homomorphisms
+         * \return \c true if and only if this and the given homomorphisms
          * have identical presentations.
          */
         bool operator == (const HomGroupPresentation& other) const;
@@ -220,7 +220,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * the words that the corresponding generators map to).
          *
          * \param other the homomorphism to compare with this.
-         * @return \c true if and only if this and the given homomorphisms
+         * \return \c true if and only if this and the given homomorphisms
          * do not have identical presentations.
          */
         bool operator != (const HomGroupPresentation& other) const;
@@ -228,13 +228,13 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * The domain of the map.
          *
-         * @return a reference to the domain.
+         * \return a reference to the domain.
          */
         const GroupPresentation& domain() const;
         /**
          * The codomain of the map.
          *
-         * @return a reference to the codomain.
+         * \return a reference to the codomain.
          */
         const GroupPresentation& codomain() const;
 
@@ -245,7 +245,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * user has explicitly provided the inverse map.  See the
          * HomGroupPresentation class notes for details.
          *
-         * @return \c true if and only if this is a declared
+         * \return \c true if and only if this is a declared
          * isomorphism, i.e, the inverse map was explicitly provided.
          */
         bool knowsInverse() const;
@@ -254,7 +254,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Evaluate the homomorphism at an element of the domain.
          *
          * \param arg an element of the domain.
-         * @return the image of this element in the codomain.
+         * \return the image of this element in the codomain.
          */
         GroupExpression evaluate(GroupExpression arg) const;
 
@@ -262,7 +262,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Evaluate the homomorphism at a generator of the domain.
          *
          * \param i the index of a generator in the domain.
-         * @return the image of the <i>i</i>th generator in the codomain.
+         * \return the image of the <i>i</i>th generator in the codomain.
          */
         GroupExpression evaluate(unsigned long i) const;
 
@@ -274,7 +274,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * on what this means.
          *
          * \param arg an element of the codomain.
-         * @return the image of this element in the domain.
+         * \return the image of this element in the domain.
          */
         GroupExpression invEvaluate(GroupExpression arg) const;
         /**
@@ -285,7 +285,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * on what this means.
          *
          * \param i the index of a generator in the codomain.
-         * @return the image of this generator in the domain.
+         * \return the image of this generator in the domain.
          */
         GroupExpression invEvaluate(unsigned long i) const;
 
@@ -299,7 +299,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Uses the underlying GroupPresentation::intelligentSimplify().
          * See that routine for details.
          *
-         * @return \c true if and only if either presentation and/or the
+         * \return \c true if and only if either presentation and/or the
          * map was changed.
          */
         bool intelligentSimplify();
@@ -308,7 +308,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Simplifies the domain and codomain using only Nielsen moves, keeping
          * track of the resulting map in the progress.
          *
-         * @return \c true if and only if either presentation and/or the
+         * \return \c true if and only if either presentation and/or the
          * map was changed.
          */
         bool intelligentNielsen();
@@ -317,7 +317,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Simplifies the domain and codomain using only small cancellation
          * theory.
          *
-         * @return \c true if and only if either presentation and/or the
+         * \return \c true if and only if either presentation and/or the
          * map was changed.
          */
         bool smallCancellation();
@@ -337,7 +337,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * homomorphism.
          *
          * \param rhs the homomorphism to compose this with.
-         * @return the composition of both homomorphisms.
+         * \return the composition of both homomorphisms.
          */
         HomGroupPresentation operator * (const HomGroupPresentation& rhs) const;
 
@@ -356,7 +356,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * homomorphism.
          *
          * \param rhs the homomorphism to compose this with.
-         * @return the composition of both homomorphisms.
+         * \return the composition of both homomorphisms.
          */
         HomGroupPresentation operator * (HomGroupPresentation&& rhs) const;
 
@@ -373,7 +373,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          *
          * This operation is (very) fast constant time.
          *
-         * @return \c true if and only if the inversion operation was
+         * \return \c true if and only if the inversion operation was
          * successful (i.e., if this is a declared isomorphism).
          */
         bool invert();
@@ -394,7 +394,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * This routine is intended for sanity checking only: any homomorphism
          * that you construct in Regina should always be valid in this sense.
          *
-         * @return \c true if Regina is able to verify that this is a
+         * \return \c true if Regina is able to verify that this is a
          * homomorphism, or \c false if the result is inconclusive.
          */
         bool verify() const;
@@ -425,7 +425,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * See the HomGroupPresentation class notes for details
          * on what this means.
          *
-         * @return \c true if it is verified that this is an
+         * \return \c true if it is verified that this is an
          * isomorphism, or \c false if the result is inconclusive.
          */
         bool verifyIsomorphism() const;
@@ -434,7 +434,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Computes the induced map on the abelianizations of the domain
          * and codomain.
          *
-         * @return the induced map on the abelianizations.
+         * \return the induced map on the abelianizations.
          */
         HomMarkedAbelianGroup markedAbelianisation() const;
 

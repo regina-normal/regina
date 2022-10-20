@@ -93,7 +93,7 @@ struct PrismSpec {
      * Copies the values from the given prism specifier into this specifier.
      *
      * \param cloneMe the prism specifier whose values should be copied.
-     * @return a reference to this prism specifier.
+     * \return a reference to this prism specifier.
      */
     PrismSpec& operator = (const PrismSpec& cloneMe) = default;
     /**
@@ -101,7 +101,7 @@ struct PrismSpec {
      * information.
      *
      * \param other the prism specifier to compare with this.
-     * @return \c true if and only if this and the given prism specifier
+     * \return \c true if and only if this and the given prism specifier
      * contain identical information.
      */
     bool operator == (const PrismSpec& other) const;
@@ -110,7 +110,7 @@ struct PrismSpec {
      * information.
      *
      * \param other the prism specifier to compare with this.
-     * @return \c true if and only if this and the given prism specifier
+     * \return \c true if and only if this and the given prism specifier
      * contain different information.
      */
     bool operator != (const PrismSpec& other) const;
@@ -125,7 +125,7 @@ struct PrismSpec {
  *
  * \param out the output stream to which to write.
  * \param spec the prism specifier to write.
- * @return a reference to \a out.
+ * \return a reference to \a out.
  *
  * \ingroup surfaces
  */

@@ -141,7 +141,7 @@ using NormalList = regina::Flags<NormalListFlags>;
  *
  * \param lhs the first flag to combine.
  * \param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \return the combination of both flags.
  *
  * \ingroup surfaces
  */
@@ -359,7 +359,7 @@ using NormalAlg = regina::Flags<NormalAlgFlags>;
  *
  * \param lhs the first flag to combine.
  * \param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \return the combination of both flags.
  *
  * \ingroup surfaces
  */

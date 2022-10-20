@@ -269,7 +269,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Returns the unique integer ID representing this type of packet.
          * This is the same for all packets of this class.
          *
-         * @return the packet type ID.
+         * \return the packet type ID.
          */
         virtual PacketType type() const = 0;
 
@@ -278,7 +278,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * An example is \c Triangulation3.
          * This is the same for all packets of this class.
          *
-         * @return the packet type name.
+         * \return the packet type name.
          */
         virtual std::string typeName() const = 0;
 
@@ -286,7 +286,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Returns the label associated with this individual packet.
          * An example is \c MyTriangulation.
          *
-         * @return this individual packet's label.
+         * \return this individual packet's label.
          */
         const std::string& label() const;
 
@@ -300,7 +300,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \warning The method by which this routine adjusts packet labels
          * is subject to change in future versions of Regina.
          *
-         * @return this individual packet's label.
+         * \return this individual packet's label.
          */
         std::string humanLabel() const;
 
@@ -326,7 +326,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * It should not contain any surrounding punctuation such as
          * brackets or a dash (this will be added automatically by
          * this routine as required).
-         * @return a copy of the packet label with the given adornment.
+         * \return a copy of the packet label with the given adornment.
          */
         std::string adornedLabel(const std::string& adornment) const;
 
@@ -344,7 +344,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The packet label will be adjusted for human-readable output
          * according to the behaviour of humanLabel().
          *
-         * @return the descriptive text string.
+         * \return the descriptive text string.
          */
         std::string fullName() const;
 
@@ -367,7 +367,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * more than once with the same packet.
          *
          * \param tag the tag to search for.
-         * @return \c true if the given tag is found, \c false otherwise.
+         * \return \c true if the given tag is found, \c false otherwise.
          */
         bool hasTag(const std::string& tag) const;
 
@@ -383,7 +383,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * @return \c true if this packet has any tags, \c false otherwise.
+         * \return \c true if this packet has any tags, \c false otherwise.
          */
         bool hasTags() const;
 
@@ -402,7 +402,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre The given tag is not the empty string.
          *
          * \param tag the tag to add.
-         * @return \c true if the given tag was successfully added,
+         * \return \c true if the given tag was successfully added,
          * or \c false if the given tag was already present beforehand.
          */
         bool addTag(const std::string& tag);
@@ -420,7 +420,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * more than once with the same packet.
          *
          * \param tag the tag to remove.
-         * @return \c true if the given tag was removed, or \c false if the
+         * \return \c true if the given tag was removed, or \c false if the
          * given tag was not actually associated with this packet.
          */
         bool removeTag(const std::string& tag);
@@ -453,7 +453,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \ifacespython This routine returns a python set.
          *
-         * @return the set of all tags associated with this packet.
+         * \return the set of all tags associated with this packet.
          */
         const std::set<std::string>& tags() const;
 
@@ -469,7 +469,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * details.
          *
          * \param listener the listener to register.
-         * @return \c true if the given listener was successfully registered,
+         * \return \c true if the given listener was successfully registered,
          * or \c false if the given listener was already registered
          * beforehand.
          */
@@ -480,7 +480,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * class notes for details.
          *
          * \param listener the listener to search for.
-         * @return \c true if the given listener is currently registered
+         * \return \c true if the given listener is currently registered
          * with this packet, or \c false otherwise.
          */
         bool isListening(PacketListener* listener);
@@ -490,7 +490,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * class notes for details.
          *
          * \param listener the listener to unregister.
-         * @return \c true if the given listener was successfully unregistered,
+         * \return \c true if the given listener was successfully unregistered,
          * or \c false if the given listener was not registered in the
          * first place.
          */
@@ -524,7 +524,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * known packet has been found.
          *
          * \param other the packet to compare with this.
-         * @return \c true if and only if this and the given object refer to
+         * \return \c true if and only if this and the given object refer to
          * the same underlying packet.
          */
         bool samePacket(const Packet& other) const;
@@ -535,7 +535,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This is equivalent to, but slightly faster than, testing
          * whether parent() returns a null pointer.
          *
-         * @return \c if and only if this packet has a parent.
+         * \return \c if and only if this packet has a parent.
          */
         bool hasParent() const;
 
@@ -544,7 +544,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This routine takes small constant time.
          *
-         * @return the parent packet, or \c null if there is none.
+         * \return the parent packet, or \c null if there is none.
          */
         std::shared_ptr<Packet> parent() const;
 
@@ -554,7 +554,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This routine takes small constant time.
          *
-         * @return the first child packet, or \c null if there is none.
+         * \return the first child packet, or \c null if there is none.
          */
         std::shared_ptr<Packet> firstChild() const;
 
@@ -564,7 +564,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This routine takes small constant time.
          *
-         * @return the last child packet, or \c null if there is none.
+         * \return the last child packet, or \c null if there is none.
          */
         std::shared_ptr<Packet> lastChild() const;
 
@@ -575,7 +575,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This routine takes small constant time.
          *
-         * @return the next sibling of this packet, or \c null if there is
+         * \return the next sibling of this packet, or \c null if there is
          * none.
          */
         std::shared_ptr<Packet> nextSibling() const;
@@ -587,7 +587,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * This routine takes small constant time.
          *
-         * @return the previous sibling of this packet, or \c null if there is
+         * \return the previous sibling of this packet, or \c null if there is
          * none.
          */
         std::shared_ptr<Packet> prevSibling() const;
@@ -595,7 +595,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
         /**
          * Determines the root of the tree to which this packet belongs.
          *
-         * @return the matriarch of the packet tree.
+         * \return the matriarch of the packet tree.
          */
         std::shared_ptr<Packet> root() const;
 
@@ -612,7 +612,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \param descendant the packet whose relationship with this
          * packet we are examining.
-         * @return the number of levels difference.
+         * \return the number of levels difference.
          */
         unsigned levelsDownTo(const Packet& descendant) const;
 
@@ -629,7 +629,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \param ancestor the packet whose relationship with this
          * packet we are examining.
-         * @return the number of levels difference.
+         * \return the number of levels difference.
          */
         unsigned levelsUpTo(const Packet& ancestor) const;
 
@@ -639,7 +639,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \param descendant the other packet whose relationships we are
          * examining.
-         * @return \c true if and only if this packet is equal to or an
+         * \return \c true if and only if this packet is equal to or an
          * ancestor of \c descendant.
          */
         bool isAncestorOf(const Packet& descendant) const;
@@ -648,7 +648,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Returns the number of immediate children of this packet.
          * Grandchildren and so on are not counted.
          *
-         * @return the number of immediate children.
+         * \return the number of immediate children.
          */
         size_t countChildren() const;
         /**
@@ -656,7 +656,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This includes children, grandchildren and so on.  This packet is
          * not included in the count.
          *
-         * @return the total number of strict descendants.
+         * \return the total number of strict descendants.
          */
         size_t countDescendants() const;
         /**
@@ -664,7 +664,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * for which this packet is matriarch.  This packet is included
          * in the count.
          *
-         * @return the total tree or subtree size.
+         * \return the total tree or subtree size.
          */
         size_t totalTreeSize() const;
 
@@ -1003,7 +1003,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * usual Python way, by treating the subtree root as you would any
          * native Python container.  See __iter__() for details.
          *
-         * @return an iterator at the beginning of this subtree.
+         * \return an iterator at the beginning of this subtree.
          */
         SubtreeIterator<false> begin();
 
@@ -1021,7 +1021,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * usual Python way, by treating the subtree root as you would any
          * native Python container.  See __iter__() for details.
          *
-         * @return an iterator beyond the end of this subtree.
+         * \return an iterator beyond the end of this subtree.
          */
         SubtreeIterator<false> end();
 
@@ -1056,7 +1056,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * usual Python way, by treating the subtree root as you would any
          * native Python container.  See __iter__() for details.
          *
-         * @return an iterator at the beginning of this subtree.
+         * \return an iterator at the beginning of this subtree.
          */
         SubtreeIterator<true> begin() const;
 
@@ -1074,7 +1074,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * usual Python way, by treating the subtree root as you would any
          * native Python container.  See __iter__() for details.
          *
-         * @return an iterator beyond the end of this subtree.
+         * \return an iterator beyond the end of this subtree.
          */
         SubtreeIterator<true> end() const;
 
@@ -1111,7 +1111,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * functions instead.  In particular, you can iterate over a packet
          * subtree in the usual C++ way using a range-based \c for loop.
          *
-         * @return an iterator over the subtree rooted at this packet.
+         * \return an iterator over the subtree rooted at this packet.
          */
         auto __iter__() const;
 #endif
@@ -1157,7 +1157,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * subtree \e including this packet, and children() for iterating
          * over just this packet's immediate children.
          *
-         * @return an object for iterating through the strict descendants
+         * \return an object for iterating through the strict descendants
          * of this packet.
          */
         PacketDescendants<false> descendants();
@@ -1195,7 +1195,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * subtree \e including this packet, and children() for iterating
          * over just this packet's immediate children.
          *
-         * @return an object for iterating through the strict descendants
+         * \return an object for iterating through the strict descendants
          * of this packet.
          */
         PacketDescendants<true> descendants() const;
@@ -1234,7 +1234,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * through the subtree rooted at this packet (not just the immediate
          * children).
          *
-         * @return an object for iterating through the children of this packet.
+         * \return an object for iterating through the children of this packet.
          */
         PacketChildren<false> children();
 
@@ -1264,7 +1264,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * through the subtree rooted at this packet (not just the immediate
          * children).
          *
-         * @return an object for iterating through the children of this packet.
+         * \return an object for iterating through the children of this packet.
          */
         PacketChildren<true> children() const;
 
@@ -1278,7 +1278,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @return the next packet, or \c null if this is the last packet in
+         * \return the next packet, or \c null if this is the last packet in
          * such an iteration.
          */
         std::shared_ptr<Packet> nextTreePacket();
@@ -1293,7 +1293,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tree matriarch will be the first packet visited in a complete
          * depth-first iteration.
          *
-         * @return the next packet, or \c null if this is the last packet in
+         * \return the next packet, or \c null if this is the last packet in
          * such an iteration.
          */
         std::shared_ptr<const Packet> nextTreePacket() const;
@@ -1309,7 +1309,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * depth-first iteration.
          *
          * \param type the type of packet to search for.
-         * @return the first such packet, or \c null if there are no packets of
+         * \return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
         std::shared_ptr<Packet> firstTreePacket(PacketType type);
@@ -1325,7 +1325,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * depth-first iteration.
          *
          * \param type the type of packet to search for.
-         * @return the first such packet, or \c null if there are no packets of
+         * \return the first such packet, or \c null if there are no packets of
          * the requested type.
          */
         std::shared_ptr<const Packet> firstTreePacket(PacketType type) const;
@@ -1338,7 +1338,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * firstTreePacket().
          *
          * \param type the type of packet to search for.
-         * @return the next such packet, or \c null if this is the last packet
+         * \return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
         std::shared_ptr<Packet> nextTreePacket(PacketType type);
@@ -1351,7 +1351,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * firstTreePacket().
          *
          * \param type the type of packet to search for.
-         * @return the next such packet, or \c null if this is the last packet
+         * \return the next such packet, or \c null if this is the last packet
          * of the requested type in such an iteration.
          */
         std::shared_ptr<const Packet> nextTreePacket(PacketType type) const;
@@ -1362,7 +1362,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * comparisons are case sensitive.
          *
          * \param label the label to search for.
-         * @return the packet with the requested label, or \c null if there is
+         * \return the packet with the requested label, or \c null if there is
          * no such packet.
          */
         std::shared_ptr<Packet> findPacketLabel(const std::string& label);
@@ -1373,7 +1373,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * comparisons are case sensitive.
          *
          * \param label the label to search for.
-         * @return the packet with the requested label, or \c null if there is
+         * \return the packet with the requested label, or \c null if there is
          * no such packet.
          */
         std::shared_ptr<const Packet> findPacketLabel(const std::string& label)
@@ -1421,7 +1421,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * the end of the parent's list of children (the default), or
          * \c false if the new packet should be inserted as the sibling
          * immediately after this packet.
-         * @return the newly inserted packet, or \c null if this packet has no
+         * \return the newly inserted packet, or \c null if this packet has no
          * parent.
          */
         std::shared_ptr<Packet> cloneAsSibling(bool cloneDescendants = false,
@@ -1457,7 +1457,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
          * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
-         * @return \c true if and only if the file was successfully written.
+         * \return \c true if and only if the file was successfully written.
          */
         bool save(const char* filename, bool compressed = true,
             FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
@@ -1487,7 +1487,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * You should use the default (REGINA_CURRENT_FILE_FORMAT) unless you
          * need your file to be readable by older versions of Regina.
          * This must not be REGINA_BINARY_GEN_1, which is no longer supported.
-         * @return \c true if and only if the data was successfully written.
+         * \return \c true if and only if the data was successfully written.
          */
         bool save(std::ostream& s, bool compressed = true,
             FileFormat format = REGINA_CURRENT_FILE_FORMAT) const;
@@ -1537,7 +1537,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The ID is implemented as an encoding of the underlying C++ pointer.
          * This encoding is subject to change in later versions of Regina.
          *
-         * @return a unique ID that identifies this packet.
+         * \return a unique ID that identifies this packet.
          */
         std::string internalID() const;
 
@@ -1643,7 +1643,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This is provided so that derived classes can use it implicitly
          * in their own assignment operators.
          *
-         * @return a reference to this packet.
+         * \return a reference to this packet.
          */
         // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
         Packet& operator = (const Packet&) { return *this; }
@@ -1658,7 +1658,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * inserted into the tree beneath either the same parent as this
          * packet or a clone of that parent.
          *
-         * @return the newly created packet.
+         * \return the newly created packet.
          */
         virtual std::shared_ptr<Packet> internalClonePacket() const = 0;
 
@@ -2123,7 +2123,7 @@ class PacketOf : public Packet, public Held {
          * Sets the content of this packet to be a copy of the given data.
          *
          * \param data the object to copy.
-         * @return a reference to this packet.
+         * \return a reference to this packet.
          */
         PacketOf<Held>& operator = (const Held& data) {
             // We assume that Held takes care of the necessary change events.
@@ -2139,7 +2139,7 @@ class PacketOf : public Packet, public Held {
          * The object that is passed (\a data) will no longer be usable.
          *
          * \param data the object to move.
-         * @return a reference to this packet.
+         * \return a reference to this packet.
          */
         PacketOf<Held>& operator = (Held&& data) {
             // We assume that Held takes care of the necessary change events.
@@ -2154,7 +2154,7 @@ class PacketOf : public Packet, public Held {
          * or change this packet's location in any packet tree).
          *
          * \param src the packet whose contents should be copied.
-         * @return a reference to this packet.
+         * \return a reference to this packet.
          */
         PacketOf<Held>& operator = (const PacketOf<Held>& src) {
             // We assume that Held takes care of the necessary change events.
@@ -2230,7 +2230,7 @@ class PacketData {
          * This operator is provided so that \a Held can (if it wants) use an
          * implicitly-declared copy or move assignment operator.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         PacketData& operator = (const PacketData&) { return *this; }
 
@@ -2261,7 +2261,7 @@ class PacketData {
          * The function inAnyPacket() is specific to Triangulation<3>, and is
          * not offered for other \a Held types.
          *
-         * @return the packet that holds this data, or \c null if this
+         * \return the packet that holds this data, or \c null if this
          * data is not (directly) held by a packet.
          */
         std::shared_ptr<PacketOf<Held>> packet() {
@@ -2277,7 +2277,7 @@ class PacketData {
          * and in particular for how this functions operations in the
          * special case of a packet that holds a SnapPea triangulation.
          *
-         * @return the packet that holds this data, or \c null if this
+         * \return the packet that holds this data, or \c null if this
          * data is not (directly) held by a packet.
          */
         std::shared_ptr<const PacketOf<Held>> packet() const {
@@ -2313,7 +2313,7 @@ class PacketData {
          *
          * See Packet::internalID() for further details.
          *
-         * @return a unique ID that identifies this object.
+         * \return a unique ID that identifies this object.
          */
         std::string anonID() const;
 
@@ -2412,7 +2412,7 @@ class PacketData {
  *
  * \param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.
- * @return the new wrapped packet.
+ * \return the new wrapped packet.
  *
  * \ingroup packet
  */
@@ -2444,7 +2444,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
  * \param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.
  * \param label the label to assign to the new packet.
- * @return the new wrapped packet.
+ * \return the new wrapped packet.
  *
  * \ingroup packet
  */
@@ -2482,7 +2482,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
  *
  * \param args the arguments to be forwarded to the appropriate
  * \a Held constructor.
- * @return the new wrapped packet.
+ * \return the new wrapped packet.
  *
  * \ingroup packet
  */
@@ -2508,7 +2508,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(std::in_place_t, Args&&... args) {
  * \nopython This routine is too heavily templated for Python.  Instead you
  * can just directly call the constructor <tt>PacketOfHeld()</tt>.
  *
- * @return the new wrapped packet.
+ * \return the new wrapped packet.
  *
  * \ingroup packet
  */
@@ -2536,7 +2536,7 @@ std::shared_ptr<PacketOf<Held>> make_packet() {
  * \nopython Casting is unnecessary in Python.
  *
  * \param p a reference, presented as a packet.
- * @return the same reference, presented using the type \a Held.
+ * \return the same reference, presented using the type \a Held.
  *
  * \ingroup packet
  */
@@ -2564,7 +2564,7 @@ Held& static_packet_cast(Packet& p) {
  * \nopython Casting is unnecessary in Python.
  *
  * \param p a reference, presented as a packet.
- * @return the same reference, presented using the type \a Held.
+ * \return the same reference, presented using the type \a Held.
  *
  * \ingroup packet
  */
@@ -2595,7 +2595,7 @@ const Held& static_packet_cast(const Packet& p) {
  * function by calling <tt>regina.open()</tt>.
  *
  * \param filename the pathname of the file to read from.
- * @return the packet tree read from file, or \c null on error.
+ * \return the packet tree read from file, or \c null on error.
  *
  * \ingroup packet
  */
@@ -2617,7 +2617,7 @@ std::shared_ptr<Packet> open(const char* filename);
  * \nopython Instead you can use the variant of open() that takes a filename.
  *
  * \param in the input stream to read from.
- * @return the packet tree read from file, or \c null on error.
+ * \return the packet tree read from file, or \c null on error.
  *
  * \ingroup packet
  */
@@ -2697,20 +2697,20 @@ class ChildIterator {
         /**
          * Sets this to be a copy of the given iterator.
          *
-         * @return a reference to this iterator.
+         * \return a reference to this iterator.
          */
         ChildIterator& operator = (const ChildIterator&) = default;
 
         /**
          * Tests whether this and the given iterator are equal.
          *
-         * @return true if and only if the two iterators are equal.
+         * \return true if and only if the two iterators are equal.
          */
         bool operator == (const ChildIterator& rhs) const;
         /**
          * Tests whether this and the given iterator are different.
          *
-         * @return true if and only if the two iterators are different.
+         * \return true if and only if the two iterators are different.
          */
         bool operator != (const ChildIterator& rhs) const;
 
@@ -2720,7 +2720,7 @@ class ChildIterator {
          * \nopython For Python users, ChildIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return a reference to this iterator.
+         * \return a reference to this iterator.
          */
         ChildIterator& operator ++ ();
         /**
@@ -2729,7 +2729,7 @@ class ChildIterator {
          * \nopython For Python users, ChildIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return a a copy of this iterator before it was incremented.
+         * \return a a copy of this iterator before it was incremented.
          */
         ChildIterator operator ++ (int);
 #ifdef __APIDOCS
@@ -2743,7 +2743,7 @@ class ChildIterator {
          * \exception StopIteration The iterator is already past-the-end
          * when this function is called.
          *
-         * @return the child packet that this iterator is pointing to, before
+         * \return the child packet that this iterator is pointing to, before
          * the increment takes place.
          */
         auto __next__();
@@ -2755,7 +2755,7 @@ class ChildIterator {
          * \nopython For Python users, ChildIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return the current packet.
+         * \return the current packet.
          */
         value_type& operator * () const;
 
@@ -2765,7 +2765,7 @@ class ChildIterator {
          * \nopython For Python users, ChildIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return \c true if and only if this is dereferencable (i.e.,
+         * \return \c true if and only if this is dereferencable (i.e.,
          * not past-the-end).
          */
         operator bool() const;
@@ -2874,7 +2874,7 @@ class SubtreeIterator {
         /**
          * Sets this to be a copy of the given iterator.
          *
-         * @return a reference to this iterator.
+         * \return a reference to this iterator.
          */
         SubtreeIterator& operator = (const SubtreeIterator&) = default;
 
@@ -2890,7 +2890,7 @@ class SubtreeIterator {
          * through a packet subtree (including or excluding the subtree root
          * respectively) using a range-based \c for loop.
          *
-         * @return an iterator over all members of the relevant packet subtree.
+         * \return an iterator over all members of the relevant packet subtree.
          */
         auto __iter__() const;
 #endif
@@ -2902,7 +2902,7 @@ class SubtreeIterator {
          * is currently pointing to.  It does not compare the roots of the
          * subtrees themselves.
          *
-         * @return true if and only if the two iterators are equal.
+         * \return true if and only if the two iterators are equal.
          */
         bool operator == (const SubtreeIterator& rhs) const;
         /**
@@ -2912,7 +2912,7 @@ class SubtreeIterator {
          * is currently pointing to.  It does not compare the roots of the
          * subtrees themselves.
          *
-         * @return true if and only if the two iterators are different.
+         * \return true if and only if the two iterators are different.
          */
         bool operator != (const SubtreeIterator& rhs) const;
 
@@ -2922,7 +2922,7 @@ class SubtreeIterator {
          * \nopython For Python users, SubtreeIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return a reference to this iterator.
+         * \return a reference to this iterator.
          */
         SubtreeIterator& operator ++ ();
         /**
@@ -2931,7 +2931,7 @@ class SubtreeIterator {
          * \nopython For Python users, SubtreeIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return a copy of this iterator before it was incremented.
+         * \return a copy of this iterator before it was incremented.
          */
         SubtreeIterator operator ++ (int);
 #ifdef __APIDOCS
@@ -2946,7 +2946,7 @@ class SubtreeIterator {
          * \exception StopIteration The iterator is already past-the-end
          * when this function is called.
          *
-         * @return the packet that this iterator is pointing to, before
+         * \return the packet that this iterator is pointing to, before
          * the increment takes place.
          */
         auto __next__();
@@ -2958,7 +2958,7 @@ class SubtreeIterator {
          * \nopython For Python users, SubtreeIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return the current packet.
+         * \return the current packet.
          */
         value_type& operator * () const;
 
@@ -2968,7 +2968,7 @@ class SubtreeIterator {
          * \nopython For Python users, SubtreeIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
-         * @return \c true if and only if this is dereferencable (i.e.,
+         * \return \c true if and only if this is dereferencable (i.e.,
          * not past-the-end).
          */
         operator bool() const;
@@ -3054,7 +3054,7 @@ class PacketChildren {
          * Sets this object to iterate over the children of the same packet
          * as the given object.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         PacketChildren& operator = (const PacketChildren&) = default;
 
@@ -3069,7 +3069,7 @@ class PacketChildren {
          * packets in the usual Python way, by treating this PacketChildren
          * object as you would any native Python container.
          *
-         * @return the beginning iterator.
+         * \return the beginning iterator.
          */
         ChildIterator<const_> begin() const;
         /**
@@ -3084,7 +3084,7 @@ class PacketChildren {
          * packets in the usual Python way, by treating this PacketChildren
          * object as you would any native Python container.
          *
-         * @return the past-the-end iterator.
+         * \return the past-the-end iterator.
          */
         ChildIterator<const_> end() const;
 #ifdef __APIDOCS
@@ -3096,7 +3096,7 @@ class PacketChildren {
          * allows you to iterate through all immediate child packets
          * in the usual way using a range-based \c for loop.
          *
-         * @return an iterator over all immediate child packets.
+         * \return an iterator over all immediate child packets.
          */
         auto __iter__() const;
 #endif
@@ -3105,7 +3105,7 @@ class PacketChildren {
          * Determines whether this and the given object are designed to
          * iterate over children of the same parent packet.
          *
-         * @return \c true if and only if this object and \a rhs iterate
+         * \return \c true if and only if this object and \a rhs iterate
          * over children of the same packet.
          */
         bool operator == (const PacketChildren& rhs) const;
@@ -3114,7 +3114,7 @@ class PacketChildren {
          * Determines whether this and the given object are designed to
          * iterate over children of different parent packets.
          *
-         * @return \c true if and only if this object and \a rhs iterate
+         * \return \c true if and only if this object and \a rhs iterate
          * over children of different packets.
          */
         bool operator != (const PacketChildren& rhs) const;
@@ -3201,7 +3201,7 @@ class PacketDescendants {
          * Sets this object to iterate over the strict descendants of the
          * same packet as the given object.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         PacketDescendants& operator = (const PacketDescendants&) = default;
 
@@ -3215,7 +3215,7 @@ class PacketDescendants {
          * packets in the usual Python way, by treating this PacketDescendants
          * object as you would any native Python container.
          *
-         * @return the beginning iterator.
+         * \return the beginning iterator.
          */
         SubtreeIterator<const_> begin() const;
         /**
@@ -3227,7 +3227,7 @@ class PacketDescendants {
          * packets in the usual Python way, by treating this PacketDescendants
          * object as you would any native Python container.
          *
-         * @return the past-the-end iterator.
+         * \return the past-the-end iterator.
          */
         SubtreeIterator<const_> end() const;
 #ifdef __APIDOCS
@@ -3239,7 +3239,7 @@ class PacketDescendants {
          * allows you to iterate through all strict descendant packets
          * in the usual way using a range-based \c for loop.
          *
-         * @return an iterator over all strict descendant packets.
+         * \return an iterator over all strict descendant packets.
          */
         auto __iter__() const;
 #endif
@@ -3248,7 +3248,7 @@ class PacketDescendants {
          * Determines whether this and the given object are designed to
          * iterate over strict descendants of the same packet.
          *
-         * @return \c true if and only if this object and \a rhs iterate
+         * \return \c true if and only if this object and \a rhs iterate
          * over descendants of the same packet.
          */
         bool operator == (const PacketDescendants& rhs) const;
@@ -3257,7 +3257,7 @@ class PacketDescendants {
          * Determines whether this and the given object are designed to
          * iterate over strict descendants of different packets.
          *
-         * @return \c true if and only if this object and \a rhs iterate
+         * \return \c true if and only if this object and \a rhs iterate
          * over descendants of different packets.
          */
         bool operator != (const PacketDescendants& rhs) const;
@@ -3317,7 +3317,7 @@ class PacketShell {
          * underlying packet.
          *
          * \param shell the shell to compare with this.
-         * @return \c true if and only if both shells refer to the same packet.
+         * \return \c true if and only if both shells refer to the same packet.
          */
         bool operator == (const PacketShell& shell) const;
 
@@ -3328,7 +3328,7 @@ class PacketShell {
          * on the right); this reversed test is defined as a global function.
          *
          * \param packet the packet to test against; this may be \c null.
-         * @return \c true if and only if this shell refers to the given packet.
+         * \return \c true if and only if this shell refers to the given packet.
          */
         bool operator == (const Packet* packet) const;
 
@@ -3337,7 +3337,7 @@ class PacketShell {
          * underlying packets.
          *
          * \param shell the shell to compare with this.
-         * @return \c true if and only if both shells refer to different
+         * \return \c true if and only if both shells refer to different
          * packets.
          */
         bool operator != (const PacketShell& shell) const;
@@ -3349,7 +3349,7 @@ class PacketShell {
          * on the right); this reversed test is defined as a global function.
          *
          * \param packet the packet to test against; this may be \c null.
-         * @return \c true if and only if this shell does not refer to the
+         * \return \c true if and only if this shell does not refer to the
          * given packet.
          */
         bool operator != (const Packet* packet) const;
@@ -3364,7 +3364,7 @@ class PacketShell {
          * temporary, since the underlying packet (and therefore the
          * string that is referenced) is in the process of being destroyed.
          *
-         * @return this individual packet's label.
+         * \return this individual packet's label.
          */
         const std::string& label() const;
 
@@ -3375,7 +3375,7 @@ class PacketShell {
          * See Packet::label() and Packet::humanLabel() for further details
          * on packet labels.
          *
-         * @return this individual packet's label.
+         * \return this individual packet's label.
          */
         std::string humanLabel() const;
 
@@ -3385,7 +3385,7 @@ class PacketShell {
          * See Packet::tags() for further details on packet tags.
          *
          * \param tag the tag to search for.
-         * @return \c true if the given tag is found, \c false otherwise.
+         * \return \c true if the given tag is found, \c false otherwise.
          */
         bool hasTag(const std::string& tag) const;
 
@@ -3394,7 +3394,7 @@ class PacketShell {
          *
          * See Packet::tags() for further details on packet tags.
          *
-         * @return \c true if this packet has any tags, \c false otherwise.
+         * \return \c true if this packet has any tags, \c false otherwise.
          */
         bool hasTags() const;
 
@@ -3409,7 +3409,7 @@ class PacketShell {
          *
          * \ifacespython This routine returns a python set.
          *
-         * @return the set of all tags associated with this packet.
+         * \return the set of all tags associated with this packet.
          */
         const std::set<std::string>& tags() const;
 
@@ -3422,7 +3422,7 @@ class PacketShell {
          *
          * See Packet::internalID() for further details.
          *
-         * @return a unique ID that identifies this packet.
+         * \return a unique ID that identifies this packet.
          */
         std::string internalID() const;
 };
@@ -3435,7 +3435,7 @@ class PacketShell {
  *
  * \param packet the packet to test against; this may be \c null.
  * \param shell the packet shell to test against.
- * @return \c true if and only if the given shell refers to the given packet.
+ * \return \c true if and only if the given shell refers to the given packet.
  *
  * \ingroup packet
  */
@@ -3449,7 +3449,7 @@ bool operator == (const Packet* packet, PacketShell shell);
  *
  * \param packet the packet to test against; this may be \c null.
  * \param shell the packet shell to test against.
- * @return \c true if and only if the given shell does not refer to the
+ * \return \c true if and only if the given shell does not refer to the
  * given packet.
  *
  * \ingroup packet
@@ -3557,7 +3557,7 @@ class PacketListener {
          * Determines whether this object is listening for events on any
          * packets at all.
          *
-         * @return \c true if and only if this object is listening on at
+         * \return \c true if and only if this object is listening on at
          * least one packet.
          */
         bool isListening() const;
@@ -3934,7 +3934,7 @@ class PacketListener {
          * to the same packets as \a src.
          *
          * \param src the listener to copy.
-         * @return a reference to this packet listener.
+         * \return a reference to this packet listener.
          */
         PacketListener& operator = (const PacketListener& src);
 

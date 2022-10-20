@@ -250,7 +250,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * Then each bag is a subset of the nodes of \a G, and this
          * function simply returns the size of this subset.
          *
-         * @return the number of graph nodes in this bag.
+         * \return the number of graph nodes in this bag.
          */
         size_t size() const;
         /**
@@ -266,7 +266,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * \param which indicates which node should be returned; this
          * must be between 0 and size()-1 inclusive.
-         * @return the number of the corresponding node stored in this bag.
+         * \return the number of the corresponding node stored in this bag.
          */
         size_t element(size_t which) const;
         /**
@@ -278,7 +278,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * is contained in this bag.
          *
          * \param element the number of some node in the graph \a G.
-         * @return \c true if and only if the given node is in this bag.
+         * \return \c true if and only if the given node is in this bag.
          */
         bool contains(size_t element) const;
 
@@ -298,7 +298,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * - for any bag \a b with a next sibling, we have
          *   <tt>b.index() &lt; b.sibling()->index()</tt>;
          *
-         * @return the index of this bag within the full tree decomposition
+         * \return the index of this bag within the full tree decomposition
          * \a d; this will be between 0 and <tt>d.size()-1</tt> inclusive.
          */
         size_t index() const;
@@ -325,7 +325,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * \e nice tree decompositions.  See TreeDecomposition::makeNice()
          * for details on what type() and subtype() represent.
          *
-         * @return a non-zero value indicating the role that this bag plays
+         * \return a non-zero value indicating the role that this bag plays
          * in this tree decomposition, or zero if type and subtype information
          * are not stored.
          */
@@ -352,7 +352,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * \e nice tree decompositions.  See TreeDecomposition::makeNice()
          * for details on what type() and subtype() represent.
          *
-         * @return additional information indicating the role that this
+         * \return additional information indicating the role that this
          * bag plays in this tree decomposition, or undefined if no
          * additional subtype information is stored for this bag.
          */
@@ -372,7 +372,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * - BAG_UNRELATED if neither this nor \a rhs is a subset of the other.
          *
          * \param rhs the bag to compare with this.
-         * @return the relationship between the two bags, as outlined above.
+         * \return the relationship between the two bags, as outlined above.
          */
         BagComparison compare(const TreeBag& rhs) const;
 
@@ -398,7 +398,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * iteration is equivalent to iterating through bags 0,1,2,...
          * in order.
          *
-         * @return the next bag after this in a postfix iteration of all
+         * \return the next bag after this in a postfix iteration of all
          * bags, or \c null if this is the final bag in such an iteration
          * (i.e., the root bag).
          */
@@ -421,7 +421,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * that is, it processes each bag \a b before <tt>b.sibling()</tt>
          * (if the latter exists).
          *
-         * @return the next bag after this in a prefix iteration of all
+         * \return the next bag after this in a prefix iteration of all
          * bags, or \c null if this is the final bag in such an iteration.
          */
         const TreeBag* nextPrefix() const;
@@ -429,7 +429,7 @@ class TreeBag : public ShortOutput<TreeBag> {
         /**
          * Returns the parent of this bag in the underlying rooted tree.
          *
-         * @return the parent of this bag, or \c null if this bag is at
+         * \return the parent of this bag, or \c null if this bag is at
          * the root of the tree.
          */
         const TreeBag* parent() const;
@@ -441,7 +441,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * <tt>children()</tt>, <tt>children()->sibling()</tt>,
          * <tt>children()->sibling()->sibling()</tt>, and so on.
          *
-         * @return the first child of this bag, or \c null if this is a
+         * \return the first child of this bag, or \c null if this is a
          * leaf bag (i.e., it has no children).
          */
         const TreeBag* children() const;
@@ -455,7 +455,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * <tt>b.children()</tt>, <tt>b.children()->sibling()</tt>,
          * <tt>b.children()->sibling()->sibling()</tt>, and so on.
          *
-         * @return the next sibling of this bag, or \c null if either
+         * \return the next sibling of this bag, or \c null if either
          * (i) this is the final child of the parent bag, or
          * (ii) this is the root bag.
          */
@@ -466,7 +466,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * This is equivalent to testing whether children() is \c null.
          *
-         * @return \c true if and only if this is a leaf bag.
+         * \return \c true if and only if this is a leaf bag.
          */
         bool isLeaf() const;
 
@@ -856,7 +856,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * or graphs.
          *
          * \param src the tree decomposition to copy.
-         * @return a reference to this tree decomposition.
+         * \return a reference to this tree decomposition.
          */
         TreeDecomposition& operator = (const TreeDecomposition& src);
 
@@ -872,7 +872,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * or graphs.
          *
          * \param src the tree decomposition to move.
-         * @return a reference to this tree decomposition.
+         * \return a reference to this tree decomposition.
          */
         TreeDecomposition& operator = (TreeDecomposition&& src) noexcept;
 
@@ -888,13 +888,13 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Returns the width of this tree decomposition.
          * This is one less than the size of the largest bag.
          *
-         * @return the width of this tree decomposition.
+         * \return the width of this tree decomposition.
          */
         ssize_t width() const;
         /**
          * Returns the number of bags in this tree decomposition.
          *
-         * @return the number of bags.
+         * \return the number of bags.
          */
         size_t size() const;
 
@@ -909,7 +909,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * are ignored.
          *
          * \param other the tree decomposition to compare with this.
-         * @return \c true if and only if this and the given tree
+         * \return \c true if and only if this and the given tree
          * decomposition are identical.
          */
         bool operator == (const TreeDecomposition& other) const;
@@ -925,7 +925,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * numbered child bags.  Bag types and subtypes are ignored.
          *
          * \param other the tree decomposition to compare with this.
-         * @return \c true if and only if this and the given tree
+         * \return \c true if and only if this and the given tree
          * decomposition are different.
          */
         bool operator != (const TreeDecomposition& other) const;
@@ -933,7 +933,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
         /**
          * Returns the bag at the root of the underlying tree.
          *
-         * @return the root bag, or \c null if there are no bags (which
+         * \return the root bag, or \c null if there are no bags (which
          * means the underlying graph \a G is empty).
          */
         const TreeBag* root() const;
@@ -958,7 +958,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * numbered 0,1,2,...; that is, following the order of
          * TreeBag::index().
          *
-         * @return the first bag in a postfix iteration of all bags, or
+         * \return the first bag in a postfix iteration of all bags, or
          * \c null if there are no bags (which means the underlying
          * graph \a G is empty).
          */
@@ -983,7 +983,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Since the first bag in a prefix iteration must be the root bag,
          * this function is identical to calling root().
          *
-         * @return the first bag in a prefix iteration of all bags, or
+         * \return the first bag in a prefix iteration of all bags, or
          * \c null if there are no bags (which means the underlying
          * graph \a G is empty).
          */
@@ -1008,7 +1008,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * \param index the number of a bag; this must be between 0 and
          * size()-1 inclusive.
-         * @return the bag with the given number.
+         * \return the bag with the given number.
          */
         const TreeBag* bag(size_t index) const;
 
@@ -1024,7 +1024,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * bags that are not destroyed, their indices (as returned by
          * TreeBag::index()) may change.
          *
-         * @return \c true if and only if the tree decomposition was changed.
+         * \return \c true if and only if the tree decomposition was changed.
          */
         bool compress();
         /**
@@ -1250,7 +1250,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * See the writeDot() notes for further details.
          *
-         * @return the output of writeDot(), as outlined above.
+         * \return the output of writeDot(), as outlined above.
          */
         std::string dot() const;
 
@@ -1288,7 +1288,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * See the writePACE() notes for further details.
          *
-         * @return the output of writePACE(), as outlined above.
+         * \return the output of writePACE(), as outlined above.
          *
          * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
@@ -1374,7 +1374,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * \param str a text representation of the tree
          * decomposition using the PACE text format.
-         * @return the corresponding tree decomposition.
+         * \return the corresponding tree decomposition.
          *
          * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
@@ -1406,7 +1406,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * \param in an input stream that provides a text
          * representation of the tree decomposition using the PACE text format.
-         * @return the corresponding tree decomposition.
+         * \return the corresponding tree decomposition.
          *
          * \see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */

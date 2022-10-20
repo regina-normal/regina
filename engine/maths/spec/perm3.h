@@ -123,14 +123,14 @@ class Perm<3> {
              * This operation is extremely fast (and constant time).
              *
              * \param index an index between 0 and 5 inclusive.
-             * @return the corresponding permutation in S3.
+             * \return the corresponding permutation in S3.
              */
             constexpr Perm<3> operator[] (int index) const;
 
             /**
              * Returns the number of permutations in the array S3.
              *
-             * @return the size of this array.
+             * \return the size of this array.
              */
             static constexpr Index size() { return 6; }
         };
@@ -146,14 +146,14 @@ class Perm<3> {
              * This operation is extremely fast (and constant time).
              *
              * \param index an index between 0 and 5 inclusive.
-             * @return the corresponding permutation in orderedS3.
+             * \return the corresponding permutation in orderedS3.
              */
             constexpr Perm<3> operator[] (int index) const;
 
             /**
              * Returns the number of permutations in the array orderedS3.
              *
-             * @return the size of this array.
+             * \return the size of this array.
              */
             static constexpr Index size() { return 6; }
         };
@@ -169,14 +169,14 @@ class Perm<3> {
              * This operation is extremely fast (and constant time).
              *
              * \param index an index between 0 and 1 inclusive.
-             * @return the corresponding permutation in S2.
+             * \return the corresponding permutation in S2.
              */
             constexpr Perm<3> operator[] (int index) const;
 
             /**
              * Returns the number of permutations in the array S2.
              *
-             * @return the size of this array.
+             * \return the size of this array.
              */
             static constexpr Index size() { return 2; }
         };
@@ -396,7 +396,7 @@ class Perm<3> {
          * The code returned will be a valid permutation code as
          * determined by isPermCode().
          *
-         * @return the internal code.
+         * \return the internal code.
          */
         constexpr Code permCode() const;
 
@@ -419,7 +419,7 @@ class Perm<3> {
          * isPermCode() for details.
          *
          * \param code the internal code for the new permutation.
-         * @return the permutation represented by the given internal code.
+         * \return the permutation represented by the given internal code.
          */
         static constexpr Perm<3> fromPermCode(Code code);
 
@@ -429,7 +429,7 @@ class Perm<3> {
          * setPermCode() or fromPermCode(), and are returned by permCode().
          *
          * \param code the permutation code to test.
-         * @return \c true if and only if the given code is a valid
+         * \return \c true if and only if the given code is a valid
          * internal permutation code.
          */
         static constexpr bool isPermCode(Code code);
@@ -439,7 +439,7 @@ class Perm<3> {
          *
          * \param cloneMe the permutation whose value will be assigned
          * to this permutation.
-         * @return a reference to this permutation.
+         * \return a reference to this permutation.
          */
         Perm<3>& operator = (const Perm<3>& cloneMe) = default;
 
@@ -450,14 +450,14 @@ class Perm<3> {
          * <tt>(p*q)[x] == p[q[x]]</tt>.
          *
          * \param q the permutation with which to compose this.
-         * @return the composition of both permutations.
+         * \return the composition of both permutations.
          */
         constexpr Perm<3> operator * (const Perm<3>& q) const;
 
         /**
          * Finds the inverse of this permutation.
          *
-         * @return the inverse of this permutation.
+         * \return the inverse of this permutation.
          */
         constexpr Perm<3> inverse() const;
 
@@ -467,7 +467,7 @@ class Perm<3> {
          * This routine runs in constant time.
          *
          * \param exp the exponent; this may be positive, zero or negative.
-         * @return this permutation raised to the power of \a exp.
+         * \return this permutation raised to the power of \a exp.
          */
         constexpr Perm<3> pow(long exp) const;
 
@@ -478,7 +478,7 @@ class Perm<3> {
          * integer \a k for which the <i>k</i>th power of this
          * permutation is the identity.
          *
-         * @return the order of this permutation.
+         * \return the order of this permutation.
          */
         constexpr int order() const;
 
@@ -494,7 +494,7 @@ class Perm<3> {
         /**
          * Determines the sign of this permutation.
          *
-         * @return 1 if this permutation is even, or -1 if this
+         * \return 1 if this permutation is even, or -1 if this
          * permutation is odd.
          */
         constexpr int sign() const;
@@ -505,7 +505,7 @@ class Perm<3> {
          *
          * \param source the integer whose image we wish to find.  This
          * should be between 0 and 2 inclusive.
-         * @return the image of \a source.
+         * \return the image of \a source.
          */
         constexpr int operator[](int source) const;
 
@@ -515,7 +515,7 @@ class Perm<3> {
          *
          * \param image the integer whose preimage we wish to find.  This
          * should be between 0 and 2 inclusive.
-         * @return the preimage of \a image.
+         * \return the preimage of \a image.
          */
         constexpr int pre(int image) const;
 
@@ -525,7 +525,7 @@ class Perm<3> {
          * images for 0, 1 and 2.
          *
          * \param other the permutation with which to compare this.
-         * @return \c true if and only if this and the given permutation
+         * \return \c true if and only if this and the given permutation
          * are equal.
          */
         constexpr bool operator == (const Perm<3>& other) const;
@@ -536,7 +536,7 @@ class Perm<3> {
          * different images for at least one of 0, 1 or 2.
          *
          * \param other the permutation with which to compare this.
-         * @return \c true if and only if this and the given permutation
+         * \return \c true if and only if this and the given permutation
          * differ.
          */
         constexpr bool operator != (const Perm<3>& other) const;
@@ -550,7 +550,7 @@ class Perm<3> {
          * compareWith() is slower than the less-than operator to compute.
          *
          * \param other the permutation with which to compare this.
-         * @return -1 if this permutation produces a smaller image, 0 if
+         * \return -1 if this permutation produces a smaller image, 0 if
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
          */
@@ -560,7 +560,7 @@ class Perm<3> {
          * Determines if this is the identity permutation.
          * This is true if and only if each of 0, 1 and 2 is mapped to itself.
          *
-         * @return \c true if and only if this is the identity permutation.
+         * \return \c true if and only if this is the identity permutation.
          */
         constexpr bool isIdentity() const;
 
@@ -573,7 +573,7 @@ class Perm<3> {
          * \nopython The postincrement operator is present in Python as the
          * member function inc().
          *
-         * @return a reference to this permutation after the increment.
+         * \return a reference to this permutation after the increment.
          */
         Perm<3>& operator ++();
 
@@ -586,7 +586,7 @@ class Perm<3> {
          * \ifacespython This routine is named inc() since python does
          * not support the increment operator.
          *
-         * @return a copy of this permutation before the increment took place.
+         * \return a copy of this permutation before the increment took place.
          */
         constexpr Perm<3> operator ++(int);
 
@@ -600,7 +600,7 @@ class Perm<3> {
          * and this order is also faster to compute than compareWith().
          *
          * \param rhs the permutation to compare this against.
-         * @return \c true if and only if this appears before \a rhs in \a Sn.
+         * \return \c true if and only if this appears before \a rhs in \a Sn.
          */
         constexpr bool operator < (const Perm<3>& rhs) const;
 
@@ -610,7 +610,7 @@ class Perm<3> {
          * for all \a k.
          *
          * \param i the image of 0; this must be between 0 and 2 inclusive.
-         * @return the <i>i</i>th rotation.
+         * \return the <i>i</i>th rotation.
          */
         static constexpr Perm rot(int i);
 
@@ -630,7 +630,7 @@ class Perm<3> {
          * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
          * returned with equal probability).
-         * @return a random permutation.
+         * \return a random permutation.
          */
         static Perm rand(bool even = false);
 
@@ -653,7 +653,7 @@ class Perm<3> {
          * \param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
          * returned with equal probability).
-         * @return a random permutation.
+         * \return a random permutation.
          */
         template <class URBG>
         static Perm rand(URBG&& gen, bool even = false);
@@ -664,7 +664,7 @@ class Perm<3> {
          * representing the images of 0, 1 and 2 respectively.  An
          * example of a string representation is <tt>120</tt>.
          *
-         * @return a string representation of this permutation.
+         * \return a string representation of this permutation.
          */
         std::string str() const;
 
@@ -674,7 +674,7 @@ class Perm<3> {
          *
          * \param len the length of the prefix required; this must be
          * between 0 and 3 inclusive.
-         * @return the corresponding prefix of the string representation
+         * \return the corresponding prefix of the string representation
          * of this permutation.
          */
         std::string trunc(int len) const;
@@ -684,7 +684,7 @@ class Perm<3> {
          * the images of 0 and 1.  The resulting string will therefore
          * have length two.
          *
-         * @return a truncated string representation of this permutation.
+         * \return a truncated string representation of this permutation.
          */
         std::string trunc2() const;
 
@@ -717,7 +717,7 @@ class Perm<3> {
          * code.  For larger permutation classes however (8 &le; \a n &le; 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
-         * @return the resulting encoded string.
+         * \return the resulting encoded string.
          */
         std::string tightEncoding() const;
 
@@ -738,7 +738,7 @@ class Perm<3> {
          * of a 3-element permutation.
          *
          * \param enc the tight encoding for a 3-element permutation.
-         * @return the permutation represented by the given tight encoding.
+         * \return the permutation represented by the given tight encoding.
          */
         static Perm tightDecoding(const std::string& enc);
 
@@ -766,7 +766,7 @@ class Perm<3> {
          *
          * \param input an input stream that begins with the tight encoding
          * for a 3-element permutation.
-         * @return the permutation represented by the given tight encoding.
+         * \return the permutation represented by the given tight encoding.
          */
         static Perm tightDecode(std::istream& input);
 
@@ -791,7 +791,7 @@ class Perm<3> {
          *
          * See Sn for further information on how these permutations are indexed.
          *
-         * @return the index \a i for which this permutation is equal to
+         * \return the index \a i for which this permutation is equal to
          * Perm<3>::Sn[i].  This will be between 0 and 5 inclusive.
          */
         constexpr Index SnIndex() const;
@@ -806,7 +806,7 @@ class Perm<3> {
          *
          * See Sn for further information on how these permutations are indexed.
          *
-         * @return the index \a i for which this permutation is equal to
+         * \return the index \a i for which this permutation is equal to
          * Perm<3>::S3[i].  This will be between 0 and 5 inclusive.
          */
         constexpr Index S3Index() const;
@@ -817,7 +817,7 @@ class Perm<3> {
          *
          * See orderedSn for further information on lexicographical ordering.
          *
-         * @return the lexicographical index of this permutation.
+         * \return the lexicographical index of this permutation.
          * This will be between 0 and 5 inclusive.
          */
         constexpr Index orderedSnIndex() const;
@@ -834,7 +834,7 @@ class Perm<3> {
          *
          * See orderedSn for further information on lexicographical ordering.
          *
-         * @return the lexicographical index of this permutation.
+         * \return the lexicographical index of this permutation.
          * This will be between 0 and 5 inclusive.
          */
         constexpr Index orderedS3Index() const;
@@ -852,7 +852,7 @@ class Perm<3> {
          * this must be exactly 2.
          *
          * \param p a permutation on two elements.
-         * @return the same permutation expressed as a permutation on
+         * \return the same permutation expressed as a permutation on
          * three elements.
          */
         template <int k>
@@ -872,7 +872,7 @@ class Perm<3> {
          * this must be strictly greater than 3.
          *
          * \param p a permutation on \a k elements.
-         * @return the same permutation restricted to a permutation on
+         * \return the same permutation restricted to a permutation on
          * 3 elements.
          */
         template <int k>
@@ -889,7 +889,7 @@ class Perm<3> {
          * This routine is extremely fast for Perm<3>, since it essentially
          * uses a hard-coded lookup table.
          *
-         * @return \c true if and only if this permutation is minimal in its
+         * \return \c true if and only if this permutation is minimal in its
          * conjugacy class.
          */
         constexpr bool isConjugacyMinimal() const;
@@ -993,7 +993,7 @@ class Perm<3> {
          * \param noTrailingData \c true if iteration should reach \a limit
          * immediately after the encoding is read, or \c false if there is
          * allowed to be additional unread data.
-         * @return the permutation represented by the given tight encoding.
+         * \return the permutation represented by the given tight encoding.
          */
         template <typename iterator>
         static Perm tightDecode(iterator start, iterator limit,

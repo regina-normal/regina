@@ -136,7 +136,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * This will induce a deep copy of \a src.
          *
          * \param src the structure to copy.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         BlockedSFSLoop& operator = (const BlockedSFSLoop& src) = default;
         /**
@@ -146,7 +146,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * The structure that was passed (\a src) will no longer be usable.
          *
          * \param src the structure to move from.
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         BlockedSFSLoop& operator = (BlockedSFSLoop&& src) noexcept = default;
         /**
@@ -162,7 +162,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * triangulation is formed.  See the class notes above for
          * further information.
          *
-         * @return details of the saturated region.
+         * \return details of the saturated region.
          */
         const SatRegion& region() const;
         /**
@@ -175,7 +175,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * See the class notes above for precise information on how this
          * matrix is presented.
          *
-         * @return the matrix describing how the boundaries of the
+         * \return the matrix describing how the boundaries of the
          * region are joined.
          */
         const Matrix2& matchingReln() const;
@@ -199,7 +199,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * blocked Seifert fibred space).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of self-identified blocked Seifert fibred
          * space.
          */
@@ -224,7 +224,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * blocked Seifert fibred space).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * do not represent the same type of self-identified blocked Seifert
          * fibred space.
          */
@@ -245,7 +245,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param tri the triangulation to examine.
-         * @return a structure containing details of the blocked
+         * \return a structure containing details of the blocked
          * self-identified Seifert fibred space, or \c null if the given
          * triangulation is not of this form.
          */

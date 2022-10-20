@@ -58,7 +58,7 @@ namespace regina {
  * between 0 and 16 inclusive.
  * \param k the parameter \a k in (\a n choose \a k); this must be
  * between 0 and \a n inclusive.
- * @return the binomial coefficient \a n choose \a k.
+ * \return the binomial coefficient \a n choose \a k.
  *
  * \ingroup maths
  */
@@ -81,7 +81,7 @@ constexpr int binomSmall(int n, int k);
  * between 0 and 29 inclusive.
  * \param k the parameter \a k in (\a n choose \a k); this must be
  * between 0 and \a n inclusive.
- * @return the binomial coefficient \a n choose \a k.
+ * \return the binomial coefficient \a n choose \a k.
  *
  * \ingroup maths
  */

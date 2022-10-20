@@ -181,7 +181,7 @@ namespace {
              * The length of this bitmask is the same as the length of the
              * underlying vector for this ray.
              *
-             * @return the bitmask of zero coordinates.
+             * \return the bitmask of zero coordinates.
              */
             inline const BitmaskType& facets() const {
                 return facets_;
@@ -200,7 +200,7 @@ namespace {
              * \param y the second of the two given rays to examine.
              * \param ignoreFacets a bitmask of coordinate positions to
              * ignore.
-             * @return \c false if there is some coordinate position
+             * \return \c false if there is some coordinate position
              * where (i) both \a x and \a y are zero, (ii) this vector
              * is not zero, and (iii) the corresponding bit in \a ignoreFacets
              * is not set (i.e., is \c false).  Returns \c true otherwise.
@@ -256,7 +256,7 @@ namespace {
              * \param tri the underlying triangulation.
              * \param enc the encoding used by this vector to describe a
              * normal surface.
-             * @return a normal surface based on this vector.
+             * \return a normal surface based on this vector.
              */
             NormalSurface recover(const SnapshotRef<Triangulation<3>>& tri,
                     NormalEncoding enc) && {
@@ -266,7 +266,7 @@ namespace {
             /**
              * Returns the sign of the given element of this vector.
              *
-             * @return 1, 0 or -1 according to whether the <i>index</i>th
+             * \return 1, 0 or -1 according to whether the <i>index</i>th
              * element of this vector is positive, zero or negative
              * respectively.
              */

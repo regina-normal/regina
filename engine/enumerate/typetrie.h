@@ -162,7 +162,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * This will induce a deep copy of \a src.
          *
          * \param src the trie to copy.
-         * @return a reference to this trie.
+         * \return a reference to this trie.
          */
         TypeTrie& operator = (const TypeTrie& src);
 
@@ -174,7 +174,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * The trie that was passed (\a src) will no longer be usable.
          *
          * \param src the trie whose contents should be moved.
-         * @return a reference to this trie.
+         * \return a reference to this trie.
          */
         TypeTrie& operator = (TypeTrie&& src) noexcept;
 
@@ -190,7 +190,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * same type vectors.
          *
          * \param other the trie to compare with this.
-         * @return \c true if and only if both tries store the same type
+         * \return \c true if and only if both tries store the same type
          * vectors.
          */
         bool operator == (const TypeTrie& other) const;
@@ -200,7 +200,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * same type vectors.
          *
          * \param other the trie to compare with this.
-         * @return \c true if and only if both tries do not store the same type
+         * \return \c true if and only if both tries do not store the same type
          * vectors.
          */
         bool operator != (const TypeTrie& other) const;
@@ -242,7 +242,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          *
          * \param vec the type vector to test.
          * \param len the number of elements in the given type vector.
-         * @return \c true if and only if \a vec dominates some type
+         * \return \c true if and only if \a vec dominates some type
          * vector stored in this trie.
          */
         bool dominates(const char* vec, size_t len) const;

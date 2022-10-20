@@ -186,7 +186,7 @@ class BoundaryComponentBase :
          * Returns the index of this boundary component in the underlying
          * triangulation.
          *
-         * @return the index of this boundary component.
+         * \return the index of this boundary component.
          */
         size_t index() const {
             return markedIndex();
@@ -200,7 +200,7 @@ class BoundaryComponentBase :
          * If this is an ideal or invalid vertex boundary component,
          * then this routine will return 0.
          *
-         * @return the number of (<i>dim</i>-1)-faces in this boundary
+         * \return the number of (<i>dim</i>-1)-faces in this boundary
          * component.
          */
         size_t size() const {
@@ -214,7 +214,7 @@ class BoundaryComponentBase :
          * If this is an ideal or invalid vertex boundary component,
          * then this routine will return 0.
          *
-         * @return the number of (<i>dim</i>-2)-faces in this boundary
+         * \return the number of (<i>dim</i>-2)-faces in this boundary
          * component.
          */
         size_t countRidges() const {
@@ -238,7 +238,7 @@ class BoundaryComponentBase :
          * allowable values of \a subdim are the facet dimension (<i>dim</i>-1)
          * and the ridge dimension (<i>dim</i>-2).
          *
-         * @return the number of <i>subdim</i>-faces.
+         * \return the number of <i>subdim</i>-faces.
          */
         template <int subdim>
         size_t countFaces() const {
@@ -355,7 +355,7 @@ class BoundaryComponentBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call facets() again each time you need it.
          *
-         * @return access to the list of all (<i>dim</i>-1)-faces.
+         * \return access to the list of all (<i>dim</i>-1)-faces.
          */
         auto facets() const {
             return ListView(std::get<tupleIndex(dim-1)>(faces_));
@@ -395,7 +395,7 @@ class BoundaryComponentBase :
          * must be between 0 and <i>dim</i>-1 inclusive.  Otherwise, the only
          * allowable value of \a subdim is the facet dimension (<i>dim</i>-1).
          *
-         * @return access to the list of all <i>subdim</i>-faces.
+         * \return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
         auto faces() const {
@@ -489,7 +489,7 @@ class BoundaryComponentBase :
          *
          * \param index the index of the desired face, ranging from 0 to
          * size()-1 inclusive.
-         * @return the requested face.
+         * \return the requested face.
          */
         Face<dim, dim-1>* facet(size_t index) const {
             return std::get<tupleIndex(dim-1)>(faces_)[index];
@@ -518,7 +518,7 @@ class BoundaryComponentBase :
          *
          * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
-         * @return the requested face.
+         * \return the requested face.
          */
         template <int subdim>
         Face<dim, subdim>* face(size_t index) const {
@@ -601,7 +601,7 @@ class BoundaryComponentBase :
         /**
          * Returns the triangulation to which this boundary component belongs.
          *
-         * @return a reference to the triangulation containing this boundary
+         * \return a reference to the triangulation containing this boundary
          * component.
          */
         Triangulation<dim>& triangulation() const {
@@ -617,7 +617,7 @@ class BoundaryComponentBase :
          * Returns the connected component of the triangulation to which this
          * boundary component belongs.
          *
-         * @return the component containing this boundary component.
+         * \return the component containing this boundary component.
          */
         Component<dim>* component() const {
             // If allFaces is true, then there may be no (dim-1)-simplices,
@@ -636,7 +636,7 @@ class BoundaryComponentBase :
          * This routine is fast; in particular, it is pre-computed and
          * does not build a full triangulation of the boundary component.
          *
-         * @return \c true if and only if this boundary component is orientable.
+         * \return \c true if and only if this boundary component is orientable.
          */
         bool isOrientable() const {
             return orientable_;
@@ -676,7 +676,7 @@ class BoundaryComponentBase :
          * <i>dim</i>-manifold, and so if you have such boundary components
          * then you almost certainly have bigger problems than this.
          *
-         * @return the Euler characteristic of this boundary component.
+         * \return the Euler characteristic of this boundary component.
          */
         long eulerChar() const {
             static_assert(allFaces,
@@ -723,7 +723,7 @@ class BoundaryComponentBase :
          * are the only types of boundary component that Regina will recognise,
          * which means that this routine will always return \c true.
          *
-         * @return \c true if and only if this boundary component is real.
+         * \return \c true if and only if this boundary component is real.
          */
         bool isReal() const {
             if constexpr (allFaces)
@@ -753,7 +753,7 @@ class BoundaryComponentBase :
          * are the only types of boundary component that Regina will recognise,
          * which means that this routine will always return \c false.
          *
-         * @return \c true if and only if this boundary component is ideal.
+         * \return \c true if and only if this boundary component is ideal.
          */
         bool isIdeal() const {
             if constexpr (allFaces) {
@@ -792,7 +792,7 @@ class BoundaryComponentBase :
          * are the only types of boundary component that Regina will recognise,
          * which means that this routine will always return \c false.
          *
-         * @return \c true if and only if this boundary component consists of a
+         * \return \c true if and only if this boundary component consists of a
          * single invalid vertex and nothing else.
          */
         bool isInvalidVertex() const {
@@ -846,7 +846,7 @@ class BoundaryComponentBase :
          *
          * \pre The dimension \a dim is greater than 2.
          *
-         * @return the triangulation of this boundary component.
+         * \return the triangulation of this boundary component.
          */
         const Triangulation<dim-1>& build() const {
             // Make sure we do not try to instantiate Triangulation<1>.
@@ -953,7 +953,7 @@ class BoundaryComponentBase :
          * \pre The dimension \a dim is greater than 2.
          * \pre The number of (dim-1)-faces is strictly positive.
          *
-         * @return the newly created boundary triangulation.
+         * \return the newly created boundary triangulation.
          */
         Triangulation<dim-1>* buildRealBoundary() const;
 

@@ -271,7 +271,7 @@ class DoubleDescription {
                  * next hyperplane.  This is simply the sign of the first
                  * element in the list of remaining dot products.
                  *
-                 * @return 1, 0 or -1 according to the sign of the next
+                 * \return 1, 0 or -1 according to the sign of the next
                  * dot product.
                  */
                 int sign() const;
@@ -281,7 +281,7 @@ class DoubleDescription {
                  * cone this ray belongs to.  Each bit is set to \c true
                  * if and only if this ray belongs to the corresponding facet.
                  *
-                 * @return a bitmask of facets.
+                 * \return a bitmask of facets.
                  */
                 inline const BitmaskType& facets() const;
 
@@ -294,7 +294,7 @@ class DoubleDescription {
                  *
                  * \param x the first of the given rays.
                  * \param y the second of the given rays.
-                 * @return \c true if and only if this ray belongs to all
+                 * \return \c true if and only if this ray belongs to all
                  * of the facets that \e both \a x and \a y belong to.
                  */
                 inline bool onAllCommonFacets(
@@ -384,7 +384,7 @@ class DoubleDescription {
          * \param tracker an optional progress tracker that will be polled
          * for cancellation (though no incremental progress will be reported
          * within this routine).  This may be null.
-         * @return \c true if vertices of the old solution set were found
+         * \return \c true if vertices of the old solution set were found
          * on both sides of the new hyperplane, \c false if one of
          * the closed half-spaces defined by the new hyperplane contained
          * the entire old solution set, or undefined if the operation

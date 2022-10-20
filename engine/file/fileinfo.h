@@ -104,7 +104,7 @@ class FileInfo : public Output<FileInfo> {
          * might not be UTF-8, since it needs to be understood by the
          * low-level C/C++ file I/O routines.
          *
-         * @return the pathname.
+         * \return the pathname.
          */
         const std::string& pathname() const;
         /**
@@ -113,7 +113,7 @@ class FileInfo : public Output<FileInfo> {
          * In particular, this encodes which generation of XML the file
          * uses, but does not encode whether the XML is compressed.
          *
-         * @return the file format.
+         * \return the file format.
          */
         FileFormat format() const;
         /**
@@ -123,26 +123,26 @@ class FileInfo : public Output<FileInfo> {
          * Like format(), this indicates which generation of XML the file
          * uses, but not whether the XML is compressed.
          *
-         * @return a description of the file format.
+         * \return a description of the file format.
          */
         std::string formatDescription() const;
         /**
          * Returns the version of the calculation engine that wrote this file.
          *
-         * @return the engine version for this file.
+         * \return the engine version for this file.
          */
         const std::string& engine() const;
         /**
          * Returns whether this file is stored in compressed format.
          * Currently this option only applies to XML data files.
          *
-         * @return \c true if this file is compressed or \c false otherwise.
+         * \return \c true if this file is compressed or \c false otherwise.
          */
         bool isCompressed() const;
         /**
          * Returns whether the file metadata could not be read.
          *
-         * @return \c true if the metadata could not be read, \c false
+         * \return \c true if the metadata could not be read, \c false
          * otherwise.
          */
         bool isInvalid() const;
@@ -156,7 +156,7 @@ class FileInfo : public Output<FileInfo> {
          *
          * The object that was passed will no longer be usable.
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         FileInfo& operator = (FileInfo&&) noexcept = default;
         /**
@@ -179,7 +179,7 @@ class FileInfo : public Output<FileInfo> {
          * invalid.  Two invalid FileInfo objects will compare as equal.
          *
          * \param other the file information to compare with this.
-         * @return \c true if and only if this and the given file information
+         * \return \c true if and only if this and the given file information
          * describe the same format and version, as described above.
          */
         bool operator == (const FileInfo& other) const;
@@ -197,7 +197,7 @@ class FileInfo : public Output<FileInfo> {
          * invalid.  Two invalid FileInfo objects will compare as equal.
          *
          * \param other the file information to compare with this.
-         * @return \c true if and only if this and the given file information
+         * \return \c true if and only if this and the given file information
          * do not describe the same format and version, as described above.
          */
         bool operator != (const FileInfo& other) const;
@@ -212,7 +212,7 @@ class FileInfo : public Output<FileInfo> {
          * routine will use the same encoding that is passed here.
          *
          * \param idPathname the pathname of the data file to be examined.
-         * @return a FileInfo structure containing information about the
+         * \return a FileInfo structure containing information about the
          * given file, or no value if the file type could not be identified.
          */
         static std::optional<FileInfo> identify(std::string idPathname);

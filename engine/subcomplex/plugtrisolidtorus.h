@@ -145,7 +145,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         PlugTriSolidTorus& operator = (const PlugTriSolidTorus&) = default;
 
@@ -161,7 +161,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * Returns the triangular solid torus at the core of this
          * triangulation.
          *
-         * @return the core triangular solid torus.
+         * \return the core triangular solid torus.
          */
         const TriSolidTorus& core() const;
 
@@ -175,7 +175,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          *
          * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
-         * @return the corresponding layered chain.
+         * \return the corresponding layered chain.
          */
         const std::optional<LayeredChain>& chain(int annulus) const;
 
@@ -187,7 +187,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          *
          * \param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
-         * @return the type of layered chain, or \a CHAIN_NONE
+         * \return the type of layered chain, or \a CHAIN_NONE
          * if there is no layered chain attached to the requested annulus.
          */
         int chainType(int annulus) const;
@@ -203,7 +203,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * layered chain; the edges filling the corresponding major or
          * minor roles will then form the equator of the plug.
          *
-         * @return the types of edges that form the equator of the plug;
+         * \return the types of edges that form the equator of the plug;
          * this will be one of the equator type constants defined in this
          * class.
          */
@@ -227,7 +227,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * plugged triangular solid torus).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of plugged triangular solid torus.
          */
         bool operator == (const PlugTriSolidTorus& other) const;
@@ -250,7 +250,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * plugged triangular solid torus).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different types of plugged triangular solid torus.
          */
         bool operator != (const PlugTriSolidTorus& other) const;
@@ -264,7 +264,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param comp the triangulation component to examine.
-         * @return a structure containing details of the plugged triangular
+         * \return a structure containing details of the plugged triangular
          * solid torus, or \c null if the given component is not a plugged
          * triangular solid torus.
          */

@@ -88,7 +88,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         PillowTwoSphere& operator = (const PillowTwoSphere&) = default;
 
@@ -97,7 +97,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          *
          * \param index specifies which of the two triangles to return;
          * this must be either 0 or 1.
-         * @return the corresponding triangle.
+         * \return the corresponding triangle.
          */
         Triangle<3>* triangle(int index) const;
         /**
@@ -109,7 +109,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * <tt>triangle(1)</tt>.  The map will represent how the vertices
          * of the triangles are identified by the three edge gluings.
          *
-         * @return a permutation describing how the triangle boundaries are
+         * \return a permutation describing how the triangle boundaries are
          * joined.
          */
         Perm<4> triangleMapping() const;
@@ -127,7 +127,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * within different triangulations.
          *
          * \param other the pillow 2-sphere to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * the same specific presentation of a pillow 2-sphere.
          */
         bool operator == (const PillowTwoSphere& other) const;
@@ -145,7 +145,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * within different triangulations.
          *
          * \param other the pillow 2-sphere to compare with this.
-         * @return \c true if and only if this and the given object represent
+         * \return \c true if and only if this and the given object represent
          * different specific presentations of a pillow 2-sphere.
          */
         bool operator != (const PillowTwoSphere& other) const;
@@ -164,7 +164,7 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          *
          * \param tri1 the first triangle to examine.
          * \param tri2 the second triangle to examine.
-         * @return a structure containing details of the pillow 2-sphere, or
+         * \return a structure containing details of the pillow 2-sphere, or
          * \c null if the given triangles do not form a pillow 2-sphere.
          */
         static std::unique_ptr<PillowTwoSphere> recognise(

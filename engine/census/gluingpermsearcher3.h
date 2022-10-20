@@ -358,7 +358,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * This may assist the \a action routine when running partial
          * depth-based searches.  See partialSearch() for further details.
          *
-         * @return \c true if a complete gluing permutation set is held,
+         * \return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
          */
         bool isComplete() const;
@@ -406,7 +406,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * @return all of this object's internal data in plain text format.
+         * \return all of this object's internal data in plain text format.
          */
         std::string taggedData() const;
 
@@ -471,7 +471,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * input stream constructor is not.  Python users should use
          * taggedData() and fromTaggedData() instead.
          *
-         * @return all of this object's internal data in plain text format.
+         * \return all of this object's internal data in plain text format.
          */
         std::string data() const;
 
@@ -539,7 +539,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
-         * @return the new search manager.
+         * \return the new search manager.
          */
         static std::unique_ptr<GluingPermSearcher<3>> bestSearcher(
                 FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
@@ -568,7 +568,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * its input as a string.
          *
          * \param in the input stream from which to read.
-         * @return the new search manager, or \c null if the data in the
+         * \return the new search manager, or \c null if the data in the
          * input stream was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<3>> fromTaggedData(
@@ -595,7 +595,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          *
          * \param data the tagged data from which to reconstruct a
          * search manager.
-         * @return the new search manager, or \c null if the data in the
+         * \return the new search manager, or \c null if the data in the
          * given string was invalid or incorrectly formatted.
          */
         static std::unique_ptr<GluingPermSearcher<3>> fromTaggedData(
@@ -626,7 +626,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * in order to see whether the current set is in canonical form
          * (i.e., is lexicographically smallest).
          *
-         * @return \c true if the current set is in canonical form,
+         * \return \c true if the current set is in canonical form,
          * or \c false otherwise.
          */
         bool isCanonical() const;
@@ -653,7 +653,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          *
          * \param face the specific tetrahedron face upon which tests
          * will be based.
-         * @return \c true if the permutations under construction will
+         * \return \c true if the permutations under construction will
          * lead to an edge identified with itself in reverse, or \c false
          * if no such edge is found.
          */
@@ -679,7 +679,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * non-boundary edges of degree 1 or 2.
          * \param testDegree3 \c true if we should test for non-boundary
          * edges of degree 3 involving three distinct tetrahedra.
-         * @return \c true if the permutations under construction will
+         * \return \c true if the permutations under construction will
          * lead to a low-degree edge as specified by parameters
          * \a testDegree12 and \a testDegree3, or \c false if no such
          * edge is found.
@@ -691,7 +691,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * Returns the character used to identify this class when
          * storing tagged data in text format.
          *
-         * @return the class tag.
+         * \return the class tag.
          */
         virtual char dataTagInternal() const;
 };
@@ -962,7 +962,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * \param nStates the total number of vertex states under
              * consideration (this must be four times the number of
              * tetrahedra).
-             * @return \c false if any errors were encountered during
+             * \return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, size_t nStates);
@@ -1106,7 +1106,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * \param in the input stream from which to read.
              * \param nTets the number of tetrahedra under consideration
              * in the census.
-             * @return \c false if any errors were encountered during
+             * \return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, size_t nTets);
@@ -1269,7 +1269,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * must be between 0 and 6t-1 inclusive, where \a t is the
          * number of tetrahedra.  See the TetEdgeState class notes for
          * details on edge indexing.
-         * @return the index of the tetrahedron edge at the root of the
+         * \return the index of the tetrahedron edge at the root of the
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
@@ -1300,7 +1300,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * above.  This must be either 0 or 1 as it is passed into the
          * function, and it will also be either 0 or 1 upon returning
          * from the function.
-         * @return the index of the tetrahedron edge at the root of the
+         * \return the index of the tetrahedron edge at the root of the
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
@@ -1319,7 +1319,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * vertex link is closed off, or enters a state where it will be
          * forced to have the wrong Euler characteristic.
          *
-         * @return a combination of VLINK_... flags describing how
+         * \return a combination of VLINK_... flags describing how
          * the vertex links were changed, or 0 if none of the changes
          * described by these flags were observed.
          */
@@ -1335,7 +1335,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * merge creates an invalid edge (i.e., an edge identified with
          * itself in reverse).
          *
-         * @return \c true if this merge creates an invalid edge, or
+         * \return \c true if this merge creates an invalid edge, or
          * \c false if not.
          */
         bool mergeEdgeClasses();
@@ -1508,7 +1508,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * \param vertexID the tetrahedron vertex to examine; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @return \c true if a one-edge boundary component is formed as
+         * \return \c true if a one-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
         bool vtxBdryLength1(size_t vertexID);
@@ -1527,7 +1527,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * \param vertexID2 the second tetrahedron vertex to examine; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @return \c true if a two-edge boundary component is formed as
+         * \return \c true if a two-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
         bool vtxBdryLength2(size_t vertexID1, size_t vertexID2);
@@ -1781,7 +1781,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * \param nStates the total number of vertex states under
              * consideration (this must be four times the number of
              * tetrahedra).
-             * @return \c false if any errors were encountered during
+             * \return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, size_t nStates);
@@ -1925,7 +1925,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * \param in the input stream from which to read.
              * \param nTets the number of tetrahedra under consideration
              * in the census.
-             * @return \c false if any errors were encountered during
+             * \return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, size_t nTets);
@@ -2064,7 +2064,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * must be between 0 and 6t-1 inclusive, where \a t is the
          * number of tetrahedra.  See the TetEdgeState class notes for
          * details on edge indexing.
-         * @return the index of the tetrahedron edge at the root of the
+         * \return the index of the tetrahedron edge at the root of the
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
@@ -2095,7 +2095,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * above.  This must be either 0 or 1 as it is passed into the
          * function, and it will also be either 0 or 1 upon returning
          * from the function.
-         * @return the index of the tetrahedron edge at the root of the
+         * \return the index of the tetrahedron edge at the root of the
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
@@ -2114,7 +2114,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * vertex link is closed off, or is made into something other
          * than a punctured 2-sphere.
          *
-         * @return a combination of VLINK_... flags describing how
+         * \return a combination of VLINK_... flags describing how
          * the vertex links were changed, or 0 if none of the changes
          * described by these flags were observed.
          */
@@ -2130,7 +2130,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * merge creates an invalid edge (i.e., an edge identified with
          * itself in reverse).
          *
-         * @return \c true if this merge creates an invalid edge, or
+         * \return \c true if this merge creates an invalid edge, or
          * \c false if not.
          */
         bool mergeEdgeClasses();
@@ -2303,7 +2303,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * \param vertexID the tetrahedron vertex to examine; this must
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @return \c true if a one-edge boundary component is formed as
+         * \return \c true if a one-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
         bool vtxBdryLength1(size_t vertexID);
@@ -2322,7 +2322,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * \param vertexID2 the second tetrahedron vertex to examine; this
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
-         * @return \c true if a two-edge boundary component is formed as
+         * \return \c true if a two-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
         bool vtxBdryLength2(size_t vertexID1, size_t vertexID2);
@@ -2593,7 +2593,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * guaranteed that if at least one such flag is appropriate then
          * at least one such flag will be returned.
          *
-         * @return a combination of ECLASS_... flags describing how
+         * \return a combination of ECLASS_... flags describing how
          * the edge links were changed, or 0 if none of the changes
          * described by these flags were observed.
          */
@@ -2732,7 +2732,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * guaranteed that if at least one such flag is appropriate then
          * at least one such flag will be returned.
          *
-         * @return a combination of ECLASS_... flags describing how
+         * \return a combination of ECLASS_... flags describing how
          * the edge links were changed, or 0 if none of the changes
          * described by these flags were observed.
          */

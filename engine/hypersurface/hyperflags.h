@@ -141,7 +141,7 @@ using HyperList = regina::Flags<HyperListFlags>;
  *
  * \param lhs the first flag to combine.
  * \param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \return the combination of both flags.
  *
  * \ingroup hypersurface
  */
@@ -269,7 +269,7 @@ using HyperAlg = regina::Flags<HyperAlgFlags>;
  *
  * \param lhs the first flag to combine.
  * \param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \return the combination of both flags.
  *
  * \ingroup hypersurface
  */

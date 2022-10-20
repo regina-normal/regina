@@ -1108,8 +1108,7 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::torsionSubgroup() const {
  *                   ^                             ^
  *                   |  this                       | other
  * Z^d --N2--> Z^e --M2--> Z^f   Z^j --N4--> Z^k --M4--> Z^l
- * @return true if and only if M1 == N3, M2 == N4 and diagram commutes
- *         commutes.
+ * \return true if and only if M1 == N3, M2 == N4 and diagram commutes
  */
 bool HomMarkedAbelianGroup::isChainMap(const HomMarkedAbelianGroup &other)
         const {

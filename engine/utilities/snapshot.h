@@ -362,7 +362,7 @@ class Snapshottable {
          * behave as though the object were being modified (i.e., it may
          * still take a snapshot).
          *
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
         Snapshottable& operator = (const Snapshottable&) {
@@ -395,7 +395,7 @@ class Snapshottable {
          * deep copy of the old type \a T value of this object.
          *
          * \param src the snapshot image being moved.
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         Snapshottable& operator = (Snapshottable&& src) {
             if (snapshot_)
@@ -473,7 +473,7 @@ class Snapshottable {
          * visible to Python, the isReadOnlySnapshot() function is still
          * visible as a member function of the class \a T.
          *
-         * @return \c true if and only if this object is a deep copy that was
+         * \return \c true if and only if this object is a deep copy that was
          * taken by a Snapshot object of some original type \a T image.
          */
         bool isReadOnlySnapshot() const {
@@ -487,7 +487,7 @@ class Snapshottable {
          *
          * This should only be called when creating a new SnapshotRef.
          *
-         * @return the snapshot for this object.  This is guaranteed to
+         * \return the snapshot for this object.  This is guaranteed to
          * be non-null, and to have a positive reference count.
          */
         Snapshot<T>* addSnapshotRef() const {
@@ -615,7 +615,7 @@ class SnapshotRef {
          *
          * \param src the underlying type \a T object whose current
          * snapshot we wish to make this a reference to.
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         SnapshotRef& operator = (const T& src) {
             if (snapshot_ != src.snapshot_) {
@@ -640,7 +640,7 @@ class SnapshotRef {
          * the underlying snapshot to be destroyed.
          *
          * \param src the snapshot reference to copy.
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         // NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
         SnapshotRef& operator = (const SnapshotRef& src) {
@@ -662,7 +662,7 @@ class SnapshotRef {
          * atomic changes to reference counts.
          *
          * \param src the snapshot reference to move.
-         * @return a reference to this object.
+         * \return a reference to this object.
          */
         SnapshotRef& operator = (SnapshotRef&& src) noexcept {
             // Let src manage the destruction of the old snapshot,
@@ -695,7 +695,7 @@ class SnapshotRef {
          * underlying type \a T object was not modified.
          *
          * \param rhs the snapshot reference to compare with this.
-         * @return \c true if and only if this and \a rhs refer to the
+         * \return \c true if and only if this and \a rhs refer to the
          * same snapshot of the same underlying type \a T object.
          */
         bool operator == (const SnapshotRef& rhs) const {
@@ -712,7 +712,7 @@ class SnapshotRef {
          * type \a T object.
          *
          * \param rhs the snapshot reference to compare with this.
-         * @return \c true if and only if this and \a rhs do not refer to the
+         * \return \c true if and only if this and \a rhs do not refer to the
          * same snapshot of the same underlying type \a T object.
          */
         bool operator != (const SnapshotRef& rhs) const {
@@ -728,7 +728,7 @@ class SnapshotRef {
          * and never take your own reference or pointer to the underlying
          * type \a T object.
          *
-         * @return a reference to the snapshot of the type \a T object.
+         * \return a reference to the snapshot of the type \a T object.
          */
         const T& operator * () const {
             return *snapshot_->value_;
@@ -743,7 +743,7 @@ class SnapshotRef {
          * and never take your own reference or pointer to the underlying
          * type \a T object.
          *
-         * @return a reference to the snapshot of the type \a T object.
+         * \return a reference to the snapshot of the type \a T object.
          */
         const T* operator -> () const {
             return snapshot_->value_;

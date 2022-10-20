@@ -249,7 +249,7 @@ class XMLTriangulationReader : public XMLPacketReader {
          * \param subTagName the name of the XML subelement opening tag.
          * \param subTagProps the properties associated with the
          * subelement opening tag.
-         * @return a newly created element reader that will be used to
+         * \return a newly created element reader that will be used to
          * parse the subelement.  This class should not take care of the
          * new reader's destruction; that will be done by the parser.
          */

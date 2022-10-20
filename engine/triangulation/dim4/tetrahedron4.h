@@ -88,7 +88,7 @@ class Face<4, 3> : public detail::FaceBase<4, 3> {
          * to compressions and boundary compressions along discs and 3-balls,
          * as well as removing trivial 4-sphere components.
          *
-         * @return a pair (\a s, \a thin), where \a s is the tetrahedron linking
+         * \return a pair (\a s, \a thin), where \a s is the tetrahedron linking
          * normal hypersurface, and \a thin is \c true if and only if this link
          * is thin (i.e., no additional normalisation steps were required).
          */

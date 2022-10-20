@@ -147,7 +147,7 @@ class ProgressTrackerBase {
          *
          * This is typically called by the reading thread.
          *
-         * @return \c true if and only if the writing thread has
+         * \return \c true if and only if the writing thread has
          * finished all processing.
          */
         bool isFinished() const;
@@ -158,7 +158,7 @@ class ProgressTrackerBase {
          *
          * This is typically called by the reading thread.
          *
-         * @return \c true if and only if the stage description has changed.
+         * \return \c true if and only if the stage description has changed.
          */
         bool descriptionChanged() const;
         /**
@@ -166,7 +166,7 @@ class ProgressTrackerBase {
          *
          * This is typically called by the reading thread.
          *
-         * @return \c the current stage description.
+         * \return \c the current stage description.
          */
         std::string description() const;
         /**
@@ -188,7 +188,7 @@ class ProgressTrackerBase {
          *
          * This is typically called by the writing thread.
          *
-         * @return \c true if and only if a cancellation request has
+         * \return \c true if and only if a cancellation request has
          * been made.
          */
         bool isCancelled() const;
@@ -274,7 +274,7 @@ class ProgressTracker : public ProgressTrackerBase,
          *
          * This is typically called by the reading thread.
          *
-         * @return \c true if and only if the percentage progress has changed.
+         * \return \c true if and only if the percentage progress has changed.
          */
         bool percentChanged() const;
         /**
@@ -285,7 +285,7 @@ class ProgressTracker : public ProgressTrackerBase,
          *
          * This is typically called by the reading thread.
          *
-         * @return the current percentage progress.
+         * \return the current percentage progress.
          */
         double percent() const;
 
@@ -326,7 +326,7 @@ class ProgressTracker : public ProgressTrackerBase,
          *
          * \param percent the percentage progress through this stage, as
          * a number between 0 and 100 inclusive.
-         * @return \c true if there has been no cancellation request, or
+         * \return \c true if there has been no cancellation request, or
          * \c false if cancel() has been called (typically by the reading
          * thread).
          */
@@ -399,7 +399,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * This is typically called by the reading thread.
          *
-         * @return \c true if and only if the number of steps completed
+         * \return \c true if and only if the number of steps completed
          * has changed.
          */
         bool stepsChanged() const;
@@ -410,7 +410,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * This is typically called by the reading thread.
          *
-         * @return the current number of steps completed.
+         * \return the current number of steps completed.
          */
         unsigned long steps() const;
 
@@ -432,7 +432,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * This is typically called by the writing thread.
          *
-         * @return \c true if there has been no cancellation request, or
+         * \return \c true if there has been no cancellation request, or
          * \c false if cancel() has been called (typically by the reading
          * thread).
          */
@@ -445,7 +445,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase,
          *
          * \param add the number of additional steps that have been completed.
          * The value returned by steps() will increase by this amount.
-         * @return \c true if there has been no cancellation request, or
+         * \return \c true if there has been no cancellation request, or
          * \c false if cancel() has been called (typically by the reading
          * thread).
          */

@@ -243,7 +243,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *
          * This operator induces a deep copy of the given angle structure.
          *
-         * @return a reference to this angle structure.
+         * \return a reference to this angle structure.
          */
         AngleStructure& operator = (const AngleStructure&) = default;
 
@@ -258,7 +258,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *
          * The structure that was passed will no longer be usable.
          *
-         * @return a reference to this angle structure.
+         * \return a reference to this angle structure.
          */
         AngleStructure& operator = (AngleStructure&&) noexcept = default;
 
@@ -291,7 +291,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * inclusive.
          * \param edgePair the number representing the pair of edges holding
          * the requested angle, as described above; this should be 0, 1 or 2.
-         * @return the requested angle scaled down by π.
+         * \return the requested angle scaled down by π.
          */
         Rational angle(size_t tetIndex, int edgePair) const;
 
@@ -317,7 +317,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *   process detects modifications, and modifying the frozen
          *   snapshot may result in an exception being thrown.
          *
-         * @return a reference to the underlying triangulation.
+         * \return a reference to the underlying triangulation.
          */
         const Triangulation<3>& triangulation() const;
 
@@ -326,7 +326,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * A strict angle structure has all angles strictly between (not
          * including) 0 and π.
          *
-         * @return \c true if and only if this is a strict angle structure.
+         * \return \c true if and only if this is a strict angle structure.
          */
         bool isStrict() const;
 
@@ -347,7 +347,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * [2] M. Lackenby, "Taut ideal triangulations of 3-manifolds",
          * Geom. Topol. 4 (2000), pp. 369-395.
          *
-         * @return \c true if and only if this is a taut structure.
+         * \return \c true if and only if this is a taut structure.
          */
         bool isTaut() const;
 
@@ -373,7 +373,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * triangulation is non-orientable, then this routine will
          * return \c false.
          *
-         * @return \c true if and only if this is a veering structure.
+         * \return \c true if and only if this is a veering structure.
          */
         bool isVeering() const;
 
@@ -395,7 +395,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * opposite edges 5, 4 and 3 respectively).  The final element of the
          * vector is the scaling member as described above.
          *
-         * @return the underlying integer vector.
+         * \return the underlying integer vector.
          */
         const Vector<Integer>& vector() const;
 
@@ -414,7 +414,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *   routine will return \c false.
          *
          * \param other the angle structure to be compared with this structure.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * are identical.
          */
         bool operator == (const AngleStructure& other) const;
@@ -434,7 +434,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *   routine will return \c true.
          *
          * \param other the angle structure to be compared with this structure.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * are different.
          */
         bool operator != (const AngleStructure& other) const;
@@ -458,7 +458,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * See the equality test operator==() for further details.
          *
          * \param other the angle structure to be compared with this structure.
-         * @return \c true if and only if this appears before the given
+         * \return \c true if and only if this appears before the given
          * structure in the total order.
          */
         bool operator < (const AngleStructure& other) const;

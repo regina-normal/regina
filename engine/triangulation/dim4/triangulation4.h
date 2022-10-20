@@ -267,7 +267,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Sets this to be a (deep) copy of the given triangulation.
          *
          * \param src the triangulation to copy.
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation& src);
 
@@ -295,7 +295,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         Triangulation& operator = (Triangulation&& src);
 
@@ -371,7 +371,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre This triangulation is valid.
          *
-         * @return the Euler characteristic of the corresponding compact
+         * \return the Euler characteristic of the corresponding compact
          * manifold.
          */
         long eulerCharManifold() const;
@@ -389,7 +389,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * situations like 4-manifold vertices whose links are cusped
          * 3-manifolds (a situation that has no analogue in lower dimensions).
          *
-         * @return \c true if and only if this triangulation is ideal.
+         * \return \c true if and only if this triangulation is ideal.
          */
         bool isIdeal() const;
         /**
@@ -400,7 +400,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * with invalid vertices are also considered not closed; see
          * Vertex<4>::isBoundary() for details.
          *
-         * @return \c true if and only if this triangulation is closed.
+         * \return \c true if and only if this triangulation is closed.
          */
         bool isClosed() const;
 
@@ -437,7 +437,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \exception FailedPrecondition This triangulation is invalid,
          * empty, non-orientable, or not closed.
          *
-         * @return the intersection form of this 4-manifold.
+         * \return the intersection form of this 4-manifold.
          */
         IntersectionForm intersectionForm() const;
 
@@ -464,7 +464,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * weak (as opposed to 3-manifolds, where a rich library of
          * simplification techinques is available to call upon).
          *
-         * @return \c true if and only if the triangulation was changed.
+         * \return \c true if and only if the triangulation was changed.
          */
         bool intelligentSimplify();
         /**
@@ -494,7 +494,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \param perform \c true if we are to perform the simplifications,
          * or \c false if we are only to investigate whether simplifications
          * are possible (defaults to \c true).
-         * @return if \a perform is \c true, this routine returns \c true
+         * \return if \a perform is \c true, this routine returns \c true
          * if and only if the triangulation was changed to reduce the
          * number of pentachora; if \a perform is \c false, this routine
          * returns \c true if and only if it determines that it is
@@ -576,7 +576,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return \c true if and only if the triangulation was successfully
+         * \return \c true if and only if the triangulation was successfully
          * simplified to fewer pentachora.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
@@ -692,7 +692,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * for each triangulation that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
-         * @return \c true if some call to \a action returned \c true (thereby
+         * \return \c true if some call to \a action returned \c true (thereby
          * terminating the search early), or \c false if the search ran to
          * completion.
          */
@@ -731,7 +731,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -786,7 +786,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -830,7 +830,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -874,7 +874,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * (defaults to \c true).
          * \param perform \c true if we are to perform the move (defaults to
          * \c true).
-         * @return If \a check is \c true, the function returns \c true if and
+         * \return If \a check is \c true, the function returns \c true if and
          * only if the requested move may be performed without changing the
          * topology of the manifold. If \a check is \c false, the function
          * simply returns \c true.
@@ -931,7 +931,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -985,7 +985,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \a true, this function returns \c true
+         * \return If \a check is \a true, this function returns \c true
          * if and only if the requested move may be performed without
          * changing the topology of the manifold.  If \a check is \c false,
          * this function simply returns \c true.
@@ -1036,7 +1036,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the given edge may be collapsed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -1088,7 +1088,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * (defaults to \c true).
          * \param perform \c true if we are to perform the move (defaults to
          * \c true).
-         * @return If \a check is \c true, the function returns \c true if and
+         * \return If \a check is \c true, the function returns \c true if and
          * only if the requested move may be performed without changing the
          * topology of the manifold. If \a check is \c false, the function
          * simply returns \c true.
@@ -1109,7 +1109,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * converted into real boundary components made from unglued
          * facets of pentachora.
          *
-         * @return \c true if and only if the triangulation was changed.
+         * \return \c true if and only if the triangulation was changed.
          */
         bool idealToFinite();
 
@@ -1141,7 +1141,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given face is a face of this triangulation.
          *
-         * @return a pair (\a s, \a thin), where \a s is the face linking
+         * \return a pair (\a s, \a thin), where \a s is the face linking
          * normal hypersurface, and \a thin is \c true if and only if this link
          * is thin (i.e., no additional normalisation steps were required).
          */

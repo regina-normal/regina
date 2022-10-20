@@ -118,7 +118,7 @@ class TrivialTri : public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         TrivialTri& operator = (const TrivialTri&) = default;
 
@@ -133,7 +133,7 @@ class TrivialTri : public StandardTriangulation {
         /**
          * Returns the specific trivial triangulation being represented.
          *
-         * @return the specific triangulation.  This will be one of the
+         * \return the specific triangulation.  This will be one of the
          * triangulation constants defined in this class.
          */
         int type() const;
@@ -152,7 +152,7 @@ class TrivialTri : public StandardTriangulation {
          * subclass means they describe isomorphic structures).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of trivial triangulation.
          */
         bool operator == (const TrivialTri& other) const;
@@ -171,7 +171,7 @@ class TrivialTri : public StandardTriangulation {
          * subclass means they describe isomorphic structures).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different types of trivial triangulation.
          */
         bool operator != (const TrivialTri& other) const;
@@ -185,7 +185,7 @@ class TrivialTri : public StandardTriangulation {
          * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * \param comp the triangulation component to examine.
-         * @return a structure representing the trivial triangulation, or
+         * \return a structure representing the trivial triangulation, or
          * \c null if the given component is not one of the triangulations
          * recognised by this class.
          */

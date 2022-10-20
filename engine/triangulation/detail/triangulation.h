@@ -188,7 +188,7 @@ class TriangulationBase :
          *
          * \tparam TupleElement the type of one of the members of \a faces,
          * or a reference to such a type.
-         * @return the face dimension corresponding to \a TupleElement;
+         * \return the face dimension corresponding to \a TupleElement;
          * this will be an integer between 0 and (<i>dim</i>-1) inclusive.
          */
         template <typename TupleElement>
@@ -317,7 +317,7 @@ class TriangulationBase :
          * Returns the number of top-dimensional simplices in the
          * triangulation.
          *
-         * @return The number of top-dimensional simplices.
+         * \return The number of top-dimensional simplices.
          */
         size_t size() const;
         /**
@@ -344,7 +344,7 @@ class TriangulationBase :
          * Nevertheless, it is recommended to treat this object as temporary
          * only, and to call simplices() again each time you need it.
          *
-         * @return access to the list of all top-dimensional simplices.
+         * \return access to the list of all top-dimensional simplices.
          */
         auto simplices() const;
         /**
@@ -356,7 +356,7 @@ class TriangulationBase :
          *
          * \param index specifies which simplex to return; this
          * value should be between 0 and size()-1 inclusive.
-         * @return the <i>index</i>th top-dimensional simplex.
+         * \return the <i>index</i>th top-dimensional simplex.
          */
         Simplex<dim>* simplex(size_t index);
         /**
@@ -368,7 +368,7 @@ class TriangulationBase :
          *
          * \param index specifies which simplex to return; this
          * value should be between 0 and size()-1 inclusive.
-         * @return the <i>index</i>th top-dimensional simplex.
+         * \return the <i>index</i>th top-dimensional simplex.
          */
         const Simplex<dim>* simplex(size_t index) const;
         /**
@@ -381,7 +381,7 @@ class TriangulationBase :
          * The new simplex will become the last simplex in this
          * triangulation; that is, it will have index size()-1.
          *
-         * @return the new simplex.
+         * \return the new simplex.
          */
         Simplex<dim>* newSimplex();
         /**
@@ -413,7 +413,7 @@ class TriangulationBase :
          * \tparam k the number of new top-dimensional simplices to add;
          * this must be non-negative.
          *
-         * @return an array containing all of the new simplices, in the order
+         * \return an array containing all of the new simplices, in the order
          * in which they were added.
          */
         template <int k>
@@ -461,7 +461,7 @@ class TriangulationBase :
          * triangulation; that is, it will have index size()-1.
          *
          * \param desc the description to give to the new simplex.
-         * @return the new simplex.
+         * \return the new simplex.
          */
         Simplex<dim>* newSimplex(const std::string& desc);
         /**
@@ -532,7 +532,7 @@ class TriangulationBase :
         /**
          * Returns the number of connected components in this triangulation.
          *
-         * @return the number of connected components.
+         * \return the number of connected components.
          */
         size_t countComponents() const;
 
@@ -545,7 +545,7 @@ class TriangulationBase :
          * class notes for full details on what constitutes a boundary
          * component in standard and non-standard dimensions.
          *
-         * @return the number of boundary components.
+         * \return the number of boundary components.
          */
         size_t countBoundaryComponents() const;
 
@@ -566,7 +566,7 @@ class TriangulationBase :
          * \tparam subdim the face dimension; this must be between 0 and
          * \a dim inclusive.
          *
-         * @return the number of <i>subdim</i>-faces.
+         * \return the number of <i>subdim</i>-faces.
          */
         template <int subdim>
         size_t countFaces() const;
@@ -591,7 +591,7 @@ class TriangulationBase :
          *
          * \param subdim the face dimension; this must be between 0 and \a dim
          * inclusive.
-         * @return the number of <i>subdim</i>-faces.
+         * \return the number of <i>subdim</i>-faces.
          */
         size_t countFaces(int subdim) const;
 
@@ -653,7 +653,7 @@ class TriangulationBase :
          * it allows you to count faces whose dimensions are not known
          * until runtime.
          *
-         * @return the f-vector of this triangulation.
+         * \return the f-vector of this triangulation.
          */
         std::vector<size_t> fVector() const;
 
@@ -681,7 +681,7 @@ class TriangulationBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call components() again each time you need it.
          *
-         * @return access to the list of all components.
+         * \return access to the list of all components.
          */
         auto components() const;
 
@@ -715,7 +715,7 @@ class TriangulationBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call boundaryComponents() again each time you need it.
          *
-         * @return access to the list of all boundary components.
+         * \return access to the list of all boundary components.
          */
         auto boundaryComponents() const;
 
@@ -749,7 +749,7 @@ class TriangulationBase :
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
          *
-         * @return access to the list of all <i>subdim</i>-faces.
+         * \return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
         auto faces() const;
@@ -779,7 +779,7 @@ class TriangulationBase :
          *
          * \param subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
-         * @return access to the list of all <i>subdim</i>-faces.
+         * \return access to the list of all <i>subdim</i>-faces.
          */
         auto faces(int subdim) const;
 
@@ -840,7 +840,7 @@ class TriangulationBase :
          *
          * \param index the index of the desired component; this must be
          * between 0 and countComponents()-1 inclusive.
-         * @return the requested component.
+         * \return the requested component.
          */
         Component<dim>* component(size_t index) const;
 
@@ -853,7 +853,7 @@ class TriangulationBase :
          *
          * \param index the index of the desired boundary component; this must
          * be between 0 and countBoundaryComponents()-1 inclusive.
-         * @return the requested boundary component.
+         * \return the requested boundary component.
          */
         BoundaryComponent<dim>* boundaryComponent(size_t index) const;
 
@@ -868,7 +868,7 @@ class TriangulationBase :
          *
          * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
-         * @return the requested face.
+         * \return the requested face.
          */
         template <int subdim>
         Face<dim, subdim>* face(size_t index) const;
@@ -902,7 +902,7 @@ class TriangulationBase :
          * <i>dim</i>-1 inclusive.
          * \param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
-         * @return the requested face.
+         * \return the requested face.
          */
         auto face(int subdim, size_t index) const;
 
@@ -1018,7 +1018,7 @@ class TriangulationBase :
          * <i>dim</i>-1 inclusive.
          *
          * \param other the face to translate.
-         * @return the corresponding face of this triangulation.
+         * \return the corresponding face of this triangulation.
          */
         template <int subdim>
         Face<dim, subdim>* translate(const Face<dim, subdim>* other) const;
@@ -1032,7 +1032,7 @@ class TriangulationBase :
          *
          * \pre This triangulation is not empty.
          *
-         * @return the dual graph of this triangulation.
+         * \return the dual graph of this triangulation.
          */
         FacetPairing<dim> pairing() const;
 
@@ -1046,7 +1046,7 @@ class TriangulationBase :
          * Determines whether this triangulation is empty.
          * An empty triangulation is one with no simplices at all.
          *
-         * @return \c true if and only if this triangulation is empty.
+         * \return \c true if and only if this triangulation is empty.
          */
         bool isEmpty() const;
 
@@ -1084,7 +1084,7 @@ class TriangulationBase :
          * Note that all invalid vertices are considered to be on the
          * boundary; see isBoundary() for details.
          *
-         * @return \c true if and only if this triangulation is valid.
+         * \return \c true if and only if this triangulation is valid.
          */
         bool isValid() const;
 
@@ -1095,7 +1095,7 @@ class TriangulationBase :
          * triangulation contains some top-dimension simplex with at
          * least one facet that is not glued to an adjacent simplex.
          *
-         * @return \c true if and only if there are boundary facets.
+         * \return \c true if and only if there are boundary facets.
          */
         bool hasBoundaryFacets() const;
 
@@ -1107,7 +1107,7 @@ class TriangulationBase :
          *
          * This is equivalent to calling countBoundaryFaces<dim-1>().
          *
-         * @return the total number of boundary facets.
+         * \return the total number of boundary facets.
          */
         size_t countBoundaryFacets() const;
 
@@ -1139,7 +1139,7 @@ class TriangulationBase :
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
          *
-         * @return the number of boundary <i>subdim</i>-faces.
+         * \return the number of boundary <i>subdim</i>-faces.
          */
         template <int subdim>
         size_t countBoundaryFaces() const;
@@ -1164,14 +1164,14 @@ class TriangulationBase :
          *
          * \param subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
-         * @return the number of boundary <i>subdim</i>-faces.
+         * \return the number of boundary <i>subdim</i>-faces.
          */
         size_t countBoundaryFaces(int subdim) const;
 
         /**
          * Determines if this triangulation is orientable.
          *
-         * @return \c true if and only if this triangulation is orientable.
+         * \return \c true if and only if this triangulation is orientable.
          */
         bool isOrientable() const;
 
@@ -1182,7 +1182,7 @@ class TriangulationBase :
          * connected component.  In particular, it returns \c true for
          * the empty triangulation.
          *
-         * @return \c true if and only if this triangulation is connected.
+         * \return \c true if and only if this triangulation is connected.
          */
         bool isConnected() const;
 
@@ -1199,7 +1199,7 @@ class TriangulationBase :
          *
          * A non-orientable triangulation can never be oriented.
          *
-         * @return \c true if and only if all top-dimensional simplices are
+         * \return \c true if and only if all top-dimensional simplices are
          * oriented consistently.
          *
          * \author Matthias Goerner
@@ -1223,7 +1223,7 @@ class TriangulationBase :
          * (<i>dim</i>-1)-dimensional boundary components when computing Euler
          * characteristic), you can use the routine eulerCharManifold() instead.
          *
-         * @return the Euler characteristic of this triangulation.
+         * \return the Euler characteristic of this triangulation.
          */
         long eulerCharTri() const;
 
@@ -1272,7 +1272,7 @@ class TriangulationBase :
          * fundamental group with fillings, call
          * SnapPeaTriangulation::fundamentalGroupFilled() instead.
          *
-         * @return the fundamental group.
+         * \return the fundamental group.
          */
         const GroupPresentation& fundamentalGroup() const;
         /**
@@ -1351,7 +1351,7 @@ class TriangulationBase :
          * one of Regina's \ref stddim "standard dimensions", or between
          * 1 and (\a dim - 2) inclusive if not.
          *
-         * @return the <i>k</i>th homology group.
+         * \return the <i>k</i>th homology group.
          */
         template <int k = 1>
         AbelianGroup homology() const;
@@ -1391,7 +1391,7 @@ class TriangulationBase :
          * this must be between 1 and (\a dim - 1) inclusive if \a dim is
          * one of Regina's \ref stddim "standard dimensions", or between
          * 1 and (\a dim - 2) inclusive if not.
-         * @return the <i>k</i>th homology group.
+         * \return the <i>k</i>th homology group.
          */
         AbelianGroup homology(int k) const;
 
@@ -1435,7 +1435,7 @@ class TriangulationBase :
          * \tparam k the dimension of the homology group to compute; this must
          * be between 1 and (<i>dim</i>-1) inclusive.
          *
-         * @return the <i>k</i>th homology group of the union of all
+         * \return the <i>k</i>th homology group of the union of all
          * simplices in this triangulation, as described above.
          */
         template <int k = 1>
@@ -1468,7 +1468,7 @@ class TriangulationBase :
          *
          * \param k the dimension of the homology group to compute; this must
          * be between 1 and (<i>dim</i>-1) inclusive.
-         * @return the <i>k</i>th homology group of the union of all
+         * \return the <i>k</i>th homology group of the union of all
          * simplices in this triangulation, as described above.
          */
         MarkedAbelianGroup markedHomology(int k) const;
@@ -1522,7 +1522,7 @@ class TriangulationBase :
          * \tparam subdim the face dimension; this must be between 1 and
          * \a dim inclusive.
          *
-         * @return the boundary map from <i>subdim</i>-faces to
+         * \return the boundary map from <i>subdim</i>-faces to
          * (<i>subdim</i>-1)-faces.
          */
         template <int subdim>
@@ -1548,7 +1548,7 @@ class TriangulationBase :
          *
          * \param subdim the face dimension; this must be between 1 and \a dim
          * inclusive.
-         * @return the boundary map from <i>subdim</i>-faces to
+         * \return the boundary map from <i>subdim</i>-faces to
          * (<i>subdim</i>-1)-faces.
          */
         MatrixInt boundaryMap(int subdim) const;
@@ -1636,7 +1636,7 @@ class TriangulationBase :
          * 1 and \a dim inclusive if \a dim is one of Regina's standard
          * dimensions, or between 1 and (\a dim - 1) inclusive otherwise.
          *
-         * @return the boundary map from dual <i>subdim</i>-faces to
+         * \return the boundary map from dual <i>subdim</i>-faces to
          * dual (<i>subdim</i>-1)-faces.
          */
         template <int subdim>
@@ -1663,7 +1663,7 @@ class TriangulationBase :
          * \param subdim the dual face dimension; this must be between
          * 1 and \a dim inclusive if \a dim is one of Regina's standard
          * dimensions, or between 1 and (\a dim - 1) inclusive otherwise.
-         * @return the boundary map from dual <i>subdim</i>-faces to
+         * \return the boundary map from dual <i>subdim</i>-faces to
          * dual (<i>subdim</i>-1)-faces.
          */
         MatrixInt dualBoundaryMap(int subdim) const;
@@ -1707,7 +1707,7 @@ class TriangulationBase :
          * \tparam subdim the chain dimension; this must be between
          * 0 and (\a dim - 1) inclusive.
          *
-         * @return the map from dual <i>subdim</i>-chains to primal
+         * \return the map from dual <i>subdim</i>-chains to primal
          * <i>subdim</i>-chains.
          */
         template <int subdim>
@@ -1736,7 +1736,7 @@ class TriangulationBase :
          *
          * \param subdim the chain dimension; this must be between
          * 0 and (\a dim - 1) inclusive.
-         * @return the map from dual <i>subdim</i>-chains to primal
+         * \return the map from dual <i>subdim</i>-chains to primal
          * <i>subdim</i>-chains.
          */
         MatrixInt dualToPrimal(int subdim) const;
@@ -1828,7 +1828,7 @@ class TriangulationBase :
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
+         * \return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
@@ -1941,7 +1941,7 @@ class TriangulationBase :
          * \warning If a real boundary component contains vertices whose
          * links are not discs, this operation may have unexpected results.
          *
-         * @return \c true if changes were made, or \c false if the
+         * \return \c true if changes were made, or \c false if the
          * original triangulation contained no real boundary components.
          */
         bool finiteToIdeal();
@@ -1965,7 +1965,7 @@ class TriangulationBase :
          *
          * - This function does not assign labels to the new components.
          *
-         * @return a list of individual component triangulations.
+         * \return a list of individual component triangulations.
          */
         std::vector<Triangulation<dim>> triangulateComponents() const;
 
@@ -2005,7 +2005,7 @@ class TriangulationBase :
          * isIdenticalTo().
          *
          * \param other the triangulation to compare with this.
-         * @return \c true if and only if the two triangulations are
+         * \return \c true if and only if the two triangulations are
          * combinatorially identical.
          */
         bool operator == (const Triangulation<dim>& other) const;
@@ -2037,7 +2037,7 @@ class TriangulationBase :
          * different numberings for vertices, edges, and so on.)
          *
          * \param other the triangulation to compare with this.
-         * @return \c true if and only if the two triangulations are
+         * \return \c true if and only if the two triangulations are
          * not combinatorially identical.
          */
         bool operator != (const Triangulation<dim>& other) const;
@@ -2084,7 +2084,7 @@ class TriangulationBase :
          * determine the others.
          *
          * \param other the triangulation to compare with this one.
-         * @return details of the isomorphism if the two triangulations
+         * \return details of the isomorphism if the two triangulations
          * are combinatorially isomorphic, or no value otherwise.
          */
         std::optional<Isomorphism<dim>> isIsomorphicTo(
@@ -2119,7 +2119,7 @@ class TriangulationBase :
          *
          * \param other the triangulation in which to search for an
          * isomorphic copy of this triangulation.
-         * @return details of the isomorphism if such a copy is found,
+         * \return details of the isomorphism if such a copy is found,
          * or no value otherwise.
          */
         std::optional<Isomorphism<dim>> isContainedIn(
@@ -2173,7 +2173,7 @@ class TriangulationBase :
          * for each isomorphism that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
-         * @return \c true if \a action ever terminated the search by returning
+         * \return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
@@ -2231,7 +2231,7 @@ class TriangulationBase :
          * for each isomorphism that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
-         * @return \c true if \a action ever terminated the search by returning
+         * \return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
@@ -2257,7 +2257,7 @@ class TriangulationBase :
          * is connected.  It may be extended to work with disconnected
          * triangulations in later versions of Regina.
          *
-         * @return \c true if the triangulation was changed, or \c false
+         * \return \c true if the triangulation was changed, or \c false
          * if the triangulation was in canonical form to begin with.
          */
         bool makeCanonical();
@@ -2406,7 +2406,7 @@ class TriangulationBase :
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
          * for different dimensions \a p and \a q.
          *
-         * @return the isomorphism signature of this triangulation.
+         * \return the isomorphism signature of this triangulation.
          */
         template <class Type = IsoSigClassic<dim>,
             class Encoding = IsoSigPrintable<dim>>
@@ -2454,7 +2454,7 @@ class TriangulationBase :
          * \exception FailedPrecondition This triangulation is either
          * empty or disconnected.
          *
-         * @return a pair containing (i) the isomorphism signature of this
+         * \return a pair containing (i) the isomorphism signature of this
          * triangulation, and (ii) the isomorphism between this triangulation
          * and the triangulation that would be reconstructed from fromIsoSig().
          */
@@ -2488,7 +2488,7 @@ class TriangulationBase :
          * with the number of simplices.  If this triangulation is very
          * large, the returned string will be very large as well.
          *
-         * @return the C++ code that was generated.
+         * \return the C++ code that was generated.
          */
         std::string dumpConstruction() const;
 
@@ -2552,7 +2552,7 @@ class TriangulationBase :
          * triangulation to construct.
          * \param gluings describes the gluings between these top-dimensional
          * simplices, as described above.
-         * @return the reconstructed triangulation.
+         * \return the reconstructed triangulation.
          */
         static Triangulation<dim> fromGluings(size_t size,
             std::initializer_list<std::tuple<size_t, int, size_t, Perm<dim+1>>>
@@ -2621,7 +2621,7 @@ class TriangulationBase :
          * described above.
          * \param endGluings a past-the-end iterator indicating the end
          * of the list of gluings.
-         * @return the reconstructed triangulation.
+         * \return the reconstructed triangulation.
          */
         template <typename Iterator>
         static Triangulation<dim> fromGluings(size_t size,
@@ -2665,7 +2665,7 @@ class TriangulationBase :
          * \param sig the isomorphism signature of the triangulation to
          * construct.  Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
-         * @return the reconstructed triangulation.
+         * \return the reconstructed triangulation.
          */
         static Triangulation<dim> fromIsoSig(const std::string& sig);
 
@@ -2685,7 +2685,7 @@ class TriangulationBase :
          * \param sig the isomorphism signature of the triangulation to
          * construct.  Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
-         * @return the reconstructed triangulation.
+         * \return the reconstructed triangulation.
          */
         static Triangulation<dim> fromSig(const std::string& sig);
 
@@ -2727,7 +2727,7 @@ class TriangulationBase :
          * \param sig the isomorphism signature of a <i>dim</i>-dimensional
          * triangulation.  Note that isomorphism signature are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
-         * @return the number of top-dimensional simplices in the first
+         * \return the number of top-dimensional simplices in the first
          * connected component, or 0 if this could not be determined
          * because the given string was not a valid isomorphism signature
          * created using the default encoding.
@@ -2754,7 +2754,7 @@ class TriangulationBase :
          *
          * \param input an input stream that begins with the tight encoding
          * for a <i>dim</i>-dimensional triangulation.
-         * @return the triangulation represented by the given tight encoding.
+         * \return the triangulation represented by the given tight encoding.
          */
         static Triangulation<dim> tightDecode(std::istream& input);
 
@@ -2768,7 +2768,7 @@ class TriangulationBase :
          * ever called by the Triangulation<dim> assignment operator.
          *
          * \param src the triangulation to copy.
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         TriangulationBase& operator = (const TriangulationBase& src);
 
@@ -2805,7 +2805,7 @@ class TriangulationBase :
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
-         * @return a reference to this triangulation.
+         * \return a reference to this triangulation.
          */
         TriangulationBase& operator = (TriangulationBase&& src);
 
@@ -2821,7 +2821,7 @@ class TriangulationBase :
          * These are only calculated "on demand", when a skeletal property
          * is first queried.
          *
-         * @return \c true if and only if the skeleton has been calculated.
+         * \return \c true if and only if the skeleton has been calculated.
          */
         bool calculatedSkeleton() const;
 
@@ -2949,7 +2949,7 @@ class TriangulationBase :
          * \param relabelling if this is non-null, it will be filled with the
          * canonical isomorphism; in this case it must already have been
          * constructed for the correct number of simplices.
-         * @return the candidate isomorphism signature.
+         * \return the candidate isomorphism signature.
          */
         template <class Encoding>
         typename Encoding::Signature isoSigFrom(size_t simp,
@@ -2989,7 +2989,7 @@ class TriangulationBase :
          * for each isomorphism that is found.
          * \param args any additional arguments that should be passed to
          * \a action, following the initial isomorphism argument.
-         * @return \c true if \a action ever terminated the search by returning
+         * \return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */
         template <typename Action, typename... Args>
@@ -3016,7 +3016,7 @@ class TriangulationBase :
          * \param complete \c true if the isomorphism must be
          * onto and boundary complete, or \c false if neither of these
          * restrictions should be imposed.
-         * @return \c true if no immediate obstructions were found, or
+         * \return \c true if no immediate obstructions were found, or
          * \c false if evidence was found that such an isomorphism
          * cannot exist.
          */
@@ -3064,7 +3064,7 @@ class TriangulationBase :
          * same number of <i>useDim</i>-faces as each other.
          *
          * \param other the triangulation to compare against this.
-         * @return \c true if and only if the <i>useDim</i>-face
+         * \return \c true if and only if the <i>useDim</i>-face
          * degree sequences are equal.
          */
         template <int useDim>
@@ -3082,7 +3082,7 @@ class TriangulationBase :
          * dimension \a k contained in the integer pack \a useDim.
          *
          * \param other the triangulation to compare against this.
-         * @return \c true if and only if all degree sequences considered
+         * \return \c true if and only if all degree sequences considered
          * are equal.
          */
         template <int... useDim>

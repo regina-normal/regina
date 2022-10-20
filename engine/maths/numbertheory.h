@@ -77,7 +77,7 @@ long reducedMod(long k, long modBase);
  *
  * \param a one of the two integers to work with.
  * \param b the other integer with which to work.
- * @return the greatest common divisor of \a a and \a b.
+ * \return the greatest common divisor of \a a and \a b.
  *
  * \ingroup maths
  */
@@ -106,7 +106,7 @@ long reducedMod(long k, long modBase);
  *
  * \param a the first integer to compute the gcd of.
  * \param b the second integer to compute the gcd of.
- * @return a tuple containing: the greatest common divisor of \a a and \a b;
+ * \return a tuple containing: the greatest common divisor of \a a and \a b;
  * the final coefficient of \a a; and the final coefficient of \a b.
  *
  * \ingroup maths
@@ -127,7 +127,7 @@ std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
  *
  * \param a one of the two integers to work with.
  * \param b the other integer with which to work.
- * @return the lowest common multiple of \a a and \a b.
+ * \return the lowest common multiple of \a a and \a b.
  *
  * \ingroup maths
  */
@@ -142,7 +142,7 @@ std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
  *
  * \param n the modular base in which to work.
  * \param k the number whose multiplicative inverse should be found.
- * @return the inverse \a v for which <tt>k * v == 1 (mod n)</tt>.
+ * \return the inverse \a v for which <tt>k * v == 1 (mod n)</tt>.
  *
  * \ingroup maths
  */

@@ -209,7 +209,7 @@ class XMLTreeResolver {
          * this is typically how they are constructed when a file is saved.
          *
          * \param id the string ID to query.
-         * @return the packet with the given ID, or \c null is no such
+         * \return the packet with the given ID, or \c null is no such
          * packet has been registered so far.
          */
         std::shared_ptr<Packet> resolve(const std::string& id) const;
@@ -231,7 +231,7 @@ class XMLTreeResolver {
          * must be a subclass of Packet.
          *
          * \param id the string ID to query.
-         * @return the packet with the given ID, or \c null if either there is
+         * \return the packet with the given ID, or \c null if either there is
          * no such packet registered so far or if there is such a packet but
          * its type is not equal to or derived from \a packetType.
          */
@@ -254,7 +254,7 @@ class XMLTreeResolver {
          * type that can be stored in a PacketOf<Held>.
          *
          * \param id the string ID to query.
-         * @return the data held by the packet with the given ID, or \c null
+         * \return the data held by the packet with the given ID, or \c null
          * if either there is no such packet registered so far, or if there
          * is such a packet but its type is not equal to or derived from
          * PacketOf<Held>.
@@ -273,7 +273,7 @@ class XMLTreeResolver {
          * See resolvePacketData() for further details.
          *
          * \param id the string ID to query.
-         * @return the triangulation held by the packet with the given ID,
+         * \return the triangulation held by the packet with the given ID,
          * or \c null if either there is no such packet registered so far,
          * or if there is such a packet but it does not hold one of Regina's
          * 3-dimensional triangulation types.

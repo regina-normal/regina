@@ -174,7 +174,7 @@ class Signature : public ShortOutput<Signature> {
          * This operator induces a deep copy of \a sig.
          *
          * \param sig the signature to copy.
-         * @return a reference to this signature.
+         * \return a reference to this signature.
          */
         Signature& operator = (const Signature& sig);
 
@@ -189,7 +189,7 @@ class Signature : public ShortOutput<Signature> {
          * The signature that is passed (\a src) will no longer be usable.
          *
          * \param src the signature to move.
-         * @return a reference to this signature.
+         * \return a reference to this signature.
          */
         Signature& operator = (Signature&& src) noexcept;
 
@@ -209,7 +209,7 @@ class Signature : public ShortOutput<Signature> {
          * Returns the order of this signature.  The order is the number
          * of quads in the corresponding splitting surface.
          *
-         * @return the order of this signature.
+         * \return the order of this signature.
          */
         unsigned order() const;
 
@@ -226,7 +226,7 @@ class Signature : public ShortOutput<Signature> {
          * only the mathematical content of the signatures is important here.
          *
          * \param other the signature to compare with this.
-         * @return \c true if and only if this and \a other are identical.
+         * \return \c true if and only if this and \a other are identical.
          */
         bool operator == (const Signature& other) const;
 
@@ -243,7 +243,7 @@ class Signature : public ShortOutput<Signature> {
          * only the mathematical content of the signatures is important here.
          *
          * \param other the signature to compare with this.
-         * @return \c true if and only if this and \a other are not identical.
+         * \return \c true if and only if this and \a other are not identical.
          */
         bool operator != (const Signature& other) const;
 
@@ -251,7 +251,7 @@ class Signature : public ShortOutput<Signature> {
          * Returns the 3-manifold triangulation corresponding to
          * this splitting surface signature.
          *
-         * @return the corresponding triangulation.
+         * \return the corresponding triangulation.
          */
         Triangulation<3> triangulate() const;
 
@@ -362,7 +362,7 @@ class Signature : public ShortOutput<Signature> {
          * to new labels (which must also be 0,1,..., possibly in a different
          * order).  This may be \c null if no relabelling is to be used.
          *
-         * @return -1, 1 or 0 if the transformed first cycle is
+         * \return -1, 1 or 0 if the transformed first cycle is
          * lexicographically less than, greater than or equal to the
          * transformed second cycle respectively.
          */

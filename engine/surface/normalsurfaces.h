@@ -169,7 +169,7 @@ using SurfaceExport = regina::Flags<SurfaceExportFields>;
  *
  * \param lhs the first flag to combine.
  * \param rhs the second flag to combine.
- * @return the combination of both flags.
+ * \return the combination of both flags.
  *
  * \ingroup surfaces
  */
@@ -429,7 +429,7 @@ class NormalSurfaces :
          * Sets this to be a (deep) copy of the given list.
          *
          * \param src the list to copy.
-         * @return a reference to this list.
+         * \return a reference to this list.
          */
         NormalSurfaces& operator = (const NormalSurfaces& src);
 
@@ -446,7 +446,7 @@ class NormalSurfaces :
          * to be destroyed (which will fire a destruction event instead).
          *
          * \param src the list to move.
-         * @return a reference to this list.
+         * \return a reference to this list.
          */
         NormalSurfaces& operator = (NormalSurfaces&& src);
 
@@ -468,7 +468,7 @@ class NormalSurfaces :
          * Returns the coordinate system that was originally used to enumerate
          * the surfaces in this list.
          *
-         * @return the coordinate system used.
+         * \return the coordinate system used.
          */
         NormalCoords coords() const;
         /**
@@ -480,7 +480,7 @@ class NormalSurfaces :
          * explicitly filled in (such as NS_VERTEX and/or NS_EMBEDDED_ONLY),
          * and invalid and/or redundant values will have been removed.
          *
-         * @return details of what this list represents.
+         * \return details of what this list represents.
          */
         NormalList which() const;
         /**
@@ -494,7 +494,7 @@ class NormalSurfaces :
          * of algorithm flags will be replaced with whatever algorithm was
          * actually used.
          *
-         * @return details of the algorithm used to enumerate this list.
+         * \return details of the algorithm used to enumerate this list.
          */
         NormalAlg algorithm() const;
         /**
@@ -505,7 +505,7 @@ class NormalSurfaces :
          * actually contain octagons: it simply returns a basic property
          * of the coordinate system that was used for enumeration.
          *
-         * @return \c true if and only if almost normal surfaces are supported.
+         * \return \c true if and only if almost normal surfaces are supported.
          */
         bool allowsAlmostNormal() const;
         /**
@@ -516,7 +516,7 @@ class NormalSurfaces :
          * are actually non-compact: it simply returns a basic property
          * of the coordinate system that was used for enumeration.
          *
-         * @return \c true if and only if non-compact normal surfaces are
+         * \return \c true if and only if non-compact normal surfaces are
          * supported.
          */
         bool allowsNonCompact() const;
@@ -529,7 +529,7 @@ class NormalSurfaces :
          * that they were not deliberately excluded (for instance, the
          * quadrilateral constraints were not enforced).
          *
-         * @return \c true if this list was constructed to contain only
+         * \return \c true if this list was constructed to contain only
          * properly embedded surfaces, or \c false otherwise.
          */
         bool isEmbeddedOnly() const;
@@ -560,7 +560,7 @@ class NormalSurfaces :
          * surface lists can now be kept anywhere in the packet tree, or can
          * be kept as standalone objects outside the packet tree entirely.
          *
-         * @return a reference to the underlying triangulation.
+         * \return a reference to the underlying triangulation.
          */
         const Triangulation<3>& triangulation() const;
         /**
@@ -569,7 +569,7 @@ class NormalSurfaces :
          * \ifacespython This is also used to implement the Python special
          * method __len__().
          *
-         * @return the number of surfaces.
+         * \return the number of surfaces.
          */
         size_t size() const;
         /**
@@ -579,7 +579,7 @@ class NormalSurfaces :
          * \param index the index of the requested surface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
-         * @return the normal surface at the requested index in this list.
+         * \return the normal surface at the requested index in this list.
          */
         const NormalSurface& surface(size_t index) const;
         /**
@@ -589,7 +589,7 @@ class NormalSurfaces :
          * \param index the index of the requested surface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
-         * @return the normal surface at the requested index in this list.
+         * \return the normal surface at the requested index in this list.
          */
         const NormalSurface& operator [](size_t index) const;
         /**
@@ -613,7 +613,7 @@ class NormalSurfaces :
          * this list in the same way that you would iterate over any native
          * Python container.
          *
-         * @return an iterator at the beginning of this list.
+         * \return an iterator at the beginning of this list.
          */
         auto begin() const;
         /**
@@ -628,7 +628,7 @@ class NormalSurfaces :
          * this list in the same way that you would iterate over any native
          * Python container.
          *
-         * @return an iterator beyond the end of this list.
+         * \return an iterator beyond the end of this list.
          */
         auto end() const;
 #ifdef __APIDOCS
@@ -649,7 +649,7 @@ class NormalSurfaces :
          * the normal surfaces in this list in the usual way using a
          * range-based \c for loop.
          *
-         * @return an iterator over the normal surfaces in this list.
+         * \return an iterator over the normal surfaces in this list.
          */
         auto __iter__() const;
 #endif
@@ -682,7 +682,7 @@ class NormalSurfaces :
          *   comparison will return \c false.
          *
          * \param other the list to be compared with this list.
-         * @return \c true if both lists represent the same multiset of
+         * \return \c true if both lists represent the same multiset of
          * normal or almost normal surfaces, or \c false if not.
          */
         bool operator == (const NormalSurfaces& other) const;
@@ -716,7 +716,7 @@ class NormalSurfaces :
          *   considered different).
          *
          * \param other the list to be compared with this list.
-         * @return \c true if both lists do not represent the same multiset of
+         * \return \c true if both lists do not represent the same multiset of
          * normal or almost normal surfaces, or \c false if they do.
          */
         bool operator != (const NormalSurfaces& other) const;
@@ -776,7 +776,7 @@ class NormalSurfaces :
          * then this normal surface list would not have been created
          * in the first place.
          *
-         * @return the matching equations used to create this normal
+         * \return the matching equations used to create this normal
          * surface list.
          */
         MatrixInt recreateMatchingEquations() const;
@@ -816,7 +816,7 @@ class NormalSurfaces :
          * \param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
-         * @return \c true if the export was successful, or \c false otherwise.
+         * \return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVStandard(const char* filename,
             SurfaceExport additionalFields = regina::surfaceExportAll) const;
@@ -856,7 +856,7 @@ class NormalSurfaces :
          * \param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
-         * @return \c true if the export was successful, or \c false otherwise.
+         * \return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVEdgeWeight(const char* filename,
             SurfaceExport additionalFields = regina::surfaceExportAll) const;
@@ -868,7 +868,7 @@ class NormalSurfaces :
          * \nopython Use vectors() instead, which returns an iterable object
          * for iterating over these same raw vectors.
          *
-         * @return an iterator at the beginning of this surface list.
+         * \return an iterator at the beginning of this surface list.
          */
         VectorIterator beginVectors() const;
 
@@ -880,7 +880,7 @@ class NormalSurfaces :
          * \nopython Use vectors() instead, which returns an iterable object
          * for iterating over these same raw vectors.
          *
-         * @return an iterator past the end of this surface list.
+         * \return an iterator past the end of this surface list.
          */
         VectorIterator endVectors() const;
 
@@ -899,7 +899,7 @@ class NormalSurfaces :
          * and endVectors() instead, which together define an iterator range
          * over these same raw vectors.
          *
-         * @return an iterator over the normal surfaces in this list.
+         * \return an iterator over the normal surfaces in this list.
          */
         auto vectors() const;
 #endif
@@ -943,7 +943,7 @@ class NormalSurfaces :
                 /**
                  * Makes this a copy of the given iterator.
                  *
-                 * @return a reference to this iterator.
+                 * \return a reference to this iterator.
                  */
                 VectorIterator& operator = (const VectorIterator&) = default;
 
@@ -951,7 +951,7 @@ class NormalSurfaces :
                  * Compares this with the given iterator for equality.
                  *
                  * \param other the iterator to compare this with.
-                 * @return \c true if the iterators point to the same
+                 * \return \c true if the iterators point to the same
                  * element of the same normal surface list, or \c false
                  * if they do not.
                  */
@@ -961,7 +961,7 @@ class NormalSurfaces :
                  * Compares this with the given iterator for inequality.
                  *
                  * \param other the iterator to compare this with.
-                 * @return \c false if the iterators point to the same
+                 * \return \c false if the iterators point to the same
                  * element of the same normal surface list, or \c true
                  * if they do not.
                  */
@@ -974,21 +974,21 @@ class NormalSurfaces :
                  * \pre This iterator is dereferenceable (in particular,
                  * it is not past-the-end).
                  *
-                 * @return the corresponding normal surface vector.
+                 * \return the corresponding normal surface vector.
                  */
                 const Vector<LargeInteger>& operator *() const;
 
                 /**
                  * The preincrement operator.
                  *
-                 * @return a reference to this iterator after the increment.
+                 * \return a reference to this iterator after the increment.
                  */
                 VectorIterator& operator ++();
 
                 /**
                  * The postincrement operator.
                  *
-                 * @return a copy of this iterator before the
+                 * \return a copy of this iterator before the
                  * increment took place.
                  */
                 VectorIterator operator ++(int);
@@ -996,14 +996,14 @@ class NormalSurfaces :
                 /**
                  * The predecrement operator.
                  *
-                 * @return a reference to this iterator after the decrement.
+                 * \return a reference to this iterator after the decrement.
                  */
                 VectorIterator& operator --();
 
                 /**
                  * The postdecrement operator.
                  *
-                 * @return a copy of this iterator before the
+                 * \return a copy of this iterator before the
                  * decrement took place.
                  */
                 VectorIterator operator --(int);
@@ -1375,7 +1375,7 @@ void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
  * \param triangulation the triangulation upon which these matching equations
  * will be based.
  * \param coords the coordinate system to be used.
- * @return the resulting set of matching equations.
+ * \return the resulting set of matching equations.
  *
  * \ingroup surfaces
  */
@@ -1401,7 +1401,7 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
  * \param triangulation the triangulation upon which these validity constraints
  * will be based.
  * \param coords the coordinate system to be used.
- * @return the set of validity constraints.
+ * \return the set of validity constraints.
  *
  * \ingroup surfaces
  */

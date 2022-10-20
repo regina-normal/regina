@@ -77,7 +77,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * This is \e different from the generic routine sphere(),
          * which uses two tetrahedra instead.
          *
-         * @return a one-tetrahedron 3-sphere.
+         * \return a one-tetrahedron 3-sphere.
          */
         static Triangulation<3> threeSphere();
 
@@ -85,7 +85,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns the two-tetrahedron triangulation of the 3-sphere
          * that is dual to Bing's house with two rooms.
          *
-         * @return a 3-sphere triangulation dual to Bing's house.
+         * \return a 3-sphere triangulation dual to Bing's house.
          */
         static Triangulation<3> bingsHouse();
 
@@ -94,7 +94,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * <tt>S² x S¹</tt>.
          * This is identical to calling the generic routine sphereBundle().
          *
-         * @return the product space <tt>S² x S¹</tt>.
+         * \return the product space <tt>S² x S¹</tt>.
          */
         static Triangulation<3> s2xs1();
 
@@ -102,7 +102,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a three-tetrahedron triangulation of the non-orientable
          * product space <tt>RP² x S¹</tt>.
          *
-         * @return the product space <tt>RP² x S¹</tt>.
+         * \return the product space <tt>RP² x S¹</tt>.
          */
         static Triangulation<3> rp2xs1();
 
@@ -110,7 +110,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a triangulation of the connected sum
          * <tt>RP³ # RP³</tt>.
          *
-         * @return the connected sum <tt>RP³ # RP³</tt>.
+         * \return the connected sum <tt>RP³ # RP³</tt>.
          */
         static Triangulation<3> rp3rp3();
 
@@ -128,7 +128,7 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * \param p a parameter of the desired lens space.
          * \param q a parameter of the desired lens space.
-         * @return the lens space <tt>L(p,q)</tt>.
+         * \return the lens space <tt>L(p,q)</tt>.
          */
         static Triangulation<3> lens(size_t p, size_t q);
 
@@ -140,7 +140,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * this must be strictly positive.
          * \param twisted \c true if the layered loop should be twisted,
          * or \c false if it should be untwisted.
-         * @return the resulting layered loop.
+         * \return the resulting layered loop.
          */
         static Triangulation<3> layeredLoop(size_t length, bool twisted);
 
@@ -148,7 +148,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns the five-tetrahedron triangulation of the
          * Poincare homology sphere.
          *
-         * @return the Poincare homology sphere.
+         * \return the Poincare homology sphere.
          */
         static Triangulation<3> poincare();
 
@@ -220,7 +220,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * \param b2 a parameter describing the second exceptional fibre.
          * \param a3 a parameter describing the third exceptional fibre.
          * \param b3 a parameter describing the third exceptional fibre.
-         * @return the triangulated Seifert fibred space.
+         * \return the triangulated Seifert fibred space.
          */
         static Triangulation<3> sfsOverSphere(long a1 = 1, long b1 = 0,
             long a2 = 1, long b2 = 0, long a3 = 1, long b3 = 0);
@@ -232,7 +232,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Note that there are nine minimal triangulations of the Weeks
          * manifold (of course this routine returns just one).
          *
-         * @return the Weeks manifold.
+         * \return the Weeks manifold.
          */
         static Triangulation<3> weeks();
 
@@ -247,7 +247,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
          * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932.
          *
-         * @return the Weber-Seifert dodecahedral space.
+         * \return the Weber-Seifert dodecahedral space.
          */
         static Triangulation<3> weberSeifert();
 
@@ -255,7 +255,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns the nine-tetrahedron closed orientable hyperbolic
          * 3-manifold with volume 0.94270736.
          *
-         * @return the closed orientable hyperbolic manifold described above.
+         * \return the closed orientable hyperbolic manifold described above.
          */
         static Triangulation<3> smallClosedOrblHyperbolic();
 
@@ -263,7 +263,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns the eleven-tetrahedron closed non-orientable hyperbolic
          * 3-manifold with volume 2.02988321.
          *
-         * @return the closed non-orientable hyperbolic manifold described
+         * \return the closed non-orientable hyperbolic manifold described
          * above.
          */
         static Triangulation<3> smallClosedNonOrblHyperbolic();
@@ -277,7 +277,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * library of triangulations.  See:
          * http://page.math.tu-berlin.de/~lutz/stellar/library_of_triangulations.html
          *
-         * @return the boundary of the regular 600-cell.
+         * \return the boundary of the regular 600-cell.
          */
         static Triangulation<3> sphere600();
 
@@ -303,7 +303,7 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * \param a the first parameter of the layered solid torus.
          * \param b the second parameter of the layered solid torus.
-         * @return the layered solid torus <tt>LST(a,b,c)</tt>.
+         * \return the layered solid torus <tt>LST(a,b,c)</tt>.
          */
         static Triangulation<3> lst(size_t a, size_t b);
 
@@ -323,7 +323,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * For genus 0, this routine uses the one-tetrahedron 3-ball.
          *
          * \param genus the genus of the handlebody.
-         * @return the orientable handlebody with the given genus.
+         * \return the orientable handlebody with the given genus.
          *
          * \author Alex He
          */
@@ -334,7 +334,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * This is isomorphic to the triangulation returned by the
          * generic routine twistedBallBundle().
          *
-         * @return the solid Klein bottle.
+         * \return the solid Klein bottle.
          */
         static Triangulation<3> solidKleinBottle();
 
@@ -348,7 +348,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a two-tetrahedron ideal triangulation of the figure
          * eight knot complement.
          *
-         * @return the figure eight knot complement.
+         * \return the figure eight knot complement.
          */
         static Triangulation<3> figureEight();
 
@@ -356,7 +356,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a two-tetrahedron ideal triangulation of the trefoil
          * knot complement.
          *
-         * @return the trefoil knot complement.
+         * \return the trefoil knot complement.
          */
         static Triangulation<3> trefoil();
 
@@ -364,7 +364,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a four-tetrahedron ideal triangulation of the
          * Whitehead link complement.
          *
-         * @return the Whitehead link complement.
+         * \return the Whitehead link complement.
          */
         static Triangulation<3> whitehead();
 
@@ -374,7 +374,7 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * \deprecated This routine has been renamed to whitehead().
          *
-         * @return the Whitehead link complement.
+         * \return the Whitehead link complement.
          */
         [[deprecated]] static Triangulation<3> whiteheadLink();
 
@@ -382,7 +382,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns the one-tetrahedron ideal triangulation of the
          * non-orientable Gieseking manifold.
          *
-         * @return the Gieseking manifold.
+         * \return the Gieseking manifold.
          */
         static Triangulation<3> gieseking();
 
@@ -391,7 +391,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * cusped boundary.  This triangulation has one internal finite
          * vertex and one genus two ideal vertex.
          *
-         * @return the solid genus two torus with cusped boundary.
+         * \return the solid genus two torus with cusped boundary.
          */
         static Triangulation<3> cuspedGenusTwoTorus();
 

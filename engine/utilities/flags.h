@@ -104,7 +104,7 @@ class Flags {
          * \warning This function should not be used widely, since it
          * effectively works around inbuilt type safety mechanisms.
          *
-         * @return the integer value of this set.
+         * \return the integer value of this set.
          */
         int intValue() const {
             return static_cast<int>(value_);
@@ -117,7 +117,7 @@ class Flags {
          * \warning This function should not be used widely, since it
          * effectively works around inbuilt type safety mechanisms.
          *
-         * @return the set corresponding to the given integer value.
+         * \return the set corresponding to the given integer value.
          */
         inline static Flags<T> fromInt(int value) {
             return Flags<T>(value);
@@ -130,7 +130,7 @@ class Flags {
          * The test is equivalent to <tt>(*this & flag) == flag</tt>.
          *
          * \param flag the flag whose presence will be tested.
-         * @return \c true if and only if all of the bits of the given
+         * \return \c true if and only if all of the bits of the given
          * flag are set.
          */
         bool has(T flag) const {
@@ -145,7 +145,7 @@ class Flags {
          * The test is equivalent to <tt>(*this & rhs) == rhs</tt>.
          *
          * \param rhs the set whose presence will be tested.
-         * @return \c true if and only if all of the bits of the given
+         * \return \c true if and only if all of the bits of the given
          * set are present in this set.
          */
         bool has(const Flags<T>& rhs) const {
@@ -156,7 +156,7 @@ class Flags {
          * Determines whether this set is precisely equal to the given flag.
          *
          * \param rhs the flag to test this against.
-         * @return \c true if and only if this and the given flag are identical.
+         * \return \c true if and only if this and the given flag are identical.
          */
         inline bool operator == (T rhs) const {
             return (value_ == rhs);
@@ -167,7 +167,7 @@ class Flags {
          * flag set.
          *
          * \param rhs the flag set to test this against.
-         * @return \c true if and only if this and the given flag set are
+         * \return \c true if and only if this and the given flag set are
          * identical.
          */
         inline bool operator == (const Flags<T>& rhs) const {
@@ -178,7 +178,7 @@ class Flags {
          * Determines whether this set is not equal to the given flag.
          *
          * \param rhs the flag to test this against.
-         * @return \c true if and only if this and the given flag are not
+         * \return \c true if and only if this and the given flag are not
          * identical.
          */
         inline bool operator != (T rhs) const {
@@ -189,7 +189,7 @@ class Flags {
          * Determines whether this set is not equal to the given flag set.
          *
          * \param rhs the flag to test this against.
-         * @return \c true if and only if this and the given flag set are not
+         * \return \c true if and only if this and the given flag set are not
          * identical.
          */
         inline bool operator != (const Flags<T>& rhs) const {
@@ -200,7 +200,7 @@ class Flags {
          * Sets this flag set to contain precisely the given flag only.
          *
          * \param rhs the new value of this flag set.
-         * @return a reference to this flag set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator = (T rhs) {
             value_ = rhs;
@@ -211,7 +211,7 @@ class Flags {
          * Sets this flag set to contain a copy of the given flag set.
          *
          * \param rhs the new value of this flag set.
-         * @return a reference to this flag set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator = (const Flags<T>& rhs) = default;
 
@@ -220,7 +220,7 @@ class Flags {
          * flag.
          *
          * \param rhs the flag to combine with this set.
-         * @return a reference to this flag set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator |= (T rhs) {
             value_ |= rhs;
@@ -232,7 +232,7 @@ class Flags {
          * flag set.
          *
          * \param rhs the flag set to combine with this set.
-         * @return a reference to this flag set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator |= (const Flags<T>& rhs) {
             value_ |= rhs.value_;
@@ -244,7 +244,7 @@ class Flags {
          * flag.
          *
          * \param rhs the flag to combine with this set.
-         * @return a reference to this flag set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator &= (T rhs) {
             value_ &= rhs;
@@ -256,7 +256,7 @@ class Flags {
          * flag set.
          *
          * \param rhs the flag set to combine with this set.
-         * @return a reference to this flag set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator &= (const Flags<T>& rhs) {
             value_ &= rhs.value_;
@@ -268,7 +268,7 @@ class Flags {
          * flag.
          *
          * \param rhs the flag to combine with this set.
-         * @return a reference to this flag set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator ^= (T rhs) {
             value_ ^= rhs;
@@ -280,7 +280,7 @@ class Flags {
          * flag set.
          *
          * \param rhs the flag set to combine with this set.
-         * @return a reference to this flag set.
+         * \return a reference to this flag set.
          */
         inline Flags<T>& operator ^= (const Flags<T>& rhs) {
             value_ ^= rhs.value_;
@@ -292,7 +292,7 @@ class Flags {
          * This flag set is not changed.
          *
          * \param rhs the flag to combine with this set.
-         * @return the combination of this set and the given flag.
+         * \return the combination of this set and the given flag.
          */
         inline Flags<T> operator | (T rhs) const {
             return Flags(value_ | rhs);
@@ -303,7 +303,7 @@ class Flags {
          * This flag set is not changed.
          *
          * \param rhs the flag set to combine with this set.
-         * @return the combination of this and the given flag set.
+         * \return the combination of this and the given flag set.
          */
         inline Flags<T> operator | (const Flags<T>& rhs) const {
             return Flags(value_ | rhs.value_);
@@ -314,7 +314,7 @@ class Flags {
          * This flag set is not changed.
          *
          * \param rhs the flag to combine with this set.
-         * @return the combination of this set and the given flag.
+         * \return the combination of this set and the given flag.
          */
         inline Flags<T> operator & (T rhs) const {
             return Flags(value_ & rhs);
@@ -325,7 +325,7 @@ class Flags {
          * This flag set is not changed.
          *
          * \param rhs the flag set to combine with this set.
-         * @return the combination of this and the given flag set.
+         * \return the combination of this and the given flag set.
          */
         inline Flags<T> operator & (const Flags<T>& rhs) const {
             return Flags(value_ & rhs.value_);
@@ -336,7 +336,7 @@ class Flags {
          * This flag set is not changed.
          *
          * \param rhs the flag to combine with this set.
-         * @return the combination of this set and the given flag.
+         * \return the combination of this set and the given flag.
          */
         inline Flags<T> operator ^ (T rhs) const {
             return Flags(value_ ^ rhs);
@@ -347,7 +347,7 @@ class Flags {
          * This flag set is not changed.
          *
          * \param rhs the flag set to combine with this set.
-         * @return the combination of this and the given flag set.
+         * \return the combination of this and the given flag set.
          */
         inline Flags<T> operator ^ (const Flags<T>& rhs) const {
             return Flags(value_ ^ rhs.value_);

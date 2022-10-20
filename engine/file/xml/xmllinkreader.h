@@ -102,7 +102,7 @@ class XMLLinkCrossingsReader : public XMLElementReader {
          * Indicates whether the XML element has been found to contain
          * invalid data.
          *
-         * @return \c true if and only if invalid data has been found.
+         * \return \c true if and only if invalid data has been found.
          */
         bool broken() const;
 };
@@ -133,7 +133,7 @@ class XMLLinkConnectionsReader : public XMLElementReader {
          * Indicates whether the XML element has been found to contain
          * invalid data.
          *
-         * @return \c true if and only if invalid data has been found.
+         * \return \c true if and only if invalid data has been found.
          */
         bool broken() const;
 };
@@ -169,7 +169,7 @@ class XMLLinkComponentsReader : public XMLElementReader {
          * Indicates whether the XML element has been found to contain
          * invalid data.
          *
-         * @return \c true if and only if invalid data has been found.
+         * \return \c true if and only if invalid data has been found.
          */
         bool broken() const;
 };

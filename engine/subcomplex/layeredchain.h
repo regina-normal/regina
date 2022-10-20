@@ -124,7 +124,7 @@ class LayeredChain : public StandardTriangulation {
         /**
          * Sets this to be a copy of the given structure.
          *
-         * @return a reference to this structure.
+         * \return a reference to this structure.
          */
         LayeredChain& operator = (const LayeredChain&) = default;
 
@@ -139,19 +139,19 @@ class LayeredChain : public StandardTriangulation {
         /**
          * Returns the bottom tetrahedron of this layered chain.
          *
-         * @return the bottom tetrahedron.
+         * \return the bottom tetrahedron.
          */
         Tetrahedron<3>* bottom() const;
         /**
          * Returns the top tetrahedron of this layered chain.
          *
-         * @return the top tetrahedron.
+         * \return the top tetrahedron.
          */
         Tetrahedron<3>* top() const;
         /**
          * Returns the number of tetrahedra in this layered chain.
          *
-         * @return the number of tetrahedra.
+         * \return the number of tetrahedra.
          */
         size_t index() const;
 
@@ -168,7 +168,7 @@ class LayeredChain : public StandardTriangulation {
          *
          * See the general class notes for further details.
          *
-         * @return a permutation representing the roles of the vertices
+         * \return a permutation representing the roles of the vertices
          * of the bottom tetrahedron.
          */
         Perm<4> bottomVertexRoles() const;
@@ -186,7 +186,7 @@ class LayeredChain : public StandardTriangulation {
          *
          * See the general class notes for further details.
          *
-         * @return a permutation representing the roles of the vertices
+         * \return a permutation representing the roles of the vertices
          * of the top tetrahedron.
          */
         Perm<4> topVertexRoles() const;
@@ -198,7 +198,7 @@ class LayeredChain : public StandardTriangulation {
          * modified accordingly (note that its index will be increased
          * by one and its top tetrahedron will change).
          *
-         * @return \c true if and only if this layered chain was
+         * \return \c true if and only if this layered chain was
          * extended.
          */
         bool extendAbove();
@@ -210,7 +210,7 @@ class LayeredChain : public StandardTriangulation {
          * modified accordingly (note that its index will be increased
          * by one and its bottom tetrahedron will change).
          *
-         * @return \c true if and only if this layered chain was
+         * \return \c true if and only if this layered chain was
          * extended.
          */
         bool extendBelow();
@@ -220,7 +220,7 @@ class LayeredChain : public StandardTriangulation {
          * Both extendAbove() and extendBelow() will be used until this
          * layered chain can be extended no further.
          *
-         * @return \c true if and only if this layered chain was
+         * \return \c true if and only if this layered chain was
          * extended.
          */
         bool extendMaximal();
@@ -268,7 +268,7 @@ class LayeredChain : public StandardTriangulation {
          * subclass means they describe isomorphic structures).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent the same type of layered chain.
          */
         bool operator == (const LayeredChain& other) const;
@@ -288,7 +288,7 @@ class LayeredChain : public StandardTriangulation {
          * subclass means they describe isomorphic structures).
          *
          * \param other the structure with which this will be compared.
-         * @return \c true if and only if this and the given structure
+         * \return \c true if and only if this and the given structure
          * represent different types of layered chain.
          */
         bool operator != (const LayeredChain& other) const;

@@ -280,7 +280,7 @@ class AbelianGroup :
          * rank differently. Specifically, SnapPy's AbelianGroup.rank()
          * computation includes torsion factors also.
          *
-         * @return the number of included copies of \a Z.
+         * \return the number of included copies of \a Z.
          */
         size_t rank() const;
         /**
@@ -297,7 +297,7 @@ class AbelianGroup :
          * \pre The given degree is at least 2.
          *
          * \param degree the degree of the torsion term to query.
-         * @return the rank in the group of the given torsion term.
+         * \return the rank in the group of the given torsion term.
          */
         size_t torsionRank(const Integer& degree) const;
         /**
@@ -314,7 +314,7 @@ class AbelianGroup :
          * \pre The given degree is at least 2.
          *
          * \param degree the degree of the torsion term to query.
-         * @return the rank in the group of the given torsion term.
+         * \return the rank in the group of the given torsion term.
          */
         size_t torsionRank(unsigned long degree) const;
         /**
@@ -322,7 +322,7 @@ class AbelianGroup :
          * torsion elements of this group.
          * See the AbelianGroup class notes for further details.
          *
-         * @return the number of invariant factors.
+         * \return the number of invariant factors.
          */
         size_t countInvariantFactors() const;
         /**
@@ -336,27 +336,27 @@ class AbelianGroup :
          *
          * \param index the index of the invariant factor to return;
          * this must be between 0 and countInvariantFactors()-1 inclusive.
-         * @return the requested invariant factor.
+         * \return the requested invariant factor.
          */
         const Integer& invariantFactor(size_t index) const;
 
         /**
          * Determines whether this is the trivial (zero) group.
          *
-         * @return \c true if and only if this is the trivial group.
+         * \return \c true if and only if this is the trivial group.
          */
         bool isTrivial() const;
         /**
          * Determines whether this is the infinite cyclic group (Z).
          *
-         * @return \c true if and only if this is the infinite cyclic group.
+         * \return \c true if and only if this is the infinite cyclic group.
          */
         bool isZ() const;
         /**
          * Determines whether this is the free abelian group of the given rank.
          *
          * \param r the rank of the free abelian group that we are testing for.
-         * @return \c true if and only if this is the free abelian group
+         * \return \c true if and only if this is the free abelian group
          * of rank \a r.
          */
         bool isFree(size_t r) const;
@@ -370,7 +370,7 @@ class AbelianGroup :
          * (i.e., it will behave the same as isTrivial()).
          *
          * \param n the number of elements of the cyclic group in question.
-         * @return \c true if and only if this is the cyclic group Z_n.
+         * \return \c true if and only if this is the cyclic group Z_n.
          */
         bool isZn(size_t n) const;
         /**
@@ -385,7 +385,7 @@ class AbelianGroup :
          * for identical chain complex presentations).
          *
          * \param other the group with which this should be compared.
-         * @return \c true if and only if the two groups have identical
+         * \return \c true if and only if the two groups have identical
          * presentations (i.e., they are isomorphic).
          */
         bool operator == (const AbelianGroup& other) const;
@@ -401,7 +401,7 @@ class AbelianGroup :
          * for identical chain complex presentations).
          *
          * \param other the group with which this should be compared.
-         * @return \c true if and only if the two groups have different
+         * \return \c true if and only if the two groups have different
          * presentations (i.e., they are non-isomorphic).
          */
         bool operator != (const AbelianGroup& other) const;
@@ -409,7 +409,7 @@ class AbelianGroup :
         /**
          * Sets this to be a clone of the given group.
          *
-         * @return a reference to this group.
+         * \return a reference to this group.
          */
         AbelianGroup& operator = (const AbelianGroup&) = default;
 
@@ -419,7 +419,7 @@ class AbelianGroup :
          *
          * The group that was passed will no longer be usable.
          *
-         * @return a reference to this group.
+         * \return a reference to this group.
          */
         AbelianGroup& operator = (AbelianGroup&&) noexcept = default;
 
@@ -461,7 +461,7 @@ class AbelianGroup :
          *
          * \param input an input stream that begins with the tight encoding
          * for an abelian group.
-         * @return the abelian group represented by the given tight encoding.
+         * \return the abelian group represented by the given tight encoding.
          */
         static AbelianGroup tightDecode(std::istream& input);
 
