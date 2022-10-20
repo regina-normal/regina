@@ -73,7 +73,7 @@ class HomMarkedAbelianGroup;
  *
  * - \a r is the number of free generators, as returned by rank();
  *
- * - \a d1, ..., \a dk are the <i>invariant factors</i> that describe the
+ * - \a d1, ..., \a dk are the _invariant factors_ that describe the
  *   torsion elements of the group, where 1 < \a d1 | \a d2 | ... | \a dk.
  *
  * This class allows you to retrieve the invariant factors, the rank, and
@@ -87,11 +87,11 @@ class HomMarkedAbelianGroup;
  *
  * This routine makes frequent use of two coordinate systems:
  *
- * - <i>Chain complex coordinates</i> describe vectors of length \a b
+ * - _Chain complex coordinates_ describe vectors of length \a b
  *   (using the notation above); that is, elements of the domain of \a M,
  *   or equivalently the codomain of \a N.
  *
- * - <i>SNF (or Smith normal form) coordinates</i> describe elements of this
+ * - _SNF (or Smith normal form) coordinates_ describe elements of this
  *   abelian group in terms of the torsion and free generators.  A vector in
  *   SNF coordinates has length (\a k + \a r), again using the notation above,
  *   where the first \a k elements store coefficients for the generators of the
@@ -106,8 +106,8 @@ class HomMarkedAbelianGroup;
  * of Regina; in particular, they depend upon the particular algorithm
  * used for computing Smith normal forms.
  *
- * Some routines in this class refer to the <i>internal presentation
- * matrix</i>.  This is a proper presentation matrix for the abelian group;
+ * Some routines in this class refer to the _internal presentation
+ * matrix_.  This is a proper presentation matrix for the abelian group;
  * if you are looking at the implementation details, this refers to the
  * matrix \a pres, created by taking the product `MRi_ * N` and then
  * removing the first \a rankM_ rows.
