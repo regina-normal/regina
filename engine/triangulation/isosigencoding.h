@@ -126,8 +126,6 @@ class IsoSigPrintable : public Base64SigEncoding {
         IsoSigPrintable() = delete;
 };
 
-/*@}*/
-
 } // namespace regina
 
 #endif

@@ -365,8 +365,6 @@ class BoolSet {
  */
 std::ostream& operator << (std::ostream& out, BoolSet set);
 
-/*@}*/
-
 // Inline functions for BoolSet
 
 inline constexpr BoolSet::BoolSet() : elements(0) {

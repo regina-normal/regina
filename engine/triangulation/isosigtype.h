@@ -360,8 +360,6 @@ using IsoSigEdgeDegrees = IsoSigDegrees<dim, 1>;
 template <int dim>
 using IsoSigRidgeDegrees = IsoSigDegrees<dim, dim - 2>;
 
-/*@}*/
-
 // Inline functions for IsoSigClassic
 
 template <int dim>
