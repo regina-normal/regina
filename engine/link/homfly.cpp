@@ -752,8 +752,8 @@ namespace {
          * partialKeyViable(end-2), partialKeyViable(end-4), ...,
          * partialKeyViable(begin), partialKeyViable(begin-2),
          * in that order, where end == key.end() and begin == key.begin().
-         * For each position p >= key.begin(), when calling partialKeyViable(p)
-         * you must have filled in the key elements at all positions >= p.
+         * For each position p ≥ key.begin(), when calling partialKeyViable(p)
+         * you must have filled in the key elements at all positions ≥ p.
          * When calling partialKeyViable(begin-2) the key must be complete.
          *
          * Calling partialKeyViable(p) does not overwrite any internal data

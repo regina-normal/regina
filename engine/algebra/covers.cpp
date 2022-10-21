@@ -175,11 +175,11 @@ namespace {
      * - Formula uses a vector, because using a contiguous block of memory is
      *   more important here than the ability to spice formulae together.
      *
-     * - Formula uses not only the group generators with indices 0 <= i < nGen,
+     * - Formula uses not only the group generators with indices 0 ≤ i < nGen,
      *   but also additional subexpressions that can be computed separately
      *   and cached.  These subexpressions (which are represented by their
      *   own Formula objects) are indicated by terms whose "generators" have
-     *   indices i >= nGen.
+     *   indices i ≥ nGen.
      */
     struct Formula {
         std::vector<GroupExpressionTerm> terms;
@@ -273,7 +273,7 @@ namespace {
      *   the generators.  These formulae typically appear as contiguous
      *   subexpressions of the group relations.
      *
-     * - In particular, for compCount[d] <= i < compCount[d+1], the expressions
+     * - In particular, for compCount[d] ≤ i < compCount[d+1], the expressions
      *   formulae[i] can all be written in terms of the generators 0..d only.
      *   We refer to these as the formulae "at depth d".  We compute the
      *   corresponding permutations as soon as we have chosen representatives
@@ -563,7 +563,7 @@ namespace {
 
         /**
          * Compute the representative in S_n for all formulae at the
-         * given depth (where 0 <= depth < nGen).
+         * given depth (where 0 ≤ depth < nGen).
          *
          * Returns false if *any* of the corresponding formulae is one of the
          * group relations and the resulting computation is not the identity

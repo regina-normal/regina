@@ -192,7 +192,7 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
          * (dim-1)-dimensional facets.
          *
          * Now the triangulation is built, we need to reorder these lower-
-         * dimensional (<= dim-2)-faces to appear in the same order and with the
+         * dimensional (≤ dim-2)-faces to appear in the same order and with the
          * same vertex numbers as they do in the boundary component face lists.
          *
          * A problem: this relabelling does happen immediately after ans is

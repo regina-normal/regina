@@ -695,7 +695,7 @@ class Laurent :
 
         /**
          * Expands the array of coefficients if necessary so that
-         * minExp_ <= newMin_ and maxExp_ >= newMax.
+         * minExp_ ≤ newMin_ and maxExp_ ≥ newMax.
          *
          * The value of \a minExp_ might decrease, but it will not increase.
          * The value of \a maxExp_ might increase, but it will not decrease.

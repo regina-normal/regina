@@ -108,7 +108,7 @@ namespace {
             /**
              * Precalculate all values [0]!, ..., [r-1]!.
              *
-             * Requires r >= 3.
+             * Requires r ≥ 3.
              */
             BracketFactorial(unsigned long r, unsigned long whichRoot);
 

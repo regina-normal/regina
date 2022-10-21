@@ -411,7 +411,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
          *   would have mapped from (k+i)) is the index of this facet in i'.
          *
          * - Consider the external facet of the overall structure that is
-         *   facet j of old simplex i (i <= d-k; j is one of 0..(k-1),(k+i)).
+         *   facet j of old simplex i (i ≤ d-k; j is one of 0..(k-1),(k+i)).
          *   Then this maps to facet j' of new simplex i', where:
          *
          *   * i' = { j if j < k ; k if j = k+i }

@@ -48,7 +48,7 @@ struct FaceName {
     /**
      * The name of a subdim-face, with the first letter capitalised.
      *
-     * This function is specialised for dimensions <= 4, and (for the
+     * This function is specialised for dimensions ≤ 4, and (for the
      * time being) is left undefined for dimensions > 5.
      */
     static constexpr const char* upper();

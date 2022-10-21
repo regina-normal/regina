@@ -777,7 +777,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the paper of Turaev and Viro, "State sum invariants of 3-manifolds
          * and quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902.
          * In particular, Section 7 of this paper describes the initial data
-         * as determined by an integer r >= 3, and a root of unity q0 of
+         * as determined by an integer r ≥ 3, and a root of unity q0 of
          * degree 2r for which q0^2 is a primitive root of unity of
          * degree r.  There are several cases to consider:
          *
@@ -869,7 +869,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the paper of Turaev and Viro, "State sum invariants of 3-manifolds
          * and quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902.
          * In particular, Section 7 describes the initial data as
-         * determined by an integer \a r >= 3 and a root of unity \a q0 of
+         * determined by an integer \a r ≥ 3 and a root of unity \a q0 of
          * degree \a 2r for which \a q0^2 is a primitive root of unity of
          * degree \a r.
          *
@@ -3270,7 +3270,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
          *
-         * \pre 0 \<= \a cuts0 \<= \a cuts1;
+         * \pre 0 ≤ \a cuts0 ≤ \a cuts1;
          * \pre gcd(\a cuts0, \a cuts1) = 1.
          *
          * \param cuts0 the smallest of the three desired intersection numbers.

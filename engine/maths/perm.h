@@ -248,7 +248,7 @@ class Perm {
     private:
         /**
          * The number of characters used in a tight encoding.
-         * This is the smallest exponent k for which 94^k >= n!.
+         * This is the smallest exponent k for which 94^k ≥ n!.
          *
          * This is only relevant for the generic Perm<n> template, where
          * tight encodings have a fixed length.

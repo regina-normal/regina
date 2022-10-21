@@ -360,7 +360,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
 #endif
         /* INVARIANTS:
          *
-         * - 0 <= level_ < nTypes_.
+         * - 0 ≤ level_ < nTypes_.
          *
          * - We have explicitly set type_[typeOrder_[0,...,level_]],
          *   though it is possible that type_[typeOrder_[level_]] is
@@ -734,7 +734,7 @@ bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
 #endif
         /* INVARIANTS:
          *
-         * - 0 <= level_ < nTypes_.
+         * - 0 ≤ level_ < nTypes_.
          *
          * - We have explicitly set type_[typeOrder_[0,...,level_]],
          *   though it is possible that type_[typeOrder_[level_]] is
