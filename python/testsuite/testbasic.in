@@ -120,8 +120,9 @@ case "$pyver" in
 		echo "WARNING: Skipping several tests due to broken line-by-line"
 		echo "         compilation in embedded python 3.10.[0-2]."
 		echo
-		blacklist="$blacklist embeddings faces groups hypersurfaces iterators"
-		blacklist="$blacklist listview presentations refs skeleton standardtri"
+		blacklist="$blacklist embeddings faces flype groups hypersurfaces"
+		blacklist="$blacklist iterators listview presentations refs skeleton"
+		blacklist="$blacklist standardtri"
 		;;
 	*)
 		;;
