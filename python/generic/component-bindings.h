@@ -34,26 +34,37 @@
 #include "../pybind11/stl.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/generic/component.h"
+#include "../docstrings/triangulation/detail/component.h"
 
 using regina::Component;
 
 template <int dim>
 void addComponent(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<Component<dim>>(m, name)
-        .def("index", &Component<dim>::index)
-        .def("size", &Component<dim>::size)
+    // We use the global scope here because all of Component's members are
+    // inherited, and so Component's own docstring namespace does not exist.
+    RDOC_SCOPE_BEGIN_MAIN
+    RDOC_SCOPE_BASE(detail::ComponentBase)
+
+    auto c = pybind11::class_<Component<dim>>(m, name, rdoc::Component)
+        .def("index", &Component<dim>::index, rbase::index)
+        .def("size", &Component<dim>::size, rbase::size)
         .def("countBoundaryComponents",
-            &Component<dim>::countBoundaryComponents)
-        .def("simplices", &Component<dim>::simplices)
+            &Component<dim>::countBoundaryComponents,
+            rbase::countBoundaryComponents)
+        .def("simplices", &Component<dim>::simplices, rbase::simplices)
         .def("simplex", &Component<dim>::simplex,
-            pybind11::return_value_policy::reference)
-        .def("boundaryComponents", &Component<dim>::boundaryComponents)
+            pybind11::return_value_policy::reference, rbase::simplex)
+        .def("boundaryComponents", &Component<dim>::boundaryComponents,
+            rbase::boundaryComponents)
         .def("boundaryComponent", &Component<dim>::boundaryComponent,
-            pybind11::return_value_policy::reference)
-        .def("isValid", &Component<dim>::isValid)
-        .def("isOrientable", &Component<dim>::isOrientable)
-        .def("hasBoundaryFacets", &Component<dim>::hasBoundaryFacets)
-        .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
+            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+        .def("isValid", &Component<dim>::isValid, rbase::isValid)
+        .def("isOrientable", &Component<dim>::isOrientable, rbase::isOrientable)
+        .def("hasBoundaryFacets", &Component<dim>::hasBoundaryFacets,
+            rbase::hasBoundaryFacets)
+        .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets,
+            rbase::countBoundaryFacets)
         .def_readonly_static("dimension", &Component<dim>::dimension)
     ;
     regina::python::add_output(c);
@@ -63,5 +74,7 @@ void addComponent(pybind11::module_& m, const char* name) {
         decltype(std::declval<Component<dim>>().simplices())>(m);
     regina::python::addListView<
         decltype(std::declval<Component<dim>>().boundaryComponents())>(m);
+
+    RDOC_SCOPE_END
 }
 
