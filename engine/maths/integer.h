@@ -1003,7 +1003,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * remainder when dividing by the given integer.
          *
          * Suppose this integer is \a n and we pass the divisor \a d.
-         * The <em>division algorithm</em> describes the result of
+         * The _division algorithm_ describes the result of
          * dividing \a n by \a d; in particular, it expresses
          * `n = qd + r`, where \a q is the quotient and
          * \a r is the remainder.
@@ -2181,7 +2181,7 @@ class NativeInteger {
          * remainder when dividing by the given integer.
          *
          * Suppose this integer is \a n and we pass the divisor \a d.
-         * The <em>division algorithm</em> describes the result of
+         * The _division algorithm_ describes the result of
          * dividing \a n by \a d; in particular, it expresses
          * `n = qd + r`, where \a q is the quotient and
          * \a r is the remainder.

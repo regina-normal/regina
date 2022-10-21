@@ -254,7 +254,7 @@ struct IntOfSize {
 };
 
 /**
- * Gives access to native integer types that hold <em>at least</em> \a k bytes,
+ * Gives access to native integer types that hold _at least_ \a k bytes,
  * where \a k may be any compile-time constant.
  *
  * \tparam bytes the minimum number of bytes in the native integer types

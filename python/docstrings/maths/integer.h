@@ -872,8 +872,8 @@ static const char *divisionAlg =
 R"doc(Uses the division algorithm to obtain a quotient and remainder when
 dividing by the given integer.
 
-Suppose this integer is *n* and we pass the divisor *d*. The *division
-algorithm* describes the result of dividing *n* by *d*; in particular,
+Suppose this integer is *n* and we pass the divisor *d*. The _division
+algorithm_ describes the result of dividing *n* by *d*; in particular,
 it expresses ``n = qd + r``, where *q* is the quotient and *r* is the
 remainder.
 

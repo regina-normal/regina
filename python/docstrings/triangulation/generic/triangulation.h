@@ -93,7 +93,7 @@ sufficiently large *dim*).
 You can construct a triangulation from scratch using routines such as
 newSimplex() and Simplex<dim>::join(). There are also routines for
 exporting and importing triangulations in bulk, such as isoSig() and
-fromIsoSig() (which use *isomorphism signatures*), or
+fromIsoSig() (which use _isomorphism signatures_), or
 dumpConstruction() and fromGluings() (which use C++ code).
 
 In additional to top-dimensional simplices, this class also tracks:

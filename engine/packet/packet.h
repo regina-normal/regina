@@ -1301,8 +1301,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
         /**
          * Finds the first packet of the requested type in a complete
          * depth-first iteration of the tree structure.
-         * Note that this packet <b>must</b> be the matriarch of the
-         * entire tree.
+         * Note that this packet **must** be the matriarch of the entire tree.
          *
          * A parent packet is always reached before its children.  The
          * tree matriarch will be the first packet visited in a complete
@@ -1317,8 +1316,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
         /**
          * Finds the first packet of the requested type in a complete
          * depth-first iteration of the tree structure.
-         * Note that this packet <b>must</b> be the matriarch of the
-         * entire tree.
+         * Note that this packet **must** be the matriarch of the entire tree.
          *
          * A parent packet is always reached before its children.  The
          * tree matriarch will be the first packet visited in a complete
