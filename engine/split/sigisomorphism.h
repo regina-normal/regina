@@ -62,9 +62,9 @@ namespace regina {
  * destination signature.
  *
  * A \e partial isomorphism is only required to map the cycles
- * and symbols found in the first <i>g</i> cycle groups of the
- * source isomorphism (for some <i>g</i>).  If only a subset of symbols
- * are mapped, that subset must be symbols 0,1,...,<i>k</i> for some <i>k</i>.
+ * and symbols found in the first \a g cycle groups of the
+ * source isomorphism (for some \a g).  If only a subset of symbols
+ * are mapped, that subset must be symbols 0,1,...,\a k for some \a k.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,

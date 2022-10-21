@@ -62,12 +62,12 @@ class SigPartialIsomorphism;
  * consisting of precisely one quad per tetrahedron and no other normal
  * (or almost normal) discs.
  *
- * A <i>signature</i> of order <i>n</i> is a string consisting of 2<i>n</i>
- * letters arranged into cycles, where <i>n</i> is the number of quads in the
+ * A <i>signature</i> of order \a n is a string consisting of 2<i>n</i>
+ * letters arranged into cycles, where \a n is the number of quads in the
  * splitting surface.  From a signature, the corresponding splitting
  * surface and then the entire 3-manifold triangulation can be recreated.
  *
- * A signature of order <i>n</i> uses the first <i>n</i> letters of the
+ * A signature of order \a n uses the first \a n letters of the
  * alphabet, each precisely twice.  Case is important; the meaning of a
  * letter changes according to whether it appears in upper-case or
  * lower-case.

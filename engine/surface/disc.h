@@ -1011,9 +1011,8 @@ class DiscSetSurfaceDataImpl {
          * this disc set.
          *
          * A directed normal arc will be specified by a permutation
-         * <i>p</i>, where the arc runs around vertex `p[0]`
-         * parallel to the directed edge from vertex `p[1]` to
-         * `p[2]`.
+         * \a p, where the arc runs around vertex `p[0]` parallel to the
+         * directed edge from vertex `p[1]` to `p[2]`.
          *
          * \param disc the given normal disc; this must be a disc in this
          * disc set.

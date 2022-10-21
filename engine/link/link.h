@@ -2245,7 +2245,7 @@ class Link :
          * Dror Bar-Natan, "On Khovanov's categorifiction of the Jones
          * polynomial", Algebraic & Geometric Topology 2 (2002), 337-370, you
          * can simply take the polynomial returned by this routine and replace
-         * the variable <i>x</i> (which represents the square root of \a t)
+         * the variable \a x (which represents the square root of \a t)
          * with the expression -<i>q</i>.
          *
          * To pretty-print this polynomial for human consumption, you can
@@ -3175,7 +3175,7 @@ class Link :
          * Knot Atlas, as seen at http://katlas.org/wiki/Planar_Diagrams.
          *
          * In detail: a planar diagram code for an <i>n</i>-crossing link
-         * is formed from a sequence of <i>n</i> 4-tuples of integers.
+         * is formed from a sequence of \a n 4-tuples of integers.
          * Regina constructs this sequence as follows:
          *
          * - Throw away any zero-crossing unknot components.
@@ -4161,7 +4161,7 @@ class Link :
          * encode zero-crossing unknot components.
          *
          * A planar diagram code for an <i>n</i>-crossing link is formed
-         * from a sequence of <i>n</i> 4-tuples of integers.  An example,
+         * from a sequence of \a n 4-tuples of integers.  An example,
          * you can construct the right-handed trefoil using the sequence:
          *
            \verbatim

@@ -1359,7 +1359,7 @@ class TriangulationBase :
         /**
          * Returns the <i>k</i>th homology group of this triangulation,
          * treating any ideal vertices as though they had been truncated,
-         * where the parameter <i>k</i> does not need to be known until runtime.
+         * where the parameter \a k does not need to be known until runtime.
          *
          * For C++ programmers who know \a k at compile time, you are better
          * off using the template function homology<k>() instead, which
@@ -1445,7 +1445,7 @@ class TriangulationBase :
          * Returns the <i>k</i>th homology group of this triangulation,
          * without truncating ideal vertices, but with explicit coordinates
          * that track the individual <i>k</i>-faces of this triangulation,
-         * where the parameter <i>k</i> does not need to be known until runtime.
+         * where the parameter \a k does not need to be known until runtime.
          *
          * For C++ programmers who know \a k at compile time, you are better
          * off using the template function markedHomology<k>() instead, which
@@ -1498,10 +1498,10 @@ class TriangulationBase :
          *
          * For the boundary map, we fix orientations as follows.
          * In simplicial homology, for any \a k, the orientation of a
-         * <i>k</i>-simplex is determined by assigning labels 0,...,<i>k</i>
+         * <i>k</i>-simplex is determined by assigning labels 0,...,\a k
          * to its vertices.  For this routine, since every <i>k</i>-face \a f
          * is already a <i>k</i>-simplex, these labels will just be the
-         * inherent vertex labels 0,...,<i>k</i> of the corresponding Face<k>
+         * inherent vertex labels 0,...,\a k of the corresponding Face<k>
          * object.  If you need to convert these labels into vertex numbers of
          * a top-dimensional simplex containing \a f, you can use either
          * Simplex<dim>::faceMapping<k>(), or the equivalent routine
@@ -1578,7 +1578,7 @@ class TriangulationBase :
          * we fix the orientations of the dual <i>k</i>-faces as follows:
          *
          * - In simplicial homology, the orientation of a <i>k</i>-simplex is
-         *   determined by assigning labels 0,...,<i>k</i> to its vertices.
+         *   determined by assigning labels 0,...,\a k to its vertices.
          *
          * - Consider a dual <i>k</i>-face \a d, and let this be dual to the
          *   primal (<i>dim</i>-<i>k</i>)-face \a f.  In general, \a d will
@@ -1603,10 +1603,10 @@ class TriangulationBase :
          * - We can now define the orientation of the dual <i>k</i>-face \a d
          *   to be the orientation of this <i>k</i>-simplex \a g that contains
          *   it.  All that remains now is to orient \a g by choosing a
-         *   labelling 0,...,<i>k</i> for its vertices.
+         *   labelling 0,...,\a k for its vertices.
          *
          * - To orient \a g, we assign the label 0 to \a B, and we
-         *   assign the labels 1,...,<i>k</i> to the "unused" vertices
+         *   assign the labels 1,...,\a k to the "unused" vertices
          *   `v[dim-k+1]`,...,`v[dim]` of \a s respectively,
          *   where \a v is the permutation `emb.vertices()`.
          *

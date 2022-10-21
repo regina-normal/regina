@@ -124,7 +124,7 @@ class SnapPeaCensusManifold : public Manifold {
          * \param index specifies which particular manifold within the
          * given section is represented.  The indices for each section
          * begin counting at zero, and so this index
-         * must be between 0 and <i>k</i>-1, where <i>k</i> is the total
+         * must be between 0 and <i>k</i>-1, where \a k is the total
          * number of manifolds in the given section.
          */
         SnapPeaCensusManifold(char section, unsigned long index);

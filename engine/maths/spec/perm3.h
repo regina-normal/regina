@@ -445,7 +445,7 @@ class Perm<3> {
 
         /**
          * Returns the composition of this permutation with the given
-         * permutation.  If this permutation is <i>p</i>, the
+         * permutation.  If this permutation is \a p, the
          * resulting permutation will be <i>p</i>∘<i>q</i>, and will satisfy
          * `(p*q)[x] == p[q[x]]`.
          *
@@ -606,8 +606,7 @@ class Perm<3> {
 
         /**
          * Returns the <i>i</i>th rotation.
-         * This maps <i>k</i> to <i>k</i> + <i>i</i> (mod 3)
-         * for all \a k.
+         * This maps \a k to \a k + \a i (mod 3) for all \a k.
          *
          * \param i the image of 0; this must be between 0 and 2 inclusive.
          * \return the <i>i</i>th rotation.

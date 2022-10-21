@@ -135,7 +135,7 @@ template <class> class Vector;
  *
  * - \a T must have a default constructor and an assignment operator.
  *
- * - An element <i>t</i> of type \a T must be writable to an output stream
+ * - An element \a t of type \a T must be writable to an output stream
  *   using the standard stream operator `<<`.
  *
  * If \a ring is \c true, then in addition to this:
