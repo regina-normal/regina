@@ -2002,7 +2002,7 @@ enum PacketHeldBy {
 /**
  * A packet that stores a mathematical object of type \a Held.
  *
- * This is the class used for all of Regina's <i>wrapped packet types</i>.
+ * This is the class used for all of Regina's _wrapped packet types_.
  * See the Packet class notes for general information about packets, and
  * about the differences between \e wrapped and \e innate packet types.
  *

@@ -16,11 +16,11 @@ static const char *Signature =
 R"doc(Represents a signature of a splitting surface in a closed 3-manifold
 triangulation.
 
-A *splitting surface* is (for these purposes) a compact normal surface
+A _splitting surface_ is (for these purposes) a compact normal surface
 consisting of precisely one quad per tetrahedron and no other normal
 (or almost normal) discs.
 
-A *signature* of order *n* is a string consisting of 2*n* letters
+A _signature_ of order *n* is a string consisting of 2*n* letters
 arranged into cycles, where *n* is the number of quads in the
 splitting surface. From a signature, the corresponding splitting
 surface and then the entire 3-manifold triangulation can be recreated.
@@ -35,7 +35,7 @@ Each cycle represents a chain of quadrilaterals joined together in the
 splitting surface. The case of a letter represents in which direction
 a quadrilateral is traversed within a cycle.
 
-Cycles are arranged into *cycle groups*, where a cycle group consists
+Cycles are arranged into _cycle groups_, where a cycle group consists
 of a series of consecutive cycles all of the same length.
 
 An example of a signature is ``(abc)(a)(b)(c)``. This signature is of
@@ -46,7 +46,7 @@ A signature cannot represent a splitting surface with more than 26
 quadrilaterals.
 
 For further details on splitting surfaces and their signatures,
-consult *Minimal triangulations and normal surfaces*, Burton, PhD
+consult _Minimal triangulations and normal surfaces_, Burton, PhD
 thesis, available from the Regina website.
 
 This class implements C++ move semantics and adheres to the C++

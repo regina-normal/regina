@@ -356,7 +356,7 @@ Python:
 static const char *PacketOf =
 R"doc(A packet that stores a mathematical object of type *Held*.
 
-This is the class used for all of Regina's *wrapped packet types*. See
+This is the class used for all of Regina's _wrapped packet types_. See
 the Packet class notes for general information about packets, and
 about the differences between *wrapped* and *innate* packet types.
 

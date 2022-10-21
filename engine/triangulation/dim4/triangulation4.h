@@ -642,7 +642,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * If \a height is negative, then there will be \e no bound on
          * the number of additional pentachora.  This means that the
-         * routine will <i>never terminate</i>, unless \a action returns
+         * routine will _never terminate_, unless \a action returns
          * \c true for some triangulation that is passed to it.
          *
          * Since Regina 7.0, this routine will not return until the exploration

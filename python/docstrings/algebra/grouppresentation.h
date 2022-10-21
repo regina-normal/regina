@@ -952,9 +952,9 @@ Returns:
 // Docstring regina::python::doc::GroupPresentation_::identifySimplyIsomorphicTo
 static const char *identifySimplyIsomorphicTo =
 R"doc(Attempts to prove that this and the given group presentation are
-*simply isomorphic*.
+_simply isomorphic_.
 
-A *simple isomorphism* is an isomorphism where each generator *g_(i)*
+A _simple isomorphism_ is an isomorphism where each generator *g_(i)*
 of this presentation is sent to some generator *g_(j)*^(+/-1) of the
 other presentation. Moreover, at present this routine only looks for
 maps where both presentations have the same number of generators, and

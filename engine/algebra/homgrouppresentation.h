@@ -49,7 +49,7 @@ class GroupPresentation;
  * Represents a homomorphism between groups which are described via finite
  * presentations.
  *
- * Some homomorphisms may be <i>declared isomorphisms</i>.  This means
+ * Some homomorphisms may be _declared isomorphisms_.  This means
  * that the user (or some other function in Regina) has proven that this
  * is an isomorphism and has explicitly provided the inverse map.
  * To provide the inverse map, you should call the four-argument constructor
@@ -241,7 +241,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         /**
          * Returns whether or not this is a declared isomorphism.
          *
-         * A <i>declared isomorphism</i> is a isomorphism for which the
+         * A _declared isomorphism_ is a isomorphism for which the
          * user has explicitly provided the inverse map.  See the
          * HomGroupPresentation class notes for details.
          *

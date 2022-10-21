@@ -25,7 +25,7 @@ enumeration routine such as DoubleDescription::enumerate() or
 HilbertDual::enumerate().
 
 The ordering is defined as follows. For each hyperplane, we create a
-*position vector* (h_1, ..., h_f), where h_i is 0 if the hyperplane
+_position vector_ (h_1, ..., h_f), where h_i is 0 if the hyperplane
 contains the ith coordinate axis, or 1 if not. We then compare these
 position vectors lexicographically.
 

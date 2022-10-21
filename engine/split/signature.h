@@ -58,11 +58,11 @@ class SigPartialIsomorphism;
  * Represents a signature of a splitting surface in a closed 3-manifold
  * triangulation.
  *
- * A <i>splitting surface</i> is (for these purposes) a compact normal surface
+ * A _splitting surface_ is (for these purposes) a compact normal surface
  * consisting of precisely one quad per tetrahedron and no other normal
  * (or almost normal) discs.
  *
- * A <i>signature</i> of order \a n is a string consisting of 2<i>n</i>
+ * A _signature_ of order \a n is a string consisting of 2<i>n</i>
  * letters arranged into cycles, where \a n is the number of quads in the
  * splitting surface.  From a signature, the corresponding splitting
  * surface and then the entire 3-manifold triangulation can be recreated.
@@ -78,7 +78,7 @@ class SigPartialIsomorphism;
  * splitting surface.  The case of a letter represents in which direction
  * a quadrilateral is traversed within a cycle.
  *
- * Cycles are arranged into <i>cycle groups</i>, where a cycle group
+ * Cycles are arranged into _cycle groups_, where a cycle group
  * consists of a series of consecutive cycles all of the same length.
  *
  * An example of a signature is `(abc)(a)(b)(c)`.  This signature
@@ -89,7 +89,7 @@ class SigPartialIsomorphism;
  * quadrilaterals.
  *
  * For further details on splitting surfaces and their signatures, consult
- * <i>Minimal triangulations and normal surfaces</i>, Burton, PhD thesis,
+ * _Minimal triangulations and normal surfaces_, Burton, PhD thesis,
  * available from the Regina website.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable

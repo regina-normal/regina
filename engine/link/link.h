@@ -86,7 +86,7 @@ template <int> class Triangulation;
  */
 enum Framing {
     /**
-     * Indicates the <i>Seifert framing</i>, which is defined
+     * Indicates the _Seifert framing_, which is defined
      * algebraically and is independent of the knot/link projection.
      *
      * For each component of the link, draw a Seifert surface (i.e., an
@@ -100,7 +100,7 @@ enum Framing {
      */
     FRAMING_SEIFERT = 1,
     /**
-     * Indicates the <i>blackboard framing</i>, which is specific to the
+     * Indicates the _blackboard framing_, which is specific to the
      * knot/link projection.
      *
      * For the blackboard framing, the normal vector field stays within
@@ -1938,7 +1938,7 @@ class Link :
          *
          * If \a height is negative, then there will be \e no bound on
          * the number of additional crossings.  This means that the
-         * routine will <i>never terminate</i>, unless \a action returns
+         * routine will _never terminate_, unless \a action returns
          * \c true for some knot diagram that is passed to it.
          *
          * Since Regina 7.0, this routine will not return until the exploration
@@ -3346,7 +3346,7 @@ class Link :
         /**
          * Constructs the \e signature for this knot diagram.
          *
-         * A <i>signature</i> is a compact text representation of a knot
+         * A _signature_ is a compact text representation of a knot
          * diagram that unique determines the knot up to relabelling,
          * rotation, and (optionally) reflection and/or reversal.
          *

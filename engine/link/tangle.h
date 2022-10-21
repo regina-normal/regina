@@ -133,7 +133,7 @@ class Tangle : public Output<Tangle> {
         /**
          * Constructs a rational tangle with the given parameters.
          * Here we use the following convention (following the
-         * description that Adams gives in <i>The Knot Book</i>):
+         * description that Adams gives in _The Knot Book_):
          *
          * - the zero tangle is horizontal with no crossings;
          * - the infinity tangle is vertical with no crossings;

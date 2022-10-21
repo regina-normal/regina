@@ -79,9 +79,8 @@ namespace regina {
  *   that is, there is a commutative square involving the gluing maps in
  *   \a T and \a U and the permutations \a f<sub>S</sub> and \a f<sub>S'</sub>.
  *
- * Isomorphisms can be <i>boundary complete</i> or
- * <i>boundary incomplete</i>.  A boundary complete isomorphism
- * satisfies the additional condition:
+ * Isomorphisms can be _boundary complete_ or _boundary incomplete_.
+ * A boundary complete isomorphism satisfies the additional condition:
  *
  * - If facet \a x is a boundary facet of \a T then facet \a f(x) is a
  *   boundary facet of \a U.

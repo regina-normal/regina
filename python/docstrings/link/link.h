@@ -252,7 +252,7 @@ namespace Framing_ {
 
 // Docstring regina::python::doc::Framing_::FRAMING_BLACKBOARD
 static const char *FRAMING_BLACKBOARD =
-R"doc(Indicates the *blackboard framing*, which is specific to the knot/link
+R"doc(Indicates the _blackboard framing_, which is specific to the knot/link
 projection.
 
 For the blackboard framing, the normal vector field stays within the
@@ -262,7 +262,7 @@ diagram.)doc";
 
 // Docstring regina::python::doc::Framing_::FRAMING_SEIFERT
 static const char *FRAMING_SEIFERT =
-R"doc(Indicates the *Seifert framing*, which is defined algebraically and is
+R"doc(Indicates the _Seifert framing_, which is defined algebraically and is
 independent of the knot/link projection.
 
 For each component of the link, draw a Seifert surface (i.e., an
@@ -2239,7 +2239,7 @@ Returns:
 static const char *knotSig =
 R"doc(Constructs the *signature* for this knot diagram.
 
-A *signature* is a compact text representation of a knot diagram that
+A _signature_ is a compact text representation of a knot diagram that
 unique determines the knot up to relabelling, rotation, and
 (optionally) reflection and/or reversal.
 
@@ -3226,8 +3226,8 @@ that you begin with *height* = 1, and if necessary try increasing
 run.
 
 If *height* is negative, then there will be *no* bound on the number
-of additional crossings. This means that the routine will *never
-terminate*, unless *action* returns ``True`` for some knot diagram
+of additional crossings. This means that the routine will _never
+terminate_, unless *action* returns ``True`` for some knot diagram
 that is passed to it.
 
 Since Regina 7.0, this routine will not return until the exploration

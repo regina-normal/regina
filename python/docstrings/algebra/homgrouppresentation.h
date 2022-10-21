@@ -16,7 +16,7 @@ static const char *HomGroupPresentation =
 R"doc(Represents a homomorphism between groups which are described via
 finite presentations.
 
-Some homomorphisms may be *declared isomorphisms*. This means that the
+Some homomorphisms may be _declared isomorphisms_. This means that the
 user (or some other function in Regina) has proven that this is an
 isomorphism and has explicitly provided the inverse map. To provide
 the inverse map, you should call the four-argument constructor
@@ -318,7 +318,7 @@ Returns:
 static const char *knowsInverse =
 R"doc(Returns whether or not this is a declared isomorphism.
 
-A *declared isomorphism* is a isomorphism for which the user has
+A _declared isomorphism_ is a isomorphism for which the user has
 explicitly provided the inverse map. See the HomGroupPresentation
 class notes for details.
 

@@ -17,16 +17,16 @@ R"doc(A component of the boundary of a *dim*-manifold triangulation.
 
 Regina recognises three types of boundary components:
 
-* A *real boundary component* is formed from unglued facets of top-
+* A _real boundary component_ is formed from unglued facets of top-
   dimensional simplices of the triangulation. For example, a real
   boundary component of a 3-manifold triangulation is formed from
   boundary triangles in the 2-skeleton.
 
-* An *ideal boundary component* consists of a single ideal vertex;
+* An _ideal boundary component_ consists of a single ideal vertex;
   that is, a vertex whose link is a closed (*dim*-1)-manifold but not
   a sphere. This is only possible for dimensions *dim* ≥ 3.
 
-* An *invalid vertex boundary component* consists of a single invalid
+* An _invalid vertex boundary component_ consists of a single invalid
   invalid vertex that does not belong to a real boundary component.
   This means the vertex link must be an ideal (*dim*-1)-manifold, or
   an invalid (*dim*-1)-manifold with no real boundary. Invalid vertex

@@ -97,7 +97,7 @@ class SnapshotWriteError : public std::exception {
  *   remains uninvolved in the snapshotting machinery.
  *
  * - At some point in time, a viewer \a V1 wishes to take a snapshot of \a I.
- *   To do this, it creates a <i>snapshot reference</i> `SnapshotRef(I)`.
+ *   To do this, it creates a _snapshot reference_ `SnapshotRef(I)`.
  *   This is a cheap operation that "enrols" \a I in the snapshotting machinery,
  *   by creating a single Snapshot object \a S.
  *

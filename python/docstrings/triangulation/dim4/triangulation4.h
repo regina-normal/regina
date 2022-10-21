@@ -518,8 +518,8 @@ try increasing *height* one at a time until this routine becomes too
 expensive to run.
 
 If *height* is negative, then there will be *no* bound on the number
-of additional pentachora. This means that the routine will *never
-terminate*, unless *action* returns ``True`` for some triangulation
+of additional pentachora. This means that the routine will _never
+terminate_, unless *action* returns ``True`` for some triangulation
 that is passed to it.
 
 Since Regina 7.0, this routine will not return until the exploration

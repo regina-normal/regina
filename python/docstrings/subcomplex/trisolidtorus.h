@@ -18,7 +18,7 @@ triangulation. A three-tetrahedron triangular solid torus is a three-
 tetrahedron triangular prism with its two ends identified.
 
 The resulting triangular solid torus will have all edges as boundary
-edges. Three of these will be *axis edges* (parallel to the axis of
+edges. Three of these will be _axis edges_ (parallel to the axis of
 the solid torus). Between the axis edges will be three annuli, each
 with two internal edges. One of these internal edges will meet all
 three tetrahedra (the *major* edge) and one of these internal edges

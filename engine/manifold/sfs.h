@@ -50,7 +50,7 @@ class AbelianGroup;
 class LensSpace;
 
 /**
- * Represents an exceptional (<i>alpha</i>, <i>beta</i>) fibre in a Seifert
+ * Represents an exceptional (\a alpha, \a beta) fibre in a Seifert
  * fibred space.
  *
  * The first parameter \a alpha must be strictly positive, and

@@ -196,9 +196,8 @@
  *  it now offers varying levels of support for manifolds and triangulations
  *  in other dimensions.
  *
- *  Regina's <i>standard dimensions</i> are those for which it offers
- *  rich support (as opposed to basic support).
- *  <b>The standard dimensions are 2, 3 and 4.</b>
+ *  Regina's _standard dimensions_ are those for which it offers rich support
+ *  (as opposed to basic support).  **The standard dimensions are 2, 3 and 4.**
  *
  *  The interface in higher dimensions is much more basic.  Partly this
  *  is due to inefficiencies that grow with dimension (e.g., the exponential
@@ -221,7 +220,7 @@ namespace regina {
  *
  * After including the header triangulation/graph.h, any object of type
  * `regina::Triangulation<dim>` can be used directly as a graph with
- * the BGL.  Here the graph will be the <i>dual graph</i> of the triangulation:
+ * the BGL.  Here the graph will be the _dual graph_ of the triangulation:
  * this is an undirected multigraph in which each node represents a
  * <i>dim</i>-simplex of the triangulation, and each arc represents a gluing
  * between two adjacent <i>dim</i>-simplices.
@@ -333,7 +332,7 @@ namespace regina {
  *  `x != y`.  Regina implements this in different ways, depending
  *  on the type of class:
  *
- *  - Most of Regina's classes use <i>comparison by value</i>.  Here
+ *  - Most of Regina's classes use _comparison by value_.  Here
  *    `x == y` tests whether the \e contents of \a x and \a y are
  *    the same.  What "the same " means will depend on the particular class;
  *    for example, GroupPresentation tests for identical presentations (not
@@ -347,7 +346,7 @@ namespace regina {
  *    the documentation for the C++ class operators == and !=.
  *    See for example Link::operator==().
  *
- *  - Some selected classes use <i>comparison by reference</i>.  Here
+ *  - Some selected classes use _comparison by reference_.  Here
  *    `x == y` tests whether \a x and \a y refer to the same underlying
  *    C++ object (analogous to how `x is y` would normally behave in a
  *    native Python application).  This is typically used for the few classes

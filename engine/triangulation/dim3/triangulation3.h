@@ -1681,7 +1681,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If \a height is negative, then there will be \e no bound on
          * the number of additional tetrahedra.  This means that the
-         * routine will <i>never terminate</i>, unless \a action returns
+         * routine will _never terminate_, unless \a action returns
          * \c true for some triangulation that is passed to it.
          *
          * Since Regina 7.0, this routine will not return until the exploration
@@ -2826,7 +2826,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * 3-manifold.
          *
          * Let \a M be the underlying 3-manifold and let \a B be its
-         * boundary.  By a <i>compressing disc</i>, we mean a disc \a D
+         * boundary.  By a _compressing disc_, we mean a disc \a D
          * properly embedded in \a M, where the boundary of \a D
          * lies in \a B but does not bound a disc in \a B.
          *
@@ -2944,7 +2944,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * triangulation.
          *
          * Let \a M be the underlying 3-manifold and let \a B be its
-         * boundary.  By a <i>compressing disc</i>, we mean a disc \a D
+         * boundary.  By a _compressing disc_, we mean a disc \a D
          * properly embedded in \a M, where the boundary of \a D
          * lies in \a B but does not bound a disc in \a B.
          *
@@ -3319,7 +3319,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Dehydrates this triangulation into an alphabetical string.
          *
-         * A <i>dehydration string</i> is a compact text representation
+         * A _dehydration string_ is a compact text representation
          * of a triangulation, introduced by Callahan, Hildebrand and Weeks
          * for their cusped hyperbolic census (see below).  The dehydration
          * string of an <i>n</i>-tetrahedron triangulation consists of

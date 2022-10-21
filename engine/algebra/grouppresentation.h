@@ -1304,9 +1304,9 @@ class GroupPresentation : public Output<GroupPresentation> {
 
         /**
          * Attempts to prove that this and the given group presentation are
-         * <i>simply isomorphic</i>.
+         * _simply isomorphic_.
          *
-         * A <i>simple isomorphism</i> is an isomorphism where each generator
+         * A _simple isomorphism_ is an isomorphism where each generator
          * <i>g<sub>i</sub></i> of this presentation is sent to
          * some generator <i>g<sub>j</sub></i><sup>+/-1</sup> of the
          * other presentation.  Moreover, at present this routine only

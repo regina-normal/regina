@@ -61,7 +61,7 @@ Seifert and Threlfall's textbook.
 In the following lists we describe the canonical ordering of both the
 cells and the dual cells of the given triangulation.
 
-First we list the cell orderings for the *standard CW decomposition*,
+First we list the cell orderings for the _standard CW decomposition_,
 which most closely resembles the ideal triangulation.
 
 * **0**-cells: The non-ideal vertices given in the order
@@ -78,7 +78,7 @@ which most closely resembles the ideal triangulation.
 
 * **3**-cells: tetrahedra.begin() through tetrahedra.end().
 
-Next we list the cell orderings for the *dual CW decomposition*: if
+Next we list the cell orderings for the _dual CW decomposition_: if
 the standard CW decomposition came from a morse function *f*, this
 would be the one for -*f*.
 

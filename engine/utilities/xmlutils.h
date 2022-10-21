@@ -98,7 +98,7 @@ std::string xmlEncodeComment(const std::string& comment);
  * \nopython
  *
  * \param tagName the name of the XML tag to create.
- * \param value the value to assign to the <i>value</i> property of the tag.
+ * \param value the value to assign to the \a value property of the tag.
  * \return the corresponding XML tag.
  *
  * \ingroup utilities

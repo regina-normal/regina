@@ -109,7 +109,7 @@ Parameter ``twists``:
 static const char *__init_2 =
 R"doc(Constructs a rational tangle with the given parameters. Here we use
 the following convention (following the description that Adams gives
-in *The Knot Book*):
+in _The Knot Book_):
 
 * the zero tangle is horizontal with no crossings;
 

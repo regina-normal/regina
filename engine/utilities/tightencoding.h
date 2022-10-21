@@ -51,7 +51,7 @@ class IntegerBase;
 
 /*! \page tight Tight encodings of data
  *
- * Regina includes support for <i>tight encodings</i>, which are
+ * Regina includes support for _tight encodings_, which are
  * encodings of various data types as short printable strings.
  *
  * Tight encodings have the following properties:

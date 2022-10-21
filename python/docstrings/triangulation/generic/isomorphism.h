@@ -34,7 +34,7 @@ of *S*, for which the following condition holds:
   there is a commutative square involving the gluing maps in *T* and
   *U* and the permutations *f*_(S) and *f*_(S').
 
-Isomorphisms can be *boundary complete* or *boundary incomplete*. A
+Isomorphisms can be _boundary complete_ or _boundary incomplete_. A
 boundary complete isomorphism satisfies the additional condition:
 
 * If facet *x* is a boundary facet of *T* then facet *f*(x) is a

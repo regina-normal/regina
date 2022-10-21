@@ -94,7 +94,7 @@ namespace regina {
  * In the following lists we describe the canonical ordering of both the
  * cells and the dual cells of the given triangulation.
  *
- * First we list the cell orderings for the <i>standard CW decomposition</i>,
+ * First we list the cell orderings for the _standard CW decomposition_,
  * which most closely resembles the ideal triangulation.
  *
  * - \b 0-cells: The non-ideal vertices given in the order vertices.begin()
@@ -110,7 +110,7 @@ namespace regina {
  *
  * - \b 3-cells: tetrahedra.begin() through tetrahedra.end().
  *
- * Next we list the cell orderings for the <i>dual CW decomposition</i>:
+ * Next we list the cell orderings for the _dual CW decomposition_:
  * if the standard CW decomposition came from a morse function \a f, this
  * would be the one for -\a f.
  *

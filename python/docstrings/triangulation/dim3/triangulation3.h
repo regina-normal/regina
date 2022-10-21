@@ -326,7 +326,7 @@ See countBoundaryFacets() for further information.)doc";
 static const char *dehydrate =
 R"doc(Dehydrates this triangulation into an alphabetical string.
 
-A *dehydration string* is a compact text representation of a
+A _dehydration string_ is a compact text representation of a
 triangulation, introduced by Callahan, Hildebrand and Weeks for their
 cusped hyperbolic census (see below). The dehydration string of an
 *n*-tetrahedron triangulation consists of approximately (but not
@@ -646,7 +646,7 @@ static const char *hasCompressingDisc =
 R"doc(Searches for a compressing disc within the underlying 3-manifold.
 
 Let *M* be the underlying 3-manifold and let *B* be its boundary. By a
-*compressing disc*, we mean a disc *D* properly embedded in *M*, where
+_compressing disc_, we mean a disc *D* properly embedded in *M*, where
 the boundary of *D* lies in *B* but does not bound a disc in *B*.
 
 This routine will first call the heuristic routine
@@ -797,7 +797,7 @@ static const char *hasSimpleCompressingDisc =
 R"doc(Searches for a "simple" compressing disc inside this triangulation.
 
 Let *M* be the underlying 3-manifold and let *B* be its boundary. By a
-*compressing disc*, we mean a disc *D* properly embedded in *M*, where
+_compressing disc_, we mean a disc *D* properly embedded in *M*, where
 the boundary of *D* lies in *B* but does not bound a disc in *B*.
 
 By a *simple* compressing disc, we mean a compressing disc that has a
@@ -2422,8 +2422,8 @@ try increasing *height* one at a time until this routine becomes too
 expensive to run.
 
 If *height* is negative, then there will be *no* bound on the number
-of additional tetrahedra. This means that the routine will *never
-terminate*, unless *action* returns ``True`` for some triangulation
+of additional tetrahedra. This means that the routine will _never
+terminate_, unless *action* returns ``True`` for some triangulation
 that is passed to it.
 
 Since Regina 7.0, this routine will not return until the exploration
