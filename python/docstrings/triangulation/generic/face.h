@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Face
-static const char *Face =
+constexpr const char *Face =
 R"doc(Represents a *subdim*-face in the skeleton of a *dim*-dimensional
 triangulation. There are two substantially different cases:
 
@@ -82,7 +82,7 @@ Template parameter ``subdim``:
     be between 0 and *dim* inclusive.)doc";
 
 // Docstring regina::python::doc::FaceEmbedding
-static const char *FaceEmbedding =
+constexpr const char *FaceEmbedding =
 R"doc(Details how a *subdim*-face of a *dim*-dimensional triangulation
 appears within each top-dimensional simplex.
 
@@ -135,14 +135,14 @@ Template parameter ``subdim``:
 namespace FaceEmbedding_ {
 
 // Docstring regina::python::doc::FaceEmbedding_::__copy
-static const char *__copy =
+constexpr const char *__copy =
 R"doc(Creates a new copy of the given object.
 
 Parameter ``cloneMe``:
     the object to copy.)doc";
 
 // Docstring regina::python::doc::FaceEmbedding_::__init
-static const char *__init =
+constexpr const char *__init =
 R"doc(Creates a new object containing the given data.
 
 Parameter ``simplex``:

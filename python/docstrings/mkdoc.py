@@ -38,6 +38,7 @@ INLINE_FILES = [
 INLINE_DIRS = [
     '../../engine/triangulation/alias',
     '../../engine/triangulation/detail',
+    '../../engine/triangulation/generic'
 ]
 
 RECURSE_LIST = [

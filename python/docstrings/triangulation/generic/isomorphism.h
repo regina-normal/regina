@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Isomorphism
-static const char *Isomorphism =
+constexpr const char *Isomorphism =
 R"doc(Represents a combinatorial isomorphism from one *dim*-manifold
 triangulation into another.
 
@@ -65,7 +65,7 @@ Template parameter ``dim``:
 namespace Isomorphism_ {
 
 // Docstring regina::python::doc::Isomorphism_::__array
-static const char *__array =
+constexpr const char *__array =
 R"doc(Determines the image of the given source simplex facet under this
 isomorphism. This operator returns by value: it cannot be used to
 alter the isomorphism.
@@ -79,7 +79,7 @@ Returns:
     the image of the source simplex facet under this isomorphism.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__call
-static const char *__call =
+constexpr const char *__call =
 R"doc(Applies this isomorphism to the given triangulation, and returns the
 result as a new triangulation.
 
@@ -111,7 +111,7 @@ Returns:
     the new isomorphic triangulation.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__call_2
-static const char *__call_2 =
+constexpr const char *__call_2 =
 R"doc(Returns the image of the given facet-of-simplex under this
 isomorphism.
 
@@ -146,7 +146,7 @@ Returns:
     the image of *f* under this isomorphism.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__call_3
-static const char *__call_3 =
+constexpr const char *__call_3 =
 R"doc(Applies this isomorphism to the given facet pairing, and returns the
 result as a new facet pairing.
 
@@ -178,14 +178,14 @@ Returns:
     the new isomorphic facet pairing.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__copy
-static const char *__copy =
+constexpr const char *__copy =
 R"doc(Creates a copy of the given isomorphism.
 
 Parameter ``src``:
     the isomorphism to copy.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__eq
-static const char *__eq =
+constexpr const char *__eq =
 R"doc(Determines whether this and the given isomorphism are identical.
 
 Two isomorphisms are considered *identical* if they act on the same
@@ -209,7 +209,7 @@ Returns:
     identical.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__inc
-static const char *__inc =
+constexpr const char *__inc =
 R"doc(A preincrement operator that changes this to be the next isomorphism
 in an iteration through all possible isomorphisms of this size.
 
@@ -238,7 +238,7 @@ Returns:
     a reference to this isomorphism after the increment.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__init
-static const char *__init =
+constexpr const char *__init =
 R"doc(Creates a new isomorphism with no initialisation. The images of the
 simplices and their vertices must be explicitly set using simpImage()
 and facetPerm().
@@ -252,7 +252,7 @@ Parameter ``nSimplices``:
     with this isomorphism. This is allowed to be zero.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__mul
-static const char *__mul =
+constexpr const char *__mul =
 R"doc(Returns the composition of this isomorphism with the given
 isomorphism.
 
@@ -271,7 +271,7 @@ Returns:
     the composition of both isomorphisms.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__mul_2
-static const char *__mul_2 =
+constexpr const char *__mul_2 =
 R"doc(Returns the composition of this isomorphism with the given
 isomorphism.
 
@@ -290,7 +290,7 @@ Returns:
     the composition of both isomorphisms.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__ne
-static const char *__ne =
+constexpr const char *__ne =
 R"doc(Determines whether this and the given isomorphism are not identical.
 
 Two isomorphisms are considered *identical* if they act on the same
@@ -314,7 +314,7 @@ Returns:
     identical.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::apply
-static const char *apply =
+constexpr const char *apply =
 R"doc(Deprecated routine that applies this isomorphism to the given
 triangulation, and returns the result as a new triangulation.
 
@@ -339,7 +339,7 @@ Returns:
     the new isomorphic triangulation.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::applyInPlace
-static const char *applyInPlace =
+constexpr const char *applyInPlace =
 R"doc(Deprecated routine that applies this isomorphism to the given
 triangulation, modifying the given triangulation directly.
 
@@ -361,7 +361,7 @@ Parameter ``tri``:
     the triangulation to which this isomorphism should be applied.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::facetPerm
-static const char *facetPerm =
+constexpr const char *facetPerm =
 R"doc(Returns a read-write reference to the permutation that is applied to
 the (*dim* + 1) facets of the given source simplex under this
 isomorphism. Facet *i* of source simplex *sourceSimp* will be mapped
@@ -387,7 +387,7 @@ Returns:
     the source simplex.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::facetPerm_2
-static const char *facetPerm_2 =
+constexpr const char *facetPerm_2 =
 R"doc(Determines the permutation that is applied to the (*dim* + 1) facets
 of the given source simplex under this isomorphism. Facet *i* of
 source simplex *sourceSimp* will be mapped to face
@@ -405,7 +405,7 @@ Returns:
     the permutation applied to the facets of the source simplex.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::global_swap
-static const char *global_swap =
+constexpr const char *global_swap =
 R"doc(Swaps the contents of the given isomorphisms.
 
 This global routine simply calls Isomorphism<dim>::swap(); it is
@@ -419,7 +419,7 @@ Parameter ``b``:
     the second isomorphism whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::identity
-static const char *identity =
+constexpr const char *identity =
 R"doc(Returns the identity isomorphism for the given number of simplices.
 This isomorphism sends every simplex and every vertex to itself.
 
@@ -431,7 +431,7 @@ Returns:
     the identity isomorphism.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::inverse
-static const char *inverse =
+constexpr const char *inverse =
 R"doc(Returns the inverse of this isomorphism.
 
 Precondition:
@@ -445,7 +445,7 @@ Returns:
     the inverse isomorphism.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::isIdentity
-static const char *isIdentity =
+constexpr const char *isIdentity =
 R"doc(Determines whether or not this is an identity isomorphism.
 
 In an identity isomorphism, each simplex image is itself, and within
@@ -456,7 +456,7 @@ Returns:
     otherwise.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::random
-static const char *random =
+constexpr const char *random =
 R"doc(Returns a random isomorphism for the given number of simplices. This
 isomorphism will reorder simplices 0 to ``nSimplices-1`` in a random
 fashion, and for each simplex a random permutation of its (*dim* + 1)
@@ -482,7 +482,7 @@ Returns:
     the new random isomorphism.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::simpImage
-static const char *simpImage =
+constexpr const char *simpImage =
 R"doc(Returns a read-write reference to the image of the given source
 simplex under this isomorphism.
 
@@ -509,7 +509,7 @@ Returns:
     source simplex maps to.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::simpImage_2
-static const char *simpImage_2 =
+constexpr const char *simpImage_2 =
 R"doc(Determines the image of the given source simplex under this
 isomorphism.
 
@@ -526,7 +526,7 @@ Returns:
     to.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::size
-static const char *size =
+constexpr const char *size =
 R"doc(Returns the number of simplices in the source triangulation associated
 with this isomorphism. Note that this is always less than or equal to
 the number of simplices in the destination triangulation.
@@ -539,7 +539,7 @@ Returns:
     the number of simplices in the source triangulation.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::swap
-static const char *swap =
+constexpr const char *swap =
 R"doc(Swaps the contents of this and the given isomorphism.
 
 It does not matter if this and the given isomorphism use different

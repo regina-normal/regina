@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::DegreeGreaterThan
-static const char *DegreeGreaterThan =
+constexpr const char *DegreeGreaterThan =
 R"doc(A function object used for sorting faces of triangulations by
 decreasing degree. This can (for instance) be used with std::sort().
 
@@ -36,7 +36,7 @@ Precondition:
     *subdim* is between 0 and *dim*-1 inclusive.)doc";
 
 // Docstring regina::python::doc::DegreeLessThan
-static const char *DegreeLessThan =
+constexpr const char *DegreeLessThan =
 R"doc(A function object used for sorting faces of triangulations by
 increasing degree. This can (for instance) be used with std::sort().
 
@@ -60,7 +60,7 @@ Precondition:
     *subdim* is between 0 and *dim*-1 inclusive.)doc";
 
 // Docstring regina::python::doc::Triangulation
-static const char *Triangulation =
+constexpr const char *Triangulation =
 R"doc(A *dim*-dimensional triangulation, built by gluing together
 *dim*-dimensional simplices along their (*dim*-1)-dimensional facets.
 Typically (but not necessarily) such triangulations are used to
@@ -158,7 +158,7 @@ Template parameter ``dim``:
 namespace DegreeGreaterThan_ {
 
 // Docstring regina::python::doc::DegreeGreaterThan_::__call
-static const char *__call =
+constexpr const char *__call =
 R"doc(Compares the degrees of the *subdim*-dimensional faces at the given
 indices within the working triangulation. The triangulation that is
 used will be the one that was passed to the class constructor.
@@ -180,10 +180,10 @@ Returns:
     within the given triangulation.)doc";
 
 // Docstring regina::python::doc::DegreeGreaterThan_::__copy
-static const char *__copy = R"doc(Creates a new clone of the given function object.)doc";
+constexpr const char *__copy = R"doc(Creates a new clone of the given function object.)doc";
 
 // Docstring regina::python::doc::DegreeGreaterThan_::__init
-static const char *__init =
+constexpr const char *__init =
 R"doc(Constructions a function object for working with faces of the given
 triangulation.
 
@@ -195,7 +195,7 @@ Parameter ``tri``:
 namespace DegreeLessThan_ {
 
 // Docstring regina::python::doc::DegreeLessThan_::__call
-static const char *__call =
+constexpr const char *__call =
 R"doc(Compares the degrees of the *subdim*-dimensional faces at the given
 indices within the working triangulation. The triangulation that is
 used will be the one that was passed to the class constructor.
@@ -217,10 +217,10 @@ Returns:
     within the given triangulation.)doc";
 
 // Docstring regina::python::doc::DegreeLessThan_::__copy
-static const char *__copy = R"doc(Creates a new clone of the given function object.)doc";
+constexpr const char *__copy = R"doc(Creates a new clone of the given function object.)doc";
 
 // Docstring regina::python::doc::DegreeLessThan_::__init
-static const char *__init =
+constexpr const char *__init =
 R"doc(Constructions a function object for working with faces of the given
 triangulation.
 
@@ -232,7 +232,7 @@ Parameter ``tri``:
 namespace Triangulation_ {
 
 // Docstring regina::python::doc::Triangulation_::__copy
-static const char *__copy =
+constexpr const char *__copy =
 R"doc(Creates a new copy of the given triangulation.
 
 This will clone any computed properties (such as homology, fundamental
@@ -244,13 +244,13 @@ Parameter ``copy``:
     the triangulation to copy.)doc";
 
 // Docstring regina::python::doc::Triangulation_::__default
-static const char *__default =
+constexpr const char *__default =
 R"doc(Default constructor.
 
 Creates an empty triangulation.)doc";
 
 // Docstring regina::python::doc::Triangulation_::__init
-static const char *__init =
+constexpr const char *__init =
 R"doc(Creates a new copy of the given triangulation, with the option of
 whether or not to clone its computed properties also.
 
@@ -264,7 +264,7 @@ Parameter ``cloneProps``:
     properties marked as unknown.)doc";
 
 // Docstring regina::python::doc::Triangulation_::swap
-static const char *swap =
+constexpr const char *swap =
 R"doc(Swaps the contents of this and the given triangulation.
 
 All top-dimensional simplices that belong to this triangulation will

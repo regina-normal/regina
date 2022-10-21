@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Component
-static const char *Component =
+constexpr const char *Component =
 R"doc(A connected component of a *dim*-manifold triangulation.
 
 Components are highly temporary: whenever a triangulation changes, all
