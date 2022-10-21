@@ -156,7 +156,7 @@ tetrahedra. A layered lens space is constructed by building a layered
 solid torus and then joining together the two boundary triangles.
 
 Precondition:
-    *p* > *q* >= 0 unless (*p*,*q*) = (0,1).
+    *p* > *q* ≥ 0 unless (*p*,*q*) = (0,1).
 
 Precondition:
     gcd(*p*, *q*) = 1.

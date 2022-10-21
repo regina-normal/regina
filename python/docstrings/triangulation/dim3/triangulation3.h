@@ -352,8 +352,8 @@ dehydration string. Note that the triangulation recovered **might not
 be identical** to the original, but it is guaranteed to be an
 isomorphic copy.
 
-For a full description of the dehydrated triangulation format, see *A
-Census of Cusped Hyperbolic 3-Manifolds*, Callahan, Hildebrand and
+For a full description of the dehydrated triangulation format, see _A
+Census of Cusped Hyperbolic 3-Manifolds_, Callahan, Hildebrand and
 Weeks, Mathematics of Computation 68/225, 1999.
 
 Exception ``NotImplemented``:
@@ -1049,7 +1049,7 @@ The new tetrahedra will be inserted at the end of the list of
 tetrahedra in the triangulation.
 
 Precondition:
-    0 <= *cuts0* <= *cuts1*;
+    0 ≤ *cuts0* ≤ *cuts1*;
 
 Precondition:
     gcd(*cuts0*, *cuts1*) = 1.
@@ -2305,8 +2305,8 @@ static const char *rehydrate =
 R"doc(Rehydrates the given alphabetical string into a 3-dimensional
 triangulation.
 
-For a full description of the dehydrated triangulation format, see *A
-Census of Cusped Hyperbolic 3-Manifolds*, Callahan, Hildebrand and
+For a full description of the dehydrated triangulation format, see _A
+Census of Cusped Hyperbolic 3-Manifolds_, Callahan, Hildebrand and
 Weeks, Mathematics of Computation 68/225, 1999.
 
 The converse routine dehydrate() can be used to extract a dehydration
@@ -2932,7 +2932,7 @@ The initial data for the Turaev-Viro invariant is as described in the
 paper of Turaev and Viro, "State sum invariants of 3-manifolds and
 quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902. In
 particular, Section 7 of this paper describes the initial data as
-determined by an integer r >= 3, and a root of unity q0 of degree 2r
+determined by an integer r ≥ 3, and a root of unity q0 of degree 2r
 for which q0^2 is a primitive root of unity of degree r. There are
 several cases to consider:
 
@@ -3027,7 +3027,7 @@ The initial data for the Turaev-Viro invariant is as described in the
 paper of Turaev and Viro, "State sum invariants of 3-manifolds and
 quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902. In
 particular, Section 7 describes the initial data as determined by an
-integer *r* >= 3 and a root of unity *q0* of degree *2r* for which
+integer *r* ≥ 3 and a root of unity *q0* of degree *2r* for which
 *q0*^2 is a primitive root of unity of degree *r*.
 
 The argument *whichRoot* specifies which root of unity is used for

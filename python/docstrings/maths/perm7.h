@@ -30,7 +30,7 @@ and from the engine. For Perm<7>, the internal permutation codes have
 changed as of Regina 7.0:
 
 * *First*-generation codes were used internally in Regina 6.0.1 and
-  earlier. These are *image packs*: integers whose lowest three bits
+  earlier. These are _image packs_: integers whose lowest three bits
   represent the image of 0, whose next lowest three bits represent the
   image of 1, and so on. The routines permCode1(), setPermCode1(),
   fromPermCode1() and isPermCode1() continue to work with first-

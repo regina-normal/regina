@@ -28,7 +28,7 @@ the internal code may be a useful means for passing permutation
 objects to and from the engine. These codes are constructed as
 follows:
 
-* For 8 ≤ *n* ≤ 16, the code is an *image pack*: essentially a packed
+* For 8 ≤ *n* ≤ 16, the code is an _image pack_: essentially a packed
   array that holds the images of 0,...,*n*-1 in a single native
   integer type. More precisely, this is an unsigned integer of type
   *ImagePack*, whose lowest *imageBits* bits represent the image of 0,

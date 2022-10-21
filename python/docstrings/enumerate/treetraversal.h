@@ -334,7 +334,7 @@ separately by the class LPData.
 
 This class holds the particular state of the tree traversal at any
 point in time, as described by the current *level* (indicating our
-current depth in the search tree) and *type vector* (indicating which
+current depth in the search tree) and _type vector_ (indicating which
 branches of the search tree we have followed). For details on these
 concepts, see the Algorithmica paper cited above. The key details are
 summarised below; throughout this discussion *n* represents the number

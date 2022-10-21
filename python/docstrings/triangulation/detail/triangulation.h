@@ -974,7 +974,7 @@ In other words, such a tuple encodes the same information as calling
 ``simplex(simp).join(facet, simplex(adj), gluing)`` upon the
 triangulation being constructed.
 
-Every gluing should be encoded from *one direction only*. This means,
+Every gluing should be encoded from _one direction only_. This means,
 for example, that to build a closed 3-manifold triangulation with *n*
 tetrahedra, you would pass a list of 2*n* such tuples. If you attempt
 to make the same gluing twice (e.g., once from each direction), then
@@ -1046,8 +1046,8 @@ you to determine the precise relabelling that will be used, if you
 need to know it.
 
 For a full and precise description of the isomorphism signature format
-for 3-manifold triangulations, see *Simplification paths in the
-Pachner graphs of closed orientable 3-manifold triangulations*,
+for 3-manifold triangulations, see _Simplification paths in the
+Pachner graphs of closed orientable 3-manifold triangulations_,
 Burton, 2011, ``arXiv:1110.6080``. The format for other dimensions is
 essentially the same, but with minor dimension-specific adjustments.
 
@@ -1381,7 +1381,7 @@ triangulation. Support for different *types* of signature is new to
 Regina 7.0 (see below for details); all isomorphism signatures created
 in Regina 6.0.1 or earlier are of the default type IsoSigClassic.
 
-An *isomorphism signature* is a compact representation of a
+An _isomorphism signature_ is a compact representation of a
 triangulation that uniquely determines the triangulation up to
 combinatorial isomorphism. That is, for any fixed signature type *T*,
 two triangulations of dimension *dim* are combinatorially isomorphic
@@ -1444,9 +1444,9 @@ future versions of Regina. At present:
   implementation of IsoSigPrintable for details.
 
 For a full and precise description of the classic isomorphism
-signature format for 3-manifold triangulations, see *Simplification
+signature format for 3-manifold triangulations, see _Simplification
 paths in the Pachner graphs of closed orientable 3-manifold
-triangulations*, Burton, 2011, ``arXiv:1110.6080``. The format for
+triangulations_, Burton, 2011, ``arXiv:1110.6080``. The format for
 other dimensions is essentially the same, but with minor dimension-
 specific adjustments.
 

@@ -221,7 +221,7 @@ possible, even when passing or returning objects by value.
 
 .. warning::
     The implementation of this class relies on the fact that the sum
-    of *absolute values* of all coefficients in each column is at most
+    of _absolute values_ of all coefficients in each column is at most
     four (not counting the rows for any optional extra constraints).
     If you are extending this class to work with more general matching
     equation matrices, you may need to change the implementation

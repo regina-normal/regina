@@ -63,7 +63,7 @@ R"doc(Determines whether this and the given structure represent the same
 
 As of Regina 5.0, this test respects the recent discovery that the
 manifolds ``x101`` and ``x103`` are homeomorphic. For details, see
-B.B., *A duplicate pair in the SnapPea census*, Experimental
+B.B., _A duplicate pair in the SnapPea census_, Experimental
 Mathematics, 23:170-173, 2014.
 
 Parameter ``compare``:
@@ -94,7 +94,7 @@ R"doc(Determines whether this and the given structure represent different
 
 As of Regina 5.0, this test respects the recent discovery that the
 manifolds ``x101`` and ``x103`` are homeomorphic. For details, see
-B.B., *A duplicate pair in the SnapPea census*, Experimental
+B.B., _A duplicate pair in the SnapPea census_, Experimental
 Mathematics, 23:170-173, 2014.
 
 Parameter ``compare``:

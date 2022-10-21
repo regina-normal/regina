@@ -542,7 +542,7 @@ octagons, including cases with multiple octagons in the same
 tetrahedron and/or octagons in multiple tetrahedra.
 
 .. warning::
-    The number of tetrahedra in the new triangulation can be *very*
+    The number of tetrahedra in the new triangulation can be _very_
     large.
 
 Precondition:
@@ -780,7 +780,7 @@ for surfaces embedded within *closed* and *irreducible* 3-manifold
 triangulations.
 
 Let *D* be some disc embedded in the underlying 3-manifold, and let
-*B* be the boundary of *D*. We call *D* a *compressing disc* for this
+*B* be the boundary of *D*. We call *D* a _compressing disc_ for this
 surface if (i) the intersection of *D* with this surface is the
 boundary *B*, and (ii) although *B* bounds a disc within the
 3-manifold, it does not bound a disc within this surface.
@@ -1048,8 +1048,8 @@ Returns:
 
 // Docstring regina::python::doc::NormalSurface_::isVertexLinking
 static const char *isVertexLinking =
-R"doc(Determines whether or not this surface is vertex linking. A *vertex
-linking* surface contains only triangles.
+R"doc(Determines whether or not this surface is vertex linking. A _vertex
+linking_ surface contains only triangles.
 
 This behaves differently from isVertexLink(), which only detects the
 link of a single vertex (or a multiple of such a link). In contrast,

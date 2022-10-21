@@ -750,7 +750,7 @@ Returns:
 // Docstring regina::python::doc::NormalHypersurface_::isVertexLinking
 static const char *isVertexLinking =
 R"doc(Determines whether or not this hypersurface is vertex linking. A
-*vertex linking* hypersurface contains only tetrahedra.
+_vertex linking_ hypersurface contains only tetrahedra.
 
 This behaves differently from isVertexLink(), which only detects the
 link of a single vertex (or a multiple of such a link). In contrast,

@@ -305,7 +305,7 @@ this expression. Index 0 represents the first term, index 1 represents
 the second term and so on.
 
 .. warning::
-    This routine is *O(n)* where *n* is the number of terms in this
+    This routine is O(*n*) where *n* is the number of terms in this
     expression.
 
 Parameter ``index``:
@@ -322,7 +322,7 @@ this expression. Index 0 represents the first term, index 1 represents
 the second term and so on.
 
 .. warning::
-    This routine is *O(n)* where *n* is the number of terms in this
+    This routine is O(*n*) where *n* is the number of terms in this
     expression.
 
 Parameter ``index``:
@@ -487,7 +487,7 @@ represents the first term, index 1 represents the second term and so
 on.
 
 .. warning::
-    This routine is *O(n)* where *n* is the number of terms in this
+    This routine is O(*n*) where *n* is the number of terms in this
     expression.
 
 Parameter ``index``:
@@ -504,7 +504,7 @@ expression. Index 0 represents the first term, index 1 represents the
 second term and so on.
 
 .. warning::
-    This routine is *O(n)* where *n* is the number of terms in this
+    This routine is O(*n*) where *n* is the number of terms in this
     expression.
 
 Parameter ``index``:
