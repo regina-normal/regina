@@ -34,6 +34,7 @@
 #include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
+#include "../docstrings/triangulation/alias/facenumber.h"
 #include "../docstrings/triangulation/generic/face.h"
 #include "../docstrings/triangulation/detail/face.h"
 #include "../docstrings/triangulation/detail/facenumbering.h"
@@ -44,7 +45,7 @@ using regina::FaceEmbedding;
 template <int dim, int subdim>
 void addFace(pybind11::module_& m, const char* name, const char* embName) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
-    RDOC_SCOPE_BASE(detail::FaceEmbeddingBase)
+    RDOC_SCOPE_BASE_2(detail::FaceEmbeddingBase, alias::FaceNumber)
 
     auto e = pybind11::class_<FaceEmbedding<dim, subdim>>(m, embName,
             rdoc_scope)
@@ -57,18 +58,18 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def("vertices", &FaceEmbedding<dim, subdim>::vertices, rbase::vertices)
     ;
     if constexpr (subdim == 0)
-        e.def("vertex", &FaceEmbedding<dim, subdim>::vertex, rbase::simplex);
+        e.def("vertex", &FaceEmbedding<dim, subdim>::vertex, rbase2::vertex);
     else if constexpr (subdim == 1)
-        e.def("edge", &FaceEmbedding<dim, subdim>::edge, rbase::simplex);
+        e.def("edge", &FaceEmbedding<dim, subdim>::edge, rbase2::edge);
     else if constexpr (subdim == 2)
         e.def("triangle", &FaceEmbedding<dim, subdim>::triangle,
-            rbase::simplex);
+            rbase2::triangle);
     else if constexpr (subdim == 3)
         e.def("tetrahedron", &FaceEmbedding<dim, subdim>::tetrahedron,
-            rbase::simplex);
+            rbase2::tetrahedron);
     else if constexpr (subdim == 4)
         e.def("pentachoron", &FaceEmbedding<dim, subdim>::pentachoron,
-            rbase::simplex);
+            rbase2::pentachoron);
     regina::python::add_output(e);
     regina::python::add_eq_operators(e, rbase::__eq, rbase::__ne);
 
@@ -115,33 +116,33 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
     ;
     if constexpr (subdim > 4) {
         c.def("pentachoron", &Face<dim, subdim>::pentachoron,
-            pybind11::return_value_policy::reference, rbase::face);
+            pybind11::return_value_policy::reference, rbase::pentachoron);
         c.def("pentachoronMapping", &Face<dim, subdim>::pentachoronMapping,
-            rbase::faceMapping);
+            rbase::pentachoronMapping);
     }
     if constexpr (subdim > 3) {
         c.def("tetrahedron", &Face<dim, subdim>::tetrahedron,
-            pybind11::return_value_policy::reference, rbase::face);
+            pybind11::return_value_policy::reference, rbase::tetrahedron);
         c.def("tetrahedronMapping", &Face<dim, subdim>::tetrahedronMapping,
-            rbase::faceMapping);
+            rbase::tetrahedronMapping);
     }
     if constexpr (subdim > 2) {
         c.def("triangle", &Face<dim, subdim>::triangle,
-            pybind11::return_value_policy::reference, rbase::face);
+            pybind11::return_value_policy::reference, rbase::triangle);
         c.def("triangleMapping", &Face<dim, subdim>::triangleMapping,
-            rbase::faceMapping);
+            rbase::triangleMapping);
     }
     if constexpr (subdim > 1) {
         c.def("edge", &Face<dim, subdim>::edge,
-            pybind11::return_value_policy::reference, rbase::face);
+            pybind11::return_value_policy::reference, rbase::edge);
         c.def("edgeMapping", &Face<dim, subdim>::edgeMapping,
-            rbase::faceMapping);
+            rbase::edgeMapping);
     }
     if constexpr (subdim > 0) {
         c.def("vertex", &Face<dim, subdim>::vertex,
-            pybind11::return_value_policy::reference, rbase::face);
+            pybind11::return_value_policy::reference, rbase::vertex);
         c.def("vertexMapping", &Face<dim, subdim>::vertexMapping,
-            rbase::faceMapping);
+            rbase::vertexMapping);
     }
     if constexpr (dim - subdim == 1)
         c.def("inMaximalForest", &Face<dim, subdim>::inMaximalForest,
