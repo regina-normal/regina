@@ -1088,7 +1088,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
 
         /**
          * Determines whether or not this surface is vertex linking.
-         * A <i>vertex linking</i> surface contains only triangles.
+         * A _vertex linking_ surface contains only triangles.
          *
          * This behaves differently from isVertexLink(), which only detects
          * the link of a single vertex (or a multiple of such a link).
@@ -1374,7 +1374,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * Let \a D be some disc embedded in the underlying 3-manifold,
          * and let \a B be the boundary of \a D.  We call \a D a
-         * <i>compressing disc</i> for this surface if (i) the intersection
+         * _compressing disc_ for this surface if (i) the intersection
          * of \a D with this surface is the boundary \a B, and
          * (ii) although \a B bounds a disc within the 3-manifold, it
          * does not bound a disc within this surface.
@@ -1419,7 +1419,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * same tetrahedron and/or octagons in multiple tetrahedra.
          *
          * \warning The number of tetrahedra in the new triangulation
-         * can be <i>very</i> large.
+         * can be _very_ large.
          *
          * \pre This normal surface is compact and embedded.
          *

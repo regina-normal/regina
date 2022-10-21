@@ -65,9 +65,9 @@
  *  description above.
  *
  *  Where necessary, we use the oriented curves \a o1 and \a o2 as
- *  curves on the boundaries <i>"representing the base orbifold"</i>,
+ *  curves on the boundaries _representing the base orbifold_,
  *  and parallel copies of \a f as curves on the boundaries
- *  <i>"representing the fibres"</i>.  This becomes particularly
+ *  _representing the fibres_.  This becomes particularly
  *  important when joining different boundary components together.
  *
  *  It is worth noting the following observation.  Suppose we have a

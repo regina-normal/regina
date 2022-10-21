@@ -2320,7 +2320,7 @@ class TriangulationBase :
          * created in Regina 6.0.1 or earlier are of the default type
          * IsoSigClassic.
          *
-         * An <i>isomorphism signature</i> is a compact representation
+         * An _isomorphism signature_ is a compact representation
          * of a triangulation that uniquely determines the triangulation up to
          * combinatorial isomorphism.  That is, for any fixed signature type
          * \a T, two triangulations of dimension \a dim are combinatorially
@@ -2386,8 +2386,8 @@ class TriangulationBase :
          *
          * For a full and precise description of the classic isomorphism
          * signature format for 3-manifold triangulations, see
-         * <i>Simplification paths in the Pachner graphs of closed orientable
-         * 3-manifold triangulations</i>, Burton, 2011,
+         * _Simplification paths in the Pachner graphs of closed orientable
+         * 3-manifold triangulations_, Burton, 2011,
          * `arXiv:1110.6080`.  The format for other dimensions is
          * essentially the same, but with minor dimension-specific adjustments.
          *
@@ -2513,7 +2513,7 @@ class TriangulationBase :
          * as calling `simplex(simp).join(facet, simplex(adj), gluing)`
          * upon the triangulation being constructed.
          *
-         * Every gluing should be encoded from <i>one direction only</i>.
+         * Every gluing should be encoded from _one direction only_.
          * This means, for example, that to build a closed 3-manifold
          * triangulation with \a n tetrahedra, you would pass a list of
          * 2<i>n</i> such tuples.  If you attempt to make the same gluing
@@ -2578,7 +2578,7 @@ class TriangulationBase :
          * `simplex(simp).join(facet, simplex(adj), gluing)`
          * upon the triangulation being constructed.
          *
-         * Every gluing should be encoded from <i>one direction only</i>.
+         * Every gluing should be encoded from _one direction only_.
          * This means, for example, that to build a closed 3-manifold
          * triangulation with \a n tetrahedra, you would pass a list of
          * 2<i>n</i> such tuples.  If you attempt to make the same gluing
@@ -2647,11 +2647,10 @@ class TriangulationBase :
          * precise relabelling that will be used, if you need to know it.
          *
          * For a full and precise description of the isomorphism signature
-         * format for 3-manifold triangulations, see <i>Simplification paths
-         * in the Pachner graphs of closed orientable 3-manifold
-         * triangulations</i>, Burton, 2011, `arXiv:1110.6080`.
-         * The format for other dimensions is essentially the same, but with
-         * minor dimension-specific adjustments.
+         * format for 3-manifold triangulations, see _Simplification paths in
+         * the Pachner graphs of closed orientable 3-manifold triangulations_,
+         * Burton, 2011, `arXiv:1110.6080`.  The format for other dimensions is
+         * essentially the same, but with minor dimension-specific adjustments.
          *
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a

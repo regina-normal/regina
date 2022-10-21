@@ -139,7 +139,7 @@ enum PermCodeType {
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  These codes are constructed as follows:
  *
- * - For 8 ≤ \a n ≤ 16, the code is an <i>image pack</i>: essentially a
+ * - For 8 ≤ \a n ≤ 16, the code is an _image pack_: essentially a
  *   packed array that holds the images of 0,...,<i>n</i>-1 in a single native
  *   integer type.  More precisely, this is an unsigned integer of type
  *   \a ImagePack, whose lowest \a imageBits bits represent the image of 0,

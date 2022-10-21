@@ -372,7 +372,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Index 0 represents the first term, index 1
          * represents the second term and so on.
          *
-         * \warning This routine is <i>O(n)</i> where \a n is the number
+         * \warning This routine is O(\a n) where \a n is the number
          * of terms in this expression.
          *
          * \param index the index of the term to return; this must be
@@ -386,7 +386,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Index 0 represents the first term, index 1
          * represents the second term and so on.
          *
-         * \warning This routine is <i>O(n)</i> where \a n is the number
+         * \warning This routine is O(\a n) where \a n is the number
          * of terms in this expression.
          *
          * \param index the index of the term to return; this must be
@@ -400,7 +400,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Index 0 represents the first term, index 1
          * represents the second term and so on.
          *
-         * \warning This routine is <i>O(n)</i> where \a n is the number
+         * \warning This routine is O(\a n) where \a n is the number
          * of terms in this expression.
          *
          * \param index the index of the term to return; this must be
@@ -414,7 +414,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Index 0 represents the first term, index 1
          * represents the second term and so on.
          *
-         * \warning This routine is <i>O(n)</i> where \a n is the number
+         * \warning This routine is O(\a n) where \a n is the number
          * of terms in this expression.
          *
          * \param index the index of the term to return; this must be

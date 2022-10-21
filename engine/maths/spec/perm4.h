@@ -69,7 +69,7 @@ namespace regina {
  * codes have changed as of Regina 4.6.1:
  *
  * - \e First-generation codes were used internally in Regina 4.6 and earlier.
- *   These are <i>image packs</i>: characters whose lowest two bits represent
+ *   These are _image packs_: characters whose lowest two bits represent
  *   the image of 0, whose next lowest two bits represent the image of 1,
  *   and so on.  The routines permCode1(), setPermCode1(), fromPermCode1()
  *   and isPermCode1() continue to work with first-generation codes for

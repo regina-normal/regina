@@ -78,7 +78,7 @@ namespace regina {
  *   applied, results in an identical facet pairing (i.e., where exactly the
  *   same pairs of labelled simplex facets are matched together).
  *
- * - A facet pairing is in <i>canonical form</i> if it is a
+ * - A facet pairing is in _canonical form_ if it is a
  *   lexicographically minimal representative of its isomorphism class.
  *   Here we order facet pairings by lexicographical comparison of the
  *   sequence `dest(0,0)`, `dest(0,1)`, ...,

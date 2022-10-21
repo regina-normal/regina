@@ -3343,7 +3343,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * original, but it is guaranteed to be an isomorphic copy.
          *
          * For a full description of the dehydrated triangulation
-         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
+         * format, see _A Census of Cusped Hyperbolic 3-Manifolds_,
          * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
          * 1999.
          *
@@ -3591,7 +3591,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * triangulation.
          *
          * For a full description of the dehydrated triangulation
-         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
+         * format, see _A Census of Cusped Hyperbolic 3-Manifolds_,
          * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
          * 1999.
          *

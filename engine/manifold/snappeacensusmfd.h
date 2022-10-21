@@ -154,7 +154,7 @@ class SnapPeaCensusManifold : public Manifold {
          *
          * As of Regina 5.0, this test respects the recent discovery that
          * the manifolds \c x101 and \c x103 are homeomorphic.
-         * For details, see B.B., <i>A duplicate pair in the SnapPea census</i>,
+         * For details, see B.B., _A duplicate pair in the SnapPea census_,
          * Experimental Mathematics, 23:170-173, 2014.
          *
          * \param compare the structure with which this will be compared.
@@ -168,7 +168,7 @@ class SnapPeaCensusManifold : public Manifold {
          *
          * As of Regina 5.0, this test respects the recent discovery that
          * the manifolds \c x101 and \c x103 are homeomorphic.
-         * For details, see B.B., <i>A duplicate pair in the SnapPea census</i>,
+         * For details, see B.B., _A duplicate pair in the SnapPea census_,
          * Experimental Mathematics, 23:170-173, 2014.
          *
          * \param compare the structure with which this will be compared.

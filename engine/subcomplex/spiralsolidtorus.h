@@ -62,9 +62,9 @@ namespace regina {
  * closed up by placing the bottommost tetrahedron above the topmost
  * tetrahedron in a similar fashion), forming a solid torus overall.
  *
- * In each tetrahedron, directed edges AB, BC and CD are <i>major edges</i>,
- * directed edges AC and BD are <i>minor edges</i> and directed edge AD
- * is an <i>axis edge</i>.
+ * In each tetrahedron, directed edges AB, BC and CD are _major edges_,
+ * directed edges AC and BD are _minor edges_ and directed edge AD
+ * is an _axis edge_.
  *
  * The major edges all combined form a single longitude of the solid
  * torus.  Using this directed longitude, using the directed meridinal curve
