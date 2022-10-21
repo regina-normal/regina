@@ -59,6 +59,11 @@ void addVertex4(pybind11::module_& m) {
         .def("index", &Vertex<4>::index)
         .def("embedding", &Vertex<4>::embedding)
         .def("embeddings", &Vertex<4>::embeddings)
+        .def("__iter__", [](const Vertex<4>& f) {
+            // By default, make_iterator uses reference_internal.
+            return pybind11::make_iterator<pybind11::return_value_policy::copy>(
+                f.begin(), f.end());
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
         .def("front", &Vertex<4>::front)
         .def("back", &Vertex<4>::back)
         .def("triangulation", &Vertex<4>::triangulation)

@@ -62,6 +62,11 @@ void addEdge4(pybind11::module_& m) {
         .def("index", &Edge<4>::index)
         .def("embedding", &Edge<4>::embedding)
         .def("embeddings", &Edge<4>::embeddings)
+        .def("__iter__", [](const Edge<4>& f) {
+            // By default, make_iterator uses reference_internal.
+            return pybind11::make_iterator<pybind11::return_value_policy::copy>(
+                f.begin(), f.end());
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
         .def("front", &Edge<4>::front)
         .def("back", &Edge<4>::back)
         .def("triangulation", &Edge<4>::triangulation)

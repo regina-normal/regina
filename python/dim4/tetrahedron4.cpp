@@ -60,6 +60,11 @@ void addTetrahedron4(pybind11::module_& m) {
         .def("degree", &Tetrahedron<4>::degree)
         .def("embedding", &Tetrahedron<4>::embedding)
         .def("embeddings", &Tetrahedron<4>::embeddings)
+        .def("__iter__", [](const Tetrahedron<4>& f) {
+            // By default, make_iterator uses reference_internal.
+            return pybind11::make_iterator<pybind11::return_value_policy::copy>(
+                f.begin(), f.end());
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
         .def("front", &Tetrahedron<4>::front)
         .def("back", &Tetrahedron<4>::back)
         .def("triangulation", &Tetrahedron<4>::triangulation)

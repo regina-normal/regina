@@ -60,6 +60,11 @@ void addTriangle3(pybind11::module_& m) {
         .def("index", &Triangle<3>::index)
         .def("embedding", &Triangle<3>::embedding)
         .def("embeddings", &Triangle<3>::embeddings)
+        .def("__iter__", [](const Triangle<3>& f) {
+            // By default, make_iterator uses reference_internal.
+            return pybind11::make_iterator<pybind11::return_value_policy::copy>(
+                f.begin(), f.end());
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
         .def("front", &Triangle<3>::front)
         .def("back", &Triangle<3>::back)
         .def("isBoundary", &Triangle<3>::isBoundary)

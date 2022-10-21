@@ -88,6 +88,12 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def("degree", &Face<dim, subdim>::degree, rbase::degree)
         .def("embedding", &Face<dim, subdim>::embedding, rbase::embedding)
         .def("embeddings", &Face<dim, subdim>::embeddings, rbase::embeddings)
+        .def("__iter__", [](const Face<dim, subdim>& f) {
+            // By default, make_iterator uses reference_internal.
+            return pybind11::make_iterator<pybind11::return_value_policy::copy>(
+                f.begin(), f.end());
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
+            rbase::__iter__)
         .def("front", &Face<dim, subdim>::front, rbase::front)
         .def("back", &Face<dim, subdim>::back, rbase::back)
         .def("index", &Face<dim, subdim>::index, rbase::index)

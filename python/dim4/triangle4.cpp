@@ -61,6 +61,11 @@ void addTriangle4(pybind11::module_& m) {
         .def("index", &Triangle<4>::index)
         .def("embedding", &Triangle<4>::embedding)
         .def("embeddings", &Triangle<4>::embeddings)
+        .def("__iter__", [](const Triangle<4>& f) {
+            // By default, make_iterator uses reference_internal.
+            return pybind11::make_iterator<pybind11::return_value_policy::copy>(
+                f.begin(), f.end());
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
         .def("front", &Triangle<4>::front)
         .def("back", &Triangle<4>::back)
         .def("triangulation", &Triangle<4>::triangulation)
