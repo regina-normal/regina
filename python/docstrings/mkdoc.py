@@ -137,7 +137,7 @@ def sanitize_name(name):
     return name
 
 
-def process_comment(comment):
+def process_comment(comment, preserveAmpersands):
     result = ''
 
     # Remove C++ comment syntax
@@ -290,13 +290,14 @@ def process_comment(comment):
                r'\1``\2``\3', s, flags=re.DOTALL)
 
     # Special characters
-    s = re.sub(r'(^|[^\\])&lt;', r'\1<', s)
-    s = re.sub(r'(^|[^\\])&gt;', r'\1>', s)
-    s = re.sub(r'(^|[^\\])&le;', r'\1≤', s)
-    s = re.sub(r'(^|[^\\])&ge;', r'\1≥', s)
-    s = re.sub(r'(^|[^\\])&amp;', r'\1&', s)
-    s = re.sub(r'(^|[^\\])&nbsp;', r'\1 ', s)
-    s = re.sub(r'(^|[^\\])&pi;', r'\1π', s)
+    if not preserveAmpersands:
+        s = re.sub(r'(^|[^\\])&lt;', r'\1<', s)
+        s = re.sub(r'(^|[^\\])&gt;', r'\1>', s)
+        s = re.sub(r'(^|[^\\])&le;', r'\1≤', s)
+        s = re.sub(r'(^|[^\\])&ge;', r'\1≥', s)
+        s = re.sub(r'(^|[^\\])&amp;', r'\1&', s)
+        s = re.sub(r'(^|[^\\])&nbsp;', r'\1 ', s)
+        s = re.sub(r'(^|[^\\])&pi;', r'\1π', s)
     s = re.sub(r'\\<', r'<', s)
     s = re.sub(r'\\>', r'>', s)
     s = re.sub(r'\\&', r'&', s)
@@ -518,8 +519,12 @@ def extract(filename, node, namespace, output):
                 # print('    Left shift:', fullname, '-- skipping')
                 return
 
+            # Note: xmlEncodeSpecialChars() includes a &...; special character
+            # that needs to be left in this encoded form, since the raw encoding
+            # is illustrated in the API docs.
             comment = d(node.raw_comment)
-            comment = process_comment(comment)
+            comment = process_comment(comment,
+                node.spelling == 'xmlEncodeSpecialChars')
 
             special = False
             if name == 'swap' and sub_namespace == '':
