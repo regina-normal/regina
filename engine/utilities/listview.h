@@ -306,6 +306,8 @@ class ListView {
  * This should not be a \c const type; the \c const modifier will added
  * automatically where necessary through the class interface.
  *
+ * \nodocstrings
+ *
  * \ingroup utilities
  */
 template <typename Element>
@@ -371,6 +373,8 @@ class ListView<Element*> {
          * Internally, this object will store a pointer to the array, which
          * means the array needs to exist for at least as long as this object.
          *
+         * \nopython
+         *
          * \param array the pointer to the C-style array.
          * \param size the number of elements in the C-style array.
          */
@@ -381,6 +385,8 @@ class ListView<Element*> {
          *
          * Internally, this object will store a pointer to the array, which
          * means the array needs to exist for at least as long as this object.
+         *
+         * \nopython
          *
          * \param begin the beginning of the C-style array (that is, a
          * pointer to the first element).
@@ -407,6 +413,9 @@ class ListView<Element*> {
         bool empty() const;
         /**
          * Returns the number of elements in this list.
+         *
+         * \ifacespython This is also used to implement the Python special
+         * method __len__().
          *
          * \return the number of elements.
          */
@@ -436,17 +445,37 @@ class ListView<Element*> {
          */
         const_reference back() const;
         /**
-         * Returns an iterator pointing to the first element.
+         * Returns a C++ iterator pointing to the first element of this list.
+         *
+         * \nopython For Python users, ListView implements the Python iterable
+         * interface.  You can iterate over the elements of this list in the
+         * same way that you would iterate over any native Python container.
          *
          * \return an iterator at the beginning of this list.
          */
         const_iterator begin() const;
         /**
-         * Returns an iterator pointing beyond the last element.
+         * Returns a C++ iterator pointing beyond the last element of this list.
+         *
+         * \nopython For Python users, ListView implements the Python iterable
+         * interface.  You can iterate over the elements of this list in the
+         * same way that you would iterate over any native Python container.
          *
          * \return an iterator beyond the end of this list.
          */
         const_iterator end() const;
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the elements of this list.
+         *
+         * \nocpp For C++ users, ListView provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over the elements
+         * of this list in the usual way using a range-based \c for loop.
+         *
+         * \return an iterator over the elements of this list.
+         */
+        auto __iter__() const;
+#endif
         /**
          * Determines whether this and the given list view are accessing
          * the same underlying C-style array.
@@ -493,6 +522,8 @@ class ListView<Element*> {
  * \tparam Element the type of element stored in the C-style array.
  * This should not be a \c const type; the \c const modifier will added
  * automatically where necessary through the class interface.
+ *
+ * \nodocstrings
  *
  * \ingroup utilities
  */
@@ -556,6 +587,8 @@ class ListView<Element[n]> {
          * Internally, this object will store a pointer to the array, which
          * means the array needs to exist for at least as long as this object.
          *
+         * \nopython
+         *
          * \param array the pointer to the C-style array.
          */
         ListView(const Element* array);
@@ -578,6 +611,9 @@ class ListView<Element[n]> {
         bool empty() const;
         /**
          * Returns the number of elements in this list.
+         *
+         * \ifacespython This is also used to implement the Python special
+         * method __len__().
          *
          * \return the number of elements.
          */
@@ -607,17 +643,37 @@ class ListView<Element[n]> {
          */
         const_reference back() const;
         /**
-         * Returns an iterator pointing to the first element.
+         * Returns a C++ iterator pointing to the first element of this list.
+         *
+         * \nopython For Python users, ListView implements the Python iterable
+         * interface.  You can iterate over the elements of this list in the
+         * same way that you would iterate over any native Python container.
          *
          * \return an iterator at the beginning of this list.
          */
         const_iterator begin() const;
         /**
-         * Returns an iterator pointing beyond the last element.
+         * Returns a C++ iterator pointing beyond the last element of this list.
+         *
+         * \nopython For Python users, ListView implements the Python iterable
+         * interface.  You can iterate over the elements of this list in the
+         * same way that you would iterate over any native Python container.
          *
          * \return an iterator beyond the end of this list.
          */
         const_iterator end() const;
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the elements of this list.
+         *
+         * \nocpp For C++ users, ListView provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over the elements
+         * of this list in the usual way using a range-based \c for loop.
+         *
+         * \return an iterator over the elements of this list.
+         */
+        auto __iter__() const;
+#endif
         /**
          * Determines whether this and the given list view are accessing
          * the same underlying C-style array.

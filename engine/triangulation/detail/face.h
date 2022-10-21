@@ -523,7 +523,7 @@ class FaceBase :
         auto embeddings() const;
 
         /**
-         * A begin function for iterating through all appearances of
+         * A C++ begin function for iterating through all appearances of
          * this face within the various top-dimensional simplices of the
          * underlying triangulation.
          *
@@ -564,13 +564,15 @@ class FaceBase :
          * }
          * \endcode
          *
-         * \nopython Python users can iterate over embeddings() instead.
+         * \nopython For Python users, Face implements the Python iterable
+         * interface.  You can iterate over this face in the same way that
+         * you would iterate over any native Python container.
          *
          * \return a iterator that points to the first appearance.
          */
         auto begin() const;
         /**
-         * An end function for iterating through all appearances of
+         * A C++ end function for iterating through all appearances of
          * this face within the various top-dimensional simplices of the
          * underlying triangulation.
          *
@@ -582,12 +584,56 @@ class FaceBase :
          * The precise C++ type of the iterator is subject to change, so
          * C++ users should use \c auto (just like this declaration does).
          *
-         * \nopython Python users can iterate over embeddings() instead.
+         * \nopython For Python users, Face implements the Python iterable
+         * interface.  You can iterate over this face in the same way that
+         * you would iterate over any native Python container.
          *
          * \return a "beyond the end" iterator that comes immediately
          * after the last appearance.
          */
         auto end() const;
+#ifdef __APIDOCS
+        /**
+         * Provides Python support for iterating through all appearances of
+         * this face within the various top-dimensional simplices of the
+         * underlying triangulation.
+         *
+         * In most cases, the ordering of appearances is arbitrary.
+         * The exception is for codimension 2, where these appearances
+         * are ordered in a way that follows the link around the face
+         * (which in codimension 2 is always a path or a cycle).
+         *
+         * Iterating over this face will run through degree() appearances in
+         * total.  This is also equivalent to iterating over embeddings():
+         * iterating directly over a face generates a tiny bit less overhead,
+         * but you may also find it to be less readable.  In particular, the
+         * following three blocks of code are all equivalent:
+         *
+         * \code{.py}
+         * for emb in face:
+         *     ...
+         * \endcode
+         *
+         * \code{.py}
+         * for emb in face.embeddings():
+         *     ...
+         * \endcode
+         *
+         * \code{.py}
+         * for i in range(face.degree()):
+         *     emb = face.embedding(i)
+         *     ...
+         * \endcode
+         *
+         * \nocpp For C++ users, Face provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over the
+         * appearances of this face in the usual way using a range-based
+         * \a for loop.
+         *
+         * \return an iterator over all the appearances of this face.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Returns the first appearance of this face within a top-dimensional

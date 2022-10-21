@@ -36,6 +36,7 @@ INLINE_FILES = [
 ]
 
 INLINE_DIRS = [
+    '../../engine/triangulation/alias',
     '../../engine/triangulation/detail',
     '../../engine/triangulation/generic'
 ]
@@ -46,7 +47,8 @@ RECURSE_LIST = [
     CursorKind.CLASS_DECL,
     CursorKind.STRUCT_DECL,
     CursorKind.ENUM_DECL,
-    CursorKind.CLASS_TEMPLATE
+    CursorKind.CLASS_TEMPLATE,
+    CursorKind.CLASS_TEMPLATE_PARTIAL_SPECIALIZATION
 ]
 
 PRINT_LIST = [
@@ -431,9 +433,14 @@ def extract(filename, node, namespace, output):
             os.path.samefile(d(node.location.file.name), filename)):
         return 0
 
-    if node.raw_comment and '\\nopython' in node.raw_comment:
-        # It is noted in the C++ docs that this entity has no Python binding.
-        return
+    if node.raw_comment:
+        if '\\nopython' in node.raw_comment:
+            # The C++ docs tell us that this entity has no Python binding.
+            return
+        if '\\nodocstrings' in node.raw_comment:
+            # Possibly this entity does have a Python binding, but the
+            # C++ docs tell us not to generate docstrings for it.
+            return
 
     if node.kind in RECURSE_LIST and \
             ((node.access_specifier not in ACCESS_BLACKLIST and \

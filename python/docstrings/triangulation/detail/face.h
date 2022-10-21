@@ -69,6 +69,42 @@ Template parameter ``subdim``:
 
 namespace detail::FaceBase_ {
 
+// Docstring regina::python::doc::detail::FaceBase_::__iter__
+constexpr const char *__iter__ =
+R"doc(Provides Python support for iterating through all appearances of this
+face within the various top-dimensional simplices of the underlying
+triangulation.
+
+In most cases, the ordering of appearances is arbitrary. The exception
+is for codimension 2, where these appearances are ordered in a way
+that follows the link around the face (which in codimension 2 is
+always a path or a cycle).
+
+Iterating over this face will run through degree() appearances in
+total. This is also equivalent to iterating over embeddings():
+iterating directly over a face generates a tiny bit less overhead, but
+you may also find it to be less readable. In particular, the following
+three blocks of code are all equivalent:
+
+```
+for emb in face:
+    ...
+```
+
+```
+for emb in face.embeddings():
+    ...
+```
+
+```
+for i in range(face.degree()):
+    emb = face.embedding(i)
+    ...
+```
+
+Returns:
+    an iterator over all the appearances of this face.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase_::back
 constexpr const char *back =
 R"doc(Returns the last appearance of this face within a top-dimensional

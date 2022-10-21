@@ -37,6 +37,7 @@ ALIASES = \
     "ifacespython=\par Python^^" \
     "nocpp=\par C++^^Not present." \
     "nopython=\par Python^^Not present." \
+    "nodocstrings=" \
     "snappy=\par SnapPy^^" \
     "i18n=\par Internationalisation^^" \
     "proburgent=<i><b>Bug (urgent):</b></i>" \
