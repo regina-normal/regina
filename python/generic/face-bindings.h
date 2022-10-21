@@ -34,190 +34,122 @@
 #include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
+#include "../docstrings/triangulation/generic/face.h"
+#include "../docstrings/triangulation/detail/face.h"
+#include "../docstrings/triangulation/detail/facenumbering.h"
 
 using regina::Face;
 using regina::FaceEmbedding;
 
-namespace {
-    template <int dim, int subdim>
-    struct embedding_aliases {
-        template <typename Class>
-        static void add(Class& c) {
-        }
-    };
-
-    template <int dim>
-    struct embedding_aliases<dim, 0> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("vertex", &FaceEmbedding<dim, 0>::vertex);
-        }
-    };
-
-    template <int dim>
-    struct embedding_aliases<dim, 1> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("edge", &FaceEmbedding<dim, 1>::edge);
-        }
-    };
-
-    template <int dim>
-    struct embedding_aliases<dim, 2> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("triangle", &FaceEmbedding<dim, 2>::triangle);
-        }
-    };
-
-    template <int dim>
-    struct embedding_aliases<dim, 3> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("tetrahedron", &FaceEmbedding<dim, 3>::tetrahedron);
-        }
-    };
-
-    template <int dim>
-    struct embedding_aliases<dim, 4> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("pentachoron", &FaceEmbedding<dim, 4>::pentachoron);
-        }
-    };
-
-    template <int dim, int subdim, int maxlower>
-    struct subface_aliases {
-        template <typename Class>
-        static void add(Class& c) {
-            subface_aliases<dim, subdim, maxlower - 1>::add(c);
-        }
-    };
-
-    template <int dim, int subdim>
-    struct subface_aliases<dim, subdim, -1> {
-        template <typename Class>
-        static void add(Class& c) {
-        }
-    };
-
-    template <int dim, int subdim>
-    struct subface_aliases<dim, subdim, 0> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("vertex", &Face<dim, subdim>::vertex,
-                pybind11::return_value_policy::reference);
-            c.def("vertexMapping", &Face<dim, subdim>::vertexMapping);
-        }
-    };
-
-    template <int dim, int subdim>
-    struct subface_aliases<dim, subdim, 1> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("edge", &Face<dim, subdim>::edge,
-                pybind11::return_value_policy::reference);
-            c.def("edgeMapping", &Face<dim, subdim>::edgeMapping);
-            subface_aliases<dim, subdim, 0>::add(c);
-        }
-    };
-
-    template <int dim, int subdim>
-    struct subface_aliases<dim, subdim, 2> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("triangle", &Face<dim, subdim>::triangle,
-                pybind11::return_value_policy::reference);
-            c.def("triangleMapping", &Face<dim, subdim>::triangleMapping);
-            subface_aliases<dim, subdim, 1>::add(c);
-        }
-    };
-
-    template <int dim, int subdim>
-    struct subface_aliases<dim, subdim, 3> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("tetrahedron", &Face<dim, subdim>::tetrahedron,
-                pybind11::return_value_policy::reference);
-            c.def("tetrahedronMapping", &Face<dim, subdim>::tetrahedronMapping);
-            subface_aliases<dim, subdim, 2>::add(c);
-        }
-    };
-
-    template <int dim, int subdim>
-    struct subface_aliases<dim, subdim, 4> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("pentachoron", &Face<dim, subdim>::pentachoron,
-                pybind11::return_value_policy::reference);
-            c.def("pentachoronMapping", &Face<dim, subdim>::pentachoronMapping);
-            subface_aliases<dim, subdim, 3>::add(c);
-        }
-    };
-
-    template <int dim, int subdim, int codim>
-    struct face_in_maximal_forest {
-        template <typename Class>
-        static void add(Class&) {
-        }
-    };
-
-    template <int dim, int subdim>
-    struct face_in_maximal_forest<dim, subdim, 1> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("inMaximalForest", &Face<dim, subdim>::inMaximalForest);
-        }
-    };
-}
-
 template <int dim, int subdim>
 void addFace(pybind11::module_& m, const char* name, const char* embName) {
-    auto e = pybind11::class_<FaceEmbedding<dim, subdim>>(m, embName)
-        .def(pybind11::init<regina::Simplex<dim>*, regina::Perm<dim + 1>>())
-        .def(pybind11::init<const FaceEmbedding<dim, subdim>&>())
-        .def("simplex", &FaceEmbedding<dim, subdim>::simplex,
-            pybind11::return_value_policy::reference)
-        .def("face", &FaceEmbedding<dim, subdim>::face)
-        .def("vertices", &FaceEmbedding<dim, subdim>::vertices)
-    ;
-    regina::python::add_output(e);
-    regina::python::add_eq_operators(e);
-    embedding_aliases<dim, subdim>::add(e);
+    RDOC_SCOPE_BEGIN(FaceEmbedding)
+    RDOC_SCOPE_BASE(detail::FaceEmbeddingBase)
 
-    auto c = pybind11::class_<regina::Face<dim, subdim>>(m, name)
-        .def("isValid", &Face<dim, subdim>::isValid)
+    auto e = pybind11::class_<FaceEmbedding<dim, subdim>>(m, embName,
+            rdoc_scope)
+        .def(pybind11::init<regina::Simplex<dim>*, regina::Perm<dim + 1>>(),
+            rdoc::__init)
+        .def(pybind11::init<const FaceEmbedding<dim, subdim>&>(), rdoc::__copy)
+        .def("simplex", &FaceEmbedding<dim, subdim>::simplex,
+            pybind11::return_value_policy::reference, rbase::simplex)
+        .def("face", &FaceEmbedding<dim, subdim>::face, rbase::face)
+        .def("vertices", &FaceEmbedding<dim, subdim>::vertices, rbase::vertices)
+    ;
+    if constexpr (subdim == 0)
+        e.def("vertex", &FaceEmbedding<dim, subdim>::vertex, rbase::simplex);
+    else if constexpr (subdim == 1)
+        e.def("edge", &FaceEmbedding<dim, subdim>::edge, rbase::simplex);
+    else if constexpr (subdim == 2)
+        e.def("triangle", &FaceEmbedding<dim, subdim>::triangle,
+            rbase::simplex);
+    else if constexpr (subdim == 3)
+        e.def("tetrahedron", &FaceEmbedding<dim, subdim>::tetrahedron,
+            rbase::simplex);
+    else if constexpr (subdim == 4)
+        e.def("pentachoron", &FaceEmbedding<dim, subdim>::pentachoron,
+            rbase::simplex);
+    regina::python::add_output(e);
+    regina::python::add_eq_operators(e, rbase::__eq, rbase::__ne);
+
+    // We use the global scope here because all of Face's members are
+    // inherited, and so Face's own docstring namespace does not exist.
+    RDOC_SCOPE_SWITCH_MAIN
+    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
+
+    auto c = pybind11::class_<regina::Face<dim, subdim>>(m, name, rdoc::Face)
+        .def("isValid", &Face<dim, subdim>::isValid, rbase::isValid)
         // Only standard dimensions offer hasBadLink().
-        .def("hasBadIdentification", &Face<dim, subdim>::hasBadIdentification)
-        .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable)
-        .def("degree", &Face<dim, subdim>::degree)
-        .def("embedding", &Face<dim, subdim>::embedding)
-        .def("embeddings", &Face<dim, subdim>::embeddings)
-        .def("front", &Face<dim, subdim>::front)
-        .def("back", &Face<dim, subdim>::back)
-        .def("index", &Face<dim, subdim>::index)
-        .def("triangulation", &Face<dim, subdim>::triangulation)
+        .def("hasBadIdentification", &Face<dim, subdim>::hasBadIdentification,
+            rbase::hasBadIdentification)
+        .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable,
+            rbase::isLinkOrientable)
+        .def("degree", &Face<dim, subdim>::degree, rbase::degree)
+        .def("embedding", &Face<dim, subdim>::embedding, rbase::embedding)
+        .def("embeddings", &Face<dim, subdim>::embeddings, rbase::embeddings)
+        .def("front", &Face<dim, subdim>::front, rbase::front)
+        .def("back", &Face<dim, subdim>::back, rbase::back)
+        .def("index", &Face<dim, subdim>::index, rbase::index)
+        .def("triangulation", &Face<dim, subdim>::triangulation,
+            rbase::triangulation)
         .def("component", &Face<dim, subdim>::component,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::component)
         .def("boundaryComponent", &Face<dim, subdim>::boundaryComponent,
-            pybind11::return_value_policy::reference)
-        .def("isBoundary", &Face<dim, subdim>::isBoundary)
-        .def("face", &regina::python::face<Face<dim, subdim>, subdim, int>)
+            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+        .def("isBoundary", &Face<dim, subdim>::isBoundary, rbase::isBoundary)
+        .def("face", &regina::python::face<Face<dim, subdim>, subdim, int>,
+            rbase::face)
         .def("faceMapping",
-            &regina::python::faceMapping<Face<dim, subdim>, subdim, dim + 1>)
-        .def_static("ordering", &Face<dim, subdim>::ordering)
-        .def_static("faceNumber", &Face<dim, subdim>::faceNumber)
-        .def_static("containsVertex", &Face<dim, subdim>::containsVertex)
+            &regina::python::faceMapping<Face<dim, subdim>, subdim, dim + 1>,
+            rbase::faceMapping)
+        .def_static("ordering", &Face<dim, subdim>::ordering, rbase2::ordering)
+        .def_static("faceNumber", &Face<dim, subdim>::faceNumber,
+            rbase2::faceNumber)
+        .def_static("containsVertex", &Face<dim, subdim>::containsVertex,
+            rbase2::containsVertex)
         .def_readonly_static("nFaces", &Face<dim, subdim>::nFaces)
         .def_readonly_static("lexNumbering", &Face<dim, subdim>::lexNumbering)
         .def_readonly_static("oppositeDim", &Face<dim, subdim>::oppositeDim)
         .def_readonly_static("dimension", &Face<dim, subdim>::dimension)
         .def_readonly_static("subdimension", &Face<dim, subdim>::subdimension)
     ;
+    if constexpr (subdim > 4) {
+        c.def("pentachoron", &Face<dim, subdim>::pentachoron,
+            pybind11::return_value_policy::reference, rbase::face);
+        c.def("pentachoronMapping", &Face<dim, subdim>::pentachoronMapping,
+            rbase::faceMapping);
+    }
+    if constexpr (subdim > 3) {
+        c.def("tetrahedron", &Face<dim, subdim>::tetrahedron,
+            pybind11::return_value_policy::reference, rbase::face);
+        c.def("tetrahedronMapping", &Face<dim, subdim>::tetrahedronMapping,
+            rbase::faceMapping);
+    }
+    if constexpr (subdim > 2) {
+        c.def("triangle", &Face<dim, subdim>::triangle,
+            pybind11::return_value_policy::reference, rbase::face);
+        c.def("triangleMapping", &Face<dim, subdim>::triangleMapping,
+            rbase::faceMapping);
+    }
+    if constexpr (subdim > 1) {
+        c.def("edge", &Face<dim, subdim>::edge,
+            pybind11::return_value_policy::reference, rbase::face);
+        c.def("edgeMapping", &Face<dim, subdim>::edgeMapping,
+            rbase::faceMapping);
+    }
+    if constexpr (subdim > 0) {
+        c.def("vertex", &Face<dim, subdim>::vertex,
+            pybind11::return_value_policy::reference, rbase::face);
+        c.def("vertexMapping", &Face<dim, subdim>::vertexMapping,
+            rbase::faceMapping);
+    }
+    if constexpr (dim - subdim == 1)
+        c.def("inMaximalForest", &Face<dim, subdim>::inMaximalForest,
+            rbase::inMaximalForest);
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-    face_in_maximal_forest<dim, subdim, dim - subdim>::add(c);
-    subface_aliases<dim, subdim, subdim - 1>::add(c);
+
+    RDOC_SCOPE_END
 
     regina::python::addListView<
         decltype(std::declval<Face<dim, subdim>>().embeddings())>(m);

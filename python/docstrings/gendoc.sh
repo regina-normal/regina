@@ -55,7 +55,7 @@ for dir in $dirs; do
           -o "$dir/$header" ../../engine/"$dir/spec/$header"
       done
     elif [ "$dir" = triangulation ]; then
-      for sub in dim2 dim3 dim4 generic alias detail; do
+      for sub in dim2 dim3 dim4 generic detail; do
         for i in ../../engine/"$dir"/"$sub"/*.h; do
           header=`basename "$i"`
           case "$sub/$header" in
