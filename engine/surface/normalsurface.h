@@ -161,7 +161,7 @@ inline constexpr char quadString[3][6] = { "01/23", "02/13", "03/12" };
  * edge from `p[1]` to `p[2]`.
  *
  * Array `triDiscArcs[i]` lists the boundary arcs of the
- * triangular disc of type <i>i</i>.  See NormalSurface::triangles()
+ * triangular disc of type \a i.  See NormalSurface::triangles()
  * for further details.
  *
  * Note that every permutation in this array is even.
@@ -182,7 +182,7 @@ inline constexpr Perm<4> triDiscArcs[4][3] = {
  * edge from `p[1]` to `p[2]`.
  *
  * Array `quadDiscArcs[i]` lists the boundary arcs of the
- * quadrilateral disc of type <i>i</i>.  See NormalSurface::quads()
+ * quadrilateral disc of type \a i.  See NormalSurface::quads()
  * for further details.
  *
  * Note that permutation `quadDiscArcs[i][j]` will be even
@@ -203,7 +203,7 @@ inline constexpr Perm<4> quadDiscArcs[3][4] = {
  * edge from `p[1]` to `p[2]`.
  *
  * Array `octDiscArcs[i]` lists the boundary arcs of the
- * octagonal disc of type <i>i</i>.  See NormalSurface::octs()
+ * octagonal disc of type \a i.  See NormalSurface::octs()
  * for further details.
  *
  * Note that permutation `octDiscArcs[i][j]` will be even

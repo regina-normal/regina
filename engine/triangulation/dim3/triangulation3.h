@@ -790,7 +790,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   any new information).  Therefore, if \a r is even, the
          *   additional argument \a parity is ignored.
          *
-         * - \a r may be odd, and \a q0 may be a primitive (<i>2r</i>)th
+         * - \a r may be odd, and \a q0 may be a primitive (2\a r)th
          *   root of unity.  This case corresponds to passing the argument
          *   \a parity as \c true.  Here the invariant is again computed
          *   as an element of the cyclotomic field of order \a 2r.  As before,
@@ -798,7 +798,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   root of unity is used, since switching between roots of unity
          *   does not yield new information.
          *
-         * - \a r may be odd, and \a q0 may be a primitive (<i>r</i>)th
+         * - \a r may be odd, and \a q0 may be a primitive (\a r)th
          *   root of unity.  This case corresponds to passing the argument
          *   \a parity as \c false.  In this case the invariant is computed
          *   as an element of the cyclotomic field of order \a r.  Again,

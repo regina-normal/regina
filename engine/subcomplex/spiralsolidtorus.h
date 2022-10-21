@@ -69,8 +69,8 @@ namespace regina {
  * The major edges all combined form a single longitude of the solid
  * torus.  Using this directed longitude, using the directed meridinal curve
  * ACBA and assuming the spiralled solid torus contains \a n tetrahedra,
- * the minor edges all combined form a (2, <i>n</i>) curve and
- * the axis edges all combined form a (3, <i>n</i>) curve on the torus
+ * the minor edges all combined form a (2, \a n) curve and
+ * the axis edges all combined form a (3, \a n) curve on the torus
  * boundary.
  *
  * Note that all tetrahedra in the spiralled solid torus must be distinct
@@ -165,7 +165,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * Returns the requested tetrahedron in this spiralled solid torus.
          * Tetrahedra are numbered from 0 to size()-1
          * inclusive, with tetrahedron <i>i</i>+1 being placed above
-         * tetrahedron <i>i</i>.
+         * tetrahedron \a i.
          *
          * \param index specifies which tetrahedron to return; this must
          * be between 0 and size()-1 inclusive.

@@ -123,7 +123,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * building a layered solid torus and then joining together the
          * two boundary triangles.
          *
-         * \pre \a p \> \a q \>= 0 unless (<i>p</i>,<i>q</i>) = (0,1).
+         * \pre \a p \> \a q \>= 0 unless (\a p,\a q) = (0,1).
          * \pre gcd(\a p, \a q) = 1.
          *
          * \param p a parameter of the desired lens space.

@@ -211,7 +211,7 @@ Specifically:
 * If *F* also appears as face number *k* in some other simplex *s*,
   then for each *i* in the range 0 ≤ *i* ≤ *subdim*, vertex ``p[i]``
   of this simplex will be identified with vertex
-  *s*.faceMapping(*k*)[*i*] of simplex *s*.
+  ``s.faceMapping(k)[i]`` of simplex *s*.
 
 If the link of the underlying *subdim*-face is orientable, then this
 permutation maps the remaining numbers (*subdim*+1, ..., *dim*) to the

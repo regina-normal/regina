@@ -926,7 +926,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Specifically, the output will be a comma-separated sequence
          * of alphabetical strings.  The <i>i</i>th such string will consist
          * of four letters, encoding the endpoints of the four edges in
-         * clockwise order that leave node <i>i</i>.  The lower-case letters
+         * clockwise order that leave node \a i.  The lower-case letters
          * \c a,\c b,...,\c z represent nodes 0,1,...,25 respectively,
          * and the upper-case letters \c A,\c B,...,\c Z represent nodes
          * 26,27,...,51 respectively.  An example of such a string is:

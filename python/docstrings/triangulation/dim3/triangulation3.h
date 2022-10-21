@@ -2944,7 +2944,7 @@ several cases to consider:
   field (i.e., it does not yield any new information). Therefore, if
   *r* is even, the additional argument *parity* is ignored.
 
-* *r* may be odd, and *q0* may be a primitive (*2r*)th root of unity.
+* *r* may be odd, and *q0* may be a primitive (2*r*)th root of unity.
   This case corresponds to passing the argument *parity* as ``True``.
   Here the invariant is again computed as an element of the cyclotomic
   field of order *2r*. As before, there is no need to give further

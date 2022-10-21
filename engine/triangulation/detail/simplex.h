@@ -469,7 +469,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * - If \a F also appears as face number \a k in some other simplex
          *   \a s, then for each \a i in the range 0 ≤ \a i ≤ \a subdim,
          *   vertex `p[i]` of this simplex will be identified with
-         *   vertex <i>s</i>.faceMapping(\a k)[\a i] of simplex \a s.
+         *   vertex `s.faceMapping(k)[i]` of simplex \a s.
          *
          * If the link of the underlying <i>subdim</i>-face is orientable,
          * then this permutation maps the remaining numbers
