@@ -78,7 +78,7 @@ namespace regina {
  *   vertices (so, for example, edges may be loops).  Many distinct
  *   <i>k</i>-faces of a top-dimensional simplex may be identified together
  *   as a consequence of the (<i>dim</i>-1)-dimensional gluings, and indeed
- *   we are even allowed to glue together two distinct factets of the same
+ *   we are even allowed to glue together two distinct facets of the same
  *   <i>dim</i>-simplex.  In contrast, a simplicial complex does not allow
  *   any of these situations.
  *
