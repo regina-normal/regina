@@ -42,6 +42,7 @@
 #include "../generic/facehelper.h"
 #include "../docstrings/triangulation/generic/triangulation.h"
 #include "../docstrings/triangulation/detail/triangulation.h"
+#include "../docstrings/utilities/snapshot.h"
 
 using pybind11::overload_cast;
 using regina::AbelianGroup;
@@ -53,15 +54,15 @@ using regina::Triangulation;
 template <int dim>
 void addTriangulation(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(Triangulation)
-    RDOC_SCOPE_BASE(detail::TriangulationBase)
+    RDOC_SCOPE_BASE_2(detail::TriangulationBase, Snapshottable)
 
     auto c = pybind11::class_<Triangulation<dim>,
             std::shared_ptr<Triangulation<dim>>>(m, name, rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Triangulation<dim>&>(), rdoc::__copy)
         .def(pybind11::init<const Triangulation<dim>&, bool>(), rdoc::__init)
-        // TODO: doc
-        .def("isReadOnlySnapshot", &Triangulation<dim>::isReadOnlySnapshot)
+        .def("isReadOnlySnapshot", &Triangulation<dim>::isReadOnlySnapshot,
+            rbase2::isReadOnlySnapshot)
         .def("size", &Triangulation<dim>::size, rbase::size)
         .def("simplices", &Triangulation<dim>::simplices,
             pybind11::keep_alive<0, 1>(), rbase::simplices)
