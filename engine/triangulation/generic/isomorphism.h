@@ -225,10 +225,9 @@ class Isomorphism :
          * and so you can safely use the special value -1 as a marker for an
          * image that is unknown or not yet initialised.
          *
-         * \ifacespython Python users can only access the read-only version
-         * of this function that returns by value: you cannot use simpImage()
-         * to edit the isomorphism.  As an alternative however, Python users
-         * can call `setSimpImage(sourceSimp, image)` instead.
+         * \nopython For Python users, simpImage() is a read-only function
+         * that returns by value.  To edit the isomorphism, use the
+         * Python-only routine setSimpImage() instead.
          *
          * \param sourceSimp the index of the source simplex; this must
          * be between 0 and `size()-1` inclusive.
@@ -250,6 +249,29 @@ class Isomorphism :
          * that the source simplex maps to.
          */
         ssize_t simpImage(size_t sourceSimp) const;
+#ifdef __APIDOCS
+        /**
+         * Python-only routine that sets the image of the given source
+         * simplex to the given value under this isomorphism.
+         *
+         * If the dimension \a dim is 2, 3 or 4, then you can also set
+         * this image through the dimension-specific alias setTriImage(),
+         * setTetImage() or setPentImage() respectively.
+         *
+         * Simplex images are stored using type \c ssize_t, not \c size_t,
+         * and so you can safely use the special value -1 as a marker for an
+         * image that is unknown or not yet initialised.
+         *
+         * \nocpp For C++ users, simpImage() is used for both reading and
+         * writing: just write `simpImage(sourceSimp) = image`.
+         *
+         * \param sourceSimp the index of the source simplex; this must
+         * be between 0 and `size()-1` inclusive.
+         * \param image the index of the new destination simplex that the
+         * source simplex should map to.
+         */
+        void setSimpImage(size_t sourceSimp, ssize_t image);
+#endif
         /**
          * Returns a read-write reference to the permutation that is
          * applied to the (\a dim + 1) facets of the given source simplex
@@ -262,10 +284,9 @@ class Isomorphism :
          * this permutation through the dimension-specific alias
          * edgePerm() or facePerm() respectively.
          *
-         * \ifacespython Python users can only access the read-only version
-         * of this function that returns by value: you cannot use facetPerm()
-         * to edit the isomorphism.  As an alternative however, Python users
-         * can call `setFacetPerm(sourceSimp, perm)` instead.
+         * \nopython For Python users, facetPerm() is a read-only function
+         * that returns by value.  To edit the isomorphism, use the
+         * Python-only routine setFacetPerm() instead.
          *
          * \param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
@@ -292,6 +313,28 @@ class Isomorphism :
          * source simplex.
          */
         Perm<dim+1> facetPerm(size_t sourceSimp) const;
+#ifdef __APIDOCS
+        /**
+         * Python-only routine that sets the permutation that is applied to
+         * the (\a dim + 1) facets of the given source simplex under this
+         * isomorphism.  Facet \a i of source simplex \a sourceSimp will be
+         * mapped to facet `perm[i]` of simplex `simpImage(sourceSimp)`.
+         *
+         * If the dimension \a dim is 2 or 3, then you can also set
+         * this permutation through the dimension-specific alias
+         * setEdgePerm() or setFacePerm() respectively.
+         *
+         * \nocpp For C++ users, facetPerm() is used for both reading and
+         * writing: just write `facetPerm(sourceSimp) = perm`.
+         *
+         * \param sourceSimp the index of the source simplex containing
+         * the original (\a dim + 1) facets; this must be between 0 and
+         * `size()-1` inclusive.
+         * \return the new permutation that should be applied to the facets
+         * of the source simplex.
+         */
+        void setFacetPerm(size_t sourceSimp, Perm<dim+1> perm);
+#endif
         /**
          * Determines the image of the given source simplex facet
          * under this isomorphism.  This operator returns by value:
