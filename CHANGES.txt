@@ -39,6 +39,10 @@ Version 7.2  [ (to be determined) ]
             - New constructor to build the empty surface.
         Class TableView:
             - New class to help wrap read-only multi-dimensional arrays.
+        Class TorusBundle:
+            - The class constructors now throw an exception if the given
+              monodromy does not have determinant ±1 (note that this has
+              always a precondition).
         Function buildInfo():
             - New function that allows packagers to embed additional
               version/build-related information in the calculation engine.

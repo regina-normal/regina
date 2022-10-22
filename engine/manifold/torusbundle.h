@@ -95,6 +95,9 @@ class TorusBundle : public Manifold {
          *
          * \pre The given matrix has determinant +1 or -1.
          *
+         * \exception InvalidArgument The given monodromy does not have
+         * determinant ±1.
+         *
          * \param monodromy describes precisely how the upper and lower
          * torus boundaries are identified.  See the class notes for details.
          */
@@ -113,6 +116,9 @@ class TorusBundle : public Manifold {
          *
          * \pre The monodromy matrix formed from the given parameters
          * has determinant +1 or -1.
+         *
+         * \exception InvalidArgument The given monodromy does not have
+         * determinant ±1.
          *
          * \param mon00 the (0,0) element of the monodromy matrix.
          * \param mon01 the (0,1) element of the monodromy matrix.
@@ -187,6 +193,11 @@ class TorusBundle : public Manifold {
         /**
          * Uses change of basis and/or inversion to reduces the monodromy
          * representation to something more aesthetically pleasing.
+         *
+         * \exception InvalidArgument The current monodromy does not have
+         * determinant ±1.  This is thrown as an InvalidArgument because
+         * reduce() is typically used to reduce a monodromy that the user
+         * passes to the class constructor.
          */
         void reduce();
 

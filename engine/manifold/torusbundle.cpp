@@ -89,14 +89,12 @@ void TorusBundle::reduce() {
     // - Simultaneously swap and negate the main diagonal (invert)
 
     // The determinant should be ±1 according to our preconditions,
-    // but we'd better check that anyway.
+    // but we'd better check that anyway.  See the reduce() docs in the
+    // header as to why the "right" exception type here is InvalidArgument.
     long det = monodromy_.determinant();
-    if (det != 1 && det != -1) {
-        // Something is very wrong.  Don't touch it.
-        std::cerr << "ERROR: TorusBundle monodromy does not have "
-            "determinant ±1.\n";
-        return;
-    }
+    if (det != 1 && det != -1)
+        throw InvalidArgument("TorusBundle monodromy does not have "
+            "determinant ±1");
 
     // Deal with the case where the main diagonal has strictly opposite
     // signs.
