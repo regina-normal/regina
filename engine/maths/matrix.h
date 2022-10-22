@@ -99,7 +99,7 @@
   #ifdef __DOCSTRINGS
     // Generate docstrings for all member functions.
     #define REGINA_ENABLE_FOR_RING(r) r
-    #define REGINA_ENABLE_FOR_RING_STATIC(r) r
+    #define REGINA_ENABLE_FOR_RING_STATIC(r) static r
     #define REGINA_ENABLE_FOR_RING_DEPRECATED(r) [[deprecated]] r
   #endif
 #endif

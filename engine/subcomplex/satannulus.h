@@ -159,7 +159,7 @@ struct SatAnnulus {
      */
     SatAnnulus& operator = (const SatAnnulus&) = default;
 
-#ifdef __DOCSTRINGS
+#ifdef __APIDOCS
     /**
      * A Python-only routine that allows you to query the \a tet field.
      *
@@ -224,7 +224,7 @@ struct SatAnnulus {
      * matches up with the individual vertices of its corresponding tetrahedron.
      */
     void setRoles(int which, Perm<4> value);
-#endif // __DOCSTRINGS
+#endif // __APIDOCS
 
     /**
      * Determines whether or not this and the given structure describe
