@@ -3779,6 +3779,9 @@ template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* TriangulationBase<dim>::translate(
         const Face<dim, subdim>* other) const {
+    static_assert(0 <= subdim && subdim < dim, "translate() requires a "
+        "facial dimension between 0 and dim-1 inclusive.");
+
     if (other) {
         const auto& emb = other->front();
         return simplices_[emb.simplex()->index()]->template face<subdim>(

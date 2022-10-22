@@ -195,8 +195,11 @@ namespace regina::detail {
 
 template <int dim>
 template <int k>
-inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
+bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         bool perform) {
+    static_assert(0 <= k && k <= dim,
+        "pachner() requires a facial dimension between 0 and dim inclusive.");
+
     if constexpr (k == 0) {
         // Pachner move on a vertex:
         if (check) {
