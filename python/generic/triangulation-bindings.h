@@ -40,6 +40,8 @@
 #include "triangulation/detail/isosig-impl.h"
 #include "utilities/typeutils.h"
 #include "../generic/facehelper.h"
+#include "../docstrings/triangulation/generic/triangulation.h"
+#include "../docstrings/triangulation/detail/triangulation.h"
 
 using pybind11::overload_cast;
 using regina::AbelianGroup;
@@ -50,6 +52,8 @@ using regina::Triangulation;
 
 template <int dim>
 void addTriangulation(pybind11::module_& m, const char* name) {
+    RDOC_SCOPE_BEGIN(Triangulation)
+
     auto c = pybind11::class_<Triangulation<dim>,
             std::shared_ptr<Triangulation<dim>>>(m, name)
         .def(pybind11::init<>())
@@ -247,5 +251,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
     // resolve regina::swap to the templated triangulation swap function.
     m.def("swap", static_cast<void(&)(Triangulation<dim>&,
         Triangulation<dim>&)>(regina::swap));
+
+    RDOC_SCOPE_END
 }
 
