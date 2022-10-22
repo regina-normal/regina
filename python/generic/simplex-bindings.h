@@ -38,73 +38,10 @@
 using pybind11::overload_cast;
 using regina::Simplex;
 
-namespace {
-    template <int dim, int maxsubdim>
-    struct face_aliases {
-        template <typename Class>
-        static void add(Class& c) {
-            face_aliases<dim, maxsubdim - 1>::add(c);
-        }
-    };
-
-    template <int dim>
-    struct face_aliases<dim, 0> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("vertex", &Simplex<dim>::vertex,
-                pybind11::return_value_policy::reference);
-            c.def("vertexMapping", &Simplex<dim>::vertexMapping);
-        }
-    };
-
-    template <int dim>
-    struct face_aliases<dim, 1> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("edge",
-                overload_cast<int>(&Simplex<dim>::edge, pybind11::const_),
-                pybind11::return_value_policy::reference);
-            c.def("edgeMapping", &Simplex<dim>::edgeMapping);
-            face_aliases<dim, 0>::add(c);
-        }
-    };
-
-    template <int dim>
-    struct face_aliases<dim, 2> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("triangle", &Simplex<dim>::triangle,
-                pybind11::return_value_policy::reference);
-            c.def("triangleMapping", &Simplex<dim>::triangleMapping);
-            face_aliases<dim, 1>::add(c);
-        }
-    };
-
-    template <int dim>
-    struct face_aliases<dim, 3> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("tetrahedron", &Simplex<dim>::tetrahedron,
-                pybind11::return_value_policy::reference);
-            c.def("tetrahedronMapping", &Simplex<dim>::tetrahedronMapping);
-            face_aliases<dim, 2>::add(c);
-        }
-    };
-
-    template <int dim>
-    struct face_aliases<dim, 4> {
-        template <typename Class>
-        static void add(Class& c) {
-            c.def("pentachoron", &Simplex<dim>::pentachoron,
-                pybind11::return_value_policy::reference);
-            c.def("pentachoronMapping", &Simplex<dim>::pentachoronMapping);
-            face_aliases<dim, 3>::add(c);
-        }
-    };
-}
-
 template <int dim>
 void addSimplex(pybind11::module_& m, const char* name) {
+    static_assert(! regina::standardDim(dim));
+
     auto c = pybind11::class_<regina::Simplex<dim>>(m, name)
         .def("description", &Simplex<dim>::description)
         .def("setDescription", &Simplex<dim>::setDescription)
@@ -122,10 +59,25 @@ void addSimplex(pybind11::module_& m, const char* name) {
         .def("component", &Simplex<dim>::component,
             pybind11::return_value_policy::reference)
         .def("face", &regina::python::face<Simplex<dim>, dim, int>)
+        .def("vertex", &Simplex<dim>::vertex,
+            pybind11::return_value_policy::reference)
+        .def("edge", overload_cast<int>(&Simplex<dim>::edge, pybind11::const_),
+            pybind11::return_value_policy::reference)
         .def("edge",
             overload_cast<int, int>(&Simplex<dim>::edge, pybind11::const_),
             pybind11::return_value_policy::reference)
+        .def("triangle", &Simplex<dim>::triangle,
+            pybind11::return_value_policy::reference)
+        .def("tetrahedron", &Simplex<dim>::tetrahedron,
+            pybind11::return_value_policy::reference)
+        .def("pentachoron", &Simplex<dim>::pentachoron,
+            pybind11::return_value_policy::reference)
         .def("faceMapping", &regina::python::faceMapping<Simplex<dim>, dim>)
+        .def("vertexMapping", &Simplex<dim>::vertexMapping)
+        .def("edgeMapping", &Simplex<dim>::edgeMapping)
+        .def("triangleMapping", &Simplex<dim>::triangleMapping)
+        .def("tetrahedronMapping", &Simplex<dim>::tetrahedronMapping)
+        .def("pentachoronMapping", &Simplex<dim>::pentachoronMapping)
         .def("orientation", &Simplex<dim>::orientation)
         .def("facetInMaximalForest", &Simplex<dim>::facetInMaximalForest)
         .def_readonly_static("dimension", &Simplex<dim>::dimension)
@@ -133,6 +85,5 @@ void addSimplex(pybind11::module_& m, const char* name) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-    face_aliases<dim, dim - 1>::add(c);
 }
 
