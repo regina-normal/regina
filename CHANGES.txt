@@ -37,6 +37,8 @@ Version 7.2  [ (to be determined) ]
             - New constructor to build the empty surface.
         Class NormalSurface:
             - New constructor to build the empty surface.
+        Class Snapshottable<T>:
+            - Routine isReadOnlySnapshot() is now public, not protected.
         Class TableView:
             - New class to help wrap read-only multi-dimensional arrays.
         Class TorusBundle:

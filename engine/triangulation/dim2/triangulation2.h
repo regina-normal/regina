@@ -164,8 +164,6 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          */
         ~Triangulation();
 
-        using Snapshottable<Triangulation<2>>::isReadOnlySnapshot;
-
         /*@}*/
         /**
          * \name Triangles

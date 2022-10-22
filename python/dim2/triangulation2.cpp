@@ -234,6 +234,10 @@ void addTriangulation2(pybind11::module_& m) {
         .def_static("isoSigComponentSize",
             &Triangulation<2>::isoSigComponentSize)
         .def("dumpConstruction", &Triangulation<2>::dumpConstruction)
+        .def_static("fromGluings", [](size_t size, const std::vector<
+                std::tuple<size_t, int, size_t, regina::Perm<3>>>& g) {
+            return Triangulation<2>::fromGluings(size, g.begin(), g.end());
+        })
         .def_readonly_static("dimension", &Triangulation<2>::dimension)
     ;
     regina::python::add_output(c);

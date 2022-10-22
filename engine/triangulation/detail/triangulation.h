@@ -1517,7 +1517,7 @@ class TriangulationBase :
          *
          * \pre This triangulation is valid and non-empty.
          *
-         * \nopython Instead use the variant `homologyMap(subdim)`.
+         * \nopython Instead use the variant `boundaryMap(subdim)`.
          *
          * \tparam subdim the face dimension; this must be between 1 and
          * \a dim inclusive.
@@ -1632,6 +1632,8 @@ class TriangulationBase :
          *
          * \pre This triangulation is valid and non-empty.
          *
+         * \nopython Instead use the variant `dualBoundaryMap(subdim)`.
+         *
          * \tparam subdim the dual face dimension; this must be between
          * 1 and \a dim inclusive if \a dim is one of Regina's standard
          * dimensions, or between 1 and (\a dim - 1) inclusive otherwise.
@@ -1703,6 +1705,8 @@ class TriangulationBase :
          * Note that Regina can only detect ideal triangulations in
          * \ref stddim "standard dimensions"; for higher dimensions it is
          * the user's reponsibility to confirm this some other way.
+         *
+         * \nopython Instead use the variant `dualToPrimal(subdim)`.
          *
          * \tparam subdim the chain dimension; this must be between
          * 0 and (\a dim - 1) inclusive.

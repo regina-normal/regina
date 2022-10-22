@@ -211,8 +211,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         ~Triangulation();
 
-        using Snapshottable<Triangulation<4>>::isReadOnlySnapshot;
-
         /*@}*/
         /**
          * \name Pentachora

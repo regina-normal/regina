@@ -298,7 +298,8 @@ class Snapshot {
  * - modifications of objects that are freshly constructed, and cannot
  *   possibly have snapshots that refer to them yet.
  *
- * \nopython
+ * \ifacespython Not present, but the routine isReadOnlySnapshot() will be
+ * provided directly through each corresponding subclass \a T.
  *
  * \ingroup utilities
  */
@@ -452,6 +453,7 @@ class Snapshottable {
                 snapshot_->freeze();
         }
 
+    public:
         /**
          * Determines if this object is a read-only deep copy that was created
          * by a snapshot.
@@ -468,10 +470,6 @@ class Snapshottable {
          * access this deep copy is via const reference from the SnapshotRef
          * dereference operators, but there are settings in which this
          * constness is "forgotten", such as Regina's Python bindings.)
-         *
-         * \ifacespython Although this Snapshottable base class is not
-         * visible to Python, the isReadOnlySnapshot() function is still
-         * visible as a member function of the class \a T.
          *
          * \return \c true if and only if this object is a deep copy that was
          * taken by a Snapshot object of some original type \a T image.

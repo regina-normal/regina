@@ -232,8 +232,6 @@ class Triangulation : public detail::TriangulationBase<dim> {
          */
         ~Triangulation();
 
-        using Snapshottable<Triangulation<dim>>::isReadOnlySnapshot;
-
         /*@}*/
         /**
          * \name Simplices

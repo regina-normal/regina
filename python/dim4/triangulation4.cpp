@@ -333,6 +333,10 @@ void addTriangulation4(pybind11::module_& m) {
         .def_static("isoSigComponentSize",
             &Triangulation<4>::isoSigComponentSize)
         .def("dumpConstruction", &Triangulation<4>::dumpConstruction)
+        .def_static("fromGluings", [](size_t size, const std::vector<
+                std::tuple<size_t, int, size_t, regina::Perm<5>>>& g) {
+            return Triangulation<4>::fromGluings(size, g.begin(), g.end());
+        })
         .def_readonly_static("dimension", &Triangulation<4>::dimension)
     ;
     regina::python::add_output(c);

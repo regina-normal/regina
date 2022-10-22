@@ -352,8 +352,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         ~Triangulation();
 
-        using Snapshottable<Triangulation<3>>::isReadOnlySnapshot;
-
         /**
          * Returns the packet that holds this data, even if it is held
          * indirectly via a SnapPea triangulation.
