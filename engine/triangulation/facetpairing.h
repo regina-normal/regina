@@ -33,7 +33,7 @@
 /*! \file triangulation/facetpairing.h
  *  \brief Includes headers for working with facet pairings in all dimensions
  *  except for dimension 3.  Specifically, this includes headers for the
- *  class FacetPairing<dim> for all \a dim &ne; 3.
+ *  class FacetPairing<dim> for all \a dim ≠ 3.
  */
 
 #ifndef __REGINA_FACETPAIRING_H

@@ -224,7 +224,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * the vertices of this simplex to the vertices of \a A.  We can
          * express this mapping in the form of a permutation \a p, where:
          *
-         * - for any \a v &ne; \a facet, the gluing identifies vertex \a v
+         * - for any \a v ≠ \a facet, the gluing identifies vertex \a v
          *   of this simplex with vertex \a p[\a v] of simplex \a A;
          *
          * - \a p[\a facet] indicates the facet of \a A that is on the
