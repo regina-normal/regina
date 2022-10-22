@@ -1218,7 +1218,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * to the presentation to ensure that under the markedAbelianisation()
          * routine, generators 0 through \a M-1 are mapped to generators of the
          * relevant \c Z_di group.  Similarly, generators \a M through
-         * <i>M</i>+<i>N</i>-1 are mapped to +/-1 in the appropriate factor.
+         * <i>M</i>+<i>N</i>-1 are mapped to ±1 in the appropriate factor.
          * All further generators will be mapped to zero.
          *
          * If this routine does return a homomorphism (because the
@@ -1308,7 +1308,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * A _simple isomorphism_ is an isomorphism where each generator
          * <i>g<sub>i</sub></i> of this presentation is sent to
-         * some generator <i>g<sub>j</sub></i><sup>+/-1</sup> of the
+         * some generator <i>g<sub>j</sub></i><sup>±1</sup> of the
          * other presentation.  Moreover, at present this routine only
          * looks for maps where both presentations have the same number
          * of generators, and where distinct generators <i>g<sub>i</sub></i>

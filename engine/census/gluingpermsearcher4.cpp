@@ -256,7 +256,7 @@ GluingPermSearcher<4>::~GluingPermSearcher() {
 }
 
 void GluingPermSearcher<4>::searchImpl(long maxDepth, ActionWrapper&& action_) {
-    // In this generation algorithm, each orientation is simply +/-1.
+    // In this generation algorithm, each orientation is simply ±1.
 
     size_t nPentachora = perms_.size();
     if (maxDepth < 0) {

@@ -197,7 +197,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     delete[] graph;
 
     // From the work above, we know that the input sequence contained each of
-    // the integers +/-1, +/-2, ..., +/-n exactly once each.
+    // the integers ±1, ±2, ..., ±n exactly once each.
 
     // The sequence J encodes which elements of S[..] are first vs second
     // occurrences of a crossing.

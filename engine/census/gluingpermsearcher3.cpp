@@ -67,7 +67,7 @@ GluingPermSearcher<3>::~GluingPermSearcher() {
 }
 
 void GluingPermSearcher<3>::searchImpl(long maxDepth, ActionWrapper&& action_) {
-    // In this generation algorithm, each orientation is simply +/-1.
+    // In this generation algorithm, each orientation is simply ±1.
 
     size_t nTetrahedra = perms_.size();
     if (maxDepth < 0) {

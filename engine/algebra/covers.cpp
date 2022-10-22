@@ -525,7 +525,7 @@ namespace {
             for (const auto& t : formulae[piece].terms) {
                 Perm<index> gen = (t.generator < nGen ?
                     rep[t.generator] : computed[t.generator - nGen]);
-                // Pull out exponents +/-1, since in practice these are
+                // Pull out exponents ±1, since in practice these are
                 // common and we can avoid the (small) overhead of pow().
                 if constexpr (cacheProducts) {
                     switch (t.exponent) {

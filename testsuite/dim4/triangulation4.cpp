@@ -1776,7 +1776,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 std::ostringstream msg;
                 msg << "Triangulation " << name << " gives "
                     "intersection form with determinant " << det
-                    << " instead of the expected +/-1.";
+                    << " instead of the expected ±1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -1806,7 +1806,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 std::ostringstream msg;
                 msg << "Triangulation " << name << " gives "
                     "intersection form with determinant " << det
-                    << " instead of the expected +/-1.";
+                    << " instead of the expected ±1.";
                 CPPUNIT_FAIL(msg.str());
             }
 

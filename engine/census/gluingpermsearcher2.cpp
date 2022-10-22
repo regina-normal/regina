@@ -65,7 +65,7 @@ GluingPermSearcher<2>::~GluingPermSearcher() {
 }
 
 void GluingPermSearcher<2>::searchImpl(long maxDepth, ActionWrapper&& action_) {
-    // In this generation algorithm, each orientation is simply +/-1.
+    // In this generation algorithm, each orientation is simply ±1.
 
     size_t nTriangles = perms_.size();
     if (maxDepth < 0) {

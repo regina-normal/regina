@@ -88,15 +88,13 @@ void TorusBundle::reduce() {
     //
     // - Simultaneously swap and negate the main diagonal (invert)
 
-    // The determinant should be +/-1 according to our preconditions,
-    // but we'd better check that anyway.
+    // The determinant should be ±1 according to our preconditions,
+    // but we'd better check that anyway.  See the reduce() docs in the
+    // header as to why the "right" exception type here is InvalidArgument.
     long det = monodromy_.determinant();
-    if (det != 1 && det != -1) {
-        // Something is very wrong.  Don't touch it.
-        std::cerr << "ERROR: TorusBundle monodromy does not have "
-            "determinant +/-1.\n";
-        return;
-    }
+    if (det != 1 && det != -1)
+        throw InvalidArgument("TorusBundle monodromy does not have "
+            "determinant ±1");
 
     // Deal with the case where the main diagonal has strictly opposite
     // signs.
@@ -129,7 +127,7 @@ void TorusBundle::reduce() {
             continue;
         }
 
-        // Since the determinant is +/-1 and neither element of the
+        // Since the determinant is ±1 and neither element of the
         // main diagonal is zero, we cannot have both elements of the
         // off-diagonal with absolute value strictly greater than x.
 
@@ -160,7 +158,7 @@ void TorusBundle::reduce() {
 
     // If the off-diagonal has strictly opposite signs, the elements
     // must be +1 and -1, and the main diagonal must contain a zero.
-    // Otherwise there is no way we can get determinant +/-1.
+    // Otherwise there is no way we can get determinant ±1.
     if (monodromy_[0][1] < 0 && monodromy_[1][0] > 0) {
         // We have [ a -1 | 1 d ].
         // Move the -1 to the bottom left corner by negating the off-diagonal.
@@ -235,7 +233,7 @@ void TorusBundle::reduce() {
         // INV: monodromy has all non-negative entries.
         // INV: best contains the best seen matrix, including the current one.
 
-        // It can be proven (via det = +/-1) that one row must dominate
+        // It can be proven (via det = ±1) that one row must dominate
         // another, unless we have [ 1 0 | 0 1 ] or [ 0 1 | 1 0 ].
         if (monodromy_.isIdentity()) {
             if (allNegative)
