@@ -51,16 +51,16 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
         .def("size", &Isomorphism<dim>::size, rdoc::size)
         .def("__len__", &Isomorphism<dim>::size, rdoc::size)
         .def("simpImage", overload_cast<size_t>(
-            &Isomorphism<dim>::simpImage, pybind11::const_), rdoc::simpImage_2)
+            &Isomorphism<dim>::simpImage, pybind11::const_), rdoc::simpImage)
         .def("setSimpImage", [](Isomorphism<dim>& iso, size_t s, ssize_t image) {
             iso.simpImage(s) = image;
-        }, rdoc::simpImage)
+        }, rdoc::setSimpImage)
         .def("facetPerm", overload_cast<size_t>(
-            &Isomorphism<dim>::facetPerm, pybind11::const_), rdoc::facetPerm_2)
+            &Isomorphism<dim>::facetPerm, pybind11::const_), rdoc::facetPerm)
         .def("setFacetPerm", [](Isomorphism<dim>& iso, size_t s,
                 regina::Perm<dim+1> p) {
             iso.facetPerm(s) = p;
-        }, rdoc::facetPerm)
+        }, rdoc::setFacetPerm)
         .def("__getitem__", &Isomorphism<dim>::operator[], rdoc::__array)
         .def("isIdentity", &Isomorphism<dim>::isIdentity, rdoc::isIdentity)
         .def("__call__", overload_cast<const regina::Triangulation<dim>&>(

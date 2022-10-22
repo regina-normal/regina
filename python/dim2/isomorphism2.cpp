@@ -53,20 +53,20 @@ void addIsomorphism2(pybind11::module_& m) {
         .def("size", &Isomorphism<2>::size, rdoc::size)
         .def("__len__", &Isomorphism<2>::size, rdoc::size)
         .def("simpImage", overload_cast<size_t>(
-            &Isomorphism<2>::simpImage, pybind11::const_), rdoc::simpImage_2)
+            &Isomorphism<2>::simpImage, pybind11::const_), rdoc::simpImage)
         .def("setSimpImage", [](Isomorphism<2>& iso, size_t s, ssize_t image) {
             iso.simpImage(s) = image;
-        }, rdoc::simpImage)
+        }, rdoc::setSimpImage)
         .def("triImage", overload_cast<size_t>(
             &Isomorphism<2>::triImage, pybind11::const_), rbase::triImage)
         .def("setTriImage", [](Isomorphism<2>& iso, size_t s, ssize_t image) {
             iso.triImage(s) = image;
         }, rbase::setTriImage)
         .def("facetPerm", overload_cast<size_t>(
-            &Isomorphism<2>::facetPerm, pybind11::const_), rdoc::facetPerm_2)
+            &Isomorphism<2>::facetPerm, pybind11::const_), rdoc::facetPerm)
         .def("setFacetPerm", [](Isomorphism<2>& iso, size_t s, Perm<3> p) {
             iso.facetPerm(s) = p;
-        }, rdoc::facetPerm)
+        }, rdoc::setFacetPerm)
         .def("edgePerm", overload_cast<size_t>(
             &Isomorphism<2>::edgePerm, pybind11::const_), rbase::edgePerm)
         .def("setEdgePerm", [](Isomorphism<2>& iso, size_t s, Perm<3> p) {

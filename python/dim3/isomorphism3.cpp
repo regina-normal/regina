@@ -35,65 +35,74 @@
 #include "triangulation/dim3.h"
 #include "triangulation/facetpairing3.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/generic/isomorphism.h"
+#include "../docstrings/triangulation/alias/isomorphism.h"
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
 using regina::Perm;
 
 void addIsomorphism3(pybind11::module_& m) {
-    auto c = pybind11::class_<Isomorphism<3>>(m, "Isomorphism3")
-        .def(pybind11::init<const Isomorphism<3>&>())
-        .def(pybind11::init<size_t>())
-        .def("swap", &Isomorphism<3>::swap)
-        .def("size", &Isomorphism<3>::size)
-        .def("__len__", &Isomorphism<3>::size)
+    RDOC_SCOPE_BEGIN(Isomorphism)
+    RDOC_SCOPE_BASE(alias::IsomorphismImage)
+
+    auto c = pybind11::class_<Isomorphism<3>>(m, "Isomorphism3", rdoc_scope)
+        .def(pybind11::init<const Isomorphism<3>&>(), rdoc::__copy)
+        .def(pybind11::init<size_t>(), rdoc::__init)
+        .def("swap", &Isomorphism<3>::swap, rdoc::swap)
+        .def("size", &Isomorphism<3>::size, rdoc::size)
+        .def("__len__", &Isomorphism<3>::size, rdoc::size)
         .def("simpImage", overload_cast<size_t>(
-            &Isomorphism<3>::simpImage, pybind11::const_))
+            &Isomorphism<3>::simpImage, pybind11::const_), rdoc::simpImage)
         .def("setSimpImage", [](Isomorphism<3>& iso, size_t s, ssize_t image) {
             iso.simpImage(s) = image;
-        })
+        }, rdoc::setSimpImage)
         .def("tetImage", overload_cast<size_t>(
-            &Isomorphism<3>::tetImage, pybind11::const_))
+            &Isomorphism<3>::tetImage, pybind11::const_), rbase::tetImage)
         .def("setTetImage", [](Isomorphism<3>& iso, size_t s, ssize_t image) {
             iso.tetImage(s) = image;
-        })
+        }, rbase::setTetImage)
         .def("facetPerm", overload_cast<size_t>(
-            &Isomorphism<3>::facetPerm, pybind11::const_))
+            &Isomorphism<3>::facetPerm, pybind11::const_), rdoc::facetPerm)
         .def("setFacetPerm", [](Isomorphism<3>& iso, size_t s, Perm<4> p) {
             iso.facetPerm(s) = p;
-        })
+        }, rdoc::setFacetPerm)
         .def("facePerm", overload_cast<size_t>(
-            &Isomorphism<3>::facePerm, pybind11::const_))
+            &Isomorphism<3>::facePerm, pybind11::const_), rbase::facePerm)
         .def("setFacePerm", [](Isomorphism<3>& iso, size_t s, Perm<4> p) {
             iso.facePerm(s) = p;
-        })
-        .def("__getitem__", &Isomorphism<3>::operator[])
-        .def("isIdentity", &Isomorphism<3>::isIdentity)
+        }, rbase::setFacePerm)
+        .def("__getitem__", &Isomorphism<3>::operator[], rdoc::__array)
+        .def("isIdentity", &Isomorphism<3>::isIdentity, rdoc::isIdentity)
         .def("__call__", overload_cast<const regina::Triangulation<3>&>(
-            &Isomorphism<3>::operator(), pybind11::const_))
+            &Isomorphism<3>::operator(), pybind11::const_), rdoc::__call)
         .def("__call__", overload_cast<const regina::FacetSpec<3>&>(
-            &Isomorphism<3>::operator(), pybind11::const_))
+            &Isomorphism<3>::operator(), pybind11::const_), rdoc::__call_2)
         .def("__call__", overload_cast<const regina::FacetPairing<3>&>(
-            &Isomorphism<3>::operator(), pybind11::const_))
+            &Isomorphism<3>::operator(), pybind11::const_), rdoc::__call_3)
         .def("apply", overload_cast<const regina::Triangulation<3>&>(
-            &Isomorphism<3>::operator(), pybind11::const_)) // deprecated
+            &Isomorphism<3>::operator(), pybind11::const_), // deprecated
+            rdoc::apply)
         .def("applyInPlace", // deprecated
                 [](const Isomorphism<3>& iso, regina::Triangulation<3>& tri) {
             tri = iso(tri);
-        })
-        .def(pybind11::self * pybind11::self)
-        .def("inverse", &Isomorphism<3>::inverse)
+        }, rdoc::applyInPlace)
+        .def(pybind11::self * pybind11::self, rdoc::__mul)
+        .def("inverse", &Isomorphism<3>::inverse, rdoc::inverse)
         .def("inc", [](Isomorphism<3>& iso) {
             ++iso;
-        })
+        }, rdoc::__inc)
         .def_static("random", &Isomorphism<3>::random,
-            pybind11::arg(), pybind11::arg("even") = false)
-        .def_static("identity", &Isomorphism<3>::identity)
+            pybind11::arg(), pybind11::arg("even") = false,
+            rdoc::random)
+        .def_static("identity", &Isomorphism<3>::identity, rdoc::identity)
     ;
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
-    regina::python::add_global_swap<Isomorphism<3>>(m);
+    regina::python::add_global_swap<Isomorphism<3>>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 
