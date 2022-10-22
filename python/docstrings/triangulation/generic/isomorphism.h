@@ -362,32 +362,6 @@ Parameter ``tri``:
 
 // Docstring regina::python::doc::Isomorphism_::facetPerm
 constexpr const char *facetPerm =
-R"doc(Returns a read-write reference to the permutation that is applied to
-the (*dim* + 1) facets of the given source simplex under this
-isomorphism. Facet *i* of source simplex *sourceSimp* will be mapped
-to facet ``facetPerm(sourceSimp)[i]`` of simplex
-``simpImage(sourceSimp)``.
-
-If the dimension *dim* is 2 or 3, then you can also access this
-permutation through the dimension-specific alias edgePerm() or
-facePerm() respectively.
-
-Python:
-    Python users can only access the read-only version of this
-    function that returns by value: you cannot use facetPerm() to edit
-    the isomorphism. As an alternative however, Python users can call
-    ``setFacetPerm(sourceSimp, perm)`` instead.
-
-Parameter ``sourceSimp``:
-    the index of the source simplex containing the original (*dim* +
-    1) facets; this must be between 0 and ``size()-1`` inclusive.
-
-Returns:
-    a read-write reference to the permutation applied to the facets of
-    the source simplex.)doc";
-
-// Docstring regina::python::doc::Isomorphism_::facetPerm_2
-constexpr const char *facetPerm_2 =
 R"doc(Determines the permutation that is applied to the (*dim* + 1) facets
 of the given source simplex under this isomorphism. Facet *i* of
 source simplex *sourceSimp* will be mapped to face
@@ -481,35 +455,48 @@ Parameter ``even``:
 Returns:
     the new random isomorphism.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::simpImage
-constexpr const char *simpImage =
-R"doc(Returns a read-write reference to the image of the given source
-simplex under this isomorphism.
+// Docstring regina::python::doc::Isomorphism_::setFacetPerm
+constexpr const char *setFacetPerm =
+R"doc(Python-only routine that sets the permutation that is applied to the
+(*dim* + 1) facets of the given source simplex under this isomorphism.
+Facet *i* of source simplex *sourceSimp* will be mapped to facet
+``perm[i]`` of simplex ``simpImage(sourceSimp)``.
 
-If the dimension *dim* is 2, 3 or 4, then you can also access this
-image through the dimension-specific alias triImage(), tetImage() or
-pentImage() respectively.
+If the dimension *dim* is 2 or 3, then you can also set this
+permutation through the dimension-specific alias setEdgePerm() or
+setFacePerm() respectively.
 
-This image is stored using type ``ssize_t``, not ``size_t``, and so
-you can safely use the special value -1 as a marker for an image that
-is unknown or not yet initialised.
+Parameter ``sourceSimp``:
+    the index of the source simplex containing the original (*dim* +
+    1) facets; this must be between 0 and ``size()-1`` inclusive.
 
-Python:
-    Python users can only access the read-only version of this
-    function that returns by value: you cannot use simpImage() to edit
-    the isomorphism. As an alternative however, Python users can call
-    ``setSimpImage(sourceSimp, image)`` instead.
+Returns:
+    the new permutation that should be applied to the facets of the
+    source simplex.)doc";
+
+// Docstring regina::python::doc::Isomorphism_::setSimpImage
+constexpr const char *setSimpImage =
+R"doc(Python-only routine that sets the image of the given source simplex to
+the given value under this isomorphism.
+
+If the dimension *dim* is 2, 3 or 4, then you can also set this image
+through the dimension-specific alias setTriImage(), setTetImage() or
+setPentImage() respectively.
+
+Simplex images are stored using type ``ssize_t``, not ``size_t``, and
+so you can safely use the special value -1 as a marker for an image
+that is unknown or not yet initialised.
 
 Parameter ``sourceSimp``:
     the index of the source simplex; this must be between 0 and
     ``size()-1`` inclusive.
 
-Returns:
-    a reference to the index of the destination simplex that the
-    source simplex maps to.)doc";
+Parameter ``image``:
+    the index of the new destination simplex that the source simplex
+    should map to.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::simpImage_2
-constexpr const char *simpImage_2 =
+// Docstring regina::python::doc::Isomorphism_::simpImage
+constexpr const char *simpImage =
 R"doc(Determines the image of the given source simplex under this
 isomorphism.
 

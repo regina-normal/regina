@@ -1258,11 +1258,11 @@ if and only if their isomorphism signatures of type *T* are the same.
 
 The length of an isomorphism signature is proportional to ``n log n``,
 where *n* is the number of top-dimenisonal simplices. The time
-required to construct it is worst-case ``O((dim!) n^2 log^2 n)``.
-Whilst this is fine for large triangulations, it becomes very slow for
-large _dimensions_; the main reason for introducing different
-signature types is that some alternative types can be much faster to
-compute in practice.
+required to construct it is worst-case ``O((dim!) n² log² n)``. Whilst
+this is fine for large triangulations, it becomes very slow for large
+_dimensions_; the main reason for introducing different signature
+types is that some alternative types can be much faster to compute in
+practice.
 
 Whilst the format of an isomorphism signature bears some similarity to
 dehydration strings for 3-manifolds, they are more general:

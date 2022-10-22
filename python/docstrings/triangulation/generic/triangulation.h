@@ -11,54 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::DegreeGreaterThan
-constexpr const char *DegreeGreaterThan =
-R"doc(A function object used for sorting faces of triangulations by
-decreasing degree. This can (for instance) be used with std::sort().
-
-The template argument *dim* refers to the dimension of the overall
-triangluation(s) with which you are working. The template argument
-*subdim* refers to the dimension of the faces that you are sorting.
-So, for instance, to sort edges of a 3-manifold triangulation by
-decreasing edge degree, you would use DegreeGreaterThan<3, 1>.
-
-A single instance of this class works with faces of a single fixed
-triangulation (which is passed to the class constructor).
-
-An object of this class behaves like a reference: it is lightweight
-and can be copy-constructed cheaply, but it does not support
-assignments or swaps.
-
-Precondition:
-    *dim* is one of Regina's standard dimensions.
-
-Precondition:
-    *subdim* is between 0 and *dim*-1 inclusive.)doc";
-
-// Docstring regina::python::doc::DegreeLessThan
-constexpr const char *DegreeLessThan =
-R"doc(A function object used for sorting faces of triangulations by
-increasing degree. This can (for instance) be used with std::sort().
-
-The template argument *dim* refers to the dimension of the overall
-triangluation(s) with which you are working. The template argument
-*subdim* refers to the dimension of the faces that you are sorting.
-So, for instance, to sort edges of a 3-manifold triangulation by
-increasing edge degree, you would use DegreeLessThan<3, 1>.
-
-A single instance of this class works with faces of a single fixed
-triangulation (which is passed to the class constructor).
-
-An object of this class behaves like a reference: it is lightweight
-and can be copy-constructed cheaply, but it does not support
-assignments or swaps.
-
-Precondition:
-    *dim* is one of Regina's standard dimensions.
-
-Precondition:
-    *subdim* is between 0 and *dim*-1 inclusive.)doc";
-
 // Docstring regina::python::doc::Triangulation
 constexpr const char *Triangulation =
 R"doc(A *dim*-dimensional triangulation, built by gluing together
@@ -80,7 +32,7 @@ two reasons:
   vertices (so, for example, edges may be loops). Many distinct
   *k*-faces of a top-dimensional simplex may be identified together as
   a consequence of the (*dim*-1)-dimensional gluings, and indeed we
-  are even allowed to glue together two distinct factets of the same
+  are even allowed to glue together two distinct facets of the same
   *dim*-simplex. In contrast, a simplicial complex does not allow any
   of these situations.
 
@@ -154,80 +106,6 @@ Python:
 Template parameter ``dim``:
     the dimension of the underlying triangulation. This must be
     between 2 and 15 inclusive.)doc";
-
-namespace DegreeGreaterThan_ {
-
-// Docstring regina::python::doc::DegreeGreaterThan_::__call
-constexpr const char *__call =
-R"doc(Compares the degrees of the *subdim*-dimensional faces at the given
-indices within the working triangulation. The triangulation that is
-used will be the one that was passed to the class constructor.
-
-Precondition:
-    Both *a* and *b* are non-negative, and are strictly less than the
-    total number of *subdim*-dimensional faces in the triangulation.
-
-Parameter ``a``:
-    the index of the first *subdim*-dimensional face within the
-    triangulation.
-
-Parameter ``b``:
-    the index of the second *subdim*-dimensional face within the
-    triangulation.
-
-Returns:
-    ``True`` if and only if face *a* has greater degree than face *b*
-    within the given triangulation.)doc";
-
-// Docstring regina::python::doc::DegreeGreaterThan_::__copy
-constexpr const char *__copy = R"doc(Creates a new clone of the given function object.)doc";
-
-// Docstring regina::python::doc::DegreeGreaterThan_::__init
-constexpr const char *__init =
-R"doc(Constructions a function object for working with faces of the given
-triangulation.
-
-Parameter ``tri``:
-    the triangulation with which we are working.)doc";
-
-}
-
-namespace DegreeLessThan_ {
-
-// Docstring regina::python::doc::DegreeLessThan_::__call
-constexpr const char *__call =
-R"doc(Compares the degrees of the *subdim*-dimensional faces at the given
-indices within the working triangulation. The triangulation that is
-used will be the one that was passed to the class constructor.
-
-Precondition:
-    Both *a* and *b* are non-negative, and are strictly less than the
-    total number of *subdim*-dimensional faces in the triangulation.
-
-Parameter ``a``:
-    the index of the first *subdim*-dimensional face within the
-    triangulation.
-
-Parameter ``b``:
-    the index of the second *subdim*-dimensional face within the
-    triangulation.
-
-Returns:
-    ``True`` if and only if face *a* has smaller degree than face *b*
-    within the given triangulation.)doc";
-
-// Docstring regina::python::doc::DegreeLessThan_::__copy
-constexpr const char *__copy = R"doc(Creates a new clone of the given function object.)doc";
-
-// Docstring regina::python::doc::DegreeLessThan_::__init
-constexpr const char *__init =
-R"doc(Constructions a function object for working with faces of the given
-triangulation.
-
-Parameter ``tri``:
-    the triangulation with which we are working.)doc";
-
-}
 
 namespace Triangulation_ {
 

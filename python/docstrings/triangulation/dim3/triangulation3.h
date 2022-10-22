@@ -2932,11 +2932,11 @@ The initial data for the Turaev-Viro invariant is as described in the
 paper of Turaev and Viro, "State sum invariants of 3-manifolds and
 quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902. In
 particular, Section 7 of this paper describes the initial data as
-determined by an integer r ≥ 3, and a root of unity q0 of degree 2r
-for which q0^2 is a primitive root of unity of degree r. There are
+determined by an integer r ≥ 3, and a root of unity q₀ of degree 2r
+for which q₀² is a primitive root of unity of degree r. There are
 several cases to consider:
 
-* *r* may be even. In this case *q0* must be a primitive (*2r*)th root
+* *r* may be even. In this case *q₀* must be a primitive (*2r*)th root
   of unity, and the invariant is computed as an element of the
   cyclotomic field of order *2r*. There is no need to specify _which_
   root of unity is used, since switching between different roots of
@@ -2944,14 +2944,14 @@ several cases to consider:
   field (i.e., it does not yield any new information). Therefore, if
   *r* is even, the additional argument *parity* is ignored.
 
-* *r* may be odd, and *q0* may be a primitive (2*r*)th root of unity.
+* *r* may be odd, and *q₀* may be a primitive (2*r*)th root of unity.
   This case corresponds to passing the argument *parity* as ``True``.
   Here the invariant is again computed as an element of the cyclotomic
   field of order *2r*. As before, there is no need to give further
   information as to which root of unity is used, since switching
   between roots of unity does not yield new information.
 
-* *r* may be odd, and *q0* may be a primitive (*r*)th root of unity.
+* *r* may be odd, and *q₀* may be a primitive (*r*)th root of unity.
   This case corresponds to passing the argument *parity* as ``False``.
   In this case the invariant is computed as an element of the
   cyclotomic field of order *r*. Again, there is no need to give
@@ -2996,7 +2996,7 @@ Parameter ``r``:
     the integer *r* as described above; this must be at least 3.
 
 Parameter ``parity``:
-    determines for odd *r* whether *q0* is a primitive *2r*th or *r*th
+    determines for odd *r* whether *q₀* is a primitive *2r*th or *r*th
     root of unity, as described above.
 
 Parameter ``alg``:
@@ -3027,14 +3027,14 @@ The initial data for the Turaev-Viro invariant is as described in the
 paper of Turaev and Viro, "State sum invariants of 3-manifolds and
 quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902. In
 particular, Section 7 describes the initial data as determined by an
-integer *r* ≥ 3 and a root of unity *q0* of degree *2r* for which
-*q0*^2 is a primitive root of unity of degree *r*.
+integer *r* ≥ 3 and a root of unity *q₀* of degree *2r* for which
+*q₀²* is a primitive root of unity of degree *r*.
 
 The argument *whichRoot* specifies which root of unity is used for
-*q0*. Specifically, *q0* will be the root of unity ``e^(2πi *
+*q₀*. Specifically, *q₀* will be the root of unity ``e^(2πi *
 whichRoot / 2r)``. There are additional preconditions on *whichRoot*
-to ensure that *q0*^2 is a _primitive_ root of unity of degree *r*;
-see below for details.
+to ensure that *q₀²* is a _primitive_ root of unity of degree *r*; see
+below for details.
 
 This same invariant can be computed by calling ``turaevViro(r,
 parity).evaluate(whichRoot)``, where *parity* is ``True`` or ``False``
@@ -3060,7 +3060,7 @@ Parameter ``r``:
     the integer *r* as described above; this must be at least 3.
 
 Parameter ``whichRoot``:
-    specifies which root of unity is used for *q0*, as described
+    specifies which root of unity is used for *q₀*, as described
     above.
 
 Parameter ``alg``:
