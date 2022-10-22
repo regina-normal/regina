@@ -589,7 +589,7 @@ static const char *negate = R"doc(Negates this polynomial. This polynomial is ch
 static const char *scaleDown =
 R"doc(Divides all exponents in this polynomial by *k* for some integer *k*.
 This is equivalent to replacing the variable *x* of the polynomial
-with *x*^(1/*k*).
+with *x*^{1/*k*}.
 
 Both positive and negative scaling factors *k* are allowed.
 
@@ -607,7 +607,7 @@ Parameter ``k``:
 static const char *scaleUp =
 R"doc(Multiplies all exponents in this polynomial by *k* for some integer
 *k*. This is equivalent to replacing the variable *x* of the
-polynomial with *x*^(*k*).
+polynomial with *x*^{*k*}.
 
 Both positive and negative scaling factors *k* are allowed.
 

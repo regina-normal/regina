@@ -954,12 +954,12 @@ static const char *identifySimplyIsomorphicTo =
 R"doc(Attempts to prove that this and the given group presentation are
 _simply isomorphic_.
 
-A _simple isomorphism_ is an isomorphism where each generator *g_(i)*
-of this presentation is sent to some generator *g_(j)*^(+/-1) of the
+A _simple isomorphism_ is an isomorphism where each generator *g_{i}*
+of this presentation is sent to some generator *g_{j}*^{+/-1} of the
 other presentation. Moreover, at present this routine only looks for
 maps where both presentations have the same number of generators, and
-where distinct generators *g_(i)* of this presentation correspond to
-distinct generators *g_(j)* of the other presentation (possibly with
+where distinct generators *g_{i}* of this presentation correspond to
+distinct generators *g_{j}* of the other presentation (possibly with
 inversion, as noted above).
 
 If this routine returns ``True``, it means that the two presentations
