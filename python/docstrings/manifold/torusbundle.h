@@ -72,6 +72,9 @@ R"doc(Creates a new torus bundle over the circle using the given monodromy.
 Precondition:
     The given matrix has determinant +1 or -1.
 
+Exception ``InvalidArgument``:
+    The given monodromy does not have determinant ±1.
+
 Parameter ``monodromy``:
     describes precisely how the upper and lower torus boundaries are
     identified. See the class notes for details.)doc";
@@ -91,6 +94,9 @@ combine to give the full monodromy matrix *M* as follows:
 Precondition:
     The monodromy matrix formed from the given parameters has
     determinant +1 or -1.
+
+Exception ``InvalidArgument``:
+    The given monodromy does not have determinant ±1.
 
 Parameter ``mon00``:
     the (0,0) element of the monodromy matrix.
