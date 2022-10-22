@@ -10,6 +10,9 @@ Regina - A Normal Surface Theory Calculator
 Version 7.2  [ (to be determined) ]
 
     ENGINE:
+        Class DegreeLessThan, DegreeGreaterThan:
+            - Deprecated, since these are one-liners that can be done using a
+              lambda instead.  These classes will eventually be removed.
         Class Example<3>:
             - Renamed whiteheadLink() to whitehead().  The old name is kept
               as a deprecated alias.

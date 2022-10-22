@@ -316,7 +316,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
 };
 
 /**
- * A function object used for sorting faces of triangulations by
+ * Deprecated function object used for sorting faces of triangulations by
  * increasing degree.  This can (for instance) be used with std::sort().
  *
  * The template argument \a dim refers to the dimension of the overall
@@ -331,13 +331,17 @@ class Triangulation : public detail::TriangulationBase<dim> {
  * An object of this class behaves like a reference: it is lightweight and can
  * be copy-constructed cheaply, but it does not support assignments or swaps.
  *
+ * \deprecated This comparison is a one-liner.  Just use a lambda instead.
+ *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
  * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \nopython
  *
  * \ingroup generic
  */
 template <int dim, int subdim>
-class DegreeLessThan {
+class [[deprecated]] DegreeLessThan {
     static_assert(standardDim(dim),
         "DegreeLessThan is only available for Regina's standard dimensions.");
 
@@ -381,7 +385,7 @@ class DegreeLessThan {
 };
 
 /**
- * A function object used for sorting faces of triangulations by
+ * Deprecated function object used for sorting faces of triangulations by
  * decreasing degree.  This can (for instance) be used with std::sort().
  *
  * The template argument \a dim refers to the dimension of the overall
@@ -396,13 +400,17 @@ class DegreeLessThan {
  * An object of this class behaves like a reference: it is lightweight and can
  * be copy-constructed cheaply, but it does not support assignments or swaps.
  *
+ * \deprecated This comparison is a one-liner.  Just use a lambda instead.
+ *
+ * \nopython
+ *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
  * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
  *
  * \ingroup generic
  */
 template <int dim, int subdim>
-class DegreeGreaterThan {
+class [[deprecated]] DegreeGreaterThan {
     static_assert(standardDim(dim),
         "DegreeGreaterThan is only available for Regina's standard dimensions.");
 

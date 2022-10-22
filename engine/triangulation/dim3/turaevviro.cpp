@@ -463,7 +463,9 @@ namespace {
         for (i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
         std::sort(sortedEdges, sortedEdges + nEdges,
-            DegreeGreaterThan<3, 1>(tri));
+            [&tri](size_t a, size_t b) {
+                return (tri.edge(a)->degree() > tri.edge(b)->degree());
+            });
         for (i = 0; i < nEdges; ++i)
             edgePos[sortedEdges[i]] = i;
 
@@ -689,7 +691,9 @@ namespace {
         for (size_t i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
         std::sort(sortedEdges, sortedEdges + nEdges,
-            DegreeGreaterThan<3, 1>(tri));
+            [&tri](size_t a, size_t b) {
+                return (tri.edge(a)->degree() > tri.edge(b)->degree());
+            });
         for (size_t i = 0; i < nEdges; ++i)
             edgePos[sortedEdges[i]] = i;
 
