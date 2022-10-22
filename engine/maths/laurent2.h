@@ -51,7 +51,7 @@ namespace regina {
  * Represents a Laurent polynomial in the two variables \e x, \e y with
  * coefficients of type \a T.  A Laurent polynomial differs from an ordinary
  * polynomial in that it allows negative exponents (so, for example, you can
- * represent a polynomial such as `2 + 3x^2 + y/x - 1/y^3`).
+ * represent a polynomial such as `2 + 3x² + y/x - 1/y³`).
  *
  * The type \a T must represent a ring with no zero divisors.
  * In particular, it must:

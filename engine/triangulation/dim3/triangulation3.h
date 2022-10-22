@@ -775,11 +775,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the paper of Turaev and Viro, "State sum invariants of 3-manifolds
          * and quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902.
          * In particular, Section 7 of this paper describes the initial data
-         * as determined by an integer r ≥ 3, and a root of unity q0 of
-         * degree 2r for which q0^2 is a primitive root of unity of
+         * as determined by an integer r ≥ 3, and a root of unity q₀ of
+         * degree 2r for which q₀² is a primitive root of unity of
          * degree r.  There are several cases to consider:
          *
-         * - \a r may be even.  In this case \a q0 must be a primitive
+         * - \a r may be even.  In this case \a q₀ must be a primitive
          *   (<i>2r</i>)th root of unity, and the invariant is computed as an
          *   element of the cyclotomic field of order \a 2r.  There is no need
          *   to specify _which_ root of unity is used, since switching between
@@ -788,7 +788,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   any new information).  Therefore, if \a r is even, the
          *   additional argument \a parity is ignored.
          *
-         * - \a r may be odd, and \a q0 may be a primitive (2\a r)th
+         * - \a r may be odd, and \a q₀ may be a primitive (2\a r)th
          *   root of unity.  This case corresponds to passing the argument
          *   \a parity as \c true.  Here the invariant is again computed
          *   as an element of the cyclotomic field of order \a 2r.  As before,
@@ -796,7 +796,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   root of unity is used, since switching between roots of unity
          *   does not yield new information.
          *
-         * - \a r may be odd, and \a q0 may be a primitive (\a r)th
+         * - \a r may be odd, and \a q₀ may be a primitive (\a r)th
          *   root of unity.  This case corresponds to passing the argument
          *   \a parity as \c false.  In this case the invariant is computed
          *   as an element of the cyclotomic field of order \a r.  Again,
@@ -841,7 +841,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \param r the integer \a r as described above; this must be at
          * least 3.
-         * \param parity determines for odd \a r whether \a q0 is a primitive
+         * \param parity determines for odd \a r whether \a q₀ is a primitive
          * <i>2r</i>th or <i>r</i>th root of unity, as described above.
          * \param alg the algorithm with which to compute the invariant.  If
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
@@ -867,14 +867,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the paper of Turaev and Viro, "State sum invariants of 3-manifolds
          * and quantum 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902.
          * In particular, Section 7 describes the initial data as
-         * determined by an integer \a r ≥ 3 and a root of unity \a q0 of
-         * degree \a 2r for which \a q0^2 is a primitive root of unity of
+         * determined by an integer \a r ≥ 3 and a root of unity \a q₀ of
+         * degree \a 2r for which \a q₀² is a primitive root of unity of
          * degree \a r.
          *
          * The argument \a whichRoot specifies which root of unity is
-         * used for \a q0.  Specifically, \a q0 will be the root of unity
+         * used for \a q₀.  Specifically, \a q₀ will be the root of unity
          * `e^(2πi * whichRoot / 2r)`.  There are additional
-         * preconditions on \a whichRoot to ensure that \a q0^2 is a
+         * preconditions on \a whichRoot to ensure that \a q₀² is a
          * _primitive_ root of unity of degree \a r; see below for details.
          *
          * This same invariant can be computed by calling
@@ -898,7 +898,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \param r the integer \a r as described above; this must be at
          * least 3.
-         * \param whichRoot specifies which root of unity is used for \a q0,
+         * \param whichRoot specifies which root of unity is used for \a q₀,
          * as described above.
          * \param alg the algorithm with which to compute the invariant.  If
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
