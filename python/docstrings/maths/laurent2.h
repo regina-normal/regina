@@ -16,8 +16,8 @@ static const char *Laurent2 =
 R"doc(Represents a Laurent polynomial in the two variables *x*, *y* with
 coefficients of type *T*. A Laurent polynomial differs from an
 ordinary polynomial in that it allows negative exponents (so, for
-example, you can represent a polynomial such as ``2 + 3x^2 + y/x -
-1/y^3``).
+example, you can represent a polynomial such as ``2 + 3x² + y/x -
+1/y³``).
 
 The type *T* must represent a ring with no zero divisors. In
 particular, it must:

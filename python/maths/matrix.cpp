@@ -117,7 +117,7 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
         .def("columns", &Matrix::columns, rdoc::columns)
         .def("set", [](Matrix& m, size_t row, size_t col, Ref value) {
             m.entry(row, col) = value;
-        }, rdoc::entry)
+        }, rdoc::set)
         // Give the read-only entry() the same docstring as the read-write
         // set(), so users know they are allowed to call set().
         .def("entry", overload_cast<size_t, size_t>(&Matrix::entry),

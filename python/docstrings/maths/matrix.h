@@ -654,50 +654,41 @@ Parameter ``divBy``:
 
 // Docstring regina::python::doc::Matrix_::entry
 static const char *entry =
-R"doc(Returns the entry at the given row and column. Rows and columns are
-numbered beginning at zero.
-
-Precondition:
-    *row* is between 0 and rows()-1 inclusive.
-
-Precondition:
-    *column* is between 0 and columns()-1 inclusive.
+R"doc(Returns a read-write reference to the entry at the given row and
+column. Rows and columns are numbered beginning at zero.
 
 Python:
-    The entry() routine gives direct read-write access to matrix
-    elements, but does not allow them to be set using the assignment
-    operator. In other words, code such as ``matrix.entry(r,
-    c).negate()`` will work, but ``matrix.entry(r, c) = value`` will
-    not. To assign values to matrix elements, you should instead use
-    the syntax ``matrix.set(row, column, value)``. This set() routine
-    returns nothing, and is provided for python only (i.e., it is not
-    part of the C++ calculation engine).
+    In general, to assign values to matrix elements you should use the
+    Python-only set() routine. This entry() routine does give read-
+    write access to matrix elements in Python, but it does not allow
+    them to be set using the assignment operator. In other words, code
+    such as ``matrix.entry(r, c).negate()`` will work, but
+    ``matrix.entry(r, c) = value`` will not; instead you will need to
+    call ``matrix.set(r, c, value)``.
 
 Parameter ``row``:
-    the row of the desired entry.
+    the row of the desired entry; this must be between 0 and rows()-1
+    inclusive.
 
 Parameter ``column``:
-    the column of the desired entry.
+    the column of the desired entry; this must be between 0 and
+    columns()-1 inclusive.
 
 Returns:
     a reference to the entry in the given row and column.)doc";
 
 // Docstring regina::python::doc::Matrix_::entry_2
 static const char *entry_2 =
-R"doc(Returns the entry at the given row and column. Rows and columns are
-numbered beginning at zero.
-
-Precondition:
-    *row* is between 0 and rows()-1 inclusive.
-
-Precondition:
-    *column* is between 0 and columns()-1 inclusive.
+R"doc(Returns a read-only reference to the entry at the given row and
+column. Rows and columns are numbered beginning at zero.
 
 Parameter ``row``:
-    the row of the desired entry.
+    the row of the desired entry; this must be between 0 and rows()-1
+    inclusive.
 
 Parameter ``column``:
-    the column of the desired entry.
+    the column of the desired entry; this must be between 0 and
+    columns()-1 inclusive.
 
 Returns:
     a reference to the entry in the given row and column.)doc";
@@ -933,6 +924,30 @@ R"doc(Returns the number of rows in this matrix.
 
 Returns:
     the number of rows.)doc";
+
+// Docstring regina::python::doc::Matrix_::set
+static const char *set =
+R"doc(Python-only routine that sets the entry at the given row and column.
+Rows and columns are numbered beginning at zero.
+
+Python:
+    In general, to assign values to matrix elements you should use the
+    syntax ``matrix.set(row, column, value)``. The entry() routine
+    does give read-write access to matrix elements in Python, but it
+    does not allow them to be set using the assignment operator. In
+    other words, code such as ``matrix.entry(r, c).negate()`` will
+    work, but ``matrix.entry(r, c) = value`` will not.
+
+Parameter ``row``:
+    the row of the entry to set; this must be between 0 and rows()-1
+    inclusive.
+
+Parameter ``column``:
+    the column of the entry to set; this must be between 0 and
+    columns()-1 inclusive.
+
+Parameter ``value``:
+    the new entry to place in the given row and column.)doc";
 
 // Docstring regina::python::doc::Matrix_::swap
 static const char *swap =

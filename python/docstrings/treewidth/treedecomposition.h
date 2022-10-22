@@ -765,19 +765,19 @@ In short, the format contains a number of lines of text:
 * Any line beginning with ``c`` is considered a comment, and will be
   ignored.
 
-* The first non-comment line should be of the form ``s td *num_bags*
-  *max_bag_size* *num_vertices*``.
+* The first non-comment line should be of the form ``s td <num_bags>
+  <max_bag_size> <num_vertices>``.
 
 * The next *num_bags* non-comment lines should describe the contents
-  of the bags. Each such line should be of the form ``b *bag_number*
-  *element* *element* ...``. The bags are numbered 1,2,...,*num_bags*,
+  of the bags. Each such line should be of the form ``b <bag_number>
+  <element> <element> ...``. The bags are numbered 1,2,...,*num_bags*,
   and may appear in any order. Likewise, the vertices of the graph are
   numbered 1,2,...,*num_vertices*, and within each bag they may again
   appear in any order.
 
 * The remaining *num_bags* - 1 non-comment lines should indicate the
   connections between the bags in the tree decomposition. Each such
-  line should be of the form ``*first_bag_index* *second_bag_index*``,
+  line should be of the form ``<first_bag_index> <second_bag_index>``,
   where *first_bag_index* is smaller than *second_bag_index*.
 
 Bags may be empty, but there must be at least one bag, and the

@@ -158,7 +158,7 @@ void addTreeLP(pybind11::module_& m) {
         .def("set", [](LPMatrix<Integer>& m, size_t row, size_t col,
                 const regina::Integer& value){
             m.entry(row, col) = value;
-        }, rdoc::entry)
+        }, rdoc::set)
         .def("rows", &LPMatrix<Integer>::rows, rdoc::rows)
         .def("columns", &LPMatrix<Integer>::columns, rdoc::columns)
         .def("swapRows", &LPMatrix<Integer>::swapRows, rdoc::swapRows)

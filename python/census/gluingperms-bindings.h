@@ -68,11 +68,11 @@ void addGluingPerms(pybind11::module_& m, const char* name) {
         .def("setPermIndex", [](GluingPerms<dim>& g,
                 const FacetSpec<dim>& s, Index val) {
             g.permIndex(s) = val;
-        }, rdoc::permIndex_3)
+        }, rdoc::setPermIndex)
         .def("setPermIndex", [](GluingPerms<dim>& g,
                 size_t s, int f, Index val) {
             g.permIndex(s, f) = val;
-        }, rdoc::permIndex_4)
+        }, rdoc::setPermIndex_2)
         .def("triangulate", &GluingPerms<dim>::triangulate, rdoc::triangulate)
         .def("data", &GluingPerms<dim>::data, rdoc::data)
         .def("gluingToIndex",
