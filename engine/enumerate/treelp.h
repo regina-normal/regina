@@ -275,15 +275,13 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
         /**
          * Returns a read-write reference to the given element of this matrix.
          *
-         * \ifacespython The entry() routine gives direct read-write access
-         * to matrix elements, but does not allow them to be set using
-         * the assignment operator.  In other words, code such as
-         * `matrix.entry(r, c).negate()` will work, but
-         * `matrix.entry(r, c) = value` will not.
-         * To assign values to matrix elements, you should instead use the
-         * syntax `matrix.set(row, column, value)`.
-         * This set() routine returns nothing, and is provided for python
-         * only (i.e., it is not part of the C++ calculation engine).
+         * \ifacespython In general, to assign values to matrix elements you
+         * should use the Python-only set() routine.  This entry() routine does
+         * give read-write access to matrix elements in Python, but it does
+         * not allow them to be set using the assignment operator.
+         * In other words, code such as `matrix.entry(r, c).negate()`
+         * will work, but `matrix.entry(r, c) = value` will not; instead
+         * you will need to call `matrix.set(r, c, value)`.
          *
          * \param row the row of the requested element.  This must be
          * between 0 and rows()-1 inclusive.
@@ -301,6 +299,29 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * between 0 and columns()-1 inclusive.
          */
         inline const IntType& entry(size_t row, size_t col) const;
+
+#ifdef __APIDOCS
+        /**
+         * Python-only routine that sets the given element of this matrix.
+         *
+         * \nocpp For C++ users, entry() is used for both reading and
+         * writing: just write `entry(row, column) = value`.
+         *
+         * \ifacespython In general, to assign values to matrix elements you
+         * should use the syntax `matrix.set(row, column, value)`.  The entry()
+         * routine does give read-write access to matrix elements in Python,
+         * but it does not allow them to be set using the assignment operator.
+         * In other words, code such as `matrix.entry(r, c).negate()`
+         * will work, but `matrix.entry(r, c) = value` will not.
+         *
+         * \param row the row of the entry to set; this must be between
+         * 0 and rows()-1 inclusive.
+         * \param col the column of the entry to set; this must be
+         * between 0 and columns()-1 inclusive.
+         * \param value the new entry to place in the given row and column.
+         */
+        void set(size_t row, size_t col, const IntType& value);
+#endif
 
         /**
          * Returns the number of rows in this matrix.  This relates to

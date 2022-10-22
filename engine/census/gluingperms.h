@@ -351,10 +351,9 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \pre The given facet is a real simplex
          * facet (not boundary, before-the-start or past-the-end).
          *
-         * \ifacespython Python users can only access the read-only version
-         * of this function that returns by value: you cannot use permIndex()
-         * to edit the gluing permutations.  As an alternative however, you
-         * can call `setPermIndex(source, index)` instead.
+         * \ifacespython For Python users, permIndex() is a read-only function
+         * that returns by value.  To edit this index, use the Python-only
+         * routine setPermIndex() instead.
          *
          * \param source the simplex facet under investigation.
          * \return a reference to the corresponding array index.
@@ -377,10 +376,9 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * may be the special value -1 indicating that the permutation
          * has not yet been chosen.
          *
-         * \ifacespython Python users can only access the read-only version
-         * of this function that returns by value: you cannot use permIndex()
-         * to edit the gluing permutations.  As an alternative however, you
-         * can call `setPermIndex(simp, facet, index)` instead.
+         * \ifacespython For Python users, permIndex() is a read-only function
+         * that returns by value.  To edit this index, use the Python-only
+         * routine setPermIndex() instead.
          *
          * \param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
@@ -390,6 +388,59 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \return a reference to the corresponding array index.
          */
         Index& permIndex(size_t simp, int facet);
+
+#ifdef __APIDOCS
+        /**
+         * Python-only routine that sets the index into array Perm<dim+1>::Sn_1
+         * describing how the the given facet is joined to its partner.
+         *
+         * Note that this is not the \a S_n index of the gluing permutation on
+         * (\a dim + 1) elements, but rather the index of a permutation on just
+         * \a dim elements.  You can use indexToGluing() and gluingToIndex()
+         * to convert between these indices and gluing permutations.
+         *
+         * As described in the class notes, this index can be a real
+         * permutation index between 0 and (dim!)-1 inclusive, or it
+         * may be the special value -1 indicating that the permutation
+         * has not yet been chosen.
+         *
+         * \pre The given facet is a real simplex facet (not boundary,
+         * before-the-start or past-the-end).
+         *
+         * \nocpp For C++ users, permIndex() is used for both reading and
+         * writing: just write `permIndex(source) = index`.
+         *
+         * \param source the simplex facet under consideration.
+         * \param index the new value of the corresponding array index.
+         */
+        void setPermIndex(const FacetSpec<dim>& source, Index index);
+
+        /**
+         * Python-only routine that sets the index into array Perm<dim+1>::Sn_1
+         * describing how the the given facet is joined to its partner.
+         *
+         * Note that this is not the \a S_n index of the gluing permutation on
+         * (\a dim + 1) elements, but rather the index of a permutation on just
+         * \a dim elements.  You can use indexToGluing() and gluingToIndex()
+         * to convert between these indices and gluing permutations.
+         *
+         * As described in the class notes, this index can be a real
+         * permutation index between 0 and (dim!)-1 inclusive, or it
+         * may be the special value -1 indicating that the permutation
+         * has not yet been chosen.
+         *
+         * \nocpp For C++ users, permIndex() is used for both reading and
+         * writing: just write `permIndex(simp, facet) = index`.
+         *
+         * \param simp the simplex under consideration (this must be
+         * strictly less than the total number of simplices under
+         * consideration).
+         * \param facet the facet of the given simplex under
+         * consideration (between 0 and \a dim inclusive).
+         * \param index the new value of the corresponding array index.
+         */
+        void setPermIndex(size_t simp, int facet, Index index);
+#endif
 
         /**
          * Returns the triangulation modelled by this set of gluing

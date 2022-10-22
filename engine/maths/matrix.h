@@ -452,43 +452,62 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Returns the entry at the given row and column.
-         * Rows and columns are numbered beginning at zero.
+         * Returns a read-write reference to the entry at the given
+         * row and column.  Rows and columns are numbered beginning at zero.
          *
-         * \pre \a row is between 0 and rows()-1 inclusive.
-         * \pre \a column is between 0 and columns()-1 inclusive.
+         * \ifacespython In general, to assign values to matrix elements you
+         * should use the Python-only set() routine.  This entry() routine does
+         * give read-write access to matrix elements in Python, but it does
+         * not allow them to be set using the assignment operator.
+         * In other words, code such as `matrix.entry(r, c).negate()`
+         * will work, but `matrix.entry(r, c) = value` will not; instead
+         * you will need to call `matrix.set(r, c, value)`.
          *
-         * \ifacespython The entry() routine gives direct read-write access
-         * to matrix elements, but does not allow them to be set using
-         * the assignment operator.  In other words, code such as
-         * `matrix.entry(r, c).negate()` will work, but
-         * `matrix.entry(r, c) = value` will not.
-         * To assign values to matrix elements, you should instead use the
-         * syntax `matrix.set(row, column, value)`.
-         * This set() routine returns nothing, and is provided for python
-         * only (i.e., it is not part of the C++ calculation engine).
-         *
-         * \param row the row of the desired entry.
-         * \param column the column of the desired entry.
+         * \param row the row of the desired entry; this must be between
+         * 0 and rows()-1 inclusive.
+         * \param column the column of the desired entry; this must be
+         * between 0 and columns()-1 inclusive.
          * \return a reference to the entry in the given row and column.
          */
         T& entry(size_t row, size_t column) {
             return data_[row][column];
         }
         /**
-         * Returns the entry at the given row and column.
-         * Rows and columns are numbered beginning at zero.
+         * Returns a read-only reference to the entry at the given
+         * row and column.  Rows and columns are numbered beginning at zero.
          *
-         * \pre \a row is between 0 and rows()-1 inclusive.
-         * \pre \a column is between 0 and columns()-1 inclusive.
-         *
-         * \param row the row of the desired entry.
-         * \param column the column of the desired entry.
+         * \param row the row of the desired entry; this must be between
+         * 0 and rows()-1 inclusive.
+         * \param column the column of the desired entry; this must be
+         * between 0 and columns()-1 inclusive.
          * \return a reference to the entry in the given row and column.
          */
         const T& entry(size_t row, size_t column) const {
             return data_[row][column];
         }
+#ifdef __APIDOCS
+        /**
+         * Python-only routine that sets the entry at the given row and column.
+         * Rows and columns are numbered beginning at zero.
+         *
+         * \nocpp For C++ users, entry() is used for both reading and
+         * writing: just write `entry(row, column) = value`.
+         *
+         * \ifacespython In general, to assign values to matrix elements you
+         * should use the syntax `matrix.set(row, column, value)`.  The entry()
+         * routine does give read-write access to matrix elements in Python,
+         * but it does not allow them to be set using the assignment operator.
+         * In other words, code such as `matrix.entry(r, c).negate()`
+         * will work, but `matrix.entry(r, c) = value` will not.
+         *
+         * \param row the row of the entry to set; this must be between
+         * 0 and rows()-1 inclusive.
+         * \param column the column of the entry to set; this must be
+         * between 0 and columns()-1 inclusive.
+         * \param value the new entry to place in the given row and column.
+         */
+        void set(size_t row, size_t column, const T& value);
+#endif
 
         /**
          * Returns the transpose of this matrix.  This matrix is not changed.
