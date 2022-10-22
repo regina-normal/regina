@@ -527,6 +527,27 @@ def extract(filename, node, namespace, output):
                 # print('    Left shift:', fullname, '-- skipping')
                 return
 
+            # Class template specialisations are a strange case.
+            # Sometimes we want them in full (e.g., Face<dim, dim>);
+            # sometimes we do not want the class docs but we want its members
+            # (e.g., the triangulation alias classes), and sometimes we
+            # do not want it at all (e.g., the ListView specialisations).
+            #
+            # For now:
+            #
+            # - Always take all the members, unless the class is marked
+            #   \nodocstrings.  This is handled by the recursion code above.
+            #
+            # - Print the class docs only if we are not already printing docs
+            #   for what appears to be the same class name in this same header.
+            #
+            if node.kind == CursorKind.CLASS_TEMPLATE_PARTIAL_SPECIALIZATION:
+                for i in output:
+                    if i[0] == sub_namespace and i[1] == name:
+                        print('Skipping partial specialisation:',
+                            node.displayname)
+                        return
+
             # Note: xmlEncodeSpecialChars() includes a &...; special character
             # that needs to be left in this encoded form, since the raw encoding
             # is illustrated in the API docs.
