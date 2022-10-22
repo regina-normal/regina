@@ -69,12 +69,12 @@ namespace regina {
  * with code to help identify and work with relabellings, via isomorphisms,
  * automorphisms, and canonical representations.  In this context:
  *
- * - An \e isomorphism of a facet pairing means a relabelling of the simplices
+ * - An _isomorphism_ of a facet pairing means a relabelling of the simplices
  *   and a relabelling of the (\a dim + 1) facets within each simplex;
  *   this can be represented by the same class Isomorphism<dim> that is used
  *   for isomorphisms of triangulations.
  *
- * - An \e automorphism of a facet pairing is an isomorphism that, when
+ * - An _automorphism_ of a facet pairing is an isomorphism that, when
  *   applied, results in an identical facet pairing (i.e., where exactly the
  *   same pairs of labelled simplex facets are matched together).
  *
