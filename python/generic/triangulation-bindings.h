@@ -38,6 +38,7 @@
 #include "triangulation/generic.h"
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
+#include "utilities/typeutils.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
@@ -46,26 +47,6 @@ using regina::Isomorphism;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
 using regina::Triangulation;
-
-namespace {
-    template <int dim, int k = dim>
-    struct add_subdims {
-        template <typename Class>
-        static void add(Class& c) {
-            if constexpr (k < dim) {
-                c.def("translate", &Triangulation<dim>::template translate<k>,
-                    pybind11::return_value_policy::reference_internal);
-            }
-            c.def("pachner", &Triangulation<dim>::template pachner<k>,
-                pybind11::arg(),
-                pybind11::arg("check") = true,
-                pybind11::arg("perform") = true);
-
-            if constexpr (k > 0)
-                add_subdims<dim, k - 1>::add(c);
-        }
-    };
-}
 
 template <int dim>
 void addTriangulation(pybind11::module_& m, const char* name) {
@@ -235,7 +216,16 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("dumpConstruction", &Triangulation<dim>::dumpConstruction)
         .def_readonly_static("dimension", &Triangulation<dim>::dimension)
     ;
-    add_subdims<dim>::add(c);
+    regina::for_constexpr<0, dim>([&c](auto k) {
+        c.def("translate", &Triangulation<dim>::template translate<k.value>,
+            pybind11::return_value_policy::reference_internal);
+    });
+    regina::for_constexpr<0, dim + 1>([&c](auto k) {
+        c.def("pachner", &Triangulation<dim>::template pachner<k.value>,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true);
+    });
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c);
