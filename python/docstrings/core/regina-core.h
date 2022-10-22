@@ -18,7 +18,7 @@ computations. A function that takes an Algorithm argument need not
 support all types of algorithm - if an unsupported algorithm is passed
 then Regina will fall back to ALG_DEFAULT.
 
-This enumeration type does *not* allow constants to be combined using
+This enumeration type does _not_ allow constants to be combined using
 the OR operator.
 
 For some computations where the user can exert more fine-grained

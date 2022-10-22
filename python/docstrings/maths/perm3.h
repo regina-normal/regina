@@ -192,7 +192,7 @@ static const char *__lt =
 R"doc(Determines if this appears earlier than the given permutation in the
 array Perm<3>::Sn.
 
-Note that this is *not* the same ordering of permutations as the
+Note that this is _not_ the same ordering of permutations as the
 ordering implied by compareWith(). This is, however, consistent with
 the ordering implied by the ++ operators, and this order is also
 faster to compute than compareWith().
@@ -249,7 +249,7 @@ static const char *compareWith =
 R"doc(Lexicographically compares the images of (0,1,2) under this and the
 given permutation.
 
-Note that this does *not* yield the same ordering of permutations as
+Note that this does _not_ yield the same ordering of permutations as
 used by the less-than and increment operators. Moreover, compareWith()
 is slower than the less-than operator to compute.
 
@@ -459,7 +459,7 @@ Returns:
 static const char *reverse =
 R"doc(Finds the reverse of this permutation.
 
-Here *reverse* means that we reverse the images of 0,1,2. In other
+Here _reverse_ means that we reverse the images of 0,1,2. In other
 words, if permutation *q* is the reverse of *p*, then ``p[i] == q[2 -
 i]`` for all *i*.)doc";
 

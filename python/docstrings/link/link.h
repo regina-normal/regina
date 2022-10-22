@@ -55,7 +55,7 @@ of by the Link to which they belong.)doc";
 // Docstring regina::python::doc::Framing
 static const char *Framing =
 R"doc(Indicates one of the standard framings of a knot or link. Here a
-*framing* refers to a choice of normal vector field along the knot or
+_framing_ refers to a choice of normal vector field along the knot or
 link. Equivalently, a framing refers to a choice of longitude on the
 torus bounding each component of the link.)doc";
 
@@ -78,7 +78,7 @@ for ad-hoc use. The consequences of this are:
   event listeners.
 
 * To include a Link in the packet tree, you must create a new
-  PacketOf<Link>. This *is* a packet type, and supports labels, tags,
+  PacketOf<Link>. This _is_ a packet type, and supports labels, tags,
   child/parent packets, and event listeners. It derives from Link, and
   so inherits the full Link interface.
 
@@ -105,7 +105,7 @@ strand (which passes under the crossing).
 
 A "null reference" is one whose crossing is the null pointer.
 
-This class can also be used to refer to an *arc* of a link; that is, a
+This class can also be used to refer to an _arc_ of a link; that is, a
 section of the link that runs from one crossing to the next. When used
 in this way:
 
@@ -430,7 +430,7 @@ call this routine in a new detached thread.
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
     fit into an ``int``. (On a typical machine where ``int`` is
-    32-bit, this would require over a *billion* crossings). Note that,
+    32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
     time) would be intractably slow anyway.
 
@@ -722,17 +722,17 @@ embedding in the plane. It comes with two major restrictions:
   algorithm.
 
 If you need a code that specifies the knot uniquely and/or that is
-fast to parse, consider using the *oriented* Gauss code instead, which
+fast to parse, consider using the _oriented_ Gauss code instead, which
 resolves both of these issues.
 
 For an *n*-crossing knot, Regina supports two variants of Dowker-
 Thistlethwaite notation:
 
-* a *numerical* variant (the default), which is a sequence of *n* even
+* a _numerical_ variant (the default), which is a sequence of *n* even
   signed integers as described (amongst other places) in Section 2.2
   of C. C. Adams, "The knot book", W. H. Freeman & Co., 1994;
 
-* an *alphabetical* variant, which transforms the numerical notation
+* an _alphabetical_ variant, which transforms the numerical notation
   into a sequence of letters by replacing positive integers
   (2,4,6,...) with lower-case letters (``a``,``b``,``c``,...), and
   replacing negative integers (-2,-4,-6,...) with upper-case letters
@@ -872,7 +872,7 @@ separates the integers does not matter.
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     planarity of the diagram. That is, if the input describes a knot
     diagram that must be drawn on some higher-genus surface as opposed
     to the plane, this will not be detected. Of course such inputs are
@@ -909,7 +909,7 @@ of taking a human-readable string, takes a machine-readable sequence
 of integers. This sequence is given by passing a pair of begin/end
 iterators.
 
-This variant of fromDT() can only work with *numerical* Dowker-
+This variant of fromDT() can only work with _numerical_ Dowker-
 Thistlethwaite notation. Regina does understand alphabetic Dowker-
 Thistlethwaite notation, but for this you will need to use the string-
 based variant of fromDT().
@@ -931,7 +931,7 @@ Precondition:
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     planarity of the diagram. That is, if the input describes a knot
     diagram that must be drawn on some higher-genus surface as opposed
     to the plane, this will not be detected. Of course such inputs are
@@ -1009,7 +1009,7 @@ hopf = Link.fromData([ +1, +1 ], [[ 1, -2 ], [ -1, 2 ]])
 
 .. warning::
     While this routine does some error checking on the input, it does
-    *not* test for planarity of the diagram. That is, if the input
+    _not_ test for planarity of the diagram. That is, if the input
     describes a link diagram that must be drawn on some higher-genus
     surface as opposed to the plane, this will not be detected. Of
     course such inputs are not allowed, and it is currently up to the
@@ -1094,11 +1094,11 @@ the string is allowed.
     for composite knots, the same Gauss code can describe knots that
     are topologically inequivalent, even when allowing for reflection.
     If you need to reconstruct a knot uniquely, consider using the
-    *oriented* Gauss code instead.
+    _oriented_ Gauss code instead.
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     planarity of the diagram. That is, if the input describes a knot
     diagram that must be drawn on some higher-genus surface as opposed
     to the plane, this will not be detected. Of course such inputs are
@@ -1144,11 +1144,11 @@ Precondition:
     for composite knots, the same Gauss code can describe knots that
     are topologically inequivalent, even when allowing for reflection.
     If you need to reconstruct a knot uniquely, consider using the
-    *oriented* Gauss code instead.
+    _oriented_ Gauss code instead.
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     planarity of the diagram. That is, if the input describes a knot
     diagram that must be drawn on some higher-genus surface as opposed
     to the plane, this will not be detected. Of course such inputs are
@@ -1210,7 +1210,7 @@ the string is allowed.
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     planarity of the diagram. That is, if the input describes a link
     diagram that must be drawn on some higher-genus surface as opposed
     to the plane, this will not be detected. Of course such inputs are
@@ -1248,7 +1248,7 @@ Precondition:
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     planarity of the diagram. That is, if the input describes a link
     diagram that must be drawn on some higher-genus surface as opposed
     to the plane, this will not be detected. Of course such inputs are
@@ -1280,7 +1280,7 @@ R"doc(Recovers a knot diagram from its signature. See knotSig() for more
 information on knot signatures.
 
 Calling knotSig() followed by fromKnotSig() is not guaranteed to
-produce an *identical* knot diagram to the original, but it is
+produce an _identical_ knot diagram to the original, but it is
 guaranteed to produce one that is related by relabelling, rotation,
 and optionally (according to the arguments that were passed to
 knotSig()) reflection and/or reversal.
@@ -1341,7 +1341,7 @@ the string is allowed.
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     planarity of the diagram. That is, if the input describes a knot
     diagram that must be drawn on some higher-genus surface as opposed
     to the plane, this will not be detected. Of course such inputs are
@@ -1382,7 +1382,7 @@ be a vector containing the six tokens:
 { "+>1", "-<2", "+>3", "-<1", "+>2", "-<3" }
 ```
 
-Each individual token should *not* contain any whitespace; otherwise
+Each individual token should _not_ contain any whitespace; otherwise
 this routine may fail to parse the token(s) and could throw an
 exception as a result.
 
@@ -1396,7 +1396,7 @@ Precondition:
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     planarity of the diagram. That is, if the input describes a knot
     diagram that must be drawn on some higher-genus surface as opposed
     to the plane, this will not be detected. Of course such inputs are
@@ -1498,7 +1498,7 @@ beginning and/or the end; these will be ignored.
 
 Note that some sources (again, such as the Knot Atlas) use the special
 symbols ``Xp``, ``Xm`` and ``P`` to change the meaning of the tuples.
-Regina does *not* attribute any meaning to these symbols, and will
+Regina does _not_ attribute any meaning to these symbols, and will
 treat them as nothing more than separators.
 
 .. warning::
@@ -1510,7 +1510,7 @@ treat them as nothing more than separators.
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     planarity of the diagram. That is, if the input describes a link
     diagram that must be drawn on some higher-genus surface as opposed
     to the plane, this will not be detected. Of course such inputs are
@@ -1559,7 +1559,7 @@ Precondition:
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     planarity of the diagram. That is, if the input describes a link
     diagram that must be drawn on some higher-genus surface as opposed
     to the plane, this will not be detected. Of course such inputs are
@@ -1623,7 +1623,7 @@ with two major restrictions:
   be deduced using some variant of a planarity testing algorithm.
 
 If you need a code that specifies the knot uniquely and/or that is
-fast to parse, consider using the *oriented* Gauss code instead, which
+fast to parse, consider using the _oriented_ Gauss code instead, which
 resolves both of these issues.
 
 A Gauss code for an *n*-crossing knot is described by a sequence of
@@ -1694,7 +1694,7 @@ Link meets the C++ Swappable requirements.
 See Link::swap() for more details.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both links which may in turn call arbitrary code
     via any registered packet listeners.
 
@@ -1741,7 +1741,7 @@ returning.
     resulting 3-manifold triangulation. Sometimes the presentation
     obtained via the complement is better, and sometimes it is worse.
 
-Currently this group is *not* cached; instead it is reconstructed
+Currently this group is _not_ cached; instead it is reconstructed
 every time this function is called. This behaviour may change in
 future versions of Regina.
 
@@ -1756,14 +1756,14 @@ crossings.
 Currently this routine is only available for knots, not multiple-
 component links.
 
-A *pass* move involves taking a section of the knot that involves only
+A _pass_ move involves taking a section of the knot that involves only
 over-crossings (or only under-crossings), and then lifting that
 section above (or beneath respectively) the diagram and placing it
 back again in a different location. In particular, this routine
 searches for a different location that will involve fewer crossings
 than the original location.
 
-This routine does not actually *perform* the pass move; it simply
+This routine does not actually _perform_ the pass move; it simply
 determines whether one exists.
 
 The running time is cubic in the number of crossings.
@@ -1796,7 +1796,7 @@ been calculated.
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
     fit into an ``int``. (On a typical machine where ``int`` is
-    32-bit, this would require over a *billion* crossings). Note that,
+    32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
     time) would be intractably slow anyway.
 
@@ -1872,7 +1872,7 @@ call this routine in a new detached thread.
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
     fit into an ``int``. (On a typical machine where ``int`` is
-    32-bit, this would require over a *billion* crossings). Note that,
+    32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
     time) would be intractably slow anyway.
 
@@ -1967,7 +1967,7 @@ call this routine in a new detached thread.
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
     fit into an ``int``. (On a typical machine where ``int`` is
-    32-bit, this would require over a *billion* crossings). Note that,
+    32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
     time) would be intractably slow anyway.
 
@@ -2048,8 +2048,8 @@ This routine will never reflect or reverse the link.
 static const char *isAlternating =
 R"doc(Returns whether this knot diagram is alternating.
 
-Note that this routine cannot tell whether the *knot* is alternating
-(i.e., whether there *exists* an alternating diagram). Instead, it
+Note that this routine cannot tell whether the _knot_ is alternating
+(i.e., whether there _exists_ an alternating diagram). Instead, it
 simply returns whether this specific diagram is alternating or not.
 
 The empty diagram and any zero-crossing unknot components will be
@@ -2211,7 +2211,7 @@ call this routine in a new detached thread.
 Exception ``NotImplemented``:
     This link is *so* large that the maximum possible strand ID cannot
     fit into an ``int``. (On a typical machine where ``int`` is
-    32-bit, this would require over a *billion* crossings). Note that,
+    32-bit, this would require over a _billion_ crossings). Note that,
     if you have such a link, then this function (which is exponential
     time) would be intractably slow anyway.
 
@@ -2237,7 +2237,7 @@ Returns:
 
 // Docstring regina::python::doc::Link_::knotSig
 static const char *knotSig =
-R"doc(Constructs the *signature* for this knot diagram.
+R"doc(Constructs the _signature_ for this knot diagram.
 
 A _signature_ is a compact text representation of a knot diagram that
 unique determines the knot up to relabelling, rotation, and
@@ -2332,7 +2332,7 @@ treewidth of this graph.
 
 See TreeDecomposition for further details on tree decompositions, and
 see TreeDecomposition::makeNice() for details on what it means to be a
-*nice* tree decomposition.
+_nice_ tree decomposition.
 
 This routine is fast: it will use a greedy algorithm to find a tree
 decomposition with (hopefully) small width, but with no guarantees
@@ -2495,7 +2495,7 @@ restrictions:
 * If a link has any components that consist entirely of over-crossings
   (which must be unknots "placed on top of" the link diagram), a
   planar diagram code does not carry enough data to reconstruct the
-  *orientation* of these components. The topology will be preserved,
+  _orientation_ of these components. The topology will be preserved,
   but in general the combinatorics of such a link diagram cannot be
   reconstructed faithfully.
 
@@ -2687,7 +2687,7 @@ zero-crossing component then the move cannot be performed, and if
 first such component will be used.
 
 This move is almost always able to be performed: the only situation in
-which it *cannot* be performed is if *arc* is a null reference but
+which it _cannot_ be performed is if *arc* is a null reference but
 this link contains no zero-crossing components, as discussed above.
 
 The existing crossings in this link will keep the same indices, and
@@ -2917,8 +2917,8 @@ these arguments is a null reference but there is no zero-crossing
 component then the move cannot be performed, and if there are multiple
 zero-crossing components then the first such component will be used.
 
-Likewise, if *both* arcs are null references, then the move will be
-performed upon two *different* zero-crossing unknot components. In
+Likewise, if _both_ arcs are null references, then the move will be
+performed upon two _different_ zero-crossing unknot components. In
 this case, if there are fewer than two such components then the move
 cannot be performed, and otherwise *upperArc* will be the first such
 component and *lowerArc* will be the second.
@@ -3089,7 +3089,7 @@ routine: *check* and *perform*.
 
 The location of this move is specified by the arguments *crossing* and
 *side*. Specifically, this move takes place around a triangle, and one
-of the arcs of this triangle is *uppermost* (in that it passes above
+of the arcs of this triangle is _uppermost_ (in that it passes above
 the other two arcs). The given crossing should be the start point of
 this uppermost arc; that is, when following the arc forwards,
 *crossing* should be the first of the two crossings that we encounter.
@@ -3151,7 +3151,7 @@ connections with the two outgoing strands, with the result that the
 given crossing is removed entirely.
 
 .. note::
-    The number of components in the link *will* change as a result of
+    The number of components in the link _will_ change as a result of
     this operation.
 
 Parameter ``c``:
@@ -3225,7 +3225,7 @@ that you begin with *height* = 1, and if necessary try increasing
 *height* one at a time until this routine becomes too expensive to
 run.
 
-If *height* is negative, then there will be *no* bound on the number
+If *height* is negative, then there will be _no_ bound on the number
 of additional crossings. This means that the routine will _never
 terminate_, unless *action* returns ``True`` for some knot diagram
 that is passed to it.
@@ -3272,7 +3272,7 @@ Python:
     described in option (b) above.
 
 Parameter ``height``:
-    the maximum number of *additional* crossings to allow beyond the
+    the maximum number of _additional_ crossings to allow beyond the
     number of crossings originally present in this knot diagram, or a
     negative number if this should not be bounded.
 
@@ -3309,7 +3309,7 @@ rotation about some axis in the plane.)doc";
 // Docstring regina::python::doc::Link_::selfFrame
 static const char *selfFrame =
 R"doc(Adds trivial twists to this link to ensure that each component has
-zero writhe. Here the *writhe* of a component *c* is the sum of the
+zero writhe. Here the _writhe_ of a component *c* is the sum of the
 signs of all crossings at which *c* crosses itself.
 
 Any component(s) that already have zero writhe will be left unchanged.
@@ -3333,7 +3333,7 @@ This routine will iterate through all knot diagrams that can be
 reached from this via Reidemeister moves, without ever exceeding
 *height* additional crossings beyond the original number.
 
-If at any stage it finds a diagram with *fewer* crossings than the
+If at any stage it finds a diagram with _fewer_ crossings than the
 original, then this routine will call intelligentSimplify() to
 simplify the diagram further if possible and will then return
 ``True``. If it cannot find a diagram with fewer crossings then it
@@ -3347,13 +3347,13 @@ the same diagram again). It is highly recommended that you begin with
 time until either you find a simplification or the routine becomes too
 expensive to run.
 
-If *height* is negative, then there will be *no* bound on the number
+If *height* is negative, then there will be _no_ bound on the number
 of additional crossings. This means that the routine will not
 terminate until a simpler diagram is found. If no simpler diagram
 exists then the only way to terminate this function is to cancel the
 operation via a progress tracker (read on for details).
 
-If you want a *fast* simplification routine, you should call
+If you want a _fast_ simplification routine, you should call
 intelligentSimplify() instead. The benefit of simplifyExhaustive() is
 that, for very stubborn knot diagrams where intelligentSimplify()
 finds itself stuck at a local minimum, simplifyExhaustive() is able to
@@ -3389,7 +3389,7 @@ Python:
     runs, so you can use it with Python-based multithreading.
 
 Parameter ``height``:
-    the maximum number of *additional* crossings to allow beyond the
+    the maximum number of _additional_ crossings to allow beyond the
     number of crossings originally present in this diagram, or a
     negative number if this should not be bounded.
 
@@ -3481,7 +3481,7 @@ objects will remain valid.
 This routine will behave correctly if *other* is in fact this link.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both links which may in turn call arbitrary code
     via any registered packet listeners.
 
@@ -3527,7 +3527,7 @@ formed by this link diagram.
 
 By default, Regina will compute (and then cache) such a tree
 decomposition itself, using in-built greedy heuristics. This routine
-allows you to supply your *own* tree decomposition (which, for
+allows you to supply your _own_ tree decomposition (which, for
 example, might be a smaller-width tree decomposition that you found
 using third-party software). By supplying your own tree decomposition
 *td* through this routine, Regina will throw away any pre-computed
@@ -3535,7 +3535,7 @@ tree decomposition that it has cached, and will instead cache *td* for
 future use instead.
 
 Regina may modify the given tree decomposition for its purposes. In
-particular, *td* does not need to be a *nice* tree decomposition
+particular, *td* does not need to be a _nice_ tree decomposition
 (indeed, it does not need to have any special properties beyond the
 definition of a tree decomposition). Regina will automatically create
 a nice tree decomposition from it if *td* is not nice already.
@@ -3548,7 +3548,7 @@ Parameter ``td``:
 static const char *writhe =
 R"doc(Returns the writhe of this link diagram.
 
-This is *not* an invariant of the link; instead it depends on the
+This is _not_ an invariant of the link; instead it depends on the
 particular link diagram. It is computed as the sum of the signs of all
 crossings. It is preserved under Reidemeister moves II and III, but
 not I.
@@ -3560,7 +3560,7 @@ Returns:
 static const char *writheOfComponent =
 R"doc(Returns the writhe of a single component of this link diagram.
 
-This is the writhe of the diagram when all *other* components are
+This is the writhe of the diagram when all _other_ components are
 removed. It is computed as the sum of the signs of all crossings at
 which the given component crosses itself.
 
@@ -3585,7 +3585,7 @@ Returns:
 static const char *writheOfComponent_2 =
 R"doc(Returns the writhe of a single component of this link diagram.
 
-This is the writhe of the diagram when all *other* components are
+This is the writhe of the diagram when all _other_ components are
 removed. It is computed as the sum of the signs of all crossings at
 which the given component crosses itself.
 
@@ -3652,7 +3652,7 @@ values for both crossing() and strand().
 
 .. warning::
     If you create a null reference by calling StrandRef(``None``, 1)
-    then this will *not* be considered equal to the null reference
+    then this will _not_ be considered equal to the null reference
     created by calling StrandRef(), since the latter is equivalent to
     calling StrandRef(``None``, 0).
 
@@ -3704,7 +3704,7 @@ values for both crossing() and strand().
 
 .. warning::
     If you create a null reference by calling StrandRef(``None``, 1)
-    then this will *not* be considered equal to the null reference
+    then this will _not_ be considered equal to the null reference
     created by calling StrandRef(), since the latter is equivalent to
     calling StrandRef(``None``, 0).
 

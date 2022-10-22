@@ -18,7 +18,7 @@ R"doc(A packet that can hold an arbitrary file attachment.
 The attachment is stored as a block of data in memory. If the
 attachment was originally read from the filesystem, this link is not
 maintained (i.e., if the source file subsequently changes, the
-attachment data stored in this packet will *not* change to reflect
+attachment data stored in this packet will _not_ change to reflect
 this).
 
 This packet may or may not contain an attachment at any given time.
@@ -86,7 +86,7 @@ R"doc(Creates a new attachment containing the contents of the given file.
 
 The file will be read immediately, but no ongoing link will be
 maintained. That is, if the given file should later change its
-contents on the filesystem, the change will *not* be reflected in this
+contents on the filesystem, the change will _not_ be reflected in this
 attachment packet.
 
 If the file could not be read or is empty, then no attachment will be
@@ -100,7 +100,7 @@ prefixes, the filename will be the empty string.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it through
+    used in the given file _name_, and simply passes it through
     unchanged to low-level C/C++ file I/O routines.
 
 Parameter ``pathname``:
@@ -296,7 +296,7 @@ simply return ``False``.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it unchanged to
+    used in the given file _name_, and simply passes it unchanged to
     low-level C/C++ file I/O routines.
 
 Parameter ``pathname``:

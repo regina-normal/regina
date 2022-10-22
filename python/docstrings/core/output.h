@@ -19,13 +19,13 @@ behaviours across Regina's entire API.
 
 Three types of output are supported:
 
-* *short* output, which fits on a single line and uses plain ASCII
+* _short_ output, which fits on a single line and uses plain ASCII
   characters wherever possible;
 
-* *utf8* output, which is like short output but supports the much
+* _utf8_ output, which is like short output but supports the much
   richer unicode character set; and
 
-* *detailed* output, which may be arbitrarily long.
+* _detailed_ output, which may be arbitrarily long.
 
 Any class that provides text output should ultimately inherit from
 this base class. Your derived class must provide two functions:
@@ -75,7 +75,7 @@ Template parameter ``supportsUtf8``:
     it will return the same output as short().
 
 .. note::
-    Every object of this class that is ever instantiated *must* be
+    Every object of this class that is ever instantiated _must_ be
     derived from the class *T*. In other words, end users can
     construct objects of type *T* (which derives from Output<T>), but
     they cannot construct objects of the parent class Output<T>

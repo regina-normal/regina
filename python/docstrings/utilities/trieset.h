@@ -14,8 +14,8 @@ namespace regina::python::doc {
 // Docstring regina::python::doc::TrieSet
 static const char *TrieSet =
 R"doc(A trie-like data structure for storing and retriving sets. This class
-is useful when the *elements* of these sets are taken from a fairly
-small universe, but where the *number* of sets being stored can be
+is useful when the _elements_ of these sets are taken from a fairly
+small universe, but where the _number_ of sets being stored can be
 extremely large.
 
 For simplicity, let the universe consist of the integers
@@ -102,9 +102,9 @@ R"doc(Performs the particular superset search required by the double
 description method.
 
 This routine asks the following question: In this collection of sets,
-is there any superset of the argument *subset* *other* than *exc1* or
+is there any superset of the argument *subset* _other_ than *exc1* or
 *exc2*? Here the sets *exc1* and *exc2* are explicitly excluded from
-our search. Supersets need not be *proper* supersets (so if an exact
+our search. Supersets need not be _proper_ supersets (so if an exact
 copy of *subset* is found in the tree then this will suffice).
 
 This routine has a slow running time, which in pathological cases can
@@ -144,7 +144,7 @@ Returns:
 // Docstring regina::python::doc::TrieSet_::hasSubset
 static const char *hasSubset =
 R"doc(Determines whether this collection of sets contains any subset of the
-argument *superset*. Subsets need not be *proper* subsets (so if an
+argument *superset*. Subsets need not be _proper_ subsets (so if an
 exact copy of *superset* is found in the tree then this will suffice).
 
 This routine has a slow running time, which in pathological cases can

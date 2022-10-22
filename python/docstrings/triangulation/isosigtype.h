@@ -35,7 +35,7 @@ The properties that any signature type must satisfy are:
   this type class produces will be the same set, but modified
   according to this reordering/relabelling. In other words, the
   starting simplices and their starting labellings can in theory be
-  completely deduced from an *unlabelled* triangulation component.
+  completely deduced from an _unlabelled_ triangulation component.
 
 An instance of a type class is like an iterator: it holds a single
 candidate combination (*s*, *p*). The constructor must initialise the
@@ -145,7 +145,7 @@ Precondition:
 Returns:
     the index of the current starting simplex with respect to the
     triangulation component under consideration. Note that, for a
-    disconnected triangulation, this is *not* necessarily the same as
+    disconnected triangulation, this is _not_ necessarily the same as
     Simplex::index() (which gives the index with respect to the
     overall triangulation).)doc";
 
@@ -210,7 +210,7 @@ Precondition:
 Returns:
     the index of the current starting simplex with respect to the
     triangulation component under consideration. Note that, for a
-    disconnected triangulation, this is *not* necessarily the same as
+    disconnected triangulation, this is _not_ necessarily the same as
     Simplex::index() (which gives the index with respect to the
     overall triangulation).)doc";
 

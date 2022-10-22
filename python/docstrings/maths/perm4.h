@@ -30,7 +30,7 @@ internal code may be a useful means for passing permutation objects to
 and from the engine. For Perm<4>, the internal permutation codes have
 changed as of Regina 4.6.1:
 
-* *First*-generation codes were used internally in Regina 4.6 and
+* _First-generation_ codes were used internally in Regina 4.6 and
   earlier. These are _image packs_: characters whose lowest two bits
   represent the image of 0, whose next lowest two bits represent the
   image of 1, and so on. The routines permCode1(), setPermCode1(),
@@ -39,7 +39,7 @@ changed as of Regina 4.6.1:
   file format continues to use first-generation codes to describe
   tetrahedron gluings.
 
-* *Second*-generation codes are used internally in Regina 4.6.1 and
+* _Second-generation_ codes are used internally in Regina 4.6.1 and
   above. These codes are integers between 0 and 23 inclusive,
   representing the index of the permutation in the array Perm<4>::S4.
   The routines permCode2(), setPermCode2(), fromPermCode2() and
@@ -228,7 +228,7 @@ static const char *__lt =
 R"doc(Determines if this appears earlier than the given permutation in the
 array Perm<4>::Sn.
 
-Note that this is *not* the same ordering of permutations as the
+Note that this is _not_ the same ordering of permutations as the
 ordering implied by compareWith(). This is, however, consistent with
 the ordering implied by the ++ operators, and this order is also
 faster to compute than compareWith().
@@ -285,7 +285,7 @@ static const char *compareWith =
 R"doc(Lexicographically compares the images of (0,1,2,3) under this and the
 given permutation.
 
-Note that this does *not* yield the same ordering of permutations as
+Note that this does _not_ yield the same ordering of permutations as
 used by the less-than and increment operators. Moreover, compareWith()
 is slower than the less-than operator to compute.
 
@@ -527,7 +527,7 @@ Returns:
 
 // Docstring regina::python::doc::Perm_::pairs
 static const char *pairs =
-R"doc(Returns the induced permutation on all six *pairs* of elements from
+R"doc(Returns the induced permutation on all six _pairs_ of elements from
 0,1,2,3.
 
 Specifically: suppose we number the six pairs in lexicographical
@@ -538,7 +538,7 @@ permutation of 0,...,5, where the pair (*a*, *b*) maps to the pair
 
 Note that, if *p* permutes the four vertices (or equivalently, the
 four faces) of a tetrahedron, then ``p.pairs()`` is the induced
-permutation on the six *edges* of the tetrahedron.
+permutation on the six _edges_ of the tetrahedron.
 
 Returns:
     the induced permutation on six pairs of elements.)doc";
@@ -623,7 +623,7 @@ Returns:
 static const char *reverse =
 R"doc(Finds the reverse of this permutation.
 
-Here *reverse* means that we reverse the images of 0,...,3. In other
+Here _reverse_ means that we reverse the images of 0,...,3. In other
 words, if permutation *q* is the reverse of *p*, then ``p[i] == q[3 -
 i]`` for all *i*.)doc";
 

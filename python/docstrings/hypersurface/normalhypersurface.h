@@ -248,7 +248,7 @@ This order is not mathematically meaningful; it is merely provided for
 scenarios where you need to be able to sort hypersurfaces (e.g., when
 using them as keys in a map).
 
-The order *is* well-defined, and will be preserved across copy/move
+The order _is_ well-defined, and will be preserved across copy/move
 operations, different program executions, and different platforms
 (since it is defined purely in terms of the normal coordinates, and
 does not use transient properties such as locations in memory).
@@ -455,11 +455,11 @@ static const char *isNormalEdgeLink =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the normalised link of a single edge.
 
-Here the phrase *normalised* link of an edge *e* means the frontier of
+Here the phrase _normalised_ link of an edge *e* means the frontier of
 a regular neighbourhood of *e*, converted into a normal hypersurface
 by expanding away from the edge using some basic normalisation moves.
 It could be that there is no normalisation required at all (in which
-case it is also a *thin* edge link). However, it could be that the
+case it is also a _thin_ edge link). However, it could be that the
 normalisation process expands the hypersurface far away from the edge
 itself, or changes its topology, or disconnects the hypersurface, or
 even normalises it away to an empty hypersurface.
@@ -500,11 +500,11 @@ static const char *isNormalTetrahedronLink =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the normalised link of a single tetrahedron.
 
-Here the phrase *normalised* link of a tetrahedron *t* means the
+Here the phrase _normalised_ link of a tetrahedron *t* means the
 frontier of a regular neighbourhood of *t*, converted into a normal
 hypersurface by expanding away from the tetrahedron using some basic
 normalisation moves. It could be that there is no normalisation
-required at all (in which case it is also a *thin* tetrahedron link).
+required at all (in which case it is also a _thin_ tetrahedron link).
 However, it could be that the normalisation process expands the
 hypersurface far away from the tetrahedron itself, or changes its
 topology, or disconnects the hypersurface, or even normalises it away
@@ -548,11 +548,11 @@ static const char *isNormalTriangleLink =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the normalised link of a single triangle.
 
-Here the phrase *normalised* link of a triangle *t* means the frontier
+Here the phrase _normalised_ link of a triangle *t* means the frontier
 of a regular neighbourhood of *t*, converted into a normal
 hypersurface by expanding away from the triangle using some basic
 normalisation moves. It could be that there is no normalisation
-required at all (in which case it is also a *thin* triangle link).
+required at all (in which case it is also a _thin_ triangle link).
 However, it could be that the normalisation process expands the
 hypersurface far away from the triangle itself, or changes its
 topology, or disconnects the hypersurface, or even normalises it away
@@ -618,12 +618,12 @@ static const char *isThinEdgeLink =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the thin link of a single edge.
 
-Here a *thin* edge link is a normal hypersurface which appears
+Here a _thin_ edge link is a normal hypersurface which appears
 naturally as the frontier of a regular neighbourhood of an edge, with
 no need for any further normalisation.
 
 This behaves differently from isNormalEdgeLink(), which tests for a
-*normalised* edge link (which could end up far away from the edge, or
+_normalised_ edge link (which could end up far away from the edge, or
 could be normalised into a hypersurface with different topology, or
 could even be normalised away to nothing). Although isNormalEdgeLink()
 will also indicate thin edge links, this test has significantly less
@@ -645,12 +645,12 @@ static const char *isThinTetrahedronLink =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the thin link of a single tetrahedron.
 
-Here a *thin* tetrahedron link is a normal hypersurface which appears
+Here a _thin_ tetrahedron link is a normal hypersurface which appears
 naturally as the frontier of a regular neighbourhood of a tetrahedron,
 with no need for any further normalisation.
 
 This behaves differently from isNormalTetrahedronLink(), which tests
-for a *normalised* tetrahedron link (which could end up far away from
+for a _normalised_ tetrahedron link (which could end up far away from
 the tetrahedron, or could be normalised into a hypersurface with
 different topology, or could even be normalised away to nothing).
 Unlike the tests for edge links, the routines isThinTetrahedronLink()
@@ -679,12 +679,12 @@ static const char *isThinTriangleLink =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the thin link of a single triangle.
 
-Here a *thin* triangle link is a normal hypersurface which appears
+Here a _thin_ triangle link is a normal hypersurface which appears
 naturally as the frontier of a regular neighbourhood of a triangle,
 with no need for any further normalisation.
 
 This behaves differently from isNormalTriangleLink(), which tests for
-a *normalised* triangle link (which could end up far away from the
+a _normalised_ triangle link (which could end up far away from the
 triangle, or could be normalised into a hypersurface with different
 topology, or could even be normalised away to nothing). Unlike the
 tests for edge links, the routines isThinTriangleLink() and
@@ -736,7 +736,7 @@ hypersurface is the link of a single vertex.
 
 This behaves differently from isVertexLinking(), which will also
 detect a union of several different vertex links. In contrast, this
-routine will only identify the link of a *single* vertex (or a
+routine will only identify the link of a _single_ vertex (or a
 multiple of such a link).
 
 Note that the results of this routine are not cached. Thus the results
@@ -754,7 +754,7 @@ _vertex linking_ hypersurface contains only tetrahedra.
 
 This behaves differently from isVertexLink(), which only detects the
 link of a single vertex (or a multiple of such a link). In contrast,
-this routine will also detect the union of several *different* vertex
+this routine will also detect the union of several _different_ vertex
 links.
 
 Note that the results of this routine are not cached. Thus the results
@@ -772,12 +772,12 @@ discs of both hypersurfaces so that none intersect.
 
 This is a local constraint, not a global constraint. That is, we do
 not insist that we can avoid intersections within all pentachora
-*simultaneously*.
+_simultaneously_.
 
 Local compatibility can be formulated in terms of normal piece types.
 Two normal hypersurfaces are locally compatible if and only if they
 together use at most two prism piece types per pentachoron; moreover,
-if there *are* two prism piece types within a single pentachoron then
+if there _are_ two prism piece types within a single pentachoron then
 these prism types are non-intersecting.
 
 If one of the two hypersurfaces breaks the local compatibility

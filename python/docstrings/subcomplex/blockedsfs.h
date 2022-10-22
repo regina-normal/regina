@@ -20,7 +20,7 @@ saturated region is in turn formed from saturated blocks by
 identifying their boundary annuli in pairs; see the SatRegion class
 for details.
 
-Note that the routines writeName() and writeTeXName() do *not* offer
+Note that the routines writeName() and writeTeXName() do _not_ offer
 enough information to uniquely identify the triangulation, since this
 essentially requires a 2-dimensional assembling of saturated blocks.
 For full detail, writeTextLong() may be used instead.

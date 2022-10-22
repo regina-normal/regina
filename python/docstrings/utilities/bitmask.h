@@ -157,7 +157,7 @@ The integer argument is merely for compatibility with the Bitmask
 constructor, and will be ignored.
 
 .. warning::
-    This is *not* a constructor that initialises the bitmask to a
+    This is _not_ a constructor that initialises the bitmask to a
     given pattern.)doc";
 
 // Docstring regina::python::doc::Bitmask1_::__ior
@@ -247,7 +247,7 @@ static const char *containsIntn =
 R"doc(Determines whether this bitmask contains the intersection of the two
 given bitmasks.
 
-For this routine to return ``True``, every bit that is set in *both*
+For this routine to return ``True``, every bit that is set in _both_
 *x* and *y* must be set in this bitmask also.
 
 Parameter ``x``:
@@ -385,7 +385,7 @@ Precondition:
     integer values.
 
 Precondition:
-    The list of indices described by these iterators is in *sorted*
+    The list of indices described by these iterators is in _sorted_
     order. This is to allow optimisations for larger bitmask types.
 
 Precondition:
@@ -413,11 +413,11 @@ R"doc(Leaves the first *numBits* bits of this bitmask intact, but sets all
 subsequent bits to ``False``. In other words, this routine "truncates"
 this bitmask to the given number of bits.
 
-This routine does not change the *length* of this bitmask (as passed
+This routine does not change the _length_ of this bitmask (as passed
 to the contructor or to reset()).
 
 Parameter ``numBits``:
-    the number of bits that will *not* be cleared.)doc";
+    the number of bits that will _not_ be cleared.)doc";
 
 }
 
@@ -462,7 +462,7 @@ The integer argument is merely for compatibility with the Bitmask
 constructor, and will be ignored.
 
 .. warning::
-    This is *not* a constructor that initialises the bitmask to a
+    This is _not_ a constructor that initialises the bitmask to a
     given pattern.)doc";
 
 // Docstring regina::python::doc::Bitmask2_::__ior
@@ -552,7 +552,7 @@ static const char *containsIntn =
 R"doc(Determines whether this bitmask contains the intersection of the two
 given bitmasks.
 
-For this routine to return ``True``, every bit that is set in *both*
+For this routine to return ``True``, every bit that is set in _both_
 *x* and *y* must be set in this bitmask also.
 
 Parameter ``x``:
@@ -690,7 +690,7 @@ Precondition:
     integer values.
 
 Precondition:
-    The list of indices described by these iterators is in *sorted*
+    The list of indices described by these iterators is in _sorted_
     order. This is to allow optimisations for larger bitmask types.
 
 Precondition:
@@ -718,11 +718,11 @@ R"doc(Leaves the first *numBits* bits of this bitmask intact, but sets all
 subsequent bits to ``False``. In other words, this routine "truncates"
 this bitmask to the given number of bits.
 
-This routine does not change the *length* of this bitmask (as passed
+This routine does not change the _length_ of this bitmask (as passed
 to the contructor or to reset()).
 
 Parameter ``numBits``:
-    the number of bits that will *not* be cleared.)doc";
+    the number of bits that will _not_ be cleared.)doc";
 
 }
 
@@ -765,7 +765,7 @@ R"doc(Determines whether this and the given bitmask are identical.
     length; instead the length is rounded up to the next "raw unit of
     storage". This means that two bitmasks that were initialised with
     different lengths may still be considered equal if the two lengths
-    round up to the same value *and* the extra bits in the longer
+    round up to the same value _and_ the extra bits in the longer
     bitmask are all ``False``.
 
 Parameter ``other``:
@@ -872,7 +872,7 @@ R"doc(Determines whether this and the given bitmask are different.
     length; instead the length is rounded up to the next "raw unit of
     storage". This means that two bitmasks that were initialised with
     different lengths may still be considered equal if the two lengths
-    round up to the same value *and* the extra bits in the longer
+    round up to the same value _and_ the extra bits in the longer
     bitmask are all ``False``.
 
 Parameter ``other``:
@@ -904,7 +904,7 @@ static const char *containsIntn =
 R"doc(Determines whether this bitmask contains the intersection of the two
 given bitmasks.
 
-For this routine to return ``True``, every bit that is set in *both*
+For this routine to return ``True``, every bit that is set in _both_
 *x* and *y* must be set in this bitmask also.
 
 Precondition:
@@ -1078,7 +1078,7 @@ Precondition:
     integer values.
 
 Precondition:
-    The list of indices described by these iterators is in *sorted*
+    The list of indices described by these iterators is in _sorted_
     order. This is to allow optimisations for larger bitmask types.
 
 Precondition:
@@ -1113,14 +1113,14 @@ R"doc(Leaves the first *numBits* bits of this bitmask intact, but sets all
 subsequent bits to ``False``. In other words, this routine "truncates"
 this bitmask to the given number of bits.
 
-This routine does not change the *length* of this bitmask (as passed
+This routine does not change the _length_ of this bitmask (as passed
 to the contructor or to reset()).
 
 Precondition:
     *numBits* is at most the length of this bitmask.
 
 Parameter ``numBits``:
-    the number of bits that will *not* be cleared.)doc";
+    the number of bits that will _not_ be cleared.)doc";
 
 }
 

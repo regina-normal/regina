@@ -47,7 +47,7 @@ If a layering is present between the two boundaries, then the boundary
 curves are not identified directly. In this case, the matrix *M* shows
 how the layering relates the curves on each region boundary.
 
-Note that the routines writeName() and writeTeXName() do *not* offer
+Note that the routines writeName() and writeTeXName() do _not_ offer
 enough information to uniquely identify the triangulation, since this
 essentially requires 2-dimensional assemblings of saturated blocks.
 For full details, writeTextLong() may be used instead.

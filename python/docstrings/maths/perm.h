@@ -448,7 +448,7 @@ Returns:
 static const char *reverse =
 R"doc(Finds the reverse of this permutation.
 
-Here *reverse* means that we reverse the images of 0,...,*n*-1. In
+Here _reverse_ means that we reverse the images of 0,...,*n*-1. In
 other words, if permutation *q* is the reverse of *p*, then ``p[i] ==
 q[n - 1 - i]`` for all *i*.)doc";
 

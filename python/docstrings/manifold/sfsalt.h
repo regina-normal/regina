@@ -47,7 +47,7 @@ base orbifold of the new alternative space. Then
     [o_alt]         [o_old]
 ```
 
-Note that this *only* applies to the first boundary torus! If the
+Note that this _only_ applies to the first boundary torus! If the
 Seifert fibred space has more than one boundary, then for the
 remaining boundaries the unoriented fibre and base curves remain the
 same. More specifically, the directed fibre remains identical, and the
@@ -74,7 +74,7 @@ static const char *__eq =
 R"doc(Determines whether this and the given alternative representation have
 identical presentations.
 
-To be considered *identical*, the two alternatives must have equal
+To be considered _identical_, the two alternatives must have equal
 alternative SFSpace representations, equal conversion matrices, and
 either both must have used a reflection or both must have not used a
 reflection. In other words, this is equivalent to testing all of
@@ -118,7 +118,7 @@ representation. The changes will include:
   space;
 
 * if *negate* is ``True``, then this will attempt to replace all
-  fibres (*alpha*, *beta*) with (*alpha*, *alpha* - *beta*), *without*
+  fibres (*alpha*, *beta*) with (*alpha*, *alpha* - *beta*), _without_
   any further reflections (but see below for conditions on when this
   is possible);
 
@@ -162,7 +162,7 @@ static const char *__ne =
 R"doc(Determines whether this and the given alternative representation do
 not have identical presentations.
 
-To be considered *identical*, the two alternatives must have equal
+To be considered _identical_, the two alternatives must have equal
 alternative SFSpace representations, equal conversion matrices, and
 either both must have used a reflection or both must have not used a
 reflection. In other words, this is equivalent to testing all of
@@ -252,7 +252,7 @@ first boundary torus in terms of the fibre and base curves of the
 original space (which was passed to the SFSAlt constructor). See the
 class notes above for details.
 
-Note that this conversion matrix applies *only* to the first boundary
+Note that this conversion matrix applies _only_ to the first boundary
 torus! If there is more than one boundary, the remaining boundary
 conversions are simpler and depend only on whether a reflection has
 been used or not. See reflected() or the class notes for details.

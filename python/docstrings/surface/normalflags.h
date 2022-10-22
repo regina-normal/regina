@@ -25,8 +25,8 @@ static const char *NormalListFlags =
 R"doc(Represents different lists of normal surfaces that might be
 constructed for a given 3-manifold triangulation.
 
-The NormalList enumeration refers to the *contents* of the list,
-whereas the NormalAlgFlags enumeration refers to the *algorithm* used
+The NormalList enumeration refers to the _contents_ of the list,
+whereas the NormalAlgFlags enumeration refers to the _algorithm_ used
 to build it.
 
 These flags can be combined using the bitwise OR operator, and then
@@ -104,7 +104,7 @@ R"doc(When enumerating fundamental normal surfaces, this flag indicates that
 a modified Contejean-Devie procedure should be used for enumerating a
 Hilbert basis.
 
-The Contejean-Devie procedure is typically *much* slower than either
+The Contejean-Devie procedure is typically _much_ slower than either
 the primal or dual method, and users should only request it if they
 have some specialised need.
 
@@ -145,7 +145,7 @@ additional combinatorial constraints (such as the quadrilateral
 constraints) should only be enforced as the final step.
 
 If you are only enumerating properly embedded surfaces then this
-procedure *extremely* slow, and users should only request it if they
+procedure _extremely_ slow, and users should only request it if they
 have some specialised need.
 
 For details and comparisons of the various options for enumerating
@@ -197,7 +197,7 @@ flag indicates that the algorithm should work directly in that
 coordinate system, and should not go via the "reduced" (quadrilateral
 or quadrilateral-octagon) coordinate system.
 
-This is typically *much* slower than going via the reduced system, and
+This is typically _much_ slower than going via the reduced system, and
 users should only request this if they have a specialised need. See
 NS_VERTEX_VIA_REDUCED for further information.
 
@@ -268,7 +268,7 @@ static const char *NS_IMMERSED_SINGULAR =
 R"doc(Indicates that the scope of this list includes not just properly
 embedded surfaces, but also immersed and/or branched surfaces.
 
-This is no guarantee that the list *contains* immersed and/or branched
+This is no guarantee that the list _contains_ immersed and/or branched
 surfaces; it merely states that such surfaces have not been explicitly
 excluded (in particular, the quadrilateral constraints have not been
 enforced).
@@ -312,14 +312,14 @@ quadrilateral or quadrilateral-octagon coordinates to the set of all
 embedded vertex normal surfaces in standard normal or standard almost
 normal coordinates respectively.
 
-It should be emphasised that this routine does *not* simply convert
+It should be emphasised that this routine does _not_ simply convert
 vectors from one coordinate system to another; instead it converts a
 full set of vertex surfaces in quad or quad-oct coordinates into a
 full set of vertex surfaces in standard normal or almost normal
 coordinates. Typically there are many more vertex surfaces in standard
 coordinates (all of which this routine will find).
 
-This conversion process is typically *much* faster than enumerating
+This conversion process is typically _much_ faster than enumerating
 surfaces directly in standard coordinates. However, normally you would
 not need to invoke this transformation yourself, since the standard
 enumeration process will use it automatically when possible. That is,
@@ -354,7 +354,7 @@ normal or standard almost normal coordinates to the set of all
 embedded vertex normal surfaces in quadrilateral or quadrilateral-
 octagon coordinates respectively.
 
-It should be emphasised that this routine does *not* simply convert
+It should be emphasised that this routine does _not_ simply convert
 vectors from one coordinate system to another; instead it converts a
 full set of vertex surfaces in standard normal or almost normal
 coordinates into a full set of vertex surfaces in quad or quad-oct
@@ -433,7 +433,7 @@ in the input list, as well as the two-sided double covers of all one-
 sided surfaces in the input list (see below for details on how one-
 sided surfaces are handled). Each of these surfaces is examined using
 relatively fast heuristic tests for incompressibility. Any surface
-that is definitely *not* incompressible is ignored, and all other
+that is definitely _not_ incompressible is ignored, and all other
 surfaces are placed in the output list.
 
 Therefore, it is guaranteed that every incompressible surface from the
@@ -442,7 +442,7 @@ individual output surface might or might not be incompressible.
 
 See NormalSurface::isIncompressible() for the definition of
 incompressibility that is used here. Note in particular that spheres
-are *never* considered incompressible.
+are _never_ considered incompressible.
 
 As indicated above, this filter works exclusively with two-sided
 surfaces. If a surface in the input list is one-sided, the heuristic

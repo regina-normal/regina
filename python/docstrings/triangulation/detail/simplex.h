@@ -243,7 +243,7 @@ there will always be (*dim*-*subdim*)!/2 possible mappings that yield
 the correct orientation.
 
 If this simplex (and therefore the face *F*) belongs to an
-*orientable* component of the triangulation, then there will also be
+_orientable_ component of the triangulation, then there will also be
 connections between faceMapping() and the orientations of the top-
 dimensional simplices (as returned by orientation()):
 

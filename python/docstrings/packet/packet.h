@@ -43,27 +43,27 @@ operated upon. Packets are stored in a tree structure, with
 child/parent relationships; the root of the tree represents a complete
 Regina data file.
 
-There are two types of packets: *innate* packets, and *wrapped*
+There are two types of packets: _innate_ packets, and _wrapped_
 packets.
 
-* *Innate* packets are only relevant within the context of a data
+* _Innate_ packets are only relevant within the context of a data
   file. Examples include containers (which are used to organise the
   packet tree), or scripts (which stores Python code with variables
   bound to other packets in the tree). Each innate packet type is
   represented by its own customised subclass of Packet (e.g.,
   Container or Script).
 
-* *Wrapped* packets hold some other type, which can also act as a
+* _Wrapped_ packets hold some other type, which can also act as a
   standalone mathematical object. Examples include packets that hold
   triangulations, links, and normal surface lists. Each wrapped packet
   type is represented by a class of the form PacketOf<Held>, where
   *Held* is the underlying mathematical type (e.g., Triangulation<3>,
   Link, or NormalSurfaces).
 
-Since Regina 7.0, packets are *always* managed by std::shared_ptr.
-There are *no* exceptions to this rule. The implication of this are:
+Since Regina 7.0, packets are _always_ managed by std::shared_ptr.
+There are _no_ exceptions to this rule. The implication of this are:
 
-* Every new packet *must* be wrapped in a std::shared_ptr immediately
+* Every new packet _must_ be wrapped in a std::shared_ptr immediately
   after construction. It is recommended that you create new packets
   using std::make_shared, not ``new``, so you do not forget this. Many
   of Regina's operations on packets will assume that such a
@@ -71,7 +71,7 @@ There are *no* exceptions to this rule. The implication of this are:
   if it does not.
 
 * When given an existing raw packet pointer (e.g., as a function
-  argument), you must *not* wrap it in a new std::shared_ptr. This
+  argument), you must _not_ wrap it in a new std::shared_ptr. This
   would lead to two shared pointers "independently" claiming ownership
   of the packet (which means the packet would be destroyed earlier
   than expected). If you need to convert a raw Packet* into a
@@ -90,7 +90,7 @@ parents. This has the following impliciations for destruction:
   scope.
 
 * If you destroy a parent but you are also holding another shared
-  pointer to one of its children, then that child will *not* be
+  pointer to one of its children, then that child will _not_ be
   destroyed. It will instead become orphaned, and will become the root
   of its own (smaller) packet tree.
 
@@ -145,7 +145,7 @@ To create a new wrapped packet type that holds an object of type
   a Held::ChangeEventSpan on the stack while the modification takes
   place. This is again lightweight (if an object does not belong to a
   packet then the cost is just two integer comparisions), and it will
-  ensure that if the object *does* belong to a packet then listeners
+  ensure that if the object _does_ belong to a packet then listeners
   are notified.
 
 External objects can listen for events on packets, such as when
@@ -295,7 +295,7 @@ and packetWasRenamed() will be called but packetToBeChanged() and
 packetWasChanged() will not.
 
 As a special case, when a packet is destroyed there is only the one
-event packetBeingDestroyed(), since this is called *during* the packet
+event packetBeingDestroyed(), since this is called _during_ the packet
 destructor (at a time when the set of listeners is still available,
 but some of the other packet data may have already been destroyed).
 
@@ -317,10 +317,10 @@ only those callbacks that you are interested in. Be aware that:
   guarantee as to whether or not the new listeners will be notified of
   the specific event currently being processed.
 
-* Callbacks can safely remove other listeners, but they must *not*
+* Callbacks can safely remove other listeners, but they must _not_
   remove the listener whose callback is currently being called. The
   one exception to this is packetBeingDestroyed(), which will
-  explicitly remove each listener *before* its callback is called
+  explicitly remove each listener _before_ its callback is called
   (which means, for example, the listener can safely delete itself).
 
 .. warning::
@@ -335,7 +335,7 @@ only those callbacks that you are interested in. Be aware that:
 .. warning::
     At the time of writing (admittedly long ago now), Qt has only
     limited support for multithreading. When working with an existing
-    packet tree in a new thread (not the main thread), the *only*
+    packet tree in a new thread (not the main thread), the _only_
     modification that you may make is to insert new packets.
     Modifications of any other type (such as changing, renaming,
     deleting or reordering existing packets) could lead to a crash
@@ -358,7 +358,7 @@ R"doc(A packet that stores a mathematical object of type *Held*.
 
 This is the class used for all of Regina's _wrapped packet types_. See
 the Packet class notes for general information about packets, and
-about the differences between *wrapped* and *innate* packet types.
+about the differences between _wrapped_ and _innate_ packet types.
 
 You can use a PacketOf<Held> in much the same way as you can use a
 "raw" object of type *Held*. This class inherits the full interface
@@ -375,7 +375,7 @@ There are some important differences, however:
   passed by pointer, copies and swaps do not touch the tree structure,
   and moves are not supported at all.
 
-* The *Held* class will typically *not* be polymorphic. In contrast,
+* The *Held* class will typically _not_ be polymorphic. In contrast,
   PacketOf<Held> aquires polymorphism through its inherited Packet
   interface.
 
@@ -549,7 +549,7 @@ deeper within the tree could not be read then that particular packet
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it through
+    used in the given file _name_, and simply passes it through
     unchanged to low-level C/C++ file I/O routines.
 
 Python:
@@ -630,7 +630,7 @@ namespace PacketData_ {
 static const char *__copy =
 R"doc(Copy constructor that ignores its argument, and instead sets *heldBy_*
 to HELD_BY_NONE. This is because *heldBy_* stores information about
-the C++ type of *this* object, not the object being copied.
+the C++ type of _this_ object, not the object being copied.
 
 This constructor is provided so that *Held* can (if it wants) use an
 implicitly-declared copy or move constructor.)doc";
@@ -656,13 +656,13 @@ The ID that is returned will:
 * not clash with the anonID() returned from any other object, or with
   the internalID() returned from any packet of any type;
 
-These IDs are *not* preserved when copying or moving one object to
+These IDs are _not_ preserved when copying or moving one object to
 another, and are not preserved when writing to a Regina data file and
 then reloading the file contents.
 
 .. warning::
-    If this object *is* wrapped in a PacketOf<Held>, then anonID() and
-    Packet::internalID() may return *different* values.
+    If this object _is_ wrapped in a PacketOf<Held>, then anonID() and
+    Packet::internalID() may return _different_ values.
 
 See Packet::internalID() for further details.
 
@@ -894,7 +894,7 @@ compare a PacketShell against a Packet pointer, in case you need to
 identify which particular packet is being destroyed.
 
 When a packet is destroyed, it will automatically unregister each
-listener *before* calling packetBeingDestroyed() on that listener.
+listener _before_ calling packetBeingDestroyed() on that listener.
 Therefore, for this (and only this) callback, it is safe for a
 listener to unregister itself (since this will be a harmless operation
 that does nothing). In particular, this makes it safe for a listener
@@ -1279,8 +1279,8 @@ Precondition:
 
 Exception ``InvalidArgument``:
     The argument *child* already has a parent packet. Note that,
-    although this tests *one* of our preconditions, there are other
-    preconditions that are *not* tested, and for which no exceptions
+    although this tests _one_ of our preconditions, there are other
+    preconditions that are _not_ tested, and for which no exceptions
     are thrown.
 
 Parameter ``child``:
@@ -1356,7 +1356,7 @@ R"doc(Clones this packet (and possibly its descendants), assigns to it a
 suitable unused label and inserts the clone into the tree as a sibling
 of this packet.
 
-Note that any string tags associated with this packet will *not* be
+Note that any string tags associated with this packet will _not_ be
 cloned.
 
 If this packet has no parent in the tree structure, no clone will be
@@ -1369,7 +1369,7 @@ and is not guaranteed to succeed.
 .. note::
     Since Regina 7.0, if a normal surface/hypersurface or angle
     structure list is cloned, then the new clone will refer back to
-    the *original* triangulation, even if we are cloning an entire
+    the _original_ triangulation, even if we are cloning an entire
     packet tree. This is because there is no guarantee that the
     original triangulation was cloned also (it could live outside the
     cloned subtree, or might not be part of a packet tree at all).
@@ -1413,7 +1413,7 @@ descendants of this packet in the packet tree.
 
 The order of iteration is exactly the same as when iterating over the
 full subtree rooted at this packet (as offered by Packet::begin() and
-Packet::end()), except that the iteration *excludes* this packet
+Packet::end()), except that the iteration _excludes_ this packet
 itself. In particular, the iteration is depth-first, and each packet
 in the subtree is processed before its own descendants.
 
@@ -1443,7 +1443,7 @@ both const and non-const iteration. It is recommended that you just
 use ``auto`` if you need to store a local copy of the returned object.
 
 See also begin() and end() for iterating through the entire subtree
-*including* this packet, and children() for iterating over just this
+_including_ this packet, and children() for iterating over just this
 packet's immediate children.
 
 Returns:
@@ -1457,7 +1457,7 @@ descendants of this packet in the packet tree.
 
 The order of iteration is exactly the same as when iterating over the
 full subtree rooted at this packet (as offered by Packet::begin() and
-Packet::end()), except that the iteration *excludes* this packet
+Packet::end()), except that the iteration _excludes_ this packet
 itself. In particular, the iteration is depth-first, and each packet
 in the subtree is processed before its own descendants.
 
@@ -1479,7 +1479,7 @@ both const and non-const iteration. It is recommended that you just
 use ``auto`` if you need to store a local copy of the returned object.
 
 See also begin() and end() for iterating through the entire subtree
-*including* this packet, and children() for iterating over just this
+_including_ this packet, and children() for iterating over just this
 packet's immediate children.
 
 Returns:
@@ -1649,8 +1649,8 @@ Precondition:
 Exception ``InvalidArgument``:
     The argument *newChild* already has a parent packet, and/or the
     argument *prevChild* is non-null and does not have this packet as
-    its parent. Note that, although this tests *some* of our
-    preconditions, there are other preconditions that are *not*
+    its parent. Note that, although this tests _some_ of our
+    preconditions, there are other preconditions that are _not_
     tested, and for which no exceptions are thrown.
 
 Parameter ``newChild``:
@@ -1682,8 +1682,8 @@ Precondition:
 Exception ``InvalidArgument``:
     The argument *newChild* already has a parent packet, and/or the
     argument *prevChild* is non-null and does not have this packet as
-    its parent. Note that, although this tests *some* of our
-    preconditions, there are other preconditions that are *not*
+    its parent. Note that, although this tests _some_ of our
+    preconditions, there are other preconditions that are _not_
     tested, and for which no exceptions are thrown.
 
 Parameter ``newChild``:
@@ -1711,8 +1711,8 @@ Precondition:
 
 Exception ``InvalidArgument``:
     The argument *child* already has a parent packet. Note that,
-    although this tests *one* of our preconditions, there are other
-    preconditions that are *not* tested, and for which no exceptions
+    although this tests _one_ of our preconditions, there are other
+    preconditions that are _not_ tested, and for which no exceptions
     are thrown.
 
 Parameter ``child``:
@@ -1735,8 +1735,8 @@ Precondition:
 
 Exception ``InvalidArgument``:
     The argument *child* already has a parent packet. Note that,
-    although this tests *one* of our preconditions, there are other
-    preconditions that are *not* tested, and for which no exceptions
+    although this tests _one_ of our preconditions, there are other
+    preconditions that are _not_ tested, and for which no exceptions
     are thrown.
 
 Parameter ``child``:
@@ -2019,8 +2019,8 @@ Precondition:
 
 Exception ``InvalidArgument``:
     The argument *child* already has a parent packet. Note that,
-    although this tests *one* of our preconditions, there are other
-    preconditions that are *not* tested, and for which no exceptions
+    although this tests _one_ of our preconditions, there are other
+    preconditions that are _not_ tested, and for which no exceptions
     are thrown.
 
 Parameter ``child``:
@@ -2087,7 +2087,7 @@ even if there are no other shared pointers to this packet).
 This routine takes small constant time. It is safe to use regardless
 of whether this packet currently has a parent or not.
 
-If you wish to reparent *all* of the children of a given packet, see
+If you wish to reparent _all_ of the children of a given packet, see
 transferChildren() instead.
 
 Precondition:
@@ -2152,8 +2152,8 @@ Precondition:
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it through
-    unchanged to low-level C/C++ file I/O routines. The *contents* of
+    used in the given file _name_, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
 Parameter ``filename``:

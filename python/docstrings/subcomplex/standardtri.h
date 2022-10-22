@@ -64,7 +64,7 @@ of this routine just throws a NotImplemented exception.
 
 Most users will not need this routine, since presumably you already
 have an explicit Triangulation<3> available and so you can just call
-Triangulation<3>::homology() instead (which, unlike this routine, *is*
+Triangulation<3>::homology() instead (which, unlike this routine, _is_
 always implemented). This StandardTriangulation::homology() routine
 should be seen as more of a verification/validation tool for the
 Regina developers.

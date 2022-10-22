@@ -20,7 +20,7 @@ class LayeredChain) glued together in a particular way.
 
 Orient the hinge edges and diagonals of each chain so they all point
 in the same direction around the solid tori formed by each layered
-chain (a *diagonal* is an edge between the two top triangular faces or
+chain (a _diagonal_ is an edge between the two top triangular faces or
 an edge between the two bottom triangular faces of a layered chain).
 
 The two top faces of the first chain are glued to a top and bottom
@@ -60,7 +60,7 @@ type of layered chain pair.
 
 Specifically, two layered chain pairs will compare as equal if and
 only if they their constituent layered chains each have the same
-respective lengths, *and* appear in the same order.
+respective lengths, _and_ appear in the same order.
 
 This test follows the general rule for most subclasses of
 StandardTriangulation (excluding fixed structures such as SnappedBall
@@ -83,7 +83,7 @@ types of layered chain pair.
 
 Specifically, two layered chain pairs will compare as equal if and
 only if they their constituent layered chains each have the same
-respective lengths, *and* appear in the same order.
+respective lengths, _and_ appear in the same order.
 
 This test follows the general rule for most subclasses of
 StandardTriangulation (excluding fixed structures such as SnappedBall

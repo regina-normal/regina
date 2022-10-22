@@ -44,8 +44,8 @@ maths/perm.h.
     be indistinguishable (since both would take two integer
     arguments). Here Perm<2> takes an approach that is consistent with
     the generic Perm<n> class: ``Perm<2>(a,b)`` is interpreted as the
-    *transposition* of *a* and *b*. In particular, ``Perm(0,1)`` is
-    *not* the identity permutation.
+    _transposition_ of *a* and *b*. In particular, ``Perm(0,1)`` is
+    _not_ the identity permutation.
 
 Python:
     Since Python does not support templates, this class is made
@@ -401,7 +401,7 @@ Returns:
 static const char *reverse =
 R"doc(Finds the reverse of this permutation.
 
-Here *reverse* means that we reverse the images of 0 and 1. In other
+Here _reverse_ means that we reverse the images of 0 and 1. In other
 words, if permutation *q* is the reverse of *p*, then ``p[i] == q[1 -
 i]`` for all *i*.)doc";
 

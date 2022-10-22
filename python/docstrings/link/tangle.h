@@ -22,16 +22,16 @@ Regina stores tangles as projections, with the four endpoints fixed at
 the top-left, top-right, bottom-left and bottom-right corners of the
 diagram.
 
-Each tangles has a *type*, indicating how the four endpoints are
+Each tangles has a _type_, indicating how the four endpoints are
 connected. The three possible types are:
 
-* *horizontal*, indicating that the two top endpoints are connected,
+* _horizontal_, indicating that the two top endpoints are connected,
   and the two bottom endpoints are connected;
 
-* *vertical*, indicating that the two left endpoints are connected,
+* _vertical_, indicating that the two left endpoints are connected,
   and the two right endpoints are connected;
 
-* *diagonal*, indicating that the top-left and bottom-right endpoints
+* _diagonal_, indicating that the top-left and bottom-right endpoints
   are connected, and the bottom-left and top-right endpoints are
   connected.
 
@@ -191,7 +191,7 @@ the argumet) will be left unchanged.
 It is allowed to pass this tangle as *other*.
 
 Precondition:
-    It is not the case that both this and *other* are vertical tangles
+    It is not the case that both this and _other_ are vertical tangles
     (which would cause the addition to create a closed link
     component).
 
@@ -457,7 +457,7 @@ additional leading or trailing whitespace.
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     the viability of the diagram (i.e., whether the given crossings
     with the given signs actually produce a tangle of the given type
     with the correct endpoints). Of course non-viable inputs are not
@@ -505,7 +505,7 @@ Precondition:
 
 .. warning::
     While this routine does some error checking on the input, these
-    checks are not exhaustive. In particular, it does *not* test for
+    checks are not exhaustive. In particular, it does _not_ test for
     the viability of the diagram (i.e., whether the given crossings
     with the given signs actually produce a tangle of the given type
     with the correct endpoints). Of course non-viable inputs are not

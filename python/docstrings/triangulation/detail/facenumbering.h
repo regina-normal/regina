@@ -78,7 +78,7 @@ Template parameter ``subdim``:
 Template parameter ``codim``:
     the codimension (*dim*-*subdim*-1) of the faces being numbered.
     Ideally this would be specified directly as ``dim-subdim-1`` in
-    the partial template specialisation, and this *should* be legal
+    the partial template specialisation, and this _should_ be legal
     according to CWG1315; however, it fails to build under some
     versions of gcc (e.g., 10.2.0).)doc";
 
@@ -131,7 +131,7 @@ the vertices of the given face in increasing numerical order. That is,
 *c*[0] < ... < *c*[*subdim*]. The remaining images *c*[(*subdim* +
 1),...,*dim*] will be ordered arbitrarily.
 
-Note that this is *not* the same permutation as returned by
+Note that this is _not_ the same permutation as returned by
 Simplex<dim>::faceMapping<subdim>():
 
 * ordering() is a static function, which returns the same permutation

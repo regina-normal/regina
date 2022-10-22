@@ -29,7 +29,7 @@ internal code may be a useful means for passing permutation objects to
 and from the engine. For Perm<7>, the internal permutation codes have
 changed as of Regina 7.0:
 
-* *First*-generation codes were used internally in Regina 6.0.1 and
+* _First-generation_ codes were used internally in Regina 6.0.1 and
   earlier. These are _image packs_: integers whose lowest three bits
   represent the image of 0, whose next lowest three bits represent the
   image of 1, and so on. The routines permCode1(), setPermCode1(),
@@ -38,7 +38,7 @@ changed as of Regina 7.0:
   file format continues to use first-generation codes to describe
   gluings between 6-simplices.
 
-* *Second*-generation codes are used internally in Regina 7.0 and
+* _Second-generation_ codes are used internally in Regina 7.0 and
   above. These codes are integers between 0 and 5039 inclusive,
   representing the index of the permutation in the array Perm<7>::S7.
   The routines permCode2(), setPermCode2(), fromPermCode2() and
@@ -247,7 +247,7 @@ static const char *__lt =
 R"doc(Determines if this appears earlier than the given permutation in the
 array Perm<7>::Sn.
 
-Note that this is *not* the same ordering of permutations as the
+Note that this is _not_ the same ordering of permutations as the
 ordering implied by compareWith(). This is, however, consistent with
 the ordering implied by the ++ operators, and this order is also
 faster to compute than compareWith().
@@ -313,7 +313,7 @@ The permutation that is returned is the same as you would obtain by
 calling ``(*this) * q``.
 
 Precondition:
-    You *must* have called the routine precompute() at least once in
+    You _must_ have called the routine precompute() at least once in
     the lifetime of this program before using cachedComp(). Otherwise
     this routine will almost certainly crash your program.
 
@@ -340,7 +340,7 @@ The permutation that is returned is the same as you would obtain by
 calling ``(*this) * q * r``.
 
 Precondition:
-    You *must* have called the routine precompute() at least once in
+    You _must_ have called the routine precompute() at least once in
     the lifetime of this program before using cachedComp(). Otherwise
     this routine will almost certainly crash your program.
 
@@ -375,7 +375,7 @@ The permutation that is returned is the same as you would obtain by
 calling order().
 
 Precondition:
-    You *must* have called the routine precompute() at least once in
+    You _must_ have called the routine precompute() at least once in
     the lifetime of this program before using cachedOrder(). Otherwise
     this routine will almost certainly crash your program.
 
@@ -403,7 +403,7 @@ The permutation that is returned is the same as you would obtain by
 calling pow(exp).
 
 Precondition:
-    You *must* have called the routine precompute() at least once in
+    You _must_ have called the routine precompute() at least once in
     the lifetime of this program before using cachedPow(). Otherwise
     this routine will almost certainly crash your program.
 
@@ -435,7 +435,7 @@ static const char *compareWith =
 R"doc(Lexicographically compares the images of (0,1,2,3,4,5,6) under this
 and the given permutation.
 
-Note that this does *not* yield the same ordering of permutations as
+Note that this does _not_ yield the same ordering of permutations as
 used by the less-than and increment operators. Moreover, compareWith()
 is slower than the less-than operator to compute.
 
@@ -754,7 +754,7 @@ static const char *precompute =
 R"doc(Performs the precomputation necessary for using the optimised
 cachedComp(), cachedPow() and cachedOrder() routines.
 
-This *must* be called before calling any of cachedComp(), cachedPow()
+This _must_ be called before calling any of cachedComp(), cachedPow()
 or cachedOrder().
 
 This only needs to be done once in the lifetime of the program. If you
@@ -790,7 +790,7 @@ Returns:
 static const char *reverse =
 R"doc(Finds the reverse of this permutation.
 
-Here *reverse* means that we reverse the images of 0,...,6. In other
+Here _reverse_ means that we reverse the images of 0,...,6. In other
 words, if permutation *q* is the reverse of *p*, then ``p[i] == q[6 -
 i]`` for all *i*.)doc";
 

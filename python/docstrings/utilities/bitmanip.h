@@ -33,7 +33,7 @@ Python:
     For Python users, the class BitManipulator represents the C++ type
     BitManipulator<unsigned long>. In particular, you should be aware
     that BitManipulator is designed specifically to work with native
-    C++ integer types, and *cannot* handle Python's arbitrary-
+    C++ integer types, and _cannot_ handle Python's arbitrary-
     precision integers. It is up to you to ensure that any Python
     integers that you pass into the BitManipulator routines are small
     enough to fit inside a C++ unsigned long.)doc";

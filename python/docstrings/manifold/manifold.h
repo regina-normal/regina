@@ -24,7 +24,7 @@ Each subclass:
 * may optionally override construct(), homology() and/or
   writeStructure(), if they are able to provide this functionality;
 
-* must *not* override writeTextShort() or writeTextLong(), since these
+* must _not_ override writeTextShort() or writeTextLong(), since these
   routines are not virtual, and are provided directly by the Manifold
   base class;
 

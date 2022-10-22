@@ -17,7 +17,7 @@ R"doc(A collection of normal hypersurfaces in a 4-manifold triangulation.
 
 There are some important changes to this class as of Regina 7.0:
 
-* A normal hypersurface list does *not* need to be a child packet of
+* A normal hypersurface list does _not_ need to be a child packet of
   the underlying triangulation, and indeed does not need to interact
   with the packet tree at all.
 
@@ -43,7 +43,7 @@ and faster for ad-hoc use. The consequences of this are:
   packets, and/or event listeners.
 
 * To include an NormalHypersurfaces object in the packet tree, you
-  must create a new PacketOf<NormalHypersurfaces>. This *is* a packet
+  must create a new PacketOf<NormalHypersurfaces>. This _is_ a packet
   type, and supports labels, tags, child/parent packets, and event
   listeners. It derives from NormalHypersurfaces, and so inherits the
   full NormalHypersurfaces interface.
@@ -206,7 +206,7 @@ hypersurface list, and their representations will be scaled down to
 use the smallest possible integer coordinates.
 
 Unlike the old enumerate() function, the new normal hypersurface list
-will *not* be inserted into the packet tree. Moreover, the given
+will _not_ be inserted into the packet tree. Moreover, the given
 triangulation may change or even be destroyed without causing
 problems. See the class notes for details.
 
@@ -243,7 +243,7 @@ Exception ``UnsolvedCase``:
     constructed, which can only happen in certain coordinate systems
     where this is explicitly described in the HyperCoords enum
     documentation; or (ii) the arguments require enumerating
-    *fundamental* normal surfaces using the primal Hilbert basis
+    _fundamental_ normal surfaces using the primal Hilbert basis
     algorithm, and Normaliz was unable to complete its portion of the
     task, which in theory should never happen at all.
 
@@ -367,7 +367,7 @@ requirements.
 See NormalHypersurfaces::swap() for more details.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both lists which may in turn call arbitrary code
     via any registered packet listeners.
 
@@ -461,7 +461,7 @@ R"doc(Swaps the contents of this and the given list.
 This routine will behave correctly if *other* is in fact this list.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both lists which may in turn call arbitrary code
     via any registered packet listeners.
 
@@ -492,7 +492,7 @@ The rules for using the triangulation() reference are:
   exception being thrown.
 
 .. warning::
-    As of Regina 7.0, you *cannot* access this triangulation via the
+    As of Regina 7.0, you _cannot_ access this triangulation via the
     packet tree as Packet::parent(). This is because normal
     hypersurface lists can now be kept anywhere in the packet tree, or
     can be kept as standalone objects outside the packet tree

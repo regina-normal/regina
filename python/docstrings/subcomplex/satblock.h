@@ -23,7 +23,7 @@ annuli, there may be no other boundary triangles within the block.
 The boundary annuli are numbered consecutively as illustrated below,
 where the markings 0 and 1 within the triangles represent the first
 and second triangle of each annulus (see the SatAnnulus class notes
-for details). Note that the following diagram is viewed from *inside*
+for details). Note that the following diagram is viewed from _inside_
 the block.
 
 ```
@@ -55,10 +55,10 @@ virtual adjustSFS() routine.
 Saturated blocks are generally joined to one another (or themselves)
 along their boundary annuli. For this purpose, each saturated block
 contains a list of which annulus of this block is adjacent to which
-annulus of which other block. Adjacencies may be *reflected*, meaning
+annulus of which other block. Adjacencies may be _reflected_, meaning
 that the adjacent annulus has its fibres reversed (i.e., the adjacent
 annulus has undergone an up-to-down reflection); they may also be
-*backwards*, meaning that the first triangle of one annulus is joined
+_backwards_, meaning that the first triangle of one annulus is joined
 to the second triangle of the other (and vice versa).
 
 This is an abstract base class: its subclasses correspond to different
@@ -208,7 +208,7 @@ As examples of what is meant by "combinatorial parameters":
 
 * Two SatLST objects will compare as equal if their internal layered
   solid tori have the same three integer parameters (identifying how
-  the meridinal disc meets the three boundary edges), *and* their
+  the meridinal disc meets the three boundary edges), _and_ their
   corresponding boundary edges are attached to the
   horizontal/vertical/diagonal edges of the boundary annulus in the
   same way.
@@ -367,7 +367,7 @@ space. This routine should make any further changes that are required
 though a trivial Seifert fibred space over the annulus with one
 twisted reflector boundary (and one twisted puncture corresponding to
 the block boundary) had been replaced by this block. In particular,
-this routine should *not* add the reflector boundary itself.
+this routine should _not_ add the reflector boundary itself.
 
 Parameter ``sfs``:
     the Seifert fibred space to adjust.

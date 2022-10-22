@@ -27,7 +27,7 @@ the process. Cycles within the *k*th cycle group of the source
 signature must map to cycles within the *k*th cycle group of the
 destination signature.
 
-A *partial* isomorphism is only required to map the cycles and symbols
+A _partial_ isomorphism is only required to map the cycles and symbols
 found in the first *g* cycle groups of the source isomorphism (for
 some *g*). If only a subset of symbols are mapped, that subset must be
 symbols 0,1,...,*k* for some *k*.

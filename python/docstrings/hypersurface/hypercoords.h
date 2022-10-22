@@ -28,7 +28,7 @@ triangulation is encoded by an integer vector.
 
 Normal hypersurfaces do not always store their internal vectors in the
 same coordinate system that was used to enumerate the surfaces, and
-indeed an isolated hypersurface does not know *how* it was originally
+indeed an isolated hypersurface does not know _how_ it was originally
 created.
 
 Therefore each normal hypersurface keeps a small amount of data,
@@ -183,7 +183,7 @@ enumerated or created the hypersurface that uses this encoding.
 If this returns ``True``, it does not mean that the hypersurface does
 actually contain vertex linking components; it simply means that the
 user will need to test this themselves. If this returns ``False``,
-however, it is guaranteed that the hypersurface does *not* contain any
+however, it is guaranteed that the hypersurface does _not_ contain any
 vertex linking components, with no further testing required.
 
 Returns:

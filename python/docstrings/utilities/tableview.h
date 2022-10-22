@@ -18,8 +18,8 @@ elements of a given multi-dimensional table.
 
 This access is read-only, in the sense that both the table itself and
 the table elements are read-only. (Of course, if the table elements
-are non-const pointers then this means that the *pointers* cannot be
-reassigned to point to different objects, but the objects they *point*
+are non-const pointers then this means that the _pointers_ cannot be
+reassigned to point to different objects, but the objects they _point_
 to can still be modified.)
 
 This class is in a sense a multi-dimensional analogue to TableView
@@ -163,7 +163,7 @@ ranges from 0 to (*s_k*-1) inclusive.
 
 Python:
     In Python, the special method __len__() returns *s_1*. That is, it
-    indicates the allowed range for the *first* array subscript.
+    indicates the allowed range for the _first_ array subscript.
 
 Returns:
     the size of this array, across all of the array dimensions.)doc";

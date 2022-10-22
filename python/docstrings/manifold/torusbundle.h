@@ -53,7 +53,7 @@ static const char *__eq =
 R"doc(Determines whether this and the given object contain precisely the
 same presentations of the same torus bundle.
 
-This routine does *not* test for homeomorphism; instead it compares
+This routine does _not_ test for homeomorphism; instead it compares
 the specific monodromies. If you have two objects that represent same
 torus bundle using two different monodromies, they will be treated as
 not equal by this routine.
@@ -109,7 +109,7 @@ static const char *__ne =
 R"doc(Determines whether this and the given object do not contain precisely
 the same presentations of the same torus bundle.
 
-This routine does *not* test for homeomorphism; instead it compares
+This routine does _not_ test for homeomorphism; instead it compares
 the specific monodromies. If you have two objects that represent same
 torus bundle using two different monodromies, they will be treated as
 not equal by this routine.

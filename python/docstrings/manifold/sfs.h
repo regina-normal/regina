@@ -59,8 +59,8 @@ the 3-manifold. They do however identify whether or not the base
 orbifold is orientable, and whether or not it contains any fibre-
 reversing paths.
 
-When describing punctures and reflector boundaries, a *twisted*
-boundary is one that gives a fibre-reversing path, and an *untwisted*
+When describing punctures and reflector boundaries, a _twisted_
+boundary is one that gives a fibre-reversing path, and an _untwisted_
 boundary is one around which the direction of fibres is preserved.
 
 Exceptional fibres are sorted first by *alpha* (the index) and then by
@@ -174,10 +174,10 @@ static const char *__eq =
 R"doc(Determines whether this and the given object contain precisely the
 same presentations of the same Seifert fibred space.
 
-This routine does *not* test for homeomorphism. Instead it compares
+This routine does _not_ test for homeomorphism. Instead it compares
 the exact presentations, including the precise details of the base
 orbifold and the exact parameters of the exceptional fibres, and
-determines whether or not these *presentations* are identical. If you
+determines whether or not these _presentations_ are identical. If you
 have two different presentations of the same Seifert fibred space,
 they will be treated as not equal by this routine.
 
@@ -264,10 +264,10 @@ static const char *__ne =
 R"doc(Determines whether this and the given object do not contain precisely
 the same presentations of the same Seifert fibred space.
 
-This routine does *not* test for homeomorphism. Instead it compares
+This routine does _not_ test for homeomorphism. Instead it compares
 the exact presentations, including the precise details of the base
 orbifold and the exact parameters of the exceptional fibres, and
-determines whether or not these *presentations* are identical. If you
+determines whether or not these _presentations_ are identical. If you
 have two different presentations of the same Seifert fibred space,
 they will be treated as not equal by this routine.
 
@@ -551,7 +551,7 @@ R"doc(Returns the total number of punctures in the base orbifold. In other
 words, this routine returns the total number of real torus or Klein
 bottle boundary components in the overall 3-manifold.
 
-Note that reflector boundaries on the base orbifold are *not* counted
+Note that reflector boundaries on the base orbifold are _not_ counted
 here; only the ordinary boundary components that give rise to real
 3-manifold boundaries are included.
 
@@ -572,7 +572,7 @@ This routine either counts only twisted punctures (which give rise to
 Klein bottle boundaries), or only untwisted punctures (which give rise
 to torus boundaries).
 
-Either way, reflector boundaries on the base orbifold are *not*
+Either way, reflector boundaries on the base orbifold are _not_
 counted here; only ordinary boundary components that give rise to real
 3-manifold boundaries are considered.
 
@@ -622,7 +622,7 @@ punctures in the base orbifold), with the exception that each base
 curve will be reflected.
 
 .. warning::
-    The space is *not* reduced after reflecting. It may be that the
+    The space is _not_ reduced after reflecting. It may be that the
     space can be further simplified (especially in the case of non-
     orientable manifolds).)doc";
 

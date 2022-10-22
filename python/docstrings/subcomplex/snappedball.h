@@ -40,7 +40,7 @@ specific presentation of a snapped 3-ball.
 
 Unlike the parameterised subclasses of StandardTriangulation, this
 SnappedBall subclass represents a fixed structure, and so its
-comparisons test not for the *structure* but the precise *location* of
+comparisons test not for the _structure_ but the precise _location_ of
 this structure within the enclosing triangulation.
 
 Specifically, two snapped 3-balls will compare as equal if and only if
@@ -65,7 +65,7 @@ specific presentations of a snapped 3-ball.
 
 Unlike the parameterised subclasses of StandardTriangulation, this
 SnappedBall subclass represents a fixed structure, and so its
-comparisons test not for the *structure* but the precise *location* of
+comparisons test not for the _structure_ but the precise _location_ of
 this structure within the enclosing triangulation.
 
 Specifically, two snapped 3-balls will compare as equal if and only if

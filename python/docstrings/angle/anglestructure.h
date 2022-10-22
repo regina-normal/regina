@@ -108,7 +108,7 @@ This order is not mathematically meaningful; it is merely provided for
 scenarios where you need to be able to sort angle structures (e.g.,
 when using them as keys in a map).
 
-The order *is* well-defined, and will be preserved across copy/move
+The order _is_ well-defined, and will be preserved across copy/move
 operations, different program executions, and different platforms
 (since it is defined purely in terms of the angle coordinates, and
 does not use transient properties such as locations in memory).

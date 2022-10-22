@@ -51,12 +51,12 @@ static const char *__eq =
 R"doc(Determines whether this and the given homomorphism have identical
 presentations.
 
-This routine does *not* test whether the two homomorphisms are equal
+This routine does _not_ test whether the two homomorphisms are equal
 in the sense that each element of the domain maps to the same group
 element of the codomain - in general this is an undecidable problem.
 
 Instead, this routine tests whether the two homomorphisms map the
-*i*th generator of the domain to precisely the same *word* in the
+*i*th generator of the domain to precisely the same _word_ in the
 codomain, for each *i*.
 
 This routine will not test whether the domains and codomains have
@@ -172,12 +172,12 @@ static const char *__ne =
 R"doc(Determines whether this and the given homomorphism do not have
 identical presentations.
 
-This routine does *not* test whether the two homomorphisms are equal
+This routine does _not_ test whether the two homomorphisms are equal
 in the sense that each element of the domain maps to the same group
 element of the codomain - in general this is an undecidable problem.
 
 Instead, this routine tests whether the two homomorphisms map the
-*i*th generator of the domain to precisely the same *word* in the
+*i*th generator of the domain to precisely the same _word_ in the
 codomain, for each *i*.
 
 This routine will not test whether the domains and codomains have

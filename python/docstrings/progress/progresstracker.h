@@ -33,11 +33,11 @@ R"doc(The base class for Regina's progress tracking classes.
 
 These classes manage progress tracking and cancellation polling for
 long operations. A typical progress tracker is simultaneously used by
-a *writing* thread, which is performing the long calculations, and a
-*reading* thread, which displays progress updates to the user and/or
+a _writing_ thread, which is performing the long calculations, and a
+_reading_ thread, which displays progress updates to the user and/or
 takes cancellation requests from the user.
 
-Progress works through a series of *stages*. Each stage has a text
+Progress works through a series of _stages_. Each stage has a text
 description, as well as a numerical progress indicator. For the class
 ProgressTracker, this is a percentage that rises from 0 to 100 as the
 stage progresses; for ProgressTrackerOpen, this is an integer that
@@ -305,7 +305,7 @@ Parameter ``desc``:
 Parameter ``weight``:
     the relative weight of this stage as a fraction of the entire
     operation. This weight must be between 0 and 1 inclusive, and the
-    weights of *all* stages must sum to 1 in total.)doc";
+    weights of _all_ stages must sum to 1 in total.)doc";
 
 // Docstring regina::python::doc::ProgressTracker_::percent
 static const char *percent =

@@ -46,12 +46,12 @@ subspace. The resulting list of extremal rays will contain no
 duplicates or redundancies.
 
 Parameter *constraints* may contain a set of validity constraints, in
-which case this routine will only return *valid* extremal rays. Each
+which case this routine will only return _valid_ extremal rays. Each
 validity constraint is of the form "an extremal ray may only lie
 outside at most one of these facets of the original cone"; see the
 ValidityConstraints class for details. These contraints have the
 important property that, although validity is not preserved under
-convex combination, *invalidity* is.
+convex combination, _invalidity_ is.
 
 An optional progress tracker may be passed. If so, this routine will
 update the percentage progress and poll for cancellation requests. It

@@ -20,9 +20,9 @@ Excluding a triangulation from a census is not a promise: for example,
 a census that uses the flag PURGE_NON_MINIMAL might include some non-
 minimal triangulations and exclude others.
 
-However, *including* a triangulation *is* a promise: for example, a
+However, _including_ a triangulation _is_ a promise: for example, a
 census that uses the flag PURGE_NON_MINIMAL will promise to include
-every *minimal* triangulations.
+every _minimal_ triangulations.
 
 These flags can be combined using the bitwise OR operator. See (for
 example) the GluingPermSearcher<3> constructor documentation for

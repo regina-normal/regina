@@ -53,7 +53,7 @@ Algebraic Computation", ACM, 2011, pp. 59-66.
 
 No additional unwanted triangulations will be produced by this search
 (in contrast to other search classes, such as ClosedPrimeMinSearcher).
-That is, *only* compact 3-manifolds will be produced.
+That is, _only_ compact 3-manifolds will be produced.
 
 This class is designed to manage the construction of a large census of
 triangulations, and so it does not support copying, moving or
@@ -88,7 +88,7 @@ Algebraic Computation", ACM, 2011, pp. 59-66.
 
 No additional unwanted triangulations will be produced by this search
 (in contrast to other search classes, such as ClosedPrimeMinSearcher).
-That is, *only* 3-manifolds with the required vertex links will be
+That is, _only_ 3-manifolds with the required vertex links will be
 produced.
 
 This class is designed to manage the construction of a large census of
@@ -126,8 +126,8 @@ algorithm for when only minimal ideal triangulations of cusped finite-
 volume hyperbolic 3-manifolds are required. Here every vertex link
 will be a torus or Klein bottle.
 
-Note that this searches for *any* triangulations of such hyperbolic
-manifolds, not just *geometric* triangulations.
+Note that this searches for _any_ triangulations of such hyperbolic
+manifolds, not just _geometric_ triangulations.
 
 Note that additional unwanted triangulations (e.g., non-hyperbolic or
 non-minimal triangulations) may still be produced by this search.
@@ -270,7 +270,7 @@ parameters entirely different algorithms are used.
 Note that not all permutation sets described by parameter *whichPurge*
 will be avoided (i.e., you may get gluing permutation sets that you
 did not want). It is guaranteed however that every permutation set
-whose corresonding triangulation does *not* satisfy the *whichPurge*
+whose corresonding triangulation does _not_ satisfy the *whichPurge*
 constraints will be generated.
 
 Similarly, even if *finiteOnly* is set to ``True``, some non-finite
@@ -321,7 +321,7 @@ Parameter ``whichPurge``:
     of constants from the CensusPurgeFlags enumeration, or PURGE_NONE
     if we should simply generate every possible permutation set. If a
     variety of purge constants are bitwise ORed together, a
-    permutation set whose triangulation satisfies *any* of these
+    permutation set whose triangulation satisfies _any_ of these
     constraints may be avoided. Note that not all such permutation
     sets will be avoided, but enough are avoided that the performance
     increase is noticeable.)doc";

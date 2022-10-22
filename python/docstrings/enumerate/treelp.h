@@ -44,7 +44,7 @@ some variables:
   the actual change of variable by editing the tableaux itself using
   column operations). Be warned: as a result, when we arrive at a
   final solution and collect the values of the variables, we must
-  remember to *increment* the values of any such variables by one.
+  remember to _increment_ the values of any such variables by one.
 
 We do not store the full tableaux (which is dense and slow to work
 with). Instead we store the matrix of row operations that were applied
@@ -80,7 +80,7 @@ simply use the template parameter LPConstraintNone.
 In the context of normal surfaces (not angle structures): Although the
 underlying coordinate system is based on quadrilaterals and
 (optionally) triangles, this class has elementary support for octagons
-also, as seen in *almost* normal surface theory. For the purposes of
+also, as seen in _almost_ normal surface theory. For the purposes of
 this class, an octagon is represented as a pair of quadrilaterals of
 different types in the same tetrahedron: these meet the boundary of
 the tetrahedron in the same arcs as a single octagon, and therefore
@@ -196,15 +196,15 @@ the underlying triangulation that are not met). In this case, the
 LPInitialTableaux class constructor will throw an exception, as noted
 in the constructor documentation below.
 
-This class is optimised for working with *columns* of the matrix (in
+This class is optimised for working with _columns_ of the matrix (in
 particular, multiplying columns of this matrix by rows of some other
 matrix).
 
 This class works with a broad class of vector encodings for normal
 surfaces or angle structures, as described by the LPSystem class, and
-within that broad class it does not know *which* particular encoding
+within that broad class it does not know _which_ particular encoding
 or underlying coordinate system is being used. In particular, the
-matching equations it uses will *always* be one of the standard tri-
+matching equations it uses will _always_ be one of the standard tri-
 quad normal matching equations (if LPSystem::standard() is ``True``),
 the quad normal matching equations (if LPSystem::quad() is ``True``),
 or the homogeneous angle equations (if LPSystem::angles() is true). If
@@ -271,7 +271,7 @@ highly specialised, which makes this matrix class inappropriate for
 general use. If you just want a general-use integer matrix class, use
 MatrixInt instead.
 
-It is *critical* that, before using an LPMatrix, you reserve space for
+It is _critical_ that, before using an LPMatrix, you reserve space for
 its elements, and then fix a specific size. A matrix for which both
 tasks have been done will be called *initialised*. You can initialise
 a matrix in one of two ways:
@@ -323,15 +323,15 @@ class.
 
 By "broad class of vector encodings", we allow only three options:
 
-* *standard* encodings, which cover all normal surface encodings that
+* _standard_ encodings, which cover all normal surface encodings that
   include triangle coordinates, and where the tableaux holds triangle
   and quadrilateral columns but nothing else;
 
-* *quad* encodings, which cover all normal surface encodings that do
+* _quad_ encodings, which cover all normal surface encodings that do
   not include triangle coordinates, and where the tableaux holds
   quadrilateral columns but nothing else;
 
-* *angle* encodings, which cover angle structure encodings, and where
+* _angle_ encodings, which cover angle structure encodings, and where
   the tableaux holds angle columns as well as a single scaling column.
 
 When working with almost normal coordinate systems, we represent
@@ -349,7 +349,7 @@ namespace LPData_ {
 
 // Docstring regina::python::doc::LPData_::__default
 static const char *__default =
-R"doc(Constructs a new tableaux. You *must* call reserve() before doing
+R"doc(Constructs a new tableaux. You _must_ call reserve() before doing
 anything else with this tableaux.)doc";
 
 // Docstring regina::python::doc::LPData_::columns
@@ -398,7 +398,7 @@ Precondition:
     constrainOct() on one of the given variables, then these prior
     routines will have performed a change of variable. Any new call to
     constrainOct() involving this same variable will constrain the
-    *new* variable, not the original, and so might not have the
+    _new_ variable, not the original, and so might not have the
     intended effect.
 
 Parameter ``quad1``:
@@ -428,7 +428,7 @@ system to infeasible and return.
     If you have previously called constrainPositive() or
     constrainOct() on this variable, then these prior routines will
     have performed a change of variable. Any new call to
-    constrainPositive() on this same variable will constrain the *new*
+    constrainPositive() on this same variable will constrain the _new_
     variable, not the original, and so might not have the intended
     effect.
 
@@ -451,7 +451,7 @@ deactivated (and it will do nothing in this case).
     If you have previously called constrainPositive() or
     constrainOct() on this variable, then these prior routines will
     have performed a change of variable. Any new call to
-    constraintZero() on this same variable will constraint the *new*
+    constraintZero() on this same variable will constraint the _new_
     variable, not the original, and so might not have the intended
     effect.
 
@@ -480,8 +480,8 @@ variables will be returned in vector form.
 The modifications are as follows:
 
 * We extract variables that correspond to the original matching
-  equations obtained from the underlying triangulation, *not* the
-  current tableaux and *not* even the original starting tableaux
+  equations obtained from the underlying triangulation, _not_ the
+  current tableaux and _not_ even the original starting tableaux
   stored in origTableaux_. In other words, when we fill the resulting
   vector, we undo the column permutation described by
   LPInitialTableaux::columnPerm(), and we undo any changes of variable
@@ -529,7 +529,7 @@ Parameter ``type``:
     columns (i.e., it should reflect the columns as they are stored in
     this tableaux, not the original matching equations). As a special
     case, when extracting a strict angle structure one may pass *type*
-    = ``None``, in which case this routine will assume that *every*
+    = ``None``, in which case this routine will assume that _every_
     coordinate was constrained as positive.
 
 Returns:
@@ -610,7 +610,7 @@ Returns:
 
 // Docstring regina::python::doc::LPData_::reserve
 static const char *reserve =
-R"doc(Reserves enough memory for this tableaux to work with. You *must* call
+R"doc(Reserves enough memory for this tableaux to work with. You _must_ call
 this routine before doing anything else with this tableaux.
 
 The data in this tableaux will not be initialised, and the contents
@@ -624,7 +624,7 @@ Parameter ``origTableaux``:
 // Docstring regina::python::doc::LPData_::sign
 static const char *sign =
 R"doc(Returns the sign of the given variable under the current basis. This
-does *not* attempt to "undo" any changes of variable caused by prior
+does _not_ attempt to "undo" any changes of variable caused by prior
 calls to constrainPositive() or constrainOct(); it simply tests the
 sign of the variable in the given column of the tableaux in its
 current form.
@@ -843,7 +843,7 @@ being used to represent an octagon type.
 
 The LPData class offers support for octagonal almost normal surfaces,
 in which exactly one tetrahedron is allowed to have exactly one
-octagon type. We represent such an octagon as a *pair* of incompatible
+octagon type. We represent such an octagon as a _pair_ of incompatible
 quadrilaterals within the same tetrahedron. See the LPData class notes
 for details on how this works.
 
@@ -939,7 +939,7 @@ namespace LPMatrix_ {
 static const char *__default =
 R"doc(Creates an uninitialised matrix with no memory storage.
 
-You *must* call reserve() and then either initClone() or
+You _must_ call reserve() and then either initClone() or
 initIdentity() before this matrix will become initialised.)doc";
 
 // Docstring regina::python::doc::LPMatrix_::__eq

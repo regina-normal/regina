@@ -16,7 +16,7 @@ static const char *TightEncodable =
 R"doc(A base class that assists with support for tight encodings and
 corresponding decodings.
 
-If a class *T* supports tight encodings, then it *may* derive from
+If a class *T* supports tight encodings, then it _may_ derive from
 TightEncodable<T>. If it does, then your derived class must provide
 the following two functions, which implement tight encodings and
 decodings via input/output streams:
@@ -44,7 +44,7 @@ below):
 
 * ``static T tightDecoding(const std::string&)``.
 
-A class *T* that supports tight encodings does not *need* to derive
+A class *T* that supports tight encodings does not _need_ to derive
 from TightEncodable. However, if it does not then it should implement
 all four of the above functions itself. Examples of this include the
 permutation classes (which have optimised implementations due to their
@@ -56,7 +56,7 @@ Template parameter ``T``:
     TightEncodable<T>.
 
 .. note::
-    Every object of this class that is ever instantiated *must* be
+    Every object of this class that is ever instantiated _must_ be
     derived from the class *T*. In other words, end users cannot
     construct objects of the parent class TightEncodable<T>.
 
@@ -82,7 +82,7 @@ this routine is identical to calling Int::tightDecoding().
 
 Exception ``InvalidArgument``:
     The given string is not a tight encoding of an integer/boolean of
-    type *Int*. This includes the case where the encoding *is* a valid
+    type *Int*. This includes the case where the encoding _is_ a valid
     integer encoding but the integer itself is outside the allowed
     range for the *Int* type.
 

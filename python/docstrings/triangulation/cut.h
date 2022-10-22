@@ -16,19 +16,19 @@ static const char *Cut =
 R"doc(A cut that separates a triangulation or facet pairing into two pieces.
 This is essentially the same concept as a cut in graph theory.
 
-Specifically, a *cut* in a triangulation or facet pairing partitions
-the top-dimensional simplices into two *sides*. This effectively
+Specifically, a _cut_ in a triangulation or facet pairing partitions
+the top-dimensional simplices into two _sides_. This effectively
 splits the triangulation or facet pairing into two pieces, by removing
 all gluings between simplices on opposite sides. The two sides of a
 cut are numbered 0 and 1.
 
-In Regina, a cut has a *size* and a *weight:*
+In Regina, a cut has a _size_ and a _weight:_
 
-* The *size* refers to the size of the underlying triangulation or
+* The _size_ refers to the size of the underlying triangulation or
   facet pairing (i.e., it indicates the total number of top-
   dimensional simplices).
 
-* The *weight* refers to the number of gluings that are undone by the
+* The _weight_ refers to the number of gluings that are undone by the
   cut. This is the usual concept of weight from graph theory (i.e.,
   the number of edges in the underlying graph that cross the
   partition).
@@ -43,7 +43,7 @@ namespace Cut_ {
 static const char *__call =
 R"doc(Partitions the given triangulation using this cut.
 
-This routine will return *two* triangulations: the first will contain
+This routine will return _two_ triangulations: the first will contain
 all the top-dimensional simplices on side 0 of this cut, and the
 second will contain all the top-dimensional simplices on side 1. All
 gluings within the same side of the partition will be preserved, but
@@ -73,7 +73,7 @@ Returns:
 static const char *__call_2 =
 R"doc(Partitions the given facet pairing using this cut.
 
-This routine will return *two* facet pairings: the first will contain
+This routine will return _two_ facet pairings: the first will contain
 all the top-dimensional simplices on side 0 of this cut, and the
 second will contain all the top-dimensional simplices on side 1. All
 matchings between simplex facets within the same side of the partition
@@ -256,7 +256,7 @@ create a new ``Cut(side0, side1)`` and then make repeated calls to
 incFixedSizes().
 
 If this is already the last partition in such an iteration, then this
-routine will return ``False`` and convert this into the *first* such
+routine will return ``False`` and convert this into the _first_ such
 permutation.
 
 The order of iteration using incFixedSizes() is lexicographical in the
@@ -355,7 +355,7 @@ It will always be true that ``size(0) + size(1) == size()``.
 .. warning::
     This routine runs in linear time, since the sizes of the
     individual sides are not cached. This is in contrast to the
-    overall total size(), which *is* cached, and which runs in
+    overall total size(), which _is_ cached, and which runs in
     constant time.
 
 Exception ``InvalidArgument``:

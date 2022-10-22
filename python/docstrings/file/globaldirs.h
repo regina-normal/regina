@@ -23,7 +23,7 @@ install).
 
 If Regina may be running from a different place in the filesystem
 (e.g., if you are running an app bundle on macOS or if you are running
-directly from the source tree), then you *must* call either setDirs()
+directly from the source tree), then you _must_ call either setDirs()
 or deduceDirs() when your application starts. Otherwise the
 directories that GlobalDirs returns might be incorrect, and might not
 even exist.)doc";
@@ -43,7 +43,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 .. warning::
     If Regina is not installed in the exact location configured at
     compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
+    are running directly out of the source tre), you _must_ call
     either setDirs() or deduceDirs() before calling this routine.
 
 Returns:
@@ -63,7 +63,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 .. warning::
     If Regina is not installed in the exact location configured at
     compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
+    are running directly out of the source tre), you _must_ call
     either setDirs() or deduceDirs() before calling this routine.
 
 Returns:
@@ -86,7 +86,7 @@ Windows installations, and also running directly from within the
 source tree.
 
 If running from within the source tree, the executable must be inside
-the *build* tree (any depth of subdirectory within the build tree is
+the _build_ tree (any depth of subdirectory within the build tree is
 fine). Moreover, it is assumed that the build tree is either an
 immediate subdirectory of the source root, or else is the source root
 itself. So, for example, an executable path of
@@ -134,7 +134,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 .. warning::
     If Regina is not installed in the exact location configured at
     compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
+    are running directly out of the source tre), you _must_ call
     either setDirs() or deduceDirs() before calling this routine.
 
 Returns:
@@ -154,7 +154,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 .. warning::
     If Regina is not installed in the exact location configured at
     compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
+    are running directly out of the source tre), you _must_ call
     either setDirs() or deduceDirs() before calling this routine.
 
 Returns:
@@ -172,7 +172,7 @@ On a typical GNU/Linux system, this directory might (for example) be
 .. warning::
     If Regina is not installed in the exact location configured at
     compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
+    are running directly out of the source tre), you _must_ call
     either setDirs() or deduceDirs() before calling this routine.
 
 Returns:
@@ -187,7 +187,7 @@ packages directory.
 .. warning::
     If Regina is not installed in the exact location configured at
     compile time (e.g., if you are running a macOS app bundle or you
-    are running directly out of the source tre), you *must* call
+    are running directly out of the source tre), you _must_ call
     either setDirs() or deduceDirs() before calling this routine.
 
 Returns:

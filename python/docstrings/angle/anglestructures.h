@@ -17,7 +17,7 @@ R"doc(A collection of angle structures on a 3-manifold triangulation.
 
 There are some important changes to this class as of Regina 7.0:
 
-* An angle structure list does *not* need to be a child packet of the
+* An angle structure list does _not_ need to be a child packet of the
   underlying triangulation, and indeed does not need to interact with
   the packet tree at all.
 
@@ -43,7 +43,7 @@ and faster for ad-hoc use. The consequences of this are:
   packets, and/or event listeners.
 
 * To include an AngleStructures object in the packet tree, you must
-  create a new PacketOf<AngleStructures>. This *is* a packet type, and
+  create a new PacketOf<AngleStructures>. This _is_ a packet type, and
   supports labels, tags, child/parent packets, and event listeners. It
   derives from AngleStructures, and so inherits the full
   AngleStructures interface.
@@ -145,7 +145,7 @@ Unless you have some specialised need, the default AS_ALG_DEFAULT
 thinks will be the most efficient method.
 
 Unlike the old enumerate() function, the new angle structure list will
-*not* be inserted into the packet tree. Moreover, the given
+_not_ be inserted into the packet tree. Moreover, the given
 triangulation may change or even be destroyed without causing
 problems. See the class notes for details.
 
@@ -250,7 +250,7 @@ provided so that AngleStructures meets the C++ Swappable requirements.
 See AngleStructures::swap() for more details.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both lists which may in turn call arbitrary code
     via any registered packet listeners.
 
@@ -322,7 +322,7 @@ R"doc(Swaps the contents of this and the given list.
 This routine will behave correctly if *other* is in fact this list.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both lists which may in turn call arbitrary code
     via any registered packet listeners.
 
@@ -353,7 +353,7 @@ The rules for using the triangulation() reference are:
   exception being thrown.
 
 .. warning::
-    As of Regina 7.0, you *cannot* access this triangulation via the
+    As of Regina 7.0, you _cannot_ access this triangulation via the
     packet tree as Packet::parent(). This is because angle structure
     lists can now be kept anywhere in the packet tree, or can be kept
     as standalone objects outside the packet tree entirely.

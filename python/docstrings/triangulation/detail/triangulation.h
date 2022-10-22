@@ -24,7 +24,7 @@ requirements.
 See Triangulation<dim>::swap() for more details.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     packet change events which may in turn call arbitrary code via any
     registered packet listeners.
 
@@ -99,11 +99,11 @@ numbered simplices using the same gluing permutations. In other words,
 "identical" means that the triangulations are isomorphic via the
 identity isomorphism.
 
-For the less strict notion of *isomorphic* triangulations, which
+For the less strict notion of _isomorphic_ triangulations, which
 allows relabelling of the top-dimensional simplices and their
 vertices, see isIsomorphicTo() instead.
 
-This test does *not* examine the textual simplex descriptions, as seen
+This test does _not_ examine the textual simplex descriptions, as seen
 in Simplex<dim>::description(); these may still differ. It also does
 not test whether lower-dimensional faces are numbered identically
 (vertices, edges and so on); this routine is only concerned with top-
@@ -150,11 +150,11 @@ numbered simplices using the same gluing permutations. In other words,
 "identical" means that the triangulations are isomorphic via the
 identity isomorphism.
 
-For the less strict notion of *isomorphic* triangulations, which
+For the less strict notion of _isomorphic_ triangulations, which
 allows relabelling of the top-dimensional simplices and their
 vertices, see isIsomorphicTo() instead.
 
-This test does *not* examine the textual simplex descriptions, as seen
+This test does _not_ examine the textual simplex descriptions, as seen
 in Simplex<dim>::description(); these may still differ. It also does
 not test whether lower-dimensional faces are numbered identically
 (vertices, edges and so on); this routine is only concerned with top-
@@ -273,7 +273,7 @@ for (BoundaryComponent<dim>* b : tri.boundaryComponents()) { ... }
 
 The object that is returned will remain up-to-date and valid for as
 long as the triangulation exists. In contrast, however, remember that
-the individual boundary components *within* this list will be deleted
+the individual boundary components _within_ this list will be deleted
 and replaced each time the triangulation changes. Therefore it is best
 to treat this object as temporary only, and to call
 boundaryComponents() again each time you need it.
@@ -342,7 +342,7 @@ for (Component<dim>* c : tri.components()) { ... }
 
 The object that is returned will remain up-to-date and valid for as
 long as the triangulation exists. In contrast, however, remember that
-the individual component objects *within* this list will be deleted
+the individual component objects _within_ this list will be deleted
 and replaced each time the triangulation changes. Therefore it is best
 to treat this object as temporary only, and to call components() again
 each time you need it.
@@ -425,7 +425,7 @@ using the template function countFaces<subdim>() instead, which is
 fast constant time.
 
 For convenience, this routine explicitly supports the case *subdim* =
-*dim*. This is *not* the case for the routines face() and faces(),
+*dim*. This is _not_ the case for the routines face() and faces(),
 which give access to individual faces (the reason relates to the fact
 that top-dimensional simplices are built manually, whereas lower-
 dimensional faces are deduced properties).
@@ -488,7 +488,7 @@ the *c*th dual *subdim*-face of this triangulation, and the *r*th row
 corresponds to the *r*th dual (*subdim*-1)-face of this triangulation.
 Here we index dual faces in the same order as the (primal) faces of
 the triangulation that they are dual to, except that we omit primal
-*boundary* faces (i.e., primal faces for which Face::isBoundary()
+_boundary_ faces (i.e., primal faces for which Face::isBoundary()
 returns ``True``). Therefore, for triangulations with boundary, the
 dual face indices and the corresponding primal face indices might not
 be equal.
@@ -500,7 +500,7 @@ fix the orientations of the dual *k*-faces as follows:
   determined by assigning labels 0,...,*k* to its vertices.
 
 * Consider a dual *k*-face *d*, and let this be dual to the primal
-  (*dim*-*k*)-face *f*. In general, *d* will *not* be a simplex. Let
+  (*dim*-*k*)-face *f*. In general, *d* will _not_ be a simplex. Let
   *B* denote the barycentre of *f* (which also appears as the "centre"
   point of *d*).
 
@@ -517,7 +517,7 @@ fix the orientations of the dual *k*-faces as follows:
   We can extend this polytope away from *B*, pushing it all the way
   through the simplex *s*, until it becomes a *k*-simplex *g* whose
   vertices are *B* along with the *k* "unused" vertices of *s* that do
-  *not* appear in *f*.
+  _not_ appear in *f*.
 
 * We can now define the orientation of the dual *k*-face *d* to be the
   orientation of this *k*-simplex *g* that contains it. All that
@@ -707,7 +707,7 @@ evaluated strictly as the alternating sum of the number of *i*-faces
 Note that this routine handles ideal triangulations in a non-standard
 way. Since it computes the Euler characteristic of the triangulation
 (and not the underlying manifold), this routine will treat each ideal
-boundary component as a single vertex, and *not* as an entire
+boundary component as a single vertex, and _not_ as an entire
 (*dim*-1)-dimensional boundary component.
 
 In Regina's standard dimensions, for a routine that handles ideal
@@ -826,7 +826,7 @@ For each isomorphism that is found, this routine will call *action*
   return value of ``True`` indicates that the search should terminate
   immediately.
 
-* This triangulation *must* remain constant while the search runs
+* This triangulation _must_ remain constant while the search runs
   (i.e., *action* must not modify the triangulation).
 
 .. warning::
@@ -838,7 +838,7 @@ Python:
     first form is ``findAllIsomorphisms(other, action)``, which
     mirrors the C++ function: it takes *action* which may be a pure
     Python function, the return value indicates whether *action* ever
-    terminated the search, but it does *not* take an additonal
+    terminated the search, but it does _not_ take an additonal
     argument list (*args*). The second form is
     ``findAllIsomorphisms(other)``, which returns a Python list
     containing all of the isomorphisms that were found.
@@ -887,7 +887,7 @@ For each isomorphism that is found, this routine will call *action*
   return value of ``True`` indicates that the search should terminate
   immediately.
 
-* This triangulation *must* remain constant while the search runs
+* This triangulation _must_ remain constant while the search runs
   (i.e., *action* must not modify the triangulation).
 
 .. warning::
@@ -899,7 +899,7 @@ Python:
     first form is ``findAllSubcomplexesIn(other, action)``, which
     mirrors the C++ function: it takes *action* which may be a pure
     Python function, the return value indicates whether *action* ever
-    terminated the search, but it does *not* take an additonal
+    terminated the search, but it does _not_ take an additonal
     argument list (*args*). The second form is
     ``findAllSubcomplexesIn(other)``, which returns a Python list
     containing all of the isomorphisms that were found.
@@ -1038,8 +1038,8 @@ created with the default encoding (i.e., there was no *Encoding*
 template parameter passed to isoSig()).
 
 Calling isoSig() followed by fromIsoSig() is not guaranteed to produce
-an *identical* triangulation to the original, but it is guaranteed to
-produce a combinatorially *isomorphic* triangulation. In other words,
+an _identical_ triangulation to the original, but it is guaranteed to
+produce a combinatorially _isomorphic_ triangulation. In other words,
 fromIsoSig() may reconstruct the triangulation with its simplices
 and/or vertices relabelled. The optional argument to isoSig() allows
 you to determine the precise relabelling that will be used, if you
@@ -1107,7 +1107,7 @@ The fundamental group is computed in the dual 2-skeleton. This means:
 * In contrast, if the triangulation contains any invalid
   (*dim*-2)-faces (i.e., codimension-2-faces that are identified with
   themselves under a non-trivial map), the fundamental group will be
-  computed *without* truncating the centroid of the face. For
+  computed _without_ truncating the centroid of the face. For
   instance, if a 3-manifold triangulation has an edge identified with
   itself in reverse, then the fundamental group will be computed
   without truncating the resulting projective plane cusp. This means
@@ -1268,7 +1268,7 @@ constexpr const char *isIsomorphicTo =
 R"doc(Determines if this triangulation is combinatorially isomorphic to the
 given triangulation.
 
-Two triangulations are *isomorphic* if and only it is possible to
+Two triangulations are _isomorphic_ if and only it is possible to
 relabel their top-dimensional simplices and the (*dim*+1) vertices of
 each simplex in a way that makes the two triangulations
 combinatorially identical, as returned by isIdenticalTo().
@@ -1288,12 +1288,12 @@ Otherwise it returns no value. Thus, to test whether an isomorphism
 exists, you can just call ``if (isIsomorphicTo(other))``.
 
 There may be many such isomorphisms between the two triangulations. If
-you need to find *all* such isomorphisms, you may call
+you need to find _all_ such isomorphisms, you may call
 findAllIsomorphisms() instead.
 
 If you need to ensure that top-dimensional simplices are labelled the
 same in both triangulations (i.e., that the triangulations are related
-by the *identity* isomorphism), you should call the stricter test
+by the _identity_ isomorphism), you should call the stricter test
 isIdenticalTo() instead.
 
 .. warning::
@@ -1321,7 +1321,7 @@ of its top-dimensional simplices are labelled in a way that preserves
 orientation across adjacent facets. Specifically, this routine returns
 ``True`` if and only if every gluing permutation has negative sign.
 
-Note that *orientable* triangulations are not always *oriented* by
+Note that _orientable_ triangulations are not always _oriented_ by
 default. You can call orient() if you need the top-dimensional
 simplices to be oriented consistently as described above.
 
@@ -1359,7 +1359,7 @@ triangulation invalid:
 
 Condition (1) is tested for all dimensions *dim*. Condition (2) is
 more difficult, since it relies on undecidable problems. As a result,
-(2) is *only* tested when *dim* is one of Regina's standard
+(2) is _only_ tested when *dim* is one of Regina's standard
 dimensions.
 
 If a triangulation is invalid then you can call Face<dim,
@@ -1377,7 +1377,7 @@ Returns:
 // Docstring regina::python::doc::detail::TriangulationBase_::isoSig
 constexpr const char *isoSig =
 R"doc(Constructs the isomorphism signature of the given type for this
-triangulation. Support for different *types* of signature is new to
+triangulation. Support for different _types_ of signature is new to
 Regina 7.0 (see below for details); all isomorphism signatures created
 in Regina 6.0.1 or earlier are of the default type IsoSigClassic.
 
@@ -1391,7 +1391,7 @@ The length of an isomorphism signature is proportional to ``n log n``,
 where *n* is the number of top-dimenisonal simplices. The time
 required to construct it is worst-case ``O((dim!) n^2 log^2 n)``.
 Whilst this is fine for large triangulations, it becomes very slow for
-large *dimensions*; the main reason for introducing different
+large _dimensions_; the main reason for introducing different
 signature types is that some alternative types can be much faster to
 compute in practice.
 
@@ -1407,7 +1407,7 @@ The routine fromIsoSig() can be used to recover a triangulation from
 an isomorphism signature (only if the default encoding has been used,
 but it does not matter which signature type was used). The
 triangulation recovered might not be identical to the original, but it
-*will* be combinatorially isomorphic. If you need the precise
+_will_ be combinatorially isomorphic. If you need the precise
 relabelling, you can call isoSigDetail() instead.
 
 Regina supports several different variants of isomorphism signatures,
@@ -1427,7 +1427,7 @@ currently determined by the template parameters *Type* and *Encoding:*
   IsoSigPrintable returns a std::string consisting entirely of
   printable characters in the 7-bit ASCII range. Importantly, this
   default encoding is currently the only encoding from which Regina
-  can *reconstruct* a triangulation from its isomorphism signature.
+  can _reconstruct_ a triangulation from its isomorphism signature.
 
 You may instead pass your own type and/or encoding parameters as
 template arguments. Currently this facility is for internal use only,
@@ -1495,7 +1495,7 @@ triangulation by calling fromIsoSig() instead.
 This routine is very fast, since it only examines the first few
 characters of the isomorphism signature (in which the size of the
 first component is encoded). However, a side-effect of this is that it
-is possible to pass an *invalid* isomorphism signature and still
+is possible to pass an _invalid_ isomorphism signature and still
 receive a positive result. If you need to test whether a signature is
 valid or not, you must call fromIsoSig() instead, which will examine
 the entire signature in full.
@@ -1649,7 +1649,7 @@ This triangulation will become empty as a result.
 
 Any pointers or references to Simplex<dim> objects will remain valid.
 
-If your intention is to *replace* the simplices in *dest* (i.e., you
+If your intention is to _replace_ the simplices in *dest* (i.e., you
 do not need to preserve the original contents), then consider using
 the move assignment operator instead (which is more streamlined and
 also moves across any cached properties from the source
@@ -2004,7 +2004,7 @@ This routine is useful for situations in which some external body
 (such as GAP) has simplified the group presentation better than Regina
 can.
 
-Regina does *not* verify that the new group presentation is equivalent
+Regina does _not_ verify that the new group presentation is equivalent
 to the old, since this is - well, hard.
 
 If the fundamental group has not yet been calculated for this
@@ -2067,7 +2067,7 @@ to obtain the corresponding face of this triangulation.
 Specifically: if *other* refers to face *i* of top-dimensional simplex
 number *k* of some other triangulation, then this routine will return
 face *i* of top-dimensional simplex number *k* of this triangulation.
-Note that this routine does *not* use the face indices within each
+Note that this routine does _not_ use the face indices within each
 triangulation (which is outside the user's control), but rather the
 simplex numbering (which the user has full control over).
 

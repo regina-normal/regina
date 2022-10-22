@@ -31,7 +31,7 @@ namespace Face_ {
 
 // Docstring regina::python::doc::Face_::Type
 static const char *Type =
-R"doc(The *type* of a triangle, which indicates how the vertices and edges
+R"doc(The _type_ of a triangle, which indicates how the vertices and edges
 of the triangle are identified together. Here the vertices of a
 triangle are considered unlabelled (so a relabelling will not change
 the triangle type).
@@ -67,7 +67,7 @@ R"doc(Returns the link of this triangle as a normal surface.
 
 Constructing the link of a triangle begins with building the frontier
 of a regular neighbourhood of the triangle. If this is already a
-normal surface, then then link is called *thin*. Otherwise the usual
+normal surface, then then link is called _thin_. Otherwise the usual
 normalisation steps are performed until the surface becomes normal;
 note that these normalisation steps could change the topology of the
 surface, and in some pathological cases could even reduce it to the

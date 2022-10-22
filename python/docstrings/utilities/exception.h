@@ -75,7 +75,7 @@ static const char *ReginaException =
 R"doc(A base class for all of the exceptions that are thrown by Regina's
 native mathematical code.
 
-This does *not* include SnapPeaFatalError and SnapPeaMemoryFull, which
+This does _not_ include SnapPeaFatalError and SnapPeaMemoryFull, which
 represent critical errors thrown from within the SnapPea kernel; it
 also does not include SnapshotWriteError, which is part of the generic
 (non-mathematical) snapshotting machinery.

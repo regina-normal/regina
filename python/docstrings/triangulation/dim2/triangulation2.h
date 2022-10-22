@@ -220,7 +220,7 @@ This routine will behave correctly if *other* is in fact this
 triangulation.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both triangulations which may in turn call
     arbitrary code via any registered packet listeners.
 

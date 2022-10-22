@@ -31,10 +31,10 @@ correct or reflected orientation according to whether this ring of
 annuli runs clockwise or anticlockwise in the base orbifold.
 
 The precise orientation of a block is described using two booleans. A
-block may be reflected *horizontally*, which preserves the directions
+block may be reflected _horizontally_, which preserves the directions
 of Seifert fibres but which reverses the clockwise/anticlockwise
 orientation as discussed above. A block may also be reflected
-*vertically*, which preserves the clockwise/anticlockwise orientation
+_vertically_, which preserves the clockwise/anticlockwise orientation
 but which reverses the directions of the Seifert fibres. A block may
 of course be reflected both horizontally and vertically, or it may not
 be reflected at all.
@@ -348,7 +348,7 @@ returned.
 Currently the annuli are numbered lexicographically by block and then
 by annulus number within the block, although this ordering is subject
 to change in future versions of Regina. In particular, the annuli are
-*not* necessarily numbered in order around the region boundaries, and
+_not_ necessarily numbered in order around the region boundaries, and
 each region boundary component might not even be given a consecutive
 range of numbers.
 
@@ -506,7 +506,7 @@ Python:
     This function is available, and *action* may be a pure Python
     function. However, *action* must take only one argument: the newly
     constructed SatRegion (i.e., the first argument in the description
-    above). The SatBlock::TetList& argument will *not* be passed, and
+    above). The SatBlock::TetList& argument will _not_ be passed, and
     there can be no additional argument list *args*.
 
 Parameter ``tri``:

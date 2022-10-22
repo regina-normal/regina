@@ -27,7 +27,7 @@ vector.
 
 Normal surfaces do not always store their internal vectors in the same
 coordinate system that was used to enumerate the surfaces, and indeed
-an isolated surface does not know *how* it was originally created.
+an isolated surface does not know _how_ it was originally created.
 
 Therefore each normal surface keeps a small amount of data,
 represented by this class, so that it knows how to interpret its
@@ -40,11 +40,11 @@ For convenience, there is also a special encoding that identifies an
 angle structure vector; this can be created via
 ``NormalEncoding(NS_ANGLE)``, and can be recognised via
 storesAngles(). However, like NS_ANGLE itself, this special angle
-structure encoding does *not* represent a normal surface, cannot be
+structure encoding does _not_ represent a normal surface, cannot be
 combined with other encodings, and must not be used with any of
 Regina's routines unless the documentation explicitly allows it.
 Specifically, any code that accepts a NormalEncoding argument may
-silently assume that the encoding is *not* the special angle structure
+silently assume that the encoding is _not_ the special angle structure
 encoding, unless the documentation explicitly says otherwise.
 
 Encodings have the important property that any rational multiple of a
@@ -72,7 +72,7 @@ namespace NormalCoords_ {
 static const char *NS_ANGLE =
 R"doc(Represents angle structure coordinates.
 
-This coordinate system is *not* for use with normal surfaces: it
+This coordinate system is _not_ for use with normal surfaces: it
 cannot be used either to display them or enumerate them. Instead it is
 for use with angle structures on triangulations. Because the
 combinatorics and linear algebra of angle strutures are tightly
@@ -101,8 +101,8 @@ R"doc(Indicates that a list of almost normal surfaces was created using
 Regina 4.5.1 or earlier, where surfaces with more than one octagon of
 the same type were stripped out of the final solution set. As of
 Regina 4.6 such surfaces are now included in the solution set, since
-we need them if we wish to enumerate *all* almost normal surfaces (not
-just the *vertex* almost normal surfaces).
+we need them if we wish to enumerate _all_ almost normal surfaces (not
+just the _vertex_ almost normal surfaces).
 
 Regina cannot enumerate or view surfaces in this coordinate system. It
 is only used for reading legacy data files. If you have a list that
@@ -139,7 +139,7 @@ for viewing. You can just view the surfaces in quad-oct coordinates
 Precondition:
     Regina can only create matching equations in this coordinate
     system for a limited class of triangulations. Currently, such
-    triangulations *must* be oriented and ideal, with precisely one
+    triangulations _must_ be oriented and ideal, with precisely one
     torus cusp and no other boundary components or internal vertices.
     These conditions will be checked when building the matching
     equations, and Regina will throw an InvalidArgument exception if
@@ -200,7 +200,7 @@ for viewing. You can just view the surfaces in quad coordinates
 Precondition:
     Regina can only create matching equations in this coordinate
     system for a limited class of triangulations. Currently, such
-    triangulations *must* be oriented and ideal, with precisely one
+    triangulations _must_ be oriented and ideal, with precisely one
     torus cusp and no other boundary components or internal vertices.
     These conditions will be checked when building the matching
     equations, and Regina will throw an InvalidArgument exception if
@@ -276,7 +276,7 @@ Note that, when Regina enumerates surfaces in the given coordinate
 system, it might choose to post-process the resulting vectors to use a
 different encoding. For example, when enumerating surfaces in quad or
 quad-oct coordinates, Regina computes and stores triangle coordinates
-also, and so for its own *internal* choice of encoding,
+also, and so for its own _internal_ choice of encoding,
 storesTriangles() will return ``True``. In contrast, if you simply
 create a ``NormalEncoding(NS_QUAD)``, then the resulting encoding will
 have storesTriangles() return ``False``.
@@ -346,7 +346,7 @@ enumerated or created the normal surface that uses this encoding.
 If this returns ``True``, it does not mean that the surface does
 actually contain vertex linking components; it simply means that the
 user will need to test this themselves. If this returns ``False``,
-however, it is guaranteed that the surface does *not* contain any
+however, it is guaranteed that the surface does _not_ contain any
 vertex linking components, with no further testing required.
 
 For the special angle structure encoding (described in the class

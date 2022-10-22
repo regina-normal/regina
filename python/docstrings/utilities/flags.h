@@ -255,7 +255,7 @@ R"doc(Adjust this set so that exactly one and only one of the three given
 flags are included.
 
 If neither flag is present, then *default_* will be used. If multiple
-flags are present, then the flag that appears *earlier* in the
+flags are present, then the flag that appears _earlier_ in the
 argument list for this routine will be used.
 
 Precondition:
@@ -276,7 +276,7 @@ R"doc(Adjust this set so that exactly one and only one of the four given
 flags are included.
 
 If neither flag is present, then *default_* will be used. If multiple
-flags are present, then the flag that appears *earlier* in the
+flags are present, then the flag that appears _earlier_ in the
 argument list for this routine will be used.
 
 Precondition:
@@ -310,7 +310,7 @@ Returns:
 constexpr const char *has =
 R"doc(Returns whether the given flag is set.
 
-This requires *all* of the bits of the given flag to be set. The test
+This requires _all_ of the bits of the given flag to be set. The test
 is equivalent to ``(*this & flag) == flag``.
 
 Parameter ``flag``:
@@ -323,7 +323,7 @@ Returns:
 constexpr const char *has_2 =
 R"doc(Returns whether all of the flags in the given set are set.
 
-This requires *all* of the bits of all of the flags in the given set
+This requires _all_ of the bits of all of the flags in the given set
 to be present in this set. The test is equivalent to ``(*this & rhs)
 == rhs``.
 

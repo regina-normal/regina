@@ -35,7 +35,7 @@ R"doc(Returns the link of this triangle as a normal hypersurface.
 
 Constructing the link of a triangle begins with building the frontier
 of a regular neighbourhood of the triangle. If this is already a
-normal hypersurface, then then link is called *thin*. Otherwise some
+normal hypersurface, then then link is called _thin_. Otherwise some
 basic normalisation steps are performed until the hypersurface becomes
 normal; note that these normalisation steps could change the topology
 of the hypersurface, and in some pathological cases could even reduce

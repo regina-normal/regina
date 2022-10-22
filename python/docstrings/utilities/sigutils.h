@@ -80,7 +80,7 @@ Returns:
 // Docstring regina::python::doc::Base64SigEncoding_::decodeTrits
 static const char *decodeTrits =
 R"doc(Decodes a single base64 character into three trits, and returns these
-as a fixed-size array. A *trit* is either 0, 1 or 2.
+as a fixed-size array. A _trit_ is either 0, 1 or 2.
 
 The inverse to this routine is encodeTrits(); see that routine for
 details of the encoding.
@@ -137,7 +137,7 @@ Returns:
 // Docstring regina::python::doc::Base64SigEncoding_::encodeTrits
 static const char *encodeTrits =
 R"doc(Returns a single base64 character that encodes up to three trits,
-given using a fixed-size array. A *trit* is either 0, 1 or 2.
+given using a fixed-size array. A _trit_ is either 0, 1 or 2.
 
 The given trits will be packed into a single base64 character, with
 the first trit representing the lowest-significance bits of the

@@ -32,7 +32,7 @@ static const char *BY_REFERENCE =
 R"doc(The objects are compared by reference. This means that the python
 operators == and != simply test whether *x* and *y* refer to the same
 instance of the C++ class *C*. In other words, they test whether the
-underlying C++ *pointers* to *x* and *y* are the same.)doc";
+underlying C++ _pointers_ to *x* and *y* are the same.)doc";
 
 // Docstring regina::python::doc::python::EqualityType_::BY_VALUE
 static const char *BY_VALUE =

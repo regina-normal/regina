@@ -18,8 +18,8 @@ to all elements of a given list.
 
 This access is read-only, in the sense that both the list itself and
 the list elements are read-only. (Of course, if the list elements are
-non-const pointers then this means that the *pointers* cannot be
-reassigned to point to different objects, but the objects they *point*
+non-const pointers then this means that the _pointers_ cannot be
+reassigned to point to different objects, but the objects they _point_
 to can still be modified.)
 
 Typically a ListView would be returned from a class member function to
@@ -98,7 +98,7 @@ constexpr const char *__eq =
 R"doc(Determines whether this and the given list view are accessing the same
 underlying container.
 
-Here the containers are compared by *reference* (i.e., they must be
+Here the containers are compared by _reference_ (i.e., they must be
 the same container object at the same location in memory; it is not
 enough to be two containers with identical contents).
 
@@ -121,7 +121,7 @@ constexpr const char *__ne =
 R"doc(Determines whether this and the given list view are accessing
 different underlying containers.
 
-Here the containers are compared by *reference* (i.e., to be
+Here the containers are compared by _reference_ (i.e., to be
 considered equal they must be the same container object at the same
 location in memory; it is not enough to be two containers with
 identical contents).

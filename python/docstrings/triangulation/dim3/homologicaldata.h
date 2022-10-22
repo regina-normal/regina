@@ -111,7 +111,7 @@ static const char *__copy =
 R"doc(Creates a new copy of the given object.
 
 This constructor induces a deep copy of the given object; moreover,
-this is expensive since HomologicalData objects are *very* large.)doc";
+this is expensive since HomologicalData objects are _very_ large.)doc";
 
 // Docstring regina::python::doc::HomologicalData_::__init
 static const char *__init =

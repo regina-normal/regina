@@ -31,7 +31,7 @@ guaranteed to be valid UTF-8. If the entire string is valid UTF-8,
 then this routine will return ``s.end()``.
 
 Python:
-    This routine returns the *length* of the longest valid UTF-8
+    This routine returns the _length_ of the longest valid UTF-8
     prefix. The length is measured in raw bytes (not unicode
     characters).
 
@@ -47,7 +47,7 @@ is guaranteed to be valid UTF-8. If the entire string is valid UTF-8,
 then this routine will return a pointer to the null terminator of *s*.
 
 Python:
-    This routine returns the *length* of the longest valid UTF-8
+    This routine returns the _length_ of the longest valid UTF-8
     prefix. The length is measured in raw bytes (not unicode
     characters).
 

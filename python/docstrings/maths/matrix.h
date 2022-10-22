@@ -266,7 +266,7 @@ This routine is only available when the template argument *ring* is
     If you only wish to add a portion of a column, be careful: you
     cannot just pass the usual *fromRow* argument, since this will be
     interpreted as a coefficient to be used with the other version of
-    addCol() that adds *several* copies of the source column. Instead
+    addCol() that adds _several_ copies of the source column. Instead
     you will need to call addColFrom().
 
 Precondition:
@@ -358,7 +358,7 @@ Precondition:
     If you only wish to add a portion of a row, be careful: you cannot
     just pass the usual *fromCol* argument, since this will be
     interpreted as a coefficient to be used with the other version of
-    addRow() that adds *several* copies of the source row. Instead you
+    addRow() that adds _several_ copies of the source row. Instead you
     will need to call addRowFrom().
 
 Parameter ``source``:
@@ -582,7 +582,7 @@ Meena Mahajan and V. Vinay, "Determinant: Combinatorics, algorithms,
 and complexity", Chicago J. Theor. Comput. Sci., Vol. 1997, Article 5.
 
 Although the Matrix class does not formally support empty matrices, if
-this *is* found to be a 0-by-0 matrix then the determinant returned
+this _is_ found to be a 0-by-0 matrix then the determinant returned
 will be 1.
 
 This routine is only available when the template argument *ring* is
@@ -870,7 +870,7 @@ Parameter ``fromCol``:
 static const char *reduceCol =
 R"doc(Reduces the given column by dividing all its elements by their
 greatest common divisor. It is guaranteed that, if the column is
-changed at all, it will be divided by a *positive* integer.
+changed at all, it will be divided by a _positive_ integer.
 
 This routine is only available when *T* is one of Regina's own integer
 classes (Integer, LargeInteger, or NativeIntgeger).
@@ -885,7 +885,7 @@ Parameter ``col``:
 static const char *reduceRow =
 R"doc(Reduces the given row by dividing all its elements by their greatest
 common divisor. It is guaranteed that, if the row is changed at all,
-it will be divided by a *positive* integer.
+it will be divided by a _positive_ integer.
 
 This routine is only available when *T* is one of Regina's own integer
 classes (Integer, LargeInteger, or NativeIntgeger).

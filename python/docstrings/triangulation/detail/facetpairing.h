@@ -119,7 +119,7 @@ reads data in the format written by textRep().
 
 This routine will skip any initial whitespace in the given input
 stream. Once it finds its first non-whitespace character, it will read
-the *entire* line from the input stream and expect that line to
+the _entire_ line from the input stream and expect that line to
 containin the text representation of a facet pairing.
 
 Exception ``InvalidInput``:
@@ -147,7 +147,7 @@ isomorphism that transforms this pairing into canonial form.
 
 Note that, while the canoncial form is uniquely determined, the
 isomorphism is not (since the facet pairing could have non-trivial
-automorphisms). If you need *all* such isomorphisms then you should
+automorphisms). If you need _all_ such isomorphisms then you should
 call canonicalAll() instead.
 
 See the FacetPairing class notes for more information on isomorphisms,
@@ -238,7 +238,7 @@ weight amongst all solutions (i.e., will have the smallest number of
 matched simplex facets that cross the two sides of the resulting
 partition). If there are still multiple solutions, then the cut that
 is returned will have the two pieces with sizes that are as close as
-possible to equal. If there are *still* multiple solutions, then the
+possible to equal. If there are _still_ multiple solutions, then the
 choice will be arbitrary.
 
 Note that it is possible that no solution exists (e.g. this could
@@ -328,7 +328,7 @@ at all.
 .. warning::
     If you are allowing a large number of boundary facets, then the
     automorphisms groups could be enormous. In this case it is highly
-    recommended that your action does *not* take the list of all
+    recommended that your action does _not_ take the list of all
     automorphisms as its second argument, since this will avoid the
     enormous memory cost of storing and passing such a list.
 
@@ -435,7 +435,7 @@ pairing has no unmatched facets.)doc";
 constexpr const char *isConnected =
 R"doc(Determines whether this facet pairing is connected.
 
-A facet pairing is *connected* if it is possible to reach any simplex
+A facet pairing is _connected_ if it is possible to reach any simplex
 from any other simplex via a series of matched facet pairs.
 
 For this purpose, the empty facet pairing is considered to be

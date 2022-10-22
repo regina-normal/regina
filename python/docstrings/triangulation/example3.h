@@ -315,7 +315,7 @@ Returns:
 // Docstring regina::python::doc::Example_::threeSphere
 static const char *threeSphere =
 R"doc(Returns a one-tetrahedron triangulation of the 3-sphere. This is
-*different* from the generic routine sphere(), which uses two
+_different_ from the generic routine sphere(), which uses two
 tetrahedra instead.
 
 Returns:

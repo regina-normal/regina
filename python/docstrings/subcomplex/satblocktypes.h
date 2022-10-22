@@ -125,7 +125,7 @@ twist as the ring of prisms wraps back around to meet itself. Note
 that a twisted reflector strip will have a twisted ring of boundary
 annuli, as described by SatBlock::twistedBoundary().
 
-The *length* of a reflector strip is defined to be the number of
+The _length_ of a reflector strip is defined to be the number of
 prisms that are joined together, or equivalently the number of
 saturated annuli on the boundary.
 
@@ -139,9 +139,9 @@ SatRegion for further details.)doc";
 static const char *SatTriPrism =
 R"doc(A saturated block that is a three-tetrahedron triangular prism.
 
-Such a prism may be of major type or of minor type. In a *major* type
+Such a prism may be of major type or of minor type. In a _major_ type
 prism, the horizontal edges of the boundary annuli are all major
-(degree three) edges of the prism. Likewise, in a *minor* type prism,
+(degree three) edges of the prism. Likewise, in a _minor_ type prism,
 the horizontal boundary edges are all minor (degree two) edges of the
 prism. See the SatAnnulus class notes for a definition of "horizontal"
 and the TriSolidTorus class notes for further details regarding

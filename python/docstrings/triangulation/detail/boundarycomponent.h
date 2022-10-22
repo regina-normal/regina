@@ -66,7 +66,7 @@ component is as follows:
   each *i*, *k*-face *i* of the returned triangulation is a copy of
   ``face<k>(i)`` of this boundary component, and its vertices are
   numbered in the same way. As an exception, this correspondence will
-  not hold for dimensions *k* where there exist *pinched* *k*-faces on
+  not hold for dimensions *k* where there exist _pinched_ *k*-faces on
   the boundary (i.e., faces where different sections of the boundary
   are pinched together, meaning that these faces must be duplicated
   when the boundary is triangulated).
@@ -359,8 +359,8 @@ boundary components, which can only occur in dimensions ≥ 3, and which
 are only recognised where *dim* is one of Regina's standard
 dimensions.
 
-Note that a boundary component formed from a single *invalid* vertex
-is *not* considered to be ideal. This means that, if a boundary
+Note that a boundary component formed from a single _invalid_ vertex
+is _not_ considered to be ideal. This means that, if a boundary
 component contains no faces of positive dimension, then one and only
 one of isIdeal() and isInvalidVertex() will return ``True``.
 

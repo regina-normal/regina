@@ -112,7 +112,7 @@ normal coordinates (NS_QUAD), standard normal coordinates
 (NS_AN_QUAD_OCT), or standard almost normal coordinates
 (NS_AN_STANDARD). For almost normal surfaces, we allow any number of
 octagons (including zero), but we only allow at most one octagon
-*type* in the entire triangulation. No coordinate systems other than
+_type_ in the entire triangulation. No coordinate systems other than
 these are supported.
 
 By using appropriate template parameters *LPConstraint* and/or
@@ -155,7 +155,7 @@ Precondition:
 .. warning::
     Although the tree traversal algorithm can run in standard normal
     or almost normal coordinates, this is not recommended: it is
-    likely to be *much* slower than in quadrilateral or quadrilateral-
+    likely to be _much_ slower than in quadrilateral or quadrilateral-
     octagon coordinates respectively. Instead you should enumerate
     vertex solutions using quadrilateral or quadrilateral-octagon
     coordinates, and then use the "transform constructor"
@@ -217,7 +217,7 @@ For any given normal coordinate, this routine will always try setting
 that coordinate to zero before it tries setting it to non-zero. In
 other words, if it does find a surface satisfying the given
 constraints, then it is guaranteed that the set of non-zero coordinate
-positions will be minimal (though not necessary a global *minimum*).
+positions will be minimal (though not necessary a global _minimum_).
 In many settings (such as when using LPConstraintEulerPositive), this
 guarantees that the final surface (if it exists) will be a vertex
 normal or almost normal surface.
@@ -235,7 +235,7 @@ surface exists, you can simply construct a TreeSingleSoln object and
 call find(). You can then call buildSurface() to extract the details
 of the surface that was found.
 
-If you wish to enumerate *all* vertex surfaces in a 3-manifold
+If you wish to enumerate _all_ vertex surfaces in a 3-manifold
 triangulation (instead of finding just one), you should use the class
 TreeEnumeration instead.
 
@@ -245,7 +245,7 @@ normal coordinates (NS_QUAD), standard normal coordinates
 (NS_AN_QUAD_OCT), or standard almost normal coordinates
 (NS_AN_STANDARD). For almost normal surfaces, we allow any number of
 octagons (including zero), but we only allow at most one octagon
-*type* in the entire triangulation. No coordinate systems other than
+_type_ in the entire triangulation. No coordinate systems other than
 these are supported.
 
 The template argument *IntType* indicates the integer type that will
@@ -258,7 +258,7 @@ This class is designed to manage the execution of a significant search
 operation, and so it does not support copying, moving or swapping.
 
 .. warning::
-    Typically one should only use this class with *one*-vertex
+    Typically one should only use this class with _one-vertex_
     triangulations (since otherwise, setting at least one triangle
     coordinate to zero is not enough to rule out trivial vertex
     linking surfaces). Of course there may be settings in which
@@ -271,7 +271,7 @@ operation, and so it does not support copying, moving or swapping.
     If you examine the type vector (e.g., by calling typeString() or
     dumpTypes()), be aware that this class merges the old types 0 and
     1 together into a single branch of the search tree. This means
-    that type 0 never appears, and that type 1 could indicate *either*
+    that type 0 never appears, and that type 1 could indicate _either_
     positive quadrilaterals in the first position, or else no
     quadrilaterals at all.
 
@@ -333,7 +333,7 @@ separately by the class TypeTrie, and the feasibility test is handled
 separately by the class LPData.
 
 This class holds the particular state of the tree traversal at any
-point in time, as described by the current *level* (indicating our
+point in time, as described by the current _level_ (indicating our
 current depth in the search tree) and _type vector_ (indicating which
 branches of the search tree we have followed). For details on these
 concepts, see the Algorithmica paper cited above. The key details are
@@ -685,7 +685,7 @@ enumerate vertex surfaces, you can either:
 
 .. warning::
     Although it is supported, it is highly recommended that you do
-    *not* run a full vertex enumeration in standard normal or almost
+    _not_ run a full vertex enumeration in standard normal or almost
     normal coordinates (this is for performance reasons). See the
     class notes for further discussion and better alternatives. In
     normal circumstances you should run a full vertex enumeration in
@@ -1036,11 +1036,11 @@ vector at the current stage of the search. This routine is for use
 only with normal (or almost normal) surfaces, not taut angle
 structures.
 
-If the current type vector does not represent a *vertex* normal
+If the current type vector does not represent a _vertex_ normal
 surface (which may be the case when calling TreeSingleSoln::find()),
 then there may be many normal surfaces all represented by the same
 type vector; in this case there are no further guarantees about
-*which* of these normal surfaces you will get.
+_which_ of these normal surfaces you will get.
 
 The surface that is returned will use the same vector encoding that
 was passed to the TreeTraversal class constructor.

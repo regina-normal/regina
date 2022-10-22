@@ -32,7 +32,7 @@ Regina recognises three types of boundary components:
   an invalid (*dim*-1)-manifold with no real boundary. Invalid vertex
   boundary components are only possible for dimensions *dim* ≥ 4.
 
-Ideal and invalid vertex boundary components are *only* recognised
+Ideal and invalid vertex boundary components are _only_ recognised
 when *dim* is one of Regina's standard dimensions. This is because, in
 higher dimensions, the relevant conditions rely on undecidable
 problems.
@@ -58,7 +58,7 @@ Consider some face whose link has more than one boundary component
 (*dim*)-manifold boundary are effectively "pinched" together. If this
 happens, the different parts of the boundary that are pinched might or
 might not be listed as part of the same boundary component; if not
-then the offending face will be included in *all* of these boundary
+then the offending face will be included in _all_ of these boundary
 components. Nevertheless, only one of these can be considered the
 "official" boundary component of the face as returned by
 Face::boundaryComponent(). This is all a bit of a mess, but then again

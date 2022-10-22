@@ -55,11 +55,11 @@ this linear subspace. The resulting list of basis vectors will contain
 no duplicates or redundancies.
 
 The parameter *constraints* may contain a set of validity constraints,
-in which case this routine will only return *valid* basis elements.
+in which case this routine will only return _valid_ basis elements.
 Each validity constraint is of the form "at most one of these
 coordinates may be non-zero"; see the ValidityConstraints class for
 details. These contraints have the important property that, although
-validity is not preserved under addition, *invalidity* is.
+validity is not preserved under addition, _invalidity_ is.
 
 For each of the resulting basis elements, this routine will call
 *action* (which must be a function or some other callable object).

@@ -246,7 +246,7 @@ This order is not mathematically meaningful; it is merely provided for
 scenarios where you need to be able to sort surfaces (e.g., when using
 them as keys in a map).
 
-The order *is* well-defined, and will be preserved across copy/move
+The order _is_ well-defined, and will be preserved across copy/move
 operations, different program executions, and different platforms
 (since it is defined purely in terms of the normal coordinates, and
 does not use transient properties such as locations in memory).
@@ -337,7 +337,7 @@ surfaces (since for closed surfaces all boundary slopes are zero).
 
 This routine is only available for use with SnapPea triangulations,
 since it needs to know the specific meridian and longitude on each
-cusp. These meridians and longitudes are *only* available through the
+cusp. These meridians and longitudes are _only_ available through the
 SnapPea kernel, since Regina does not use or store peripheral curves
 for its own Triangulation<3> class. Therefore:
 
@@ -345,7 +345,7 @@ for its own Triangulation<3> class. Therefore:
   not of the subclass SnapPeaTriangulation, this routine will throw an
   exception (see below).
 
-* In particular, this *will* happen if you have edited or deleted the
+* In particular, this _will_ happen if you have edited or deleted the
   original triangulation that was used to construct this normal
   surface. This is because such a modification will trigger an
   internal deep copy of the original, and this will only copy Regina's
@@ -364,7 +364,7 @@ around the longitude. The rational boundary slope is therefore
 ``-L/M``, and there are ``gcd(L,M)`` boundary curves with this slope.
 
 The orientations of the boundary curves of a spun-normal surface are
-chosen so that *if* meridian and longitude are a positive basis as
+chosen so that _if_ meridian and longitude are a positive basis as
 vieved from the cusp, then as one travels along an oriented boundary
 curve, the spun-normal surface spirals into the cusp to one's right
 and down into the manifold to one's left.
@@ -428,7 +428,7 @@ R"doc(Indicates whether the internal vector encoding for this surface
 supports almost normal surfaces.
 
 If this routine returns ``True``, it does not mean that the surface
-actually *contains* one or more octagons; you should use normal() to
+actually _contains_ one or more octagons; you should use normal() to
 test for that. This routine simply queries a basic property of the
 vector encoding that is being used, and this property is often
 inherited from whatever coordinate system was used to perform the
@@ -447,7 +447,7 @@ supports non-compact surfaces. Non-compact surfaces are surfaces that
 contain infinitely many discs (i.e., spun-normal surfaces).
 
 If this routine returns ``True``, it does not mean that the surface
-actually *is* non-compact; you should use isCompact() to test for
+actually _is_ non-compact; you should use isCompact() to test for
 that. This routine simply queries a basic property of the vector
 encoding that is being used, and this property is often inherited from
 whatever coordinate system was used to perform the normal surface
@@ -536,7 +536,7 @@ Note that, unlike crushing a surface to a point, this operation will
 not change the topology of the underlying 3-manifold beyond simply
 slicing along this surface.
 
-As of Regina 7.1, this routine can happily cut along *almost* normal
+As of Regina 7.1, this routine can happily cut along _almost_ normal
 surfaces as well as normal surfaces. That is, it can now handle
 octagons, including cases with multiple octagons in the same
 tetrahedron and/or octagons in multiple tetrahedra.
@@ -660,12 +660,12 @@ Parameter ``b``:
 // Docstring regina::python::doc::NormalSurface_::hasMultipleOctDiscs
 static const char *hasMultipleOctDiscs =
 R"doc(Determines if this normal surface has more than one octagonal disc. It
-may be assumed that at most one octagonal disc *type* exists in this
+may be assumed that at most one octagonal disc _type_ exists in this
 surface. This routine will return ``True`` if an octagonal type does
 exist and its coordinate is greater than one.
 
 Precondition:
-    At most one octagonal disc *type* exists in this surface.
+    At most one octagonal disc _type_ exists in this surface.
 
 Returns:
     ``True`` if and only if there is an octagonal disc type present
@@ -776,7 +776,7 @@ static const char *isEmpty = R"doc(Determines if this normal surface is empty (h
 static const char *isIncompressible =
 R"doc(Determines whether this is an incompressible surface within the
 surrounding 3-manifold. At present, this routine is only implemented
-for surfaces embedded within *closed* and *irreducible* 3-manifold
+for surfaces embedded within _closed_ and _irreducible_ 3-manifold
 triangulations.
 
 Let *D* be some disc embedded in the underlying 3-manifold, and let
@@ -785,7 +785,7 @@ surface if (i) the intersection of *D* with this surface is the
 boundary *B*, and (ii) although *B* bounds a disc within the
 3-manifold, it does not bound a disc within this surface.
 
-We declare this surface to be *incompressible* if there are no such
+We declare this surface to be _incompressible_ if there are no such
 compressing discs. For our purposes, spheres are never considered
 incompressible (so if this surface is a sphere then this routine will
 always return ``False``).
@@ -818,11 +818,11 @@ static const char *isNormalEdgeLink =
 R"doc(Determines whether or not a positive rational multiple of this surface
 is the normalised link of a single edge.
 
-Here the phrase *normalised* link of an edge *e* means the frontier of
+Here the phrase _normalised_ link of an edge *e* means the frontier of
 a regular neighbourhood of *e*, converted into a normal surface by
 expanding away from the edge using the normalisation process. It could
 be that there is no normalisation required at all (in which case it is
-also a *thin* edge link). However, it could be that the normalisation
+also a _thin_ edge link). However, it could be that the normalisation
 process expands the surface far away from the edge itself, or changes
 its topology, or disconnects the surface, or even normalises it away
 to an empty surface.
@@ -863,11 +863,11 @@ static const char *isNormalTriangleLink =
 R"doc(Determines whether or not a positive rational multiple of this surface
 is the normalised link of a single triangle.
 
-Here the phrase *normalised* link of a triangle *t* means the frontier
+Here the phrase _normalised_ link of a triangle *t* means the frontier
 of a regular neighbourhood of *t*, converted into a normal surface by
 expanding away from the triangle using the normalisation process. It
 could be that there is no normalisation required at all (in which case
-it is also a *thin* triangle link). However, it could be that the
+it is also a _thin_ triangle link). However, it could be that the
 normalisation process expands the surface far away from the triangle
 itself, or changes its topology, or disconnects the surface, or even
 normalises it away to an empty surface.
@@ -945,18 +945,18 @@ static const char *isThinEdgeLink =
 R"doc(Determines whether or not a positive rational multiple of this surface
 is the thin link of a single edge.
 
-Here a *thin* edge link is a normal surface which appears naturally as
+Here a _thin_ edge link is a normal surface which appears naturally as
 the frontier of a regular neighbourhood of an edge, with no need for
 any further normalisation.
 
 This behaves differently from isNormalEdgeLink(), which tests for a
-*normalised* edge link (which could end up far away from the edge, or
+_normalised_ edge link (which could end up far away from the edge, or
 could be normalised into a surface with different topology, or could
 even be normalised away to nothing). Although isNormalEdgeLink() will
 also indicate thin edge links, this test has significantly less
 overhead (and so should be faster).
 
-A surface (or its positive rational multiple) can be the *thin* edge
+A surface (or its positive rational multiple) can be the _thin_ edge
 link of at most two edges. If there are indeed two different edges
 *e1* and *e2* for which a multiple of this surface can be expressed as
 the thin edge link, then the pair (*e1*, *e2*) will be returned. If
@@ -976,19 +976,19 @@ static const char *isThinTriangleLink =
 R"doc(Determines whether or not a positive rational multiple of this surface
 is the thin link of a single triangle.
 
-Here a *thin* triangle link is a normal surface which appears
+Here a _thin_ triangle link is a normal surface which appears
 naturally as the frontier of a regular neighbourhood of a triangle,
 with no need for any further normalisation.
 
 This behaves differently from isNormalTriangleLink(), which tests for
-a *normalised* triangle link (which could end up far away from the
+a _normalised_ triangle link (which could end up far away from the
 triangle, or could be normalised into a surface with different
 topology, or could even be normalised away to nothing). Unlike the
 tests for edge links, the routines isThinTriangleLink() and
 isNormalTriangleLink() use essentially the same implementation (so
 testing for only thin links may be a little faster, but not by much).
 
-A surface (or its positive rational multiple) can be the *thin* link
+A surface (or its positive rational multiple) can be the _thin_ link
 of at most two triangles. If there are indeed two different triangles
 *t1* and *t2* for which a multiple of this surface can be expressed as
 the thin triangle link, then the pair (*t1*, *t2*) will be returned.
@@ -1035,7 +1035,7 @@ is the link of a single vertex.
 
 This behaves differently from isVertexLinking(), which will also
 detect a union of several different vertex links. In contrast, this
-routine will only identify the link of a *single* vertex (or a
+routine will only identify the link of a _single_ vertex (or a
 multiple of such a link).
 
 Note that the results of this routine are not cached. Thus the results
@@ -1053,7 +1053,7 @@ linking_ surface contains only triangles.
 
 This behaves differently from isVertexLink(), which only detects the
 link of a single vertex (or a multiple of such a link). In contrast,
-this routine will also detect the union of several *different* vertex
+this routine will also detect the union of several _different_ vertex
 links.
 
 Note that the results of this routine are not cached. Thus the results
@@ -1071,7 +1071,7 @@ surfaces so that none intersect.
 
 This is a local constraint, not a global constraint. That is, we do
 not insist that we can avoid intersections within all tetrahedra
-*simultaneously*. To test the global constraint, see the (much slower)
+_simultaneously_. To test the global constraint, see the (much slower)
 routine disjoint() instead.
 
 Local compatibility can be formulated in terms of normal disc types.
@@ -1080,7 +1080,7 @@ only if they together have at most one quadrilateral or octagonal disc
 type per tetrahedron.
 
 Note again that this is a local constraint only. In particular, for
-almost normal surfaces, it does *not* insist that there is at most one
+almost normal surfaces, it does _not_ insist that there is at most one
 octagonal disc type anywhere within the triangulation.
 
 If one of the two surfaces breaks the local compatibility constraints
@@ -1250,7 +1250,7 @@ within the same triangulation.
 
 If this surface does contain octagons, then the triangulation *t* will
 be obtained from the original by replacing each tetrahedron containing
-octagons with *three* tetrahedra (essentially performing a 0-2 move).
+octagons with _three_ tetrahedra (essentially performing a 0-2 move).
 Each octagon can then be subdivided into a quadrilateral and four
 triangles. If the original triangulation is oriented, then the new
 triangulation *t* will preserve this orientation.

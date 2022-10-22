@@ -21,7 +21,7 @@ Current this class does not support circular graph components (which,
 in a link diagram, would correspond to zero-crossing unknot components
 of the link).
 
-This class is primarily designed for *enumerating* knots and links. If
+This class is primarily designed for _enumerating_ knots and links. If
 you wish to study the underlying graph of an existing link, you do not
 need to create a ModelLinkGraph - instead the Link class already gives
 you direct access to the graph structure. In particular, if you
@@ -136,7 +136,7 @@ values for both node() and arc().
 
 .. warning::
     If you create a null arc by calling ModelLinkGraphArc(``None``,
-    *i*) for some non-zero *i*, then this will *not* be considered
+    *i*) for some non-zero *i*, then this will _not_ be considered
     equal to the null arc created by calling ModelLinkGraphArc(),
     since the latter is equivalent to calling
     ModelLinkGraphArc(``None``, 0).
@@ -193,7 +193,7 @@ values for both node() and arc().
 
 .. warning::
     If you create a null arc by calling ModelLinkGraphArc(``None``,
-    *i*) for some non-zero *i*, then this will *not* be considered
+    *i*) for some non-zero *i*, then this will _not_ be considered
     equal to the null arc created by calling ModelLinkGraphArc(),
     since the latter is equivalent to calling
     ModelLinkGraphArc(``None``, 0).
@@ -345,7 +345,7 @@ For each cell, the arcs along the boundary are given in order as you
 walk anticlockwise around the cell (so the cell is on the left of each
 arc as you walk around the cell boundary).
 
-Each arc is described in the form of an *outgoing* arc from some node
+Each arc is described in the form of an _outgoing_ arc from some node
 of the underlying graph (so if the return ModelLinkGraphArc is *a*
 then this describes an outgoing arc from a.node()). It follows that,
 if the underlying graph has *n* nodes, then each of the 4*n* possible
@@ -438,7 +438,7 @@ Consider the cell *c* to the left of the given arc as you follow the
 arc away from ``arc.node()``. The routine arc() can be used to
 enumerate the sequence of arcs along the boundary of this cell *c*, in
 order as you walk anticlockwise around the cell boundary. The purpose
-of this routine is to identify *where* in this sequence the given arc
+of this routine is to identify _where_ in this sequence the given arc
 occurs.
 
 For any arc *a*, calling ``arc(cell(a), cellPos(a))`` will return the
@@ -464,7 +464,7 @@ R"doc(Returns the number of 2-cells in this cellular decomposition.
 
 If isValid() returns ``False`` (i.e., the underlying ModelLinkGraph is
 either empty or does not describe a planar embedding), then this
-routine will return 0 instead. Note that this routine *cannot* be used
+routine will return 0 instead. Note that this routine _cannot_ be used
 to test for connectivity, which is a non-negotiable precondition
 required by the class constructor.
 
@@ -486,7 +486,7 @@ empty connected graphs where the corresponding ModelLinkGraph object
 also describes a planar embedding.
 
 The constructor for this class requires you to pass a graph that is
-already known to be connected. However, *assuming* the graph is
+already known to be connected. However, _assuming_ the graph is
 connected, the constructor then tests for the remaining conditions.
 This routine returns the results of these tests: if the underlying
 graph is empty or does not describe a planar embedding, then this
@@ -537,7 +537,7 @@ Let *e* be the undirected edge of the underlying model graph that
 corresponds to the given outgoing arc from this node. Recall that
 there are two ModelLinkGraphArc objects corresponding to *e*, one for
 each of its endpoints. One of these will be
-ModelLinkGraphArc(``this``, *which*); this routine returns the *other*
+ModelLinkGraphArc(``this``, *which*); this routine returns the _other_
 object, which is the ModelLinkGraphArc describing the other endpoint
 of *e*.
 
@@ -688,7 +688,7 @@ Precondition:
     This graph has between 1 and 52 nodes inclusive.
 
 Precondition:
-    The dual to this graph is a *simple* quadrangulation of the
+    The dual to this graph is a _simple_ quadrangulation of the
     sphere. In particular, the dual must not have any parallel edges.
     Note that any graph that fails this condition will the model graph
     for a link diagram that is an "obvious" connected sum.
@@ -752,23 +752,23 @@ preconditions for the flype() routine.
 
 There are several possible outcomes:
 
-* It is possible that there are *no* suitable arcs *left* and *right*.
+* It is possible that there are _no_ suitable arcs *left* and *right*.
   In this case, this routine returns a pair of null arcs.
 
 * It is possible that there is exactly one pair of suitable arcs
   (*left*, *right*). In this case, this pair will be returned.
 
-* It is possible that there are *many* pairs of suitable arcs. In this
+* It is possible that there are _many_ pairs of suitable arcs. In this
   case, it can be shown that the suitable pairs have an ordering
   *P_1*, ..., *P_k* in which the flype disc for *P_i* is completely
   contained within the flype disc for *P_j* whenever *i* < *j*. In
-  this case, this routine returns the *smallest* pair *P_1*; that is,
+  this case, this routine returns the _smallest_ pair *P_1*; that is,
   the pair (*left*, *right*) that gives the smallest possible flype
   disc.
 
 It should be noted that choosing only the smallest flype is not a
 serious restriction: assuming the graph does not model a composition
-of non-trivial knot diagrams, *any* suitable flype can be expressed as
+of non-trivial knot diagrams, _any_ suitable flype can be expressed as
 a composition of minimal flypes in this sense.
 
 Precondition:
@@ -790,7 +790,7 @@ Returns:
 static const char *flype =
 R"doc(Performs a flype on this graph at the given location.
 
-A *flype* is an operation on a disc in the plane. The boundary of the
+A _flype_ is an operation on a disc in the plane. The boundary of the
 disc must cut through four arcs of the graph (and otherwise must not
 meet the graph at all), as indicated in the diagram below. Moreover,
 the two arcs that exit the disc on the left must meet at a common node
@@ -878,7 +878,7 @@ Precondition:
 Exception ``InvalidArgument``:
     One or more of the preconditions above fails to hold. Be warned
     that the connectivity precondition will not be checked - this is
-    the user's responsibility - but all other preconditions *will* be
+    the user's responsibility - but all other preconditions _will_ be
     checked, and an exception will be thrown if any of them fails.
 
 Parameter ``from``:
@@ -963,7 +963,7 @@ Each line consists of an integer (the number of nodes in the graph),
 followed by a comma-separated sequence of alphabetical strings that
 encode the edges leaving each node.
 
-This function *only* takes the comma-separated sequence of
+This function _only_ takes the comma-separated sequence of
 alphabetical strings. So, for example, to construct the graph
 corresponding to the second line of output above, you could call:
 
@@ -991,7 +991,7 @@ output format for larger graphs. In particular:
   such graphs using *plantri* format at all.
 
 Even for graphs with at most 26 nodes, the given string does not
-*need* to be come from the program *plantri* itself. Whereas *plantri*
+_need_ to be come from the program *plantri* itself. Whereas *plantri*
 always outputs graphs with a particular canonical labelling, this
 function can accept an arbitrary ordering of nodes and arcs - in
 particular, it can accept the string ``g.plantri()`` for any graph *g*
@@ -1002,11 +1002,11 @@ embedding.
 
 This routine can also interpret the "tight" format that is optionally
 produced by the member function canonicalPlantri() (even though such
-output would certainly *not* be produced by the program *plantri*).
+output would certainly _not_ be produced by the program *plantri*).
 
 .. warning::
     While this routine does some basic error checking on the input,
-    these checks are not exhaustive. In particular, it does *not* test
+    these checks are not exhaustive. In particular, it does _not_ test
     for planarity of the graph. (Of course *plantri* does not output
     non-planar graphs, but a user could still construct one by hand
     and passes it to this routine, in which case the resulting
@@ -1016,7 +1016,7 @@ Precondition:
     The graph being described is connected.
 
 Precondition:
-    The graph being described is dual to a *simple* quadrangulation of
+    The graph being described is dual to a _simple_ quadrangulation of
     the sphere. In particular, the dual must not have any parallel
     edges. Note that any graph that fails this condition will the
     model graph for a link diagram that is an "obvious" connected sum.
@@ -1038,18 +1038,18 @@ static const char *generateMinimalLinks =
 R"doc(Exhaustively generates potentially-minimal knot diagrams that are
 modelled by this graph.
 
-Here *potentially*-minimal means there are no "obvious" simplification
+Here _potentially-minimal_ means there are no "obvious" simplification
 moves (such as a simplifying type II Reidemeister move, for example).
 The list of "obvious" moves considered here is subject to change in
 future versions of Regina.
 
-By *exhaustive*, we mean:
+By _exhaustive_, we mean:
 
 * Every minimal knot diagram modelled by this graph will be generated
   by this routine, up to reflection and/or reversal (as noted below).
 
 * If a knot diagram is non-minimal and modelled by this graph, it
-  *might* still be generated by this routine.
+  _might_ still be generated by this routine.
 
 In other words, this routine will generate all minimal knot diagrams
 modelled by this graph, but there is no promise that all of the
@@ -1204,7 +1204,7 @@ preconditions for fromPlantri(), calling ``fromPlantri(s).plantri()``
 will recover the original string *s*.
 
 It is important to note the preconditions below: in particular, that
-this graph must be dual to a *simple* quadrangulation of the sphere.
+this graph must be dual to a _simple_ quadrangulation of the sphere.
 This is because the planar embeddings for more general graphs (i.e.,
 the duals of non-simple quadrangulations) cannot always be uniquely
 reconstructed from their *plantri* output.
@@ -1225,7 +1225,7 @@ Precondition:
     This graph has between 1 and 52 nodes inclusive.
 
 Precondition:
-    The dual to this graph is a *simple* quadrangulation of the
+    The dual to this graph is a _simple_ quadrangulation of the
     sphere. In particular, the dual must not have any parallel edges.
     Note that any graph that fails this condition will the model graph
     for a link diagram that is an "obvious" connected sum.

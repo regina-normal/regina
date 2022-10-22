@@ -39,9 +39,9 @@ and are numbered beginning at 0.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it through
+    used in the given file _name_, and simply passes it through
     unchanged to low-level C/C++ file I/O routines. It assumes however
-    that the *contents* of the file are in UTF-8.
+    that the _contents_ of the file are in UTF-8.
 
 Parameter ``filename``:
     the name of the text file from which to read.

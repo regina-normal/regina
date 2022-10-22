@@ -112,7 +112,7 @@ R"doc(Returns the link of this edge as a normal hypersurface.
 
 Constructing the link of a edge begins with building the frontier of a
 regular neighbourhood of the edge. If this is already a normal
-hypersurface, then then link is called *thin*. Otherwise some basic
+hypersurface, then then link is called _thin_. Otherwise some basic
 normalisation steps are performed until the hypersurface becomes
 normal; note that these normalisation steps could change the topology
 of the hypersurface, and in some pathological cases could even reduce

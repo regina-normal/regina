@@ -381,7 +381,7 @@ Returns:
 static const char *simplify =
 R"doc(Simplifies this expression. Adjacent powers of the same generator will
 be combined, and terms with an exponent of zero will be removed. Note
-that it is *not* assumed that the underlying group is abelian.
+that it is _not_ assumed that the underlying group is abelian.
 
 You may declare that the expression is cyclic, in which case it is
 assumed that terms may be moved from the back to the front and vice
@@ -623,7 +623,7 @@ static const char *__eq =
 R"doc(Determines whether this and the given group presentation are
 identical.
 
-This routine does *not* test for isomorphism (which in general is an
+This routine does _not_ test for isomorphism (which in general is an
 undecidable problem). Instead it tests whether this and the given
 presentation use exactly the same generators and exactly the same
 relations, presented in exactly the same order.
@@ -674,7 +674,7 @@ static const char *__ne =
 R"doc(Determines whether this and the given group presentation are not
 identical.
 
-This routine does *not* test for isomorphism (which in general is an
+This routine does _not_ test for isomorphism (which in general is an
 undecidable problem). Instead it tests whether this and the given
 presentation use exactly the same generators and exactly the same
 relations, presented in exactly the same order.
@@ -802,11 +802,11 @@ This routine produces a constant stream of output (i.e., it calls
 .. warning::
     The running time is ``(k!)^g``, where *k* is the subgroup index
     described above, and *g* is the number of generators of this group
-    presentation. In particular, the running time grows *extremely*
+    presentation. In particular, the running time grows _extremely_
     quickly with *k*.
 
 .. warning::
-    This routine does *not* simplify the group presentation before it
+    This routine does _not_ simplify the group presentation before it
     runs. You should make sure that you have simplified the
     presentation, either using Regina or some other tool, before
     running this routine, since (as noted above) the running time is
@@ -816,7 +816,7 @@ This routine produces a constant stream of output (i.e., it calls
     Likewise, this routine does not simplify the subgroup
     presentations before passing them to *action*. These presentations
     can be quite large, and (for example) if all you care about is
-    their abelianisations then you are better off using the *abelian*
+    their abelianisations then you are better off using the _abelian_
     group simplification / computation instead (which is much faster).
 
 .. warning::
@@ -832,7 +832,7 @@ Python:
     first form is ``enumerateCovers(index, action)``, which mirrors
     the C++ function: it takes *action* which may be a pure Python
     function, it returns the number of representations found, but it
-    does *not* take an addition argument list (*args*). The second
+    does _not_ take an addition argument list (*args*). The second
     form is ``enumerateCovers(index)``, which returns a Python list
     containing all of the corresponding subgroups, each given as a
     GroupPresentation. In both forms, the template parameter *index*
@@ -893,7 +893,7 @@ Parameter ``rhs``:
 static const char *homologicalAlignment =
 R"doc(Rewrites the presentation so that generators of the group map to
 generators of the abelianisation, with any left-over generators
-mapping to zero (if possible). Consider this a *homological*-alignment
+mapping to zero (if possible). Consider this a _homological-alignment_
 of the presentation.
 
 If the abelianisation of this group has rank *N* and *M* invariant

@@ -16,13 +16,13 @@ static const char *BagComparison = R"doc(Indicates the relationship between two 
 
 // Docstring regina::python::doc::NiceType
 static const char *NiceType =
-R"doc(Used to indicate the type of each bag in a *nice* tree decomposition.
+R"doc(Used to indicate the type of each bag in a _nice_ tree decomposition.
 
 A nice tree decomposition is produced by calling
 TreeDecomposition::makeNice(). As a result:
 
-* every bag will be either an *introduce* bag, a *forget* bag, or a
-  *join* bag, as defined below;
+* every bag will be either an _introduce_ bag, a _forget_ bag, or a
+  _join_ bag, as defined below;
 
 * the root bag will be a forget bag, and will be empty;
 
@@ -39,7 +39,7 @@ R"doc(Represents a single bag in a tree decomposition.
 
 The class TreeDecomposition is used to build, manipulate and iterate
 over tree decompositions of graphs. A tree decomposition of a graph
-*G* consists of (i) an underlying tree *T*; and (ii) a *bag* at every
+*G* consists of (i) an underlying tree *T*; and (ii) a _bag_ at every
 node of this tree. Each bag is a set of zero or more nodes of *G*, and
 these bags are subject to various constraints as described in the
 TreeDecomposition class notes.
@@ -62,12 +62,12 @@ This class TreeBag represents a single bag in a tree decomposition.
 * You can iterate through all the bags in the tree decomposition with
   the help of member functions next(), nextPrefix() and index().
 
-* If the tree decomposition is of a special type (such as a *nice*
+* If the tree decomposition is of a special type (such as a _nice_
   tree decomposition), then each bag may be adorned with some
   additional information; you can access this through the member
   functions type() and subtype().
 
-To *build* a tree decomposition of a graph, see the various
+To _build_ a tree decomposition of a graph, see the various
 TreeDecomposition class constructors.
 
 Note that a bag may be empty (indeed, if you call
@@ -91,7 +91,7 @@ triangulation. This is an important step in the implementation of
 fixed-parameter tractable algorithms on triangulated manifolds.
 
 Given a graph *G*, a tree decomposition of *G* consists of (i) an
-underlying tree *T*; and (ii) a *bag* at every node of this tree. Each
+underlying tree *T*; and (ii) a _bag_ at every node of this tree. Each
 bag is a set of zero or more nodes of *G*, and these bags are subject
 to the following constraints:
 
@@ -99,7 +99,7 @@ to the following constraints:
 
 * Every arc of *G* has both its endpoints in some common bag;
 
-* For every node *v* of *G*, the set of *all* bags containing *v*
+* For every node *v* of *G*, the set of _all_ bags containing *v*
   forms a (connected) subtree of *T*.
 
 In Regina, the underlying tree *T* is a rooted tree, so that every
@@ -108,8 +108,8 @@ of children (possibly many, possibly zero).
 
 Tree decompositions are generally considered "better" if their bags
 are smaller (i.e., contain fewer nodes of *G*). To this end, the
-*width* of a tree decomposition is one less than its largest bag size,
-and the *treewidth* of *G* is the minimum width over all tree
+_width_ of a tree decomposition is one less than its largest bag size,
+and the _treewidth_ of *G* is the minimum width over all tree
 decompositions of *G*.
 
 A tree decomposition is described by a single TreeDecomposition
@@ -141,14 +141,14 @@ left-to-right manner:
 This bag numbering may be useful if you wish to store auxiliary
 information alongside each bag in a separate array. You can access
 this numbering through the function TreeBag::index(). However, note
-that TreeDecomposition does *not* store its bags in an array, and so
+that TreeDecomposition does _not_ store its bags in an array, and so
 the "random access" function bag() is slow, with worst-case linear
 time.
 
 There are two broad classes of algorithms for building tree
-decompositions: (i) *exact* algorithms, which are slow but guarantee
+decompositions: (i) _exact_ algorithms, which are slow but guarantee
 to find a tree decomposition of the smallest possible width; and (ii)
-*greedy* algorithms, which are fast and which aim to keep the width
+_greedy_ algorithms, which are fast and which aim to keep the width
 small but which do not promise minimality. Currently Regina only
 offers greedy algorithms, though this may change in a future release.
 See the TreeDecompositionAlg enumeration for a list of all algorithms
@@ -190,13 +190,13 @@ namespace NiceType_ {
 
 // Docstring regina::python::doc::NiceType_::NICE_FORGET
 static const char *NICE_FORGET =
-R"doc(Indicates a forget bag. A *forget* bag has only one child bag. It
+R"doc(Indicates a forget bag. A _forget_ bag has only one child bag. It
 contains all of the nodes in this child bag except for exactly one
 missing node, and contains no other nodes besides these.)doc";
 
 // Docstring regina::python::doc::NiceType_::NICE_INTRODUCE
 static const char *NICE_INTRODUCE =
-R"doc(Indicates an introduce bag. An *introduce* bag has only one child bag.
+R"doc(Indicates an introduce bag. An _introduce_ bag has only one child bag.
 It contains all of the nodes in this child bag plus exactly one new
 node, and contains no other nodes besides these.
 
@@ -206,7 +206,7 @@ exactly one node.)doc";
 
 // Docstring regina::python::doc::NiceType_::NICE_JOIN
 static const char *NICE_JOIN =
-R"doc(Indicates a join bag. A *join* bag has exactly two child bags, where
+R"doc(Indicates a join bag. A _join_ bag has exactly two child bags, where
 the join bag and both of its child bags are all identical.)doc";
 
 }
@@ -314,7 +314,7 @@ Returns:
 // Docstring regina::python::doc::TreeBag_::next
 static const char *next =
 R"doc(Used for a postfix iteration through all of the bags in a tree
-decomposition. Amongst other things, a *postfix* iteration is one in
+decomposition. Amongst other things, a _postfix_ iteration is one in
 which all of the children of any bag *b* will be processed before *b*
 itself.
 
@@ -343,7 +343,7 @@ Returns:
 // Docstring regina::python::doc::TreeBag_::nextPrefix
 static const char *nextPrefix =
 R"doc(Used for a prefix iteration through all of the bags in a tree
-decomposition. Amongst other things, a *prefix* iteration is one in
+decomposition. Amongst other things, a _prefix_ iteration is one in
 which each bag will be processed before any of its children.
 
 If *d* is a non-empty tree decomposition, then you can complete a full
@@ -416,7 +416,7 @@ accessed through the member functions type() and subtype().
   (and indeed whether it is even defined) will depend on the value of
   type().
 
-At present, types and subtypes are only stored for *nice* tree
+At present, types and subtypes are only stored for _nice_ tree
 decompositions. See TreeDecomposition::makeNice() for details on what
 type() and subtype() represent.
 
@@ -443,7 +443,7 @@ accessed through the member functions type() and subtype().
   specific meaning of subtype() (and indeed whether it is even
   defined) will typically depend on the return value of type().
 
-At present, types and subtypes are only stored for *nice* tree
+At present, types and subtypes are only stored for _nice_ tree
 decompositions. See TreeDecomposition::makeNice() for details on what
 type() and subtype() represent.
 
@@ -657,12 +657,12 @@ R"doc(A slow (linear-time) routine that returns the bag at the given index.
 Recall that the bags in a tree decomposition are numbered
 0,1,...,size()-1. This routine returns the bag with the given number.
 
-This routine is linear-time, and so you should *not* use it to iterate
+This routine is linear-time, and so you should _not_ use it to iterate
 through all bags. Instead, to iterate through all bags, use
 TreeDecomposition::first() and TreeBag::next().
 
 .. warning::
-    This routine is *slow*, with a worst-case linear time. This is
+    This routine is _slow_, with a worst-case linear time. This is
     because the bags are not stored internally in an array, and so
     this routine must search the tree from the root downwards to find
     the bag that is being requested.
@@ -704,7 +704,7 @@ Returns:
 // Docstring regina::python::doc::TreeDecomposition_::first
 static const char *first =
 R"doc(Used for a postfix iteration through all of the bags in the tree
-decomposition. Amongst other things, a *postfix* iteration is one in
+decomposition. Amongst other things, a _postfix_ iteration is one in
 which all of the children of any bag *b* will be processed before *b*
 itself.
 
@@ -731,7 +731,7 @@ Returns:
 // Docstring regina::python::doc::TreeDecomposition_::firstPrefix
 static const char *firstPrefix =
 R"doc(Used for a prefix iteration through all of the bags in the tree
-decomposition. Amongst other things, a *prefix* iteration is one in
+decomposition. Amongst other things, a _prefix_ iteration is one in
 which each bag will be processed before any of its children.
 
 If *d* is a non-empty tree decomposition, then you can complete a full
@@ -841,18 +841,18 @@ Parameter ``b``:
 static const char *makeNice =
 R"doc(Converts this into a nice tree decomposition.
 
-A *nice* tree decomposition is one in which every bag is one of the
+A _nice_ tree decomposition is one in which every bag is one of the
 following types:
 
-* an *introduce* bag, which has only one child bag, and which contains
+* an _introduce_ bag, which has only one child bag, and which contains
   all of the nodes in this child bag plus exactly one new node (and
   nothing else);
 
-* a *forget* bag, which has only one child bag, and which contains all
+* a _forget_ bag, which has only one child bag, and which contains all
   of the nodes in this child bag except for exactly one missing node
   (and nothing else);
 
-* a *join* bag, which has exactly two child bags, and where each child
+* a _join_ bag, which has exactly two child bags, and where each child
   bag contains exactly the same nodes as the join bag itself.
 
 As a special case, each leaf bag (which has no child bags at all) is
@@ -892,8 +892,8 @@ only, in that their effect on the final tree decomposition might
 change in future versions of Regina.
 
 .. warning::
-    Note that TreeBag::subtype() is *not* the number of the new or
-    missing node, but instead gives the *index* of the new or missing
+    Note that TreeBag::subtype() is _not_ the number of the new or
+    missing node, but instead gives the _index_ of the new or missing
     node within the relevant bag.
 
 .. note::
@@ -963,12 +963,12 @@ The three arrays play the following roles. Let *b* be some bag at
 index *i* in the original tree decomposition, and let *p* be its
 parent bag.
 
-* ``costSame[i]`` indicates the cost of *preserving* the parent-child
+* ``costSame[i]`` indicates the cost of _preserving_ the parent-child
   relationship between *b* and *p* (i.e., after rerooting, *p* is
   still the parent bag of *b*). If *b* is the root bag of the original
   tree decomposition then ``costSame[i]`` is ignored.
 
-* ``costReverse[i]`` indicates the cost of *reversing* the parent-
+* ``costReverse[i]`` indicates the cost of _reversing_ the parent-
   child relationship between *b* and *p* (i.e., after rerooting, *b*
   is now the parent bag of *p*). Again, if *b* is the root bag of the
   original tree decomposition then ``costReverse[i]`` is ignored.
@@ -982,14 +982,14 @@ It follows that, for each potential new root, there are size() costs
 to aggregate: this comes from size()-1 costs from the arrays
 *costSame* and/or *costReverse* (one for each connection between bags
 in the underlying tree), and one cost from *costRoot*. These costs
-will be aggregated by taking the *maximum* over all individual costs.
+will be aggregated by taking the _maximum_ over all individual costs.
 This means that you do not need to estimate running times and/or
 memory consumption accurately; instead you only need to find some
-heuristic that aims to be *monotonic* in time and/or memory.
+heuristic that aims to be _monotonic_ in time and/or memory.
 
 So: in essence then, this routine minimises the maximum cost. In the
 case of a tie, it then minimises multiplicity; that is, it minimises
-the *number* of times that this maximum cost occurs over the
+the _number_ of times that this maximum cost occurs over the
 individual size() costs that are being aggregated.
 
 Note that the *costSame* and *costReverse* arrays are technically
@@ -1000,7 +1000,7 @@ a cost per bag, the typical way of doing this would be:
   relationship with its parent is preserved;
 
 * ``costReverse[i]`` estimates the processing cost at the original
-  *parent* of bag *i* if its relationship with bag *i* is reversed
+  _parent_ of bag *i* if its relationship with bag *i* is reversed
   (i.e., it becomes a child of bag *i*);
 
 * ``costRoot[i]`` estimates the processing cost at bag *i* if bag *i*

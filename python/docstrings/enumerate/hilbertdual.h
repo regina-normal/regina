@@ -49,12 +49,12 @@ this linear subspace. The resulting list of basis vectors will contain
 no duplicates or redundancies.
 
 Parameter *constraints* may contain a set of validity constraints, in
-which case this routine will only return *valid* basis elements. Each
+which case this routine will only return _valid_ basis elements. Each
 validity constraint is of the form "a basis element may only lie
 outside at most one of these facets of the original cone"; see the
 ValidityConstraints class for details. These contraints have the
 important property that, although validity is not preserved under
-addition, *invalidity* is.
+addition, _invalidity_ is.
 
 An optional progress tracker may be passed. If so, this routine will
 update the percentage progress and poll for cancellation requests. It

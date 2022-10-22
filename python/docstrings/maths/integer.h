@@ -143,7 +143,7 @@ Parameter ``value``:
 // Docstring regina::python::doc::IntegerBase_::__dec
 static const char *__dec =
 R"doc(The postdecrement operator. This operator decrements this integer by
-one, and returns a copy of the integer *before* the decrement.
+one, and returns a copy of the integer _before_ the decrement.
 
 Python:
     This routine is named dec() since python does not support the
@@ -424,7 +424,7 @@ Returns:
 // Docstring regina::python::doc::IntegerBase_::__inc
 static const char *__inc =
 R"doc(The postincrement operator. This operator increments this integer by
-one, and returns a copy of the integer *before* the increment.
+one, and returns a copy of the integer _before_ the increment.
 
 Python:
     This routine is named inc() since python does not support the
@@ -1175,7 +1175,7 @@ static const char *randomBinary =
 R"doc(Generate a pseudo-random integer that is uniformly distributed in the
 interval [0,2^n).
 
-The random number generation here does *not* use Regina's own
+The random number generation here does _not_ use Regina's own
 RandomEngine class, but instead uses a separate random number
 generator provided by GMP.
 
@@ -1190,7 +1190,7 @@ static const char *randomBoundedByThis =
 R"doc(Generate a pseudo-random integer that is uniformly distributed in the
 interval [0,*this).
 
-The random number generation here does *not* use Regina's own
+The random number generation here does _not_ use Regina's own
 RandomEngine class, but instead uses a separate random number
 generator provided by GMP.
 
@@ -1213,7 +1213,7 @@ R"doc(Generate a pseudo-random integer that is distributed in the interval
 [0,2^n), with a tendency to have long strings of 0s and 1s in its
 binary expansion.
 
-The random number generation here does *not* use Regina's own
+The random number generation here does _not_ use Regina's own
 RandomEngine class, but instead uses a separate random number
 generator provided by GMP.
 

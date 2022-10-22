@@ -268,8 +268,8 @@ Python:
     In Python, this is the square bracket operator, not the round
     bracket operator; that is, Python users can access coefficients
     through the syntax ``poly[xExp, yExp]``. Moreover, this operator
-    can also *set* cofficients; that is, you can write ``poly[xExp,
-    yExp] = value``. However, when *getting* a coefficient this
+    can also _set_ cofficients; that is, you can write ``poly[xExp,
+    yExp] = value``. However, when _getting_ a coefficient this
     operator will return by value (to enforce constness), which means
     for example you cannot write something like ``poly[xExp,
     yExp].negate()``.

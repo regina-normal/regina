@@ -123,7 +123,7 @@ for ad-hoc use. The consequences of this are:
   event listeners.
 
 * To include a Triangulation in the packet tree, you must create a new
-  PacketOf<Triangulation>. This *is* a packet type, and supports
+  PacketOf<Triangulation>. This _is_ a packet type, and supports
   labels, tags, child/parent packets, and event listeners. It derives
   from Triangulation, and so inherits the full Triangulation
   interface.
@@ -141,7 +141,7 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.
 
 For Regina's standard dimensions, this template is specialised and
-offers *much* more functionality. In order to use these specialised
+offers _much_ more functionality. In order to use these specialised
 classes, you will need to include the corresponding headers (e.g.,
 triangulation/dim2.h for *dim* = 2, or triangulation/dim3.h for *dim*
 = 3).
@@ -280,7 +280,7 @@ This routine will behave correctly if *other* is in fact this
 triangulation.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both triangulations which may in turn call
     arbitrary code via any registered packet listeners.
 

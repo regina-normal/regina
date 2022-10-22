@@ -65,7 +65,7 @@ and layerings according to the following relation:
     [o1]       [o0]
 ```
 
-Note that the routines writeName() and writeTeXName() do *not* offer
+Note that the routines writeName() and writeTeXName() do _not_ offer
 enough information to uniquely identify the triangulation, since this
 essentially requires 2-dimensional assemblings of saturated blocks.
 For more detail, writeTextLong() may be used instead.

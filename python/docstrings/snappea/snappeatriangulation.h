@@ -93,7 +93,7 @@ Regarding the inherited Triangulation<3> interface:
   class) and Regina's native triangulation functions (such as
   Triangulation<3>::homology(), and others inherited from
   Triangulation<3>). This is because an object of this class stores
-  *two* representations of the triangulation (SnapPea's and Regina's),
+  _two_ representations of the triangulation (SnapPea's and Regina's),
   which are always kept in sync.
 
 * However, you may **only edit this object using the SnapPea functions
@@ -110,7 +110,7 @@ Regarding the inherited Triangulation<3> interface:
 
 * In particular, if you wish to assign one SnapPea triangulation to
   another, or swap the contents of two SnapPea triangulations, then
-  you *must* cast both objects to SnapPeaTriangulation before
+  you _must_ cast both objects to SnapPeaTriangulation before
   performing the operation. If either argument is presented as the
   parent class Triangulation<3> then the inherited operation on
   Triangulation<3> will be called instead, which will (as above)
@@ -154,7 +154,7 @@ about fillings at all. Therefore:
 * In particular, if you are testing two triangulations for equality:
   if either triangulation is presented as the parent class
   Triangulation<3> then you will be calling the inherited
-  Triangulation<3> comparision operators, which *only* compare the
+  Triangulation<3> comparision operators, which _only_ compare the
   tetrahedron labelling and gluings. If you wish to compare cusps and
   fillings as well, you must ensure that both triangulations are cast
   to SnapPeaTriangulation (in which case the SnapPeaTriangulation
@@ -195,7 +195,7 @@ are:
   and/or event listeners.
 
 * To include a SnapPeaTriangulation in the packet tree, you must
-  create a new PacketOf<SnapPeaTriangulation>. This *is* a packet
+  create a new PacketOf<SnapPeaTriangulation>. This _is_ a packet
   type, and supports labels, tags, child/parent packets, and event
   listeners. It derives from SnapPeaTriangulation, and so inherits the
   full SnapPeaTriangulation interface.
@@ -217,8 +217,8 @@ listening for change events on a PacketOf<SnapPeaTriangulation>:
 
 * As expected, this will fire a pair of change events. However, the
   packetToBeChanged() event will be fired too late: specifically, it
-  will be fired *after* the Triangulation<3> change is made but
-  *before* the SnapPea triangulation is nullifed. In particular, it
+  will be fired _after_ the Triangulation<3> change is made but
+  _before_ the SnapPea triangulation is nullifed. In particular, it
   will already be too late to take a copy of the original SnapPea
   triangulation.
 
@@ -262,7 +262,7 @@ information.
 
 Two Cusp objects are considered equal if they refer to the same vertex
 number of the underlying triangulation, and they have the same filling
-coefficients. Note that the vertex *pointers* do not need to be the
+coefficients. Note that the vertex _pointers_ do not need to be the
 same (i.e., it is meaningful to compare cusps from different
 triangulations).
 
@@ -280,7 +280,7 @@ information.
 
 Two Cusp objects are considered equal if they refer to the same vertex
 number of the underlying triangulation, and they have the same filling
-coefficients. Note that the vertex *pointers* do not need to be the
+coefficients. Note that the vertex _pointers_ do not need to be the
 same (i.e., it is meaningful to compare cusps from different
 triangulations).
 
@@ -447,7 +447,7 @@ This routine checks only those things that can be checked exactly,
 without going through the SnapPea kernel and without requiring
 floating-point comparisons.
 
-In particular, it *does* check whether:
+In particular, it _does_ check whether:
 
 * the tetrahedron numbers, vertex labels and gluings are the same in
   both triangulations (i.e., the tests performed by Regina's native
@@ -459,7 +459,7 @@ In particular, it *does* check whether:
 * each pair of corresponding cusps are either both not filled, or both
   filled using the same coefficients.
 
-It does *not* check wehether corresponding tetrahedron shapes are the
+It does _not_ check wehether corresponding tetrahedron shapes are the
 same, or if the volumes are "sufficiently close", or even whether the
 SnapPea kernel has produced the same solution type for both
 triangulations.
@@ -476,8 +476,8 @@ Returns:
 // Docstring regina::python::doc::SnapPeaTriangulation_::__init
 static const char *__init =
 R"doc(Creates a new SnapPea triangulation from the contents of SnapPea data
-file. The argument may be the *name* of a SnapPea file, or it may also
-be the *contents* of a SnapPea file (so the file itself need not
+file. The argument may be the _name_ of a SnapPea file, or it may also
+be the _contents_ of a SnapPea file (so the file itself need not
 actually exist on the filesystem).
 
 This routine uses the SnapPea kernel to read the data file, and so all
@@ -508,7 +508,7 @@ Internationalisation:
     If the given argument is a filename, then this routine makes no
     assumptions about the character encoding used in the filename, and
     simply passes it through unchanged to low-level C/C++ file I/O
-    routines. This routine assumes that the file *contents*, however,
+    routines. This routine assumes that the file _contents_, however,
     are in UTF-8 (the standard encoding used throughout Regina).
 
 Exception ``FileError``:
@@ -580,7 +580,7 @@ Even if SnapPea does not retriangulate the manifold (for the reasons
 described above), it is possible that the tetrahedron and vertex
 numbers might be changed in the new SnapPea triangulation. In
 particular, if the given Regina triangulation is orientable but not
-oriented, then you should *expect* these numbers to change.
+oriented, then you should _expect_ these numbers to change.
 
 Parameter ``tri``:
     the Regina triangulation to clone.
@@ -594,7 +594,7 @@ static const char *__init_3 =
 R"doc(Creates a new ideal SnapPea triangulation representing the complement
 of the given link in the 3-sphere.
 
-This is *not* the same triangulation that would be produced by calling
+This is _not_ the same triangulation that would be produced by calling
 ``SnapPeaTriangulation(link.complement())``. By calling
 ``link.complement()``, you through Regina's Triangulation<3> class and
 therefore lose the peripheral curves. Although the
@@ -626,7 +626,7 @@ This routine checks only those things that can be checked exactly,
 without going through the SnapPea kernel and without requiring
 floating-point comparisons.
 
-In particular, it *does* check whether:
+In particular, it _does_ check whether:
 
 * the tetrahedron numbers, vertex labels and gluings are the same in
   both triangulations (i.e., the tests performed by Regina's native
@@ -638,7 +638,7 @@ In particular, it *does* check whether:
 * each pair of corresponding cusps are either both not filled, or both
   filled using the same coefficients.
 
-It does *not* check wehether corresponding tetrahedron shapes are the
+It does _not_ check wehether corresponding tetrahedron shapes are the
 same, or if the volumes are "sufficiently close", or even whether the
 SnapPea kernel has produced the same solution type for both
 triangulations.
@@ -705,7 +705,7 @@ SnapPy:
     The SnapPea kernel does not always compute the canonical cell
     decomposition correctly. Sometimes it gives the wrong answer,
     although in such a case it still guarantees that the manifold it
-    *does* return is homeomorphic to the original. Sometimes it gives
+    _does_ return is homeomorphic to the original. Sometimes it gives
     no answer at all, in which case this routine will throw an
     exception (see below).
 
@@ -901,7 +901,7 @@ Each covering space is produced once up to equivalence; here
 equivalent covers correspond to conjugate representations of the
 fundamental group.
 
-To enumerate *all* *k*-sheeted covers up to equivalence, set *type* to
+To enumerate _all_ *k*-sheeted covers up to equivalence, set *type* to
 *all_covers*. Be warned, however, that this becomes enormously slow as
 the number of sheets *k* grows. An alternative is to enumerate only
 cyclic covers by setting *type* to *cyclic_covers*; this significantly
@@ -947,7 +947,7 @@ Precondition:
 
 .. warning::
     If you are enumerating all covers, then the argument *sheets*
-    should be *very* small.
+    should be _very_ small.
 
 .. warning::
     The covers that are produced will typically use far more
@@ -972,7 +972,7 @@ Python:
     first form is ``enumerateCovers(sheets, type, action)``, which
     mirrors the C++ function: it takes *action* which may be a pure
     Python function, it returns the number of covers found, but it
-    does *not* take an addition argument list (*args*). The second
+    does _not_ take an addition argument list (*args*). The second
     form is ``enumerateCovers(sheets, type)``, which returns a Python
     list containing all of the triangulated covers, each given as a
     pair (SnapPeaTriangulation, SnapPeaTriangulation::CoverType).
@@ -1244,7 +1244,7 @@ See SnapPeaTriangulation::swap() for more details and caveats.
 
 .. warning::
     If you wish to swap the contents of two SnapPea triangulations,
-    you *must* cast both to SnapPeaTriangulation before calling
+    you _must_ cast both to SnapPeaTriangulation before calling
     swap(). If either argument is presented as the parent class
     Triangulation<3>, then the Triangulation<3> swap() will be called
     instead; the result will be that (just like when you call any of
@@ -1253,7 +1253,7 @@ See SnapPeaTriangulation::swap() for more details and caveats.
     class notes for further discussion.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events which may in turn call arbitrary code via any
     registered packet listeners.
 
@@ -1495,7 +1495,7 @@ SnapPy:
     The SnapPea kernel does not always compute the canonical cell
     decomposition correctly. Sometimes it gives the wrong answer,
     although in such a case it still guarantees that the manifold it
-    *does* return is homeomorphic to the original. Sometimes it gives
+    _does_ return is homeomorphic to the original. Sometimes it gives
     no answer at all, in which case this routine will throw an
     exception (see below).
 
@@ -1570,8 +1570,8 @@ this routine will return ``False``.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it through
-    unchanged to low-level C/C++ file I/O routines. The *contents* of
+    used in the given file _name_, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
 Parameter ``filename``:
@@ -1634,7 +1634,7 @@ these slopes directly from a normal surface, see
 NormalSurface::boundaryIntersections().
 
 The orientations of the boundary curves of a spun-normal surface are
-chosen so that *if* meridian and longitude are a positive basis as
+chosen so that _if_ meridian and longitude are a positive basis as
 vieved from the cusp, then as one travels along an oriented boundary
 curve, the spun-normal surface spirals into the cusp to one's right
 and down into the manifold to one's left.
@@ -1677,7 +1677,7 @@ kernel to produce the file contents. This means it will include not
 just the tetrahedron gluings, but also other SnapPea-specific
 information that Regina does not use (e.g., peripheral curves).
 
-If you wish to export a triangulation to a SnapPea *file*, you should
+If you wish to export a triangulation to a SnapPea _file_, you should
 call saveSnapPea() instead (which has better performance, and does not
 require you to construct an enormous intermediate string).
 
@@ -1717,7 +1717,7 @@ triangulation.
 
 .. warning::
     If you wish to swap the contents of two SnapPea triangulations,
-    you *must* cast both to SnapPeaTriangulation before calling
+    you _must_ cast both to SnapPeaTriangulation before calling
     swap(). If either argument is presented as the parent class
     Triangulation<3>, then the Triangulation<3> swap() will be called
     instead; the result will be that (just like when you call any of
@@ -1726,7 +1726,7 @@ triangulation.
     class notes for further discussion.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both triangulations which may in turn call
     arbitrary code via any registered packet listeners.
 
@@ -1790,7 +1790,7 @@ Returns:
 // Docstring regina::python::doc::SnapPeaTriangulation_::volumeZero
 static const char *volumeZero =
 R"doc(Determines whether the current solution to the gluing equations has
-volume approximately zero. This test is *not* rigorous.
+volume approximately zero. This test is _not_ rigorous.
 
 This requires (i) the volume itself to be very close to zero in an
 absolute sense, (ii) the volume to be zero within SnapPea's own

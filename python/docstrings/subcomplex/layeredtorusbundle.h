@@ -60,7 +60,7 @@ combinatorial parameters, and their layering relations are the same.
 
 In particular, if you invert a layered torus bundle (which means the
 layering relation becomes its inverse matrix), the resulting layered
-torus bundle will generally *not* compare as equal.
+torus bundle will generally _not_ compare as equal.
 
 This test follows the general rule for most subclasses of
 StandardTriangulation (excluding fixed structures such as SnappedBall
@@ -88,7 +88,7 @@ combinatorial parameters, and their layering relations are the same.
 
 In particular, if you invert a layered torus bundle (which means the
 layering relation becomes its inverse matrix), the resulting layered
-torus bundle will generally *not* compare as equal.
+torus bundle will generally _not_ compare as equal.
 
 This test follows the general rule for most subclasses of
 StandardTriangulation (excluding fixed structures such as SnappedBall
@@ -160,7 +160,7 @@ relates curves on the two torus boundaries of the core ``T x I``.
 
 The TxICore class documentation describes generating α and β curves on
 the two torus boundaries of the core ``T x I`` (which are referred to
-as the *upper* and *lower* boundaries). The two boundary tori are
+as the _upper_ and _lower_ boundaries). The two boundary tori are
 parallel in two directions: through the core, and through the
 layering. It is desirable to know the parallel relationship between
 the two sets of boundary curves in each direction.

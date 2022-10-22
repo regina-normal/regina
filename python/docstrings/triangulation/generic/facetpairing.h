@@ -28,19 +28,19 @@ boundary facet. Note however that a facet pairing does not contain
 enough information to fully reconstruct a triangulation, since the
 permutations used for each individual gluing are not stored.
 
-Facet pairings are *labelled*, in that the simplices are explicitly
+Facet pairings are _labelled_, in that the simplices are explicitly
 numbered 0,1,..., and the facets of each simplex are explicitly
 numbered 0,...,*dim* (just like in a triangulation). Facet pairings do
 also come with code to help identify and work with relabellings, via
 isomorphisms, automorphisms, and canonical representations. In this
 context:
 
-* An *isomorphism* of a facet pairing means a relabelling of the
+* An _isomorphism_ of a facet pairing means a relabelling of the
   simplices and a relabelling of the (*dim* + 1) facets within each
   simplex; this can be represented by the same class Isomorphism<dim>
   that is used for isomorphisms of triangulations.
 
-* An *automorphism* of a facet pairing is an isomorphism that, when
+* An _automorphism_ of a facet pairing is an isomorphism that, when
   applied, results in an identical facet pairing (i.e., where exactly
   the same pairs of labelled simplex facets are matched together).
 

@@ -134,8 +134,8 @@ R"doc(Divides the two given polynomials.
 
 More precisely: suppose there exist polynomials *q* and *r* with
 coefficients of type *T* for which ``lhs = q.rhs + r``, and where *r*
-has smaller degree than *rhs*. Then we call *q* the *quotient*, and
-*r* the *remainder*.
+has smaller degree than *rhs*. Then we call *q* the _quotient_, and
+*r* the _remainder_.
 
 This routine returns the quotient *q*, and discards the remainder. If
 you need to keep the remainder also, then call
@@ -294,8 +294,8 @@ static const char *__array =
 R"doc(Returns the given coefficient of this polynomial.
 
 Python:
-    Python users can also use this operator to *set* cofficients; that
-    is, you can write ``poly[exp] = value``. However, when *getting* a
+    Python users can also use this operator to _set_ cofficients; that
+    is, you can write ``poly[exp] = value``. However, when _getting_ a
     coefficient this operator will return by value (to enforce
     constness), which means for example you cannot write something
     like ``poly[exp].negate()``.
@@ -375,8 +375,8 @@ R"doc(Divides this by the given polynomial.
 
 More precisely: suppose there exist polynomials *q* and *r* with
 coefficients of type *T* for which ``this = q.other + r``, and where
-*r* has smaller degree than *other*. Then we call *q* the *quotient*,
-and *r* the *remainder*.
+*r* has smaller degree than *other*. Then we call *q* the _quotient_,
+and *r* the _remainder_.
 
 This routine replaces this polynomial with the quotient *q*, and
 discards the remainder. If you need to keep the remainder also, then
@@ -502,7 +502,7 @@ the remainder.
 More precisely: suppose there exist polynomials *q* and *r* with
 coefficients of type *T* for which ``this = q.divisor + r``, and where
 *r* has smaller degree than *divisor*. Then this routine returns the
-pair (*q*, *r*); that is, the *quotient* and the *remainder*.
+pair (*q*, *r*); that is, the _quotient_ and the _remainder_.
 
 If you do not need the remainder (e.g., if you know in advance that
 *divisor* divides into this polynomial exactly), then you can use the
@@ -614,7 +614,7 @@ Parameter ``end``:
 
 // Docstring regina::python::doc::Polynomial_::isMonic
 static const char *isMonic =
-R"doc(Returns whether this polynomial is monic. A *monic* polynomial is a
+R"doc(Returns whether this polynomial is monic. A _monic_ polynomial is a
 non-zero polynomial whose leading coefficient is one.
 
 Returns:

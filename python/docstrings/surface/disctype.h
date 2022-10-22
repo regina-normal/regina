@@ -28,7 +28,7 @@ of *type* is left to the user.
 It is however assumed that *type* will always be non-negative for
 "meaningful" disc types.
 
-This class can also store a *null* disc type; this is obtained by
+This class can also store a _null_ disc type; this is obtained by
 calling the default constructor, and it will have a type of -1 and a
 tetrahedron index of 0. You can test for a null disc type by casting
 to ``bool``.

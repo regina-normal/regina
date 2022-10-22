@@ -38,7 +38,7 @@ static const char *__eq =
 R"doc(Determines if this and the given bilinear form are represented by the
 same symmetric square integer matrices.
 
-This does *not* test whether this and the given form are congruent
+This does _not_ test whether this and the given form are congruent
 (i.e., related by a change basis in the underlying free abelian
 group). Instead it is equivalent to testing whether ``matrix() ==
 other.matrix()``.
@@ -76,7 +76,7 @@ static const char *__ne =
 R"doc(Determines if this and the given bilinear form are not represented by
 the same symmetric square integer matrices.
 
-This does *not* test whether this and the given form are congruent
+This does _not_ test whether this and the given form are congruent
 (i.e., related by a change basis in the underlying free abelian
 group). Instead it is equivalent to testing whether ``matrix() !=
 other.matrix()``.
@@ -92,7 +92,7 @@ Returns:
 static const char *even =
 R"doc(Returns ``True`` if and only if this bilinear form is of even type.
 
-A form *Q* is *even* if and only if ``Q(x,x)`` is even for all *x*.
+A form *Q* is _even_ if and only if ``Q(x,x)`` is even for all *x*.
 
 Returns:
     ``True`` if this bilinear form is of even type, or ``False`` if it
@@ -127,7 +127,7 @@ Returns:
 static const char *odd =
 R"doc(Returns ``True`` if and only if this bilinear form is of odd type.
 
-A form *Q* is *odd* if and only if ``Q(x,x)`` is odd for some *x*.
+A form *Q* is _odd_ if and only if ``Q(x,x)`` is odd for some *x*.
 
 Returns:
     ``True`` if this bilinear form is of odd type, or ``False`` if it

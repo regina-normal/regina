@@ -17,7 +17,7 @@ R"doc(A collection of normal surfaces in a 3-manifold triangulation.
 
 There are some important changes to this class as of Regina 7.0:
 
-* A normal surface list does *not* need to be a child packet of the
+* A normal surface list does _not_ need to be a child packet of the
   underlying triangulation, and indeed does not need to interact with
   the packet tree at all.
 
@@ -43,7 +43,7 @@ faster for ad-hoc use. The consequences of this are:
   packets, and/or event listeners.
 
 * To include an NormalSurfaces object in the packet tree, you must
-  create a new PacketOf<NormalSurfaces>. This *is* a packet type, and
+  create a new PacketOf<NormalSurfaces>. This _is_ a packet type, and
   supports labels, tags, child/parent packets, and event listeners. It
   derives from NormalSurfaces, and so inherits the full NormalSurfaces
   interface.
@@ -242,7 +242,7 @@ list, and their representations will be scaled down to use the
 smallest possible integer coordinates.
 
 Unlike the old enumerate() function, the new normal surface list will
-*not* be inserted into the packet tree. Moreover, the given
+_not_ be inserted into the packet tree. Moreover, the given
 triangulation may change or even be destroyed without causing
 problems. See the class notes for details.
 
@@ -279,7 +279,7 @@ Exception ``UnsolvedCase``:
     constructed, which can only happen in certain coordinate systems
     where this is explicitly described in the NormalCoords enum
     documentation; or (ii) the arguments require enumerating
-    *fundamental* normal surfaces using the primal Hilbert basis
+    _fundamental_ normal surfaces using the primal Hilbert basis
     algorithm, and Normaliz was unable to complete its portion of the
     task, which in theory should never happen at all.
 
@@ -329,7 +329,7 @@ constants. These preconditions will be checked, and if any of them
 fails then this constructor will throw an exception (see below).
 
 Unlike the old conversion and filter functions, this constructor will
-*not* insert the new normal surface list into the packet tree.
+_not_ insert the new normal surface list into the packet tree.
 
 Exception ``FailedPrecondition``:
     The preconditions for the given transformation were not met. See
@@ -348,7 +348,7 @@ static const char *__init_3 =
 R"doc(A "filter constructor" that creates a new list filled with those
 surfaces from the given list that pass the given filter.
 
-Unlike the old filter() function, this constructor will *not* insert
+Unlike the old filter() function, this constructor will _not_ insert
 the new normal surface list into the packet tree.
 
 For this new filtered list, which() will include the NS_CUSTOM flag,
@@ -464,7 +464,7 @@ provided so that NormalSurfaces meets the C++ Swappable requirements.
 See NormalSurfaces::swap() for more details.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both lists which may in turn call arbitrary code
     via any registered packet listeners.
 
@@ -535,7 +535,7 @@ name"``.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it through
+    used in the given file _name_, and simply passes it through
     unchanged to low-level C/C++ file I/O routines. Any user strings
     such as surface names will be written in UTF-8.
 
@@ -578,7 +578,7 @@ name"``.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it through
+    used in the given file _name_, and simply passes it through
     unchanged to low-level C/C++ file I/O routines. Any user strings
     such as surface names will be written in UTF-8.
 
@@ -642,7 +642,7 @@ R"doc(Swaps the contents of this and the given list.
 This routine will behave correctly if *other* is in fact this list.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both lists which may in turn call arbitrary code
     via any registered packet listeners.
 
@@ -673,7 +673,7 @@ The rules for using the triangulation() reference are:
   exception being thrown.
 
 .. warning::
-    As of Regina 7.0, you *cannot* access this triangulation via the
+    As of Regina 7.0, you _cannot_ access this triangulation via the
     packet tree as Packet::parent(). This is because normal surface
     lists can now be kept anywhere in the packet tree, or can be kept
     as standalone objects outside the packet tree entirely.

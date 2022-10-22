@@ -41,7 +41,7 @@ static const char *countFaces =
 R"doc(Returns the number of *subdim*-faces in this component.
 
 For convenience, this routine explicitly supports the case *subdim* =
-3. This is *not* the case for the routines face() and faces(), which
+3. This is _not_ the case for the routines face() and faces(), which
 give access to individual faces (the reason relates to the fact that
 tetrahedra are built manually, whereas lower-dimensional faces are
 deduced properties).

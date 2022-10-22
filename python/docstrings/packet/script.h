@@ -15,8 +15,8 @@ namespace regina::python::doc {
 static const char *Script =
 R"doc(A packet representing a Python script that can be run.
 
-A script consists of two parts: (i) the *text*, which contains the
-Python code; and (ii) a set of *variables*, which refer to packets in
+A script consists of two parts: (i) the _text_, which contains the
+Python code; and (ii) a set of _variables_, which refer to packets in
 your packet tree. When running a script, the variables should be
 instantiated in the default namespace before the script is run.
 
@@ -33,7 +33,7 @@ This means that:
   only holds weak pointers).
 
 * If such a packet changes its packet label or is destroyed, the
-  script will not notify its *own* listeners of the change. If a user
+  script will not notify its _own_ listeners of the change. If a user
   interface needs to know about this change (e.g., because it shows
   packet labels of script variables in a visual table), it will need
   to set up packet listeners for the individual variables - it is no
@@ -83,7 +83,7 @@ static const char *__default = R"doc(Initialises to a script with no text and no
 static const char *__eq =
 R"doc(Determines if this and the given script are identical.
 
-Here *identical* means that both scripts contain exactly the same
+Here _identical_ means that both scripts contain exactly the same
 text, and they have the same set of variables. For two variables to be
 considered the same, they must have the same variable name, and their
 values must be either both ``None`` or both pointers to the same
@@ -99,7 +99,7 @@ Returns:
 static const char *__ne =
 R"doc(Determines if this and the given script are not identical.
 
-Here *identical* means that both scripts contain exactly the same
+Here _identical_ means that both scripts contain exactly the same
 text, and they have the same set of variables. For two variables to be
 considered the same, they must have the same variable name, and their
 values must be either both ``None`` or both pointers to the same

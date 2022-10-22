@@ -559,7 +559,7 @@ file, you should work with the SnapPeaTriangulation class instead
 (which uses the SnapPea kernel directly, and can therefore store
 anything that SnapPea can).
 
-If you wish to read a triangulation from a SnapPea *file*, you should
+If you wish to read a triangulation from a SnapPea _file_, you should
 likewise call the SnapPeaTriangulation constructor, giving the
 filename as argument. This will read all SnapPea-specific information
 (as described above), and also avoids constructing an enormous
@@ -587,7 +587,7 @@ Returns:
 // Docstring regina::python::doc::Triangulation_::generalAngleStructure
 static const char *generalAngleStructure =
 R"doc(Returns a generalised angle structure on this triangulation, if one
-exists. A *generalised* angle structure must satisfy the same matching
+exists. A _generalised_ angle structure must satisfy the same matching
 equations as all angle structures do, but there is no constraint on
 the signs of the angles; in particular, negative angles are allowed.
 If a generalised angle structure does exist, then this routine is
@@ -696,19 +696,19 @@ Returns:
 // Docstring regina::python::doc::Triangulation_::hasGeneralAngleStructure
 static const char *hasGeneralAngleStructure =
 R"doc(Determines whether this triangulation supports a generalised angle
-structure. A *generalised* angle structure must satisfy the same
+structure. A _generalised_ angle structure must satisfy the same
 matching equations as all angle structures do, but there is no
 constraint on the signs of the angles; in particular, negative angles
 are allowed.
 
 This routine returns ``False`` if and only if generalAngleStructure()
-throws an exception. However, if you do not *know* whether a
+throws an exception. However, if you do not _know_ whether a
 generalised angle structure exists, then this routine is faster:
 
-* If there is *no* generalised angle structure, this routine will
+* If there is _no_ generalised angle structure, this routine will
   avoid the overhead of throwing and catching exceptions.
 
-* If there *is* a generalised angle structure, this routine will find
+* If there _is_ a generalised angle structure, this routine will find
   and cache this angle structure, which means that any subsequent call
   to generalAngleStructure() to retrieve its details will be
   essentially instantaneous.
@@ -862,22 +862,22 @@ Returns:
 // Docstring regina::python::doc::Triangulation_::hasStrictAngleStructure
 static const char *hasStrictAngleStructure =
 R"doc(Determines whether this triangulation supports a strict angle
-structure. Recall that a *strict* angle structure is one in which
+structure. Recall that a _strict_ angle structure is one in which
 every angle is strictly between 0 and π.
 
 This routine returns ``False`` if and only if strictAngleStructure()
-throws an exception. However, if you do not *know* whether a strict
+throws an exception. However, if you do not _know_ whether a strict
 angle structure exists, then this routine is faster:
 
-* If there is *no* strict angle structure, this routine will avoid the
+* If there is _no_ strict angle structure, this routine will avoid the
   overhead of throwing and catching exceptions.
 
-* If there *is* a strict angle structure, this routine will find and
+* If there _is_ a strict angle structure, this routine will find and
   cache this angle structure, which means that any subsequent call to
   strictAngleStructure() to retrieve its details will be essentially
   instantaneous.
 
-The underlying algorithm runs a single linear program (it does *not*
+The underlying algorithm runs a single linear program (it does _not_
 enumerate all vertex angle structures). This means that it is likely
 to be fast even for large triangulations.
 
@@ -1345,7 +1345,7 @@ Otherwise a call to isBall() may potentially require more significant
 work, and so this routine will return ``False``.
 
 .. warning::
-    This routine does not actually tell you *whether* this
+    This routine does not actually tell you _whether_ this
     triangulation forms a ball; it merely tells you whether the answer
     has already been computed (or is very easily computed).
 
@@ -1372,7 +1372,7 @@ Otherwise a call to hasCompressingDisc() may potentially require more
 significant work, and so this routine will return ``False``.
 
 .. warning::
-    This routine does not actually tell you *whether* the underlying
+    This routine does not actually tell you _whether_ the underlying
     3-manifold has a compressing disc; it merely tells you whether the
     answer has already been computed (or is very easily computed).
 
@@ -1395,7 +1395,7 @@ If this property is indeed already known, future calls to isHaken()
 will be very fast (simply returning the precalculated value).
 
 .. warning::
-    This routine does not actually tell you *whether* the underlying
+    This routine does not actually tell you _whether_ the underlying
     3-manifold is Haken; it merely tells you whether the answer has
     already been computed (or is very easily computed).
 
@@ -1425,7 +1425,7 @@ Otherwise a call to isHandlebody() may potentially require more
 significant work, and so this routine will return ``False``.
 
 .. warning::
-    This routine does not actually tell you *whether* this
+    This routine does not actually tell you _whether_ this
     triangulation forms an orientable handlebody; it merely tells you
     whether the answer has already been computed (or is very easily
     computed).
@@ -1448,7 +1448,7 @@ isIrreducible() will be very fast (simply returning the precalculated
 value).
 
 .. warning::
-    This routine does not actually tell you *whether* the underlying
+    This routine does not actually tell you _whether_ the underlying
     3-manifold is irreducible; it merely tells you whether the answer
     has already been computed (or is very easily computed).
 
@@ -1478,7 +1478,7 @@ Otherwise a call to isSolidTorus() may potentially require more
 significant work, and so this routine will return ``False``.
 
 .. warning::
-    This routine does not actually tell you *whether* this
+    This routine does not actually tell you _whether_ this
     triangulation forms a solid torus; it merely tells you whether the
     answer has already been computed (or is very easily computed).
 
@@ -1503,7 +1503,7 @@ Otherwise a call to isSphere() may potentially require more
 significant work, and so this routine will return ``False``.
 
 .. warning::
-    This routine does not actually tell you *whether* this
+    This routine does not actually tell you _whether_ this
     triangulation forms a 3-sphere; it merely tells you whether the
     answer has already been computed (or is very easily computed).
 
@@ -1522,7 +1522,7 @@ strictAngleStructure() and hasStrictAngleStructure() will be very fast
 (simply returning the precalculated solution).
 
 .. warning::
-    This routine does not actually tell you *whether* the
+    This routine does not actually tell you _whether_ the
     triangulation supports a strict angle structure; it merely tells
     you whether the answer has already been computed (or is very
     easily computed).
@@ -1549,7 +1549,7 @@ Otherwise a call to isTxI() may potentially require more significant
 work, and so this routine will return ``False``.
 
 .. warning::
-    This routine does not actually tell you *whether* this
+    This routine does not actually tell you _whether_ this
     triangulation forms the product of the torus with an interval; it
     merely tells you whether the answer has already been computed (or
     is very easily computed).
@@ -1567,7 +1567,7 @@ If this property is already known, future calls to isZeroEfficient()
 will be very fast (simply returning the precalculated value).
 
 .. warning::
-    This routine does not actually tell you *whether* this
+    This routine does not actually tell you _whether_ this
     triangulation is 0-efficient; it merely tells you whether the
     answer has already been computed.
 
@@ -1600,7 +1600,7 @@ R"doc(Returns the link of the given face as a normal surface.
 
 Constructing the link of a face begins with building the frontier of a
 regular neighbourhood of the face. If this is already a normal
-surface, then then link is called *thin*. Otherwise the usual
+surface, then then link is called _thin_. Otherwise the usual
 normalisation steps are performed until the surface becomes normal;
 note that these normalisation steps could change the topology of the
 surface, and in some pathological cases could even reduce it to the
@@ -1648,7 +1648,7 @@ have real (not ideal) boundary. These restrictions may be eased in
 future versions of Regina.
 
 If the algebraic longitude is already represented by a single boundary
-edge, then it is guaranteed that this routine will *not* modify the
+edge, then it is guaranteed that this routine will _not_ modify the
 triangulation, and will simply return this boundary edge.
 
 Precondition:
@@ -1665,8 +1665,8 @@ Precondition:
     Vertex, Edge or Triangle references.
 
 .. warning::
-    If you have an *ideal* triangulation of a knot complement, you
-    *must* first run idealToFinite() and then simplify the resulting
+    If you have an _ideal_ triangulation of a knot complement, you
+    _must_ first run idealToFinite() and then simplify the resulting
     triangulation to have two boundary triangles.
 
 Exception ``FailedPrecondition``:
@@ -1712,8 +1712,8 @@ Precondition:
     boundary component is formed from two triangles.
 
 .. warning::
-    If you have an *ideal* triangulation of a knot complement, you
-    *must* first run idealToFinite() and then simplify the resulting
+    If you have an _ideal_ triangulation of a knot complement, you
+    _must_ first run idealToFinite() and then simplify the resulting
     triangulation to have two boundary triangles.
 
 Exception ``FailedPrecondition``:
@@ -1798,7 +1798,7 @@ have real (not ideal) boundary. These restrictions may be eased in
 future versions of Regina.
 
 If the meridian is already represented by a single boundary edge, then
-it is guaranteed that, if this routine does terminate, it will *not*
+it is guaranteed that, if this routine does terminate, it will _not_
 modify the triangulation, and will simply return this boundary edge.
 
 Precondition:
@@ -1815,8 +1815,8 @@ Precondition:
     Vertex, Edge or Triangle references.
 
 .. warning::
-    If you have an *ideal* triangulation of a knot complement, you
-    *must* first run idealToFinite() and then simplify the resulting
+    If you have an _ideal_ triangulation of a knot complement, you
+    _must_ first run idealToFinite() and then simplify the resulting
     triangulation to have two boundary triangles.
 
 Exception ``FailedPrecondition``:
@@ -1867,7 +1867,7 @@ future versions of Regina.
 
 If the meridian and algebraic longitude are already both represented
 by single boundary edges, then it is guaranteed that, if this routine
-does terminate, it will *not* modify the triangulation, and will
+does terminate, it will _not_ modify the triangulation, and will
 simply return these two boundary edges.
 
 Precondition:
@@ -1884,8 +1884,8 @@ Precondition:
     Vertex, Edge or Triangle references.
 
 .. warning::
-    If you have an *ideal* triangulation of a knot complement, you
-    *must* first run idealToFinite() and then simplify the resulting
+    If you have an _ideal_ triangulation of a knot complement, you
+    _must_ first run idealToFinite() and then simplify the resulting
     triangulation to have two boundary triangles.
 
 Exception ``FailedPrecondition``:
@@ -2052,7 +2052,7 @@ face pairing graph.
 
 See TreeDecomposition for further details on tree decompositions, and
 see TreeDecomposition::makeNice() for details on what it means to be a
-*nice* tree decomposition.
+_nice_ tree decomposition.
 
 This routine is fast: it will use a greedy algorithm to find a tree
 decomposition with (hopefully) small width, but with no guarantees
@@ -2165,7 +2165,7 @@ triangulation will not be changed.
     edge orientations until a consistent one has been found.
 
 Parameter ``forceOriented``:
-    ``True`` if the triangulation must be both ordered and *oriented*,
+    ``True`` if the triangulation must be both ordered and _oriented_,
     in which case this routine will return ``False`` if the
     triangulation cannot be oriented and ordered at the same time. See
     orient() for further details.
@@ -2183,7 +2183,7 @@ R"doc(Pinches an internal edge to a point. Topologically, this collapses the
 edge to a point with no further side-effects, and it increases the
 number of tetrahedra by two.
 
-This operation can be performed on *any* internal edge, without
+This operation can be performed on _any_ internal edge, without
 further constraints. Two particularly useful settings are:
 
 * If the edge joins an internal vertex with some different vertex
@@ -2191,7 +2191,7 @@ further constraints. Two particularly useful settings are:
   does not change the topology of the manifold at all, and it reduces
   the total number of vertices by one. In this sense, it acts as an
   alternative to collapseEdge(), and unlike collapseEdge() it can
-  *always* be performed.
+  _always_ be performed.
 
 * If the edge runs from an internal vertex back to itself, then this
   move effectively drills out the edge, leaving an ideal torus or
@@ -2199,7 +2199,7 @@ further constraints. Two particularly useful settings are:
 
 We do not allow *e* to lie entirely on the triangulation boundary,
 because the implementation actually collapses an internal curve
-*parallel* to *e*, not the edge *e* itself (and so if *e* is a
+_parallel_ to *e*, not the edge *e* itself (and so if *e* is a
 boundary edge then the topological effect would not be as intended).
 We do allow *e* to be an internal edge with both endpoints on the
 boundary, but note that in this case the resulting topological
@@ -2385,7 +2385,7 @@ other callable object).
   discussed below), representing the triangluation that has been
   found; or else (b) the first two arguments must be of types const
   std::string& followed by a triangulation, representing both the
-  triangulation and *an* isomorphism signature. The second form is
+  triangulation and _an_ isomorphism signature. The second form is
   offered in order to avoid unnecessary recomputation within the
   *action* function; however, note that the signature might not be of
   the IsoSigClassic type (i.e., it might not match the output from the
@@ -2421,7 +2421,7 @@ highly recommended that you begin with *height* = 1, and if necessary
 try increasing *height* one at a time until this routine becomes too
 expensive to run.
 
-If *height* is negative, then there will be *no* bound on the number
+If *height* is negative, then there will be _no_ bound on the number
 of additional tetrahedra. This means that the routine will _never
 terminate_, unless *action* returns ``True`` for some triangulation
 that is passed to it.
@@ -2468,7 +2468,7 @@ Python:
     triangulation, as described in option (b) above.
 
 Parameter ``height``:
-    the maximum number of *additional* tetrahedra to allow beyond the
+    the maximum number of _additional_ tetrahedra to allow beyond the
     number of tetrahedra originally present in the triangulation, or a
     negative number if this should not be bounded.
 
@@ -2505,8 +2505,8 @@ will return ``False``.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it through
-    unchanged to low-level C/C++ file I/O routines. The *contents* of
+    used in the given file _name_, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
 Parameter ``filename``:
@@ -2526,8 +2526,8 @@ Precondition:
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it through
-    unchanged to low-level C/C++ file I/O routines. The *contents* of
+    used in the given file _name_, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
 Parameter ``filename``:
@@ -2565,8 +2565,8 @@ the file will not be written and this routine will return ``False``.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
-    used in the given file *name*, and simply passes it through
-    unchanged to low-level C/C++ file I/O routines. The *contents* of
+    used in the given file _name_, and simply passes it through
+    unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
 Parameter ``filename``:
@@ -2638,7 +2638,7 @@ that can be reached from this triangulation via 2-3 and 3-2 Pachner
 moves, without ever exceeding *height* additional tetrahedra beyond
 the original number.
 
-If at any stage it finds a triangulation with *fewer* tetrahedra than
+If at any stage it finds a triangulation with _fewer_ tetrahedra than
 the original, then this routine will call intelligentSimplify() to
 shrink the triangulation further if possible and will then return
 ``True``. If it cannot find a triangulation with fewer tetrahedra then
@@ -2652,13 +2652,13 @@ recommended that you begin with *height* = 1, and if this fails then
 try increasing *height* one at a time until either you find a
 simplification or the routine becomes too expensive to run.
 
-If *height* is negative, then there will be *no* bound on the number
+If *height* is negative, then there will be _no_ bound on the number
 of additional tetrahedra. This means that the routine will not
 terminate until a simpler triangulation is found. If no simpler
 diagram exists then the only way to terminate this function is to
 cancel the operation via a progress tracker (read on for details).
 
-If you want a *fast* simplification routine, you should call
+If you want a _fast_ simplification routine, you should call
 intelligentSimplify() instead. The benefit of simplifyExhaustive() is
 that, for very stubborn triangulations where intelligentSimplify()
 finds itself stuck at a local minimum, simplifyExhaustive() is able to
@@ -2693,7 +2693,7 @@ Python:
     runs, so you can use it with Python-based multithreading.
 
 Parameter ``height``:
-    the maximum number of *additional* tetrahedra to allow beyond the
+    the maximum number of _additional_ tetrahedra to allow beyond the
     number of tetrahedra originally present in the triangulation, or a
     negative number if this should not be bounded.
 
@@ -2771,7 +2771,7 @@ Regarding what gets stored in the SnapPea data file:
   Triangulation<3> is not a polymorphic class, and in particular this
   function is not virtual).
 
-If you wish to export a triangulation to a SnapPea *file*, you should
+If you wish to export a triangulation to a SnapPea _file_, you should
 call saveSnapPea() instead (which has better performance, and does not
 require you to construct an enormous intermediate string).
 
@@ -2790,7 +2790,7 @@ Returns:
 // Docstring regina::python::doc::Triangulation_::strictAngleStructure
 static const char *strictAngleStructure =
 R"doc(Returns a strict angle structure on this triangulation, if one exists.
-Recall that a *strict* angle structure is one in which every angle is
+Recall that a _strict_ angle structure is one in which every angle is
 strictly between 0 and π. If a strict angle structure does exist, then
 this routine is guaranteed to return one.
 
@@ -2800,14 +2800,14 @@ strict angle structure exists. This means:
 * If no strict angle structure exists, this routine will throw an
   exception, which will incur a significant overhead.
 
-* If you do *not* know in advance whether a strict angle structure
+* If you do _not_ know in advance whether a strict angle structure
   exists, you should call hasStrictAngleStructure() first. If the
   answer is no, this will avoid the overhead of throwing and catching
   exceptions. If the answer is yes, this will have the side-effect of
   caching the strict angle structure, which means your subsequent call
   to strictAngleStructure() will be essentially instantaneous.
 
-The underlying algorithm runs a single linear program (it does *not*
+The underlying algorithm runs a single linear program (it does _not_
 enumerate all vertex angle structures). This means that it is likely
 to be fast even for large triangulations.
 
@@ -2847,7 +2847,7 @@ linking normal spheres). Specifically, for every summand, either:
 
 For non-orientable triangulations, this routine is only guaranteed to
 succeed if the original manifold contains no embedded two-sided
-projective planes. If the manifold *does* contain embedded two-sided
+projective planes. If the manifold _does_ contain embedded two-sided
 projective planes, then this routine might still succeed but it might
 fail; however, such a failure will always be detected, and in such a
 case this routine will throw an exception (as detailed below).
@@ -2916,7 +2916,7 @@ This routine will behave correctly if *other* is in fact this
 triangulation.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both triangulations which may in turn call
     arbitrary code via any registered packet listeners.
 
@@ -2938,7 +2938,7 @@ several cases to consider:
 
 * *r* may be even. In this case *q0* must be a primitive (*2r*)th root
   of unity, and the invariant is computed as an element of the
-  cyclotomic field of order *2r*. There is no need to specify *which*
+  cyclotomic field of order *2r*. There is no need to specify _which_
   root of unity is used, since switching between different roots of
   unity corresponds to an automorphism of the underlying cyclotomic
   field (i.e., it does not yield any new information). Therefore, if
@@ -3033,7 +3033,7 @@ integer *r* ≥ 3 and a root of unity *q0* of degree *2r* for which
 The argument *whichRoot* specifies which root of unity is used for
 *q0*. Specifically, *q0* will be the root of unity ``e^(2πi *
 whichRoot / 2r)``. There are additional preconditions on *whichRoot*
-to ensure that *q0*^2 is a *primitive* root of unity of degree *r*;
+to ensure that *q0*^2 is a _primitive_ root of unity of degree *r*;
 see below for details.
 
 This same invariant can be computed by calling ``turaevViro(r,
@@ -3124,7 +3124,7 @@ Parameter ``e``:
     the edge about which to perform the move.
 
 Parameter ``edgeEnd``:
-    the end of the edge *opposite* that at which the second
+    the end of the edge _opposite_ that at which the second
     tetrahedron (to be merged) is joined. The end is 0 or 1,
     corresponding to the labelling (0,1) of the vertices of the edge
     as described in EdgeEmbedding<3>::vertices().

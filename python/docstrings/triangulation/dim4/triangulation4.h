@@ -22,7 +22,7 @@ triangulation classes work.
 This 4-dimensional specialisation offers significant extra
 functionality, including many functions specific to 4-manifolds.
 
-A 4-manifold triangulation is built from pentachora: a *pentachoron*
+A 4-manifold triangulation is built from pentachora: a _pentachoron_
 is a 4-dimensional simplex, with five vertices.
 
 This class implements C++ move semantics and adheres to the C++
@@ -165,7 +165,7 @@ does not).
 For triangulations whose vertex links are all 3-spheres or 3-balls,
 this routine and eulerCharTri() give identical results.
 
-This routine does *not* yet handle invalid triangulations correctly.
+This routine does _not_ yet handle invalid triangulations correctly.
 For this reason, this routine currently insists on a valid
 triangulation as a precondition.
 
@@ -333,7 +333,7 @@ R"doc(Returns the link of the given face as a normal hypersurface.
 
 Constructing the link of a face begins with building the frontier of a
 regular neighbourhood of the face. If this is already a normal
-hypersurface, then then link is called *thin*. Otherwise some basic
+hypersurface, then then link is called _thin_. Otherwise some basic
 normalisation steps are performed until the hypersurface becomes
 normal; note that these normalisation steps could change the topology
 of the hypersurface, and in some pathological cases could even reduce
@@ -517,7 +517,7 @@ highly recommended that you begin with *height* = 1, and if necessary
 try increasing *height* one at a time until this routine becomes too
 expensive to run.
 
-If *height* is negative, then there will be *no* bound on the number
+If *height* is negative, then there will be _no_ bound on the number
 of additional pentachora. This means that the routine will _never
 terminate_, unless *action* returns ``True`` for some triangulation
 that is passed to it.
@@ -568,7 +568,7 @@ Python:
     triangulation, as described in option (b) above.
 
 Parameter ``height``:
-    the maximum number of *additional* pentachora to allow beyond the
+    the maximum number of _additional_ pentachora to allow beyond the
     number of pentachora originally present in the triangulation, or a
     negative number if this should not be bounded.
 
@@ -665,7 +665,7 @@ Pachner moves, without ever exceeding *height* additional pentachora
 beyond the original number. Note that 5-1 moves are currently not
 supported, though this may be added in a future verson of Regina.
 
-If at any stage it finds a triangulation with *fewer* pentachora than
+If at any stage it finds a triangulation with _fewer_ pentachora than
 the original, then this routine will call intelligentSimplify() to
 shrink the triangulation further if possible and will then return
 ``True``. If it cannot find a triangulation with fewer pentachora then
@@ -679,13 +679,13 @@ recommended that you begin with *height* = 1, and if this fails then
 try increasing *height* one at a time until either you find a
 simplification or the routine becomes too expensive to run.
 
-If *height* is negative, then there will be *no* bound on the number
+If *height* is negative, then there will be _no_ bound on the number
 of additional pentachora. This means that the routine will not
 terminate until a simpler triangulation is found. If no simpler
 diagram exists then the only way to terminate this function is to
 cancel the operation via a progress tracker (read on for details).
 
-If you want a *fast* simplification routine, you should call
+If you want a _fast_ simplification routine, you should call
 intelligentSimplify() instead. The benefit of simplifyExhaustive() is
 that, for very stubborn triangulations where intelligentSimplify()
 finds itself stuck at a local minimum, simplifyExhaustive() is able to
@@ -720,7 +720,7 @@ Python:
     runs, so you can use it with Python-based multithreading.
 
 Parameter ``height``:
-    the maximum number of *additional* pentachora to allow beyond the
+    the maximum number of _additional_ pentachora to allow beyond the
     number of pentachora originally present in the triangulation, or a
     negative number if this should not be bounded.
 
@@ -853,7 +853,7 @@ This routine will behave correctly if *other* is in fact this
 triangulation.
 
 .. note::
-    This swap function is *not* marked ``noexcept``, since it fires
+    This swap function is _not_ marked ``noexcept``, since it fires
     change events on both triangulations which may in turn call
     arbitrary code via any registered packet listeners.
 

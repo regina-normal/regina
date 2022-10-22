@@ -24,7 +24,7 @@ Regina uses the following general scheme for numbering faces:
   02, 03, 12, 13, 23 respectively.
 
 * For high-dimensional faces (*subdim* ≥ *dim* / 2), faces are
-  numbered in *reverse* lexicographical order according to their
+  numbered in _reverse_ lexicographical order according to their
   vertices. For example, in a 3-dimensional triangulation, triangles
   0,...,3 contain vertices 123, 023, 013, 012 respectively.
 

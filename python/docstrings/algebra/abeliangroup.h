@@ -40,7 +40,7 @@ static const char *__eq =
 R"doc(Determines whether this and the given abelian group have identical
 presentations (which means they are isomorphic).
 
-Since the AbelianGroup class stores *only* the invariants required to
+Since the AbelianGroup class stores _only_ the invariants required to
 identify the isomorphism type, two groups will compare as equal if and
 only if they are isomorphic. This is in contrast to the comparisons
 for GroupPresentation (which tests for identical generators and
@@ -109,7 +109,7 @@ Precondition:
     exception will be thrown if it does not hold.
 
 Precondition:
-    The product M×N = 0. This condition will *not* be tested (for
+    The product M×N = 0. This condition will _not_ be tested (for
     efficiency reasons); this is left to the user/programmer to
     ensure.
 
@@ -141,7 +141,7 @@ Precondition:
     exception will be thrown if it does not hold.
 
 Precondition:
-    The product M×N = 0. This condition will *not* be tested (for
+    The product M×N = 0. This condition will _not_ be tested (for
     efficiency reasons); this is left to the user/programmer to
     ensure.
 
@@ -170,7 +170,7 @@ static const char *__ne =
 R"doc(Determines whether this and the given abelian group have different
 presentations (which means they are non-isomorphic).
 
-Since the AbelianGroup class stores *only* the invariants required to
+Since the AbelianGroup class stores _only_ the invariants required to
 identify the isomorphism type, two groups will compare as equal if and
 only if they are isomorphic. This is in contrast to the comparisons
 for GroupPresentation (which tests for identical generators and

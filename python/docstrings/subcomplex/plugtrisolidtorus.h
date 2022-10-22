@@ -32,7 +32,7 @@ square two of whose (opposite) edges are axis edges of the original
 triangular solid torus (and possibly also hinge edges of a layered
 chain).
 
-Create a *plug* by gluing two tetrahedra together along a single
+Create a _plug_ by gluing two tetrahedra together along a single
 triangle. The six edges that do not run along this common triangle
 split the plug boundary into three squares. These three squares must
 be glued to the three boundary annuli previously described. Each axis
@@ -45,7 +45,7 @@ precisely one of the three axis edges.
 If the axis edges are directed so that they all point the same way
 around the triangular solid torus, these axis edges when drawn on the
 plug must all point from one common tip of the plug to the other
-(where the *tips* of the plug are the vertices not meeting the
+(where the _tips_ of the plug are the vertices not meeting the
 interior triangle). The gluings must also be made so that the
 resulting triangulation component is orientable.
 

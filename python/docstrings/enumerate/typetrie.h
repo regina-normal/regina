@@ -27,7 +27,7 @@ particular, you cannot print them (since they use raw integer values,
 not ASCII digits). The length of a type vector must be passed
 alongside it (i.e., there is no special terminating character).
 
-A type vector *v* is said to *dominate* *u* if, for each position *i*,
+A type vector *v* is said to _dominate_ *u* if, for each position *i*,
 either v[i] == u[i] or else u[i] == 0. So, for instance, (1,0,2,3)
 dominates (1,0,2,0), which in turn dominates (1,0,0,0). Domination is
 a partial order, not a total order: for instance, neither of (1,0,2,0)

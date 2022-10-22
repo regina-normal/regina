@@ -60,8 +60,8 @@ Note also that the labelling of the tetrahedra and their vertices
 establishes an orientation on the vertical fibres, as well as a left-
 to-right direction across the annulus.
 
-For convenience we refer to edges *roles*[][0-1] as *vertical*, edges
-*roles*[][0-2] as *horizontal*, and edge *roles*[][1-2] as *diagonal*.
+For convenience we refer to edges *roles*[][0-1] as _vertical_, edges
+*roles*[][0-2] as _horizontal_, and edge *roles*[][1-2] as _diagonal_.
 This is illustrated in the following diagrams.
 
 ```
@@ -108,7 +108,7 @@ Specifically, in order to compare as equal, two saturated annuli must
 use the same two numbered tetrahedra, presented in the same order, and
 with the same *roles* permutations.
 
-Because this operation compares tetrahedron *numbers* and not the
+Because this operation compares tetrahedron _numbers_ and not the
 underlying Tetrahedron objects, it is meaningful to compare saturated
 annuli from different triangulations.
 
@@ -145,7 +145,7 @@ Specifically, in order to compare as equal, two saturated annuli must
 use the same two numbered tetrahedra, presented in the same order, and
 with the same *roles* permutations.
 
-Because this operation compares tetrahedron *numbers* and not the
+Because this operation compares tetrahedron _numbers_ and not the
 underlying Tetrahedron objects, it is meaningful to compare saturated
 annuli from different triangulations.
 

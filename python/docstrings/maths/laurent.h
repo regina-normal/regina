@@ -261,8 +261,8 @@ R"doc(Returns the given coefficient of this polynomial. There are no
 restrictions on the exponent *exp*.
 
 Python:
-    Python users can also use this operator to *set* cofficients; that
-    is, you can write ``poly[exp] = value``. However, when *getting* a
+    Python users can also use this operator to _set_ cofficients; that
+    is, you can write ``poly[exp] = value``. However, when _getting_ a
     coefficient this operator will return by value (to enforce
     constness), which means for example you cannot write something
     like ``poly[exp].negate()``.

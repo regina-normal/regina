@@ -479,7 +479,7 @@ There are several conditions that might make a *subdim*-face of a
 
 Condition (1) is tested for all dimensions *subdim* and *dim*.
 Condition (2) is more difficult, since it relies on undecidable
-problems. As a result, (2) is *only* tested when *dim* is one of
+problems. As a result, (2) is _only_ tested when *dim* is one of
 Regina's standard dimensions.
 
 If this face is invalid, then it is possible to find out why. In non-
@@ -580,12 +580,12 @@ Parameter ``cloneMe``:
 constexpr const char *__eq =
 R"doc(Tests whether this and the given object are identical.
 
-Here *identical* means that two FaceEmbedding objects refer to the
-same-numbered face of the same-numbered simplex, *and* have the same
+Here _identical_ means that two FaceEmbedding objects refer to the
+same-numbered face of the same-numbered simplex, _and_ have the same
 embedding permutations as returned by vertices().
 
 In particular, since this test only examines face/simplex/vertex
-*numbers* (not object pointers), it is meaningful to compare two
+_numbers_ (not object pointers), it is meaningful to compare two
 FaceEmbedding objects from different underlying triangulations.
 
 .. warning::
@@ -622,12 +622,12 @@ Parameter ``vertices``:
 constexpr const char *__ne =
 R"doc(Tests whether this and the given object are not identical.
 
-Here *identical* means that two FaceEmbedding objects refer to the
-same-numbered face of the same-numbered simplex, *and* have the same
+Here _identical_ means that two FaceEmbedding objects refer to the
+same-numbered face of the same-numbered simplex, _and_ have the same
 embedding permutations as returned by vertices().
 
 In particular, since this test only examines face/simplex/vertex
-*numbers* (not object pointers), it is meaningful to compare two
+_numbers_ (not object pointers), it is meaningful to compare two
 FaceEmbedding objects from different underlying triangulations.
 
 .. warning::

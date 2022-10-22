@@ -24,7 +24,7 @@ angle structures.
     explicitly include triangles (e.g., encodings for standard normal
     or almost normal coordinates). In quadrilateral or quadrilateral-
     octagon coordinates it will only ban quadrilaterals or octagons
-    that touch the boundary, but it will still allow *triangles* that
+    that touch the boundary, but it will still allow _triangles_ that
     meet the boundary (since triangle types are not counted in these
     coordinate systems). The supported() routine will only return
     ``True`` for encodings that include triangles.
@@ -65,10 +65,10 @@ triangulation.
 
 This class adds constraints of two types:
 
-* *Banning* constraints, which ensure that certain coordinates are set
+* _Banning_ constraints, which ensure that certain coordinates are set
   to zero;
 
-* *Marking* constraints, which are more flexible and can be used in
+* _Marking_ constraints, which are more flexible and can be used in
   different ways by different algorithms.
 
 All of these constraints operate only on normal or angle structure
@@ -85,7 +85,7 @@ Currently marking is used in the following ways:
   a non-trivial normal surface. Normally, a non-trivial surface is
   defined to be one in which some triangle coordinate is zero. With
   marking, a non-trivial surface is redefined to be one in which some
-  *unmarked* triangle coordinate is zero. In other words, marked
+  _unmarked_ triangle coordinate is zero. In other words, marked
   triangle types are effectively ignored when determining whether a
   surface is non-trivial or not.
 
@@ -108,7 +108,7 @@ columns for octagon coordinates). See LPInitialTableaux for a more
 detailed discussion of this.
 
 This base class provides limited functionality (as documented below).
-Subclasses *must* implement a constructor (which, like this base
+Subclasses _must_ implement a constructor (which, like this base
 class, takes an initial tableaux and determines which coordinates are
 banned and/or marked), and must implement supported(), which indicates
 which normal or angle structure coordinate system this constraint
@@ -153,7 +153,7 @@ angle structures.
     explicitly include triangles (e.g., encodings for standard normal
     or almost normal coordinates). In quadrilateral or quadrilateral-
     octagon coordinates it will only ban quadrilaterals or octagons
-    that meet the given edge, but it will still allow *triangles* that
+    that meet the given edge, but it will still allow _triangles_ that
     meet the edge (since triangle types are not counted in these
     coordinate systems). The supported() routine will only return
     ``True`` for encodings that include triangles.
@@ -190,7 +190,7 @@ R"doc(A do-nothing class that bans no coordinates and marks no coordinates.
 
 This is intended to act as a drop-in replacement for a "real"
 BanConstraint class (i.e., a subclass of BanConstraintBase). However,
-to avoid any overhead in this trivial case, BanNone does *not* derive
+to avoid any overhead in this trivial case, BanNone does _not_ derive
 from BanConstraintBase, and all of its routines do nothing at all.
 
 See the BanConstraintBase class notes for details on the interface
@@ -243,7 +243,7 @@ angle structures.
     standard normal or almost normal coordinates). In quadrilateral or
     quadrilateral-octagon coordinates it will only ban quadrilaterals
     or octagons that touch torus boundaries, but it will still allow
-    *triangles* that meet torus boundaries (since triangle types are
+    _triangles_ that meet torus boundaries (since triangle types are
     not counted in these coordinate systems). The supported() routine
     will only return ``True`` for encodings that include triangles.
 
@@ -288,7 +288,7 @@ may be more than one such constraint. If all constraints are
 homogeneous equalities, the class should derive from
 LPConstraintSubspace instead (not this base class).
 
-In angle structure coordinates, these linear constraints must *not*
+In angle structure coordinates, these linear constraints must _not_
 involve the scaling coordinate (the final coordinate that is used to
 convert the angle structure polytope into a polyhedral cone). The
 coefficient for the final scaling coordinate in each additional linear
@@ -302,7 +302,7 @@ detailed discussion of this.
 
 This base class provides no functionality. For documentation's sake
 only, the notes here describe the functionality that any subclass
-*must* implement. We note again that LPConstraintBase does not provide
+_must_ implement. We note again that LPConstraintBase does not provide
 any implementations at all, and subclasses are completely responsible
 for their own implementations.
 
@@ -391,7 +391,7 @@ There are many ways of writing Euler characteritic as a linear
 function. The function constructed here has integer coefficients, but
 otherwise has no special properties of note.
 
-This constraint currently only works with normal (and *not* almost
+This constraint currently only works with normal (and _not_ almost
 normal) coordinates.
 
 See the LPConstraintBase class notes for details on all member
@@ -406,7 +406,7 @@ TautEnumeration).
 
 Precondition:
     We are working with a normal vector encoding that includes
-    triangle coordinates, and that does *not* include octagon
+    triangle coordinates, and that does _not_ include octagon
     coordinates (i.e, the encoding for standard normal coordinates).
 
 Python:
@@ -441,7 +441,7 @@ these requirements are not met.
 
 Also, at present this class can only work with quadrilateral normal
 coordinates (and cannot handle almost normal coordinates at all). This
-is *not* explicitly checked; instead it appears as a precondition (see
+is _not_ explicitly checked; instead it appears as a precondition (see
 below).
 
 See the LPConstraintBase class notes for details on all member
@@ -716,7 +716,7 @@ As described in the LPInitialTableaux class notes, it might not be
 possible to construct the linear functions (since the underlying
 triangulation might not satisfy the necessary requirements). In such
 cases this routine should throw an exception, as described below, and
-the corresponding constraint class *must* mention this possibility in
+the corresponding constraint class _must_ mention this possibility in
 its class documentation.
 
 If you are implementing this routine in a subclass that works with
@@ -724,7 +724,7 @@ angle structure coordinates, remember that your linear constraints
 must not interact with the scaling coordinate (the final angle
 structure coordinate that is used to projectivise the angle structure
 polytope into a polyhedral cone). Your implementation of this routine
-*must* ensure that your linear constraints all have coefficient zero
+_must_ ensure that your linear constraints all have coefficient zero
 in this column.
 
 The precise form of the linear function(s) will typically depend upon
@@ -756,14 +756,14 @@ Exception ``InvalidArgument``:
     It was not possible to create the linear functions for these
     constraints, due to an error which should have been preventable
     with the right checks in advance. Any constraint class that could
-    throw exceptions in this way *must* describe this behaviour in its
+    throw exceptions in this way _must_ describe this behaviour in its
     own class documentation.
 
 Exception ``UnsolvedCase``:
     It was not possible to create the linear functions for these
     constraints, due to an error that was "genuinely" unforseeable.
     Again, any constraint class that could throw exceptions in this
-    way *must* describe this behaviour in its own class documentation.
+    way _must_ describe this behaviour in its own class documentation.
 
 Python:
     The argument *col* is not present, since LPCol is only designed to

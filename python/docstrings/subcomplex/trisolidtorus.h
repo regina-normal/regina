@@ -66,7 +66,7 @@ specific presentation of a triangular solid torus.
 
 Unlike the parameterised subclasses of StandardTriangulation, this
 TriSolidTorus subclass represents a fixed structure, and so its
-comparisons test not for the *structure* but the precise *location* of
+comparisons test not for the _structure_ but the precise _location_ of
 this structure within the enclosing triangulation.
 
 Specifically, two triangular solid tori will compare as equal if and
@@ -92,7 +92,7 @@ specific presentations of a triangular solid torus.
 
 Unlike the parameterised subclasses of StandardTriangulation, this
 TriSolidTorus subclass represents a fixed structure, and so its
-comparisons test not for the *structure* but the precise *location* of
+comparisons test not for the _structure_ but the precise _location_ of
 this structure within the enclosing triangulation.
 
 Specifically, two triangular solid tori will compare as equal if and
@@ -121,8 +121,7 @@ tetrahedron and the other annulus meets both faces of the bottom
 tetrahedron of the layered chain.
 
 To be identified by this routine, the layered chain (described by
-LayeredChain) must be attached as follows. We shall refer to the two
-hinge edges of the layered chain as *first* and *second*.
+LayeredChain) must be attached as follows.
 
 The two diagonals of the layered chain (between the two top faces and
 between the two bottom faces) should correspond to the two directed

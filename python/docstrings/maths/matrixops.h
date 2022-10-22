@@ -120,7 +120,7 @@ be square with side length matrix.rows().
 
 Parameter ``matrix``:
     the original matrix to put into Smith Normal Form (this need not
-    be square). When the algorithm terminates, this matrix *is* in its
+    be square). When the algorithm terminates, this matrix _is_ in its
     Smith Normal Form.
 
 Parameter ``rowSpaceBasis``:
@@ -182,7 +182,7 @@ rank of the matrix). The rank itself will be returned. No other
 changes will be made to the matrix aside from swapping rows.
 
 Although this routine takes an integer matrix (and only uses integer
-operations), we consider the row space to be over the *rationals*.
+operations), we consider the row space to be over the _rationals_.
 That is, although we never divide, we act as though we could if we
 wanted to.
 
@@ -218,7 +218,7 @@ row space and simultaneously cut down the complement one dimension at
 a time.
 
 Although this routine takes integer matrices (and only uses integer
-operations), we consider all bases to be over the *rationals*. That
+operations), we consider all bases to be over the _rationals_. That
 is, although we never divide, we act as though we could if we wanted
 to.
 
@@ -294,7 +294,7 @@ be square with side length matrix.rows().
 
 Parameter ``matrix``:
     the original matrix to put into Smith Normal Form (this need not
-    be square). When the algorithm terminates, this matrix *is* in its
+    be square). When the algorithm terminates, this matrix _is_ in its
     Smith Normal Form.
 
 Parameter ``rowSpaceBasis``:

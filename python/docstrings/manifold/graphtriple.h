@@ -86,7 +86,7 @@ however, that GraphTriple still requires a non-trivial (but constant
 sized) amount of data to be copied even in a move operation.
 
 .. warning::
-    The 2-by-2 matrices used in this class are *not* the same matrices
+    The 2-by-2 matrices used in this class are _not_ the same matrices
     that appear in the manifold name returned by name() and texName()
     and seen in the census data files. The matrices used in this class
     work from the inside out, describing the boundary torus on each
@@ -110,10 +110,10 @@ static const char *__eq =
 R"doc(Determines whether this and the given object contain precisely the
 same presentations of the same graph manifold.
 
-This routine does *not* test for homeomorphism. Instead it compares
+This routine does _not_ test for homeomorphism. Instead it compares
 the exact presentations, including the matching matrices and the
 specific presentations of the bounded Seifert fibred spaces, and
-determines whether or not these *presentations* are identical. If you
+determines whether or not these _presentations_ are identical. If you
 have two different presentations of the same graph manifold, they will
 be treated as not equal by this routine.
 
@@ -220,10 +220,10 @@ static const char *__ne =
 R"doc(Determines whether this and the given object do not contain precisely
 the same presentations of the same graph manifold.
 
-This routine does *not* test for homeomorphism. Instead it compares
+This routine does _not_ test for homeomorphism. Instead it compares
 the exact presentations, including the matching matrices and the
 specific presentations of the bounded Seifert fibred spaces, and
-determines whether or not these *presentations* are identical. If you
+determines whether or not these _presentations_ are identical. If you
 have two different presentations of the same graph manifold, they will
 be treated as not equal by this routine.
 

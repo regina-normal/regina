@@ -429,7 +429,7 @@ static const char *__eq =
 R"doc(Determines whether this and the given group were formed from identical
 chain complex constructions.
 
-This is *not* an isomorphism test. For this comparison to return
+This is _not_ an isomorphism test. For this comparison to return
 ``True``, both groups must have been constructed from identical
 matrices *M* and *N*, using homology with the same coefficients.
 
@@ -453,7 +453,7 @@ Precondition:
     exception will be thrown if it does not hold.
 
 Precondition:
-    The product M×N = 0. This condition will *not* be tested (for
+    The product M×N = 0. This condition will _not_ be tested (for
     efficiency reasons); this is left to the user/programmer to
     ensure.
 
@@ -482,7 +482,7 @@ Precondition:
     exception will be thrown if it does not hold.
 
 Precondition:
-    The product M×N = 0. This condition will *not* be tested (for
+    The product M×N = 0. This condition will _not_ be tested (for
     efficiency reasons); this is left to the user/programmer to
     ensure.
 
@@ -525,7 +525,7 @@ static const char *__ne =
 R"doc(Determines whether this and the given group were formed from different
 chain complex constructions.
 
-This is *not* an isomorphism test. For this comparison to return
+This is _not_ an isomorphism test. For this comparison to return
 ``False`` (i.e., for the chain complex constructions to be considered
 identical), both groups must have been constructed from identical
 matrices *M* and *N*, using homology with the same coefficients.

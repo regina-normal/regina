@@ -172,7 +172,7 @@ given qitmask both have non-zero qits. That is, there is some index
 
 Note that these two qits do not need to be equal; they just both need
 to be non-zero. Note also that this only needs to happen at one index;
-there may be *other* indices at which the qit is zero in one qitmask
+there may be _other_ indices at which the qit is zero in one qitmask
 but not the other.
 
 Parameter ``other``:
@@ -295,7 +295,7 @@ given qitmask both have non-zero qits. That is, there is some index
 
 Note that these two qits do not need to be equal; they just both need
 to be non-zero. Note also that this only needs to happen at one index;
-there may be *other* indices at which the qit is zero in one qitmask
+there may be _other_ indices at which the qit is zero in one qitmask
 but not the other.
 
 Parameter ``other``:
