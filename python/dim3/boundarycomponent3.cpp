@@ -36,47 +36,65 @@
 #include "triangulation/dim2.h" // for build()
 #include "../helpers.h"
 #include "../generic/facehelper.h"
+#include "../docstrings/triangulation/generic/boundarycomponent.h"
+#include "../docstrings/triangulation/detail/boundarycomponent.h"
 
 using regina::BoundaryComponent;
 
 void addBoundaryComponent3(pybind11::module_& m) {
-    auto c = pybind11::class_<BoundaryComponent<3>>(m, "BoundaryComponent3")
-        .def("index", &BoundaryComponent<3>::index)
-        .def("size", &BoundaryComponent<3>::size)
-        .def("countRidges", &BoundaryComponent<3>::countRidges)
+    // We use the global scope here because all of BoundaryComponent's members
+    // are inherited, and so BoundaryComponent's own docstring namespace
+    // does not exist.
+    RDOC_SCOPE_BEGIN_MAIN
+    RDOC_SCOPE_BASE(detail::BoundaryComponentBase)
+
+    auto c = pybind11::class_<BoundaryComponent<3>>(m, "BoundaryComponent3",
+            rdoc::BoundaryComponent)
+        .def("index", &BoundaryComponent<3>::index, rbase::index)
+        .def("size", &BoundaryComponent<3>::size, rbase::size)
+        .def("countRidges", &BoundaryComponent<3>::countRidges,
+            rbase::countRidges)
         .def("countFaces",
-            &regina::python::countFaces<BoundaryComponent<3>, 3, 2>)
-        .def("countTriangles", &BoundaryComponent<3>::countTriangles)
-        .def("countEdges", &BoundaryComponent<3>::countEdges)
-        .def("countVertices", &BoundaryComponent<3>::countVertices)
-        .def("facets", &BoundaryComponent<3>::facets)
-        .def("faces", regina::python::faces<BoundaryComponent<3>, 3>)
-        .def("triangles", &BoundaryComponent<3>::triangles)
-        .def("edges", &BoundaryComponent<3>::edges)
-        .def("vertices", &BoundaryComponent<3>::vertices)
+            &regina::python::countFaces<BoundaryComponent<3>, 3, 2>,
+            rbase::countFaces)
+        .def("countTriangles", &BoundaryComponent<3>::countTriangles,
+            rbase::countTriangles)
+        .def("countEdges", &BoundaryComponent<3>::countEdges, rbase::countEdges)
+        .def("countVertices", &BoundaryComponent<3>::countVertices,
+            rbase::countVertices)
+        .def("facets", &BoundaryComponent<3>::facets, rbase::facets)
+        .def("faces", regina::python::faces<BoundaryComponent<3>, 3>,
+            rbase::faces)
+        .def("triangles", &BoundaryComponent<3>::triangles, rbase::triangles)
+        .def("edges", &BoundaryComponent<3>::edges, rbase::edges)
+        .def("vertices", &BoundaryComponent<3>::vertices, rbase::vertices)
         .def("facet", &BoundaryComponent<3>::facet,
-            pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t>)
+            pybind11::return_value_policy::reference, rbase::facet)
+        .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t>,
+            rbase::face)
         .def("triangle", &BoundaryComponent<3>::triangle,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::triangle)
         .def("edge", &BoundaryComponent<3>::edge,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::edge)
         .def("vertex", &BoundaryComponent<3>::vertex,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::vertex)
         .def("component", &BoundaryComponent<3>::component,
-            pybind11::return_value_policy::reference)
-        .def("triangulation", &BoundaryComponent<3>::triangulation)
+            pybind11::return_value_policy::reference, rbase::component)
+        .def("triangulation", &BoundaryComponent<3>::triangulation,
+            rbase::triangulation)
         .def("build", [](const BoundaryComponent<3>& b) {
             // Return a clone of the resulting triangulation.
             // This is because Python cannot enforce the constness of
             // the reference that would normally be returned.
             return new regina::Triangulation<2>(b.build());
-        })
-        .def("eulerChar", &BoundaryComponent<3>::eulerChar)
-        .def("isReal", &BoundaryComponent<3>::isReal)
-        .def("isIdeal", &BoundaryComponent<3>::isIdeal)
-        .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex)
-        .def("isOrientable", &BoundaryComponent<3>::isOrientable)
+        }, rbase::build)
+        .def("eulerChar", &BoundaryComponent<3>::eulerChar, rbase::eulerChar)
+        .def("isReal", &BoundaryComponent<3>::isReal, rbase::isReal)
+        .def("isIdeal", &BoundaryComponent<3>::isIdeal, rbase::isIdeal)
+        .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex,
+            rbase::isInvalidVertex)
+        .def("isOrientable", &BoundaryComponent<3>::isOrientable,
+            rbase::isOrientable)
         .def_readonly_static("dimension", &BoundaryComponent<3>::dimension)
         .def_readonly_static("allFaces", &BoundaryComponent<3>::allFaces)
         .def_readonly_static("allowVertex", &BoundaryComponent<3>::allowVertex)
@@ -84,6 +102,8 @@ void addBoundaryComponent3(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 
     regina::python::addListView<
         decltype(std::declval<BoundaryComponent<3>>().vertices())>(m);
