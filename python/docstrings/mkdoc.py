@@ -32,6 +32,7 @@ INLINE_FILES = [
     '../../engine/triangulation/isosigtype.h',
     '../../engine/utilities/flags.h',
     '../../engine/utilities/listview.h',
+    '../../engine/utilities/snapshot.h',
     '../../engine/utilities/tableview.h'
 ]
 

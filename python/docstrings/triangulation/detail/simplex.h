@@ -75,7 +75,7 @@ adjacent simplex *A*. Then this gluing induces a mapping from the
 vertices of this simplex to the vertices of *A*. We can express this
 mapping in the form of a permutation *p*, where:
 
-* for any *v* &ne; *facet*, the gluing identifies vertex *v* of this
+* for any *v* ≠ *facet*, the gluing identifies vertex *v* of this
   simplex with vertex *p*[*v*] of simplex *A*;
 
 * *p*[*facet*] indicates the facet of *A* that is on the other side of
