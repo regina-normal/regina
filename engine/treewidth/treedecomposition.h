@@ -1325,21 +1325,21 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *   will be ignored.
          *
          * - The first non-comment line should be of the form
-         *   <tt>s&nbsp;td&nbsp;<i>num_bags</i>&nbsp;<i>max_bag_size</i>&nbsp;<i>num_vertices</i></tt>.
+         *   `s td <num_bags> <max_bag_size> <num_vertices>`.
          *
-         * - The next \e num_bags non-comment lines should describe the
+         * - The next \a num_bags non-comment lines should describe the
          *   contents of the bags.  Each such line should be of the form
-         *   <tt>b&nbsp;<i>bag_number</i>&nbsp;<i>element</i>&nbsp;<i>element</i>&nbsp;...</tt>.
-         *   The bags are numbered 1,2,...,\e num_bags, and may appear in any
+         *   `b <bag_number> <element> <element> ...`.
+         *   The bags are numbered 1,2,...,\a num_bags, and may appear in any
          *   order.  Likewise, the vertices of the graph are numbered
-         *   1,2,...,\e num_vertices, and within each bag they may again
+         *   1,2,...,\a num_vertices, and within each bag they may again
          *   appear in any order.
          *
-         * - The remaining \e num_bags - 1 non-comment lines should
+         * - The remaining \a num_bags - 1 non-comment lines should
          *   indicate the connections between the bags in the tree
          *   decomposition.  Each such line should be of the form
-         *   <tt><i>first_bag_index</i>&nbsp;<i>second_bag_index</i></tt>,
-         *   where \e first_bag_index is smaller than \e second_bag_index.
+         *   `<first_bag_index> <second_bag_index>`,
+         *   where \a first_bag_index is smaller than \a second_bag_index.
          *
          * Bags may be empty, but there must be at least one bag, and the
          * connections between the bags must form a tree.  This routine will

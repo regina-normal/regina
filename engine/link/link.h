@@ -3280,14 +3280,14 @@ class Link :
          * In summary, the output will consist of several lines of text:
          *
          * - The first line will be of the form
-         *   <tt>p&nbsp;tw&nbsp;<i>num_vertices</i>&nbsp;<i>num_edges</i></tt>.
+         *   `p tw <num_vertices> <num_edges>`.
          *   Note that, since the underlying graph comes from a link diagram,
-         *   we will always have \e num_edges equal to twice \e num_vertices.
+         *   we will always have \a num_edges equal to twice \a num_vertices.
          *
-         * - Following this will be \e num_edges lines, one for each
-         *   edge, each of the form <tt><i>u&nbsp;v</i></tt>, indicating
-         *   an edge from vertex number \e u to vertex number \e v.
-         *   In this format, vertices are numbered 1,2,...,\e num_vertices.
+         * - Following this will be \a num_edges lines, one for each
+         *   edge, each of the form `<u> <v>`, indicating
+         *   an edge from vertex number \a u to vertex number \a v.
+         *   In this format, vertices are numbered 1,2,...,\a num_vertices.
          *
          * An example of this text format is as follows:
          *
