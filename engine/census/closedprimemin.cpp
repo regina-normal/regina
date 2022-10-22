@@ -350,7 +350,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
     // order[nChainEdges].simp), face 0 of this tetrahedron is not
     // involved in a one-ended chain.
 
-    // In this generation algorithm, each orientation is simply +/-1.
+    // In this generation algorithm, each orientation is simply ±1.
     // We won't bother assigning orientations to the tetrahedra internal
     // to the one-ended chains.
 

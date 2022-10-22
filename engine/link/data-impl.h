@@ -55,7 +55,7 @@ Link Link::fromData(std::initializer_list<int> crossingSigns,
         if (sign == 1 || sign == -1)
             ans.crossings_.push_back(new Crossing(sign));
         else
-            throw InvalidArgument("fromData(): crossing sign not +/-1");
+            throw InvalidArgument("fromData(): crossing sign not ±1");
     }
     ans.addComponents(2 * crossingSigns.size(), components...);
     return ans;
@@ -168,7 +168,7 @@ Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
         if (*sit == 1 || *sit == -1)
             ans.crossings_.push_back(new Crossing(*sit));
         else
-            throw InvalidArgument("fromData(): crossing sign not +/-1");
+            throw InvalidArgument("fromData(): crossing sign not ±1");
     }
 
     size_t strandsFound = 0;

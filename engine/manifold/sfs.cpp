@@ -267,7 +267,7 @@ void SFSpace::reduce(bool mayReflect) {
         // (p,q) == (p,-q), and so (1,2) == (1,0).
         b_ = b_ % 2;
         if (b_ && nFibres_) {
-            // We have b == +/-1.
+            // We have b == ±1.
             // Merge this into the first exceptional fibre instead.
             // Instead of modifying the fibre directly, delete and reinsert
             // so that sorted order is maintained.

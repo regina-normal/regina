@@ -103,7 +103,7 @@ std::unique_ptr<LayeredLensSpace> LayeredLensSpace::recognise(
             }
 
             // Find the nicest possible value for q.
-            // Choices are +/- q, +/- 1/q.
+            // Choices are ±q, ±1/q.
             if (ans->p_ > 0) {
                 if (2 * ans->q_ > ans->p_)
                     ans->q_ = ans->p_ - ans->q_;

@@ -259,7 +259,7 @@ Edge<3>* Triangulation<3>::meridian() {
     // - If the longitude is (0,1,1), then the meridian must be of the form
     //   (1,k,k+1) or (1,k+1,k).
     // - If the longitude is (a,b,a+b) for a,b > 0, then the meridian must be
-    //   (x,y,x+y) where ay-bx = +/-1.
+    //   (x,y,x+y) where ay-bx = ±1.
     //
     // We will treat these two cases separately.
     // In each case, we identify the meridian by repeatedly filling along
@@ -300,7 +300,7 @@ Edge<3>* Triangulation<3>::meridian() {
             }
         }
     } else {
-        // The meridian is of the form (x,y,x+y) where ay-bx = +/-1.
+        // The meridian is of the form (x,y,x+y) where ay-bx = ±1.
 
         // First find *some* integer solution to give each of +1 or -1.
         auto [d, u, v] = gcdWithCoeffs(longCuts[0], longCuts[1]);

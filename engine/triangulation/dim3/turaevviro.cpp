@@ -238,7 +238,7 @@ namespace {
 
         /**
          * Multiplies ans by the triangle-based contribution to the Turaev-Viro
-         * invariant.  This corresponds to +/- Delta(i/2, j/2, k/2)^2.
+         * invariant.  This corresponds to ± Delta(i/2, j/2, k/2)^2.
          */
         void triContrib(unsigned long i, unsigned long j, unsigned long k,
                 TVType& ans) const {

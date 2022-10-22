@@ -426,7 +426,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
                  underlying triangulation.  Orientation is positive/negative,
                  or 0 if unknown.
                  Note that in some algorithms the orientation is simply
-                 +/-1, and in some algorithms the orientation counts
+                 ±1, and in some algorithms the orientation counts
                  forwards or backwards from 0 according to how many
                  times the orientation has been set or verified. */
 

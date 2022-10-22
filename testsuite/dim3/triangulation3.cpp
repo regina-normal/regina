@@ -5728,7 +5728,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 if (! tmp.homology().isZn(3)) {
                     std::ostringstream msg;
                     msg << name << ": filling along "
-                        "(3 * meridian +/- 2 * longitude) "
+                        "(3 * meridian ± 2 * longitude) "
                         "does not give Z_3 homology.";
                     CPPUNIT_FAIL(msg.str());
                 }
