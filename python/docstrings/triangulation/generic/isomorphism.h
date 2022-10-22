@@ -24,15 +24,15 @@ gluings across adjacent simplices.
 
 More precisely: An isomorphism consists of (i) a one-to-one map *f*
 from the simplices of *T* to the simplices of *U*, and (ii) for each
-simplex *S* of *T*, a permutation *f*_(S) of the facets (0,...,*dim*)
+simplex *S* of *T*, a permutation *f*_{S} of the facets (0,...,*dim*)
 of *S*, for which the following condition holds:
 
 * If facet *k* of simplex *S* and facet *k*' of simplex *S*' are
-  identified in *T*, then facet *f*_(S)(*k*) of *f*(S) and facet
-  *f*_(S')(*k*') of *f*(S') are identified in *U*. Moreover, their
+  identified in *T*, then facet *f*_{S}(*k*) of *f*(S) and facet
+  *f*_{S'}(*k*') of *f*(S') are identified in *U*. Moreover, their
   gluing is consistent with the facet/vertex permutations; that is,
   there is a commutative square involving the gluing maps in *T* and
-  *U* and the permutations *f*_(S) and *f*_(S').
+  *U* and the permutations *f*_{S} and *f*_{S'}.
 
 Isomorphisms can be _boundary complete_ or _boundary incomplete_. A
 boundary complete isomorphism satisfies the additional condition:

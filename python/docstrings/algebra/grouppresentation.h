@@ -901,7 +901,7 @@ factors ``d0 | d2 | ... | d(M-1)``, this routine applies Nielsen moves
 to the presentation to ensure that under the markedAbelianisation()
 routine, generators 0 through *M*-1 are mapped to generators of the
 relevant ``Z_di`` group. Similarly, generators *M* through *M*+*N*-1
-are mapped to +/-1 in the appropriate factor. All further generators
+are mapped to ±1 in the appropriate factor. All further generators
 will be mapped to zero.
 
 If this routine does return a homomorphism (because the presentation
@@ -954,12 +954,12 @@ static const char *identifySimplyIsomorphicTo =
 R"doc(Attempts to prove that this and the given group presentation are
 _simply isomorphic_.
 
-A _simple isomorphism_ is an isomorphism where each generator *g_(i)*
-of this presentation is sent to some generator *g_(j)*^(+/-1) of the
+A _simple isomorphism_ is an isomorphism where each generator *g_{i}*
+of this presentation is sent to some generator *g_{j}*^{±1} of the
 other presentation. Moreover, at present this routine only looks for
 maps where both presentations have the same number of generators, and
-where distinct generators *g_(i)* of this presentation correspond to
-distinct generators *g_(j)* of the other presentation (possibly with
+where distinct generators *g_{i}* of this presentation correspond to
+distinct generators *g_{j}* of the other presentation (possibly with
 inversion, as noted above).
 
 If this routine returns ``True``, it means that the two presentations
