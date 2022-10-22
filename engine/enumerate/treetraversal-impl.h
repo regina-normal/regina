@@ -34,7 +34,7 @@
  *  \brief Contains implementation details for the various tree traversal
  *  class templates.
  *
- *  This file is \e not included automatically by treetraversal.h.
+ *  This file is _not_ included automatically by treetraversal.h.
  *  However, most end users should not need to include it, since
  *  Regina's calculation engine provides full explicit instantiations
  *  of these classes for common combinations of template arguments.
@@ -54,7 +54,7 @@
 
 /**
  * Optimisation flags:
- * Define any combination of the following flags to switch \e off
+ * Define any combination of the following flags to switch _off_
  * various optimisations.
  * This is for diagnostic purposes only.
  */

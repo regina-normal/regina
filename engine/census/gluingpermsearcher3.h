@@ -187,7 +187,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * \a whichPurge will be avoided (i.e., you may get gluing
          * permutation sets that you did not want).  It is guaranteed however
          * that every permutation set whose corresonding triangulation does
-         * \e not satisfy the \a whichPurge constraints will be generated.
+         * _not_ satisfy the \a whichPurge constraints will be generated.
          *
          * Similarly, even if \a finiteOnly is set to \c true, some
          * non-finite triangulations might still slip through the net
@@ -226,7 +226,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * enumeration, or PURGE_NONE if we should simply generate every
          * possible permutation set.
          * If a variety of purge constants are bitwise ORed together, a
-         * permutation set whose triangulation satisfies \e any of these
+         * permutation set whose triangulation satisfies _any_ of these
          * constraints may be avoided.  Note that not all such
          * permutation sets will be avoided, but enough are avoided that
          * the performance increase is noticeable.
@@ -724,7 +724,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
  *
  * No additional unwanted triangulations will be produced by this search
  * (in contrast to other search classes, such as ClosedPrimeMinSearcher).
- * That is, \e only 3-manifolds with the required vertex links will be produced.
+ * That is, _only_ 3-manifolds with the required vertex links will be produced.
  *
  * This class is designed to manage the construction of a large census of
  * triangulations, and so it does not support copying, moving or swapping.
@@ -956,7 +956,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * temporary basis only.
              *
              * This routine does test for bad input data, but it
-             * does \e not test for end-of-file.
+             * does _not_ test for end-of-file.
              *
              * \param in the input stream from which to read.
              * \param nStates the total number of vertex states under
@@ -1101,7 +1101,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * temporary basis only.
              *
              * This routine does test for bad input data, but it
-             * does \e not test for end-of-file.
+             * does _not_ test for end-of-file.
              *
              * \param in the input stream from which to read.
              * \param nTets the number of tetrahedra under consideration
@@ -1283,7 +1283,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * The argument \a twisted is also modified to indicate whether
          * or not the identification of the given edge with the class
          * representative preserves orientation.  Note that this arugment
-         * is \e not initialised.  Instead, if the identification
+         * is _not_ initialised.  Instead, if the identification
          * is orientation-preserving then \a twisted will be left
          * unmodified, and if it is orientation-reversing then \a twisted
          * will be changed from 0 to 1 or vice-versa.
@@ -1578,7 +1578,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
  *
  * No additional unwanted triangulations will be produced by this search
  * (in contrast to other search classes, such as ClosedPrimeMinSearcher).
- * That is, \e only compact 3-manifolds will be produced.
+ * That is, _only_ compact 3-manifolds will be produced.
  *
  * This class is designed to manage the construction of a large census of
  * triangulations, and so it does not support copying, moving or swapping.
@@ -1775,7 +1775,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * temporary basis only.
              *
              * This routine does test for bad input data, but it
-             * does \e not test for end-of-file.
+             * does _not_ test for end-of-file.
              *
              * \param in the input stream from which to read.
              * \param nStates the total number of vertex states under
@@ -1920,7 +1920,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * temporary basis only.
              *
              * This routine does test for bad input data, but it
-             * does \e not test for end-of-file.
+             * does _not_ test for end-of-file.
              *
              * \param in the input stream from which to read.
              * \param nTets the number of tetrahedra under consideration
@@ -2078,7 +2078,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * The argument \a twisted is also modified to indicate whether
          * or not the identification of the given edge with the class
          * representative preserves orientation.  Note that this arugment
-         * is \e not initialised.  Instead, if the identification
+         * is _not_ initialised.  Instead, if the identification
          * is orientation-preserving then \a twisted will be left
          * unmodified, and if it is orientation-reversing then \a twisted
          * will be changed from 0 to 1 or vice-versa.
@@ -2616,8 +2616,8 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
  * finite-volume hyperbolic 3-manifolds are required.  Here every vertex
  * link will be a torus or Klein bottle.
  *
- * Note that this searches for \e any triangulations of such hyperbolic
- * manifolds, not just \e geometric triangulations.
+ * Note that this searches for _any_ triangulations of such hyperbolic
+ * manifolds, not just _geometric_ triangulations.
  *
  * Note that additional unwanted triangulations (e.g., non-hyperbolic or
  * non-minimal triangulations) may still be produced by this search.

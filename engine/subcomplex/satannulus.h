@@ -95,9 +95,9 @@ class Matrix2;
  * establishes an orientation on the vertical fibres, as well as a
  * left-to-right direction across the annulus.
  *
- * For convenience we refer to edges \a roles[][0-1] as \e vertical,
- * edges \a roles[][0-2] as \e horizontal, and edge \a roles[][1-2] as
- * \e diagonal.  This is illustrated in the following diagrams.
+ * For convenience we refer to edges \a roles[][0-1] as _vertical_,
+ * edges \a roles[][0-2] as _horizontal_, and edge \a roles[][1-2] as
+ * _diagonal_.  This is illustrated in the following diagrams.
  *
  * <pre>
  *         V  Horizontal       V   Diagonal
@@ -234,7 +234,7 @@ struct SatAnnulus {
      * must use the same two numbered tetrahedra, presented in the same
      * order, and with the same \a roles permutations.
      *
-     * Because this operation compares tetrahedron \e numbers and not
+     * Because this operation compares tetrahedron _numbers_ and not
      * the underlying Tetrahedron objects, it is meaningful to compare
      * saturated annuli from different triangulations.
      *
@@ -251,7 +251,7 @@ struct SatAnnulus {
      * must use the same two numbered tetrahedra, presented in the same
      * order, and with the same \a roles permutations.
      *
-     * Because this operation compares tetrahedron \e numbers and not
+     * Because this operation compares tetrahedron _numbers_ and not
      * the underlying Tetrahedron objects, it is meaningful to compare
      * saturated annuli from different triangulations.
      *

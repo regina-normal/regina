@@ -62,7 +62,7 @@ namespace regina {
  * values, not ASCII digits).  The length of a type vector must be
  * passed alongside it (i.e., there is no special terminating character).
  *
- * A type vector \a v is said to \e dominate \a u if, for each position
+ * A type vector \a v is said to _dominate_ \a u if, for each position
  * \a i, either v[i] == u[i] or else u[i] == 0.  So, for instance,
  * (1,0,2,3) dominates (1,0,2,0), which in turn dominates (1,0,0,0).
  * Domination is a partial order, not a total order: for instance,
@@ -111,7 +111,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
                      only if \a elementHere_ is \c true at the root node.)
                      If this is \c false at a non-root node, then the fact
                      that the node was ever constructed means that the path
-                     from the root to this node describes some \e prefix of
+                     from the root to this node describes some _prefix_ of
                      a longer type vector in the set that has additional
                      subsequent non-zero elements. */
 

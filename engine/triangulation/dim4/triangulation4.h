@@ -78,7 +78,7 @@ template <int> class XMLTriangulationReader;
  * This 4-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 4-manifolds.
  *
- * A 4-manifold triangulation is built from pentachora: a \e pentachoron is a
+ * A 4-manifold triangulation is built from pentachora: a _pentachoron_ is a
  * 4-dimensional simplex, with five vertices.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
@@ -103,7 +103,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
                  If \a vertexLinkSummary_ is negative, this means that either
                  one or more vertices are invalid, and/or the skeleton has
                  not yet been computed.
-                 Crucially, this property may be known \e before the skeleton
+                 Crucially, this property may be known _before_ the skeleton
                  is computed (thereby allowing us to avoid costly 3-sphere or
                  3-ball recognition when the skeleton is computed later on). */
 
@@ -179,7 +179,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * does not fire any change events.  This is because this triangulation
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
          * \param src the triangulation to move.
          */
@@ -288,10 +288,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
          * code via any registered packet listeners.  It deliberately does
-         * \e not fire change events on \a src, since it assumes that \a src is
+         * _not_ fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
@@ -315,7 +315,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
@@ -365,7 +365,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * For triangulations whose vertex links are all 3-spheres or
          * 3-balls, this routine and eulerCharTri() give identical results.
          *
-         * This routine does \e not yet handle invalid triangulations
+         * This routine does _not_ yet handle invalid triangulations
          * correctly.  For this reason, this routine currently insists on
          * a valid triangulation as a precondition.
          *
@@ -514,7 +514,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Note that 5-1 moves are currently not supported, though this
          * may be added in a future verson of Regina.
          *
-         * If at any stage it finds a triangulation with \e fewer
+         * If at any stage it finds a triangulation with _fewer_
          * pentachora than the original, then this routine will call
          * intelligentSimplify() to shrink the triangulation further if
          * possible and will then return \c true.  If it cannot find a
@@ -530,14 +530,14 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * either you find a simplification or the routine becomes
          * too expensive to run.
          *
-         * If \a height is negative, then there will be \e no bound on
+         * If \a height is negative, then there will be _no_ bound on
          * the number of additional pentachora.  This means that the
          * routine will not terminate until a simpler triangulation is found.
          * If no simpler diagram exists then the only way to terminate this
          * function is to cancel the operation via a progress tracker
          * (read on for details).
          *
-         * If you want a \e fast simplification routine, you should call
+         * If you want a _fast_ simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
          * is that, for very stubborn triangulations where intelligentSimplify()
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
@@ -569,7 +569,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * \param height the maximum number of \e additional pentachora to
+         * \param height the maximum number of _additional_ pentachora to
          * allow beyond the number of pentachora originally present in the
          * triangulation, or a negative number if this should not be bounded.
          * \param nThreads the number of threads to use.  If this is
@@ -640,7 +640,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
-         * If \a height is negative, then there will be \e no bound on
+         * If \a height is negative, then there will be _no_ bound on
          * the number of additional pentachora.  This means that the
          * routine will _never terminate_, unless \a action returns
          * \c true for some triangulation that is passed to it.
@@ -681,7 +681,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * (const std::string&, Triangulation<4>&&) representing a signature
          * and the triangulation, as described in option (b) above.
          *
-         * \param height the maximum number of \e additional pentachora to
+         * \param height the maximum number of _additional_ pentachora to
          * allow beyond the number of pentachora originally present in the
          * triangulation, or a negative number if this should not be bounded.
          * \param nThreads the number of threads to use.  If this is
@@ -1124,7 +1124,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * Constructing the link of a face begins with building the frontier
          * of a regular neighbourhood of the face.  If this is already a
-         * normal hypersurface, then then link is called \e thin.  Otherwise
+         * normal hypersurface, then then link is called _thin_.  Otherwise
          * some basic normalisation steps are performed until the hypersurface
          * becomes normal; note that these normalisation steps could
          * change the topology of the hypersurface, and in some pathological

@@ -88,7 +88,7 @@ class Component<3> : public detail::ComponentBase<3> {
          * Returns the number of <i>subdim</i>-faces in this component.
          *
          * For convenience, this routine explicitly supports the case
-         * \a subdim = 3.  This is \e not the case for the routines
+         * \a subdim = 3.  This is _not_ the case for the routines
          * face() and faces(), which give access to individual faces
          * (the reason relates to the fact that tetrahedra are built manually,
          * whereas lower-dimensional faces are deduced properties).

@@ -54,7 +54,7 @@ class QTreeView;
  * for triangulations of a particular dimension.  Each type of skeletal
  * data for each type of triangulation requires its own separate subclass.
  *
- * \pre Subclasses may use at most \e four columns.  This number is
+ * \pre Subclasses may use at most _four_ columns.  This number is
  * currently hard-coded into the SkeletalModel code.
  *
  * See SkeletonWindow for further details.

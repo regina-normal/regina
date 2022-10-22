@@ -259,7 +259,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * does not fire any change events.  This is because this triangulation
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
          * \param src the triangulation to move.
          */
@@ -505,10 +505,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
          * code via any registered packet listeners.  It deliberately does
-         * \e not fire change events on \a src, since it assumes that \a src is
+         * _not_ fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
@@ -532,7 +532,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
@@ -784,7 +784,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - \a r may be even.  In this case \a q0 must be a primitive
          *   (<i>2r</i>)th root of unity, and the invariant is computed as an
          *   element of the cyclotomic field of order \a 2r.  There is no need
-         *   to specify \e which root of unity is used, since switching between
+         *   to specify _which_ root of unity is used, since switching between
          *   different roots of unity corresponds to an automorphism of
          *   the underlying cyclotomic field (i.e., it does not yield
          *   any new information).  Therefore, if \a r is even, the
@@ -877,7 +877,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * used for \a q0.  Specifically, \a q0 will be the root of unity
          * `e^(2πi * whichRoot / 2r)`.  There are additional
          * preconditions on \a whichRoot to ensure that \a q0^2 is a
-         * \e primitive root of unity of degree \a r; see below for details.
+         * _primitive_ root of unity of degree \a r; see below for details.
          *
          * This same invariant can be computed by calling
          * `turaevViro(r, parity).evaluate(whichRoot)`,
@@ -971,8 +971,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre This triangulation has precisely one vertex, and its
          * (unique) boundary component is formed from two triangles.
          *
-         * \warning If you have an \e ideal triangulation of a knot
-         * complement, you \e must first run idealToFinite() and then simplify
+         * \warning If you have an _ideal_ triangulation of a knot
+         * complement, you _must_ first run idealToFinite() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
          * \exception FailedPrecondition This triangulation is not a valid
@@ -1023,7 +1023,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the algebraic longitude is already represented by a single
          * boundary edge, then it is guaranteed that this routine will
-         * \e not modify the triangulation, and will simply return this
+         * _not_ modify the triangulation, and will simply return this
          * boundary edge.
          *
          * \pre The underlying 3-manifold is known to be the complement
@@ -1035,8 +1035,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * explained above, which will have the side-effect of
          * invalidating any existing Vertex, Edge or Triangle references.
          *
-         * \warning If you have an \e ideal triangulation of a knot
-         * complement, you \e must first run idealToFinite() and then simplify
+         * \warning If you have an _ideal_ triangulation of a knot
+         * complement, you _must_ first run idealToFinite() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
          * \exception FailedPrecondition This triangulation is not a valid
@@ -1086,7 +1086,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the meridian is already represented by a single boundary edge,
          * then it is guaranteed that, if this routine does terminate,
-         * it will \e not modify the triangulation, and will simply return
+         * it will _not_ modify the triangulation, and will simply return
          * this boundary edge.
          *
          * \pre The underlying 3-manifold is known to be the complement
@@ -1098,8 +1098,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * explained above, which will have the side-effect of
          * invalidating any existing Vertex, Edge or Triangle references.
          *
-         * \warning If you have an \e ideal triangulation of a knot
-         * complement, you \e must first run idealToFinite() and then simplify
+         * \warning If you have an _ideal_ triangulation of a knot
+         * complement, you _must_ first run idealToFinite() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
          * \exception FailedPrecondition This triangulation is not a valid
@@ -1149,7 +1149,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the meridian and algebraic longitude are already both represented
          * by single boundary edges, then it is guaranteed that, if this
-         * routine does terminate, it will \e not modify the triangulation,
+         * routine does terminate, it will _not_ modify the triangulation,
          * and will simply return these two boundary edges.
          *
          * \pre The underlying 3-manifold is known to be the complement
@@ -1161,8 +1161,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * explained above, which will have the side-effect of
          * invalidating any existing Vertex, Edge or Triangle references.
          *
-         * \warning If you have an \e ideal triangulation of a knot
-         * complement, you \e must first run idealToFinite() and then simplify
+         * \warning If you have an _ideal_ triangulation of a knot
+         * complement, you _must_ first run idealToFinite() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
          * \exception FailedPrecondition This triangulation is not a valid
@@ -1192,7 +1192,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Constructing the link of a face begins with building the frontier
          * of a regular neighbourhood of the face.  If this is already a
-         * normal surface, then then link is called \e thin.  Otherwise
+         * normal surface, then then link is called _thin_.  Otherwise
          * the usual normalisation steps are performed until the surface
          * becomes normal; note that these normalisation steps could
          * change the topology of the surface, and in some pathological
@@ -1230,7 +1230,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * isZeroEfficient() will be very fast (simply returning the
          * precalculated value).
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * this triangulation is 0-efficient; it merely tells you whether
          * the answer has already been computed.
          *
@@ -1277,7 +1277,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         std::optional<NormalSurface> octagonalAlmostNormalSphere() const;
         /**
          * Returns a strict angle structure on this triangulation, if one
-         * exists.  Recall that a \e strict angle structure is one in which
+         * exists.  Recall that a _strict_ angle structure is one in which
          * every angle is strictly between 0 and π.  If a strict angle
          * structure does exist, then this routine is guaranteed to return one.
          *
@@ -1287,7 +1287,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - If no strict angle structure exists, this routine will throw an
          *   exception, which will incur a significant overhead.
          *
-         * - If you do \e not know in advance whether a strict angle structure
+         * - If you do _not_ know in advance whether a strict angle structure
          *   exists, you should call hasStrictAngleStructure() first.  If the
          *   answer is no, this will avoid the overhead of throwing and catching
          *   exceptions.  If the answer is yes, this will have the side-effect
@@ -1295,7 +1295,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   call to strictAngleStructure() will be essentially instantaneous.
          *
          * The underlying algorithm runs a single linear program (it does
-         * \e not enumerate all vertex angle structures).  This means
+         * _not_ enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
          *
          * The result of this routine is cached internally: as long as
@@ -1316,23 +1316,23 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         const AngleStructure& strictAngleStructure() const;
         /**
          * Determines whether this triangulation supports a strict angle
-         * structure.  Recall that a \e strict angle structure is one
+         * structure.  Recall that a _strict_ angle structure is one
          * in which every angle is strictly between 0 and π.
          *
          * This routine returns \c false if and only if strictAngleStructure()
-         * throws an exception.  However, if you do not \e know whether a
+         * throws an exception.  However, if you do not _know_ whether a
          * strict angle structure exists, then this routine is faster:
          *
-         * - If there is \e no strict angle structure, this routine will
+         * - If there is _no_ strict angle structure, this routine will
          *   avoid the overhead of throwing and catching exceptions.
          *
-         * - If there \e is a strict angle structure, this routine will find
+         * - If there _is_ a strict angle structure, this routine will find
          *   and cache this angle structure, which means that any subsequent
          *   call to strictAngleStructure() to retrieve its details will
          *   be essentially instantaneous.
          *
          * The underlying algorithm runs a single linear program (it does
-         * \e not enumerate all vertex angle structures).  This means
+         * _not_ enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
          *
          * \return \c true if and only if a strict angle structure exists on
@@ -1348,7 +1348,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * strictAngleStructure() and hasStrictAngleStructure() will be
          * very fast (simply returning the precalculated solution).
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * the triangulation supports a strict angle structure; it merely
          * tells you whether the answer has already been computed (or is
          * very easily computed).
@@ -1359,7 +1359,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool knowsStrictAngleStructure() const;
         /**
          * Returns a generalised angle structure on this triangulation,
-         * if one exists.  A \e generalised angle structure must satisfy the
+         * if one exists.  A _generalised_ angle structure must satisfy the
          * same matching equations as all angle structures do, but there is no
          * constraint on the signs of the angles; in particular, negative
          * angles are allowed.  If a generalised angle structure does exist,
@@ -1408,19 +1408,19 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         const AngleStructure& generalAngleStructure() const;
         /**
          * Determines whether this triangulation supports a generalised angle
-         * structure.  A \e generalised angle structure must satisfy the
+         * structure.  A _generalised_ angle structure must satisfy the
          * same matching equations as all angle structures do, but there is no
          * constraint on the signs of the angles; in particular, negative
          * angles are allowed.
          *
          * This routine returns \c false if and only if generalAngleStructure()
-         * throws an exception.  However, if you do not \e know whether a
+         * throws an exception.  However, if you do not _know_ whether a
          * generalised angle structure exists, then this routine is faster:
          *
-         * - If there is \e no generalised angle structure, this routine will
+         * - If there is _no_ generalised angle structure, this routine will
          *   avoid the overhead of throwing and catching exceptions.
          *
-         * - If there \e is a generalised angle structure, this routine will
+         * - If there _is_ a generalised angle structure, this routine will
          *   find and cache this angle structure, which means that any
          *   subsequent call to generalAngleStructure() to retrieve its
          *   details will be essentially instantaneous.
@@ -1555,7 +1555,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * via 2-3 and 3-2 Pachner moves, without ever exceeding
          * \a height additional tetrahedra beyond the original number.
          *
-         * If at any stage it finds a triangulation with \e fewer
+         * If at any stage it finds a triangulation with _fewer_
          * tetrahedra than the original, then this routine will call
          * intelligentSimplify() to shrink the triangulation further if
          * possible and will then return \c true.  If it cannot find a
@@ -1571,14 +1571,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * either you find a simplification or the routine becomes
          * too expensive to run.
          *
-         * If \a height is negative, then there will be \e no bound on
+         * If \a height is negative, then there will be _no_ bound on
          * the number of additional tetrahedra.  This means that the
          * routine will not terminate until a simpler triangulation is found.
          * If no simpler diagram exists then the only way to terminate this
          * function is to cancel the operation via a progress tracker
          * (read on for details).
          *
-         * If you want a \e fast simplification routine, you should call
+         * If you want a _fast_ simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
          * is that, for very stubborn triangulations where intelligentSimplify()
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
@@ -1610,7 +1610,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * \param height the maximum number of \e additional tetrahedra to
+         * \param height the maximum number of _additional_ tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
          * triangulation, or a negative number if this should not be bounded.
          * \param nThreads the number of threads to use.  If this is
@@ -1642,7 +1642,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   type is discussed below), representing the triangluation that has
          *   been found; or else (b) the first two arguments must be of types
          *   const std::string& followed by a triangulation, representing both
-         *   the triangulation and \e an isomorphism signature.
+         *   the triangulation and _an_ isomorphism signature.
          *   The second form is offered in order to avoid unnecessary
          *   recomputation within the \a action function; however, note that
          *   the signature might not be of the IsoSigClassic type (i.e., it
@@ -1679,7 +1679,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
-         * If \a height is negative, then there will be \e no bound on
+         * If \a height is negative, then there will be _no_ bound on
          * the number of additional tetrahedra.  This means that the
          * routine will _never terminate_, unless \a action returns
          * \c true for some triangulation that is passed to it.
@@ -1716,7 +1716,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * (const std::string&, Triangulation<3>&&) representing a signature
          * and the triangulation, as described in option (b) above.
          *
-         * \param height the maximum number of \e additional tetrahedra to
+         * \param height the maximum number of _additional_ tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
          * triangulation, or a negative number if this should not be bounded.
          * \param nThreads the number of threads to use.  If this is
@@ -2035,7 +2035,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The given edge is an edge of this triangulation.
          *
          * \param e the edge about which to perform the move.
-         * \param edgeEnd the end of the edge \e opposite that at
+         * \param edgeEnd the end of the edge _opposite_ that at
          * which the second tetrahedron (to be merged) is joined.
          * The end is 0 or 1, corresponding to the labelling (0,1) of
          * the vertices of the edge as described in
@@ -2465,7 +2465,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * has been found.
          *
          * \param forceOriented \c true if the triangulation must be
-         * both ordered and \e oriented, in which case this routine will
+         * both ordered and _oriented_, in which case this routine will
          * return \c false if the triangulation cannot be oriented and
          * ordered at the same time.  See orient() for further details.
          * \return \c true if the triangulation has been successfully ordered
@@ -2502,7 +2502,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * For non-orientable triangulations, this routine is only guaranteed
          * to succeed if the original manifold contains no embedded two-sided
-         * projective planes.  If the manifold \e does contain embedded
+         * projective planes.  If the manifold _does_ contain embedded
          * two-sided projective planes, then this routine might still succeed
          * but it might fail; however, such a failure will always be detected,
          * and in such a case this routine will throw an exception (as
@@ -2586,7 +2586,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to isSphere() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * this triangulation forms a 3-sphere; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
@@ -2629,7 +2629,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to isBall() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * this triangulation forms a ball; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
@@ -2673,7 +2673,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to isSolidTorus() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * this triangulation forms a solid torus; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
@@ -2721,7 +2721,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to isHandlebody() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether this
+         * \warning This routine does not actually tell you _whether_ this
          * triangulation forms an orientable handlebody; it merely tells you
          * whether the answer has already been computed (or is very easily
          * computed).
@@ -2771,7 +2771,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to isTxI() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * this triangulation forms the product of the torus with an interval;
          * it merely tells you whether the answer has already been computed
          * (or is very easily computed).
@@ -2810,7 +2810,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * isIrreducible() will be very fast (simply returning the
          * precalculated value).
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * the underlying 3-manifold is irreducible; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
@@ -2889,7 +2889,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Otherwise a call to hasCompressingDisc() may potentially require more
          * significant work, and so this routine will return \c false.
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * the underlying 3-manifold has a compressing disc; it merely tells
          * you whether the answer has already been computed (or is very
          * easily computed).
@@ -2928,7 +2928,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * isHaken() will be very fast (simply returning the
          * precalculated value).
          *
-         * \warning This routine does not actually tell you \e whether
+         * \warning This routine does not actually tell you _whether_
          * the underlying 3-manifold is Haken; it merely tells you whether
          * the answer has already been computed (or is very easily computed).
          *
@@ -2998,7 +2998,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * See TreeDecomposition for further details on tree
          * decompositions, and see TreeDecomposition::makeNice() for
-         * details on what it means to be a \e nice tree decomposition.
+         * details on what it means to be a _nice_ tree decomposition.
          *
          * This routine is fast: it will use a greedy algorithm to find a
          * tree decomposition with (hopefully) small width, but with
@@ -3052,7 +3052,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * the edge to a point with no further side-effects, and it increases
          * the number of tetrahedra by two.
          *
-         * This operation can be performed on \e any internal edge,
+         * This operation can be performed on _any_ internal edge,
          * without further constraints.  Two particularly useful settings are:
          *
          * - If the edge joins an internal vertex with some different vertex
@@ -3060,7 +3060,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   this move does not change the topology of the manifold at all,
          *   and it reduces the total number of vertices by one.  In
          *   this sense, it acts as an alternative to collapseEdge(),
-         *   and unlike collapseEdge() it can \e always be performed.
+         *   and unlike collapseEdge() it can _always_ be performed.
          *
          * - If the edge runs from an internal vertex back to itself,
          *   then this move effectively drills out the edge, leaving
@@ -3068,7 +3068,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * We do not allow \a e to lie entirely on the triangulation boundary,
          * because the implementation actually collapses an internal curve
-         * \e parallel to \a e, not the edge \a e itself (and so if \a e is a
+         * _parallel_ to \a e, not the edge \a e itself (and so if \a e is a
          * boundary edge then the topological effect would not be as intended).
          * We do allow \a e to be an internal edge with both endpoints on the
          * boundary, but note that in this case the resulting topological
@@ -3379,7 +3379,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   (since Triangulation<3> is not a polymorphic class, and in
          *   particular this function is not virtual).
          *
-         * If you wish to export a triangulation to a SnapPea \e file, you
+         * If you wish to export a triangulation to a SnapPea _file_, you
          * should call saveSnapPea() instead (which has better performance, and
          * does not require you to construct an enormous intermediate string).
          *
@@ -3465,9 +3465,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * return \c false.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written using UTF-8.
+         * routines.  The _contents_ of the file will be written using UTF-8.
          *
          * \param filename the name of the SnapPea file to which to write.
          * \return \c true if and only if the file was successfully written.
@@ -3554,9 +3554,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this routine will return \c false.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written using UTF-8.
+         * routines.  The _contents_ of the file will be written using UTF-8.
          *
          * \param filename the name of the Recogniser file to which to write.
          * \return \c true if and only if the file was successfully written.
@@ -3571,9 +3571,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any boundary triangles.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written using UTF-8.
+         * routines.  The _contents_ of the file will be written using UTF-8.
          *
          * \param filename the name of the Recogniser file to which to write.
          * \return \c true if and only if the file was successfully written.
@@ -3622,7 +3622,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * instead (which uses the SnapPea kernel directly, and can therefore
          * store anything that SnapPea can).
          *
-         * If you wish to read a triangulation from a SnapPea \e file, you
+         * If you wish to read a triangulation from a SnapPea _file_, you
          * should likewise call the SnapPeaTriangulation constructor, giving
          * the filename as argument.  This will read all SnapPea-specific
          * information (as described above), and also avoids constructing an

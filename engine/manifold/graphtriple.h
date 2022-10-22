@@ -121,7 +121,7 @@ namespace regina {
  * GraphTriple still requires a non-trivial (but constant sized) amount of data
  * to be copied even in a move operation.
  *
- * \warning The 2-by-2 matrices used in this class are \e not the same
+ * \warning The 2-by-2 matrices used in this class are _not_ the same
  * matrices that appear in the manifold name returned by name()
  * and texName() and seen in the census data files.  The matrices
  * used in this class work from the inside out, describing the boundary torus
@@ -306,10 +306,10 @@ class GraphTriple : public Manifold {
          * Determines whether this and the given object contain precisely
          * the same presentations of the same graph manifold.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the matching matrices
          * and the specific presentations of the bounded Seifert fibred spaces,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
@@ -323,10 +323,10 @@ class GraphTriple : public Manifold {
          * Determines whether this and the given object do not contain
          * precisely the same presentations of the same graph manifold.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the matching matrices
          * and the specific presentations of the bounded Seifert fibred spaces,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *

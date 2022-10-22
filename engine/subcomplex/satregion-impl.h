@@ -33,7 +33,7 @@
 /*! \file subcomplex/satregion-impl.h
  *  \brief Full implementation details for SatRegion::find().
  *
- *  This file is \e not included automatically by satregion.h.
+ *  This file is _not_ included automatically by satregion.h.
  */
 
 #ifndef __REGINA_SATREGION_IMPL_H

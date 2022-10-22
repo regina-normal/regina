@@ -305,7 +305,7 @@ class Signature : public ShortOutput<Signature> {
         /**
          * Creates a new completely uninitialised signature.
          *
-         * \warning The internal arrays \e must be created before this
+         * \warning The internal arrays _must_ be created before this
          * signature is destroyed!
          */
         Signature();
@@ -328,7 +328,7 @@ class Signature : public ShortOutput<Signature> {
          * Lexicographically compares the results of transformations upon
          * two given cycles within this signature.
          *
-         * This comparison is \e not case-sensitive.
+         * This comparison is _not_ case-sensitive.
          *
          * \pre The two specified cycles have the same length.
          *

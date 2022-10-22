@@ -53,7 +53,7 @@
 // of Matrix only for certain underlying types T.
 //
 // A side-effect is that every member function that uses these macros is
-// now a \e template member function (this is so we can use SFINAE to
+// now a _template_ member function (this is so we can use SFINAE to
 // remove unwanted member functions without compile errors).  The user
 // should never specify their own template arguments, and indeed the template
 // parameter pack Args is there precisely to stop users from doing this.
@@ -196,7 +196,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Creates a new uninitialised matrix.
          *
-         * You \e must initialise this matrix using the assignment operator
+         * You _must_ initialise this matrix using the assignment operator
          * before you can use it for any purpose.  The only exceptions are:
          *
          * - you can safely destroy an uninitialised matrix;
@@ -742,7 +742,7 @@ class Matrix : public Output<Matrix<T>> {
          * \warning If you only wish to add a portion of a row, be careful:
          * you cannot just pass the usual \a fromCol argument, since this will
          * be interpreted as a coefficient to be used with the other version
-         * of addRow() that adds \e several copies of the source row.
+         * of addRow() that adds _several_ copies of the source row.
          * Instead you will need to call addRowFrom().
          *
          * \param source the row to add.
@@ -814,7 +814,7 @@ class Matrix : public Output<Matrix<T>> {
          * \warning If you only wish to add a portion of a column, be careful:
          * you cannot just pass the usual \a fromRow argument, since this will
          * be interpreted as a coefficient to be used with the other version
-         * of addCol() that adds \e several copies of the source column.
+         * of addCol() that adds _several_ copies of the source column.
          * Instead you will need to call addColFrom().
          *
          * \pre The two given columns are distinct and between 0 and
@@ -1119,7 +1119,7 @@ class Matrix : public Output<Matrix<T>> {
          * Comput. Sci., Vol. 1997, Article 5.
          *
          * Although the Matrix class does not formally support empty matrices,
-         * if this \e is found to be a 0-by-0 matrix then the determinant
+         * if this _is_ found to be a 0-by-0 matrix then the determinant
          * returned will be 1.
          *
          * This routine is only available when the template argument \a ring
@@ -1289,7 +1289,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Reduces the given row by dividing all its elements by their
          * greatest common divisor.  It is guaranteed that, if the row is
-         * changed at all, it will be divided by a \e positive integer.
+         * changed at all, it will be divided by a _positive_ integer.
          *
          * This routine is only available when \a T is one of Regina's
          * own integer classes (Integer, LargeInteger, or NativeIntgeger).
@@ -1307,7 +1307,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Reduces the given column by dividing all its elements by their
          * greatest common divisor.  It is guaranteed that, if the column is
-         * changed at all, it will be divided by a \e positive integer.
+         * changed at all, it will be divided by a _positive_ integer.
          *
          * This routine is only available when \a T is one of Regina's
          * own integer classes (Integer, LargeInteger, or NativeIntgeger).

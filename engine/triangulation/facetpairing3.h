@@ -104,7 +104,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * This routine will skip any initial whitespace in the given input
          * stream.  Once it finds its first non-whitespace character,
-         * it will read the \e entire line from the input stream and expect
+         * it will read the _entire_ line from the input stream and expect
          * that line to containin the text representation of a facet pairing.
          *
          * If the data found in the input stream is invalid, incomplete or

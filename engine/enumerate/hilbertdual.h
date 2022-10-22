@@ -120,12 +120,12 @@ class HilbertDual {
          * of basis vectors will contain no duplicates or redundancies.
          *
          * Parameter \a constraints may contain a set of validity constraints,
-         * in which case this routine will only return \e valid basis elements.
+         * in which case this routine will only return _valid_ basis elements.
          * Each validity constraint is of the form "a basis element may only
          * lie outside at most one of these facets of the original
          * cone"; see the ValidityConstraints class for details.  These
          * contraints have the important property that, although validity is
-         * not preserved under addition, \e invalidity is.
+         * not preserved under addition, _invalidity_ is.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation

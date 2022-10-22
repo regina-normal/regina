@@ -251,7 +251,7 @@ class Primes {
          * Adds the given number of primes (or suspected primes) to the
          * list already stored.
          *
-         * This routine is \e not thread-safe.  It should only be called
+         * This routine is _not_ thread-safe.  It should only be called
          * when \a largeMutex is locked.
          *
          * \param extras the number of additional suspected primes to

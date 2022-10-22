@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
- * A class \e T that implements tight encodings (and optionally decodings) can
+ * A class \a T that implements tight encodings (and optionally decodings) can
  * derive its test class from TightEncodingTest<T, ...>, which will give its
  * test class an inherited function verifyTightEncoding(const T&).
  *

@@ -504,7 +504,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * correct orientation.
          *
          * If this simplex (and therefore the face \a F) belongs to an
-         * \e orientable component of the triangulation, then there will also
+         * _orientable_ component of the triangulation, then there will also
          * be connections between faceMapping() and the orientations of the
          * top-dimensional simplices (as returned by orientation()):
          *

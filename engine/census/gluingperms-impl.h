@@ -33,7 +33,7 @@
 /*! \file census/gluingperms-impl.h
  *  \brief Contains implementation details for the GluingPerms class template.
  *
- *  This file is \e not included automatically by gluingperms.h.
+ *  This file is _not_ included automatically by gluingperms.h.
  *  However, typical end users should never need to include it, since
  *  Regina's calculation engine provides full explicit instantiations
  *  of GluingPerms for \ref stddim "standard dimensions".

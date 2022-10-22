@@ -113,7 +113,7 @@ inline constexpr char base64Table[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 /**
- * A table of printable characters that are \e not amongst the base64
+ * A table of printable characters that are _not_ amongst the base64
  * printable characters used by Regina.
  *
  * These characters could be used (for example) to mark the boundaries of

@@ -57,11 +57,11 @@ template <class T, bool supportsUtf8 = false> struct Output;
  *
  * Three types of output are supported:
  *
- * - \e short output, which fits on a single line and uses plain ASCII
+ * - _short_ output, which fits on a single line and uses plain ASCII
  *   characters wherever possible;
- * - \e utf8 output, which is like short output but supports the much richer
+ * - _utf8_ output, which is like short output but supports the much richer
  *   unicode character set; and
- * - \e detailed output, which may be arbitrarily long.
+ * - _detailed_ output, which may be arbitrarily long.
  *
  * Any class that provides text output should ultimately inherit from
  * this base class.  Your derived class must provide two functions:
@@ -106,7 +106,7 @@ template <class T, bool supportsUtf8 = false> struct Output;
  * This Output base class will still provide a utf8() function, but it will
  * return the same output as short().
  *
- * \note Every object of this class that is ever instantiated \e must be
+ * \note Every object of this class that is ever instantiated _must_ be
  * derived from the class \a T.  In other words, end users can construct
  * objects of type \a T (which derives from Output<T>), but they cannot
  * construct objects of the parent class Output<T> itself.

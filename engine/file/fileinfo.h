@@ -206,7 +206,7 @@ class FileInfo : public Output<FileInfo> {
          * Return information about the given Regina data file.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given path \e name,
+         * \ref i18n "character encoding" used in the given path _name_,
          * and simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  If a FileInfo structure is returned, its pathname()
          * routine will use the same encoding that is passed here.

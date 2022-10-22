@@ -259,10 +259,10 @@ class GraphLoop : public Manifold {
          * Determines whether this and the given object contain precisely
          * the same presentations of the same graph manifold.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the matching matrix
          * and the specific presentation of the bounded Seifert fibred space,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *
@@ -276,10 +276,10 @@ class GraphLoop : public Manifold {
          * Determines whether this and the given object do not contain
          * precisely the same presentations of the same graph manifold.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the matching matrix
          * and the specific presentation of the bounded Seifert fibred space,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same graph manifold,
          * they will be treated as not equal by this routine.
          *

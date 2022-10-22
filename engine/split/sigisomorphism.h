@@ -61,7 +61,7 @@ namespace regina {
  * must map to cycles within the <i>k</i>th cycle group of the
  * destination signature.
  *
- * A \e partial isomorphism is only required to map the cycles
+ * A _partial_ isomorphism is only required to map the cycles
  * and symbols found in the first \a g cycle groups of the
  * source isomorphism (for some \a g).  If only a subset of symbols
  * are mapped, that subset must be symbols 0,1,...,\a k for some \a k.

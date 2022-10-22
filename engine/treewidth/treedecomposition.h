@@ -121,13 +121,13 @@ enum BagComparison {
 };
 
 /**
- * Used to indicate the type of each bag in a \e nice tree decomposition.
+ * Used to indicate the type of each bag in a _nice_ tree decomposition.
  *
  * A nice tree decomposition is produced by calling
  * TreeDecomposition::makeNice().  As a result:
  *
- * - every bag will be either an \e introduce bag, a \e forget bag, or a
- *   \e join bag, as defined below;
+ * - every bag will be either an _introduce_ bag, a _forget_ bag, or a
+ *   _join_ bag, as defined below;
  *
  * - the root bag will be a forget bag, and will be empty;
  *
@@ -141,7 +141,7 @@ enum BagComparison {
  */
 enum NiceType {
     /**
-     * Indicates an introduce bag.  An \e introduce bag has only one child bag.
+     * Indicates an introduce bag.  An _introduce_ bag has only one child bag.
      * It contains all of the nodes in this child bag plus exactly one
      * new node, and contains no other nodes besides these.
      *
@@ -151,13 +151,13 @@ enum NiceType {
      */
     NICE_INTRODUCE = 1,
     /**
-     * Indicates a forget bag.  A \e forget bag has only one child bag.
+     * Indicates a forget bag.  A _forget_ bag has only one child bag.
      * It contains all of the nodes in this child bag except for exactly one
      * missing node, and contains no other nodes besides these.
      */
     NICE_FORGET = 2,
     /**
-     * Indicates a join bag.  A \e join bag has exactly two child bags,
+     * Indicates a join bag.  A _join_ bag has exactly two child bags,
      * where the join bag and both of its child bags are all identical.
      */
     NICE_JOIN = 3
@@ -168,7 +168,7 @@ enum NiceType {
  *
  * The class TreeDecomposition is used to build, manipulate and iterate
  * over tree decompositions of graphs.  A tree decomposition of a graph \a G
- * consists of (i) an underlying tree \a T; and (ii) a \e bag at every node of
+ * consists of (i) an underlying tree \a T; and (ii) a _bag_ at every node of
  * this tree.  Each bag is a set of zero or more nodes of \a G, and
  * these bags are subject to various constraints as described in the
  * TreeDecomposition class notes.
@@ -190,12 +190,12 @@ enum NiceType {
  * - You can iterate through all the bags in the tree decomposition
  *   with the help of member functions next(), nextPrefix() and index().
  *
- * - If the tree decomposition is of a special type (such as a \e nice
+ * - If the tree decomposition is of a special type (such as a _nice_
  *   tree decomposition), then each bag may be adorned with some additional
  *   information; you can access this through the member functions type()
  *   and subtype().
  *
- * To \e build a tree decomposition of a graph, see the various
+ * To _build_ a tree decomposition of a graph, see the various
  * TreeDecomposition class constructors.
  *
  * Note that a bag may be empty (indeed, if you call
@@ -322,7 +322,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *   defined) will typically depend on the return value of type().
          *
          * At present, types and subtypes are only stored for
-         * \e nice tree decompositions.  See TreeDecomposition::makeNice()
+         * _nice_ tree decompositions.  See TreeDecomposition::makeNice()
          * for details on what type() and subtype() represent.
          *
          * \return a non-zero value indicating the role that this bag plays
@@ -349,7 +349,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *   on the value of type().
          *
          * At present, types and subtypes are only stored for
-         * \e nice tree decompositions.  See TreeDecomposition::makeNice()
+         * _nice_ tree decompositions.  See TreeDecomposition::makeNice()
          * for details on what type() and subtype() represent.
          *
          * \return additional information indicating the role that this
@@ -378,7 +378,7 @@ class TreeBag : public ShortOutput<TreeBag> {
 
         /**
          * Used for a postfix iteration through all of the bags in a tree
-         * decomposition.  Amongst other things, a \e postfix iteration is
+         * decomposition.  Amongst other things, a _postfix_ iteration is
          * one in which all of the children of any bag \a b will be processed
          * before \a b itself.
          *
@@ -405,7 +405,7 @@ class TreeBag : public ShortOutput<TreeBag> {
         const TreeBag* next() const;
         /**
          * Used for a prefix iteration through all of the bags in a tree
-         * decomposition.  Amongst other things, a \e prefix iteration is
+         * decomposition.  Amongst other things, a _prefix_ iteration is
          * one in which each bag will be processed before any of its children.
          *
          * If \a d is a non-empty tree decomposition, then you can complete a
@@ -490,7 +490,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * graph nodes.
          *
          * Specifically, the member \a size_ will be set and the array
-         * \e elements_ will be allocated to this size, but the \e contents of
+         * \e elements_ will be allocated to this size, but the _contents_ of
          * the array (i.e., the graph nodes themselves) will be left
          * uninitialised.
          *
@@ -566,7 +566,7 @@ class TreeBag : public ShortOutput<TreeBag> {
  * tractable algorithms on triangulated manifolds.
  *
  * Given a graph \a G, a tree decomposition of \a G consists of
- * (i) an underlying tree \a T; and (ii) a \e bag at every node of
+ * (i) an underlying tree \a T; and (ii) a _bag_ at every node of
  * this tree.  Each bag is a set of zero or more nodes of \a G, and
  * these bags are subject to the following constraints:
  *
@@ -574,7 +574,7 @@ class TreeBag : public ShortOutput<TreeBag> {
  *
  * - Every arc of \a G has both its endpoints in some common bag;
  *
- * - For every node \a v of \a G, the set of \e all bags containing \a v
+ * - For every node \a v of \a G, the set of _all_ bags containing \a v
  *   forms a (connected) subtree of \a T.
  *
  * In Regina, the underlying tree \a T is a rooted tree, so that every
@@ -583,8 +583,8 @@ class TreeBag : public ShortOutput<TreeBag> {
  *
  * Tree decompositions are generally considered "better" if their bags
  * are smaller (i.e., contain fewer nodes of \a G).  To this end, the
- * \e width of a tree decomposition is one less than its largest bag size,
- * and the \e treewidth of \a G is the minimum width over all tree
+ * _width_ of a tree decomposition is one less than its largest bag size,
+ * and the _treewidth_ of \a G is the minimum width over all tree
  * decompositions of \a G.
  *
  * A tree decomposition is described by a single TreeDecomposition object,
@@ -615,13 +615,13 @@ class TreeBag : public ShortOutput<TreeBag> {
  * This bag numbering may be useful if you wish to store auxiliary information
  * alongside each bag in a separate array.  You can access this numbering
  * through the function TreeBag::index().  However, note that
- * TreeDecomposition does \e not store its bags in an array, and so
+ * TreeDecomposition does _not_ store its bags in an array, and so
  * the "random access" function bag() is slow, with worst-case linear time.
  *
  * There are two broad classes of algorithms for building tree
- * decompositions: (i) \e exact algorithms, which are slow but guarantee to
+ * decompositions: (i) _exact_ algorithms, which are slow but guarantee to
  * find a tree decomposition of the smallest possible width; and
- * (ii) \e greedy algorithms, which are fast and which aim to keep the width
+ * (ii) _greedy_ algorithms, which are fast and which aim to keep the width
  * small but which do not promise minimality.  Currently Regina only
  * offers greedy algorithms, though this may change in a future release.
  * See the TreeDecompositionAlg enumeration for a list of all algorithms
@@ -939,7 +939,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
         const TreeBag* root() const;
         /**
          * Used for a postfix iteration through all of the bags in the tree
-         * decomposition.  Amongst other things, a \e postfix iteration is
+         * decomposition.  Amongst other things, a _postfix_ iteration is
          * one in which all of the children of any bag \a b will be processed
          * before \a b itself.
          *
@@ -965,7 +965,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
         const TreeBag* first() const;
         /**
          * Used for a prefix iteration through all of the bags in the tree
-         * decomposition.  Amongst other things, a \e prefix iteration is
+         * decomposition.  Amongst other things, a _prefix_ iteration is
          * one in which each bag will be processed before any of its children.
          *
          * If \a d is a non-empty tree decomposition, then you can complete a
@@ -997,11 +997,11 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * 0,1,...,size()-1.  This routine returns the bag with the
          * given number.
          *
-         * This routine is linear-time, and so you should \e not use it
+         * This routine is linear-time, and so you should _not_ use it
          * to iterate through all bags.  Instead, to iterate through all
          * bags, use TreeDecomposition::first() and TreeBag::next().
          *
-         * \warning This routine is \e slow, with a worst-case linear time.
+         * \warning This routine is _slow_, with a worst-case linear time.
          * This is because the bags are not stored internally in an
          * array, and so this routine must search the tree from the root
          * downwards to find the bag that is being requested.
@@ -1030,18 +1030,18 @@ class TreeDecomposition : public Output<TreeDecomposition> {
         /**
          * Converts this into a nice tree decomposition.
          *
-         * A \e nice tree decomposition is one in which every bag is one of
+         * A _nice_ tree decomposition is one in which every bag is one of
          * the following types:
          *
-         * - an \e introduce bag, which has only one child bag, and which
+         * - an _introduce_ bag, which has only one child bag, and which
          *   contains all of the nodes in this child bag plus exactly one
          *   new node (and nothing else);
          *
-         * - a \e forget bag, which has only one child bag, and which contains
+         * - a _forget_ bag, which has only one child bag, and which contains
          *   all of the nodes in this child bag except for exactly one
          *   missing node (and nothing else);
          *
-         * - a \e join bag, which has exactly two child bags, and where each
+         * - a _join_ bag, which has exactly two child bags, and where each
          *   child bag contains exactly the same nodes as the join bag itself.
          *
          * As a special case, each leaf bag (which has no child bags at all)
@@ -1080,8 +1080,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * These should be considered hints only, in that their effect on the
          * final tree decomposition might change in future versions of Regina.
          *
-         * \warning Note that TreeBag::subtype() is \e not the number of
-         * the new or missing node, but instead gives the \e index of the
+         * \warning Note that TreeBag::subtype() is _not_ the number of
+         * the new or missing node, but instead gives the _index_ of the
          * new or missing node within the relevant bag.
          *
          * \note This routine calls compress() automatically, and so
@@ -1134,13 +1134,13 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * at index \a i in the original tree decomposition, and let \a p be
          * its parent bag.
          *
-         * - `costSame[i]` indicates the cost of \e preserving the
+         * - `costSame[i]` indicates the cost of _preserving_ the
          *   parent-child relationship between \a b and \a p (i.e.,
          *   after rerooting, \a p is still the parent bag of \a b).
          *   If \e b is the root bag of the original tree decomposition
          *   then `costSame[i]` is ignored.
          *
-         * - `costReverse[i]` indicates the cost of \e reversing the
+         * - `costReverse[i]` indicates the cost of _reversing_ the
          *   parent-child relationship between \a b and \a p (i.e.,
          *   after rerooting, \a b is now the parent bag of \a p).
          *   Again, if \e b is the root bag of the original tree decomposition
@@ -1155,15 +1155,15 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * costs to aggregate: this comes from size()-1 costs from the arrays
          * \a costSame and/or \a costReverse (one for each connection
          * between bags in the underlying tree), and one cost from \a costRoot.
-         * These costs will be aggregated by taking the \e maximum over
+         * These costs will be aggregated by taking the _maximum_ over
          * all individual costs.  This means that you do not need to
          * estimate running times and/or memory consumption accurately;
          * instead you only need to find some heuristic that aims to be
-         * \e monotonic in time and/or memory.
+         * _monotonic_ in time and/or memory.
          *
          * So: in essence then, this routine minimises the maximum cost.
          * In the case of a tie, it then minimises multiplicity; that is,
-         * it minimises the \e number of times that this maximum cost occurs
+         * it minimises the _number_ of times that this maximum cost occurs
          * over the individual size() costs that are being aggregated.
          *
          * Note that the \a costSame and \a costReverse arrays are
@@ -1175,7 +1175,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *   if its relationship with its parent is preserved;
          *
          * - `costReverse[i]` estimates the processing cost at the
-         *   original \e parent of bag \a i if its relationship with bag \a i
+         *   original _parent_ of bag \a i if its relationship with bag \a i
          *   is reversed (i.e., it becomes a child of bag \a i);
          *
          * - `costRoot[i]` estimates the processing cost at bag \a i
@@ -1262,7 +1262,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * fromPACE(const std::string&).
          *
          * If you write a tree decomposition using pace() or writePACE()
-         * and then read it again using fromPACE(), you are \e not guaranteed
+         * and then read it again using fromPACE(), you are _not_ guaranteed
          * to obtain an identical tree decomposition.  This is because
          * the PACE text format stores the connections between bags as an
          * undirected, unrooted tree.

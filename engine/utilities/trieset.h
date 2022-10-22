@@ -47,8 +47,8 @@ namespace regina {
 
 /**
  * A trie-like data structure for storing and retriving sets.
- * This class is useful when the \e elements of these sets are taken from a
- * fairly small universe, but where the \e number of sets being stored
+ * This class is useful when the _elements_ of these sets are taken from a
+ * fairly small universe, but where the _number_ of sets being stored
  * can be extremely large.
  *
  * For simplicity, let the universe consist of the integers 0,...,(<i>n</i>-1).
@@ -101,7 +101,7 @@ class TrieSet : public Output<TrieSet> {
                      corresponding child pointer will be \c null. */
             size_t descendants_;
                 /**< The number of sets stored at or beneath this node in
-                     the tree.  The number of sets stored \e precisely at
+                     the tree.  The number of sets stored _precisely_ at
                      this node can be computed by subtracting the descendant
                      counts for each child node. */
 
@@ -216,7 +216,7 @@ class TrieSet : public Output<TrieSet> {
         /**
          * Determines whether this collection of sets contains any subset
          * of the argument \a superset.
-         * Subsets need not be \e proper subsets (so if an exact copy of
+         * Subsets need not be _proper_ subsets (so if an exact copy of
          * \a superset is found in the tree then this will suffice).
          *
          * This routine has a slow running time, which in
@@ -246,9 +246,9 @@ class TrieSet : public Output<TrieSet> {
          *
          * This routine asks the following question:  In this collection
          * of sets, is there any superset of the argument \a subset
-         * \e other than \a exc1 or \a exc2?  Here the sets \a exc1 and
+         * _other_ than \a exc1 or \a exc2?  Here the sets \a exc1 and
          * \a exc2 are explicitly excluded from our search.  Supersets
-         * need not be \e proper supersets (so if an exact copy of
+         * need not be _proper_ supersets (so if an exact copy of
          * \a subset is found in the tree then this will suffice).
          *
          * This routine has a slow running time, which in

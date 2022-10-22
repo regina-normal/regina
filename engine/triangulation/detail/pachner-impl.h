@@ -34,7 +34,7 @@
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
- *  This file is \e not included from triangulate.h, and it is not
+ *  This file is _not_ included from triangulate.h, and it is not
  *  shipped with Regina's development headers.  The routines it contains are
  *  explicitly instantiated in Regina's calculation engine for all dimensions.
  *
@@ -74,7 +74,7 @@ namespace regina::detail {
      * topological ball.  For the new simplices, this will be the actual
      * labelling of the simplices (since Regina gets to create the
      * new simplices).  For the old simplices, however, this will
-     * \e not be the actual labelling of the simplices (since this is
+     * _not_ be the actual labelling of the simplices (since this is
      * provided by the user, and is out of Regina's control).
      *
      * For the details of Regina's "canonical" labelling of simplices,

@@ -74,7 +74,7 @@ class HyperCompatibilityUI : public QObject, public PacketViewerTab {
          *
          * These are null if there are too many surfaces, or real objects
          * if we aim to display the matrices.  Note that, even if these
-         * are real objects, we do not \e fill the canvases with data
+         * are real objects, we do not _fill_ the canvases with data
          * points until the user actually tries to display them.
          */
         CompatCanvas* matrixLocal;

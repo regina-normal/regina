@@ -96,7 +96,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          * If \a autoUpdate is \c false, then contents of this chooser will
          * only be updated when refresh() is manually called.  Be careful
          * when using this setting, since if the triangulation changes
-         * but the chooser is \e not refreshed, then selected() may end
+         * but the chooser is _not_ refreshed, then selected() may end
          * up returning an invalid pointer.
          *
          * The given filter may be 0, in which case every edge/integer
@@ -122,7 +122,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          * chooser, or if the given pointer is 0, then the first entry
          * in the chooser will be selected.
          *
-         * The activated() signal will \e not be emitted.
+         * The activated() signal will _not_ be emitted.
          */
         void select(regina::Edge<3>* option, int arg);
 

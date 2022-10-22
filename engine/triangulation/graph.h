@@ -257,7 +257,7 @@ namespace graph {
              * position in the list of (<i>dim</i>-1)-faces of the
              * triangulation.
              *
-             * If \a it points to a \e boundary (<i>dim</i>-1)-face, then
+             * If \a it points to a _boundary_ (<i>dim</i>-1)-face, then
              * the dual edge iterator will automatically skip through the list
              * of (<i>dim</i>-1)-faces until it either locates an internal
              * face or moves past-the-end.  For this reason, it is not

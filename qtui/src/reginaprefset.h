@@ -323,7 +323,7 @@ class ReginaPrefSet : public QObject {
         /**
          * Emitted from the global ReginaPrefSet instance when the
          * global preferences have changed.  If the recent files list
-         * changes, this signal will \e not be emitted; however, one or
+         * changes, this signal will _not_ be emitted; however, one or
          * more of the recent files signals will be emitted instead.
          */
         void preferencesChanged();

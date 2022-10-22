@@ -78,7 +78,7 @@ template <int> class Triangulation;
 
 /**
  * Indicates one of the standard framings of a knot or link.
- * Here a \e framing refers to a choice of normal vector field along the
+ * Here a _framing_ refers to a choice of normal vector field along the
  * knot or link.  Equivalently, a framing refers to a choice of longitude
  * on the torus bounding each component of the link.
  *
@@ -121,7 +121,7 @@ enum Framing {
  *
  * A "null reference" is one whose crossing is the null pointer.
  *
- * This class can also be used to refer to an \e arc of a link; that is,
+ * This class can also be used to refer to an _arc_ of a link; that is,
  * a section of the link that runs from one crossing to the next.
  * When used in this way:
  *
@@ -228,7 +228,7 @@ class StrandRef {
          * same values for both crossing() and strand().
          *
          * \warning If you create a null reference by calling
-         * StrandRef(\c null, 1) then this will \e not be considered
+         * StrandRef(\c null, 1) then this will _not_ be considered
          * equal to the null reference created by calling StrandRef(),
          * since the latter is equivalent to calling StrandRef(\c null, 0).
          *
@@ -242,7 +242,7 @@ class StrandRef {
          * same values for both crossing() and strand().
          *
          * \warning If you create a null reference by calling
-         * StrandRef(\c null, 1) then this will \e not be considered
+         * StrandRef(\c null, 1) then this will _not_ be considered
          * equal to the null reference created by calling StrandRef(),
          * since the latter is equivalent to calling StrandRef(\c null, 0).
          *
@@ -610,7 +610,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
  *   not support a label, tags, child/parent packets, and/or event listeners.
  *
  * - To include a Link in the packet tree, you must create a new
- *   PacketOf<Link>.  This \e is a packet type, and supports labels, tags,
+ *   PacketOf<Link>.  This _is_ a packet type, and supports labels, tags,
  *   child/parent packets, and event listeners.  It derives from Link,
  *   and so inherits the full Link interface.
  *
@@ -803,7 +803,7 @@ class Link :
          * does not fire any change events.  This is because this link
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
          * \param src the link to move.
          */
@@ -1121,9 +1121,9 @@ class Link :
          *
          * The link that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this link which may in turn call arbitrary code
-         * via any registered packet listeners.  It deliberately does \e not
+         * via any registered packet listeners.  It deliberately does _not_
          * fire change events on \a src, since it assumes that \a src is about
          * to be destroyed (which will fire a destruction event instead).
          *
@@ -1146,7 +1146,7 @@ class Link :
          * This routine will behave correctly if \a other is in fact
          * this link.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both links which may in turn call arbitrary
          * code via any registered packet listeners.
          *
@@ -1175,7 +1175,7 @@ class Link :
          * switch connections with the two outgoing strands, with the
          * result that the given crossing is removed entirely.
          *
-         * \note The number of components in the link \e will change
+         * \note The number of components in the link _will_ change
          * as a result of this operation.
          *
          * \param c the crossing to resolve.
@@ -1306,7 +1306,7 @@ class Link :
          * zero-crossing components then the first such component will be used.
          *
          * This move is almost always able to be performed: the only situation
-         * in which it \e cannot be performed is if \a arc is a null reference
+         * in which it _cannot_ be performed is if \a arc is a null reference
          * but this link contains no zero-crossing components, as discussed
          * above.
          *
@@ -1505,8 +1505,8 @@ class Link :
          * and if there are multiple zero-crossing components then the first
          * such component will be used.
          *
-         * Likewise, if \e both arcs are null references, then the move
-         * will be performed upon two \e different zero-crossing unknot
+         * Likewise, if _both_ arcs are null references, then the move
+         * will be performed upon two _different_ zero-crossing unknot
          * components.  In this case, if there are fewer than two such
          * components then the move cannot be performed, and otherwise
          * \a upperArc will be the first such component and \a lowerArc
@@ -1656,7 +1656,7 @@ class Link :
          *
          * The location of this move is specified by the arguments \a crossing
          * and \a side.  Specifically, this move takes place around a
-         * triangle, and one of the arcs of this triangle is \e uppermost (in
+         * triangle, and one of the arcs of this triangle is _uppermost_ (in
          * that it passes above the other two arcs).  The given crossing
          * should be the start point of this uppermost arc; that is, when
          * following the arc forwards, \a crossing should be the first of the
@@ -1703,14 +1703,14 @@ class Link :
          * Currently this routine is only available for knots, not
          * multiple-component links.
          *
-         * A \e pass move involves taking a section of the knot that
+         * A _pass_ move involves taking a section of the knot that
          * involves only over-crossings (or only under-crossings), and
          * then lifting that section above (or beneath respectively) the
          * diagram and placing it back again in a different location.
          * In particular, this routine searches for a different location
          * that will involve fewer crossings than the original location.
          *
-         * This routine does not actually \e perform the pass move; it
+         * This routine does not actually _perform_ the pass move; it
          * simply determines whether one exists.
          *
          * The running time is cubic in the number of crossings.
@@ -1725,7 +1725,7 @@ class Link :
 
         /**
          * Adds trivial twists to this link to ensure that each component has
-         * zero writhe.  Here the \e writhe of a component \a c is the sum of
+         * zero writhe.  Here the _writhe_ of a component \a c is the sum of
          * the signs of all crossings at which \a c crosses itself.
          *
          * Any component(s) that already have zero writhe will be left
@@ -1805,7 +1805,7 @@ class Link :
          * reached from this via Reidemeister moves, without ever exceeding
          * \a height additional crossings beyond the original number.
          *
-         * If at any stage it finds a diagram with \e fewer
+         * If at any stage it finds a diagram with _fewer_
          * crossings than the original, then this routine will call
          * intelligentSimplify() to simplify the diagram further if
          * possible and will then return \c true.  If it cannot find a
@@ -1821,14 +1821,14 @@ class Link :
          * either you find a simplification or the routine becomes
          * too expensive to run.
          *
-         * If \a height is negative, then there will be \e no bound on
+         * If \a height is negative, then there will be _no_ bound on
          * the number of additional crossings.  This means that the
          * routine will not terminate until a simpler diagram is found.
          * If no simpler diagram exists then the only way to terminate this
          * function is to cancel the operation via a progress tracker
          * (read on for details).
          *
-         * If you want a \e fast simplification routine, you should call
+         * If you want a _fast_ simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
          * is that, for very stubborn knot diagrams where intelligentSimplify()
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
@@ -1861,7 +1861,7 @@ class Link :
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
-         * \param height the maximum number of \e additional crossings to
+         * \param height the maximum number of _additional_ crossings to
          * allow beyond the number of crossings originally present in this
          * diagram, or a negative number if this should not be bounded.
          * \param nThreads the number of threads to use.  If this is
@@ -1936,7 +1936,7 @@ class Link :
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
-         * If \a height is negative, then there will be \e no bound on
+         * If \a height is negative, then there will be _no_ bound on
          * the number of additional crossings.  This means that the
          * routine will _never terminate_, unless \a action returns
          * \c true for some knot diagram that is passed to it.
@@ -1973,7 +1973,7 @@ class Link :
          * (const std::string&, Link&&) representing the knot signature and
          * the knot diagram, as described in option (b) above.
          *
-         * \param height the maximum number of \e additional crossings to
+         * \param height the maximum number of _additional_ crossings to
          * allow beyond the number of crossings originally present in this
          * knot diagram, or a negative number if this should not be bounded.
          * \param nThreads the number of threads to use.  If this is
@@ -2027,8 +2027,8 @@ class Link :
         /**
          * Returns whether this knot diagram is alternating.
          *
-         * Note that this routine cannot tell whether the \e knot is
-         * alternating (i.e., whether there \e exists an alternating diagram).
+         * Note that this routine cannot tell whether the _knot_ is
+         * alternating (i.e., whether there _exists_ an alternating diagram).
          * Instead, it simply returns whether this specific diagram is
          * alternating or not.
          *
@@ -2055,7 +2055,7 @@ class Link :
         /**
          * Returns the writhe of this link diagram.
          *
-         * This is \e not an invariant of the link; instead it depends
+         * This is _not_ an invariant of the link; instead it depends
          * on the particular link diagram.  It is computed as the sum
          * of the signs of all crossings.  It is preserved under
          * Reidemeister moves II and III, but not I.
@@ -2067,7 +2067,7 @@ class Link :
         /**
          * Returns the writhe of a single component of this link diagram.
          *
-         * This is the writhe of the diagram when all \e other components
+         * This is the writhe of the diagram when all _other_ components
          * are removed.  It is computed as the sum of the signs of all
          * crossings at which the given component crosses itself.
          *
@@ -2091,7 +2091,7 @@ class Link :
         /**
          * Returns the writhe of a single component of this link diagram.
          *
-         * This is the writhe of the diagram when all \e other components
+         * This is the writhe of the diagram when all _other_ components
          * are removed.  It is computed as the sum of the signs of all
          * crossings at which the given component crosses itself.
          *
@@ -2187,7 +2187,7 @@ class Link :
          *
          * \exception NotImplemented This link is \e so large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
-         * where \c int is 32-bit, this would require over a \e billion
+         * where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
@@ -2277,7 +2277,7 @@ class Link :
          *
          * \exception NotImplemented This link is \e so large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
-         * where \c int is 32-bit, this would require over a \e billion
+         * where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
@@ -2361,7 +2361,7 @@ class Link :
          *
          * \exception NotImplemented This link is \e so large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
-         * where \c int is 32-bit, this would require over a \e billion
+         * where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
@@ -2431,7 +2431,7 @@ class Link :
          *
          * \exception NotImplemented This link is \e so large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
-         * where \c int is 32-bit, this would require over a \e billion
+         * where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
@@ -2470,7 +2470,7 @@ class Link :
          *
          * \exception NotImplemented This link is \e so large that the maximum
          * possible strand ID cannot fit into an \c int.  (On a typical machine
-         * where \c int is 32-bit, this would require over a \e billion
+         * where \c int is 32-bit, this would require over a _billion_
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
@@ -2541,7 +2541,7 @@ class Link :
          * resulting 3-manifold triangulation.  Sometimes the presentation
          * obtained via the complement is better, and sometimes it is worse.
          *
-         * Currently this group is \e not cached; instead it is reconstructed
+         * Currently this group is _not_ cached; instead it is reconstructed
          * every time this function is called.  This behaviour may change in
          * future versions of Regina.
          *
@@ -2557,7 +2557,7 @@ class Link :
          *
          * See TreeDecomposition for further details on tree decompositions,
          * and see TreeDecomposition::makeNice() for details on what it
-         * means to be a \e nice tree decomposition.
+         * means to be a _nice_ tree decomposition.
          *
          * This routine is fast: it will use a greedy algorithm to find
          * a tree decomposition with (hopefully) small width, but with
@@ -2588,7 +2588,7 @@ class Link :
          *
          * By default, Regina will compute (and then cache) such a tree
          * decomposition itself, using in-built greedy heuristics.  This
-         * routine allows you to supply your \e own tree decomposition
+         * routine allows you to supply your _own_ tree decomposition
          * (which, for example, might be a smaller-width tree decomposition
          * that you found using third-party software).  By supplying
          * your own tree decomposition \e td through this routine,
@@ -2597,7 +2597,7 @@ class Link :
          * use instead.
          *
          * Regina may modify the given tree decomposition for its purposes.
-         * In particular, \e td does not need to be a \e nice tree
+         * In particular, \e td does not need to be a _nice_ tree
          * decomposition (indeed, it does not need to have any special
          * properties beyond the definition of a tree decomposition).
          * Regina will automatically create a nice tree decomposition
@@ -2699,7 +2699,7 @@ class Link :
          *   to be deduced using some variant of a planarity testing algorithm.
          *
          * If you need a code that specifies the knot uniquely and/or that
-         * is fast to parse, consider using the \e oriented Gauss code instead,
+         * is fast to parse, consider using the _oriented_ Gauss code instead,
          * which resolves both of these issues.
          *
          * A Gauss code for an <i>n</i>-crossing knot is described by
@@ -3028,18 +3028,18 @@ class Link :
          *   planarity testing algorithm.
          *
          * If you need a code that specifies the knot uniquely and/or that
-         * is fast to parse, consider using the \e oriented Gauss code instead,
+         * is fast to parse, consider using the _oriented_ Gauss code instead,
          * which resolves both of these issues.
          *
          * For an <i>n</i>-crossing knot, Regina supports two variants
          * of Dowker-Thistlethwaite notation:
          *
-         * - a \e numerical variant (the default), which is a sequence of
+         * - a _numerical_ variant (the default), which is a sequence of
          *   \a n even signed integers as described (amongst other places) in
          *   Section 2.2 of C. C. Adams, "The knot book", W. H. Freeman & Co.,
          *   1994;
          *
-         * - an \e alphabetical variant, which transforms the numerical
+         * - an _alphabetical_ variant, which transforms the numerical
          *   notation into a sequence of letters by replacing positive
          *   integers (2,4,6,...) with lower-case letters (\c a,\c b,\c c,...),
          *   and replacing negative integers (-2,-4,-6,...) with upper-case
@@ -3162,7 +3162,7 @@ class Link :
          * - If a link has any components that consist entirely of
          *   over-crossings (which must be unknots "placed on top of" the link
          *   diagram), a planar diagram code does not carry enough data to
-         *   reconstruct the \e orientation of these components.  The topology
+         *   reconstruct the _orientation_ of these components.  The topology
          *   will be preserved, but in general the combinatorics of such a link
          *   diagram cannot be reconstructed faithfully.
          *
@@ -3344,7 +3344,7 @@ class Link :
         std::string dumpConstruction() const;
 
         /**
-         * Constructs the \e signature for this knot diagram.
+         * Constructs the _signature_ for this knot diagram.
          *
          * A _signature_ is a compact text representation of a knot
          * diagram that unique determines the knot up to relabelling,
@@ -3486,7 +3486,7 @@ class Link :
          * \endcode
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, it does _not_ test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -3559,7 +3559,7 @@ class Link :
          * \endcode
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, it does _not_ test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -3593,7 +3593,7 @@ class Link :
          * See knotSig() for more information on knot signatures.
          *
          * Calling knotSig() followed by fromKnotSig() is not guaranteed to
-         * produce an \e identical knot diagram to the original, but it
+         * produce an _identical_ knot diagram to the original, but it
          * is guaranteed to produce one that is related by relabelling,
          * rotation, and optionally (according to the arguments that
          * were passed to knotSig()) reflection and/or reversal.
@@ -3632,7 +3632,7 @@ class Link :
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input routine _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
@@ -3699,11 +3699,11 @@ class Link :
          * code; for composite knots, the same Gauss code can describe
          * knots that are topologically inequivalent, even when allowing for
          * reflection.  If you need to reconstruct a knot uniquely, consider
-         * using the \e oriented Gauss code instead.
+         * using the _oriented_ Gauss code instead.
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -3745,11 +3745,11 @@ class Link :
          * code; for composite knots, the same Gauss code can describe
          * knots that are topologically inequivalent, even when allowing for
          * reflection.  If you need to reconstruct a knot uniquely, consider
-         * using the \e oriented Gauss code instead.
+         * using the _oriented_ Gauss code instead.
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -3818,7 +3818,7 @@ class Link :
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -3857,7 +3857,7 @@ class Link :
            { "+>1", "-<2", "+>3", "-<1", "+>2", "-<3" }
            \endverbatim
          *
-         * Each individual token should \e not contain any whitespace;
+         * Each individual token should _not_ contain any whitespace;
          * otherwise this routine may fail to parse the token(s) and
          * could throw an exception as a result.
          *
@@ -3869,7 +3869,7 @@ class Link :
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -3923,7 +3923,7 @@ class Link :
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -3960,7 +3960,7 @@ class Link :
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -4000,7 +4000,7 @@ class Link :
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -4070,7 +4070,7 @@ class Link :
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -4103,7 +4103,7 @@ class Link :
          * sequence of integers.  This sequence is given by passing a
          * pair of begin/end iterators.
          *
-         * This variant of fromDT() can only work with \e numerical
+         * This variant of fromDT() can only work with _numerical_
          * Dowker-Thistlethwaite notation.  Regina does understand alphabetic
          * Dowker-Thistlethwaite notation, but for this you will need to use
          * the string-based variant of fromDT().
@@ -4123,7 +4123,7 @@ class Link :
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -4225,7 +4225,7 @@ class Link :
          *
          * Note that some sources (again, such as the Knot Atlas) use the
          * special symbols \c Xp, \c Xm and \c P to change the meaning of the
-         * tuples.  Regina does \e not attribute any meaning to these symbols,
+         * tuples.  Regina does _not_ attribute any meaning to these symbols,
          * and will treat them as nothing more than separators.
          *
          * \warning If the link contains an unknotted loop that sits
@@ -4237,7 +4237,7 @@ class Link :
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -4284,7 +4284,7 @@ class Link :
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
-         * it does \e not test for planarity of the diagram.
+         * it does _not_ test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
@@ -4442,20 +4442,20 @@ class Link :
          * each crossing according to the given bitmask:
          *
          * - If the <i>i</i>th bit in \a mask is 0, this indicates that
-         *   crossing \a i should be resolved by turning \e left when
+         *   crossing \a i should be resolved by turning _left_ when
          *   entering along the upper strand.
          *
          * - If the <i>i</i>th bit in \a mask is 1, this indicates that
-         *   crossing \a i should be resolved by turning \e right when
+         *   crossing \a i should be resolved by turning _right_ when
          *   entering along the upper strand.
          *
          * If the array \a loopIDs is non-null, then it will be filled
          * with an identifier for each loop.  Each identifier will be
          * the minimum of the following values that are computed as you
          * follow the loop: when passing through crossing \a i, if we
-         * encounter the half of the upper strand that \e exits the crossing
+         * encounter the half of the upper strand that _exits_ the crossing
          * then we take the value \a i, and if we encounter the half of
-         * the upper strand that \e enters the crossing then we take the
+         * the upper strand that _enters_ the crossing then we take the
          * value (\a i + \a n).  These identifiers will be returned in the
          * array \a loopIDs in sorted order.
          *
@@ -4485,7 +4485,7 @@ class Link :
          * algorithm that sums over all resolutions of all crossings.
          *
          * The given progress tracker may be \c null.
-         * This routine does \e not mark the tracker as finished.
+         * This routine does _not_ mark the tracker as finished.
          *
          * See bracket() for further details.
          */
@@ -4496,7 +4496,7 @@ class Link :
          * tractable algorithm based on a tree decomposition.
          *
          * The given progress tracker may be \c null.
-         * This routine does \e not mark the tracker as finished.
+         * This routine does _not_ mark the tracker as finished.
          *
          * See bracket() for further details.
          *
@@ -4583,7 +4583,7 @@ class Link :
  *
  * See Link::swap() for more details.
  *
- * \note This swap function is \e not marked \c noexcept, since it
+ * \note This swap function is _not_ marked \c noexcept, since it
  * fires change events on both links which may in turn call arbitrary
  * code via any registered packet listeners.
  *

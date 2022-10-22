@@ -169,7 +169,7 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          *
          * Constructing the link of a edge begins with building the frontier
          * of a regular neighbourhood of the edge.  If this is already a
-         * normal hypersurface, then then link is called \e thin.  Otherwise
+         * normal hypersurface, then then link is called _thin_.  Otherwise
          * some basic normalisation steps are performed until the hypersurface
          * becomes normal; note that these normalisation steps could
          * change the topology of the hypersurface, and in some pathological

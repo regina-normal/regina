@@ -63,7 +63,7 @@ class SFSpace;
  * The boundary annuli are numbered consecutively as illustrated below,
  * where the markings 0 and 1 within the triangles represent the first
  * and second triangle of each annulus (see the SatAnnulus class notes for
- * details).  Note that the following diagram is viewed from \e inside
+ * details).  Note that the following diagram is viewed from _inside_
  * the block.
  *
  * <pre>
@@ -94,10 +94,10 @@ class SFSpace;
  * Saturated blocks are generally joined to one another (or themselves)
  * along their boundary annuli.  For this purpose, each saturated block
  * contains a list of which annulus of this block is adjacent to which
- * annulus of which other block.  Adjacencies may be \e reflected, meaning
+ * annulus of which other block.  Adjacencies may be _reflected_, meaning
  * that the adjacent annulus has its fibres reversed (i.e., the adjacent
  * annulus has undergone an up-to-down reflection); they may also be
- * \e backwards, meaning that the first triangle of one annulus is joined to
+ * _backwards_, meaning that the first triangle of one annulus is joined to
  * the second triangle of the other (and vice versa).
  *
  * This is an abstract base class: its subclasses correspond to different
@@ -158,7 +158,7 @@ class SatBlock : public ShortOutput<SatBlock> {
     public:
         /**
          * Destroys all internal arrays.  Note that any adjacent blocks
-         * that are referenced by the \a adjBlock array will \e not be
+         * that are referenced by the \a adjBlock array will _not_ be
          * destroyed.
          */
         virtual ~SatBlock();
@@ -304,7 +304,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * space over the annulus with one twisted reflector boundary (and
          * one twisted puncture corresponding to the block boundary) had
          * been replaced by this block.  In particular, this routine should
-         * \e not add the reflector boundary itself.
+         * _not_ add the reflector boundary itself.
          *
          * \param sfs the Seifert fibred space to adjust.
          * \param reflect \c true if this block is to be reflected, or
@@ -452,7 +452,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * - Two SatLST objects will compare as equal if their internal
          *   layered solid tori have the same three integer parameters
          *   (identifying how the meridinal disc meets the three boundary
-         *   edges), \e and their corresponding boundary edges are attached
+         *   edges), _and_ their corresponding boundary edges are attached
          *   to the horizontal/vertical/diagonal edges of the boundary
          *   annulus in the same way.
          *
@@ -693,7 +693,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * routine SatAnnulus::transform() will be called for each
          * boundary annulus).
          *
-         * Information regarding adjacent blocks will \e not be changed.
+         * Information regarding adjacent blocks will _not_ be changed.
          * Only structural information for this particular block will be
          * updated.
          *

@@ -279,7 +279,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
              * temporary basis only.
              *
              * This routine does test for bad input data, but it
-             * does \e not test for end-of-file.
+             * does _not_ test for end-of-file.
              *
              * \param in the input stream from which to read.
              * \param nStates the total number of edge states under
@@ -382,7 +382,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
              * releases.  Data in this format should be used on a short-term
              * temporary basis only.
              *
-             * This routine does test for bad input data, but it does \e not
+             * This routine does test for bad input data, but it does _not_
              * test for end-of-file.
              *
              * \param in the input stream from which to read.
@@ -996,7 +996,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * The argument \a twist is also modified to indicate what
          * rotation or reflection is used to identify vertices (0,1,2)
          * of the given triangle with vertices (0,1,2) of the class
-         * representative.  Note that this argument is \e not initialised.
+         * representative.  Note that this argument is _not_ initialised.
          * Instead, the original \a twist will be multiplied on the left
          * by the mapping described above.
          *

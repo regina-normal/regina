@@ -60,7 +60,7 @@ namespace regina {
  * It is however assumed that \a type will always be non-negative for
  * "meaningful" disc types.
  *
- * This class can also store a \e null disc type; this is obtained by calling
+ * This class can also store a _null_ disc type; this is obtained by calling
  * the default constructor, and it will have a type of -1 and a tetrahedron
  * index of 0.  You can test for a null disc type by casting to \c bool.
  *

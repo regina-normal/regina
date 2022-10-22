@@ -77,9 +77,9 @@ class Container;
  * whitespace and are numbered beginning at 0.
  *
  * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
+ * \ref i18n "character encoding" used in the given file _name_, and
  * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * It assumes however that the \e contents of the file are in UTF-8.
+ * It assumes however that the _contents_ of the file are in UTF-8.
  *
  * \param filename the name of the text file from which to read.
  * \param colDehydrations the column of the text file containing the

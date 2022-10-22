@@ -36,7 +36,7 @@
  *
  *  The accompanying source file (pythoninterpreter.cpp) should be built
  *  directly into each user interface that requires it.
- *  It is \e not built into Regina's python module.
+ *  It is _not_ built into Regina's python module.
  */
 
 #ifndef __PYTHONINTERPRETER_H
@@ -270,7 +270,7 @@ class PythonInterpreter {
          * session, such a function would exit the python * session; here it
          * just sets this flag so the enclosing GUI can clean up nicely.
          *
-         * This does \e not capture os._exit(), which will instead
+         * This does _not_ capture os._exit(), which will instead
          * immediately terminate the parent process (i.e., the enclosing GUI).
          */
         bool exitAttempted() const;
@@ -311,7 +311,7 @@ class PythonInterpreter {
          *
          * When this function is called, it is typically verifying a
          * precondition to some other member function of PythonInterpreter.
-         * Therefore the behaviour when this check \e fails is subject to
+         * Therefore the behaviour when this check _fails_ is subject to
          * change in future versions of Regina (since in theory, it should
          * never happen).
          */

@@ -179,7 +179,7 @@ struct Base64SigEncoding {
 
     /**
      * Returns a single base64 character that encodes up to three trits,
-     * given using an input iterator.  A \e trit is either 0, 1 or 2.
+     * given using an input iterator.  A _trit_ is either 0, 1 or 2.
      *
      * The given trits will be packed into a single base64 character, with
      * the first trit representing the lowest-significance bits of the
@@ -211,7 +211,7 @@ struct Base64SigEncoding {
 
     /**
      * Returns a single base64 character that encodes up to three trits,
-     * given using a fixed-size array.  A \e trit is either 0, 1 or 2.
+     * given using a fixed-size array.  A _trit_ is either 0, 1 or 2.
      *
      * The given trits will be packed into a single base64 character, with
      * the first trit representing the lowest-significance bits of the
@@ -244,7 +244,7 @@ struct Base64SigEncoding {
 
     /**
      * Decodes a single base64 character into three trits, and returns
-     * these using an output iterator.  A \e trit is either 0, 1 or 2.
+     * these using an output iterator.  A _trit_ is either 0, 1 or 2.
      *
      * The inverse to this routine is encodeTrits(); see that routine
      * for details of the encoding.
@@ -268,7 +268,7 @@ struct Base64SigEncoding {
 
     /**
      * Decodes a single base64 character into three trits, and returns
-     * these as a fixed-size array.  A \e trit is either 0, 1 or 2.
+     * these as a fixed-size array.  A _trit_ is either 0, 1 or 2.
      *
      * The inverse to this routine is encodeTrits(); see that routine
      * for details of the encoding.

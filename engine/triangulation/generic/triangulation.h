@@ -118,7 +118,7 @@ namespace regina {
  *   not support a label, tags, child/parent packets, and/or event listeners.
  *
  * - To include a Triangulation in the packet tree, you must create a new
- *   PacketOf<Triangulation>.  This \e is a packet type, and supports labels,
+ *   PacketOf<Triangulation>.  This _is_ a packet type, and supports labels,
  *   tags, child/parent packets, and event listeners.  It derives from
  *   Triangulation, and so inherits the full Triangulation interface.
  *
@@ -134,7 +134,7 @@ namespace regina {
  * even when passing or returning objects by value.
  *
  * For Regina's \ref stddim "standard dimensions", this template is specialised
- * and offers \e much more functionality.  In order to use these specialised
+ * and offers _much_ more functionality.  In order to use these specialised
  * classes, you will need to include the corresponding headers (e.g.,
  * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
  * for \a dim = 3).
@@ -219,7 +219,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * does not fire any change events.  This is because this triangulation
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
          * \param src the triangulation to move.
          */
@@ -264,10 +264,10 @@ class Triangulation : public detail::TriangulationBase<dim> {
          *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
          * code via any registered packet listeners.  It deliberately does
-         * \e not fire change events on \a src, since it assumes that \a src is
+         * _not_ fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
@@ -291,7 +291,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *

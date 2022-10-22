@@ -132,7 +132,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * does not fire any change events.  This is because this triangulation
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
          * \param src the triangulation to move.
          */
@@ -240,10 +240,10 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
          * code via any registered packet listeners.  It deliberately does
-         * \e not fire change events on \a src, since it assumes that \a src is
+         * _not_ fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
@@ -267,7 +267,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *

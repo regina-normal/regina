@@ -67,10 +67,10 @@ namespace regina {
  * in the base orbifold.
  *
  * The precise orientation of a block is described using two booleans.
- * A block may be reflected \e horizontally, which preserves the
+ * A block may be reflected _horizontally_, which preserves the
  * directions of Seifert fibres but which reverses the
  * clockwise/anticlockwise orientation as discussed above.  A block may
- * also be reflected \e vertically, which preserves the
+ * also be reflected _vertically_, which preserves the
  * clockwise/anticlockwise orientation but which reverses the directions
  * of the Seifert fibres.  A block may of course be reflected both
  * horizontally and vertically, or it may not be reflected at all.
@@ -430,7 +430,7 @@ class SatRegion : public Output<SatRegion> {
          * Currently the annuli are numbered lexicographically by
          * block and then by annulus number within the block, although
          * this ordering is subject to change in future versions of Regina.
-         * In particular, the annuli are \e not necessarily numbered in
+         * In particular, the annuli are _not_ necessarily numbered in
          * order around the region boundaries, and each region boundary
          * component might not even be given a consecutive range of numbers.
          *
@@ -703,7 +703,7 @@ class SatRegion : public Output<SatRegion> {
          * pure Python function.  However, \a action must take only one
          * argument: the newly constructed SatRegion (i.e., the first argument
          * in the description above).  The SatBlock::TetList& argument will
-         * \e not be passed, and there can be no additional argument list
+         * _not_ be passed, and there can be no additional argument list
          * \a args.
          *
          * \param tri the triangulation in which to search for starter blocks.
@@ -834,7 +834,7 @@ class SatRegion : public Output<SatRegion> {
          * \warning When joining blocks together, it is possible to
          * create invalid edges (e.g., by joining a one-annulus
          * untwisted boundary to a one-annulus twisted boundary).
-         * This routine does \e not check for such conditions.  It is
+         * This routine does _not_ check for such conditions.  It is
          * recommended that you run Triangulation<3>::isValid() before
          * calling this routine.
          *

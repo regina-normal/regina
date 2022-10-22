@@ -102,7 +102,7 @@ namespace regina {
  *     [o1]       [o0]
  * </pre>
  *
- * Note that the routines writeName() and writeTeXName() do \e not offer
+ * Note that the routines writeName() and writeTeXName() do _not_ offer
  * enough information to uniquely identify the triangulation, since this
  * essentially requires 2-dimensional assemblings of saturated blocks.
  * For more detail, writeTextLong() may be used instead.

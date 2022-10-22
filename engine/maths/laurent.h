@@ -292,13 +292,13 @@ class Laurent :
          * Returns the given coefficient of this polynomial.
          * There are no restrictions on the exponent \a exp.
          *
-         * \ifacespython Python users can also use this operator to \e set
+         * \ifacespython Python users can also use this operator to _set_
          * cofficients; that is, you can write `poly[exp] = value`.
-         * However, when \e getting a coefficient this operator will return
+         * However, when _getting_ a coefficient this operator will return
          * by value (to enforce constness), which means for example you
          * cannot write something like `poly[exp].negate()`.
          *
-         * \cpp For C++ users, this operator is read-only.  To \e set
+         * \cpp For C++ users, this operator is read-only.  To _set_
          * coefficients, you must use the separate routine set().
          *
          * \param exp the exponent of the term whose coefficient should
@@ -655,7 +655,7 @@ class Laurent :
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input routine _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
@@ -688,7 +688,7 @@ class Laurent :
          * coefficient array.
          *
          * The coefficient array may have leading or trailing zeroes,
-         * but if this is a possibility then you \e must pass
+         * but if this is a possibility then you _must_ pass
          * \a checkZeroes as \c true.
          */
         Laurent(long minExp, long maxExp, T* coeff, bool checkZeroes = false);

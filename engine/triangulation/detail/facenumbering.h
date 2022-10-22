@@ -120,7 +120,7 @@ class FaceNumberingAPI {
          * The remaining images \a c[(\a subdim + 1),...,\a dim] will
          * be ordered arbitrarily.
          *
-         * Note that this is \e not the same permutation as returned by
+         * Note that this is _not_ the same permutation as returned by
          * Simplex<dim>::faceMapping<subdim>():
          *
          * - ordering() is a static function, which returns the same permutation
@@ -201,7 +201,7 @@ class FaceNumberingAPI {
  * \tparam codim the codimension (<i>dim</i>-<i>subdim</i>-1) of the
  * faces being numbered.  Ideally this would be specified directly as
  * `dim-subdim-1` in the partial template specialisation, and this
- * \e should be legal according to CWG1315; however, it fails to build
+ * _should_ be legal according to CWG1315; however, it fails to build
  * under some versions of gcc (e.g., 10.2.0).
  *
  * \ingroup detail

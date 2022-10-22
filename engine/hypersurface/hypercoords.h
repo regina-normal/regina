@@ -88,7 +88,7 @@ enum HyperCoords {
  *
  * Normal hypersurfaces do not always store their internal vectors in the same
  * coordinate system that was used to enumerate the surfaces, and indeed
- * an isolated hypersurface does not know \e how it was originally created.
+ * an isolated hypersurface does not know _how_ it was originally created.
  *
  * Therefore each normal hypersurface keeps a small amount of data,
  * represented by this class, so that it knows how to interpret its
@@ -262,7 +262,7 @@ class HyperEncoding {
          * does actually contain vertex linking components; it simply
          * means that the user will need to test this themselves.
          * If this returns \c false, however, it is guaranteed that the
-         * hypersurface does \e not contain any vertex linking components,
+         * hypersurface does _not_ contain any vertex linking components,
          * with no further testing required.
          *
          * \return \c true if it is possible that the hypersurface might

@@ -141,7 +141,7 @@ class ModelLinkGraphArc {
          *
          * \warning If you create a null arc by calling
          * ModelLinkGraphArc(\c null, \a i) for some non-zero \a i, then this
-         * will \e not be considered equal to the null arc created by calling
+         * will _not_ be considered equal to the null arc created by calling
          * ModelLinkGraphArc(), since the latter is equivalent to calling
          * ModelLinkGraphArc(\c null, 0).
          *
@@ -156,7 +156,7 @@ class ModelLinkGraphArc {
          *
          * \warning If you create a null arc by calling
          * ModelLinkGraphArc(\c null, \a i) for some non-zero \a i, then this
-         * will \e not be considered equal to the null arc created by calling
+         * will _not_ be considered equal to the null arc created by calling
          * ModelLinkGraphArc(), since the latter is equivalent to calling
          * ModelLinkGraphArc(\c null, 0).
          *
@@ -364,7 +364,7 @@ class ModelLinkGraphNode : public MarkedElement,
         public ShortOutput<ModelLinkGraphNode> {
     private:
         ModelLinkGraphArc adj_[4];
-            /**< Stores the arcs at the \e other endpoints of the four
+            /**< Stores the arcs at the _other_ endpoints of the four
                  graph edges that exit this node.  The four arc references
                  are stored in a clockwise order around this node. */
 
@@ -402,7 +402,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * Recall that there are two ModelLinkGraphArc objects corresponding
          * to \a e, one for each of its endpoints.  One of these will
          * be ModelLinkGraphArc(\c this, \a which); this routine returns the
-         * \e other object, which is the ModelLinkGraphArc describing the other
+         * _other_ object, which is the ModelLinkGraphArc describing the other
          * endpoint of \a e.
          *
          * Note that for a node \a n, calling `n.adj(i)`
@@ -447,7 +447,7 @@ class ModelLinkGraphNode : public MarkedElement,
  * in a link diagram, would correspond to zero-crossing unknot components
  * of the link).
  *
- * This class is primarily designed for \e enumerating knots and links.
+ * This class is primarily designed for _enumerating_ knots and links.
  * If you wish to study the underlying graph of an existing link, you do
  * not need to create a ModelLinkGraph - instead the Link class already
  * gives you direct access to the graph structure.  In particular, if
@@ -677,23 +677,23 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * There are several possible outcomes:
          *
-         * - It is possible that there are \e no suitable arcs \a left and
+         * - It is possible that there are _no_ suitable arcs \a left and
          *   \a right.  In this case, this routine returns a pair of null arcs.
          *
          * - It is possible that there is exactly one pair of suitable arcs
          *   (\a left, \a right).  In this case, this pair will be returned.
          *
-         * - It is possible that there are \e many pairs of suitable arcs.
+         * - It is possible that there are _many_ pairs of suitable arcs.
          *   In this case, it can be shown that the suitable pairs have an
          *   ordering \a P_1, ..., \a P_k in which the flype disc for \a P_i
          *   is completely contained within the flype disc for \a P_j whenever
-         *   \a i < \a j.  In this case, this routine returns the \e smallest
+         *   \a i < \a j.  In this case, this routine returns the _smallest_
          *   pair \a P_1; that is, the pair (\a left, \a right) that gives
          *   the smallest possible flype disc.
          *
          * It should be noted that choosing only the smallest flype is not
          * a serious restriction: assuming the graph does not model a
-         * composition of non-trivial knot diagrams, \e any suitable flype
+         * composition of non-trivial knot diagrams, _any_ suitable flype
          * can be expressed as a composition of minimal flypes in this sense.
          *
          * \pre This graph is connected.
@@ -713,7 +713,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         /**
          * Performs a flype on this graph at the given location.
          *
-         * A \e flype is an operation on a disc in the plane.  The boundary
+         * A _flype_ is an operation on a disc in the plane.  The boundary
          * of the disc must cut through four arcs of the graph (and otherwise
          * must not meet the graph at all), as indicated in the diagram below.
          * Moreover, the two arcs that exit the disc on the left must meet at
@@ -800,7 +800,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * \exception InvalidArgument One or more of the preconditions
          * above fails to hold.  Be warned that the connectivity precondition
          * will not be checked - this is the user's responsibility - but all
-         * other preconditions \e will be checked, and an exception will
+         * other preconditions _will_ be checked, and an exception will
          * be thrown if any of them fails.
          *
          * \param from the first arc that indicates where the flype should
@@ -851,19 +851,19 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Exhaustively generates potentially-minimal knot diagrams that
          * are modelled by this graph.
          *
-         * Here \e potentially-minimal means there are no "obvious"
+         * Here _potentially-minimal_ means there are no "obvious"
          * simplification moves (such as a simplifying type II Reidemeister
          * move, for example).  The list of "obvious" moves considered
          * here is subject to change in future versions of Regina.
          *
-         * By \e exhaustive, we mean:
+         * By _exhaustive_, we mean:
          *
          * - Every minimal knot diagram modelled by this graph will be
          *   generated by this routine, up to reflection and/or reversal
          *   (as noted below).
          *
          * - If a knot diagram is non-minimal and modelled by this graph,
-         *   it \e might still be generated by this routine.
+         *   it _might_ still be generated by this routine.
          *
          * In other words, this routine will generate all minimal knot diagrams
          * modelled by this graph, but there is no promise that all of the
@@ -948,7 +948,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * recover the original string \a s.
          *
          * It is important to note the preconditions below: in particular,
-         * that this graph must be dual to a \e simple quadrangulation of
+         * that this graph must be dual to a _simple_ quadrangulation of
          * the sphere.  This is because the planar embeddings for more general
          * graphs (i.e., the duals of non-simple quadrangulations) cannot
          * always be uniquely reconstructed from their \e plantri output.
@@ -963,7 +963,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \pre This graph is connected.
          * \pre This graph has between 1 and 52 nodes inclusive.
-         * \pre The dual to this graph is a \e simple quadrangulation of the
+         * \pre The dual to this graph is a _simple_ quadrangulation of the
          * sphere.  In particular, the dual must not have any parallel edges.
          * Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
@@ -1015,7 +1015,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \pre This graph is connected.
          * \pre This graph has between 1 and 52 nodes inclusive.
-         * \pre The dual to this graph is a \e simple quadrangulation of the
+         * \pre The dual to this graph is a _simple_ quadrangulation of the
          * sphere.  In particular, the dual must not have any parallel edges.
          * Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
@@ -1087,7 +1087,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * followed by a comma-separated sequence of alphabetical strings
          * that encode the edges leaving each node.
          *
-         * This function \e only takes the comma-separated sequence of
+         * This function _only_ takes the comma-separated sequence of
          * alphabetical strings.  So, for example, to construct the graph
          * corresponding to the second line of output above, you could call:
          *
@@ -1115,7 +1115,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *   decode such graphs using \e plantri format at all.
          *
          * Even for graphs with at most 26 nodes, the given string does not
-         * \e need to be come from the program \e plantri itself.  Whereas
+         * _need_ to be come from the program \e plantri itself.  Whereas
          * \e plantri always outputs graphs with a particular canonical
          * labelling, this function can accept an arbitrary ordering of nodes
          * and arcs - in particular, it can accept the string
@@ -1126,18 +1126,18 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * This routine can also interpret the "tight" format that is
          * optionally produced by the member function canonicalPlantri()
-         * (even though such output would certainly \e not be produced by
+         * (even though such output would certainly _not_ be produced by
          * the program \e plantri).
          *
          * \warning While this routine does some basic error checking on the
          * input, these checks are not exhaustive.  In particular, it does
-         * \e not test for planarity of the graph.  (Of course \e plantri
+         * _not_ test for planarity of the graph.  (Of course \e plantri
          * does not output non-planar graphs, but a user could still construct
          * one by hand and passes it to this routine, in which case the
          * resulting behaviour is undefined.)
          *
          * \pre The graph being described is connected.
-         * \pre The graph being described is dual to a \e simple quadrangulation
+         * \pre The graph being described is dual to a _simple_ quadrangulation
          * of the sphere.  In particular, the dual must not have any parallel
          * edges.  Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
@@ -1226,7 +1226,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
                  this array store the arcs in order as they would appear if
                  you walked anticlockwise around the cell boundary (so the
                  2-cell is on the left of each arc as you follow them around).
-                 Each arc is described as an \e outgoing arc as you exit each
+                 Each arc is described as an _outgoing_ arc as you exit each
                  node in turn.  Note that this array contains every arc of the
                  underlying graph exactly once. */
         size_t* start_;
@@ -1262,7 +1262,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * ModelLinkGraph object also describes a planar embedding.
          *
          * The constructor for this class requires you to pass a graph
-         * that is already known to be connected.  However, \e assuming
+         * that is already known to be connected.  However, _assuming_
          * the graph is connected, the constructor then tests for the
          * remaining conditions.  This routine returns the results of these
          * tests: if the underlying graph is empty or does not describe a
@@ -1286,7 +1286,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * If isValid() returns \c false (i.e., the underlying ModelLinkGraph
          * is either empty or does not describe a planar embedding), then
          * this routine will return 0 instead.  Note that this routine
-         * \e cannot be used to test for connectivity, which is a
+         * _cannot_ be used to test for connectivity, which is a
          * non-negotiable precondition required by the class constructor.
          *
          * Note that, if isValid() returns \c true, then countCells()
@@ -1320,7 +1320,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * as you walk anticlockwise around the cell (so the cell is on
          * the left of each arc as you walk around the cell boundary).
          *
-         * Each arc is described in the form of an \e outgoing arc from some
+         * Each arc is described in the form of an _outgoing_ arc from some
          * node of the underlying graph (so if the return ModelLinkGraphArc
          * is \a a then this describes an outgoing arc from a.node()).
          * It follows that, if the underlying graph has \a n nodes, then
@@ -1462,7 +1462,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * the arc away from `arc.node()`.  The routine arc()
          * can be used to enumerate the sequence of arcs along the boundary of
          * this cell \a c, in order as you walk anticlockwise around the cell
-         * boundary.  The purpose of this routine is to identify \e where in
+         * boundary.  The purpose of this routine is to identify _where_ in
          * this sequence the given arc occurs.
          *
          * For any arc \a a, calling `arc(cell(a), cellPos(a))`

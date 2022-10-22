@@ -861,7 +861,7 @@ class DiscSetSurfaceDataImpl {
          * Moves the contents of the given disc set into this disc set.
          *
          * The running time of this operation is linear in the number of
-         * tetrahedra from the \e original triangulation (since the
+         * tetrahedra from the _original_ triangulation (since the
          * underlying data for those tetrahedra will be destroyed immediately).
          *
          * The disc set that was passed (\a src) will no longer be usable.

@@ -75,9 +75,9 @@ class Container;
  * whitespace and are numbered beginning at 0.
  *
  * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
+ * \ref i18n "character encoding" used in the given file _name_, and
  * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * It assumes however that the \e contents of the file are in UTF-8.
+ * It assumes however that the _contents_ of the file are in UTF-8.
  *
  * \tparam ObjectType Indicates which types of signatures the file contains.
  * This must be either Link (indicating that the file contains knot signatures),

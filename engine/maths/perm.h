@@ -528,7 +528,7 @@ class Perm {
         /**
          * Finds the reverse of this permutation.
          *
-         * Here \e reverse means that we reverse the images of
+         * Here _reverse_ means that we reverse the images of
          * 0,...,<i>n</i>-1.  In other words, if permutation \a q is the
          * reverse of \a p, then `p[i] == q[n - 1 - i]` for all \a i.
          */
@@ -764,7 +764,7 @@ class Perm {
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input routine _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
@@ -863,7 +863,7 @@ class Perm {
          * treated as invalid (i.e., this routine will throw an exception).
          *
          * If \a noTrailingData is \c true then the iterator is required to
-         * \e finish at \a limit, or else the encoding will be considered
+         * _finish_ at \a limit, or else the encoding will be considered
          * invalid also; if \a noTrailingData is \c false then there is no
          * constraint on the final state of the iterator.
          *

@@ -67,7 +67,7 @@ namespace regina {
  *   invalid (<i>dim</i>-1)-manifold with no real boundary.  Invalid vertex
  *   boundary components are only possible for dimensions \a dim ≥ 4.
  *
- * Ideal and invalid vertex boundary components are \e only recognised
+ * Ideal and invalid vertex boundary components are _only_ recognised
  * when \a dim is one of Regina's \ref stddim "standard dimensions".
  * This is because, in higher dimensions, the relevant conditions rely
  * on undecidable problems.
@@ -93,7 +93,7 @@ namespace regina {
  * (<i>dim</i>)-manifold boundary are effectively "pinched" together.
  * If this happens, the different parts of the boundary that are pinched
  * might or might not be listed as part of the same boundary component;
- * if not then the offending face will be included in \e all of these
+ * if not then the offending face will be included in _all_ of these
  * boundary components.  Nevertheless, only one of these can be considered
  * the "official" boundary component of the face as returned by
  * Face::boundaryComponent().  This is all a bit of a mess, but then again the

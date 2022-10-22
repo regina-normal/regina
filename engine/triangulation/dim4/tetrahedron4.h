@@ -76,7 +76,7 @@ class Face<4, 3> : public detail::FaceBase<4, 3> {
          *
          * Constructing the link of a tetrahedron begins with building the
          * frontier of a regular neighbourhood of the tetrahedron.  If this is
-         * already a normal hypersurface, then then link is called \e thin.
+         * already a normal hypersurface, then then link is called _thin_.
          * Otherwise some basic normalisation steps are performed until the
          * hypersurface becomes normal; note that these normalisation steps
          * could change the topology of the hypersurface, and in some

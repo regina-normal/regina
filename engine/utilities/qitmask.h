@@ -261,7 +261,7 @@ class Qitmask1 {
          *
          * Note that these two qits do not need to be equal; they
          * just both need to be non-zero.  Note also that this only
-         * needs to happen at one index; there may be \e other indices at
+         * needs to happen at one index; there may be _other_ indices at
          * which the qit is zero in one qitmask but not the other.
          *
          * \param other the qitmask to compare with this.
@@ -517,7 +517,7 @@ class Qitmask2 {
          *
          * Note that these two qits do not need to be equal; they
          * just both need to be non-zero.  Note also that this only
-         * needs to happen at one index; there may be \e other indices at
+         * needs to happen at one index; there may be _other_ indices at
          * which the qit is zero in one qitmask but not the other.
          *
          * \param other the qitmask to compare with this.

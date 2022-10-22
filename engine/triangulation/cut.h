@@ -58,19 +58,19 @@ template <int n> class Perm;
  * A cut that separates a triangulation or facet pairing into two pieces.
  * This is essentially the same concept as a cut in graph theory.
  *
- * Specifically, a \e cut in a triangulation or facet pairing partitions
- * the top-dimensional simplices into two \e sides.  This effectively splits
+ * Specifically, a _cut_ in a triangulation or facet pairing partitions
+ * the top-dimensional simplices into two _sides_.  This effectively splits
  * the triangulation or facet pairing into two pieces, by removing all
  * gluings between simplices on opposite sides.  The two sides of a cut are
  * numbered 0 and 1.
  *
- * In Regina, a cut has a \e size and a \e weight:
+ * In Regina, a cut has a _size_ and a _weight:_
  *
- * - The \e size refers to the size of the underlying triangulation or
+ * - The _size_ refers to the size of the underlying triangulation or
  *   facet pairing (i.e., it indicates the total number of top-dimensional
  *   simplices).
  *
- * - The \e weight refers to the number of gluings that are undone by the cut.
+ * - The _weight_ refers to the number of gluings that are undone by the cut.
  *   This is the usual concept of weight from graph theory (i.e., the number
  *   of edges in the underlying graph that cross the partition).
  *
@@ -187,7 +187,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * \warning This routine runs in linear time, since the sizes of
          * the individual sides are not cached.  This is in contrast to
-         * the overall total size(), which \e is cached, and which runs
+         * the overall total size(), which _is_ cached, and which runs
          * in constant time.
          *
          * \exception InvalidArgument The given side is not 0 or 1.
@@ -339,7 +339,7 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Partitions the given triangulation using this cut.
          *
-         * This routine will return \e two triangulations: the first
+         * This routine will return _two_ triangulations: the first
          * will contain all the top-dimensional simplices on side 0 of
          * this cut, and the second will contain all the top-dimensional
          * simplices on side 1.  All gluings within the same side of the
@@ -368,7 +368,7 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Partitions the given facet pairing using this cut.
          *
-         * This routine will return \e two facet pairings: the first
+         * This routine will return _two_ facet pairings: the first
          * will contain all the top-dimensional simplices on side 0 of
          * this cut, and the second will contain all the top-dimensional
          * simplices on side 1.  All matchings between simplex facets within
@@ -464,7 +464,7 @@ class Cut : public ShortOutput<Cut> {
          *
          * If this is already the last partition in such an iteration,
          * then this routine will return \c false and convert this into
-         * the \e first such permutation.
+         * the _first_ such permutation.
          *
          * The order of iteration using incFixedSizes() is lexicographical in
          * the sequence of sides.  In particular, if you wish to avoid

@@ -114,11 +114,11 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
  *
  * The implementation uses SFINAE to remove the member function without
  * compile errors.  A side-effect of this is that the member function will
- * now be a \e template member function.  The user should never specify their
+ * now be a _template_ member function.  The user should never specify their
  * own template arguments, and indeed the template parameter pack \a Args in
  * the implementation is there precisely to stop users from doing this.
  *
- * \pre The member function this macro is applied to is \e not a
+ * \pre The member function this macro is applied to is _not_ a
  * template member function (though, as noted above, this macro will
  * silently make it one).
  *
@@ -220,7 +220,7 @@ inline constexpr IntType minSafeFactor =
     std::numeric_limits<IntType>::min() / coeff;
 
 /**
- * Gives access to native integer types that hold \e exactly \a k bytes,
+ * Gives access to native integer types that hold _exactly_ \a k bytes,
  * where \a k may be any compile-time constant.
  *
  * \tparam bytes the exact number of bytes in the native integer types

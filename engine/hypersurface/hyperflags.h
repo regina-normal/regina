@@ -48,8 +48,8 @@ namespace regina {
  * Represents different lists of normal hypersurfaces that might be constructed
  * for a given 4-manifold triangulation.
  *
- * The HyperList enumeration refers to the \e contents of the list,
- * whereas the HyperAlgFlags enumeration refers to the \e algorithm
+ * The HyperList enumeration refers to the _contents_ of the list,
+ * whereas the HyperAlgFlags enumeration refers to the _algorithm_
  * used to build it.
  *
  * These flags can be combined using the bitwise OR operator, and then
@@ -78,7 +78,7 @@ enum HyperListFlags {
      * Indicates that the scope of this list includes not just properly
      * embedded hypersurfaces, but also immersed and/or branched hypersurfaces.
      *
-     * This is no guarantee that the list \e contains immersed and/or
+     * This is no guarantee that the list _contains_ immersed and/or
      * branched hypersurfaces; it merely states that such hypersurfaces
      * have not been explicitly excluded (in particular, the prism
      * constraints have not been enforced).

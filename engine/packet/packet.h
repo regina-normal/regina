@@ -101,32 +101,32 @@ template <typename Held> class XMLWriter;
  * child/parent relationships; the root of the tree represents a
  * complete Regina data file.
  *
- * There are two types of packets: \e innate packets, and \e wrapped packets.
+ * There are two types of packets: _innate_ packets, and _wrapped_ packets.
  *
- * - \e Innate packets are only relevant within the context of a data file.
+ * - _Innate_ packets are only relevant within the context of a data file.
  *   Examples include containers (which are used to organise the packet tree),
  *   or scripts (which stores Python code with variables bound to other packets
  *   in the tree).  Each innate packet type is represented by its own
  *   customised subclass of Packet (e.g., Container or Script).
  *
- * - \e Wrapped packets hold some other type, which can also act as a
+ * - _Wrapped_ packets hold some other type, which can also act as a
  *   standalone mathematical object.  Examples include packets that hold
  *   triangulations, links, and normal surface lists.  Each wrapped packet type
  *   is represented by a class of the form PacketOf<Held>, where \a Held
  *   is the underlying mathematical type (e.g., Triangulation<3>, Link,
  *   or NormalSurfaces).
  *
- * Since Regina 7.0, packets are \e always managed by std::shared_ptr.
- * There are \e no exceptions to this rule.  The implication of this are:
+ * Since Regina 7.0, packets are _always_ managed by std::shared_ptr.
+ * There are _no_ exceptions to this rule.  The implication of this are:
  *
- * - Every new packet \e must be wrapped in a std::shared_ptr immediately
+ * - Every new packet _must_ be wrapped in a std::shared_ptr immediately
  *   after construction.  It is recommended that you create new packets using
  *   std::make_shared, not \c new, so you do not forget this.  Many of
  *   Regina's operations on packets will assume that such a std::shared_ptr
  *   exists, and will throw std::bad_weak_ptr exceptions if it does not.
  *
  * - When given an existing raw packet pointer (e.g., as a function argument),
- *   you must \e not wrap it in a new std::shared_ptr.  This would lead to two
+ *   you must _not_ wrap it in a new std::shared_ptr.  This would lead to two
  *   shared pointers "independently" claiming ownership of the packet (which
  *   means the packet would be destroyed earlier than expected).  If you need
  *   to convert a raw Packet* into a std::shared_ptr, you can use the member
@@ -143,7 +143,7 @@ template <typename Held> class XMLWriter;
  *   the child once your last shared pointer to it goes out of scope.
  *
  * - If you destroy a parent but you are also holding another shared pointer to
- *   one of its children, then that child will \e not be destroyed.  It will
+ *   one of its children, then that child will _not_ be destroyed.  It will
  *   instead become orphaned, and will become the root of its own (smaller)
  *   packet tree.
  *
@@ -197,7 +197,7 @@ template <typename Held> class XMLWriter;
  *   Held::ChangeEventSpan on the stack while the modification takes place.
  *   This is again lightweight (if an object does not belong to a packet
  *   then the cost is just two integer comparisions), and it will ensure that
- *   if the object \e does belong to a packet then listeners are notified.
+ *   if the object _does_ belong to a packet then listeners are notified.
  *
  * External objects can listen for events on packets, such as when packets
  * are changed or about to be destroyed.  This is useful (for example)
@@ -690,8 +690,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre This packet is not a descendant of the given child.
          *
          * \exception InvalidArgument The argument \a child already has a
-         * parent packet.  Note that, although this tests \e one of our
-         * preconditions, there are other preconditions that are \e not
+         * parent packet.  Note that, although this tests _one_ of our
+         * preconditions, there are other preconditions that are _not_
          * tested, and for which no exceptions are thrown.
          *
          * \param child the child to insert.
@@ -709,8 +709,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre This packet is not a descendant of the given child.
          *
          * \exception InvalidArgument The argument \a child already has a
-         * parent packet.  Note that, although this tests \e one of our
-         * preconditions, there are other preconditions that are \e not
+         * parent packet.  Note that, although this tests _one_ of our
+         * preconditions, there are other preconditions that are _not_
          * tested, and for which no exceptions are thrown.
          *
          * \param child the child to insert.
@@ -732,8 +732,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre This packet is not a descendant of the given child.
          *
          * \exception InvalidArgument The argument \a child already has a
-         * parent packet.  Note that, although this tests \e one of our
-         * preconditions, there are other preconditions that are \e not
+         * parent packet.  Note that, although this tests _one_ of our
+         * preconditions, there are other preconditions that are _not_
          * tested, and for which no exceptions are thrown.
          *
          * \param child the child to insert.
@@ -751,8 +751,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre This packet is not a descendant of the given child.
          *
          * \exception InvalidArgument The argument \a child already has a
-         * parent packet.  Note that, although this tests \e one of our
-         * preconditions, there are other preconditions that are \e not
+         * parent packet.  Note that, although this tests _one_ of our
+         * preconditions, there are other preconditions that are _not_
          * tested, and for which no exceptions are thrown.
          *
          * \param child the child to insert.
@@ -779,8 +779,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \exception InvalidArgument The argument \a newChild already has a
          * parent packet, and/or the argument \a prevChild is non-null and
          * does not have this packet as its parent.  Note that, although this
-         * tests \e some of our preconditions, there are other preconditions
-         * that are \e not tested, and for which no exceptions are thrown.
+         * tests _some_ of our preconditions, there are other preconditions
+         * that are _not_ tested, and for which no exceptions are thrown.
          *
          * \param newChild the child to insert.
          * \param prevChild the preexisting child of this packet after
@@ -804,8 +804,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \exception InvalidArgument The argument \a newChild already has a
          * parent packet, and/or the argument \a prevChild is non-null and
          * does not have this packet as its parent.  Note that, although this
-         * tests \e some of our preconditions, there are other preconditions
-         * that are \e not tested, and for which no exceptions are thrown.
+         * tests _some_ of our preconditions, there are other preconditions
+         * that are _not_ tested, and for which no exceptions are thrown.
          *
          * \param newChild the child to insert.
          * \param prevChild the preexisting child of this packet after
@@ -859,7 +859,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * This routine takes small constant time.  It is safe to use
          * regardless of whether this packet currently has a parent or not.
          *
-         * If you wish to reparent \e all of the children of a given
+         * If you wish to reparent _all_ of the children of a given
          * packet, see transferChildren() instead.
          *
          * \pre The given parent is not a descendant of this packet.
@@ -1123,7 +1123,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The order of iteration is exactly the same as when iterating
          * over the full subtree rooted at this packet (as offered by
          * Packet::begin() and Packet::end()), except that the iteration
-         * \e excludes this packet itself.  In particular, the iteration is
+         * _excludes_ this packet itself.  In particular, the iteration is
          * depth-first, and each packet in the subtree is processed
          * before its own descendants.
          *
@@ -1154,7 +1154,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * object.
          *
          * See also begin() and end() for iterating through the entire
-         * subtree \e including this packet, and children() for iterating
+         * subtree _including_ this packet, and children() for iterating
          * over just this packet's immediate children.
          *
          * \return an object for iterating through the strict descendants
@@ -1169,7 +1169,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * The order of iteration is exactly the same as when iterating
          * over the full subtree rooted at this packet (as offered by
          * Packet::begin() and Packet::end()), except that the iteration
-         * \e excludes this packet itself.  In particular, the iteration is
+         * _excludes_ this packet itself.  In particular, the iteration is
          * depth-first, and each packet in the subtree is processed
          * before its own descendants.
          *
@@ -1192,7 +1192,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * object.
          *
          * See also begin() and end() for iterating through the entire
-         * subtree \e including this packet, and children() for iterating
+         * subtree _including_ this packet, and children() for iterating
          * over just this packet's immediate children.
          *
          * \return an object for iterating through the strict descendants
@@ -1395,7 +1395,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * sibling of this packet.
          *
          * Note that any string tags associated with this packet will
-         * \e not be cloned.
+         * _not_ be cloned.
          *
          * If this packet has no parent in the tree structure, no clone
          * will be created and \c null will be returned.
@@ -1406,7 +1406,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \note Since Regina 7.0, if a normal surface/hypersurface or
          * angle structure list is cloned, then the new clone will refer
-         * back to the \e original triangulation, even if we are cloning
+         * back to the _original_ triangulation, even if we are cloning
          * an entire packet tree.  This is because there is no guarantee that
          * the original triangulation was cloned also (it could live outside
          * the cloned subtree, or might not be part of a packet tree at all).
@@ -1444,9 +1444,9 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \pre The given packet does not depend on its parent.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name,
+         * \ref i18n "character encoding" used in the given file _name_,
          * and simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written using UTF-8.
+         * routines.  The _contents_ of the file will be written using UTF-8.
          *
          * \param filename the pathname of the file to write to.
          * \param compressed \c true if the XML data should be compressed,
@@ -1647,7 +1647,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
         Packet& operator = (const Packet&) { return *this; }
 
         /**
-         * Makes a new copy of this packet.  This routine should \e not
+         * Makes a new copy of this packet.  This routine should _not_
          * insert the new packet into the tree structure, clone the packet's
          * associated tags or give the packet a label.  It should also not
          * clone any descendants of this packet.
@@ -1828,13 +1828,13 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Later on, as the XML is written, the value `refs[p]` will be
          * changed from \c false to \c true once \a p has been written.
          *
-         * If your packet requires that the \e contents of \a p appear
+         * If your packet requires that the _contents_ of \a p appear
          * before this packet it the XML data file, then writeXMLPacketData()
          * should check \a refs to see if \a p has already been written,
          * and if not, it should write \a p in a new anonymous block.
          *
          * It is fine if \a p does not actually belong to this packet tree.
-         * However, in this case writeXMLPacketData() \e must take
+         * However, in this case writeXMLPacketData() _must_ take
          * responsibility to ensure that \a p is written to file.
          * This would need to be done via writeXMLAnon(); moreover, as
          * before, it should only be done only after checking \a refs to
@@ -2004,7 +2004,7 @@ enum PacketHeldBy {
  *
  * This is the class used for all of Regina's _wrapped packet types_.
  * See the Packet class notes for general information about packets, and
- * about the differences between \e wrapped and \e innate packet types.
+ * about the differences between _wrapped_ and _innate_ packet types.
  *
  * You can use a PacketOf<Held> in much the same way as you can use a "raw"
  * object of type \a Held.  This class inherits the full interface from
@@ -2021,7 +2021,7 @@ enum PacketHeldBy {
  *   copies and swaps do not touch the tree structure, and moves are not
  *   supported at all.
  *
- * - The \a Held class will typically \e not be polymorphic.  In contrast,
+ * - The \a Held class will typically _not_ be polymorphic.  In contrast,
  *   PacketOf<Held> aquires polymorphism through its inherited Packet
  *   interface.
  *
@@ -2213,7 +2213,7 @@ class PacketData {
         /**
          * Copy constructor that ignores its argument, and instead sets
          * \a heldBy_ to HELD_BY_NONE.  This is because \a heldBy_ stores
-         * information about the C++ type of \e this object, not the object
+         * information about the C++ type of _this_ object, not the object
          * being copied.
          *
          * This constructor is provided so that \a Held can (if it wants) use
@@ -2223,7 +2223,7 @@ class PacketData {
         /**
          * Assignment operator that ignores its argument and does nothing.
          * This is because \a heldBy_ stores information about the C++ type
-         * of \e this object, not the object being copied.
+         * of _this_ object, not the object being copied.
          *
          * This operator is provided so that \a Held can (if it wants) use an
          * implicitly-declared copy or move assignment operator.
@@ -2302,12 +2302,12 @@ class PacketData {
          * - not clash with the anonID() returned from any other object,
          *   or with the internalID() returned from any packet of any type;
          *
-         * These IDs are \e not preserved when copying or moving one
+         * These IDs are _not_ preserved when copying or moving one
          * object to another, and are not preserved when writing to a
          * Regina data file and then reloading the file contents.
          *
-         * \warning If this object \e is wrapped in a PacketOf<Held>, then
-         * anonID() and Packet::internalID() may return \e different values.
+         * \warning If this object _is_ wrapped in a PacketOf<Held>, then
+         * anonID() and Packet::internalID() may return _different_ values.
          *
          * See Packet::internalID() for further details.
          *
@@ -2329,7 +2329,7 @@ class PacketData {
          *   destructor are both extremely cheap (each will make just a
          *   single integer comparison).
          *
-         * - If the underlying \a Held object \e is part of a PacketOf<Held>,
+         * - If the underlying \a Held object _is_ part of a PacketOf<Held>,
          *   then this ChangeEventSpan will ensure that the appropriate
          *   packet events are fired (just like Packet::ChangeEventSpan).
          *
@@ -2526,8 +2526,8 @@ std::shared_ptr<PacketOf<Held>> make_packet() {
  * \pre The given reference refers to an object of type PacketOf<Held>.
  *
  * \warning If you try to use static_packet_cast<Triangulation<3>> on a
- * reference to a PacketOf<SnapPeaTriangulation>, this will \e not work,
- * since PacketOf<SnapPeaTriangulation> is \e not a subclass of
+ * reference to a PacketOf<SnapPeaTriangulation>, this will _not_ work,
+ * since PacketOf<SnapPeaTriangulation> is _not_ a subclass of
  * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
@@ -2554,8 +2554,8 @@ Held& static_packet_cast(Packet& p) {
  * \pre The given reference refers to an object of type PacketOf<Held>.
  *
  * \warning If you try to use static_packet_cast<Triangulation<3>> on a
- * reference to a PacketOf<SnapPeaTriangulation>, this will \e not work,
- * since PacketOf<SnapPeaTriangulation> is \e not a subclass of
+ * reference to a PacketOf<SnapPeaTriangulation>, this will _not_ work,
+ * since PacketOf<SnapPeaTriangulation> is _not_ a subclass of
  * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
@@ -2582,7 +2582,7 @@ const Held& static_packet_cast(const Packet& p) {
  * its descendants, if any) will simply be ignored.
  *
  * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and simply
+ * \ref i18n "character encoding" used in the given file _name_, and simply
  * passes it through unchanged to low-level C/C++ file I/O routines.
  *
  * \ifacespython This function is not automatically imported into the
@@ -3472,7 +3472,7 @@ bool operator != (const Packet* packet, PacketShell shell);
  * packetToBeChanged() and packetWasChanged() will not.
  *
  * As a special case, when a packet is destroyed there is only the one
- * event packetBeingDestroyed(), since this is called \e during the packet
+ * event packetBeingDestroyed(), since this is called _during_ the packet
  * destructor (at a time when the set of listeners is still available, but
  * some of the other packet data may have already been destroyed).
  *
@@ -3494,10 +3494,10 @@ bool operator != (const Packet* packet, PacketShell shell);
  *   as to whether or not the new listeners will be notified of the
  *   specific event currently being processed.
  *
- * - Callbacks can safely remove other listeners, but they must \e not
+ * - Callbacks can safely remove other listeners, but they must _not_
  *   remove the listener whose callback is currently being called.
  *   The one exception to this is packetBeingDestroyed(), which will
- *   explicitly remove each listener \e before its callback is called
+ *   explicitly remove each listener _before_ its callback is called
  *   (which means, for example, the listener can safely delete itself).
  *
  * \warning Subclass authors should be aware of the default copy semantics
@@ -3510,7 +3510,7 @@ bool operator != (const Packet* packet, PacketShell shell);
  *
  * \warning At the time of writing (admittedly long ago now), Qt has only
  * limited support for multithreading.  When working with an existing packet
- * tree in a new thread (not the main thread), the \e only modification that
+ * tree in a new thread (not the main thread), the _only_ modification that
  * you may make is to insert new packets.  Modifications of any other type
  * (such as changing, renaming, deleting or reordering existing packets)
  * could lead to a crash within Qt or Xlib when running the GUI.
@@ -3621,7 +3621,7 @@ class PacketListener {
          * destroyed.
          *
          * When a packet is destroyed, it will automatically unregister each
-         * listener \e before calling packetBeingDestroyed() on that listener.
+         * listener _before_ calling packetBeingDestroyed() on that listener.
          * Therefore, for this (and only this) callback, it is safe for a
          * listener to unregister itself (since this will be a harmless
          * operation that does nothing).  In particular, this makes it safe
@@ -3944,7 +3944,7 @@ class PacketListener {
          * to the same packets that \a src was originally listening to,
          * and vice versa.
          *
-         * This operation is \e not constant time, since it needs to
+         * This operation is _not_ constant time, since it needs to
          * perform an internal adjustment for each packet that is affected.
          *
          * \param other the listener to swap with this.

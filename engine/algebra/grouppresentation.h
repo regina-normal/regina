@@ -516,7 +516,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Simplifies this expression.
          * Adjacent powers of the same generator will be combined, and
          * terms with an exponent of zero will be removed.
-         * Note that it is \e not assumed that the underlying group is
+         * Note that it is _not_ assumed that the underlying group is
          * abelian.
          *
          * You may declare that the expression is cyclic, in which case
@@ -1210,7 +1210,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Rewrites the presentation so that generators
          * of the group map to generators of the abelianisation, with any
          * left-over generators mapping to zero (if possible).  Consider this a
-         * \e homological-alignment of the presentation.
+         * _homological-alignment_ of the presentation.
          *
          * If the abelianisation of this group has rank \a N and \a M invariant
          * factors `d0 | d2 | ... | d(M-1)`,
@@ -1276,7 +1276,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Determines whether this and the given group presentation are
          * identical.
          *
-         * This routine does \e not test for isomorphism (which in
+         * This routine does _not_ test for isomorphism (which in
          * general is an undecidable problem).  Instead it tests whether
          * this and the given presentation use exactly the same generators
          * and exactly the same relations, presented in exactly the same order.
@@ -1291,7 +1291,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Determines whether this and the given group presentation are
          * not identical.
          *
-         * This routine does \e not test for isomorphism (which in
+         * This routine does _not_ test for isomorphism (which in
          * general is an undecidable problem).  Instead it tests whether
          * this and the given presentation use exactly the same generators
          * and exactly the same relations, presented in exactly the same order.
@@ -1373,9 +1373,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \warning The running time is `(k!)^g`, where \a k is the
          * subgroup index described above, and \a g is the number of
          * generators of this group presentation.  In particular, the
-         * running time grows \e extremely quickly with \a k.
+         * running time grows _extremely_ quickly with \a k.
          *
-         * \warning This routine does \e not simplify the group presentation
+         * \warning This routine does _not_ simplify the group presentation
          * before it runs.  You should make sure that you have simplified
          * the presentation, either using Regina or some other tool, before
          * running this routine, since (as noted above) the running time
@@ -1384,7 +1384,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * \warning Likewise, this routine does not simplify the subgroup
          * presentations before passing them to \a action.  These presentations
          * can be quite large, and (for example) if all you care about is their
-         * abelianisations then you are better off using the \e abelian group
+         * abelianisations then you are better off using the _abelian_ group
          * simplification / computation instead (which is much faster).
          *
          * \apinotfinal
@@ -1393,7 +1393,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Python.  The first form is `enumerateCovers(index, action)`,
          * which mirrors the C++ function: it takes \a action which may
          * be a pure Python function, it returns the number of representations
-         * found, but it does \e not take an addition argument list (\a args).
+         * found, but it does _not_ take an addition argument list (\a args).
          * The second form is `enumerateCovers(index)`, which returns
          * a Python list containing all of the corresponding subgroups, each
          * given as a GroupPresentation.  In both forms, the template

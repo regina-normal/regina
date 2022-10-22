@@ -172,8 +172,8 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * however identify whether or not the base orbifold is orientable,
  * and whether or not it contains any fibre-reversing paths.
  *
- * When describing punctures and reflector boundaries, a \e twisted
- * boundary is one that gives a fibre-reversing path, and an \e untwisted
+ * When describing punctures and reflector boundaries, a _twisted_
+ * boundary is one that gives a fibre-reversing path, and an _untwisted_
  * boundary is one around which the direction of fibres is preserved.
  *
  * Exceptional fibres are sorted first by \a alpha (the index) and then
@@ -481,7 +481,7 @@ class SFSpace : public Manifold {
          * torus or Klein bottle boundary components in the overall
          * 3-manifold.
          *
-         * Note that reflector boundaries on the base orbifold are \e not
+         * Note that reflector boundaries on the base orbifold are _not_
          * counted here; only the ordinary boundary components that give rise
          * to real 3-manifold boundaries are included.
          *
@@ -503,7 +503,7 @@ class SFSpace : public Manifold {
          * (which give rise to torus boundaries).
          *
          * Either way, reflector boundaries on the base orbifold are
-         * \e not counted here; only ordinary boundary components that
+         * _not_ counted here; only ordinary boundary components that
          * give rise to real 3-manifold boundaries are considered.
          *
          * \param twisted \c true if only twisted punctures should be
@@ -711,7 +711,7 @@ class SFSpace : public Manifold {
          * boundaries caused by punctures in the base orbifold), with
          * the exception that each base curve will be reflected.
          *
-         * \warning The space is \e not reduced after reflecting.
+         * \warning The space is _not_ reduced after reflecting.
          * It may be that the space can be further simplified
          * (especially in the case of non-orientable manifolds).
          */
@@ -759,10 +759,10 @@ class SFSpace : public Manifold {
          * Determines whether this and the given object contain precisely
          * the same presentations of the same Seifert fibred space.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the precise details of
          * the base orbifold and the exact parameters of the exceptional fibres,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same Seifert fibred
          * space, they will be treated as not equal by this routine.
          *
@@ -776,10 +776,10 @@ class SFSpace : public Manifold {
          * Determines whether this and the given object do not contain
          * precisely the same presentations of the same Seifert fibred space.
          *
-         * This routine does \e not test for homeomorphism.  Instead it
+         * This routine does _not_ test for homeomorphism.  Instead it
          * compares the exact presentations, including the precise details of
          * the base orbifold and the exact parameters of the exceptional fibres,
-         * and determines whether or not these \e presentations are identical.
+         * and determines whether or not these _presentations_ are identical.
          * If you have two different presentations of the same Seifert fibred
          * space, they will be treated as not equal by this routine.
          *

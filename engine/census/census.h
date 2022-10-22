@@ -146,7 +146,7 @@ class CensusDB {
          * with no hits but it will not actually search the database).
          *
          * If you are using this routine yourself, you will need to
-         * include the extra header census/census-impl.h (which is \e not
+         * include the extra header census/census-impl.h (which is _not_
          * automatically included from this file).  Typically, however,
          * end users can simply use the catch-all Census::lookup() routines
          * and will not need to call this more fine-grained routine.
@@ -401,7 +401,7 @@ class Census {
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
-         * Therefore a \e list of hits will be returned, which you can
+         * Therefore a _list_ of hits will be returned, which you can
          * iterate through the individual matches.  Even if there are no
          * matches at all, a list will still be returned; you can call
          * empty() on this list to test whether any matches were found.
@@ -428,7 +428,7 @@ class Census {
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
-         * Therefore a \e list of hits will be returned, which you can
+         * Therefore a _list_ of hits will be returned, which you can
          * iterate through the individual matches.  Even if there are no
          * matches at all, a list will still be returned; you can call
          * empty() on this list to test whether any matches were found.

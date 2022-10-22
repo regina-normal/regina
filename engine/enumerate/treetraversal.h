@@ -72,7 +72,7 @@ class ProgressTracker;
  * class LPData.
  *
  * This class holds the particular state of the tree traversal
- * at any point in time, as described by the current \e level (indicating
+ * at any point in time, as described by the current _level_ (indicating
  * our current depth in the search tree) and _type vector_
  * (indicating which branches of the search tree we have followed).
  * For details on these concepts, see the Algorithmica paper cited above.
@@ -181,7 +181,7 @@ class TreeTraversal : public ShortOutput<
         const NormalEncoding enc_;
             /**< The normal surface or angle structure vector encoding
                  that we are using for our enumeration task.
-                 Note that the tableaux will \e not necessarily use this
+                 Note that the tableaux will _not_ necessarily use this
                  same encoding; see LPInitialTableaux for details. */
         const BanConstraint ban_;
             /**< Details of any banning/marking constraints that are in use. */
@@ -359,11 +359,11 @@ class TreeTraversal : public ShortOutput<
          * This routine is for use only with normal (or almost normal)
          * surfaces, not taut angle structures.
          *
-         * If the current type vector does not represent a \e vertex
+         * If the current type vector does not represent a _vertex_
          * normal surface (which may be the case when calling
          * TreeSingleSoln::find()), then there may be many normal surfaces
          * all represented by the same type vector; in this case there are
-         * no further guarantees about \e which of these normal surfaces
+         * no further guarantees about _which_ of these normal surfaces
          * you will get.
          *
          * The surface that is returned will use the same vector encoding
@@ -495,7 +495,7 @@ class TreeTraversal : public ShortOutput<
          * BanConstraintBase class notes.
          *
          * This routine simply searches through types by increasing index
-         * into the type vector; in particular, it does \e not make any use
+         * into the type vector; in particular, it does _not_ make any use
          * of the reordering defined by the \a typeOrder_ array.
          *
          * \pre We are working in standard normal or almost normal
@@ -584,7 +584,7 @@ class TreeTraversal : public ShortOutput<
  * quadrilateral-octagon almost normal coordinates (NS_AN_QUAD_OCT), or
  * standard almost normal coordinates (NS_AN_STANDARD).  For almost
  * normal surfaces, we allow any number of octagons (including zero),
- * but we only allow at most one octagon \e type in the entire triangulation.
+ * but we only allow at most one octagon _type_ in the entire triangulation.
  * No coordinate systems other than these are supported.
  *
  * By using appropriate template parameters \a LPConstraint and/or
@@ -621,7 +621,7 @@ class TreeTraversal : public ShortOutput<
  *
  * \warning Although the tree traversal algorithm can run in standard normal
  * or almost normal coordinates, this is not recommended: it is likely to be
- * \e much slower than in quadrilateral or quadrilateral-octagon coordinates
+ * _much_ slower than in quadrilateral or quadrilateral-octagon coordinates
  * respectively.  Instead you should enumerate vertex solutions using
  * quadrilateral or quadrilateral-octagon coordinates, and then use the
  * "transform constructor" `NormalSurfaces(..., NS_CONV_REDUCED_TO_STD)`.
@@ -709,7 +709,7 @@ class TreeEnumeration :
          *   surface each time you call it.
          *
          * \warning Although it is supported, it is highly recommended that you
-         * do \e not run a full vertex enumeration in standard normal
+         * do _not_ run a full vertex enumeration in standard normal
          * or almost normal coordinates (this is for performance reasons).
          * See the class notes for further discussion and better alternatives.
          * In normal circumstances you should run a full vertex enumeration
@@ -1279,7 +1279,7 @@ class TautEnumeration :
  * that coordinate to zero before it tries setting it to non-zero.  In
  * other words, if it does find a surface satisfying the given constraints,
  * then it is guaranteed that the set of non-zero coordinate positions
- * will be minimal (though not necessary a global \e minimum).  In many
+ * will be minimal (though not necessary a global _minimum_).  In many
  * settings (such as when using LPConstraintEulerPositive), this guarantees
  * that the final surface (if it exists) will be a vertex normal or
  * almost normal surface.
@@ -1297,7 +1297,7 @@ class TautEnumeration :
  * then call buildSurface() to extract the details of the surface that was
  * found.
  *
- * If you wish to enumerate \e all vertex surfaces in a 3-manifold
+ * If you wish to enumerate _all_ vertex surfaces in a 3-manifold
  * triangulation (instead of finding just one), you should use the class
  * TreeEnumeration instead.
  *
@@ -1306,7 +1306,7 @@ class TautEnumeration :
  * quadrilateral-octagon almost normal coordinates (NS_AN_QUAD_OCT), or
  * standard almost normal coordinates (NS_AN_STANDARD).  For almost
  * normal surfaces, we allow any number of octagons (including zero),
- * but we only allow at most one octagon \e type in the entire triangulation.
+ * but we only allow at most one octagon _type_ in the entire triangulation.
  * No coordinate systems other than these are supported.
  *
  * The template argument \a IntType indicates the integer type that
@@ -1318,7 +1318,7 @@ class TautEnumeration :
  * This class is designed to manage the execution of a significant search
  * operation, and so it does not support copying, moving or swapping.
  *
- * \warning Typically one should only use this class with \e one-vertex
+ * \warning Typically one should only use this class with _one-vertex_
  * triangulations (since otherwise, setting at least one triangle coordinate
  * to zero is not enough to rule out trivial vertex linking surfaces).
  * Of course there may be settings in which multiple vertices make sense
@@ -1329,7 +1329,7 @@ class TautEnumeration :
  * \warning If you examine the type vector (e.g., by calling typeString()
  * or dumpTypes()), be aware that this class merges the old types 0 and 1
  * together into a single branch of the search tree.  This means that
- * type 0 never appears, and that type 1 could indicate \e either positive
+ * type 0 never appears, and that type 1 could indicate _either_ positive
  * quadrilaterals in the first position, or else no quadrilaterals at all.
  *
  * \pre The parameter LPConstraint must be a subclass of LPConstraintBase, and

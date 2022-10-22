@@ -92,12 +92,12 @@ class HilbertPrimal {
          * no duplicates or redundancies.
          *
          * The parameter \a constraints may contain a set of validity
-         * constraints, in which case this routine will only return \e valid
+         * constraints, in which case this routine will only return _valid_
          * basis elements.  Each validity constraint is of the form "at
          * most one of these coordinates may be non-zero"; see the
          * ValidityConstraints class for details.  These contraints have the
          * important property that, although validity is not preserved under
-         * addition, \e invalidity is.
+         * addition, _invalidity_ is.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -115,7 +115,7 @@ class HilbertPrimal {
          * contents into some other more permanent storage.
          *
          * \pre If \a constraints is passed, then the given list of
-         * extremal rays contains \e only those extremal rays that satisfy
+         * extremal rays contains _only_ those extremal rays that satisfy
          * all of the given constraints.
          * \pre The template argument RayClass is derived from (or equal to)
          * Vector<T>, where \a T is one of Regina's arbitrary-precision

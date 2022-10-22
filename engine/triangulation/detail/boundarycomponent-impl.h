@@ -34,14 +34,14 @@
  *  \brief Contains some of the implementation details for the generic
  *  BoundaryComponent class template.
  *
- *  This file is \e not included from boundarycomponent.h, and it is not
+ *  This file is _not_ included from boundarycomponent.h, and it is not
  *  shipped with Regina's development headers.  The routines it contains are
  *  explicitly instantiated in Regina's calculation engine for all dimensions.
  *
  *  The reason for "quarantining" this file is that the routines it defines
  *  require a definition of the lower-dimensional class Triangulation<dim-1>.
  *  By keeping their implementations safely out of the main headers, we avoid
- *  having Triangulation<dim> recursively instantiate \e all triangulation
+ *  having Triangulation<dim> recursively instantiate _all_ triangulation
  *  classes Triangulation<dim-1>, Triangulation<dim-2>, ..., Triangulation<2>.
  *  This quarantining also helps us to keep the helper class ReorderIterator
  *  out of the main API.
@@ -69,7 +69,7 @@ namespace {
      * of the boundary component, `map[f->index()]` is the
      * corresponding face of \a tri.  Note that `f->index()` is the
      * index of \a f in the underlying <i>dim</i>-dimensional triangulation,
-     * \e not the index of \a f in the boundary component's facet list.
+     * _not_ the index of \a f in the boundary component's facet list.
      */
     template <int dim, int subdim>
     class ReorderIterator {

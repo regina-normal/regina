@@ -962,11 +962,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         bool isEmpty() const;
         /**
          * Determines if this normal surface has more than one octagonal disc.
-         * It may be assumed that at most one octagonal disc \e type exists in
+         * It may be assumed that at most one octagonal disc _type_ exists in
          * this surface.  This routine will return \c true if an octagonal
          * type does exist and its coordinate is greater than one.
          *
-         * \pre At most one octagonal disc \e type exists in this surface.
+         * \pre At most one octagonal disc _type_ exists in this surface.
          *
          * \return \c true if and only if there is an octagonal disc type
          * present and its coordinate is greater than one.
@@ -1093,7 +1093,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * This behaves differently from isVertexLink(), which only detects
          * the link of a single vertex (or a multiple of such a link).
          * In contrast, this routine will also detect the union of
-         * several \e different vertex links.
+         * several _different_ vertex links.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
@@ -1108,7 +1108,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * This behaves differently from isVertexLinking(), which will also
          * detect a union of several different vertex links.  In contrast,
-         * this routine will only identify the link of a \e single vertex
+         * this routine will only identify the link of a _single_ vertex
          * (or a multiple of such a link).
          *
          * Note that the results of this routine are not cached.
@@ -1124,18 +1124,18 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Determines whether or not a positive rational multiple of this
          * surface is the thin link of a single edge.
          *
-         * Here a \e thin edge link is a normal surface which appears naturally
+         * Here a _thin_ edge link is a normal surface which appears naturally
          * as the frontier of a regular neighbourhood of an edge, with no need
          * for any further normalisation.
          *
          * This behaves differently from isNormalEdgeLink(), which tests for a
-         * \e normalised edge link (which could end up far away from the
+         * _normalised_ edge link (which could end up far away from the
          * edge, or could be normalised into a surface with different
          * topology, or could even be normalised away to nothing).
          * Although isNormalEdgeLink() will also indicate thin edge links,
          * this test has significantly less overhead (and so should be faster).
          *
-         * A surface (or its positive rational multiple) can be the \e thin edge
+         * A surface (or its positive rational multiple) can be the _thin_ edge
          * link of at most two edges.  If there are indeed two different edges
          * \a e1 and \a e2 for which a multiple of this surface can be expressed
          * as the thin edge link, then the pair (\a e1, \a e2) will be returned.
@@ -1156,11 +1156,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Determines whether or not a positive rational multiple of this
          * surface is the normalised link of a single edge.
          *
-         * Here the phrase \e normalised link of an edge \a e means the
+         * Here the phrase _normalised_ link of an edge \a e means the
          * frontier of a regular neighbourhood of \a e, converted into a
          * normal surface by expanding away from the edge using the
          * normalisation process.  It could be that there is no normalisation
-         * required at all (in which case it is also a \e thin edge link).
+         * required at all (in which case it is also a _thin_ edge link).
          * However, it could be that the normalisation process expands
          * the surface far away from the edge itself, or changes its
          * topology, or disconnects the surface, or even normalises it
@@ -1203,19 +1203,19 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Determines whether or not a positive rational multiple of this
          * surface is the thin link of a single triangle.
          *
-         * Here a \e thin triangle link is a normal surface which appears
+         * Here a _thin_ triangle link is a normal surface which appears
          * naturally as the frontier of a regular neighbourhood of a
          * triangle, with no need for any further normalisation.
          *
          * This behaves differently from isNormalTriangleLink(), which tests
-         * for a \e normalised triangle link (which could end up far away from
+         * for a _normalised_ triangle link (which could end up far away from
          * the triangle, or could be normalised into a surface with different
          * topology, or could even be normalised away to nothing).  Unlike the
          * tests for edge links, the routines isThinTriangleLink() and
          * isNormalTriangleLink() use essentially the same implementation (so
          * testing for only thin links may be a little faster, but not by much).
          *
-         * A surface (or its positive rational multiple) can be the \e thin link
+         * A surface (or its positive rational multiple) can be the _thin_ link
          * of at most two triangles.  If there are indeed two different
          * triangles \a t1 and \a t2 for which a multiple of this surface can
          * be expressed as the thin triangle link, then the pair (\a t1, \a t2)
@@ -1237,11 +1237,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Determines whether or not a positive rational multiple of this
          * surface is the normalised link of a single triangle.
          *
-         * Here the phrase \e normalised link of a triangle \a t means the
+         * Here the phrase _normalised_ link of a triangle \a t means the
          * frontier of a regular neighbourhood of \a t, converted into a
          * normal surface by expanding away from the triangle using the
          * normalisation process.  It could be that there is no normalisation
-         * required at all (in which case it is also a \e thin triangle link).
+         * required at all (in which case it is also a _thin_ triangle link).
          * However, it could be that the normalisation process expands
          * the surface far away from the triangle itself, or changes its
          * topology, or disconnects the surface, or even normalises it
@@ -1369,8 +1369,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         /**
          * Determines whether this is an incompressible surface within
          * the surrounding 3-manifold.  At present, this routine is only
-         * implemented for surfaces embedded within \e closed and
-         * \e irreducible 3-manifold triangulations.
+         * implemented for surfaces embedded within _closed_ and
+         * _irreducible_ 3-manifold triangulations.
          *
          * Let \a D be some disc embedded in the underlying 3-manifold,
          * and let \a B be the boundary of \a D.  We call \a D a
@@ -1379,7 +1379,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * (ii) although \a B bounds a disc within the 3-manifold, it
          * does not bound a disc within this surface.
          *
-         * We declare this surface to be \e incompressible if there are
+         * We declare this surface to be _incompressible_ if there are
          * no such compressing discs.  For our purposes, spheres are never
          * considered incompressible (so if this surface is a sphere then
          * this routine will always return \c false).
@@ -1413,7 +1413,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * operation will not change the topology of the underlying
          * 3-manifold beyond simply slicing along this surface.
          *
-         * As of Regina 7.1, this routine can happily cut along \e almost
+         * As of Regina 7.1, this routine can happily cut along _almost_
          * normal surfaces as well as normal surfaces.  That is, it can
          * now handle octagons, including cases with multiple octagons in the
          * same tetrahedron and/or octagons in multiple tetrahedra.
@@ -1483,7 +1483,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * If this surface does contain octagons, then the triangulation \a t
          * will be obtained from the original by replacing each tetrahedron
-         * containing octagons with \e three tetrahedra (essentially
+         * containing octagons with _three_ tetrahedra (essentially
          * performing a 0-2 move).  Each octagon can then be subdivided
          * into a quadrilateral and four triangles.  If the original
          * triangulation is oriented, then the new triangulation \a t will
@@ -1569,7 +1569,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * provided for scenarios where you need to be able to sort
          * surfaces (e.g., when using them as keys in a map).
          *
-         * The order \e is well-defined, and will be preserved across
+         * The order _is_ well-defined, and will be preserved across
          * copy/move operations, different program executions, and different
          * platforms (since it is defined purely in terms of the normal
          * coordinates, and does not use transient properties such as
@@ -1621,7 +1621,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * This is a local constraint, not a global constraint.  That is,
          * we do not insist that we can avoid intersections within all
-         * tetrahedra \e simultaneously.  To test the global constraint,
+         * tetrahedra _simultaneously_.  To test the global constraint,
          * see the (much slower) routine disjoint() instead.
          *
          * Local compatibility can be formulated in terms of normal disc types.
@@ -1630,7 +1630,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * octagonal disc type per tetrahedron.
          *
          * Note again that this is a local constraint only.  In particular,
-         * for almost normal surfaces, it does \e not insist that there is
+         * for almost normal surfaces, it does _not_ insist that there is
          * at most one octagonal disc type anywhere within the triangulation.
          *
          * If one of the two surfaces breaks the local compatibility
@@ -1682,7 +1682,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * This routine is only available for use with SnapPea triangulations,
          * since it needs to know the specific meridian and longitude on each
-         * cusp.  These meridians and longitudes are \e only available through
+         * cusp.  These meridians and longitudes are _only_ available through
          * the SnapPea kernel, since Regina does not use or store peripheral
          * curves for its own Triangulation<3> class.  Therefore:
          *
@@ -1690,7 +1690,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   is not of the subclass SnapPeaTriangulation, this routine will
          *   throw an exception (see below).
          *
-         * - In particular, this \e will happen if you have edited or deleted
+         * - In particular, this _will_ happen if you have edited or deleted
          *   the original triangulation that was used to construct this normal
          *   surface.  This is because such a modification will trigger an
          *   internal deep copy of the original, and this will only copy
@@ -1711,7 +1711,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * there are `gcd(L,M)` boundary curves with this slope.
          *
          * The orientations of the boundary curves of a
-         * spun-normal surface are chosen so that \e if meridian and
+         * spun-normal surface are chosen so that _if_ meridian and
          * longitude are a positive basis as vieved from the cusp, then
          * as one travels along an oriented boundary curve, the
          * spun-normal surface spirals into the cusp to one's right and
@@ -1785,7 +1785,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface supports almost normal surfaces.
          *
          * If this routine returns \c true, it does not mean that the surface
-         * actually \e contains one or more octagons; you should use normal()
+         * actually _contains_ one or more octagons; you should use normal()
          * to test for that.  This routine simply queries a basic property
          * of the vector encoding that is being used, and this property is
          * often inherited from whatever coordinate system was used to
@@ -1806,7 +1806,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * (i.e., spun-normal surfaces).
          *
          * If this routine returns \c true, it does not mean that the surface
-         * actually \e is non-compact; you should use isCompact() to test for
+         * actually _is_ non-compact; you should use isCompact() to test for
          * that.  This routine simply queries a basic property of the vector
          * encoding that is being used, and this property is often inherited
          * from whatever coordinate system was used to perform the normal
@@ -1877,12 +1877,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
 
         /**
          * Determines whether or not a positive rational multiple of this
-         * surface \e could be the normalised link of a face of positive
+         * surface _could_ be the normalised link of a face of positive
          * dimension.
          *
-         * A non-null return value is \e not a guarantee that this surface
-         * \e is such a link; however, if this routine returns no value then
-         * this \e is a guarantee that the surface is not such a link.
+         * A non-null return value is _not_ a guarantee that this surface
+         * _is_ such a link; however, if this routine returns no value then
+         * this _is_ a guarantee that the surface is not such a link.
          *
          * The precise tests that this routine carries out involve a trade-off
          * between speed and mathematical power, and so are subject to change
@@ -1890,7 +1890,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre This surface is non-empty.
          *
-         * \return the precise multiple of this surface that \e could be a
+         * \return the precise multiple of this surface that _could_ be a
          * normalised non-vertex face link, or no value if we can prove
          * that this surface is not such a link.
          */

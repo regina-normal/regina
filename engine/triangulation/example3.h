@@ -74,7 +74,7 @@ class Example<3> : public detail::ExampleBase<3> {
 
         /**
          * Returns a one-tetrahedron triangulation of the 3-sphere.
-         * This is \e different from the generic routine sphere(),
+         * This is _different_ from the generic routine sphere(),
          * which uses two tetrahedra instead.
          *
          * \return a one-tetrahedron 3-sphere.

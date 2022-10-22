@@ -77,7 +77,7 @@ namespace regina::python::doc::common {
  *
  * If you are within a ..._SCOPE(s) block and s is the name of a
  * class/struct/etc., then rdoc refers to the namespace containing the
- * \e members of s (which uses a trailing underscore, as noted above),
+ * _members_ of s (which uses a trailing underscore, as noted above),
  * and rdoc_scope is an alias for the docstring for s itself (which has
  * no trailing underscore).
  *

@@ -117,7 +117,7 @@ class LightweightSequence {
          *   added onto the end of the sequence.
          *
          * - If the next argument is a LightweightSequence iterator, then this
-         *   must be followed by \e another LightweightSequence iterator.
+         *   must be followed by _another_ LightweightSequence iterator.
          *   The range defined by this iterator pair will be copied onto
          *   the end of the sequence.
          *
@@ -330,7 +330,7 @@ class LightweightSequence {
          * This class is meant to be lightweight: it merely stores a
          * reference to the list of elements to compare, and it is safe
          * and fast to pass around by value.  The cost of this is that
-         * the caller \e must ensure that the list of elements to compare
+         * the caller _must_ ensure that the list of elements to compare
          * (which is a C-style array) has a lifespan at least as long as
          * this object.  This behaviour is new as of Regina 5.96; in past
          * versions of Regina the list of elements was copied on construction.

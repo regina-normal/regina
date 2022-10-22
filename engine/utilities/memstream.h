@@ -69,7 +69,7 @@ class mem_istream : public std::istream {
          */
         mem_istream(const char* begin, const char* end);
         /**
-         * Destructor.  Note that this does \e not deallocate the array of
+         * Destructor.  Note that this does _not_ deallocate the array of
          * characters being read.
          */
         ~mem_istream() override;

@@ -162,7 +162,7 @@ class GILScopedRelease {
  *   callbacks from within other threads.
  *
  * It must be emphasised that, although \a c may be called from a thread
- * \a t that is not the main thread, this thread \a t \e must be created and
+ * \a t that is not the main thread, this thread \a t _must_ be created and
  * destroyed by the main function \a f.  That is, the thread \a t must not
  * have interacted with Python before, and it must not interact with Python
  * again afterwards.  Of the course this thread \a t may be reused multiple

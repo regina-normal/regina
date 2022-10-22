@@ -488,10 +488,10 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Determines if this and the given filter are configured to
          * filter on the same set of constraints.
          *
-         * Even if both filters are designed to reject \e every surface
+         * Even if both filters are designed to reject _every_ surface
          * by having an empty BoolSet for one of the boolean conditions,
          * they will still not compare as equal unless they use an empty
-         * BoolSet for the \e same boolean condition(s).  In other words,
+         * BoolSet for the _same_ boolean condition(s).  In other words,
          * this test compares the precise configurations of the filters,
          * not their deduced behaviour.
          *
@@ -505,10 +505,10 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Determines if this and the given filter are configured to
          * filter on the different sets of constraints.
          *
-         * Even if both filters are designed to reject \e every surface
+         * Even if both filters are designed to reject _every_ surface
          * by having an empty BoolSet for one of the boolean conditions,
          * they will still compare as different unless they use an empty
-         * BoolSet for the \e same boolean condition(s).  In other words,
+         * BoolSet for the _same_ boolean condition(s).  In other words,
          * this test compares the precise configurations of the filters,
          * not their deduced behaviour.
          *

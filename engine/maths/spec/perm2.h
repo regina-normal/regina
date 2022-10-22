@@ -79,8 +79,8 @@ namespace regina {
  * `Perm<5>(a,b,c,d,e)`.  For Perm<2>, these two constructors would
  * be indistinguishable (since both would take two integer arguments).
  * Here Perm<2> takes an approach that is consistent with the generic Perm<n>
- * class: `Perm<2>(a,b)` is interpreted as the \e transposition of
- * \a a and \a b.  In particular, `Perm(0,1)` is \e not the
+ * class: `Perm<2>(a,b)` is interpreted as the _transposition_ of
+ * \a a and \a b.  In particular, `Perm(0,1)` is _not_ the
  * identity permutation.
  *
  * \ifacespython Since Python does not support templates, this class is
@@ -418,7 +418,7 @@ class Perm<2> {
         /**
          * Finds the reverse of this permutation.
          *
-         * Here \e reverse means that we reverse the images of 0 and 1.
+         * Here _reverse_ means that we reverse the images of 0 and 1.
          * In other words, if permutation \a q is the
          * reverse of \a p, then `p[i] == q[1 - i]` for all \a i.
          */
@@ -667,7 +667,7 @@ class Perm<2> {
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input routine _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
@@ -816,7 +816,7 @@ class Perm<2> {
          * treated as invalid (i.e., this routine will throw an exception).
          *
          * If \a noTrailingData is \c true then the iterator is required to
-         * \e finish at \a limit, or else the encoding will be considered
+         * _finish_ at \a limit, or else the encoding will be considered
          * invalid also; if \a noTrailingData is \c false then there is no
          * constraint on the final state of the iterator.
          *

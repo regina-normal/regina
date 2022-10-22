@@ -50,7 +50,7 @@ namespace regina {
  * Represents a layering of zero or more tetrahedra upon a torus
  * boundary.
  *
- * A \e layering involves laying a new tetrahedron flat upon two
+ * A _layering_ involves laying a new tetrahedron flat upon two
  * adjacent boundary triangles in order to change the boundary curves.  Many
  * tetrahedra may be layered upon a boundary in succession in order to
  * change the boundary curves more dramatically.
@@ -88,15 +88,15 @@ namespace regina {
  * often be the cause of these edge identifications).  This allows the
  * Layering class a little more versatility in degenerate and boundary cases.
  *
- * This class keeps track of an \e old boundary, which is the original
+ * This class keeps track of an _old_ boundary, which is the original
  * pair of triangles upon which the first tetrahedron is layered, and a
- * \e new boundary, which is formed by the last layered tetrahedron and
+ * _new_ boundary, which is formed by the last layered tetrahedron and
  * contains the modified boundary curves.  If no tetrahedra are layered
  * at all then the old and new boundaries will be identical.
  *
  * This class is used to search for layerings as follows.  The
  * constructor is called with a particular pair of triangles that will form
- * the old boundary (note that these are generally \e not boundary triangles
+ * the old boundary (note that these are generally _not_ boundary triangles
  * in the triangulation, since we are searching for layerings that have
  * been placed upon them).  This forms a trivial (zero-tetrahedron)
  * layering.  The routines extend() or extendOne() are then called to see

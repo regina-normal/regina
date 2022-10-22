@@ -121,7 +121,7 @@ namespace {
     /**
      * Helper data used by the treewidth-based algorithm to test whether a
      * key is viable.  In other words, this tests whether the data from
-     * a given key \e might survive all the way up to the root of the
+     * a given key _might_ survive all the way up to the root of the
      * tree decomposition.
      *
      * \pre Like homflyTreewidth(), this struct can only be used when the
@@ -256,7 +256,7 @@ namespace {
 #ifdef IDENTIFY_NONVIABLE_KEYS
         /**
          * Marked as \c true when a key is determined to be viable.
-         * This allows diagnostic code to determine whether \e any of a set
+         * This allows diagnostic code to determine whether _any_ of a set
          * of potential keys was found to be viable.
          *
          * This class never initialises \a foundViable or marks it as \c false;

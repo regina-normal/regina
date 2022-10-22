@@ -34,7 +34,7 @@
  *  \brief Contains implementation details for the various linear programming
  *  constraint classes.
  *
- *  This file is \e not included automatically by treeconstraint.h.
+ *  This file is _not_ included automatically by treeconstraint.h.
  *  However, most end users should not need to include it, since
  *  Regina's calculation engine provides full explicit instantiations
  *  of these classes for common combinations of template arguments.

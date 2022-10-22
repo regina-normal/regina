@@ -34,7 +34,7 @@
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
- *  This file is \e not included from triangulation.h, but the routines
+ *  This file is _not_ included from triangulation.h, but the routines
  *  it contains are explicitly instantiated in Regina's calculation engine.
  *  Therefore end users should never need to include this header.
  */

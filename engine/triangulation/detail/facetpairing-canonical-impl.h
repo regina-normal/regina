@@ -34,7 +34,7 @@
  *  \brief Contains some of the implementation details for the generic
  *  FacetPairing class template.
  *
- *  This file is \e not included from facetpairing.h, and it is not
+ *  This file is _not_ included from facetpairing.h, and it is not
  *  shipped with Regina's development headers.  The routines it contains are
  *  explicitly instantiated in Regina's calculation engine for all dimensions.
  *

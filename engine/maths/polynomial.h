@@ -245,7 +245,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         bool isZero() const;
 
         /**
-         * Returns whether this polynomial is monic.  A \e monic
+         * Returns whether this polynomial is monic.  A _monic_
          * polynomial is a non-zero polynomial whose leading coefficient
          * is one.
          *
@@ -269,13 +269,13 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         /**
          * Returns the given coefficient of this polynomial.
          *
-         * \ifacespython Python users can also use this operator to \e set
+         * \ifacespython Python users can also use this operator to _set_
          * cofficients; that is, you can write `poly[exp] = value`.
-         * However, when \e getting a coefficient this operator will return
+         * However, when _getting_ a coefficient this operator will return
          * by value (to enforce constness), which means for example you
          * cannot write something like `poly[exp].negate()`.
          *
-         * \cpp For C++ users, this operator is read-only.  To \e set
+         * \cpp For C++ users, this operator is read-only.  To _set_
          * coefficients, you must use the separate routine set().
          *
          * \param exp the exponent of the term whose coefficient should
@@ -452,7 +452,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * More precisely: suppose there exist polynomials \a q and \a r with
          * coefficients of type \a T for which `this = q.other + r`,
          * and where \a r has smaller degree than \a other.  Then we call
-         * \a q the \e quotient, and \a r the \e remainder.
+         * \a q the _quotient_, and \a r the _remainder_.
          *
          * This routine replaces this polynomial with the quotient \a q,
          * and discards the remainder.  If you need to keep the remainder
@@ -484,8 +484,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * More precisely: suppose there exist polynomials \a q and \a r with
          * coefficients of type \a T for which `this = q.divisor + r`,
          * and where \a r has smaller degree than \a divisor.  Then this
-         * routine returns the pair (\a q, \a r); that is, the \e quotient
-         * and the \e remainder.
+         * routine returns the pair (\a q, \a r); that is, the _quotient_
+         * and the _remainder_.
          *
          * If you do not need the remainder (e.g., if you know in
          * advance that \a divisor divides into this polynomial exactly),
@@ -856,7 +856,7 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  * More precisely: suppose there exist polynomials \a q and \a r with
  * coefficients of type \a T for which `lhs = q.rhs + r`,
  * and where \a r has smaller degree than \a rhs.  Then we call
- * \a q the \e quotient, and \a r the \e remainder.
+ * \a q the _quotient_, and \a r the _remainder_.
  *
  * This routine returns the quotient \a q, and discards the remainder.
  * If you need to keep the remainder also, then call Polynomial::divisionAlg()

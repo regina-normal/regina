@@ -63,7 +63,7 @@ namespace regina {
  * enough information to fully reconstruct a triangulation, since
  * the permutations used for each individual gluing are not stored.
  *
- * Facet pairings are \e labelled, in that the simplices are explicitly
+ * Facet pairings are _labelled_, in that the simplices are explicitly
  * numbered 0,1,..., and the facets of each simplex are explicitly numbered
  * 0,...,\a dim (just like in a triangulation).  Facet pairings do also come
  * with code to help identify and work with relabellings, via isomorphisms,
@@ -152,7 +152,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          *
          * This routine will skip any initial whitespace in the given input
          * stream.  Once it finds its first non-whitespace character,
-         * it will read the \e entire line from the input stream and expect
+         * it will read the _entire_ line from the input stream and expect
          * that line to containin the text representation of a facet pairing.
          *
          * \exception InvalidInput The data found in the input stream is

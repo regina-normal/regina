@@ -59,7 +59,7 @@ class IntegerBase;
  * - They use only printable ASCII characters (the 94 ASCII values from
  *   33 to 126 inclusive), and do not contain any whitespace.  This means
  *   (for example) you can use them as whitespace-separated tokens in plain
- *   text files.  However, they do make use of \e all of the ASCII punctuation
+ *   text files.  However, they do make use of _all_ of the ASCII punctuation
  *   symbols, and so you must take care when (for example) trying to hard-code
  *   them as strings in source code, or using them as components of filenames.
  *
@@ -79,29 +79,29 @@ class IntegerBase;
  *   this guarantee only extends to types that "conceptually" intend to
  *   represent the same broad types of objects, possibly with different
  *   limitations.  So, for example, there is no guarantee that the integer 7,
- *   the rational 7/1, and/or the constant \e polynomial 7 would encode to
+ *   the rational 7/1, and/or the constant _polynomial_ 7 would encode to
  *   the same string.
  *
  * - Conversely, objects of the same type but with different inherent values
  *   will encode to different strings.  So, for example, the integers 7 and -7
  *   will have different encodings.
  *
- * A consequence of the last two points is that, if the \e type of an object
- * is known in advance, then its \e value can be recovered from its encoding.
+ * A consequence of the last two points is that, if the _type_ of an object
+ * is known in advance, then its _value_ can be recovered from its encoding.
  * However, the encoding does not contain enough information to deduce the
  * type if this is not already known.
  *
  * Because encodings contain enough information to identify where they end,
- * this means that you can encode a \e sequence of objects by concatenating
+ * this means that you can encode a _sequence_ of objects by concatenating
  * the individual encodings with no separators, and (assuming the types
  * of the objects are fixed) this will be enough to guarantee that
- * different \e sequences likewise have different encodngs.
+ * different _sequences_ likewise have different encodngs.
  *
  * Tight encodings were originally designed to support perfect hashing
  * (essentially "compressing" data into a short printable string whilst
  * preserving the correctness of equality tests).  As a result, they were
  * originally intended to be used only in one direction.  However, Regina
- * does provide matching \e decoding routines if you need to reconstruct
+ * does provide matching _decoding_ routines if you need to reconstruct
  * objects from their tight encodings.
  *
  * For native C++ data types where tight encodings and decodings are supported,
@@ -120,7 +120,7 @@ class IntegerBase;
  * A base class that assists with support for tight encodings and
  * corresponding decodings.
  *
- * If a class \a T supports tight encodings, then it \e may derive from
+ * If a class \a T supports tight encodings, then it _may_ derive from
  * TightEncodable<T>.  If it does, then your derived class must provide
  * the following two functions, which implement tight encodings and decodings
  * via input/output streams:
@@ -146,7 +146,7 @@ class IntegerBase;
  *
  * - `static T tightDecoding(const std::string&)`.
  *
- * A class \a T that supports tight encodings does not \e need to derive from
+ * A class \a T that supports tight encodings does not _need_ to derive from
  * TightEncodable.  However, if it does not then it should implement all four
  * of the above functions itself.  Examples of this include the permutation
  * classes (which have optimised implementations due to their very small space
@@ -156,7 +156,7 @@ class IntegerBase;
  * \tparam T the type of object being encoded/decoded; this must derive
  * from TightEncodable<T>.
  *
- * \note Every object of this class that is ever instantiated \e must be
+ * \note Every object of this class that is ever instantiated _must_ be
  * derived from the class \a T.  In other words, end users cannot
  * construct objects of the parent class TightEncodable<T>.
  *
@@ -417,7 +417,7 @@ std::string tightEncoding(bool value);
  *
  * \exception InvalidArgument The given string is not a tight encoding of an
  * integer/boolean of type \a Int.  This includes the case where the encoding
- * \e is a valid integer encoding but the integer itself is outside the
+ * _is_ a valid integer encoding but the integer itself is outside the
  * allowed range for the \a Int type.
  *
  * \ifacespython Since Python does not support templates, the interface
@@ -448,7 +448,7 @@ Int tightDecoding(const std::string& enc);
  * The tight encoding will be read from the given input stream.  If the input
  * stream contains leading whitespace then it will be treated as an invalid
  * encoding (i.e., this routine will throw an exception).  The input routine
- * \e may contain further data: if this routine is successful then the input
+ * _may_ contain further data: if this routine is successful then the input
  * stream will be left positioned immediately after the encoding, without
  * skipping any trailing whitespace.
  *
@@ -468,7 +468,7 @@ Int tightDecoding(const std::string& enc);
  *
  * \exception InvalidInput The given input stream does not begin with a tight
  * encoding of an integer/boolean of type \a Int.  This includes the case
- * where the encoding \e is a valid integer encoding but the integer itself
+ * where the encoding _is_ a valid integer encoding but the integer itself
  * is outside the allowed range for the \a Int type.
  *
  * \nopython Use regina::tightDecoding() instead, which takes a string as its
@@ -523,13 +523,13 @@ namespace detail {
      * treated as invalid (i.e., this routine will throw an exception).
      *
      * If \a noTrailingData is \c true then the iterator is required to
-     * \e finish at \a limit, or else the encoding will be considered
+     * _finish_ at \a limit, or else the encoding will be considered
      * invalid also; if \a noTrailingData is \c false then there is no
      * constraint on the final state of the iterator.
      *
      * \exception InvalidInput The given iterator does not point to
      * a tight encoding of an integer of type \a Int.  This includes the
-     * case where the encoding \e is a valid integer encoding but the integer
+     * case where the encoding _is_ a valid integer encoding but the integer
      * itself is outside the allowed range for the \a Int type.
      *
      * This routine does recognise infinity in the case where \a Int is
@@ -562,7 +562,7 @@ namespace detail {
      * Internal function that writes the tight encoding of an integer
      * whose value is either non-negative or -1.
      *
-     * This should \e not be used for encoding standalone integers, since it
+     * This should _not_ be used for encoding standalone integers, since it
      * uses a more compact format that is not compatible with Regina's general
      * integer encodings.  Instead, it is intended to be used as part of the
      * encoding for larger objects (e.g., triangulations or isomorphisms).
@@ -587,7 +587,7 @@ namespace detail {
     /**
      * Internal function that writes the tight encoding of -1, using an
      * encoding that is compatible with tightEncodeIndex().  Note that this is
-     * \e not compatible with Regina's general integer encodings.
+     * _not_ compatible with Regina's general integer encodings.
      *
      * This is identical to calling `tightEncodeIndex<ssize_t>(out, -1)`.
      *
@@ -608,14 +608,14 @@ namespace detail {
      * The tight encoding will be read from the given input stream.  If the
      * input stream contains leading whitespace then it will be treated as an
      * invalid encoding (i.e., this routine will throw an exception).  The
-     * input routine \e may contain further data: if this routine is successful
+     * input routine _may_ contain further data: if this routine is successful
      * then the input stream will be left positioned immediately after the
      * encoding, without skipping any trailing whitespace.
      *
      * \exception InvalidInput The given input stream does not begin with a
      * tight encoding of an integer of type \a Int using the encoding scheme
      * defined by tightEncodeIndex().  This includes the case where the
-     * encoding \e is a valid non-negative integer encoding but the integer
+     * encoding _is_ a valid non-negative integer encoding but the integer
      * itself is outside the allowed range for the \a Int type.
      *
      * \nopython

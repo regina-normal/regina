@@ -614,7 +614,7 @@ namespace {
     /**
      * This is another helper class for enumerateCovers().  Its purpose
      * is to use the group relations to derive relations between the
-     * \e signs of the permutations that represent the group generators.
+     * _signs_ of the permutations that represent the group generators.
      *
      * If we are able to identify k independent relations between the signs,
      * then this should allow us to cut the size of the resulting search

@@ -126,7 +126,7 @@ class Flags {
         /**
          * Returns whether the given flag is set.
          *
-         * This requires \e all of the bits of the given flag to be set.
+         * This requires _all_ of the bits of the given flag to be set.
          * The test is equivalent to `(*this & flag) == flag`.
          *
          * \param flag the flag whose presence will be tested.
@@ -140,7 +140,7 @@ class Flags {
         /**
          * Returns whether all of the flags in the given set are set.
          *
-         * This requires \e all of the bits of all of the flags in the
+         * This requires _all_ of the bits of all of the flags in the
          * given set to be present in this set.
          * The test is equivalent to `(*this & rhs) == rhs`.
          *
@@ -401,7 +401,7 @@ class Flags {
          *
          * If neither flag is present, then \a default_ will be used.
          * If multiple flags are present, then the flag that appears
-         * \e earlier in the argument list for this routine will be used.
+         * _earlier_ in the argument list for this routine will be used.
          *
          * \pre Each of the given flags is single-bit.
          *
@@ -425,7 +425,7 @@ class Flags {
          *
          * If neither flag is present, then \a default_ will be used.
          * If multiple flags are present, then the flag that appears
-         * \e earlier in the argument list for this routine will be used.
+         * _earlier_ in the argument list for this routine will be used.
          *
          * \pre Each of the given flags is single-bit.
          *

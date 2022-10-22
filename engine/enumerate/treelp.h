@@ -75,7 +75,7 @@ using MatrixInt = Matrix<Integer, true>;
  * inappropriate for general use.  If you just want a general-use
  * integer matrix class, use MatrixInt instead.
  *
- * It is \e critical that, before using an LPMatrix, you reserve space
+ * It is _critical_ that, before using an LPMatrix, you reserve space
  * for its elements, and then fix a specific size.  A matrix for which
  * both tasks have been done will be called \a initialised.  You can
  * initialise a matrix in one of two ways:
@@ -136,7 +136,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
         /**
          * Creates an uninitialised matrix with no memory storage.
          *
-         * You \e must call reserve() and then either initClone() or
+         * You _must_ call reserve() and then either initClone() or
          * initIdentity() before this matrix will become initialised.
          */
         inline LPMatrix();
@@ -580,15 +580,15 @@ struct LPCol {
  *
  * By "broad class of vector encodings", we allow only three options:
  *
- * - \e standard encodings, which cover all normal surface encodings
+ * - _standard_ encodings, which cover all normal surface encodings
  *   that include triangle coordinates, and where the tableaux holds
  *   triangle and quadrilateral columns but nothing else;
  *
- * - \e quad encodings, which cover all normal surface encodings that do not
+ * - _quad_ encodings, which cover all normal surface encodings that do not
  *   include triangle coordinates, and where the tableaux holds
  *   quadrilateral columns but nothing else;
  *
- * - \e angle encodings, which cover angle structure encodings, and
+ * - _angle_ encodings, which cover angle structure encodings, and
  *   where the tableaux holds angle columns as well as a single scaling
  *   column.
  *
@@ -784,15 +784,15 @@ class LPSystem : public ShortOutput<LPSystem> {
  * class constructor will throw an exception, as noted in the constructor
  * documentation below.
  *
- * This class is optimised for working with \e columns of the matrix
+ * This class is optimised for working with _columns_ of the matrix
  * (in particular, multiplying columns of this matrix by rows of some
  * other matrix).
  *
  * This class works with a broad class of vector encodings for normal
  * surfaces or angle structures, as described by the LPSystem class,
- * and within that broad class it does not know \e which particular
+ * and within that broad class it does not know _which_ particular
  * encoding or underlying coordinate system is being used.  In particular,
- * the matching equations it uses will \e always be one of the standard
+ * the matching equations it uses will _always_ be one of the standard
  * tri-quad normal matching equations (if LPSystem::standard() is \c true),
  * the quad normal matching equations (if LPSystem::quad() is \c true),
  * or the homogeneous angle equations (if LPSystem::angles() is true).
@@ -1115,7 +1115,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * The LPData class offers support for octagonal almost normal
          * surfaces, in which exactly one tetrahedron is allowed to have
          * exactly one octagon type.  We represent such an octagon as a
-         * \e pair of incompatible quadrilaterals within the same tetrahedron.
+         * _pair_ of incompatible quadrilaterals within the same tetrahedron.
          * See the LPData class notes for details on how this works.
          *
          * In some settings where we are using additional constraints
@@ -1268,7 +1268,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  *   the actual change of variable by editing the tableaux itself using
  *   column operations).  Be warned: as a result, when we arrive at a
  *   final solution and collect the values of the variables, we must
- *   remember to \e increment the values of any such variables by one.
+ *   remember to _increment_ the values of any such variables by one.
  *
  * We do not store the full tableaux (which is dense and slow to work
  * with).  Instead we store the matrix of row operations that were
@@ -1305,7 +1305,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  * In the context of normal surfaces (not angle structures):
  * Although the underlying coordinate system is based on quadrilaterals
  * and (optionally) triangles, this class has elementary support for
- * octagons also, as seen in \e almost normal surface theory.  For the
+ * octagons also, as seen in _almost_ normal surface theory.  For the
  * purposes of this class, an octagon is represented as a pair of
  * quadrilaterals of different types in the same tetrahedron: these meet
  * the boundary of the tetrahedron in the same arcs as a single octagon,
@@ -1444,7 +1444,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
 
     public:
         /**
-         * Constructs a new tableaux.  You \e must call reserve() before
+         * Constructs a new tableaux.  You _must_ call reserve() before
          * doing anything else with this tableaux.
          */
         inline LPData();
@@ -1495,7 +1495,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
 
         /**
          * Reserves enough memory for this tableaux to work with.
-         * You \e must call this routine before doing anything else with
+         * You _must_ call this routine before doing anything else with
          * this tableaux.
          *
          * The data in this tableaux will not be initialised, and the
@@ -1591,7 +1591,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
 
         /**
          * Returns the sign of the given variable under the current
-         * basis.  This does \e not attempt to "undo" any changes of variable
+         * basis.  This does _not_ attempt to "undo" any changes of variable
          * caused by prior calls to constrainPositive() or constrainOct();
          * it simply tests the sign of the variable in the given column
          * of the tableaux in its current form.
@@ -1623,7 +1623,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * or constrainOct() on this variable, then these prior routines
          * will have performed a change of variable.  Any new call to
          * constraintZero() on this same variable will constraint the
-         * \e new variable, not the original, and so might not have the
+         * _new_ variable, not the original, and so might not have the
          * intended effect.
          *
          * \param pos the index of the variable that is to be set to zero.
@@ -1649,7 +1649,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * or constrainOct() on this variable, then these prior routines
          * will have performed a change of variable.  Any new call to
          * constrainPositive() on this same variable will constrain the
-         * \e new variable, not the original, and so might not have the
+         * _new_ variable, not the original, and so might not have the
          * intended effect.
          *
          * \param pos the index of the variable that is to be constrained as
@@ -1690,7 +1690,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * constrainOct() on one of the given variables, then these prior
          * routines will have performed a change of variable.  Any new call
          * to constrainOct() involving this same variable will constrain the
-         * \e new variable, not the original, and so might not have the
+         * _new_ variable, not the original, and so might not have the
          * intended effect.
          *
          * \param quad1 one of the two quadrilateral types that we
@@ -1712,7 +1712,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          *
          * - We extract variables that correspond to the original
          *   matching equations obtained from the underlying
-         *   triangulation, \e not the current tableaux and \e not even
+         *   triangulation, _not_ the current tableaux and _not_ even
          *   the original starting tableaux stored in origTableaux_.
          *   In other words, when we fill the resulting vector, we undo the
          *   column permutation described by LPInitialTableaux::columnPerm(),
@@ -1756,7 +1756,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * in this tableaux, not the original matching equations).
          * As a special case, when extracting a strict angle structure
          * one may pass \a type = \c null, in which case this routine will
-         * assume that \e every coordinate was constrained as positive.
+         * assume that _every_ coordinate was constrained as positive.
          * \return a vector containing the values of all the variables.
          * This vector will have length origTableaux_->coordinateColumns().
          */

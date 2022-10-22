@@ -55,12 +55,12 @@ namespace regina {
  * cone with a given linear subspace, and return the extremal rays of the new
  * cone that results.
  *
- * In some cases we are only interested in \e valid rays of the new cone.
+ * In some cases we are only interested in _valid_ rays of the new cone.
  * The ValidityConstraints class stores a number of "validity constraints";
  * a ray is then "valid" if it satisfies all of these constraints.
  *
  * Each individual constraint encodes a subset \a S of coordinate positions,
- * and requires that a ray can only be non-zero on at most \e one of those
+ * and requires that a ray can only be non-zero on at most _one_ of those
  * coordinate positions.  Equivalently, if we were to assume that the
  * linear subspace is in general position with respect to the coordinate
  * axes (which it is often not), then the <i>i</i>th facet of the cone would
@@ -72,7 +72,7 @@ namespace regina {
  * normal surfaces and angle structures:
  *
  * - We assume that the coordinate positions are grouped into consecutive
- *   \e blocks, each of the same size.  For instance, in standard coordinates
+ *   _blocks_, each of the same size.  For instance, in standard coordinates
  *   for normal surfaces, there is one block per tetrahedron, each of size
  *   seven (since each tetrahedron provides four triangle coordinates and
  *   three quadrilateral coordinates).
@@ -82,17 +82,17 @@ namespace regina {
  *   However, these additional coordinates cannot be used in any validity
  *   constraints.
  *
- * It is assumed that all constraints are either \e local or \e global:
+ * It is assumed that all constraints are either _local_ or _global:_
  *
- * - A \e local constraint involves coordinates within a single block only.
- *   It is assumed that, if local constraints are used, then \e every block
+ * - A _local_ constraint involves coordinates within a single block only.
+ *   It is assumed that, if local constraints are used, then _every_ block
  *   will use analogous local constraints (where "analagous" means they use
  *   the same coordinate positions relative to the start of each block).
  *   An example of a local constraint is the quadrilateral constraints from
  *   normal surface theory, which require that each tetrahedron has at most
  *   one non-zero quadrilateral coordinate.
  *
- * - A \e global constraint involves coordinates in every block; moreover,
+ * - A _global_ constraint involves coordinates in every block; moreover,
  *   each block must constraint the same coordinates relative to the start
  *   of the block.  An example of a global constraint is with almost normal
  *   surfaces, where we require that the entire surface has at most one

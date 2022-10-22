@@ -161,7 +161,7 @@ class IntersectionForm : public Output<IntersectionForm> {
         /**
          * Returns \c true if and only if this bilinear form is of even type.
          *
-         * A form \a Q is \e even if and only if `Q(x,x)` is even for all \a x.
+         * A form \a Q is _even_ if and only if `Q(x,x)` is even for all \a x.
          *
          * \return \c true if this bilinear form is of even type, or \c false
          * if it is of odd type.
@@ -171,7 +171,7 @@ class IntersectionForm : public Output<IntersectionForm> {
         /**
          * Returns \c true if and only if this bilinear form is of odd type.
          *
-         * A form \a Q is \e odd if and only if `Q(x,x)` is odd for some \a x.
+         * A form \a Q is _odd_ if and only if `Q(x,x)` is odd for some \a x.
          *
          * \return \c true if this bilinear form is of odd type, or \c false
          * if it is of even type.
@@ -182,7 +182,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * Determines if this and the given bilinear form are represented by
          * the same symmetric square integer matrices.
          *
-         * This does \e not test whether this and the given form are
+         * This does _not_ test whether this and the given form are
          * congruent (i.e., related by a change basis in the underlying
          * free abelian group).  Instead it is equivalent to testing
          * whether `matrix() == other.matrix()`.
@@ -197,7 +197,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          * Determines if this and the given bilinear form are not represented
          * by the same symmetric square integer matrices.
          *
-         * This does \e not test whether this and the given form are
+         * This does _not_ test whether this and the given form are
          * congruent (i.e., related by a change basis in the underlying
          * free abelian group).  Instead it is equivalent to testing
          * whether `matrix() != other.matrix()`.

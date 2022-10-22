@@ -99,7 +99,7 @@ void smithNormalForm(MatrixInt& matrix);
  * will both be square with side length matrix.rows().
  *
  * \param matrix the original matrix to put into Smith Normal Form (this
- * need not be square).  When the algorithm terminates, this matrix \e is
+ * need not be square).  When the algorithm terminates, this matrix _is_
  * in its Smith Normal Form.
  * \param rowSpaceBasis used to return a change of basis matrix (see
  * above for details).
@@ -144,7 +144,7 @@ void smithNormalForm(MatrixInt& matrix,
  * will both be square with side length matrix.rows().
  *
  * \param matrix the original matrix to put into Smith Normal Form (this
- * need not be square).  When the algorithm terminates, this matrix \e is
+ * need not be square).  When the algorithm terminates, this matrix _is_
  * in its Smith Normal Form.
  * \param rowSpaceBasis used to return a change of basis matrix (see
  * above for details).
@@ -170,7 +170,7 @@ void metricalSmithNormalForm(MatrixInt& matrix,
  * changes will be made to the matrix aside from swapping rows.
  *
  * Although this routine takes an integer matrix (and only uses integer
- * operations), we consider the row space to be over the \e rationals.
+ * operations), we consider the row space to be over the _rationals_.
  * That is, although we never divide, we act as though we could if we
  * wanted to.
  *
@@ -203,7 +203,7 @@ size_t rowBasis(MatrixInt& matrix);
  * space and simultaneously cut down the complement one dimension at a time.
  *
  * Although this routine takes integer matrices (and only uses integer
- * operations), we consider all bases to be over the \e rationals.
+ * operations), we consider all bases to be over the _rationals_.
  * That is, although we never divide, we act as though we could if we
  * wanted to.
  *

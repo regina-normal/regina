@@ -183,12 +183,12 @@ class FaceEmbeddingBase :
         /**
          * Tests whether this and the given object are identical.
          *
-         * Here \e identical means that two FaceEmbedding objects refer to
-         * the same-numbered face of the same-numbered simplex, \e and have
+         * Here _identical_ means that two FaceEmbedding objects refer to
+         * the same-numbered face of the same-numbered simplex, _and_ have
          * the same embedding permutations as returned by vertices().
          *
          * In particular, since this test only examines face/simplex/vertex
-         * \e numbers (not object pointers), it is meaningful to compare two
+         * _numbers_ (not object pointers), it is meaningful to compare two
          * FaceEmbedding objects from different underlying triangulations.
          *
          * \warning The meaning of this comparison changed in Regina 7.0.
@@ -208,12 +208,12 @@ class FaceEmbeddingBase :
         /**
          * Tests whether this and the given object are not identical.
          *
-         * Here \e identical means that two FaceEmbedding objects refer to
-         * the same-numbered face of the same-numbered simplex, \e and have
+         * Here _identical_ means that two FaceEmbedding objects refer to
+         * the same-numbered face of the same-numbered simplex, _and_ have
          * the same embedding permutations as returned by vertices().
          *
          * In particular, since this test only examines face/simplex/vertex
-         * \e numbers (not object pointers), it is meaningful to compare two
+         * _numbers_ (not object pointers), it is meaningful to compare two
          * FaceEmbedding objects from different underlying triangulations.
          *
          * \warning The meaning of this comparison changed in Regina 7.0.
@@ -740,7 +740,7 @@ class FaceBase :
          *
          * Condition (1) is tested for all dimensions \a subdim and \a dim.
          * Condition (2) is more difficult, since it relies on undecidable
-         * problems.  As a result, (2) is \e only tested when \a dim is one
+         * problems.  As a result, (2) is _only_ tested when \a dim is one
          * of Regina's \ref stddim "standard dimensions".
          *
          * If this face is invalid, then it is possible to find out why.

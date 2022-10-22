@@ -460,7 +460,7 @@ private:
      */
     void computeTorsionLinkingForm();
     /**
-     * Unlike computeTorsionLinkingForm(), this routine \e can be called
+     * Unlike computeTorsionLinkingForm(), this routine _can_ be called
      * for non-orientable manifolds (in which case we look at the
      * orientable double cover).
      *
@@ -533,14 +533,14 @@ public:
      * Creates a new copy of the given object.
      *
      * This constructor induces a deep copy of the given object; moreover,
-     * this is expensive since HomologicalData objects are \e very large.
+     * this is expensive since HomologicalData objects are _very_ large.
      */
     HomologicalData(const HomologicalData&) = default;
     /**
      * Moves the contents of the given object into this new object.
      *
      * This operation is constant time, but it is still expensive
-     * constant time because HomologicalData objects are \e very large.
+     * constant time because HomologicalData objects are _very_ large.
      *
      * The object that was passed will no longer be usable.
      */
@@ -550,7 +550,7 @@ public:
      * Sets this to be a copy of the given object.
      *
      * This operator induces a deep copy of the given object; moreover,
-     * this is expensive since HomologicalData objects are \e very large.
+     * this is expensive since HomologicalData objects are _very_ large.
      *
      * \return a reference to this normal surface.
      */
@@ -559,7 +559,7 @@ public:
      * Moves the contents of the given object into this object.
      *
      * This operation is constant time, but it is still expensive
-     * constant time because HomologicalData objects are \e very large.
+     * constant time because HomologicalData objects are _very_ large.
      *
      * The object that was passed will no longer be usable.
      *

@@ -292,12 +292,12 @@ class ArcIterator {
      * given crossing of a knot or link.
      *
      * If the template argument \a out is \c true, then this will
-     * iterate through the two directed arcs \e exiting the given crossing:
+     * iterate through the two directed arcs _exiting_ the given crossing:
      * first the arc leaving from the lower strand, and then the arc leaving
      * from the upper strand.
      *
      * If the template argument \a out is \c false, then this will
-     * iterate through the two directed arcs \e entering the given crossing:
+     * iterate through the two directed arcs _entering_ the given crossing:
      * first the arc entering into the lower strand, and then the arc
      * entering into the upper strand.
      *

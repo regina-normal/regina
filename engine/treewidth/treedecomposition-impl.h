@@ -34,7 +34,7 @@
  *  \brief Contains implementations of template member functions in the
  *  TreeDecomposition class.
  *
- *  This file is \e not included automatically by treedecomposition.h.
+ *  This file is _not_ included automatically by treedecomposition.h.
  *  However, most end users should never need to include it, since
  *  Regina's calculation engine provides full explicit instantiations
  *  of these routines for \ref stddim "standard dimensions" and for

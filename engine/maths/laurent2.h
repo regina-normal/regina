@@ -270,13 +270,13 @@ class Laurent2 :
          * \ifacespython In Python, this is the square bracket operator,
          * not the round bracket operator; that is, Python users can access
          * coefficients through the syntax `poly[xExp, yExp]`.
-         * Moreover, this operator can also \e set cofficients; that is,
+         * Moreover, this operator can also _set_ cofficients; that is,
          * you can write `poly[xExp, yExp] = value`.
-         * However, when \e getting a coefficient this operator will return
+         * However, when _getting_ a coefficient this operator will return
          * by value (to enforce constness), which means for example you
          * cannot write something like `poly[xExp, yExp].negate()`.
          *
-         * \cpp For C++ users, this operator is read-only.  To \e set
+         * \cpp For C++ users, this operator is read-only.  To _set_
          * coefficients, you must use the separate routine set().
          *
          * \param xExp the exponent attached to \a x.
@@ -594,7 +594,7 @@ class Laurent2 :
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input routine _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.

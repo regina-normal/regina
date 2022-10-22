@@ -70,7 +70,7 @@ class LPConstraintNone;
  * homogeneous equalities, the class should derive from LPConstraintSubspace
  * instead (not this base class).
  *
- * In angle structure coordinates, these linear constraints must \e not
+ * In angle structure coordinates, these linear constraints must _not_
  * involve the scaling coordinate (the final coordinate that is used to
  * convert the angle structure polytope into a polyhedral cone).
  * The coefficient for the final scaling coordinate in each additional
@@ -83,7 +83,7 @@ class LPConstraintNone;
  *
  * This base class provides no functionality.  For documentation's sake
  * only, the notes here describe the functionality that any subclass
- * \e must implement.  We note again that LPConstraintBase does not
+ * _must_ implement.  We note again that LPConstraintBase does not
  * provide any implementations at all, and subclasses are completely
  * responsible for their own implementations.
  *
@@ -141,7 +141,7 @@ class LPConstraintBase {
          * The LPData class offers support for octagonal almost normal
          * surfaces, in which exactly one tetrahedron is allowed to have
          * exactly one octagon type.  We represent such an octagon as a
-         * \e pair of incompatible quadrilaterals within the same
+         * _pair_ of incompatible quadrilaterals within the same
          * tetrahedron.  See the LPData class notes for details on how
          * this works.
          *
@@ -158,7 +158,7 @@ class LPConstraintBase {
          *
          * This adjustment is not used with angle structure coordinates.
          *
-         * Currently this is a \e very blunt mechanism: it assumes that
+         * Currently this is a _very_ blunt mechanism: it assumes that
          * the adjustment can be made by adding a compile-time constant,
          * and it assumes that if there are multiple constraints (i.e.,
          * \a nConstraints > 1) then they can all be adjusted in the same way.
@@ -186,14 +186,14 @@ class LPConstraintBase {
          * triangulation might not satisfy the necessary requirements).
          * In such cases this routine should throw an exception, as
          * described below, and the corresponding constraint class
-         * \e must mention this possibility in its class documentation.
+         * _must_ mention this possibility in its class documentation.
          *
          * If you are implementing this routine in a subclass that
          * works with angle structure coordinates, remember that your
          * linear constraints must not interact with the scaling coordinate
          * (the final angle structure coordinate that is used to projectivise
          * the angle structure polytope into a polyhedral cone).  Your
-         * implementation of this routine \e must ensure that your
+         * implementation of this routine _must_ ensure that your
          * linear constraints all have coefficient zero in this column.
          *
          * The precise form of the linear function(s) will typically depend
@@ -224,12 +224,12 @@ class LPConstraintBase {
          * linear functions for these constraints, due to an error which
          * should have been preventable with the right checks in advance.
          * Any constraint class that could throw exceptions in this way
-         * \e must describe this behaviour in its own class documentation.
+         * _must_ describe this behaviour in its own class documentation.
          *
          * \exception UnsolvedCase It was not possible to create the linear
          * functions for these constraints, due to an error that was
          * "genuinely" unforseeable.  Again, any constraint class that could
-         * throw exceptions in this way \e must describe this behaviour in its
+         * throw exceptions in this way _must_ describe this behaviour in its
          * own class documentation.
          *
          * \ifacespython The argument \a col is not present, since LPCol is
@@ -477,7 +477,7 @@ class LPConstraintEulerPositive : public LPConstraintBase {
  * function.  The function constructed here has integer coefficients,
  * but otherwise has no special properties of note.
  *
- * This constraint currently only works with normal (and \e not almost normal)
+ * This constraint currently only works with normal (and _not_ almost normal)
  * coordinates.
  *
  * See the LPConstraintBase class notes for details on all member functions.
@@ -489,7 +489,7 @@ class LPConstraintEulerPositive : public LPConstraintBase {
  * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
  * \pre We are working with a normal vector encoding that includes triangle
- * coordinates, and that does \e not include octagon coordinates (i.e,
+ * coordinates, and that does _not_ include octagon coordinates (i.e,
  * the encoding for standard normal coordinates).
  *
  * \ifacespython It is rare that you would need to access this class directly
@@ -533,7 +533,7 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  *
  * Also, at present this class can only work with quadrilateral normal
  * coordinates (and cannot handle almost normal coordinates at all).
- * This is \e not explicitly checked; instead it appears as a
+ * This is _not_ explicitly checked; instead it appears as a
  * precondition (see below).
  *
  * See the LPConstraintBase class notes for details on all member functions.
@@ -594,10 +594,10 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  *
  * This class adds constraints of two types:
  *
- * - \e Banning constraints, which ensure that certain coordinates
+ * - _Banning_ constraints, which ensure that certain coordinates
  *   are set to zero;
  *
- * - \e Marking constraints, which are more flexible and can be used in
+ * - _Marking_ constraints, which are more flexible and can be used in
  *   different ways by different algorithms.
  *
  * All of these constraints operate only on normal or angle structure
@@ -613,7 +613,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * - In the TreeSingleSoln algorithm, marking affects what is considered
  *   a non-trivial normal surface.  Normally, a non-trivial surface is defined
  *   to be one in which some triangle coordinate is zero.  With marking,
- *   a non-trivial surface is redefined to be one in which some \e unmarked
+ *   a non-trivial surface is redefined to be one in which some _unmarked_
  *   triangle coordinate is zero.  In other words, marked triangle types
  *   are effectively ignored when determining whether a surface is non-trivial
  *   or not.
@@ -635,7 +635,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * coordinates).  See LPInitialTableaux for a more detailed discussion of this.
  *
  * This base class provides limited functionality (as documented below).
- * Subclasses \e must implement a constructor (which, like this base class,
+ * Subclasses _must_ implement a constructor (which, like this base class,
  * takes an initial tableaux and determines which coordinates are banned and/or
  * marked), and must implement supported(), which indicates which normal or
  * angle structure coordinate system this constraint class can work with.
@@ -818,7 +818,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
  *
  * This is intended to act as a drop-in replacement for a "real" BanConstraint
  * class (i.e., a subclass of BanConstraintBase).  However, to avoid any
- * overhead in this trivial case, BanNone does \e not derive from
+ * overhead in this trivial case, BanNone does _not_ derive from
  * BanConstraintBase, and all of its routines do nothing at all.
  *
  * See the BanConstraintBase class notes for details on the interface
@@ -873,7 +873,7 @@ class BanNone : public ShortOutput<BanNone> {
  * explicitly include triangles (e.g., encodings for standard normal or
  * almost normal coordinates).  In quadrilateral or quadrilateral-octagon
  * coordinates it will only ban quadrilaterals or octagons that touch
- * the boundary, but it will still allow \e triangles that meet the boundary
+ * the boundary, but it will still allow _triangles_ that meet the boundary
  * (since triangle types are not counted in these coordinate systems).
  * The supported() routine will only return \c true for encodings that
  * include triangles.
@@ -936,7 +936,7 @@ class BanBoundary : public BanConstraintBase {
  * explicitly include triangles (e.g., encodings for standard normal or
  * almost normal coordinates).  In quadrilateral or quadrilateral-octagon
  * coordinates it will only ban quadrilaterals or octagons that meet the
- * given edge, but it will still allow \e triangles that meet the edge
+ * given edge, but it will still allow _triangles_ that meet the edge
  * (since triangle types are not counted in these coordinate systems).
  * The supported() routine will only return \c true for encodings that
  * include triangles.
@@ -1007,7 +1007,7 @@ class BanEdge : public BanConstraintBase {
  * vector encodings that explicitly include triangles (e.g., encodings for
  * standard normal or almost normal coordinates).  In quadrilateral or
  * quadrilateral-octagon coordinates it will only ban quadrilaterals or
- * octagons that touch torus boundaries, but it will still allow \e triangles
+ * octagons that touch torus boundaries, but it will still allow _triangles_
  * that meet torus boundaries (since triangle types are not counted in these
  * coordinate systems).  The supported() routine will only return \c true for
  * encodings that include triangles.

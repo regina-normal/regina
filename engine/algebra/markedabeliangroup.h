@@ -180,7 +180,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
          *
-         * \pre The product M×N = 0.  This condition will \e not be tested
+         * \pre The product M×N = 0.  This condition will _not_ be tested
          * (for efficiency reasons); this is left to the user/programmer
          * to ensure.
          *
@@ -204,7 +204,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
          *
-         * \pre The product M×N = 0.  This condition will \e not be tested
+         * \pre The product M×N = 0.  This condition will _not_ be tested
          * (for efficiency reasons); this is left to the user/programmer
          * to ensure.
          *
@@ -442,7 +442,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Determines whether this and the given group were formed from
          * identical chain complex constructions.
          *
-         * This is \e not an isomorphism test.  For this comparison to return
+         * This is _not_ an isomorphism test.  For this comparison to return
          * \c true, both groups must have been constructed from identical
          * matrices \a M and \a N, using homology with the same coefficients.
          *
@@ -456,7 +456,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Determines whether this and the given group were formed from
          * different chain complex constructions.
          *
-         * This is \e not an isomorphism test.  For this comparison to return
+         * This is _not_ an isomorphism test.  For this comparison to return
          * \c false (i.e., for the chain complex constructions to be considered
          * identical), both groups must have been constructed from identical
          * matrices \a M and \a N, using homology with the same coefficients.

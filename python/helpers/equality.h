@@ -63,7 +63,7 @@ enum EqualityType {
      * The objects are compared by reference.  This means that the
      * python operators == and != simply test whether \a x and \a y refer to
      * the same instance of the C++ class \a C.  In other words, they test
-     * whether the underlying C++ \e pointers to \a x and \a y are the same.
+     * whether the underlying C++ _pointers_ to \a x and \a y are the same.
      */
     BY_REFERENCE = 2,
     /**
@@ -97,7 +97,7 @@ enum EqualityType {
  *
  * - If \a T provides neither == nor != operators, then this will generate
  *   a compile error.  Instead you should be calling the variant of
- *   add_eq_operators() \e without docstrings.
+ *   add_eq_operators() _without_ docstrings.
  *
  * - If \a T provides one of == or != but not the other, then this will
  *   generate a compile error.  You should fix the C++ class \a T to make its

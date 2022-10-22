@@ -72,7 +72,7 @@ template <>
 class Face<3, 2> : public detail::FaceBase<3, 2> {
     public:
         /**
-         * The \e type of a triangle, which indicates how the vertices and
+         * The _type_ of a triangle, which indicates how the vertices and
          * edges of the triangle are identified together.  Here the vertices
          * of a triangle are considered unlabelled (so a relabelling
          * will not change the triangle type).
@@ -183,7 +183,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          *
          * Constructing the link of a triangle begins with building the frontier
          * of a regular neighbourhood of the triangle.  If this is already a
-         * normal surface, then then link is called \e thin.  Otherwise
+         * normal surface, then then link is called _thin_.  Otherwise
          * the usual normalisation steps are performed until the surface
          * becomes normal; note that these normalisation steps could
          * change the topology of the surface, and in some pathological

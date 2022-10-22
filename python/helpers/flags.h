@@ -33,7 +33,7 @@
 /*! \file python/helpers/flags.h
  *  \brief Assists with wrapping Regina's flag constants and related classes.
  *
- *  This header is \e not included automatically by python/helpers.h.
+ *  This header is _not_ included automatically by python/helpers.h.
  *  If you need it, you will need to include it yourself.
  */
 

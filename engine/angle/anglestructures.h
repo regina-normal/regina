@@ -61,7 +61,7 @@ class XMLLegacyAngleStructuresReader;
  *
  * There are some important changes to this class as of Regina 7.0:
  *
- * - An angle structure list does \e not need to be a child packet of the
+ * - An angle structure list does _not_ need to be a child packet of the
  *   underlying triangulation, and indeed does not need to interact with
  *   the packet tree at all.
  *
@@ -86,7 +86,7 @@ class XMLLegacyAngleStructuresReader;
  *   event listeners.
  *
  * - To include an AngleStructures object in the packet tree, you must create
- *   a new PacketOf<AngleStructures>.  This \e is a packet type, and supports
+ *   a new PacketOf<AngleStructures>.  This _is_ a packet type, and supports
  *   labels, tags, child/parent packets, and event listeners.  It derives from
  *   AngleStructures, and so inherits the full AngleStructures interface.
  *
@@ -157,7 +157,7 @@ class AngleStructures :
          * thinks will be the most efficient method.
          *
          * Unlike the old enumerate() function, the new angle structure
-         * list will \e not be inserted into the packet tree.  Moreover,
+         * list will _not_ be inserted into the packet tree.  Moreover,
          * the given triangulation may change or even be destroyed
          * without causing problems.  See the class notes for details.
          *
@@ -207,7 +207,7 @@ class AngleStructures :
          * does not fire any change events.  This is because this list
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
          * \param src the list to move.
          */
@@ -227,9 +227,9 @@ class AngleStructures :
          *
          * The list that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this list which may in turn call arbitrary code
-         * via any registered packet listeners.  It deliberately does \e not
+         * via any registered packet listeners.  It deliberately does _not_
          * fire change events on \a src, since it assumes that \a src is about
          * to be destroyed (which will fire a destruction event instead).
          *
@@ -244,7 +244,7 @@ class AngleStructures :
          * This routine will behave correctly if \a other is in fact
          * this list.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both lists which may in turn call arbitrary
          * code via any registered packet listeners.
          *
@@ -274,7 +274,7 @@ class AngleStructures :
          *   process detects modifications, and modifying the frozen
          *   snapshot may result in an exception being thrown.
          *
-         * \warning As of Regina 7.0, you \e cannot access this triangulation
+         * \warning As of Regina 7.0, you _cannot_ access this triangulation
          * via the packet tree as Packet::parent().  This is because angle
          * structure lists can now be kept anywhere in the packet tree, or
          * can be kept as standalone objects outside the packet tree entirely.
@@ -554,7 +554,7 @@ class AngleStructures :
  *
  * See AngleStructures::swap() for more details.
  *
- * \note This swap function is \e not marked \c noexcept, since it
+ * \note This swap function is _not_ marked \c noexcept, since it
  * fires change events on both lists which may in turn call arbitrary
  * code via any registered packet listeners.
  *

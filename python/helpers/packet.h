@@ -63,7 +63,7 @@ namespace python {
  * of Held) inherit the full interface from Held.
  *
  * Since all packet types are held by std::shared_ptr in their Python
- * bindings, you \e must ensure that the base class Held is likewise held by
+ * bindings, you _must_ ensure that the base class Held is likewise held by
  * std::shared_ptr (not the default std::unique_ptr that pybind11 uses
  * unless instructed otherwise).  If you do not do this, then Python
  * will raise an ImportError when loading Regina's module.

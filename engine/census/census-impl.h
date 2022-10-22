@@ -34,7 +34,7 @@
  *  \brief Contains implementation details for the CensusDB::lookup()
  *  template function.
  *
- *  This file is \e not included automatically by census.h.
+ *  This file is _not_ included automatically by census.h.
  *  However, typical end users should not need to include it, since
  *  the main entry point to the census lookup functions is via the global
  *  Census::lookup() routines.

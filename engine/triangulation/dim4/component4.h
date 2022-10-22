@@ -90,7 +90,7 @@ class Component<4> : public detail::ComponentBase<4> {
          * Returns the number of <i>subdim</i>-faces in this component.
          *
          * For convenience, this routine explicitly supports the case
-         * \a subdim = 4.  This is \e not the case for the routines
+         * \a subdim = 4.  This is _not_ the case for the routines
          * face() and faces(), which give access to individual faces
          * (the reason relates to the fact that pentachora are built manually,
          * whereas lower-dimensional faces are deduced properties).

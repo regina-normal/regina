@@ -520,7 +520,7 @@ class Isomorphism :
          * the array Perm<dim>::Sn.
          *
          * In particular, the identity isomorphism is the first in such an
-         * iteration.  If this isomorphism is the \e last in such an
+         * iteration.  If this isomorphism is the _last_ in such an
          * iteration, then this operator will "wrap around" and set this
          * to the identity.
          *
@@ -549,7 +549,7 @@ class Isomorphism :
          * the array Perm<dim>::Sn.
          *
          * In particular, the identity isomorphism is the first in such an
-         * iteration.  If this isomorphism is the \e last in such an
+         * iteration.  If this isomorphism is the _last_ in such an
          * iteration, then this operator will "wrap around" and set this
          * to the identity.
          *
@@ -589,7 +589,7 @@ class Isomorphism :
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input routine _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
@@ -629,12 +629,12 @@ class Isomorphism :
         /**
          * Determines whether this and the given isomorphism are identical.
          *
-         * Two isomorphisms are considered \e identical if they act on the
+         * Two isomorphisms are considered _identical_ if they act on the
          * same number of top-dimensional simplices, and all destination
          * simplex numbers and facet permutations are the same for both
          * isomorphisms.
          *
-         * In particular it is only the simplex, facet and vertex \e labels
+         * In particular it is only the simplex, facet and vertex _labels_
          * that matter: an isomorphism does not refer to a specific
          * triangulation, and there is no sense in which the two isomorphisms
          * need to act on the same triangulations and/or point to the same
@@ -652,12 +652,12 @@ class Isomorphism :
         /**
          * Determines whether this and the given isomorphism are not identical.
          *
-         * Two isomorphisms are considered \e identical if they act on the
+         * Two isomorphisms are considered _identical_ if they act on the
          * same number of top-dimensional simplices, and all destination
          * simplex numbers and facet permutations are the same for both
          * isomorphisms.
          *
-         * In particular it is only the simplex, facet and vertex \e labels
+         * In particular it is only the simplex, facet and vertex _labels_
          * that matter: an isomorphism does not refer to a specific
          * triangulation, and there is no sense in which the two isomorphisms
          * need to act on the same triangulations and/or point to the same

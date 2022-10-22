@@ -113,7 +113,7 @@ namespace {
      * the case where that ordering was wrong.
      *
      * The permutation \a err maps the real vertices (A,B,C,D) to what
-     * where we \e thought those vertices were.  Specifically, if
+     * where we _thought_ those vertices were.  Specifically, if
      * err[x] == y, this means that the real vertex x has been glued
      * into the position that really belongs to vertex y.
      */

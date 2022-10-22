@@ -52,7 +52,7 @@ namespace regina {
  * The attachment is stored as a block of data in memory.  If the
  * attachment was originally read from the filesystem, this link is not
  * maintained (i.e., if the source file subsequently changes, the attachment
- * data stored in this packet will \e not change to reflect this).
+ * data stored in this packet will _not_ change to reflect this).
  *
  * This packet may or may not contain an attachment at any given time.
  * This can be tested by calling isNull(), and can be changed by calling
@@ -132,7 +132,7 @@ class Attachment : public Packet {
          *
          * The file will be read immediately, but no ongoing link will be
          * maintained.  That is, if the given file should later change its
-         * contents on the filesystem, the change will \e not be reflected in
+         * contents on the filesystem, the change will _not_ be reflected in
          * this attachment packet.
          *
          * If the file could not be read or is empty, then no attachment will
@@ -145,7 +145,7 @@ class Attachment : public Packet {
          * to remove directory prefixes, the filename will be the empty string.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.
          *
@@ -366,7 +366,7 @@ class Attachment : public Packet {
          * nothing and simply return \c false.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it unchanged to low-level C/C++ file I/O routines.
          *
          * \param pathname the full pathname of the file to write.

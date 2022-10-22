@@ -179,7 +179,7 @@ class AbelianGroup :
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
          *
-         * \pre The product M×N = 0.  This condition will \e not be tested
+         * \pre The product M×N = 0.  This condition will _not_ be tested
          * (for efficiency reasons); this is left to the user/programmer
          * to ensure.
          *
@@ -206,7 +206,7 @@ class AbelianGroup :
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
          *
-         * \pre The product M×N = 0.  This condition will \e not be tested
+         * \pre The product M×N = 0.  This condition will _not_ be tested
          * (for efficiency reasons); this is left to the user/programmer
          * to ensure.
          *
@@ -377,7 +377,7 @@ class AbelianGroup :
          * Determines whether this and the given abelian group have
          * identical presentations (which means they are isomorphic).
          *
-         * Since the AbelianGroup class stores \e only the invariants required
+         * Since the AbelianGroup class stores _only_ the invariants required
          * to identify the isomorphism type, two groups will compare as equal
          * if and only if they are isomorphic.  This is in contrast to the
          * comparisons for GroupPresentation (which tests for identical
@@ -393,7 +393,7 @@ class AbelianGroup :
          * Determines whether this and the given abelian group have
          * different presentations (which means they are non-isomorphic).
          *
-         * Since the AbelianGroup class stores \e only the invariants required
+         * Since the AbelianGroup class stores _only_ the invariants required
          * to identify the isomorphism type, two groups will compare as equal
          * if and only if they are isomorphic.  This is in contrast to the
          * comparisons for GroupPresentation (which tests for identical
@@ -448,7 +448,7 @@ class AbelianGroup :
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input routine _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.

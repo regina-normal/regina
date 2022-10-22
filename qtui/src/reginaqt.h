@@ -32,7 +32,7 @@
 
 /*! \file reginaqt.h
  *  \brief Provides Qt configuration for Regina.  This must be included
- *  in all of Regina's GUI sources, \e before any Qt headers.
+ *  in all of Regina's GUI sources, _before_ any Qt headers.
  */
 
 #ifndef __REGINAQT_H

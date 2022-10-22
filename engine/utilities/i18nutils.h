@@ -59,7 +59,7 @@ namespace regina::i18n {
  * returned is guaranteed to be valid UTF-8.  If the entire string is
  * valid UTF-8, then this routine will return `s.end()`.
  *
- * \ifacespython This routine returns the \e length of the longest valid
+ * \ifacespython This routine returns the _length_ of the longest valid
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
  *
  * \return an iterator marking the end of the longest valid UTF-8 prefix.
@@ -75,7 +75,7 @@ std::string::const_iterator utf8ValidTo(const std::string& s);
  * is guaranteed to be valid UTF-8.  If the entire string is valid UTF-8,
  * then this routine will return a pointer to the null terminator of \a s.
  *
- * \ifacespython This routine returns the \e length of the longest valid
+ * \ifacespython This routine returns the _length_ of the longest valid
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
  *
  * \return a pointer marking the end of the longest valid UTF-8 prefix.

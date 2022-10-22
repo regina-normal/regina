@@ -88,7 +88,7 @@ class FacetPairingBase :
          * A list of isomorphisms on facet pairings.
          *
          * In particular, this class uses the IsoList type to return
-         * the set of all \e automorphisms of a facet pairing.
+         * the set of all _automorphisms_ of a facet pairing.
          */
         using IsoList = std::vector<Isomorphism<dim>>;
 
@@ -146,7 +146,7 @@ class FacetPairingBase :
          *
          * This routine will skip any initial whitespace in the given input
          * stream.  Once it finds its first non-whitespace character,
-         * it will read the \e entire line from the input stream and expect
+         * it will read the _entire_ line from the input stream and expect
          * that line to containin the text representation of a facet pairing.
          *
          * \exception InvalidInput The data found in the input stream is
@@ -330,7 +330,7 @@ class FacetPairingBase :
         /**
          * Determines whether this facet pairing is connected.
          *
-         * A facet pairing is \e connected if it is possible to reach any
+         * A facet pairing is _connected_ if it is possible to reach any
          * simplex from any other simplex via a series of matched facet pairs.
          *
          * For this purpose, the empty facet pairing is considered to be
@@ -350,7 +350,7 @@ class FacetPairingBase :
          * sides of the resulting partition).  If there are still multiple
          * solutions, then the cut that is returned will have the two pieces
          * with sizes that are as close as possible to equal.  If there are
-         * \e still multiple solutions, then the choice will be arbitrary.
+         * _still_ multiple solutions, then the choice will be arbitrary.
          *
          * Note that it is possible that no solution exists (e.g. this
          * could happen if the matching is a star graph and \a minSide is
@@ -394,7 +394,7 @@ class FacetPairingBase :
          *
          * Note that, while the canoncial form is uniquely determined,
          * the isomorphism is not (since the facet pairing could have
-         * non-trivial automorphisms).  If you need \e all such isomorphisms
+         * non-trivial automorphisms).  If you need _all_ such isomorphisms
          * then you should call canonicalAll() instead.
          *
          * See the FacetPairing class notes for more information on
@@ -610,7 +610,7 @@ class FacetPairingBase :
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input routine _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
@@ -720,7 +720,7 @@ class FacetPairingBase :
          *
          * \warning If you are allowing a large number of boundary facets,
          * then the automorphisms groups could be enormous.  In this case it is
-         * highly recommended that your action does \e not take the list of all
+         * highly recommended that your action does _not_ take the list of all
          * automorphisms as its second argument, since this will avoid the
          * enormous memory cost of storing and passing such a list.
          *

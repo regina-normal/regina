@@ -93,8 +93,8 @@ namespace detail {
  *
  * This access is read-only, in the sense that both the table itself and the
  * table elements are read-only.  (Of course, if the table elements are
- * non-const pointers then this means that the \e pointers cannot be reassigned
- * to point to different objects, but the objects they \e point to can still
+ * non-const pointers then this means that the _pointers_ cannot be reassigned
+ * to point to different objects, but the objects they _point_ to can still
  * be modified.)
  *
  * This class is in a sense a multi-dimensional analogue to TableView
@@ -420,7 +420,7 @@ class TableView {
          *
          * \ifacespython In Python, the special method __len__() returns
          * \a s_1.  That is, it indicates the allowed range for the
-         * \e first array subscript.
+         * _first_ array subscript.
          *
          * \return the size of this array, across all of the array dimensions.
          */

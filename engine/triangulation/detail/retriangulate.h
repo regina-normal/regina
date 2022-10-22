@@ -55,10 +55,10 @@ namespace detail {
  * to a retriangulation or link rewriting function.
  *
  * A retriangulation or link rewriting function can work with arbitrary
- * callable objects.  However, the \e implementations of such functions are
+ * callable objects.  However, the _implementations_ of such functions are
  * long and should not be dragged into the main headers.  The core purpose
  * of this class is therefore to coalesce the arbitrary action types
- * down to just \e two fixed types (depending on whether the action includes a
+ * down to just _two_ fixed types (depending on whether the action includes a
  * text signature (e.g., an isomorphism signature) in its initial argument(s)).
  * This means that the retriangulation or rewriting code can be templated on
  * a single boolean parameter, and so we can instatiate it completely in

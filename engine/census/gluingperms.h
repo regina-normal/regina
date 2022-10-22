@@ -72,7 +72,7 @@ namespace regina {
  *
  * Internally, this class stores each permutation as an index into
  * Perm<dim+1>::Sn_1 (that is, an index into the permutation group \a S_dim).
- * Importantly, you can only \e set permutations using these indices,
+ * Importantly, you can only _set_ permutations using these indices,
  * via the non-const permIndex() function - access to the permutations
  * themselves is read-only.  You can use indexToGluing() and gluingToIndex()
  * to convert between indicex and permutations, or you can use the read-only

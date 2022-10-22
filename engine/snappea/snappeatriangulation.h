@@ -250,7 +250,7 @@ class Cusp : public ShortOutput<Cusp> {
          * Two Cusp objects are considered equal if they refer to the
          * same vertex number of the underlying triangulation, and they
          * have the same filling coefficients.  Note that the vertex
-         * \e pointers do not need to be the same (i.e., it is meaningful
+         * _pointers_ do not need to be the same (i.e., it is meaningful
          * to compare cusps from different triangulations).
          *
          * \param other the cusp information to compare with this.
@@ -266,7 +266,7 @@ class Cusp : public ShortOutput<Cusp> {
          * Two Cusp objects are considered equal if they refer to the
          * same vertex number of the underlying triangulation, and they
          * have the same filling coefficients.  Note that the vertex
-         * \e pointers do not need to be the same (i.e., it is meaningful
+         * _pointers_ do not need to be the same (i.e., it is meaningful
          * to compare cusps from different triangulations).
          *
          * \param other the cusp information to compare with this.
@@ -321,7 +321,7 @@ class Cusp : public ShortOutput<Cusp> {
  *   SnapPeaTriangulation::volume(), and others specific to this class)
  *   and Regina's native triangulation functions (such as
  *   Triangulation<3>::homology(), and others inherited from Triangulation<3>).
- *   This is because an object of this class stores \e two representations of
+ *   This is because an object of this class stores _two_ representations of
  *   the triangulation (SnapPea's and Regina's), which are always kept in sync.
  *
  * - However, you may <b>only edit this object using the SnapPea functions
@@ -335,7 +335,7 @@ class Cusp : public ShortOutput<Cusp> {
  *   with no tetrahedra and no SnapPea data at all.
  *
  * - In particular, if you wish to assign one SnapPea triangulation to another,
- *   or swap the contents of two SnapPea triangulations, then you \e must
+ *   or swap the contents of two SnapPea triangulations, then you _must_
  *   cast both objects to SnapPeaTriangulation before performing the operation.
  *   If either argument is presented as the parent class Triangulation<3> then
  *   the inherited operation on Triangulation<3> will be called instead, which
@@ -379,7 +379,7 @@ class Cusp : public ShortOutput<Cusp> {
  * - In particular, if you are testing two triangulations for equality:
  *   if either triangulation is presented as the parent class Triangulation<3>
  *   then you will be calling the inherited Triangulation<3> comparision
- *   operators, which \e only compare the tetrahedron labelling and gluings.
+ *   operators, which _only_ compare the tetrahedron labelling and gluings.
  *   If you wish to compare cusps and fillings as well, you must ensure that
  *   both triangulations are cast to SnapPeaTriangulation (in which case the
  *   SnapPeaTriangulation comparison operators will be used).
@@ -417,7 +417,7 @@ class Cusp : public ShortOutput<Cusp> {
  *   listeners.
  *
  * - To include a SnapPeaTriangulation in the packet tree, you must create a
- *   new PacketOf<SnapPeaTriangulation>.  This \e is a packet type, and
+ *   new PacketOf<SnapPeaTriangulation>.  This _is_ a packet type, and
  *   supports labels, tags, child/parent packets, and event listeners.
  *   It derives from SnapPeaTriangulation, and so inherits the full
  *   SnapPeaTriangulation interface.
@@ -438,7 +438,7 @@ class Cusp : public ShortOutput<Cusp> {
  *
  * - As expected, this will fire a pair of change events.  However, the
  *   packetToBeChanged() event will be fired too late: specifically, it will be
- *   fired \e after the Triangulation<3> change is made but \e before the
+ *   fired _after_ the Triangulation<3> change is made but _before_ the
  *   SnapPea triangulation is nullifed.  In particular, it will already be
  *   too late to take a copy of the original SnapPea triangulation.
  *
@@ -642,8 +642,8 @@ class SnapPeaTriangulation :
 
         /**
          * Creates a new SnapPea triangulation from the contents of
-         * SnapPea data file.  The argument may be the \e name of a
-         * SnapPea file, or it may also be the \e contents of a SnapPea file
+         * SnapPea data file.  The argument may be the _name_ of a
+         * SnapPea file, or it may also be the _contents_ of a SnapPea file
          * (so the file itself need not actually exist on the filesystem).
          *
          * This routine uses the SnapPea kernel to read the data file,
@@ -672,7 +672,7 @@ class SnapPeaTriangulation :
          * \i18n If the given argument is a filename, then this routine makes
          * no assumptions about the \ref i18n "character encoding" used in the
          * filename, and simply passes it through unchanged to low-level C/C++
-         * file I/O routines.  This routine assumes that the file \e contents,
+         * file I/O routines.  This routine assumes that the file _contents_,
          * however, are in UTF-8 (the standard encoding used throughout Regina).
          *
          * \exception FileError The SnapPea kernel could not read the
@@ -715,7 +715,7 @@ class SnapPeaTriangulation :
          * does not fire any change events.  This is because this triangulation
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
          * \param src the triangulation to move.
          */
@@ -781,7 +781,7 @@ class SnapPeaTriangulation :
          * reasons described above), it is possible that the tetrahedron and
          * vertex numbers might be changed in the new SnapPea triangulation.
          * In particular, if the given Regina triangulation is orientable but
-         * not oriented, then you should \e expect these numbers to change.
+         * not oriented, then you should _expect_ these numbers to change.
          *
          * \param tri the Regina triangulation to clone.
          * \param ignored a legacy parameter that is now ignored.
@@ -794,7 +794,7 @@ class SnapPeaTriangulation :
          * Creates a new ideal SnapPea triangulation representing the
          * complement of the given link in the 3-sphere.
          *
-         * This is \e not the same triangulation that would be produced by
+         * This is _not_ the same triangulation that would be produced by
          * calling `SnapPeaTriangulation(link.complement())`.
          * By calling `link.complement()`, you through Regina's
          * Triangulation<3> class and therefore lose the peripheral curves.
@@ -857,7 +857,7 @@ class SnapPeaTriangulation :
          * Sets this to be a (deep) copy of the given SnapPea triangulation.
          *
          * \warning If you wish to copy the contents of one SnapPea
-         * triangulation into another, you \e must cast both to
+         * triangulation into another, you _must_ cast both to
          * SnapPeaTriangulation before calling the assignment operator.  If
          * either argument is presented as the parent class Triangulation<3>,
          * then the Triangulation<3> assignment operator will be called
@@ -888,7 +888,7 @@ class SnapPeaTriangulation :
          * The triangulation that is passed (\a src) will no longer be usable.
          *
          * \warning If you wish to move the contents of one SnapPea
-         * triangulation into another, you \e must cast both to
+         * triangulation into another, you _must_ cast both to
          * SnapPeaTriangulation before calling the assignment operator.  If
          * either argument is presented as the parent class Triangulation<3>,
          * then the Triangulation<3> assignment operator will be called
@@ -897,10 +897,10 @@ class SnapPeaTriangulation :
          * be reset to a null triangulation.  See the SnapPeaTriangulation
          * class notes for further discussion.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
          * code via any registered packet listeners.  It deliberately does
-         * \e not fire change events on \a src, since it assumes that \a src is
+         * _not_ fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
@@ -923,7 +923,7 @@ class SnapPeaTriangulation :
          * this triangulation.
          *
          * \warning If you wish to swap the contents of two SnapPea
-         * triangulations, you \e must cast both to SnapPeaTriangulation
+         * triangulations, you _must_ cast both to SnapPeaTriangulation
          * before calling swap().  If either argument is presented as the
          * parent class Triangulation<3>, then the Triangulation<3>
          * swap() will be called instead; the result will be that (just
@@ -931,7 +931,7 @@ class SnapPeaTriangulation :
          * both SnapPea triangulations will be reset to null triangulations.
          * See the SnapPeaTriangulation class notes for further discussion.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both triangulations which may in turn call
          * arbitrary code via any registered packet listeners.
          *
@@ -1029,7 +1029,7 @@ class SnapPeaTriangulation :
 
         /**
          * Determines whether the current solution to the gluing equations
-         * has volume approximately zero.  This test is \e not rigorous.
+         * has volume approximately zero.  This test is _not_ rigorous.
          *
          * This requires (i) the volume itself to be very close to
          * zero in an absolute sense, (ii) the volume to be zero
@@ -1173,7 +1173,7 @@ class SnapPeaTriangulation :
          * exactly, without going through the SnapPea kernel and without
          * requiring floating-point comparisons.
          *
-         * In particular, it \e does check whether:
+         * In particular, it _does_ check whether:
          *
          * - the tetrahedron numbers, vertex labels and gluings are the
          *   same in both triangulations (i.e., the tests performed by
@@ -1185,7 +1185,7 @@ class SnapPeaTriangulation :
          * - each pair of corresponding cusps are either both not filled,
          *   or both filled using the same coefficients.
          *
-         * It does \e not check wehether corresponding tetrahedron shapes are
+         * It does _not_ check wehether corresponding tetrahedron shapes are
          * the same, or if the volumes are "sufficiently close", or even
          * whether the SnapPea kernel has produced the same solution
          * type for both triangulations.
@@ -1206,7 +1206,7 @@ class SnapPeaTriangulation :
          * exactly, without going through the SnapPea kernel and without
          * requiring floating-point comparisons.
          *
-         * In particular, it \e does check whether:
+         * In particular, it _does_ check whether:
          *
          * - the tetrahedron numbers, vertex labels and gluings are the
          *   same in both triangulations (i.e., the tests performed by
@@ -1218,7 +1218,7 @@ class SnapPeaTriangulation :
          * - each pair of corresponding cusps are either both not filled,
          *   or both filled using the same coefficients.
          *
-         * It does \e not check wehether corresponding tetrahedron shapes are
+         * It does _not_ check wehether corresponding tetrahedron shapes are
          * the same, or if the volumes are "sufficiently close", or even
          * whether the SnapPea kernel has produced the same solution
          * type for both triangulations.
@@ -1558,7 +1558,7 @@ class SnapPeaTriangulation :
          *
          * The orientations of the
          * boundary curves of a spun-normal surface are chosen so
-         * that \e if meridian and longitude are a positive basis as
+         * that _if_ meridian and longitude are a positive basis as
          * vieved from the cusp, then as one travels along an oriented
          * boundary curve, the spun-normal surface spirals into the cusp
          * to one's right and down into the manifold to one's left.
@@ -1715,7 +1715,7 @@ class SnapPeaTriangulation :
          * equivalent covers correspond to conjugate representations of
          * the fundamental group.
          *
-         * To enumerate \e all <i>k</i>-sheeted covers up to equivalence,
+         * To enumerate _all_ <i>k</i>-sheeted covers up to equivalence,
          * set \a type to \a all_covers.  Be warned, however, that this becomes
          * enormously slow as the number of sheets \a k grows.  An alternative
          * is to enumerate only cyclic covers by setting \a type to
@@ -1760,7 +1760,7 @@ class SnapPeaTriangulation :
          * \pre This is not a null triangulation.
          *
          * \warning If you are enumerating all covers, then the argument
-         * \a sheets should be \e very small.
+         * \a sheets should be _very_ small.
          *
          * \warning The covers that are produced will typically use far more
          * tetrahedra than necessary.  If size is important then you should
@@ -1777,7 +1777,7 @@ class SnapPeaTriangulation :
          * in Python.  The first form is
          * `enumerateCovers(sheets, type, action)`, which mirrors the
          * C++ function: it takes \a action which may be a pure Python function,
-         * it returns the number of covers found, but it does \e not take an
+         * it returns the number of covers found, but it does _not_ take an
          * addition argument list (\a args).  The second form is
          * `enumerateCovers(sheets, type)`, which returns a Python list
          * containing all of the triangulated covers, each given as a
@@ -1841,7 +1841,7 @@ class SnapPeaTriangulation :
          * \warning The SnapPea kernel does not always compute the canonical
          * cell decomposition correctly.  Sometimes it gives the wrong answer,
          * although in such a case it still guarantees that the manifold it
-         * \e does return is homeomorphic to the original.  Sometimes it
+         * _does_ return is homeomorphic to the original.  Sometimes it
          * gives no answer at all, in which case this routine will throw
          * an exception (see below).
          *
@@ -1923,7 +1923,7 @@ class SnapPeaTriangulation :
          * \warning The SnapPea kernel does not always compute the canonical
          * cell decomposition correctly.  Sometimes it gives the wrong answer,
          * although in such a case it still guarantees that the manifold it
-         * \e does return is homeomorphic to the original.  Sometimes it
+         * _does_ return is homeomorphic to the original.  Sometimes it
          * gives no answer at all, in which case this routine will throw
          * an exception (see below).
          *
@@ -2046,7 +2046,7 @@ class SnapPeaTriangulation :
          * SnapPea-specific information that Regina does not use (e.g.,
          * peripheral curves).
          *
-         * If you wish to export a triangulation to a SnapPea \e file, you
+         * If you wish to export a triangulation to a SnapPea _file_, you
          * should call saveSnapPea() instead (which has better performance, and
          * does not require you to construct an enormous intermediate string).
          *
@@ -2096,9 +2096,9 @@ class SnapPeaTriangulation :
          * written and this routine will return \c false.
          *
          * \i18n This routine makes no assumptions about the
-         * \ref i18n "character encoding" used in the given file \e name, and
+         * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  The \e contents of the file will be written using UTF-8.
+         * routines.  The _contents_ of the file will be written using UTF-8.
          *
          * \param filename the name of the SnapPea file to which to write.
          * \return \c true if and only if the file was successfully written.
@@ -2241,14 +2241,14 @@ class SnapPeaTriangulation :
  * See SnapPeaTriangulation::swap() for more details and caveats.
  *
  * \warning If you wish to swap the contents of two SnapPea triangulations,
- * you \e must cast both to SnapPeaTriangulation before calling swap().  If
+ * you _must_ cast both to SnapPeaTriangulation before calling swap().  If
  * either argument is presented as the parent class Triangulation<3>, then
  * the Triangulation<3> swap() will be called instead; the result will be
  * that (just like when you call any of the Triangulation<3> edit routines)
  * both SnapPea triangulations will be reset to null triangulations.
  * See the SnapPeaTriangulation class notes for further discussion.
  *
- * \note This swap function is \e not marked \c noexcept, since it
+ * \note This swap function is _not_ marked \c noexcept, since it
  * fires change events which may in turn call arbitrary
  * code via any registered packet listeners.
  *

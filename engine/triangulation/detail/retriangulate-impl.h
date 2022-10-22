@@ -35,7 +35,7 @@
  *  \brief Full implementation details for the retriangulation and
  *  link rewriting functions.
  *
- *  This file is \e not included from triangulation.h or link.h, and it is not
+ *  This file is _not_ included from triangulation.h or link.h, and it is not
  *  shipped with Regina's development headers.  The routines it contains are
  *  explicitly instantiated in Regina's calculation engine for all dimensions.
  *
@@ -176,7 +176,7 @@ class RetriangulateThreadSync<true> {
             auto* t = new std::thread[nThreads];
             unsigned i;
 
-            // In the std::thread constructor, we \e must pass \c this as a
+            // In the std::thread constructor, we _must_ pass \c this as a
             // pointer - otherwise we may end up making deep copies instead.
             for (i = 0; i < nThreads; ++i)
                 t[i] = std::thread(&RetriangulatorType::processQueue,

@@ -67,7 +67,7 @@ namespace regina {
  * objects to and from the engine.  For Perm<6>, the internal permutation
  * codes have changed as of Regina 7.0:
  *
- * - \e First-generation codes were used internally in Regina 6.0.1 and earlier.
+ * - _First-generation_ codes were used internally in Regina 6.0.1 and earlier.
  *   These are _image packs_: integers whose lowest three bits represent
  *   the image of 0, whose next lowest three bits represent the image of 1,
  *   and so on.  The routines permCode1(), setPermCode1(), fromPermCode1()
@@ -76,7 +76,7 @@ namespace regina {
  *   continues to use first-generation codes to describe gluings between
  *   5-simplices.
  *
- * - \e Second-generation codes are used internally in Regina 7.0 and above.
+ * - _Second-generation_ codes are used internally in Regina 7.0 and above.
  *   These codes are integers between 0 and 719 inclusive, representing the
  *   index of the permutation in the array Perm<6>::S6.  The routines
  *   permCode2(), setPermCode2(), fromPermCode2() and isPermCode2()
@@ -294,7 +294,7 @@ class Perm<6> {
          * Performs the precomputation necessary for using the optimised
          * cachedComp() and cachedPow() routines.
          *
-         * This \e must be called before calling cachedComp() or cachedPow().
+         * This _must_ be called before calling cachedComp() or cachedPow().
          *
          * This only needs to be done once in the lifetime of the program.
          * If you do try to call precompute() a second time then it will
@@ -593,7 +593,7 @@ class Perm<6> {
          * The permutation that is returned is the same as you would
          * obtain by calling `(*this) * q`.
          *
-         * \pre You \e must have called the routine precompute() at least once
+         * \pre You _must_ have called the routine precompute() at least once
          * in the lifetime of this program before using cachedComp().
          * Otherwise this routine will almost certainly crash your program.
          *
@@ -618,7 +618,7 @@ class Perm<6> {
          * The permutation that is returned is the same as you would
          * obtain by calling `(*this) * q * r`.
          *
-         * \pre You \e must have called the routine precompute() at least once
+         * \pre You _must_ have called the routine precompute() at least once
          * in the lifetime of this program before using cachedComp().
          * Otherwise this routine will almost certainly crash your program.
          *
@@ -676,7 +676,7 @@ class Perm<6> {
          * The permutation that is returned is the same as you would
          * obtain by calling pow(exp).
          *
-         * \pre You \e must have called the routine precompute() at least once
+         * \pre You _must_ have called the routine precompute() at least once
          * in the lifetime of this program before using cachedPow().
          * Otherwise this routine will almost certainly crash your program.
          *
@@ -699,7 +699,7 @@ class Perm<6> {
         /**
          * Finds the reverse of this permutation.
          *
-         * Here \e reverse means that we reverse the images of 0,...,5.
+         * Here _reverse_ means that we reverse the images of 0,...,5.
          * In other words, if permutation \a q is the
          * reverse of \a p, then `p[i] == q[5 - i]` for all \a i.
          */
@@ -759,7 +759,7 @@ class Perm<6> {
          * Lexicographically compares the images of (0,1,2,3,4,5) under this
          * and the given permutation.
          *
-         * Note that this does \e not yield the same ordering of permutations
+         * Note that this does _not_ yield the same ordering of permutations
          * as used by the less-than and increment operators.  Moreover,
          * compareWith() is slower than the less-than operator to compute.
          *
@@ -810,7 +810,7 @@ class Perm<6> {
          * Determines if this appears earlier than the given permutation
          * in the array Perm<6>::Sn.
          *
-         * Note that this is \e not the same ordering of permutations as
+         * Note that this is _not_ the same ordering of permutations as
          * the ordering implied by compareWith().  This is, however,
          * consistent with the ordering implied by the ++ operators,
          * and this order is also faster to compute than compareWith().
@@ -955,7 +955,7 @@ class Perm<6> {
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input routine _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
@@ -3070,7 +3070,7 @@ class Perm<6> {
          * treated as invalid (i.e., this routine will throw an exception).
          *
          * If \a noTrailingData is \c true then the iterator is required to
-         * \e finish at \a limit, or else the encoding will be considered
+         * _finish_ at \a limit, or else the encoding will be considered
          * invalid also; if \a noTrailingData is \c false then there is no
          * constraint on the final state of the iterator.
          *

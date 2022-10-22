@@ -83,7 +83,7 @@ class SatRegion;
  * boundary curves are not identified directly.  In this case, the matrix
  * \a M shows how the layering relates the curves on each region boundary.
  *
- * Note that the routines writeName() and writeTeXName() do \e not
+ * Note that the routines writeName() and writeTeXName() do _not_
  * offer enough information to uniquely identify the triangulation,
  * since this essentially requires 2-dimensional assemblings of
  * saturated blocks.  For full details, writeTextLong() may be used instead.

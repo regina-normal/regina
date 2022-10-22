@@ -65,7 +65,7 @@ class ProgressTracker;
  *
  * There are some important changes to this class as of Regina 7.0:
  *
- * - A normal hypersurface list does \e not need to be a child packet of the
+ * - A normal hypersurface list does _not_ need to be a child packet of the
  *   underlying triangulation, and indeed does not need to interact with
  *   the packet tree at all.
  *
@@ -90,7 +90,7 @@ class ProgressTracker;
  *   event listeners.
  *
  * - To include an NormalHypersurfaces object in the packet tree, you must
- *   create a new PacketOf<NormalHypersurfaces>.  This \e is a packet type,
+ *   create a new PacketOf<NormalHypersurfaces>.  This _is_ a packet type,
  *   and supports labels, tags, child/parent packets, and event listeners.
  *   It derives from NormalHypersurfaces, and so inherits the full
  *   NormalHypersurfaces interface.
@@ -169,7 +169,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * to use the smallest possible integer coordinates.
          *
          * Unlike the old enumerate() function, the new normal hypersurface
-         * list will \e not be inserted into the packet tree.  Moreover,
+         * list will _not_ be inserted into the packet tree.  Moreover,
          * the given triangulation may change or even be destroyed
          * without causing problems.  See the class notes for details.
          *
@@ -205,7 +205,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * (i) the matching equations could not be constructed, which can
          * only happen in certain coordinate systems where this is explicitly
          * described in the HyperCoords enum documentation; or
-         * (ii) the arguments require enumerating \e fundamental normal
+         * (ii) the arguments require enumerating _fundamental_ normal
          * surfaces using the primal Hilbert basis algorithm, and Normaliz
          * was unable to complete its portion of the task, which in theory
          * should never happen at all.
@@ -248,7 +248,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * does not fire any change events.  This is because this list
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
          * \param src the list to move.
          */
@@ -268,9 +268,9 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *
          * The list that is passed (\a src) will no longer be usable.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this list which may in turn call arbitrary code
-         * via any registered packet listeners.  It deliberately does \e not
+         * via any registered packet listeners.  It deliberately does _not_
          * fire change events on \a src, since it assumes that \a src is about
          * to be destroyed (which will fire a destruction event instead).
          *
@@ -285,7 +285,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * This routine will behave correctly if \a other is in fact
          * this list.
          *
-         * \note This swap function is \e not marked \c noexcept, since it
+         * \note This swap function is _not_ marked \c noexcept, since it
          * fires change events on both lists which may in turn call arbitrary
          * code via any registered packet listeners.
          *
@@ -373,7 +373,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *   process detects modifications, and modifying the frozen
          *   snapshot may result in an exception being thrown.
          *
-         * \warning As of Regina 7.0, you \e cannot access this triangulation
+         * \warning As of Regina 7.0, you _cannot_ access this triangulation
          * via the packet tree as Packet::parent().  This is because normal
          * hypersurface lists can now be kept anywhere in the packet tree, or
          * can be kept as standalone objects outside the packet tree entirely.
@@ -940,7 +940,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
  *
  * See NormalHypersurfaces::swap() for more details.
  *
- * \note This swap function is \e not marked \c noexcept, since it
+ * \note This swap function is _not_ marked \c noexcept, since it
  * fires change events on both lists which may in turn call arbitrary
  * code via any registered packet listeners.
  *

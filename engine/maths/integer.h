@@ -306,7 +306,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Initialises this integer to the given value.
          *
          * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict \e multiple of sizeof(long).  For
+         * \a bytes is a strict _multiple_ of sizeof(long).  For
          * instance, if longs are 8 bytes then you can use \a bytes=16
          * but not \a bytes=12.  This restriction is enforced through a
          * compile-time assertion, but may be lifted in future versions
@@ -504,7 +504,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * underlying representation is a native or large integer.
          *
          * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict \e multiple of sizeof(long).  For
+         * \a bytes is a strict _multiple_ of sizeof(long).  For
          * instance, if longs are 8 bytes then you can use this routine
          * with \a bytes=4 or \a bytes=16 but not \a bytes=12.
          * This restriction is enforced through a compile-time assertion,
@@ -779,7 +779,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * The preincrement operator.
          * This operator increments this integer by one, and returns a
-         * reference to the integer \e after the increment.
+         * reference to the integer _after_ the increment.
          *
          * \nopython The postincrement operator is present in Python as the
          * member function inc().
@@ -791,7 +791,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * The postincrement operator.
          * This operator increments this integer by one, and returns a
-         * copy of the integer \e before the increment.
+         * copy of the integer _before_ the increment.
          *
          * \ifacespython This routine is named inc() since python does not
          * support the increment operator.
@@ -803,7 +803,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * The predecrement operator.
          * This operator decrements this integer by one, and returns a
-         * reference to the integer \e after the decrement.
+         * reference to the integer _after_ the decrement.
          *
          * \nopython The postdecrement operator is present in python as the
          * member function dec().
@@ -815,7 +815,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * The postdecrement operator.
          * This operator decrements this integer by one, and returns a
-         * copy of the integer \e before the decrement.
+         * copy of the integer _before_ the decrement.
          *
          * \ifacespython This routine is named dec() since python does not
          * support the decrement operator.
@@ -1396,7 +1396,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Generate a pseudo-random integer that is uniformly
          * distributed in the interval [0,*this).
          *
-         * The random number generation here does \e not use Regina's
+         * The random number generation here does _not_ use Regina's
          * own RandomEngine class, but instead uses a separate random
          * number generator provided by GMP.
          *
@@ -1416,7 +1416,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Generate a pseudo-random integer that is uniformly
          * distributed in the interval [0,2^n).
          *
-         * The random number generation here does \e not use Regina's
+         * The random number generation here does _not_ use Regina's
          * own RandomEngine class, but instead uses a separate random
          * number generator provided by GMP.
          *
@@ -1431,7 +1431,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * interval [0,2^n), with a tendency to have long strings of 0s
          * and 1s in its binary expansion.
          *
-         * The random number generation here does \e not use Regina's
+         * The random number generation here does _not_ use Regina's
          * own RandomEngine class, but instead uses a separate random
          * number generator provided by GMP.
          *
@@ -1582,7 +1582,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * The tight encoding will be read from the given input stream.  If the
          * input stream contains leading whitespace then it will be treated as
          * an invalid encoding (i.e., this routine will throw an exception).
-         * The input routine \e may contain further data: if this routine is
+         * The input routine _may_ contain further data: if this routine is
          * successful then the input stream will be left positioned immediately
          * after the encoding, without skipping any trailing whitespace.
          *
@@ -1857,7 +1857,7 @@ class NativeInteger {
          * will have an undefined initial value.
          *
          * \pre If \a bytes is larger than sizeof(long), then
-         * \a bytes is a strict \e multiple of sizeof(long).  For
+         * \a bytes is a strict _multiple_ of sizeof(long).  For
          * instance, if longs are 8 bytes then you can use this
          * routine with \a bytes=16 but not \a bytes=12.
          * This restriction is enforced through a compile-time assertion,
@@ -2012,7 +2012,7 @@ class NativeInteger {
         /**
          * The preincrement operator.
          * This operator increments this integer by one, and returns a
-         * reference to the integer \e after the increment.
+         * reference to the integer _after_ the increment.
          *
          * \return a reference to this integer after the increment.
          */
@@ -2021,7 +2021,7 @@ class NativeInteger {
         /**
          * The postincrement operator.
          * This operator increments this integer by one, and returns a
-         * copy of the integer \e before the increment.
+         * copy of the integer _before_ the increment.
          *
          * \return a copy of this integer before the
          * increment took place.
@@ -2031,7 +2031,7 @@ class NativeInteger {
         /**
          * The predecrement operator.
          * This operator decrements this integer by one, and returns a
-         * reference to the integer \e after the decrement.
+         * reference to the integer _after_ the decrement.
          *
          * \return a reference to this integer after the decrement.
          */
@@ -2040,7 +2040,7 @@ class NativeInteger {
         /**
          * The postdecrement operator.
          * This operator decrements this integer by one, and returns a
-         * copy of the integer \e before the decrement.
+         * copy of the integer _before_ the decrement.
          *
          * \return a copy of this integer before the
          * decrement took place.

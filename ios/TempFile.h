@@ -67,7 +67,7 @@
  *
  * There is typically no need to call removeFile, unless you urgently need the space.
  * This is because removeFile will be called automatically when this TempFile is
- * deallocated.  As an exception, it will \e not be called upon deallocation if it
+ * deallocated.  As an exception, it will _not_ be called upon deallocation if it
  * has been called before and it returned \c true.
  *
  * You may call this removeFile multiple times (though of course this only makes sense if you

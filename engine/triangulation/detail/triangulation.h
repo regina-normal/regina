@@ -295,7 +295,7 @@ class TriangulationBase :
          * does not fire any change events.  This is because this triangulation
          * is freshly constructed (and therefore has no listeners yet), and
          * because we assume that \a src is about to be destroyed (an action
-         * that \e will fire a packet destruction event).
+         * that _will_ fire a packet destruction event).
          *
          * \param src the triangulation to move.
          */
@@ -511,7 +511,7 @@ class TriangulationBase :
          *
          * Any pointers or references to Simplex<dim> objects will remain valid.
          *
-         * If your intention is to \e replace the simplices in \a dest
+         * If your intention is to _replace_ the simplices in \a dest
          * (i.e., you do not need to preserve the original contents),
          * then consider using the move assignment operator instead
          * (which is more streamlined and also moves across any cached
@@ -556,7 +556,7 @@ class TriangulationBase :
          * at compile time.
          *
          * For convenience, this routine explicitly supports the case
-         * \a subdim = \a dim.  This is \e not the case for the routines
+         * \a subdim = \a dim.  This is _not_ the case for the routines
          * face() and faces(), which give access to individual faces (the
          * reason relates to the fact that top-dimensional simplices are built
          * manually, whereas lower-dimensional faces are deduced properties).
@@ -581,7 +581,7 @@ class TriangulationBase :
          * is fast constant time.
          *
          * For convenience, this routine explicitly supports the case
-         * \a subdim = \a dim.  This is \e not the case for the routines
+         * \a subdim = \a dim.  This is _not_ the case for the routines
          * face() and faces(), which give access to individual faces (the
          * reason relates to the fact that top-dimensional simplices are built
          * manually, whereas lower-dimensional faces are deduced properties).
@@ -676,7 +676,7 @@ class TriangulationBase :
          *
          * The object that is returned will remain up-to-date and valid for
          * as long as the triangulation exists.  In contrast, however, remember
-         * that the individual component objects \e within this list will be
+         * that the individual component objects _within_ this list will be
          * deleted and replaced each time the triangulation changes.
          * Therefore it is best to treat this object as temporary only,
          * and to call components() again each time you need it.
@@ -710,7 +710,7 @@ class TriangulationBase :
          *
          * The object that is returned will remain up-to-date and valid for
          * as long as the triangulation exists.  In contrast, however, remember
-         * that the individual boundary components \e within this list will be
+         * that the individual boundary components _within_ this list will be
          * deleted and replaced each time the triangulation changes.
          * Therefore it is best to treat this object as temporary only,
          * and to call boundaryComponents() again each time you need it.
@@ -739,7 +739,7 @@ class TriangulationBase :
          *
          * The object that is returned will remain up-to-date and valid for
          * as long as the triangulation exists.  In contrast, however,
-         * remember that the individual faces \e within this list will be
+         * remember that the individual faces _within_ this list will be
          * deleted and replaced each time the triangulation changes.
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
@@ -1002,7 +1002,7 @@ class TriangulationBase :
          * Specifically: if \a other refers to face \a i of top-dimensional
          * simplex number \a k of some other triangulation, then this routine
          * will return face \a i of top-dimensional simplex number \a k of this
-         * triangulation.  Note that this routine does \e not use the face
+         * triangulation.  Note that this routine does _not_ use the face
          * indices within each triangulation (which is outside the user's
          * control), but rather the simplex numbering (which the user has
          * full control over).
@@ -1071,7 +1071,7 @@ class TriangulationBase :
          *
          * Condition (1) is tested for all dimensions \a dim.
          * Condition (2) is more difficult, since it relies on undecidable
-         * problems.  As a result, (2) is \e only tested when \a dim is one
+         * problems.  As a result, (2) is _only_ tested when \a dim is one
          * of Regina's \ref stddim "standard dimensions".
          *
          * If a triangulation is invalid then you can call
@@ -1193,7 +1193,7 @@ class TriangulationBase :
          * Specifically, this routine returns \c true if and only if every
          * gluing permutation has negative sign.
          *
-         * Note that \e orientable triangulations are not always \e oriented
+         * Note that _orientable_ triangulations are not always _oriented_
          * by default.  You can call orient() if you need the top-dimensional
          * simplices to be oriented consistently as described above.
          *
@@ -1216,7 +1216,7 @@ class TriangulationBase :
          * non-standard way.  Since it computes the Euler characteristic of
          * the triangulation (and not the underlying manifold), this routine
          * will treat each ideal boundary component as a single vertex, and
-         * \e not as an entire (<i>dim</i>-1)-dimensional boundary component.
+         * _not_ as an entire (<i>dim</i>-1)-dimensional boundary component.
          *
          * In Regina's \ref stddim "standard dimensions", for a routine that
          * handles ideal boundary components properly (by treating them as
@@ -1249,7 +1249,7 @@ class TriangulationBase :
          * - In contrast, if the triangulation contains any invalid
          *   (<i>dim</i>-2)-faces (i.e., codimension-2-faces that are
          *   identified with themselves under a non-trivial map), the
-         *   fundamental group will be computed \e without truncating the
+         *   fundamental group will be computed _without_ truncating the
          *   centroid of the face.  For instance, if a 3-manifold
          *   triangulation has an edge identified with itself in reverse,
          *   then the fundamental group will be computed without truncating
@@ -1284,7 +1284,7 @@ class TriangulationBase :
          * body (such as GAP) has simplified the group presentation
          * better than Regina can.
          *
-         * Regina does \e not verify that the new group presentation is
+         * Regina does _not_ verify that the new group presentation is
          * equivalent to the old, since this is - well, hard.
          *
          * If the fundamental group has not yet been calculated for this
@@ -1306,11 +1306,11 @@ class TriangulationBase :
          *
          * A problem here is that, if \a dim is not one of Regina's
          * \ref stddim "standard dimensions", then Regina cannot actually
-         * \e detect ideal vertices (since in general this requires solving
+         * _detect_ ideal vertices (since in general this requires solving
          * undecidable problems).  Currently we resolve this by insisting that,
          * in higher dimensions, the homology dimension \a k is at most
          * (<i>dim</i>-2); the underlying algorithm will then effectively
-         * truncate \e all vertices (since truncating "ordinary" vertices
+         * truncate _all_ vertices (since truncating "ordinary" vertices
          * whose links are spheres or balls does not affect the <i>k</i>th
          * homology in such cases).
          *
@@ -1322,7 +1322,7 @@ class TriangulationBase :
          * The homology will be computed using the dual skeleton: what this
          * means is that any invalid faces of dimension 0,1,...,(<i>dim</i>-3)
          * will be treated as though their centroids had been truncated,
-         * but any invalid (<i>dim</i>-2)-faces will be treated \e without
+         * but any invalid (<i>dim</i>-2)-faces will be treated _without_
          * such truncation.  A side-effect is that, after performing a
          * barycentric on an invalid triangulation, the group returned by
          * homology<1>() might change.
@@ -1410,7 +1410,7 @@ class TriangulationBase :
          *   with the boundary maps between (<i>k</i>+1)-faces, <i>k</i>-faces
          *   and (<i>k</i>-1)-faces of the triangulation.  If your
          *   triangulation is ideal, then this routine will almost certainly
-         *   \e not give the correct homology group for the underlying manifold.
+         *   _not_ give the correct homology group for the underlying manifold.
          *   If, however, all of your vertex links are spheres or balls
          *   (i.e., the triangulation is closed or all of its boundary
          *   components are built from unglued (<i>dim</i>-1)-faces),
@@ -1480,13 +1480,13 @@ class TriangulationBase :
          * This is the boundary map that you would use if you were building
          * the homology groups manually from a chain complex.
          *
-         * Unlike homology(), this code does \e not use the dual skeleton:
+         * Unlike homology(), this code does _not_ use the dual skeleton:
          * instead it uses the primal (i.e., ordinary) skeleton.
          *
          * - The main advantage of this is that you can easily match rows and
          *   columns of the returned matrix to faces of this triangulation.
          *
-         * - The main disadvantage is that ideal vertices are \e not treated
+         * - The main disadvantage is that ideal vertices are _not_ treated
          *   as though they were truncated; instead they are just treated
          *   as 0-faces that appear as part of the chain complex.
          *
@@ -1569,7 +1569,7 @@ class TriangulationBase :
          * dual (<i>subdim</i>-1)-face of this triangulation.  Here we index
          * dual faces in the same order as the (primal) faces of the
          * triangulation that they are dual to, except that we omit primal
-         * \e boundary faces (i.e., primal faces for which Face::isBoundary()
+         * _boundary_ faces (i.e., primal faces for which Face::isBoundary()
          * returns \c true).  Therefore, for triangulations with boundary,
          * the dual face indices and the corresponding primal face indices
          * might not be equal.
@@ -1582,7 +1582,7 @@ class TriangulationBase :
          *
          * - Consider a dual <i>k</i>-face \a d, and let this be dual to the
          *   primal (<i>dim</i>-<i>k</i>)-face \a f.  In general, \a d will
-         *   \e not be a simplex.  Let \a B denote the barycentre of \a f
+         *   _not_ be a simplex.  Let \a B denote the barycentre of \a f
          *   (which also appears as the "centre" point of \a d).
          *
          * - Let \a emb be an arbitrary FaceEmbedding<dim-k> for \a f (i.e.,
@@ -1598,7 +1598,7 @@ class TriangulationBase :
          *   vertices.  We can extend this polytope away from \a B, pushing it
          *   all the way through the simplex \a s, until it becomes a
          *   <i>k</i>-simplex \a g whose vertices are \a B along with the
-         *   \a k "unused" vertices of \a s that do \e not appear in \a f.
+         *   \a k "unused" vertices of \a s that do _not_ appear in \a f.
          *
          * - We can now define the orientation of the dual <i>k</i>-face \a d
          *   to be the orientation of this <i>k</i>-simplex \a g that contains
@@ -1907,7 +1907,7 @@ class TriangulationBase :
          *
          * \todo Lock the topological properties of the underlying manifold,
          * to avoid recomputing them after the subdivision.  However, only
-         * do this for \e valid triangulations (since we can have scenarios
+         * do this for _valid_ triangulations (since we can have scenarios
          * where invalid triangulations becoming valid and ideal after
          * subdivision, which may change properties such as
          * Triangulation<4>::knownSimpleLinks).
@@ -1985,11 +1985,11 @@ class TriangulationBase :
          * In other words, "identical" means that the triangulations
          * are isomorphic via the identity isomorphism.
          *
-         * For the less strict notion of \e isomorphic triangulations,
+         * For the less strict notion of _isomorphic_ triangulations,
          * which allows relabelling of the top-dimensional simplices and their
          * vertices, see isIsomorphicTo() instead.
          *
-         * This test does \e not examine the textual simplex descriptions,
+         * This test does _not_ examine the textual simplex descriptions,
          * as seen in Simplex<dim>::description(); these may still differ.
          * It also does not test whether lower-dimensional faces are
          * numbered identically (vertices, edges and so on); this routine
@@ -2020,11 +2020,11 @@ class TriangulationBase :
          * In other words, "identical" means that the triangulations
          * are isomorphic via the identity isomorphism.
          *
-         * For the less strict notion of \e isomorphic triangulations,
+         * For the less strict notion of _isomorphic_ triangulations,
          * which allows relabelling of the top-dimensional simplices and their
          * vertices, see isIsomorphicTo() instead.
          *
-         * This test does \e not examine the textual simplex descriptions,
+         * This test does _not_ examine the textual simplex descriptions,
          * as seen in Simplex<dim>::description(); these may still differ.
          * It also does not test whether lower-dimensional faces are
          * numbered identically (vertices, edges and so on); this routine
@@ -2046,7 +2046,7 @@ class TriangulationBase :
          * Determines if this triangulation is combinatorially
          * isomorphic to the given triangulation.
          *
-         * Two triangulations are \e isomorphic if and only it is
+         * Two triangulations are _isomorphic_ if and only it is
          * possible to relabel their top-dimensional simplices and the
          * (<i>dim</i>+1) vertices of each simplex in a way that makes
          * the two triangulations combinatorially identical, as returned
@@ -2067,12 +2067,12 @@ class TriangulationBase :
          * exists, you can just call `if (isIsomorphicTo(other))`.
          *
          * There may be many such isomorphisms between the two triangulations.
-         * If you need to find \e all such isomorphisms, you may call
+         * If you need to find _all_ such isomorphisms, you may call
          * findAllIsomorphisms() instead.
          *
          * If you need to ensure that top-dimensional simplices are labelled
          * the same in both triangulations (i.e., that the triangulations are
-         * related by the \e identity isomorphism), you should call the
+         * related by the _identity_ isomorphism), you should call the
          * stricter test isIdenticalTo() instead.
          *
          * \warning For large dimensions, this routine can become
@@ -2151,7 +2151,7 @@ class TriangulationBase :
          *   and a return value of \c true indicates that the search
          *   should terminate immediately.
          *
-         * - This triangulation \e must remain constant while the search
+         * - This triangulation _must_ remain constant while the search
          *   runs (i.e., \a action must not modify the triangulation).
          *
          * \warning For large dimensions, this routine can become
@@ -2163,7 +2163,7 @@ class TriangulationBase :
          * `findAllIsomorphisms(other, action)`, which mirrors the C++
          * function: it takes \a action which may be a pure Python function,
          * the return value indicates whether \a action ever terminated the
-         * search, but it does \e not take an additonal argument list (\a args).
+         * search, but it does _not_ take an additonal argument list (\a args).
          * The second form is `findAllIsomorphisms(other)`, which
          * returns a Python list containing all of the isomorphisms that were
          * found.
@@ -2208,7 +2208,7 @@ class TriangulationBase :
          *   and a return value of \c true indicates that the search
          *   should terminate immediately.
          *
-         * - This triangulation \e must remain constant while the search
+         * - This triangulation _must_ remain constant while the search
          *   runs (i.e., \a action must not modify the triangulation).
          *
          * \warning For large dimensions, this routine can become
@@ -2220,7 +2220,7 @@ class TriangulationBase :
          * `findAllSubcomplexesIn(other, action)`, which mirrors the C++
          * function: it takes \a action which may be a pure Python function,
          * the return value indicates whether \a action ever terminated the
-         * search, but it does \e not take an additonal argument list (\a args).
+         * search, but it does _not_ take an additonal argument list (\a args).
          * The second form is `findAllSubcomplexesIn(other)`, which
          * returns a Python list containing all of the isomorphisms that were
          * found.
@@ -2315,7 +2315,7 @@ class TriangulationBase :
 
         /**
          * Constructs the isomorphism signature of the given type for this
-         * triangulation.  Support for different \e types of signature is new
+         * triangulation.  Support for different _types_ of signature is new
          * to Regina 7.0 (see below for details); all isomorphism signatures
          * created in Regina 6.0.1 or earlier are of the default type
          * IsoSigClassic.
@@ -2331,7 +2331,7 @@ class TriangulationBase :
          * `n log n`, where \a n is the number of top-dimenisonal
          * simplices.  The time required to construct it is worst-case
          * `O((dim!) n^2 log^2 n)`.  Whilst this is fine for large
-         * triangulations, it becomes very slow for large \e dimensions;
+         * triangulations, it becomes very slow for large _dimensions_;
          * the main reason for introducing different signature types is that
          * some alternative types can be much faster to compute in practice.
          *
@@ -2347,7 +2347,7 @@ class TriangulationBase :
          * from an isomorphism signature (only if the default encoding has
          * been used, but it does not matter which signature type was used).
          * The triangulation recovered might not be identical to the original,
-         * but it \e will be combinatorially isomorphic.  If you need the
+         * but it _will_ be combinatorially isomorphic.  If you need the
          * precise relabelling, you can call isoSigDetail() instead.
          *
          * Regina supports several different variants of isomorphism signatures,
@@ -2368,7 +2368,7 @@ class TriangulationBase :
          *   IsoSigPrintable returns a std::string consisting entirely of
          *   printable characters in the 7-bit ASCII range.  Importantly, this
          *   default encoding is currently the only encoding from which Regina
-         *   can \e reconstruct a triangulation from its isomorphism signature.
+         *   can _reconstruct_ a triangulation from its isomorphism signature.
          *
          * You may instead pass your own type and/or encoding parameters as
          * template arguments.  Currently this facility is for internal use
@@ -2639,8 +2639,8 @@ class TriangulationBase :
          * no \a Encoding template parameter passed to isoSig()).
          *
          * Calling isoSig() followed by fromIsoSig() is not guaranteed to
-         * produce an \e identical triangulation to the original, but it
-         * is guaranteed to produce a combinatorially \e isomorphic
+         * produce an _identical_ triangulation to the original, but it
+         * is guaranteed to produce a combinatorially _isomorphic_
          * triangulation.  In other words, fromIsoSig() may reconstruct the
          * triangulation with its simplices and/or vertices relabelled.
          * The optional argument to isoSig() allows you to determine the
@@ -2713,7 +2713,7 @@ class TriangulationBase :
          * This routine is very fast, since it only examines the first
          * few characters of the isomorphism signature (in which the size
          * of the first component is encoded).  However, a side-effect
-         * of this is that it is possible to pass an \e invalid isomorphism
+         * of this is that it is possible to pass an _invalid_ isomorphism
          * signature and still receive a positive result.  If you need to
          * test whether a signature is valid or not, you must call fromIsoSig()
          * instead, which will examine the entire signature in full.
@@ -2740,7 +2740,7 @@ class TriangulationBase :
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
-         * exception).  The input routine \e may contain further data: if this
+         * exception).  The input routine _may_ contain further data: if this
          * routine is successful then the input stream will be left positioned
          * immediately after the encoding, without skipping any trailing
          * whitespace.
@@ -2797,10 +2797,10 @@ class TriangulationBase :
          * and that this derived class operator will manage its own properties
          * in whatever way it deems best.
          *
-         * \note This operator is \e not marked \c noexcept, since it fires
+         * \note This operator is _not_ marked \c noexcept, since it fires
          * change events on this triangulation which may in turn call arbitrary
          * code via any registered packet listeners.  It deliberately does
-         * \e not fire change events on \a src, since it assumes that \a src is
+         * _not_ fire change events on \a src, since it assumes that \a src is
          * about to be destroyed (which will fire a destruction event instead).
          *
          * \param src the triangulation to move.
@@ -2831,7 +2831,7 @@ class TriangulationBase :
          * as connected components, orientability, and lower-dimensional faces.
          * Some Triangulation<dim> subclasses may track additional skeletal
          * data, in which case they should reimplement this function.  Their
-         * reimplementations \e must call this parent implementation.
+         * reimplementations _must_ call this parent implementation.
          *
          * You should never call this function directly; instead call
          * ensureSkeleton() instead.
@@ -2898,7 +2898,7 @@ class TriangulationBase :
          *
          * See calculateSkeleton() for further details.
          *
-         * This \e should have been an ordinary member function (not static),
+         * This _should_ have been an ordinary member function (not static),
          * but it caused an internal compiler error in gcc8 (see gcc bug #86594,
          * which is fixed in gcc9).  Making the function static is a workaround
          * that we will need to keep until we drop support for gcc8.
@@ -3092,7 +3092,7 @@ class TriangulationBase :
         /**
          * Creates a temporary lock on the topological properties of
          * the given triangulation.  While this object exists, any
-         * computed properties of the underlying \e manifold will be
+         * computed properties of the underlying _manifold_ will be
          * preserved even when the triangulation changes.  This allows
          * you to avoid recomputing expensive invariants when the
          * underlying manifold is retriangulated.
@@ -3124,7 +3124,7 @@ class TriangulationBase :
          *
          * \note If you are creating a ChangeEventSpan before retriangulating
          * the manifold and you wish to use a TopologyLock, then you should
-         * create the TopologyLock \e before the ChangeEventSpan (since the
+         * create the TopologyLock _before_ the ChangeEventSpan (since the
          * ChangeEventSpan calls clearAllProperties() in its destructor,
          * and you need your topology lock to still exist at that point).
          */
@@ -3168,7 +3168,7 @@ class TriangulationBase :
  *
  * See Triangulation<dim>::swap() for more details.
  *
- * \note This swap function is \e not marked \c noexcept, since it
+ * \note This swap function is _not_ marked \c noexcept, since it
  * fires packet change events which may in turn call arbitrary
  * code via any registered packet listeners.
  *

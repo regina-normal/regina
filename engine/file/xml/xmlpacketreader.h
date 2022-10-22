@@ -60,15 +60,15 @@ class XMLTreeResolver;
  * its documentation for further notes on how the packet should be
  * constructed.
  *
- * Routines startSubElement() and endSubElement() should \e not be
+ * Routines startSubElement() and endSubElement() should _not_ be
  * overridden by derived classes.  They determine whether the subelement
  * is another packet element or a packet tag; if so then they deal with
  * the subelement themselves (packet elements will be read using a new
  * XMLPacketReader of the correct type), and if not then they call
- * startContentSubElement() and endContentSubElement() which \e should
+ * startContentSubElement() and endContentSubElement() which _should_
  * be overridden for processing of non-packet XML subelements.
  *
- * If routine abort() is overridden, it \e must at some point call
+ * If routine abort() is overridden, it _must_ at some point call
  * XMLPacketReader::abort().
  *
  * The XML packet reader should read everything that
@@ -131,7 +131,7 @@ class XMLPacketReader : public XMLElementReader {
          * \param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          * \param parent the location in the packet tree beneath which this
-         * packet will be inserted, once it has been constructed.  This \e must
+         * packet will be inserted, once it has been constructed.  This _must_
          * be non-null unless (i) \a anon is \c true, or (ii) this packet
          * reader represents the root \<regina\> or \<reginadata\> element.
          * \param anon \c true if this packet appears within an \<anon\> block.
@@ -191,7 +191,7 @@ class XMLPacketReader : public XMLElementReader {
          * \param subTagProps the properties associated with the
          * subelement opening tag.
          * \return a newly created element reader that will be used to
-         * parse the subelement.  This class should \e not take care of
+         * parse the subelement.  This class should _not_ take care of
          * the new reader's destruction; that will be done by the parser.
          */
         virtual XMLElementReader* startContentSubElement(
@@ -225,7 +225,7 @@ class XMLPacketReader : public XMLElementReader {
          * Finishes off the packet under construction and inserts it
          * into the packet tree.
          *
-         * This routine will \e always be called for each packet reader:
+         * This routine will _always_ be called for each packet reader:
          * either when the first tag/packet child is seen, or (if there are
          * no tags or child packets) from endElement(), or (if necessary)
          * from abort().

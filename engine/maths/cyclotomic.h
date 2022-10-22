@@ -58,7 +58,7 @@ namespace regina {
  * uniquely represented as a rational polynomial of degree strictly less than
  * `deg(Φ_n) = φ(n)`, where `φ` denotes Euler's totient function.
  * This class stores field elements using such a polynomial representation,
- * and does \e not store complex numbers directly.  If you require the
+ * and does _not_ store complex numbers directly.  If you require the
  * complex value of a field element (as a floating point approximation),
  * you can call evaluate().
  *
@@ -220,7 +220,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * cyclotomic field.
          *
          * This is safe even if this element was previously initialised
-         * as an element of a \e different field - all prior information
+         * as an element of a _different_ field - all prior information
          * about this field element will be safely discarded.
          *
          * \param field the order of the cyclotomic field to which this
@@ -324,7 +324,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * Returns the value of this cyclotomic field element as a
          * complex number.
          *
-         * The evaluation depends upon \e which primitive root of unity
+         * The evaluation depends upon _which_ primitive root of unity
          * is used to build the underlying cyclotomic field of order \a n.
          * This ambiguity is resolved as follows.
          *
@@ -364,7 +364,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * If either this or \a rhs have not been initialised (typically
          * because they were created using the default constructor),
-         * then this comparison will return \c false.  If \e both field
+         * then this comparison will return \c false.  If _both_ field
          * elements have not been initialised, then this comparison will
          * return \c true.
          *
@@ -385,7 +385,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * If either this or \a rhs have not been initialised (typically
          * because they were created using the default constructor),
-         * then this comparison will return \c true.  If \e both field
+         * then this comparison will return \c true.  If _both_ field
          * elements have not been initialised, then this comparison will
          * return \c false.
          *
@@ -585,7 +585,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * given variable name instead of \c x.
          *
          * The field element will be written using its rational polynomial
-         * representation.  The underlying field will \e not be indicated in the
+         * representation.  The underlying field will _not_ be indicated in the
          * output, since this is often already understood.  If required, it can
          * be accessed by calling `c.field()`.
          *
@@ -610,7 +610,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * given variable name instead of \c x.
          *
          * The field element will be written using its rational polynomial
-         * representation.  The underlying field will \e not be indicated in the
+         * representation.  The underlying field will _not_ be indicated in the
          * output, since this is often already understood.  If required, it can
          * be accessed by calling `c.field()`.
          *
@@ -629,7 +629,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * unicode characters, using the given variable name instead of \c x.
          *
          * The field element will be written using its rational polynomial
-         * representation.  The underlying field will \e not be indicated in the
+         * representation.  The underlying field will _not_ be indicated in the
          * output, since this is often already understood.  If required, it can
          * be accessed by calling `c.field()`.
          *

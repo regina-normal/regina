@@ -92,7 +92,7 @@ enum NormalCoords {
      *
      * \pre Regina can only create matching equations in this coordinate system
      * for a limited class of triangulations.  Currently, such triangulations
-     * \e must be oriented and ideal, with precisely one torus cusp and no
+     * _must_ be oriented and ideal, with precisely one torus cusp and no
      * other boundary components or internal vertices.  These conditions
      * will be checked when building the matching equations, and Regina
      * will throw an InvalidArgument exception if they are not met.
@@ -110,8 +110,8 @@ enum NormalCoords {
      * one octagon of the same type were stripped out of the final
      * solution set.  As of Regina 4.6 such surfaces are now
      * included in the solution set, since we need them if we
-     * wish to enumerate \e all almost normal surfaces (not just
-     * the \e vertex almost normal surfaces).
+     * wish to enumerate _all_ almost normal surfaces (not just
+     * the _vertex_ almost normal surfaces).
      *
      * Regina cannot enumerate or view surfaces in this coordinate system.
      * It is only used for reading legacy data files.
@@ -154,7 +154,7 @@ enum NormalCoords {
      *
      * \pre Regina can only create matching equations in this coordinate system
      * for a limited class of triangulations.  Currently, such triangulations
-     * \e must be oriented and ideal, with precisely one torus cusp and no
+     * _must_ be oriented and ideal, with precisely one torus cusp and no
      * other boundary components or internal vertices.  These conditions
      * will be checked when building the matching equations, and Regina
      * will throw an InvalidArgument exception if they are not met.
@@ -185,7 +185,7 @@ enum NormalCoords {
     /**
      * Represents angle structure coordinates.
      *
-     * This coordinate system is \e not for use with normal surfaces:
+     * This coordinate system is _not_ for use with normal surfaces:
      * it cannot be used either to display them or enumerate them.
      * Instead it is for use with angle structures on triangulations.
      * Because the combinatorics and linear algebra of angle strutures
@@ -216,7 +216,7 @@ enum NormalCoords {
  *
  * Normal surfaces do not always store their internal vectors in the same
  * coordinate system that was used to enumerate the surfaces, and indeed
- * an isolated surface does not know \e how it was originally created.
+ * an isolated surface does not know _how_ it was originally created.
  *
  * Therefore each normal surface keeps a small amount of data,
  * represented by this class, so that it knows how to interpret its
@@ -228,11 +228,11 @@ enum NormalCoords {
  * For convenience, there is also a special encoding that identifies an angle
  * structure vector; this can be created via `NormalEncoding(NS_ANGLE)`,
  * and can be recognised via storesAngles().  However, like NS_ANGLE itself,
- * this special angle structure encoding does \e not represent a normal surface,
+ * this special angle structure encoding does _not_ represent a normal surface,
  * cannot be combined with other encodings, and must not be used with any of
  * Regina's routines unless the documentation explicitly allows it.
  * Specifically, any code that accepts a NormalEncoding argument may silently
- * assume that the encoding is \e not the special angle structure encoding,
+ * assume that the encoding is _not_ the special angle structure encoding,
  * unless the documentation explicitly says otherwise.
  *
  * Encodings have the important property that any rational multiple of a
@@ -315,7 +315,7 @@ class NormalEncoding {
          * system, it might choose to post-process the resulting vectors to
          * use a different encoding.  For example, when enumerating surfaces
          * in quad or quad-oct coordinates, Regina computes and stores
-         * triangle coordinates also, and so for its own \e internal choice of
+         * triangle coordinates also, and so for its own _internal_ choice of
          * encoding, storesTriangles() will return \c true.  In contrast,
          * if you simply create a `NormalEncoding(NS_QUAD)`, then the
          * resulting encoding will have storesTriangles() return \c false.
@@ -463,7 +463,7 @@ class NormalEncoding {
          * does actually contain vertex linking components; it simply
          * means that the user will need to test this themselves.
          * If this returns \c false, however, it is guaranteed that the
-         * surface does \e not contain any vertex linking components,
+         * surface does _not_ contain any vertex linking components,
          * with no further testing required.
          *
          * For the special angle structure encoding (described in the class

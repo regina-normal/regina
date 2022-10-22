@@ -36,7 +36,7 @@
  *
  *  The accompanying source file (pythonoutputstream.cpp) should be built
  *  directly into each user interface that requires it.
- *  It is \e not built into Regina's python module.
+ *  It is _not_ built into Regina's python module.
  */
 
 #ifndef __PYTHONOUTPUTSTREAM_H
@@ -124,7 +124,7 @@ class PythonOutputStream {
          * This routine might for instance display the data to the user
          * or write it to a log file.
          *
-         * \pre The Python global interpreter lock is \e not held.
+         * \pre The Python global interpreter lock is _not_ held.
          */
         virtual void processOutput(const std::string& data) = 0;
 };

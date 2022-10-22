@@ -742,8 +742,8 @@ class BoundaryComponentBase :
          * and which are only recognised where \a dim is one of Regina's
          * \ref stddim "standard dimensions".
          *
-         * Note that a boundary component formed from a single \e invalid
-         * vertex is \e not considered to be ideal.  This means that, if a
+         * Note that a boundary component formed from a single _invalid_
+         * vertex is _not_ considered to be ideal.  This means that, if a
          * boundary component contains no faces of positive dimension,
          * then one and only one of isIdeal() and isInvalidVertex() will
          * return \c true.
@@ -829,7 +829,7 @@ class BoundaryComponentBase :
          *   a copy of `face<k>(i)` of this boundary component,
          *   and its vertices are numbered in the same way.  As an exception,
          *   this correspondence will not hold for dimensions \a k where
-         *   there exist \e pinched <i>k</i>-faces on the boundary (i.e.,
+         *   there exist _pinched_ <i>k</i>-faces on the boundary (i.e.,
          *   faces where different sections of the boundary are pinched
          *   together, meaning that these faces must be duplicated when the
          *   boundary is triangulated).
@@ -963,7 +963,7 @@ class BoundaryComponentBase :
          * corresponding faces of this boundary component, and so that their
          * vertices are numbered in a corresponding way.
          *
-         * If there are any \e pinched <i>subdim</i>-faces in this
+         * If there are any _pinched_ <i>subdim</i>-faces in this
          * boundary component (so they appear multiple times when the
          * boundary is triangulated), then this routine will do nothing.
          *

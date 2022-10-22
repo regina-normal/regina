@@ -83,7 +83,7 @@ class SFSpace;
  *     [o_alt]         [o_old]
  * </pre>
  *
- * Note that this \e only applies to the first boundary torus!  If the
+ * Note that this _only_ applies to the first boundary torus!  If the
  * Seifert fibred space has more than one boundary, then for the
  * remaining boundaries the unoriented fibre and base curves remain the
  * same.  More specifically, the directed fibre remains identical, and
@@ -145,7 +145,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          *
          * - if \a negate is \c true, then this will attempt to replace all
          *   fibres (\a alpha, \a beta) with (\a alpha, \a alpha - \a beta),
-         *   \e without any further reflections (but see below for conditions
+         *   _without_ any further reflections (but see below for conditions
          *   on when this is possible);
          *
          * - in all cases, this will reduce the parameters via SFSpace::reduce()
@@ -284,7 +284,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * curves of the original space (which was passed to the SFSAlt
          * constructor).  See the class notes above for details.
          *
-         * Note that this conversion matrix applies \e only to the first
+         * Note that this conversion matrix applies _only_ to the first
          * boundary torus!  If there is more than one boundary, the
          * remaining boundary conversions are simpler and depend only
          * on whether a reflection has been used or not.  See reflected()
@@ -320,7 +320,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * Determines whether this and the given alternative representation
          * have identical presentations.
          *
-         * To be considered \e identical, the two alternatives must have equal
+         * To be considered _identical_, the two alternatives must have equal
          * alternative SFSpace representations, equal conversion matrices,
          * and either both must have used a reflection or both must have
          * not used a reflection.  In other words, this is equivalent to
@@ -336,7 +336,7 @@ class SFSAlt : public ShortOutput<SFSAlt> {
          * Determines whether this and the given alternative representation
          * do not have identical presentations.
          *
-         * To be considered \e identical, the two alternatives must have equal
+         * To be considered _identical_, the two alternatives must have equal
          * alternative SFSpace representations, equal conversion matrices,
          * and either both must have used a reflection or both must have
          * not used a reflection.  In other words, this is equivalent to

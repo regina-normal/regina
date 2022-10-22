@@ -54,7 +54,7 @@ namespace regina {
  *
  * If Regina may be running from a different place in the filesystem (e.g.,
  * if you are running an app bundle on macOS or if you are running directly
- * from the source tree), then you \e must call either setDirs() or deduceDirs()
+ * from the source tree), then you _must_ call either setDirs() or deduceDirs()
  * when your application starts.  Otherwise the directories that GlobalDirs
  * returns might be incorrect, and might not even exist.
  *
@@ -72,7 +72,7 @@ class GlobalDirs {
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
          * \return Regina's primary home directory.
@@ -86,7 +86,7 @@ class GlobalDirs {
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
          * \return Regina's python module directory.
@@ -104,7 +104,7 @@ class GlobalDirs {
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
          * \return Regina's calculation engine data directory.
@@ -123,7 +123,7 @@ class GlobalDirs {
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
          * \return Regina's example and census data directory.
@@ -148,7 +148,7 @@ class GlobalDirs {
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
          * \return Regina's calculation engine documentation directory.
@@ -167,7 +167,7 @@ class GlobalDirs {
          *
          * \warning If Regina is not installed in the exact location configured
          * at compile time (e.g., if you are running a macOS app bundle or you
-         * are running directly out of the source tre), you \e must call
+         * are running directly out of the source tre), you _must_ call
          * either setDirs() or deduceDirs() before calling this routine.
          *
          * \return Regina's calculation engine data directory.
@@ -228,7 +228,7 @@ class GlobalDirs {
          * running directly from within the source tree.
          *
          * If running from within the source tree, the executable must be
-         * inside the \e build tree (any depth of subdirectory within the
+         * inside the _build_ tree (any depth of subdirectory within the
          * build tree is fine).  Moreover, it is assumed that the build
          * tree is either an immediate subdirectory of the source root,
          * or else is the source root itself.  So, for example, an

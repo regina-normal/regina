@@ -52,8 +52,8 @@ class Script;
 /**
  * A packet representing a Python script that can be run.
  *
- * A script consists of two parts: (i) the \e text, which contains the
- * Python code; and (ii) a set of \e variables, which refer to packets
+ * A script consists of two parts: (i) the _text_, which contains the
+ * Python code; and (ii) a set of _variables_, which refer to packets
  * in your packet tree.  When running a script, the variables should be
  * instantiated in the default namespace before the script is run.
  *
@@ -69,7 +69,7 @@ class Script;
  *   only holds weak pointers).
  *
  * - If such a packet changes its packet label or is destroyed, the script
- *   will not notify its \e own listeners of the change.  If a user interface
+ *   will not notify its _own_ listeners of the change.  If a user interface
  *   needs to know about this change (e.g., because it shows packet labels
  *   of script variables in a visual table), it will need to set up packet
  *   listeners for the individual variables - it is no longer enough just to
@@ -357,7 +357,7 @@ class Script : public Packet {
         /**
          * Determines if this and the given script are identical.
          *
-         * Here \e identical means that both scripts contain exactly the
+         * Here _identical_ means that both scripts contain exactly the
          * same text, and they have the same set of variables.  For two
          * variables to be considered the same, they must have the same
          * variable name, and their values must be either both \c null or
@@ -372,7 +372,7 @@ class Script : public Packet {
         /**
          * Determines if this and the given script are not identical.
          *
-         * Here \e identical means that both scripts contain exactly the
+         * Here _identical_ means that both scripts contain exactly the
          * same text, and they have the same set of variables.  For two
          * variables to be considered the same, they must have the same
          * variable name, and their values must be either both \c null or

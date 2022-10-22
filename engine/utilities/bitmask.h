@@ -209,7 +209,7 @@ class Bitmask {
          * \pre \a ForwardIterator is a forward iterator type that iterates
          * over integer values.
          * \pre The list of indices described by these iterators is
-         * in \e sorted order.  This is to allow optimisations for
+         * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
          * \pre All indices in the given list are at least zero and
          * strictly less than the length of this bitmask.
@@ -314,12 +314,12 @@ class Bitmask {
          * sets all subsequent bits to \c false.  In other words, this
          * routine "truncates" this bitmask to the given number of bits.
          *
-         * This routine does not change the \e length of this bitmask
+         * This routine does not change the _length_ of this bitmask
          * (as passed to the contructor or to reset()).
          *
          * \pre \a numBits is at most the length of this bitmask.
          *
-         * \param numBits the number of bits that will \e not be cleared.
+         * \param numBits the number of bits that will _not_ be cleared.
          */
         void truncate(size_t numBits);
 
@@ -389,7 +389,7 @@ class Bitmask {
          * next "raw unit of storage".  This means that two bitmasks
          * that were initialised with different lengths may still be
          * considered equal if the two lengths round up to the same value
-         * \e and the extra bits in the longer bitmask are all \c false.
+         * _and_ the extra bits in the longer bitmask are all \c false.
          *
          * \param other the bitmask to compare against this.
          * \return \c true if and only if this and the given bitmask are
@@ -405,7 +405,7 @@ class Bitmask {
          * next "raw unit of storage".  This means that two bitmasks
          * that were initialised with different lengths may still be
          * considered equal if the two lengths round up to the same value
-         * \e and the extra bits in the longer bitmask are all \c false.
+         * _and_ the extra bits in the longer bitmask are all \c false.
          *
          * \param other the bitmask to compare against this.
          * \return \c true if and only if this and the given bitmask are
@@ -471,7 +471,7 @@ class Bitmask {
          * the two given bitmasks.
          *
          * For this routine to return \c true, every bit that is set in
-         * \e both \a x and \a y must be set in this bitmask also.
+         * _both_ \a x and \a y must be set in this bitmask also.
          *
          * \pre Both \a x and \a y are the same length as this bitmask.
          *
@@ -635,7 +635,7 @@ class Bitmask1 {
          * The integer argument is merely for compatibility with
          * the Bitmask constructor, and will be ignored.
          *
-         * \warning This is \e not a constructor that initialises the
+         * \warning This is _not_ a constructor that initialises the
          * bitmask to a given pattern.
          */
         inline Bitmask1(size_t) : mask(0) {
@@ -678,10 +678,10 @@ class Bitmask1 {
          * sets all subsequent bits to \c false.  In other words, this
          * routine "truncates" this bitmask to the given number of bits.
          *
-         * This routine does not change the \e length of this bitmask
+         * This routine does not change the _length_ of this bitmask
          * (as passed to the contructor or to reset()).
          *
-         * \param numBits the number of bits that will \e not be cleared.
+         * \param numBits the number of bits that will _not_ be cleared.
          */
         inline void truncate(size_t numBits) {
             if (numBits < 8 * sizeof(T))
@@ -742,7 +742,7 @@ class Bitmask1 {
          * \pre \a ForwardIterator is a forward iterator type that iterates
          * over integer values.
          * \pre The list of indices described by these iterators is
-         * in \e sorted order.  This is to allow optimisations for
+         * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
          * \pre All indices in the given list are between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
@@ -911,7 +911,7 @@ class Bitmask1 {
          * the two given bitmasks.
          *
          * For this routine to return \c true, every bit that is set in
-         * \e both \a x and \a y must be set in this bitmask also.
+         * _both_ \a x and \a y must be set in this bitmask also.
          *
          * \param x the first bitmask used to form the intersection.
          * \param y the first bitmask used to form the intersection.
@@ -1060,7 +1060,7 @@ class Bitmask2 {
          * The integer argument is merely for compatibility with
          * the Bitmask constructor, and will be ignored.
          *
-         * \warning This is \e not a constructor that initialises the
+         * \warning This is _not_ a constructor that initialises the
          * bitmask to a given pattern.
          */
         inline Bitmask2(size_t) : low(0), high(0) {
@@ -1105,10 +1105,10 @@ class Bitmask2 {
          * sets all subsequent bits to \c false.  In other words, this
          * routine "truncates" this bitmask to the given number of bits.
          *
-         * This routine does not change the \e length of this bitmask
+         * This routine does not change the _length_ of this bitmask
          * (as passed to the contructor or to reset()).
          *
-         * \param numBits the number of bits that will \e not be cleared.
+         * \param numBits the number of bits that will _not_ be cleared.
          */
         inline void truncate(size_t numBits) {
             if (numBits < 8 * sizeof(T)) {
@@ -1184,7 +1184,7 @@ class Bitmask2 {
          * \pre \a ForwardIterator is a forward iterator type that iterates
          * over integer values.
          * \pre The list of indices described by these iterators is
-         * in \e sorted order.  This is to allow optimisations for
+         * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
          * \pre All indices in the given list are between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
@@ -1371,7 +1371,7 @@ class Bitmask2 {
          * the two given bitmasks.
          *
          * For this routine to return \c true, every bit that is set in
-         * \e both \a x and \a y must be set in this bitmask also.
+         * _both_ \a x and \a y must be set in this bitmask also.
          *
          * \param x the first bitmask used to form the intersection.
          * \param y the first bitmask used to form the intersection.

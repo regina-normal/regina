@@ -33,7 +33,7 @@
 /*! \file python/helpers/arraylike.h
  *  \brief Allows lightweight array-like objects to be wrapped neatly in Python.
  *
- *  This header is \e not included automatically by python/helpers.h.
+ *  This header is _not_ included automatically by python/helpers.h.
  *  If you need it, you will need to include it yourself.
  */
 

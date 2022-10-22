@@ -94,12 +94,12 @@ class DoubleDescription {
          * contain no duplicates or redundancies.
          *
          * Parameter \a constraints may contain a set of validity constraints,
-         * in which case this routine will only return \e valid extremal
+         * in which case this routine will only return _valid_ extremal
          * rays.  Each validity constraint is of the form "an extremal ray
          * may only lie outside at most one of these facets of the original
          * cone"; see the ValidityConstraints class for details.  These
          * contraints have the important property that, although validity is
-         * not preserved under convex combination, \e invalidity is.
+         * not preserved under convex combination, _invalidity_ is.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -259,7 +259,7 @@ class DoubleDescription {
                  * products are not empty).
                  * \pre The two given rays lie on opposite sides of the
                  * next hyperplane to intersect, and neither ray actually
-                 * lies \e in this next hyperplane.
+                 * lies _in_ this next hyperplane.
                  *
                  * \param first the first of the given rays.
                  * \param second the second of the given rays.
@@ -295,7 +295,7 @@ class DoubleDescription {
                  * \param x the first of the given rays.
                  * \param y the second of the given rays.
                  * \return \c true if and only if this ray belongs to all
-                 * of the facets that \e both \a x and \a y belong to.
+                 * of the facets that _both_ \a x and \a y belong to.
                  */
                 inline bool onAllCommonFacets(
                     const RaySpec& x, const RaySpec& y) const;
@@ -305,7 +305,7 @@ class DoubleDescription {
                  * described by this object.  This routine is not fast,
                  * since it needs to solve a system of linear equations.
                  *
-                 * \pre This ray is a member of the \e final solution
+                 * \pre This ray is a member of the _final_ solution
                  * space.  That is, all hyperplanes have been
                  * intersected with the original cone, and the list of
                  * dot products stored in this object is empty.

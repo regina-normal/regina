@@ -182,7 +182,7 @@ using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
  * `R(i)` denotes the type returned by the corresponding call to
  * `action(i)`.
  *
- * This is useful when the return \e type from \a action (not just the
+ * This is useful when the return _type_ from \a action (not just the
  * return value) depends on \a i.  An example of this is
  * `Triangulation::face(subdim, index)`, whose return type
  * would normally be `Face<subdim>*`, except for the fact that
@@ -338,7 +338,7 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
 /**
  * Returns the preferred Python display name for the given C++ type.
  *
- * The Python bindings have an internal mechanism for converting \e any
+ * The Python bindings have an internal mechanism for converting _any_
  * C++ type into a suitable display name.  However, for some of Regina's
  * classes the results are not ideal.
  *

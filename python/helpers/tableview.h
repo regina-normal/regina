@@ -34,7 +34,7 @@
  *  \brief Assists with wrapping instances of Regina's lightweight ListView
  *  template class.
  *
- *  This header is \e not included automatically by python/helpers.h.
+ *  This header is _not_ included automatically by python/helpers.h.
  *  If you need it, you will need to include it yourself.
  */
 

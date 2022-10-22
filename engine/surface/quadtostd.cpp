@@ -96,7 +96,7 @@ namespace {
             }
 
             /**
-             * Creates a new ray that represents the \e negative of
+             * Creates a new ray that represents the _negative_ of
              * the link of the given vertex.
              *
              * \param tri the underlying triangulation.
@@ -189,7 +189,7 @@ namespace {
 
             /**
              * Determines whether this ray has zero coordinates in every
-             * position where \e both of the given rays simultaneously
+             * position where _both_ of the given rays simultaneously
              * have zero coordinates.
              *
              * The bitmask \a ignoreFacets represents a list of coordinate

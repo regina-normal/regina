@@ -86,9 +86,9 @@ class SnapshotWriteError : public std::exception {
  *
  * To describe how this class works, we need some terminology:
  *
- * - the \e image is a single object of type \a T whose snapshot we are taking;
+ * - the _image_ is a single object of type \a T whose snapshot we are taking;
  *
- * - the \e viewers are many object of other types that all require access to
+ * - the _viewers_ are many object of other types that all require access to
  *   this snapshot.
  *
  * The life cycle of this process is as follows:
@@ -131,7 +131,7 @@ class SnapshotWriteError : public std::exception {
  *   because the image may change to be a different object if the original
  *   is modified or destroyed.
  *
- * - Snapshot references are only ever granted \e read-only access to the image.
+ * - Snapshot references are only ever granted _read-only_ access to the image.
  *   Semantically this makes sense (since this is a snapshot); also this
  *   avoids unpleasant lifespan questions if someone tries to modify a
  *   Snapshot's internal deep copy.  If you need write access from a snapshot,
@@ -155,9 +155,9 @@ class SnapshotWriteError : public std::exception {
  * - In particular, \a T must have a copy constructor.  This will be used by
  *   the snapshot whenever it needs to take its own deep copy.
  *
- * - Whenever an object of type \a T changes, it \e must call
+ * - Whenever an object of type \a T changes, it _must_ call
  *   Snapshottable<T>::takeSnapshot() from within the modifying member
- *   function, \e before the change takes place (though there are a handful
+ *   function, _before_ the change takes place (though there are a handful
  *   of exceptions to this requirement, described in the Snapshottable class
  *   notes).  If the object does not have a current snapshot, this is very fast
  *   (a single test for a null pointer).  If the object does have a current
@@ -176,12 +176,12 @@ class SnapshotWriteError : public std::exception {
  *
  * Regarding multithreading:
  *
- * - In general, this class is \e not thread-safe; in particular, the
+ * - In general, this class is _not_ thread-safe; in particular, the
  *   code that creates new snapshots, takes deep copies before modification,
  *   destroys snapshots, and enrols/unenrols images from the snapshot
  *   machinery is all unsafe for multithreading.
  *
- * - However: the reference counting machinery \e is thread-safe.
+ * - However: the reference counting machinery _is_ thread-safe.
  *   This means that, if your image is not being modified and you already have
  *   one snapshot reference \a R, it is safe to create more references,
  *   access the image through your references, and/or destroy references,
@@ -248,7 +248,7 @@ class Snapshot {
          * This is called from Snapshottable<T> whenever \a value is
          * about to be modified or destroyed.
          *
-         * If we already \e have a deep copy, then this is an error:
+         * If we already _have_ a deep copy, then this is an error:
          * it means the call came from within the deep copy, which should be
          * read-only and which we ourselves are responsible for destroying.
          */
@@ -289,7 +289,7 @@ class Snapshot {
  *   any data is destroyed.
  *
  * There are some situations where an object of type \a T is modified but
- * does \e not need to call takeSnapshot().  These include:
+ * does _not_ need to call takeSnapshot().  These include:
  *
  * - move, copy and swap operations, since these are required to call the
  *   base class implementations from Snapshottable<T>, which take care of
@@ -329,10 +329,10 @@ class Snapshottable {
         /**
          * Move constructor.
          *
-         * This should \e only be called when the entire type \a T contents
+         * This should _only_ be called when the entire type \a T contents
          * of \a src are being moved into this new type \a T object.  If \a src
          * has a current snapshot, then this object will move in as the new
-         * image for that \e same snapshot.  This avoids a deep copy of \a src,
+         * image for that _same_ snapshot.  This avoids a deep copy of \a src,
          * even though \a src is changing (and presumably will be destroyed).
          *
          * In particular, if the move constructor for \a T calls this
@@ -381,10 +381,10 @@ class Snapshottable {
          * operator for \a T calls this base class operator (as it should),
          * then it does not need to call takeSnapshot() itself.
          *
-         * This should \e only be called when the entire type \a T contents
+         * This should _only_ be called when the entire type \a T contents
          * of \a src are being moved into this type \a T object.  If \a src
          * has a current snapshot, then this object will move in as the new
-         * image for that \e same snapshot.  This avoids a deep copy of \a src,
+         * image for that _same_ snapshot.  This avoids a deep copy of \a src,
          * even though \a src is changing (and presumably will be destroyed).
          *
          * In particular, if the move assignment operator for \a T calls this
@@ -411,10 +411,10 @@ class Snapshottable {
         /**
          * Swap operation.
          *
-         * This should \e only be called when the entire type \a T contents
+         * This should _only_ be called when the entire type \a T contents
          * of this object and \a other are being swapped.  If one object has
          * a current snapshot, then the other object will move in as the new
-         * image for that \e same snapshot.  This avoids a deep copies of
+         * image for that _same_ snapshot.  This avoids a deep copies of
          * this object and/or \a other, even though both objects are changing.
          *
          * In particular, if the swap function for \a T calls this base class
@@ -573,7 +573,7 @@ class SnapshotRef {
          *
          * This move constructor is identical to the copy constructor,
          * and there is no particular reason to call it.  It is included
-         * here for consistency because the move \e assignment operator is
+         * here for consistency because the move _assignment_ operator is
          * different from (and more efficient) than copy assignment.
          *
          * \param src the snapshot reference to move.

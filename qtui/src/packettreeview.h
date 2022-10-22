@@ -149,7 +149,7 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::PacketListener {
  * A visual representation of an entire Regina packet tree.
  *
  * This tree must be filled only with items of type PacketTreeItem.
- * The item corresponding to the root of the packet tree will \e not be
+ * The item corresponding to the root of the packet tree will _not_ be
  * included in the tree.
  */
 class PacketTreeView : public QTreeWidget, public regina::PacketListener {
@@ -205,7 +205,7 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * Finds the item corresponding to the given packet, or null if no
          * such item could be found.
          *
-         * This routine will \e not find the root of the packet tree:
+         * This routine will _not_ find the root of the packet tree:
          * if packet is the tree root then this routine will return null.
          */
         PacketTreeItem* find(const regina::Packet& packet);

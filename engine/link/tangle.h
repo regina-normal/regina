@@ -55,16 +55,16 @@ namespace regina {
  * fixed at the top-left, top-right, bottom-left and bottom-right
  * corners of the diagram.
  *
- * Each tangles has a \e type, indicating how the four endpoints are
+ * Each tangles has a _type_, indicating how the four endpoints are
  * connected.  The three possible types are:
  *
- * - \e horizontal, indicating that the two top endpoints are connected,
+ * - _horizontal_, indicating that the two top endpoints are connected,
  *   and the two bottom endpoints are connected;
  *
- * - \e vertical, indicating that the two left endpoints are connected,
+ * - _vertical_, indicating that the two left endpoints are connected,
  *   and the two right endpoints are connected;
  *
- * - \e diagonal, indicating that the top-left and bottom-right endpoints
+ * - _diagonal_, indicating that the top-left and bottom-right endpoints
  *   are connected, and the bottom-left and top-right endpoints are connected.
  *
  * Internally, Regina numbers the two strings 0 and 1: string 0 will
@@ -562,7 +562,7 @@ class Tangle : public Output<Tangle> {
          *
          * It is allowed to pass this tangle as \a other.
          *
-         * \pre It is not the case that both this and \e other are
+         * \pre It is not the case that both this and _other_ are
          * vertical tangles (which would cause the addition to create a
          * closed link component).
          *
@@ -859,7 +859,7 @@ class Tangle : public Output<Tangle> {
          * contain additional leading or trailing whitespace.
          *
          * \warning While this routine does some error checking on the input,
-         * these checks are not exhaustive.  In particular, it does \e not test
+         * these checks are not exhaustive.  In particular, it does _not_ test
          * for the viability of the diagram (i.e., whether the given crossings
          * with the given signs actually produce a tangle of the given type
          * with the correct endpoints).  Of course non-viable inputs are not
@@ -901,7 +901,7 @@ class Tangle : public Output<Tangle> {
          * \pre The tokens in the input sequence do not contain any whitespace.
          *
          * \warning While this routine does some error checking on the input,
-         * these checks are not exhaustive.  In particular, it does \e not test
+         * these checks are not exhaustive.  In particular, it does _not_ test
          * for the viability of the diagram (i.e., whether the given crossings
          * with the given signs actually produce a tangle of the given type
          * with the correct endpoints).  Of course non-viable inputs are not

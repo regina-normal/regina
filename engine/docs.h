@@ -163,8 +163,8 @@
  *
  *  Regina's calculation engine uses UTF-8 for all strings (except possibly
  *  for filenames; see below).  This means that programmers who pass
- *  strings \e into routines must ensure that they use UTF-8, and
- *  programmers who receive strings \e from routines may assume that
+ *  strings _into_ routines must ensure that they use UTF-8, and
+ *  programmers who receive strings _from_ routines may assume that
  *  they are returned in UTF-8.  Note that plain ASCII is a subset of
  *  UTF-8, so plain ASCII text is always fine to use.
  *
@@ -177,7 +177,7 @@
  *  useful for programmers who need to work with older data files at a
  *  low level.
  *
- *  File \e names are a special case, since here Regina must interact with
+ *  File _names_ are a special case, since here Regina must interact with
  *  the underlying operating system.  All filenames that are passed into
  *  routines must be presented in whatever encoding the operating system
  *  expects; Regina will simply pass them through to the standard C/C++ file
@@ -233,7 +233,7 @@ namespace regina {
  * - bidirectional graph;
  * - the read-only portions of property graph.
  *
- * Triangulations are \e not mutable graphs - for the purposes of the BGL,
+ * Triangulations are _not_ mutable graphs - for the purposes of the BGL,
  * they are considered read-only.
  *
  * Dual vertices of the graph represent <i>dim</i>-dimensional simplices
@@ -259,7 +259,7 @@ namespace regina {
  * - bidirectional graph;
  * - the read-only portions of property graph.
  *
- * Knots and links are \e not mutable graphs - for the purposes of the BGL,
+ * Knots and links are _not_ mutable graphs - for the purposes of the BGL,
  * they are considered read-only.
  *
  * Vertices of the graph are represented directly by a pointer of type
@@ -299,7 +299,7 @@ namespace regina {
  *
  *  <h3>Python vs C++ APIs</h3>
  *
- *  - Since Regina 7.0, almost \e all of Regina's C++ classes and functions
+ *  - Since Regina 7.0, almost _all_ of Regina's C++ classes and functions
  *    are wrapped in Python - even the low-level and/or highly specialised
  *    classes - wherever it is meaningful to do so.  However, sometimes there
  *    is reason why a class or function cannot or should not be wrapped.
@@ -321,7 +321,7 @@ namespace regina {
  *  more classes now compare by value, and a few now have their comparisons
  *  disabled.
  *
- *  In general, you do \e not want to use the Python test `x is y`.
+ *  In general, you do _not_ want to use the Python test `x is y`.
  *  This is because each of Regina's Python objects is typically a "wrapper"
  *  that points to one of Regina's native C++ objects.  Importantly, the
  *  same native C++ object could have many Python wrappers, and so
@@ -333,7 +333,7 @@ namespace regina {
  *  on the type of class:
  *
  *  - Most of Regina's classes use _comparison by value_.  Here
- *    `x == y` tests whether the \e contents of \a x and \a y are
+ *    `x == y` tests whether the _contents_ of \a x and \a y are
  *    the same.  What "the same " means will depend on the particular class;
  *    for example, GroupPresentation tests for identical presentations (not
  *    group isomorphism), Triangulation<3> tests for the same tetrahedron and

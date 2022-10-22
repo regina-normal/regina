@@ -152,7 +152,7 @@
  *
  * Normally there is no need to override this in your subclasses.
  * However, if your subclass needs to override this to support additional editing styles,
- * then you \e must call the superclass implementation if \a editingStyle is
+ * then you _must_ call the superclass implementation if \a editingStyle is
  * UITableViewCellEditingStyleDelete.
  */
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;

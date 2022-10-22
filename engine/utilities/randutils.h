@@ -71,7 +71,7 @@ namespace regina {
  * you run the same code in a new process (but on the same machine), you
  * should receive the same sequence of random bits.  However, the generation
  * algorithm may be specific to your machine, so running the same code on
- * different machines might well \e not generate the same random bits.
+ * different machines might well _not_ generate the same random bits.
  *
  * If you need to re-seed the random engine with a value that is
  * unpredictable (e.g., using hardware entropy), you can call
@@ -83,7 +83,7 @@ namespace regina {
  * Regina does not offer any way for a RandomEngine to transfer its duty
  * (i.e., unlocking the internal mutex upon destruction) to another object.
  *
- * \warning Locks are \e not recursive.  If the same thread attempts to
+ * \warning Locks are _not_ recursive.  If the same thread attempts to
  * create a second RandomEngine object before the previous one is destroyed,
  * the resulting behaviour is undefined.
  *
@@ -153,7 +153,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * bits unpredictable (and, in particular, different between
          * runs of your program).
          *
-         * Regina does \e not do this by default.
+         * Regina does _not_ do this by default.
          *
          * This routine is thread-safe, and it locks the internal mutex
          * while it runs.

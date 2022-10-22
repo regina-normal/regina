@@ -51,8 +51,8 @@ namespace regina {
  *
  * This access is read-only, in the sense that both the list itself and the
  * list elements are read-only.  (Of course, if the list elements are
- * non-const pointers then this means that the \e pointers cannot be reassigned
- * to point to different objects, but the objects they \e point to can still
+ * non-const pointers then this means that the _pointers_ cannot be reassigned
+ * to point to different objects, but the objects they _point_ to can still
  * be modified.)
  *
  * Typically a ListView would be returned from a class member function to
@@ -266,7 +266,7 @@ class ListView {
          * Determines whether this and the given list view are accessing
          * the same underlying container.
          *
-         * Here the containers are compared by \e reference (i.e., they
+         * Here the containers are compared by _reference_ (i.e., they
          * must be the same container object at the same location in memory;
          * it is not enough to be two containers with identical contents).
          *
@@ -279,7 +279,7 @@ class ListView {
          * Determines whether this and the given list view are accessing
          * different underlying containers.
          *
-         * Here the containers are compared by \e reference (i.e., to be
+         * Here the containers are compared by _reference_ (i.e., to be
          * considered equal they must be the same container object at the same
          * location in memory; it is not enough to be two containers with
          * identical contents).
@@ -482,7 +482,7 @@ class ListView<Element*> {
          *
          * To be considered the same array, the two arrays must have the same
          * location in memory (i.e., the pointers that define the C-style arrays
-         * must be equal), \e and the two arrays must have the same length.
+         * must be equal), _and_ the two arrays must have the same length.
          * In particular, it is not enough for the two arrays just to have
          * identical contents.
          *
@@ -497,7 +497,7 @@ class ListView<Element*> {
          *
          * To be considered the same array, the two arrays must have the same
          * location in memory (i.e., the pointers that define the C-style arrays
-         * must be equal), \e and the two arrays must have the same length.
+         * must be equal), _and_ the two arrays must have the same length.
          * In particular, it is not enough for the two arrays just to have
          * identical contents.
          *

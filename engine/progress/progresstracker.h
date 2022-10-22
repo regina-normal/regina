@@ -55,11 +55,11 @@ namespace regina {
  *
  * These classes manage progress tracking and cancellation polling for long
  * operations.  A typical progress tracker is simultaneously used by a
- * \e writing thread, which is performing the long calculations, and a
- * \e reading thread, which displays progress updates to the user and/or
+ * _writing_ thread, which is performing the long calculations, and a
+ * _reading_ thread, which displays progress updates to the user and/or
  * takes cancellation requests from the user.
  *
- * Progress works through a series of \e stages.  Each stage has a text
+ * Progress works through a series of _stages_.  Each stage has a text
  * description, as well as a numerical progress indicator.  For the
  * class ProgressTracker, this is a percentage that rises from 0 to 100
  * as the stage progresses; for ProgressTrackerOpen, this is an integer
@@ -301,7 +301,7 @@ class ProgressTracker : public ProgressTrackerBase,
          * final period (full stop).
          * \param weight the relative weight of this stage as a fraction
          * of the entire operation.  This weight must be between 0 and 1
-         * inclusive, and the weights of \e all stages must sum to 1
+         * inclusive, and the weights of _all_ stages must sum to 1
          * in total.
          */
         void newStage(std::string desc, double weight = 1);
