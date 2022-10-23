@@ -291,8 +291,41 @@ For C++ programmers who know *subdim* at compile time, you are better
 off using the template function boundaryMap<subdim>() instead, which
 is slightly faster.
 
-See the templated boundaryMap<subdim>() for full details on what this
-function computes and how the matrix it returns should be interpreted.
+This is the boundary map that you would use if you were building the
+homology groups manually from a chain complex.
+
+Unlike homology(), this code does _not_ use the dual skeleton: instead
+it uses the primal (i.e., ordinary) skeleton.
+
+* The main advantage of this is that you can easily match rows and
+  columns of the returned matrix to faces of this triangulation.
+
+* The main disadvantage is that ideal vertices are _not_ treated as
+  though they were truncated; instead they are just treated as 0-faces
+  that appear as part of the chain complex.
+
+The matrix that is returned should be thought of as acting on column
+vectors. Specifically, the *c*th column of the matrix corresponds to
+the *c*th *subdim*-face of this triangulation, and the *r*th row
+corresponds to the *r*th (*subdim*-1)-face of this triangulation.
+
+For the boundary map, we fix orientations as follows. In simplicial
+homology, for any *k*, the orientation of a *k*-simplex is determined
+by assigning labels 0,...,*k* to its vertices. For this routine, since
+every *k*-face *f* is already a *k*-simplex, these labels will just be
+the inherent vertex labels 0,...,*k* of the corresponding Face<k>
+object. If you need to convert these labels into vertex numbers of a
+top-dimensional simplex containing *f*, you can use either
+Simplex<dim>::faceMapping<k>(), or the equivalent routine
+FaceEmbedding<k>::vertices().
+
+If you wish to convert these boundary maps to homology groups
+yourself, either the AbelianGroup class (if you do not need to track
+which face is which) or the MarkedAbelianGroup class (if you do need
+to track individual faces) can help you do this.
+
+Note that, unlike many of the templated face-related routines, this
+routine explicitly supports the case *subdim* = *dim*.
 
 Precondition:
     This triangulation is valid and non-empty.
@@ -374,8 +407,18 @@ which is fast constant time.
 
 Specifically, this counts the number of *subdim*-faces for which
 isBoundary() returns ``True``. This may lead to some unexpected
-results in non-standard scenarios; see the documentation for the
-templated countBoundaryFaces<subdim>() for details.
+results in non-standard scenarios; for example:
+
+* In non-standard dimensions, ideal vertices are not recognised and so
+  will not be counted as boundary;
+
+* In an invalid triangulation, the number of boundary faces reported
+  here may be smaller than the number of faces obtained when you
+  triangulate the boundary using BoundaryComponent::build(). This is
+  because "pinched" faces (where separate parts of the boundary are
+  identified together) will only be counted once here, but will
+  "spring apart" into multiple faces when the boundary is
+  triangulated.
 
 Exception ``InvalidArgument``:
     The face dimension *subdim* is outside the supported range (i.e.,
@@ -482,9 +525,76 @@ For C++ programmers who know *subdim* at compile time, you are better
 off using the template function dualBoundaryMap<subdim>() instead,
 which is slightly faster.
 
-See the templated dualBoundaryMap<subdim>() for full details on what
-this function computes and how the matrix it returns should be
-interpreted.
+This function is analogous to boundaryMap(), but is designed to work
+with dual faces instead of ordinary (primal) faces. In particular,
+this is used in the implementation of homology(), which works with the
+dual skeleton in order to effectively truncate ideal vertices.
+
+The matrix that is returned should be thought of as acting on column
+vectors. Specifically, the *c*th column of the matrix corresponds to
+the *c*th dual *subdim*-face of this triangulation, and the *r*th row
+corresponds to the *r*th dual (*subdim*-1)-face of this triangulation.
+Here we index dual faces in the same order as the (primal) faces of
+the triangulation that they are dual to, except that we omit primal
+_boundary_ faces (i.e., primal faces for which Face::isBoundary()
+returns ``True``). Therefore, for triangulations with boundary, the
+dual face indices and the corresponding primal face indices might not
+be equal.
+
+For this dual boundary map, for positive dual face dimensions *k*, we
+fix the orientations of the dual *k*-faces as follows:
+
+* In simplicial homology, the orientation of a *k*-simplex is
+  determined by assigning labels 0,...,*k* to its vertices.
+
+* Consider a dual *k*-face *d*, and let this be dual to the primal
+  (*dim*-*k*)-face *f*. In general, *d* will _not_ be a simplex. Let
+  *B* denote the barycentre of *f* (which also appears as the "centre"
+  point of *d*).
+
+* Let *emb* be an arbitrary FaceEmbedding<dim-k> for *f* (i.e., chosen
+  from ``f.embeddings()``), and let *s* be the corresponding top-
+  dimensional simplex containing *f* (i.e., ``emb.simplex()``). For
+  the special case of dual edges (*k* = 1), this choice matters; here
+  we choose *emb* to be the first embedding (that is, ``f.front()``).
+  For larger *k* this choice does not matter; see below for the
+  reasons why.
+
+* Now consider how *d* intersects the top-dimensional simplex *s*.
+  This intersection is a *k*-polytope with *B* as one of its vertices.
+  We can extend this polytope away from *B*, pushing it all the way
+  through the simplex *s*, until it becomes a *k*-simplex *g* whose
+  vertices are *B* along with the *k* "unused" vertices of *s* that do
+  _not_ appear in *f*.
+
+* We can now define the orientation of the dual *k*-face *d* to be the
+  orientation of this *k*-simplex *g* that contains it. All that
+  remains now is to orient *g* by choosing a labelling 0,...,*k* for
+  its vertices.
+
+* To orient *g*, we assign the label 0 to *B*, and we assign the
+  labels 1,...,*k* to the "unused" vertices
+  ``v[dim-k+1]``,...,``v[dim]`` of *s* respectively, where *v* is the
+  permutation ``emb.vertices()``.
+
+* Finally, we note that for *k* > 1, the orientation for *d* does not
+  depend on the particular choice of *s* and *emb:* by the
+  preconditions and the fact that this routine only considers duals of
+  non-boundary faces, the link of *f* must be a sphere, and therefore
+  the images of those "other" vertices are fixed in a way that
+  preserves orientation as you walk around the link. See the
+  documentation for Simplex<dim>::faceMapping() for details.
+
+* For the special case of dual edges (*k* = 1), the conditions above
+  can be described more simply: the two endpoints of the dual edge *d*
+  correspond to the two top-dimensional simplices on either side of
+  the (*dim*-1)-face *f*, and we orient *d* by labelling these
+  endpoints (0, 1) in the order (``f.back()``, ``f.front()``).
+
+If you wish to convert these boundary maps to homology groups
+yourself, either the AbelianGroup class (if you do not need to track
+which dual face is which) or the MarkedAbelianGroup class (if you do
+need to track individual dual faces) can help you do this.
 
 Precondition:
     This triangulation is valid and non-empty.
@@ -512,8 +622,30 @@ For C++ programmers who know *subdim* at compile time, you are better
 off using the template function dualToPrimal<subdim>() instead, which
 is slightly faster.
 
-See the templated dualToPrimal<subdim>() for full details on what this
-function computes and how the matrix it returns should be interpreted.
+The matrix that is returned should be thought of as acting on column
+vectors. Specifically, the *c*th column of the matrix corresponds to
+the *c*th dual *subdim*-face of this triangulation, and the *r*th row
+corresponds to the *r*th primal *subdim*-face of this triangulation.
+
+We index and orient these dual and primal faces in the same manner as
+dualBoundaryMap() and boundaryMap() respectively. In particular, dual
+faces are indexed in the same order as the primal
+(*dim*-*subdim*)-faces of the triangulation that they are dual to,
+except that we omit primal boundary faces. See dualBoundaryMap() and
+boundaryMap() for further details.
+
+The key feature of this map is that, if a column vector *v* represents
+a cycle *c* in the dual chain complex (i.e., it is a chain with zero
+boundary), and if this map is represented by the matrix *M*, then the
+vector ``M*v`` represents a cycle in the primal chain complex that
+belongs to the same *subdim*th homology class as *c*.
+
+Regarding implementation: the map is constructed by (i) subdividing
+each dual face into smaller *subdim*-simplices whose vertices are
+barycentres of primal faces of different dimensions, (ii) moving each
+barycentre to vertex 0 of the corresponding face, and then (iii)
+discarding any resulting simplices with repeated vertices (which
+become "flattened" to a dimension less than *subdim*).
 
 Precondition:
     This trianguation is valid, non-empty, and non-ideal. Note that
@@ -1024,8 +1156,34 @@ For C++ programmers who know *k* at compile time, you are better off
 using the template function homology<k>() instead, which is slightly
 faster.
 
-See the templated homology<k>() for full details on exactly what this
-function computes.
+A problem with computing homology is that, if *dim* is not one of
+Regina's standard dimensions, then Regina cannot actually _detect_
+ideal vertices (since in general this requires solving undecidable
+problems). Currently we resolve this by insisting that, in higher
+dimensions, the homology dimension *k* is at most (*dim*-2); the
+underlying algorithm will then effectively truncate _all_ vertices
+(since truncating "ordinary" vertices whose links are spheres or balls
+does not affect the *k*th homology in such cases).
+
+In general, this routine insists on working with a valid triangulation
+(see isValid() for what this means). However, for historical reasons,
+if you are computing first homology (*k* = 1) then your triangulation
+is allowed to be invalid, though the results might or might not be
+useful to you. The homology will be computed using the dual skeleton:
+what this means is that any invalid faces of dimension
+0,1,...,(*dim*-3) will be treated as though their centroids had been
+truncated, but any invalid (*dim*-2)-faces will be treated _without_
+such truncation. A side-effect is that, after performing a barycentric
+on an invalid triangulation, the group returned by homology<1>() might
+change.
+
+.. warning::
+    In dimension 3, if you are calling this from the subclass
+    SnapPeaTriangulation then **any fillings on the cusps will be
+    ignored**. (This is the same as for every routine implemented by
+    Regina's Triangulation<3> class.) If you wish to compute homology
+    with fillings, call SnapPeaTriangulation::homologyFilled()
+    instead.
 
 Precondition:
     Unless you are computing first homology (*k* = 1), this
@@ -1478,9 +1636,29 @@ For C++ programmers who know *k* at compile time, you are better off
 using the template function markedHomology<k>() instead, which is
 slightly faster.
 
-See the templated markedHomology<k>() for full details on what this
-function computes, some important caveats to be aware of, and how the
-group that it returns should be interpreted.
+This is a specialised homology routine; you should only use it if you
+need to understand how individual *k*-faces (or chains of *k*-faces)
+appear within the homology group.
+
+* The major disadvantage of this routine is that it does not truncate
+  ideal vertices. Instead it computes the homology of the union of all
+  top-dimensional simplices, working directly with the boundary maps
+  between (*k*+1)-faces, *k*-faces and (*k*-1)-faces of the
+  triangulation. If your triangulation is ideal, then this routine
+  will almost certainly _not_ give the correct homology group for the
+  underlying manifold. If, however, all of your vertex links are
+  spheres or balls (i.e., the triangulation is closed or all of its
+  boundary components are built from unglued (*dim*-1)-faces), then
+  the homology of the manifold will be computed correctly.
+
+* The major advantage is that, instead of returning a simpler
+  AbelianGroup, this routine returns a MarkedAbelianGroup. This allows
+  you to track chains of individual *k*-faces of the triangulation as
+  they appear within the homology group. Specifically, the chain
+  complex cordinates with this MarkedAbelianGroup represent precisely
+  the *k*-faces of the triangulation in the same order as they appear
+  in the list faces<k>(), using the inherent orientation provided by
+  Face<dim, k>.
 
 Precondition:
     This triangulation is valid and non-empty.

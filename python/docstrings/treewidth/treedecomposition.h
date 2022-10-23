@@ -691,15 +691,25 @@ Returns:
 
 // Docstring regina::python::doc::TreeDecomposition_::dot
 static const char *dot =
-R"doc(Returns a Graphviz DOT representation of this tree decomposition.
+R"doc(Returns a Graphviz DOT representation of this tree decomposition. This
+string can be saved as a standalone DOT file, which in turn can be run
+through Graphviz in order to visualise the tree decomposition.
+
+This routine generates a directed graph (with arrows running from
+parent bags to their children). The nodes of this graph will be
+labelled in a way that indicates the tetrahedra contained in each bag.
+The resulting DOT file should be used with the *dot* program shipped
+with Graphviz.
 
 This routine simply returns the output of writeDot() as a string,
 instead of dumping it to an output stream.
 
-See the writeDot() notes for further details.
+If you are writing this text representation to an output stream then
+you should call writeDot() instead, which is more efficient.
 
 Returns:
-    the output of writeDot(), as outlined above.)doc";
+    the DOT representation of this tree decomposition, as outlined
+    above.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::first
 static const char *first =
@@ -913,17 +923,20 @@ Parameter ``heightHint``:
 // Docstring regina::python::doc::TreeDecomposition_::pace
 static const char *pace =
 R"doc(Returns a text representation of this tree decomposition using the
-PACE text format. The text format is described in detail at
+PACE text format. This text format is described in detail at
 https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ , and
 is documented in detail by the routine fromPACE(const std::string&).
 
-This routine simply returns the output of writePACE() as a string,
-instead of writing it to an output stream.
+If you write a tree decomposition using pace() or writePACE() and then
+read it again using fromPACE(), you are _not_ guaranteed to obtain an
+identical tree decomposition. This is because the PACE text format
+stores the connections between bags as an undirected, unrooted tree.
 
-See the writePACE() notes for further details.
+If you are writing this text representation to an output stream then
+you should call writePACE() instead, which is more efficient.
 
 Returns:
-    the output of writePACE(), as outlined above.
+    the PACE text representation of this tree decomposition.
 
 See also:
     https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/)doc";

@@ -2439,17 +2439,43 @@ Returns:
 // Docstring regina::python::doc::Link_::pace
 static const char *pace =
 R"doc(Returns a text representation of the underlying planar 4-valent
-multigraph, using the PACE text format. The text format is described
+multigraph, using the PACE text format. This text format is described
 in detail at https://pacechallenge.wordpress.com/pace-2016/track-a-
-treewidth/, and is documented in detail by the routine writePACE().
+treewidth/.
 
-This routine simply returns the output of writePACE() as a string,
-instead of writing it to an output stream.
+In summary, the PACE text representation will consist of several lines
+of text:
 
-See the writePACE() notes for further details.
+* The first line will be of the form ``p tw <num_vertices>
+  <num_edges>``. Note that, since the underlying graph comes from a
+  link diagram, we will always have *num_edges* equal to twice
+  *num_vertices*.
+
+* Following this will be *num_edges* lines, one for each edge, each of
+  the form ``<u> <v>``, indicating an edge from vertex number *u* to
+  vertex number *v*. In this format, vertices are numbered
+  1,2,...,*num_vertices*.
+
+An example of this text format is as follows:
+
+```
+p tw 4 8
+1 2
+1 4
+1 2
+2 3
+3 4
+1 3
+3 4
+2 4
+```
+
+If you are writing this text representation to an output stream then
+you should call writePACE() instead, which is more efficient.
 
 Returns:
-    the output of writePACE(), as outlined above.
+    the PACE text representation of the underlying 4-valent
+    multigraph, as outlined above.
 
 See also:
     https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/)doc";

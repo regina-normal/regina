@@ -549,8 +549,9 @@ Returns:
 
 // Docstring regina::python::doc::GroupExpression_::tex
 static const char *tex =
-R"doc(Returns a TeX representation of this expression. See writeTeX() for
-details on how this is formed.
+R"doc(Returns a TeX representation of this expression.
+
+The text representation will be of the form ``g_2^4 g_{13}^{-5} g_4``.
 
 Returns:
     a TeX representation of this expression.)doc";
@@ -739,8 +740,11 @@ Parameter ``rel``:
 // Docstring regina::python::doc::GroupPresentation_::compact
 static const char *compact =
 R"doc(Returns a compact one-line representation of this group presentation,
-including details of all generators and relations. See
-writeTextCompact() for details on how this is formed.
+including details of all generators and relations.
+
+The output will be of the form ``< generators | relators >``. The full
+relations will be included, and the entire output will be written on a
+single line. There will be no final newline.
 
 Currently str() and compact() are identical functions, though the
 output from str() may change in future versions of Regina.
@@ -1331,8 +1335,10 @@ Parameter ``other``:
 
 // Docstring regina::python::doc::GroupPresentation_::tex
 static const char *tex =
-R"doc(Returns a TeX representation of this group presentation. See
-writeTeX() for details on how this is formed.
+R"doc(Returns a TeX representation of this group presentation.
+
+The output will be of the form ``< generators | relators >``. There
+will be no final newline.
 
 Returns:
     a TeX representation of this group presentation.)doc";
