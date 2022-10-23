@@ -520,7 +520,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * The greatest common divisor will be a monic polynomial.
          * The polynomials returned in \a u and \a v will satisfy
-         * `u*this + v*other = gcd`.
+         * `u⋅this + v⋅other = gcd`.
          *
          * As a special case, gcd(0,0) is considered to be zero.
          *

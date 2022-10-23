@@ -1308,9 +1308,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * returns the tuple (\a d, \a u, \a v), where \a u and \a v are
          * coefficients for which:
          *
-         * - `u*this + v*other = d`;
-         * - `-abs(this)/d < v*sign(other) ≤ 0`; and
-         * - `1 ≤ u*sign(this) ≤ abs(other)/d`.
+         * - `u⋅this + v⋅other = d`;
+         * - `-abs(this)/d < v⋅sign(other) ≤ 0`; and
+         * - `1 ≤ u⋅sign(this) ≤ abs(other)/d`.
          *
          * These equations are not satisfied when either of \a this or
          * \a other are zero, but in this case \a u and \a v will both be
@@ -1344,9 +1344,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * If \a d is the gcd of \a this and \a other, the values placed
          * into \a u and \a v will be coefficients for which:
          *
-         * - `u*this + v*other = d`;
-         * - `-abs(this)/d < v*sign(other) ≤ 0`; and
-         * - `1 ≤ u*sign(this) ≤ abs(other)/d`.
+         * - `u⋅this + v⋅other = d`;
+         * - `-abs(this)/d < v⋅sign(other) ≤ 0`; and
+         * - `1 ≤ u⋅sign(this) ≤ abs(other)/d`.
          *
          * These equations are not satisfied when either of \a this or
          * \a other are zero, but in this case \a u and \a v will both be

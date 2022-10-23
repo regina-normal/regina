@@ -95,13 +95,13 @@ long reducedMod(long k, long modBase);
  * If \a d is the gcd of \a a and \a b, then this routine returns the
  * tuple (\a d, \a u, \a v), where \a u and \a v are coefficients for which:
  *
- * - `u*a + v*b = d`;
- * - `-abs(a)/d < v*sign(b) ≤ 0`; and
- * - `1 ≤ u*sign(a) ≤ abs(b)/d`.
+ * - `u⋅a + v⋅b = d`;
+ * - `-abs(a)/d < v⋅sign(b) ≤ 0`; and
+ * - `1 ≤ u⋅sign(a) ≤ abs(b)/d`.
  *
  * In the special case where one of the given integers is zero, the
  * corresponding coefficient will also be zero and the other coefficient
- * will be 1 or -1 so that `u*a + v*b = d` still holds.  If both
+ * will be 1 or -1 so that `u⋅a + v⋅b = d` still holds.  If both
  * given integers are zero, both of the coefficients will be set to zero.
  *
  * \param a the first integer to compute the gcd of.

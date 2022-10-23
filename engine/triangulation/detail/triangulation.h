@@ -1744,7 +1744,7 @@ class TriangulationBase :
          * The key feature of this map is that, if a column vector \a v
          * represents a cycle \a c in the dual chain complex (i.e., it is a
          * chain with zero boundary), and if this map is represented by the
-         * matrix \a M, then the vector `M*v` represents a cycle in the
+         * matrix \a M, then the vector `M×v` represents a cycle in the
          * primal chain complex that belongs to the same <i>subdim</i>th
          * homology class as \a c.
          *
