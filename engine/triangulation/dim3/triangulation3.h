@@ -1063,7 +1063,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - returns that (possibly new) boundary edge.
          *
          * This routine uses fast heuristics to locate the meridian; as a
-         * result, <b>it does not guarantee to terminate</b> (but if you find
+         * result, **it does not guarantee to terminate** (but if you find
          * a case where it does not, please let the Regina developers know!).
          * If it does return then it guarantees that the result is correct.
          *
@@ -1128,7 +1128,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - returns these two (possibly new) boundary edges.
          *
          * This routine uses fast heuristics to locate the meridian; as a
-         * result, <b>it does not guarantee to terminate</b> (but if you find
+         * result, **it does not guarantee to terminate** (but if you find
          * a case where it does not, please let the Regina developers know!).
          * If it does return then it guarantees that the result is correct.
          *
@@ -3335,7 +3335,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * The routine rehydrate() can be used to recover a
          * triangulation from a dehydration string.  Note that the
-         * triangulation recovered <b>might not be identical</b> to the
+         * triangulation recovered might not be identical to the
          * original, but it is guaranteed to be an isomorphic copy.
          *
          * For a full description of the dehydrated triangulation

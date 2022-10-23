@@ -1265,8 +1265,8 @@ class TriangulationBase :
          * \pre This triangulation has at most one component.
          *
          * \warning In dimension 3, if you are calling this from the subclass
-         * SnapPeaTriangulation then <b>any fillings on the cusps will be
-         * ignored</b>.  (This is the same as for every routine implemented by
+         * SnapPeaTriangulation then **any fillings on the cusps will be
+         * ignored**.  (This is the same as for every routine implemented by
          * Regina's Triangulation<3> class.)  If you wish to compute the
          * fundamental group with fillings, call
          * SnapPeaTriangulation::fundamentalGroupFilled() instead.
@@ -1367,8 +1367,8 @@ class TriangulationBase :
          * homology<1>() might change.
          *
          * \warning In dimension 3, if you are calling this from the subclass
-         * SnapPeaTriangulation then <b>any fillings on the cusps will be
-         * ignored</b>.  (This is the same as for every routine implemented by
+         * SnapPeaTriangulation then **any fillings on the cusps will be
+         * ignored**.  (This is the same as for every routine implemented by
          * Regina's Triangulation<3> class.)  If you wish to compute homology
          * with fillings, call SnapPeaTriangulation::homologyFilled() instead.
          *

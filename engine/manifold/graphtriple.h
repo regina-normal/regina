@@ -76,8 +76,8 @@ namespace regina {
  * 2-by-2 matrix.  This matrix expresses the locations of the fibres and
  * base orbifold of the corresponding end space in terms of the central
  * space.
- * <b>Note that these are not the same matrices that appear in the
- * manifold name in the census data files!</b>  See the warning below.
+ * **Note that these are not the same matrices that appear in the
+ * manifold name in the census data files!**  See the warning below.
  *
  * More specifically, consider the matrix \a M that describes the
  * joining of the central space and the first end space (marked above as
@@ -130,7 +130,7 @@ namespace regina {
  * diagram above, describing a boundary torus on the central space or
  * rightmost end space in terms of a boundary torus on the leftmost end
  * space or central space respectively.  The upshot of all this is that
- * <b>the first matrix becomes inverted</b> (and the second matrix
+ * **the first matrix becomes inverted** (and the second matrix
  * remains unchanged).  It is likely that future versions of Regina will
  * replace this class with a more general class that (amongst other
  * things) removes this inconsistency.

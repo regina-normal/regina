@@ -302,7 +302,7 @@ class Cusp : public ShortOutput<Cusp> {
  *
  * Regarding interaction with the SnapPea kernel:
  *
- * - This class acts as the <b>sole C/C++ conduit</b> between the Regina
+ * - This class acts as the **sole C/C++ conduit** between the Regina
  *   calculation engine and Regina's inbuilt version of the SnapPea kernel.
  *   Regina should not interact with the SnapPea kernel at the C/C++ level
  *   other than through this class.
@@ -324,14 +324,14 @@ class Cusp : public ShortOutput<Cusp> {
  *   This is because an object of this class stores _two_ representations of
  *   the triangulation (SnapPea's and Regina's), which are always kept in sync.
  *
- * - However, you may <b>only edit this object using the SnapPea functions
- *   specific to this class</b> (such as SnapPeaTriangulation::randomise()).
+ * - However, you may **only edit this object using the SnapPea functions
+ *   specific to this class** (such as SnapPeaTriangulation::randomise()).
  *   This is essentially because the synchronisation is one-way only (from
  *   SnapPea to Regina, but not in the other direction).
  *
  * - Any attempt to edit this triangulation via the inherited Triangulation<3>
  *   interface (for instance, by calling Triangulation<3>::pachner()) will
- *   automatically cause this to become a <b>null triangulation</b>,
+ *   automatically cause this to become a **null triangulation**,
  *   with no tetrahedra and no SnapPea data at all.
  *
  * - In particular, if you wish to assign one SnapPea triangulation to another,

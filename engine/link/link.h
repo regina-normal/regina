@@ -1794,8 +1794,8 @@ class Link :
          * exhaustive search through the Reidemeister graph.  This routine is
          * more powerful but much slower than intelligentSimplify().
          *
-         * Unlike intelligentSimplify(), this routine <b>could potentially
-         * reflect or reverse the link</b>.
+         * Unlike intelligentSimplify(), this routine **could potentially
+         * reflect or reverse the link**.
          *
          * This routine is only available for knots at the present time.
          * If this link has multiple (or zero) components, then this
@@ -1886,8 +1886,8 @@ class Link :
          * This routine iterates through all knot diagrams that can be reached
          * from this via Reidemeister moves, without ever exceeding
          * \a height additional crossings beyond the original number.
-         * With the current implementation, these diagrams <b>could become
-         * reflected and/or reversed</b>, and moreover each diagram will only be
+         * With the current implementation, these diagrams **could become
+         * reflected and/or reversed**, and moreover each diagram will only be
          * considered once up to reflection and/or reversal; be aware that this
          * behaviour could change and/or become configurable in a future version
          * of Regina.
