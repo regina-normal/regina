@@ -118,7 +118,7 @@ Returns:
 static const char *chain =
 R"doc(Returns the layered chain attached to the requested annulus on the
 boundary of the core triangular solid torus. If there is no attached
-layered chain, no value will be returned.
+layered chain, ``None`` will be returned.
 
 Note that the core triangular solid torus will be attached to the
 bottom (as opposed to the top) of the layered chain.

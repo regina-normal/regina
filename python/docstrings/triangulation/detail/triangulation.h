@@ -1279,7 +1279,7 @@ Parameter ``other``:
     this triangulation.
 
 Returns:
-    details of the isomorphism if such a copy is found, or no value
+    details of the isomorphism if such a copy is found, or ``None``
     otherwise.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::isEmpty
@@ -1311,7 +1311,7 @@ to exist.
 
 If the triangulations are isomorphic, then this routine returns one
 such boundary complete isomorphism (i.e., one such relabelling).
-Otherwise it returns no value. Thus, to test whether an isomorphism
+Otherwise it returns ``None``. Thus, to test whether an isomorphism
 exists, you can just call ``if (isIsomorphicTo(other))``.
 
 There may be many such isomorphisms between the two triangulations. If
@@ -1332,7 +1332,7 @@ Parameter ``other``:
 
 Returns:
     details of the isomorphism if the two triangulations are
-    combinatorially isomorphic, or no value otherwise.)doc";
+    combinatorially isomorphic, or ``None`` otherwise.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::isOrientable
 constexpr const char *isOrientable =

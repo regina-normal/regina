@@ -254,7 +254,7 @@ Parameter ``minSide``:
     pieces; this must be at least 1.
 
 Returns:
-    the best possible cut as described above, or no value if no such
+    the best possible cut as described above, or ``None`` if no such
     cut exists.)doc";
 
 // Docstring regina::python::doc::detail::FacetPairingBase_::dot

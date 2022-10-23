@@ -921,7 +921,7 @@ what this means.
 
 Returns:
     an isomorphism describing the reduction map from the original
-    presentation to the new presentation, or no value if this
+    presentation to the new presentation, or ``None`` if this
     presentation was not changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::identifyAbelian
@@ -1019,7 +1019,7 @@ what this means.
 
 Returns:
     an isomorphism describing the map from the original presentation
-    to the new presentation, or no value if this presentation was not
+    to the new presentation, or ``None`` if this presentation was not
     changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::intelligentSimplify
@@ -1043,7 +1043,7 @@ what this means.
 
 Returns:
     an isomorphism describing the reduction map from the original
-    presentation to the new presentation, or no value if this
+    presentation to the new presentation, or ``None`` if this
     presentation was not changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::isValid
@@ -1169,7 +1169,7 @@ details on what this means.
 
 Returns:
     an isomorphism describing the map from the original presentation
-    to the new presentation, or no value if this presentation was not
+    to the new presentation, or ``None`` if this presentation was not
     changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::proliferateRelators
@@ -1323,7 +1323,7 @@ what this means.
 
 Returns:
     an isomorphism describing the reduction map from the original
-    presentation to the new presentation, or no value if this
+    presentation to the new presentation, or ``None`` if this
     presentation was not changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::swap

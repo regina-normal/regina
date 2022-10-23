@@ -528,7 +528,7 @@ static const char *isLensSpace =
 R"doc(Determines if this Seifert fibred space is a Lens space.
 
 Returns:
-    a structure containing the details of this Lens space, or no value
+    a structure containing the details of this Lens space, or ``None``
     if this is not a Lens space.)doc";
 
 // Docstring regina::python::doc::SFSpace_::obstruction

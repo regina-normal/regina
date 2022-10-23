@@ -112,7 +112,7 @@ Burton, J. Knot Theory Ramifications 16 (2007), 545--574.
 
 Returns:
     the name of the plugged thin/thick I-bundle, if the triangulation
-    is of this form, or no value if it is not.)doc";
+    is of this form, or ``None`` if it is not.)doc";
 
 // Docstring regina::python::doc::BlockedSFS_::recognise
 static const char *recognise =

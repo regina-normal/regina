@@ -278,7 +278,7 @@ Returns:
     a pair (*adj*, *perm*), where *adj* is the normal disc adjacent to
     the given disc along the given arc, and *perm* represents the same
     directed normal arc that was passed but expressed in terms of the
-    vertices of the adjacent tetrahedron. This will be no value if
+    vertices of the adjacent tetrahedron. This will be ``None`` if
     there is no adjacent disc.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::global_swap

@@ -343,9 +343,9 @@ Dehydration strings come with some restrictions:
 * They can only support triangulations with at most 25 tetrahedra.
 
 The routine rehydrate() can be used to recover a triangulation from a
-dehydration string. Note that the triangulation recovered **might not
-be identical** to the original, but it is guaranteed to be an
-isomorphic copy.
+dehydration string. Note that the triangulation recovered might not be
+identical to the original, but it is guaranteed to be an isomorphic
+copy.
 
 For a full description of the dehydrated triangulation format, see _A
 Census of Cusped Hyperbolic 3-Manifolds_, Callahan, Hildebrand and
@@ -2069,7 +2069,7 @@ triangulation. If such a surface exists within this triangulation,
 this routine is guaranteed to find one.
 
 Returns:
-    a non-vertex-linking normal sphere or disc, or no value if none
+    a non-vertex-linking normal sphere or disc, or ``None`` if none
     exists.)doc";
 
 // Docstring regina::python::doc::Triangulation_::octagonalAlmostNormalSphere
@@ -2084,7 +2084,7 @@ Precondition:
     restrictive than they need to be, but we stay safe for now.
 
 Returns:
-    an octagonal almost normal 2-sphere, or no value if none exists.)doc";
+    an octagonal almost normal 2-sphere, or ``None`` if none exists.)doc";
 
 // Docstring regina::python::doc::Triangulation_::openBook
 static const char *openBook =

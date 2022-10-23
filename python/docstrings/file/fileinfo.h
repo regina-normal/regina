@@ -132,7 +132,7 @@ Parameter ``idPathname``:
 
 Returns:
     a FileInfo structure containing information about the given file,
-    or no value if the file type could not be identified.)doc";
+    or ``None`` if the file type could not be identified.)doc";
 
 // Docstring regina::python::doc::FileInfo_::isCompressed
 static const char *isCompressed =

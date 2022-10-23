@@ -123,8 +123,8 @@ static const char *augTorus =
 R"doc(Returns the layered solid torus attached to the requested annulus on
 the boundary of the core triangular solid torus. If the layered solid
 torus is a degenerate (2,1,1) mobius band (i.e., the two triangles of
-the corresponding annulus have simply been glued together), then no
-value will be returned.
+the corresponding annulus have simply been glued together), then
+``None`` will be returned.
 
 Parameter ``annulus``:
     specifies which annulus to examine; this must be 0, 1 or 2.
