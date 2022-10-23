@@ -2060,6 +2060,7 @@
 		05FF4D3E1DB6BE310056D1EA /* SyntaxHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */; };
 		05FFD26A2900C75900E0F61C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFD2692900C75900E0F61C /* facenumbering.cpp */; };
 		05FFD26B2900C75900E0F61C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFD2692900C75900E0F61C /* facenumbering.cpp */; };
+		05FFD26D2905263800E0F61C /* faceembedding.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FFD26C2905263700E0F61C /* faceembedding.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -4766,6 +4767,8 @@
 		05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SyntaxHighlighter.mm; sourceTree = "<group>"; };
 		05FF74E31DCB12F700FC2CB4 /* 600cell.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = 600cell.py; sourceTree = "<group>"; };
 		05FFD2692900C75900E0F61C /* facenumbering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facenumbering.cpp; sourceTree = "<group>"; };
+		05FFD26C2905263700E0F61C /* faceembedding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = faceembedding.h; sourceTree = "<group>"; };
+		05FFD26E2905265700E0F61C /* faceembedding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = faceembedding.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5431,6 +5434,7 @@
 				05098B382900186E005E4716 /* boundarycomponent.h */,
 				05098B3A2900186E005E4716 /* component.h */,
 				05098B3D2900186E005E4716 /* face.h */,
+				05FFD26E2905265700E0F61C /* faceembedding.h */,
 				05098B3B2900186E005E4716 /* facetpairing.h */,
 				05098B372900186E005E4716 /* isomorphism.h */,
 				05098B392900186E005E4716 /* simplex.h */,
@@ -7354,6 +7358,7 @@
 				054C6A841DCC2148005373F0 /* CMakeLists.txt */,
 				055114F61DCDF63000EC753C /* component.h */,
 				055114F71DCDF63000EC753C /* face.h */,
+				05FFD26C2905263700E0F61C /* faceembedding.h */,
 				055114F81DCDF63000EC753C /* facetpairing.h */,
 				055114F91DCDF63000EC753C /* isomorphism.h */,
 				055114FA1DCDF63000EC753C /* simplex.h */,
@@ -8540,6 +8545,7 @@
 				05F0A04E1DBF0B5E00117BFC /* triangulation3.h in Headers */,
 				05870CB21FAD250900835F9E /* modellinkgraph.h in Headers */,
 				052F9F8C180600FB00FAE4DF /* kernel.h in Headers */,
+				05FFD26D2905263800E0F61C /* faceembedding.h in Headers */,
 				054208741DF0D0B50018AB24 /* definition_p.h in Headers */,
 				05F09FC01DBEF01800117BFC /* dim3.h in Headers */,
 				05FB46EB1DD92D4A00BB00E5 /* markedabeliangroup.h in Headers */,
