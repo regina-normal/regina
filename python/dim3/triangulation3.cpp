@@ -531,8 +531,8 @@ void addTriangulation3(pybind11::module_& m) {
             rdoc::isSolidTorus)
         .def("knowsSolidTorus", &Triangulation<3>::knowsSolidTorus,
             rdoc::knowsSolidTorus)
-        .def("isHandlebody", &Triangulation<3>::isHandlebody,
-            rdoc::isHandlebody)
+        .def("recogniseHandlebody", &Triangulation<3>::recogniseHandlebody,
+            rdoc::recogniseHandlebody)
         .def("knowsHandlebody", &Triangulation<3>::knowsHandlebody,
             rdoc::knowsHandlebody)
         .def("isTxI", &Triangulation<3>::isTxI, rdoc::isTxI)

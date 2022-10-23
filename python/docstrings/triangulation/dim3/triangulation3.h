@@ -1139,8 +1139,8 @@ Returns:
     ``True`` if and only if the underlying 3-manifold is irreducible
     and Haken.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isHandlebody
-static const char *isHandlebody =
+// Docstring regina::python::doc::Triangulation_::recogniseHandlebody
+static const char *recogniseHandlebody =
 R"doc(Determines whether this is a triangulation of an orientable
 handlebody, and if so, which genus. Specifically, this routine returns
 the genus if this is indeed a handlebody, and returns -1 otherwise.

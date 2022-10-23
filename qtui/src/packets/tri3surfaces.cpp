@@ -465,7 +465,7 @@ void Tri3SurfacesUI::refresh() {
         btnTxI->setVisible(true);
 
         if (tri_->knowsHandlebody() || tri_->size() <= autoCalcThreshold) {
-            ssize_t genus = tri_->isHandlebody();
+            ssize_t genus = tri_->recogniseHandlebody();
 
             if (genus >= 0) {
                 handlebody->setText(tr("Genus %1").arg(genus));
@@ -758,7 +758,7 @@ void Tri3SurfacesUI::calculateHandlebody() {
         "Handlebody recognition can be quite slow\n"
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri_->isHandlebody();
+    tri_->recogniseHandlebody();
     delete dlg;
 
     refresh();

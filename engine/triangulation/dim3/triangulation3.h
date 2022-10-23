@@ -2698,24 +2698,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \author Alex He
          */
-        ssize_t isHandlebody() const;
+        ssize_t recogniseHandlebody() const;
         /**
          * Is it already known (or trivial to determine) whether or not this
-         * is a triangulation of an orientable handlebody? See isHandlebody()
-         * for further details.
+         * is a triangulation of an orientable handlebody? See
+         * recogniseHandlebody() for further details.
          *
          * If this property is indeed already known, future calls to
-         * isHandlebody() will be very fast (simply returning the
+         * recogniseHandlebody() will be very fast (simply returning the
          * precalculated value).
          *
          * If this property is not already known, this routine will
          * nevertheless run some very fast preliminary tests to see if the
          * answer is obviously no. If so, it will store \c false as the
-         * precalculated value for isHandlebody() and this routine will
+         * precalculated value for recogniseHandlebody() and this routine will
          * return \c true.
          *
-         * Otherwise a call to isHandlebody() may potentially require more
-         * significant work, and so this routine will return \c false.
+         * Otherwise a call to recogniseHandlebody() may potentially require
+         * more significant work, and so this routine will return \c false.
          *
          * \warning This routine does not actually tell you _whether_ this
          * triangulation forms an orientable handlebody; it merely tells you

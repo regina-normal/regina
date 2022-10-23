@@ -560,7 +560,7 @@ bool Triangulation<3>::knowsSolidTorus() const {
     return false;
 }
 
-ssize_t Triangulation<3>::isHandlebody() const {
+ssize_t Triangulation<3>::recogniseHandlebody() const {
     if ( prop_.handlebody_.has_value() ) {
         return *prop_.handlebody_;
     }
@@ -689,7 +689,7 @@ ssize_t Triangulation<3>::isHandlebody() const {
                 // the end of this for loop
                 // TODO Throw a proper exception.
                 std::cerr << "ERROR: S2xS1 summand detected in "
-                    "isHandlebody() that should not exist." << std::endl;
+                    "recogniseHandlebody() that should not exist." << std::endl;
 
                 // At any rate, it means we did not have an orientable
                 // handlebody.

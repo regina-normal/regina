@@ -53,6 +53,10 @@ Version 7.2  [ (to be determined) ]
             - The class constructors now throw an exception if the given
               monodromy does not have determinant ±1 (note that this has
               always a precondition).
+        Class Triangulation<3>:
+            - Renamed isHandlebody() to recogniseHandlebody().  There is no
+              deprecated alias, since the issue here was users potentially
+              misinterpreting the return type because of the function name.
         Function buildInfo():
             - New function that allows packagers to embed additional
               version/build-related information in the calculation engine.

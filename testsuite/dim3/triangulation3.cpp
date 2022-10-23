@@ -3427,25 +3427,25 @@ class Triangulation3Test : public TriangulationTest<3> {
             idealBig.barycentricSubdivision();
             clearProperties(idealBig);
 
-            if ( bounded.isHandlebody() != genus ) {
+            if ( bounded.recogniseHandlebody() != genus ) {
                 std::ostringstream msg;
                 msg << "The real handlebody " << triName
                     << " was not recognised as such.";
                 CPPUNIT_FAIL( msg.str() );
             }
-            if ( genus > 0 and ideal.isHandlebody() != genus ) {
+            if ( genus > 0 and ideal.recogniseHandlebody() != genus ) {
                 std::ostringstream msg;
                 msg << "The ideal handlebody " << triName
                     << " was not recognised as such.";
                 CPPUNIT_FAIL( msg.str() );
             }
-            if ( boundedBig.isHandlebody() != genus ) {
+            if ( boundedBig.recogniseHandlebody() != genus ) {
                 std::ostringstream msg;
                 msg << "The subdivided real handlebody " << triName
                     << " was not recognised as such.";
                 CPPUNIT_FAIL( msg.str() );
             }
-            if ( genus > 0 and idealBig.isHandlebody() != genus ) {
+            if ( genus > 0 and idealBig.recogniseHandlebody() != genus ) {
                 std::ostringstream msg;
                 msg << "The subdivided ideal handlebody " << triName
                     << " was not recognised as such.";
@@ -3475,25 +3475,25 @@ class Triangulation3Test : public TriangulationTest<3> {
             idealBig.barycentricSubdivision();
             clearProperties(idealBig);
 
-            if ( bounded.isHandlebody() != -1 ) {
+            if ( bounded.recogniseHandlebody() != -1 ) {
                 std::ostringstream msg;
                 msg << "The real non-handlebody " << triName
                     << " was recognised as a handlebody.";
                 CPPUNIT_FAIL( msg.str() );
             }
-            if ( ideal.isHandlebody() != -1 ) {
+            if ( ideal.recogniseHandlebody() != -1 ) {
                 std::ostringstream msg;
                 msg << "The ideal non-handlebody " << triName
                     << " was recognised as a handlebody.";
                 CPPUNIT_FAIL( msg.str() );
             }
-            if ( boundedBig.isHandlebody() != -1 ) {
+            if ( boundedBig.recogniseHandlebody() != -1 ) {
                 std::ostringstream msg;
                 msg << "The subdivided real non-handlebody " << triName
                     << " was recognised as a handlebody.";
                 CPPUNIT_FAIL( msg.str() );
             }
-            if ( idealBig.isHandlebody() != -1 ) {
+            if ( idealBig.recogniseHandlebody() != -1 ) {
                 std::ostringstream msg;
                 msg << "The subdivided ideal non-handlebody " << triName
                     << " was recognised as a handlebody.";
