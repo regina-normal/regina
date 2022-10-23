@@ -74,32 +74,36 @@ void addEdge4(pybind11::module_& m) {
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1", rdoc_scope)
-        .def("index", &Edge<4>::index)
-        .def("embedding", &Edge<4>::embedding)
-        .def("embeddings", &Edge<4>::embeddings)
+        .def("index", &Edge<4>::index, rbase::index)
+        .def("embedding", &Edge<4>::embedding, rbase::embedding)
+        .def("embeddings", &Edge<4>::embeddings, rbase::embeddings)
         .def("__iter__", [](const Edge<4>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
-        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
-        .def("front", &Edge<4>::front)
-        .def("back", &Edge<4>::back)
-        .def("triangulation", &Edge<4>::triangulation)
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
+            rbase::__iter__)
+        .def("front", &Edge<4>::front, rbase::front)
+        .def("back", &Edge<4>::back, rbase::back)
+        .def("triangulation", &Edge<4>::triangulation, rbase::triangulation)
         .def("component", &Edge<4>::component,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::component)
         .def("boundaryComponent", &Edge<4>::boundaryComponent,
-            pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Edge<4>, 1, int>)
+            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+        .def("face", &regina::python::face<Edge<4>, 1, int>, rbase::face)
         .def("vertex", &Edge<4>::vertex,
-            pybind11::return_value_policy::reference)
-        .def("faceMapping", &regina::python::faceMapping<Edge<4>, 1, 5>)
-        .def("vertexMapping", &Edge<4>::vertexMapping)
-        .def("degree", &Edge<4>::degree)
-        .def("isBoundary", &Edge<4>::isBoundary)
-        .def("isLinkOrientable", &Edge<4>::isLinkOrientable)
-        .def("isValid", &Edge<4>::isValid)
-        .def("hasBadIdentification", &Edge<4>::hasBadIdentification)
-        .def("hasBadLink", &Edge<4>::hasBadLink)
+            pybind11::return_value_policy::reference, rbase::vertex)
+        .def("faceMapping", &regina::python::faceMapping<Edge<4>, 1, 5>,
+            rbase::faceMapping)
+        .def("vertexMapping", &Edge<4>::vertexMapping, rbase::vertexMapping)
+        .def("degree", &Edge<4>::degree, rbase::degree)
+        .def("isBoundary", &Edge<4>::isBoundary, rbase::isBoundary)
+        .def("isLinkOrientable", &Edge<4>::isLinkOrientable,
+            rbase::isLinkOrientable)
+        .def("isValid", &Edge<4>::isValid, rbase::isValid)
+        .def("hasBadIdentification", &Edge<4>::hasBadIdentification,
+            rbase::hasBadIdentification)
+        .def("hasBadLink", &Edge<4>::hasBadLink, rbase::hasBadLink)
         .def("buildLink", [](const Edge<4>& e) {
             // Return a clone of the resulting triangulation.
             // This is because Python cannot enforce the constness of

@@ -73,35 +73,39 @@ void addTriangle4(pybind11::module_& m) {
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2", rdoc_scope)
-        .def("index", &Triangle<4>::index)
-        .def("embedding", &Triangle<4>::embedding)
-        .def("embeddings", &Triangle<4>::embeddings)
+        .def("index", &Triangle<4>::index, rbase::index)
+        .def("embedding", &Triangle<4>::embedding, rbase::embedding)
+        .def("embeddings", &Triangle<4>::embeddings, rbase::embeddings)
         .def("__iter__", [](const Triangle<4>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
-        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
-        .def("front", &Triangle<4>::front)
-        .def("back", &Triangle<4>::back)
-        .def("triangulation", &Triangle<4>::triangulation)
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
+            rbase::__iter__)
+        .def("front", &Triangle<4>::front, rbase::front)
+        .def("back", &Triangle<4>::back, rbase::back)
+        .def("triangulation", &Triangle<4>::triangulation, rbase::triangulation)
         .def("component", &Triangle<4>::component,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::component)
         .def("boundaryComponent", &Triangle<4>::boundaryComponent,
-            pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Triangle<4>, 2, int>)
+            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+        .def("face", &regina::python::face<Triangle<4>, 2, int>, rbase::face)
         .def("vertex", &Triangle<4>::vertex,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::vertex)
         .def("edge", &Triangle<4>::edge,
-            pybind11::return_value_policy::reference)
-        .def("faceMapping", &regina::python::faceMapping<Triangle<4>, 2, 5>)
-        .def("vertexMapping", &Triangle<4>::vertexMapping)
-        .def("edgeMapping", &Triangle<4>::edgeMapping)
-        .def("degree", &Triangle<4>::degree)
-        .def("isBoundary", &Triangle<4>::isBoundary)
-        .def("isLinkOrientable", &Triangle<4>::isLinkOrientable)
-        .def("isValid", &Triangle<4>::isValid)
-        .def("hasBadIdentification", &Triangle<4>::hasBadIdentification)
-        .def("hasBadLink", &Triangle<4>::hasBadLink)
+            pybind11::return_value_policy::reference, rbase::edge)
+        .def("faceMapping", &regina::python::faceMapping<Triangle<4>, 2, 5>,
+            rbase::faceMapping)
+        .def("vertexMapping", &Triangle<4>::vertexMapping, rbase::vertexMapping)
+        .def("edgeMapping", &Triangle<4>::edgeMapping, rbase::edgeMapping)
+        .def("degree", &Triangle<4>::degree, rbase::degree)
+        .def("isBoundary", &Triangle<4>::isBoundary, rbase::isBoundary)
+        .def("isLinkOrientable", &Triangle<4>::isLinkOrientable,
+            rbase::isLinkOrientable)
+        .def("isValid", &Triangle<4>::isValid, rbase::isValid)
+        .def("hasBadIdentification", &Triangle<4>::hasBadIdentification,
+            rbase::hasBadIdentification)
+        .def("hasBadLink", &Triangle<4>::hasBadLink, rbase::hasBadLink)
         .def("linkingSurface", &Triangle<4>::linkingSurface,
             rdoc::linkingSurface)
         .def_static("ordering", &Triangle<4>::ordering)

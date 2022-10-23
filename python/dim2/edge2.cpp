@@ -73,33 +73,38 @@ void addEdge2(pybind11::module_& m) {
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<2, 1>>(m, "Face2_1", rdoc::Face)
-        .def("index", &Edge<2>::index)
-        .def("isValid", &Edge<2>::isValid)
-        .def("hasBadIdentification", &Edge<2>::hasBadIdentification)
-        .def("hasBadLink", &Edge<2>::hasBadLink)
-        .def("isLinkOrientable", &Edge<2>::isLinkOrientable)
-        .def("degree", &Edge<2>::degree)
-        .def("embedding", &Edge<2>::embedding)
-        .def("embeddings", &Edge<2>::embeddings)
+        .def("index", &Edge<2>::index, rbase::index)
+        .def("isValid", &Edge<2>::isValid, rbase::isValid)
+        .def("hasBadIdentification", &Edge<2>::hasBadIdentification,
+            rbase::hasBadIdentification)
+        .def("hasBadLink", &Edge<2>::hasBadLink, rbase::hasBadLink)
+        .def("isLinkOrientable", &Edge<2>::isLinkOrientable,
+            rbase::isLinkOrientable)
+        .def("degree", &Edge<2>::degree, rbase::degree)
+        .def("embedding", &Edge<2>::embedding, rbase::embedding)
+        .def("embeddings", &Edge<2>::embeddings, rbase::embeddings)
         .def("__iter__", [](const Edge<2>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
-        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
-        .def("front", &Edge<2>::front)
-        .def("back", &Edge<2>::back)
-        .def("triangulation", &Edge<2>::triangulation)
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
+            rbase::__iter__)
+        .def("front", &Edge<2>::front, rbase::front)
+        .def("back", &Edge<2>::back, rbase::back)
+        .def("triangulation", &Edge<2>::triangulation, rbase::triangulation)
         .def("component", &Edge<2>::component,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::component)
         .def("boundaryComponent", &Edge<2>::boundaryComponent,
-            pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Edge<2>, 1, int>)
+            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+        .def("face", &regina::python::face<Edge<2>, 1, int>, rbase::face)
         .def("vertex", &Edge<2>::vertex,
-            pybind11::return_value_policy::reference)
-        .def("faceMapping", &regina::python::faceMapping<Edge<2>, 1, 3>)
-        .def("vertexMapping", &Edge<2>::vertexMapping)
-        .def("isBoundary", &Edge<2>::isBoundary)
-        .def("inMaximalForest", &Edge<2>::inMaximalForest)
+            pybind11::return_value_policy::reference, rbase::vertex)
+        .def("faceMapping", &regina::python::faceMapping<Edge<2>, 1, 3>,
+            rbase::faceMapping)
+        .def("vertexMapping", &Edge<2>::vertexMapping, rbase::vertexMapping)
+        .def("isBoundary", &Edge<2>::isBoundary, rbase::isBoundary)
+        .def("inMaximalForest", &Edge<2>::inMaximalForest,
+            rbase::inMaximalForest)
         .def_static("ordering", &Edge<2>::ordering)
         .def_static("faceNumber", &Edge<2>::faceNumber)
         .def_static("containsVertex", &Edge<2>::containsVertex)

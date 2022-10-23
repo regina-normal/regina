@@ -72,27 +72,30 @@ void addVertex2(pybind11::module_& m) {
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<2, 0>>(m, "Face2_0", rdoc::Face)
-        .def("index", &Vertex<2>::index)
-        .def("isValid", &Vertex<2>::isValid)
-        .def("hasBadIdentification", &Vertex<2>::hasBadIdentification)
-        .def("hasBadLink", &Vertex<2>::hasBadLink)
-        .def("isLinkOrientable", &Vertex<2>::isLinkOrientable)
-        .def("embedding", &Vertex<2>::embedding)
-        .def("embeddings", &Vertex<2>::embeddings)
+        .def("index", &Vertex<2>::index, rbase::index)
+        .def("isValid", &Vertex<2>::isValid, rbase::isValid)
+        .def("hasBadIdentification", &Vertex<2>::hasBadIdentification,
+            rbase::hasBadIdentification)
+        .def("hasBadLink", &Vertex<2>::hasBadLink, rbase::hasBadLink)
+        .def("isLinkOrientable", &Vertex<2>::isLinkOrientable,
+            rbase::isLinkOrientable)
+        .def("embedding", &Vertex<2>::embedding, rbase::embedding)
+        .def("embeddings", &Vertex<2>::embeddings, rbase::embeddings)
         .def("__iter__", [](const Vertex<2>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
-        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
-        .def("front", &Vertex<2>::front)
-        .def("back", &Vertex<2>::back)
-        .def("triangulation", &Vertex<2>::triangulation)
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
+            rbase::__iter__)
+        .def("front", &Vertex<2>::front, rbase::front)
+        .def("back", &Vertex<2>::back, rbase::back)
+        .def("triangulation", &Vertex<2>::triangulation, rbase::triangulation)
         .def("component", &Vertex<2>::component,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::component)
         .def("boundaryComponent", &Vertex<2>::boundaryComponent,
-            pybind11::return_value_policy::reference)
-        .def("degree", &Vertex<2>::degree)
-        .def("isBoundary", &Vertex<2>::isBoundary)
+            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+        .def("degree", &Vertex<2>::degree, rbase::degree)
+        .def("isBoundary", &Vertex<2>::isBoundary, rbase::isBoundary)
         .def_static("ordering", &Vertex<2>::ordering)
         .def_static("faceNumber", &Vertex<2>::faceNumber)
         .def_static("containsVertex", &Vertex<2>::containsVertex)

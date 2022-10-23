@@ -73,32 +73,36 @@ void addEdge3(pybind11::module_& m) {
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<3, 1>>(m, "Face3_1", rdoc_scope)
-        .def("index", &Edge<3>::index)
-        .def("embedding", &Edge<3>::embedding)
-        .def("embeddings", &Edge<3>::embeddings)
+        .def("index", &Edge<3>::index, rbase::index)
+        .def("embedding", &Edge<3>::embedding, rbase::embedding)
+        .def("embeddings", &Edge<3>::embeddings, rbase::embeddings)
         .def("__iter__", [](const Edge<3>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
-        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
-        .def("front", &Edge<3>::front)
-        .def("back", &Edge<3>::back)
-        .def("triangulation", &Edge<3>::triangulation)
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
+            rbase::__iter__)
+        .def("front", &Edge<3>::front, rbase::front)
+        .def("back", &Edge<3>::back, rbase::back)
+        .def("triangulation", &Edge<3>::triangulation, rbase::triangulation)
         .def("component", &Edge<3>::component,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::component)
         .def("boundaryComponent", &Edge<3>::boundaryComponent,
-            pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Edge<3>, 1, int>)
+            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+        .def("face", &regina::python::face<Edge<3>, 1, int>, rbase::face)
         .def("vertex", &Edge<3>::vertex,
-            pybind11::return_value_policy::reference)
-        .def("faceMapping", &regina::python::faceMapping<Edge<3>, 1, 4>)
-        .def("vertexMapping", &Edge<3>::vertexMapping)
-        .def("degree", &Edge<3>::degree)
-        .def("isBoundary", &Edge<3>::isBoundary)
-        .def("isValid", &Edge<3>::isValid)
-        .def("hasBadIdentification", &Edge<3>::hasBadIdentification)
-        .def("hasBadLink", &Edge<3>::hasBadLink)
-        .def("isLinkOrientable", &Edge<3>::isLinkOrientable)
+            pybind11::return_value_policy::reference, rbase::vertex)
+        .def("faceMapping", &regina::python::faceMapping<Edge<3>, 1, 4>,
+            rbase::faceMapping)
+        .def("vertexMapping", &Edge<3>::vertexMapping, rbase::vertexMapping)
+        .def("degree", &Edge<3>::degree, rbase::degree)
+        .def("isBoundary", &Edge<3>::isBoundary, rbase::isBoundary)
+        .def("isValid", &Edge<3>::isValid, rbase::isValid)
+        .def("hasBadIdentification", &Edge<3>::hasBadIdentification,
+            rbase::hasBadIdentification)
+        .def("hasBadLink", &Edge<3>::hasBadLink, rbase::hasBadLink)
+        .def("isLinkOrientable", &Edge<3>::isLinkOrientable,
+            rbase::isLinkOrientable)
         .def("linkingSurface", &Edge<3>::linkingSurface, rdoc::linkingSurface)
         .def_static("ordering", &Edge<3>::ordering)
         .def_static("faceNumber", &Edge<3>::faceNumber)
@@ -128,7 +132,18 @@ void addEdge3(pybind11::module_& m) {
             // real standards-compliant solution is to just cast to a long
             // regardless of platform.
             return uintptr_t(std::addressof(e));
-        })
+        }, R"doc(Hashes this edge.
+
+This hash function is consistent with the equality tests provided for
+Edge3 in Python: if two Edge3 objects refer to the same edge of the
+same triangulation (i.e., the same underlying C++ Edge<3> object),
+then their hashes will be equal.
+
+This hash function is provided so that Python can work with sets of
+edges (e.g., as returned by Triangulation3.maximalForestInBoundary()).
+
+The precise hash function that is used is subject to change in future
+versions of Regina.)doc")
     ;
     c.attr("edgeNumber") = wrapTableView(m, Edge<3>::edgeNumber);
     c.attr("edgeVertex") = wrapTableView(m, Edge<3>::edgeVertex);

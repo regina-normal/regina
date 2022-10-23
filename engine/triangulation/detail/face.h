@@ -809,10 +809,18 @@ class FaceBase :
          * See FaceNumbering<subdim, lowerdim> for the conventions of how
          * <i>lowerdim</i>-faces are numbered within a <i>subdim</i>-simplex.
          *
+         * \pre The dimension of this face (\a subdim) is strictly positive
+         * (i.e., this face is not a vertex).  Note that, without this
+         * constraint, there are no possible values for the template
+         * parameter \a lowerdim.
+         *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `face(lowerdim, face)`; that is, the template parameter
          * \a lowerdim becomes the first argument of the function.
+         *
+         * \tparam lowerdim the dimension of subface to examine.
+         * This must be between 0 and (\a subdim - 1) inclusive.
          *
          * \param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
          * examine.  This should be between 0 and
@@ -909,10 +917,18 @@ class FaceBase :
          * See FaceNumbering<subdim, lowerdim> for the conventions of how
          * <i>lowerdim</i>-faces are numbered within a <i>subdim</i>-simplex.
          *
+         * \pre The dimension of this face (\a subdim) is strictly positive
+         * (i.e., this face is not a vertex).  Note that, without this
+         * constraint, there are no possible values for the template
+         * parameter \a lowerdim.
+         *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `faceMapping(lowerdim, face)`; that is, the template
          * parameter \a lowerdim becomes the first argument of the function.
+         *
+         * \tparam lowerdim the dimension of subface to examine.
+         * This must be between 0 and (\a subdim - 1) inclusive.
          *
          * \param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
          * examine.  This should be between 0 and
@@ -1165,6 +1181,10 @@ inline bool FaceBase<dim, subdim>::hasBadLink() const {
 template <int dim, int subdim>
 template <int lowerdim>
 inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
+    static_assert(0 <= lowerdim && lowerdim < subdim,
+        "Face<dim, subdim>::face<lowerdim>() requires "
+        "0 <= lowerdim < subdim.");
+
     // Let S be the dim-simplex corresponding to the first embedding,
     // i.e., this->front().
     // Let face f of this subdim-face correspond to face inSimp of S.
@@ -1212,6 +1232,10 @@ inline Face<dim, 4>* FaceBase<dim, subdim>::pentachoron(int i) const {
 template <int dim, int subdim>
 template <int lowerdim>
 Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
+    static_assert(0 <= lowerdim && lowerdim < subdim,
+        "Face<dim, subdim>::faceMapping<lowerdim>() requires "
+        "0 <= lowerdim < subdim.");
+
     // Let S be the dim-simplex corresponding to the first embedding,
     // i.e., this->front().
     // Let face f of this subdim-face correspond to face inSimp of S.

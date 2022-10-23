@@ -72,42 +72,47 @@ void addTriangle3(pybind11::module_& m) {
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<3, 2>>(m, "Face3_2", rdoc_scope)
-        .def("index", &Triangle<3>::index)
-        .def("embedding", &Triangle<3>::embedding)
-        .def("embeddings", &Triangle<3>::embeddings)
+        .def("index", &Triangle<3>::index, rbase::index)
+        .def("embedding", &Triangle<3>::embedding, rbase::embedding)
+        .def("embeddings", &Triangle<3>::embeddings, rbase::embeddings)
         .def("__iter__", [](const Triangle<3>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
-        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
-        .def("front", &Triangle<3>::front)
-        .def("back", &Triangle<3>::back)
-        .def("isBoundary", &Triangle<3>::isBoundary)
-        .def("inMaximalForest", &Triangle<3>::inMaximalForest)
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
+            rbase::__iter__)
+        .def("front", &Triangle<3>::front, rbase::front)
+        .def("back", &Triangle<3>::back, rbase::back)
+        .def("isBoundary", &Triangle<3>::isBoundary, rbase::isBoundary)
+        .def("inMaximalForest", &Triangle<3>::inMaximalForest,
+            rbase::inMaximalForest)
         .def("type", &Triangle<3>::type, rdoc::type)
         .def("subtype", &Triangle<3>::subtype, rdoc::subtype)
         .def("isMobiusBand", &Triangle<3>::isMobiusBand, rdoc::isMobiusBand)
         .def("isCone", &Triangle<3>::isCone, rdoc::isCone)
         .def("linkingSurface", &Triangle<3>::linkingSurface,
             rdoc::linkingSurface)
-        .def("isValid", &Triangle<3>::isValid)
-        .def("hasBadIdentification", &Triangle<3>::hasBadIdentification)
-        .def("hasBadLink", &Triangle<3>::hasBadLink)
-        .def("isLinkOrientable", &Triangle<3>::isLinkOrientable)
-        .def("degree", &Triangle<3>::degree)
-        .def("triangulation", &Triangle<3>::triangulation)
+        .def("isValid", &Triangle<3>::isValid, rbase::isValid)
+        .def("hasBadIdentification", &Triangle<3>::hasBadIdentification,
+            rbase::hasBadIdentification)
+        .def("hasBadLink", &Triangle<3>::hasBadLink, rbase::hasBadLink)
+        .def("isLinkOrientable", &Triangle<3>::isLinkOrientable,
+            rbase::isLinkOrientable)
+        .def("degree", &Triangle<3>::degree, rbase::degree)
+        .def("triangulation", &Triangle<3>::triangulation, rbase::triangulation)
         .def("component", &Triangle<3>::component,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::component)
         .def("boundaryComponent", &Triangle<3>::boundaryComponent,
-            pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Triangle<3>, 2, int>)
+            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+        .def("face", &regina::python::face<Triangle<3>, 2, int>, rbase::face)
         .def("vertex", &Triangle<3>::vertex,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::vertex)
         .def("edge", &Triangle<3>::edge,
-            pybind11::return_value_policy::reference)
-        .def("faceMapping", &regina::python::faceMapping<Triangle<3>, 2, 4>)
-        .def("vertexMapping", &Triangle<3>::vertexMapping)
-        .def("edgeMapping", &Triangle<3>::edgeMapping)
+            pybind11::return_value_policy::reference, rbase::edge)
+        .def("faceMapping", &regina::python::faceMapping<Triangle<3>, 2, 4>,
+            rbase::faceMapping)
+        .def("vertexMapping", &Triangle<3>::vertexMapping, rbase::vertexMapping)
+        .def("edgeMapping", &Triangle<3>::edgeMapping, rbase::edgeMapping)
         .def_static("ordering", &Triangle<3>::ordering)
         .def_static("faceNumber", &Triangle<3>::faceNumber)
         .def_static("containsVertex", &Triangle<3>::containsVertex)

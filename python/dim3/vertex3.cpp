@@ -72,29 +72,39 @@ void addVertex3(pybind11::module_& m) {
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0", rdoc_scope)
-        .def("index", &Vertex<3>::index)
-        .def("embedding", &Vertex<3>::embedding)
-        .def("embeddings", &Vertex<3>::embeddings)
+        .def("index", &Vertex<3>::index, rbase::index)
+        .def("embedding", &Vertex<3>::embedding, rbase::embedding)
+        .def("embeddings", &Vertex<3>::embeddings, rbase::embeddings)
         .def("__iter__", [](const Vertex<3>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
-        }, pybind11::keep_alive<0, 1>()) // iterator keeps Face alive
-        .def("front", &Vertex<3>::front)
-        .def("back", &Vertex<3>::back)
-        .def("triangulation", &Vertex<3>::triangulation)
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
+            rbase::__iter__)
+        .def("front", &Vertex<3>::front, rbase::front)
+        .def("back", &Vertex<3>::back, rbase::back)
+        .def("triangulation", &Vertex<3>::triangulation, rbase::triangulation)
         .def("component", &Vertex<3>::component,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::component)
         .def("boundaryComponent", &Vertex<3>::boundaryComponent,
-            pybind11::return_value_policy::reference)
-        .def("degree", &Vertex<3>::degree)
+            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+        .def("degree", &Vertex<3>::degree, rbase::degree)
         .def("linkType", &Vertex<3>::linkType, rdoc::linkType)
         .def("link", [](const Vertex<3>&) {
+            // Removed completely in v7.0.  C++ does not get a deprecated
+            // alias.  Keep this here for Python users for a little white so
+            // that people can see what needs to be done.  Probably we can
+            // remove this placeholder routine in Regina 8.0.
             throw std::runtime_error(
                 "Vertex3::link() has been renamed to Vertex3::linkType().  "
                 "You should change your code now, because the name link() "
                 "will be used for a different function in the future.");
-        })
+        }, R"doc(Old routine that was renamed in Regina 7.0.
+
+Please update your code to use Vertex3.linkType() instead, which does
+exactly what Vertex3.link() used to do in Regina 6.0.1 and earlier.
+The name link() has _not_ been kept as an alias because it is now
+being reserved for a different purpose in a future release.)doc")
         .def("buildLink", [](const Vertex<3>& v) {
             // Return a clone of the resulting triangulation.
             // This is because Python cannot enforce the constness of
@@ -105,12 +115,14 @@ void addVertex3(pybind11::module_& m) {
             rdoc::buildLinkInclusion)
         .def("isLinkClosed", &Vertex<3>::isLinkClosed, rdoc::isLinkClosed)
         .def("isIdeal", &Vertex<3>::isIdeal, rdoc::isIdeal)
-        .def("isBoundary", &Vertex<3>::isBoundary)
+        .def("isBoundary", &Vertex<3>::isBoundary, rbase::isBoundary)
         .def("isStandard", &Vertex<3>::isStandard, rdoc::isStandard)
-        .def("isValid", &Vertex<3>::isValid)
-        .def("hasBadIdentification", &Vertex<3>::hasBadIdentification)
-        .def("hasBadLink", &Vertex<3>::hasBadLink)
-        .def("isLinkOrientable", &Vertex<3>::isLinkOrientable)
+        .def("isValid", &Vertex<3>::isValid, rbase::isValid)
+        .def("hasBadIdentification", &Vertex<3>::hasBadIdentification,
+            rbase::hasBadIdentification)
+        .def("hasBadLink", &Vertex<3>::hasBadLink, rbase::hasBadLink)
+        .def("isLinkOrientable", &Vertex<3>::isLinkOrientable,
+            rbase::isLinkOrientable)
         .def("linkEulerChar", &Vertex<3>::linkEulerChar, rdoc::linkEulerChar)
         .def("linkingSurface", &Vertex<3>::linkingSurface, rdoc::linkingSurface)
         .def_static("ordering", &Vertex<3>::ordering)

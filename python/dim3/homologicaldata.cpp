@@ -34,48 +34,66 @@
 #include "../pybind11/stl.h"
 #include "triangulation/dim3/homologicaldata.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/dim3/homologicaldata.h"
 
 using regina::HomologicalData;
 using regina::Triangulation;
 
 void addHomologicalData(pybind11::module_& m) {
-    auto c = pybind11::class_<HomologicalData>(m, "HomologicalData")
-        .def(pybind11::init<const Triangulation<3>&>())
-        .def(pybind11::init<const HomologicalData&>())
-        .def("swap", &HomologicalData::swap)
+    RDOC_SCOPE_BEGIN(HomologicalData)
+
+    auto c = pybind11::class_<HomologicalData>(m, "HomologicalData", rdoc_scope)
+        .def(pybind11::init<const Triangulation<3>&>(), rdoc::__init)
+        .def(pybind11::init<const HomologicalData&>(), rdoc::__copy)
+        .def("swap", &HomologicalData::swap, rdoc::swap)
         .def("homology", &HomologicalData::homology,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rdoc::homology)
         .def("bdryHomology", &HomologicalData::bdryHomology,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::bdryHomology)
         .def("bdryHomologyMap", &HomologicalData::bdryHomologyMap,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::bdryHomologyMap)
         .def("dualHomology", &HomologicalData::dualHomology,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::dualHomology)
         .def("h1CellAp", &HomologicalData::h1CellAp,
-            pybind11::return_value_policy::reference_internal)
-        .def("countStandardCells", &HomologicalData::countStandardCells)
-        .def("countDualCells", &HomologicalData::countDualCells)
-        .def("countBdryCells", &HomologicalData::countBdryCells)
-        .def("eulerChar", &HomologicalData::eulerChar)
-        .def("torsionRankVector", &HomologicalData::torsionRankVector)
+            pybind11::return_value_policy::reference_internal, rdoc::h1CellAp)
+        .def("countStandardCells", &HomologicalData::countStandardCells,
+            rdoc::countStandardCells)
+        .def("countDualCells", &HomologicalData::countDualCells,
+            rdoc::countDualCells)
+        .def("countBdryCells", &HomologicalData::countBdryCells,
+            rdoc::countBdryCells)
+        .def("eulerChar", &HomologicalData::eulerChar, rdoc::eulerChar)
+        .def("torsionRankVector", &HomologicalData::torsionRankVector,
+            rdoc::torsionRankVector)
         .def("torsionRankVectorString",
-            &HomologicalData::torsionRankVectorString)
-        .def("torsionSigmaVector", &HomologicalData::torsionSigmaVector)
+            &HomologicalData::torsionRankVectorString,
+            rdoc::torsionRankVectorString)
+        .def("torsionSigmaVector", &HomologicalData::torsionSigmaVector,
+            rdoc::torsionSigmaVector)
         .def("torsionSigmaVectorString",
-            &HomologicalData::torsionSigmaVectorString)
+            &HomologicalData::torsionSigmaVectorString,
+            rdoc::torsionSigmaVectorString)
         .def("torsionLegendreSymbolVector",
-            &HomologicalData::torsionLegendreSymbolVector)
+            &HomologicalData::torsionLegendreSymbolVector,
+            rdoc::torsionLegendreSymbolVector)
         .def("torsionLegendreSymbolVectorString",
-            &HomologicalData::torsionLegendreSymbolVectorString)
-        .def("formIsHyperbolic", &HomologicalData::formIsHyperbolic)
-        .def("formIsSplit", &HomologicalData::formIsSplit)
-        .def("formSatKK", &HomologicalData::formSatKK)
+            &HomologicalData::torsionLegendreSymbolVectorString,
+            rdoc::torsionLegendreSymbolVectorString)
+        .def("formIsHyperbolic", &HomologicalData::formIsHyperbolic,
+            rdoc::formIsHyperbolic)
+        .def("formIsSplit", &HomologicalData::formIsSplit, rdoc::formIsSplit)
+        .def("formSatKK", &HomologicalData::formSatKK, rdoc::formSatKK)
         .def("embeddabilityComment",
-            &HomologicalData::embeddabilityComment)
+            &HomologicalData::embeddabilityComment, rdoc::embeddabilityComment)
     ;
     regina::python::add_output(c);
     regina::python::disable_eq_operators(c);
 
-    regina::python::add_global_swap<HomologicalData>(m);
+    regina::python::add_global_swap<HomologicalData>(m, rdoc::global_swap);
+
+    RDOC_SCOPE_END
 }
 

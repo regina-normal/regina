@@ -16,6 +16,11 @@ Version 7.2  [ (to be determined) ]
         Class Example<3>:
             - Renamed whiteheadLink() to whitehead().  The old name is kept
               as a deprecated alias.
+        Class Face<dim, subdim>
+            - Routines face<lowerdim> and faceMapping<lowerdim> now explicitly
+              require 0 <= lowerdim < subdim (though this was always enforced
+              in Python, and the only meaningful scenario in C++ that this
+              could possibly rule out is the trivial case lowerdim == subdim).
         Class HyperEncoding:
             - New static function empty().
         Class ListView<...>:
