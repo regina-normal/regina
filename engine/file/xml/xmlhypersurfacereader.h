@@ -82,7 +82,7 @@ class XMLNormalHypersurfaceReader : public XMLElementReader {
         /**
          * Returns a reference to the normal hypersurface that has been read.
          *
-         * \return the normal hypersurface, or no value if an error occurred.
+         * \return the normal hypersurface, or \nullopt if an error occurred.
          */
         std::optional<NormalHypersurface>& hypersurface();
 

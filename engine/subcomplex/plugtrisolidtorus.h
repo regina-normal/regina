@@ -127,7 +127,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
                  triangulation. */
         std::optional<LayeredChain> chain_[3];
             /**< The layered chains attached to the annuli on the
-                 triangular solid torus, or no value for those annuli without
+                 triangular solid torus, or \nullopt for those annuli without
                  attached layered chains. */
         int chainType_[3];
             /**< The way in which the layered chain is attached to each
@@ -168,7 +168,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
         /**
          * Returns the layered chain attached to the requested
          * annulus on the boundary of the core triangular solid torus.
-         * If there is no attached layered chain, no value will be returned.
+         * If there is no attached layered chain, \nullopt will be returned.
          *
          * Note that the core triangular solid torus will be attached to
          * the bottom (as opposed to the top) of the layered chain.
@@ -278,7 +278,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
     private:
         /**
          * Creates a new structure with the given core.
-         * All optional data members will be initialsed to no value,
+         * All optional data members will be initialsed to \nullopt,
          * all chain types will be initialised to CHAIN_NONE, and
          * all remaining data members will be left uninitialised.
          */

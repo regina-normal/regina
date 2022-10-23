@@ -1252,7 +1252,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * within this triangulation.  If such a surface exists within
          * this triangulation, this routine is guaranteed to find one.
          *
-         * \return a non-vertex-linking normal sphere or disc, or no value if
+         * \return a non-vertex-linking normal sphere or disc, or \nullopt if
          * none exists.
          */
         std::optional<NormalSurface> nonTrivialSphereOrDisc() const;
@@ -1265,7 +1265,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and 0-efficient.  These preconditions are almost certainly more
          * restrictive than they need to be, but we stay safe for now.
          *
-         * \return an octagonal almost normal 2-sphere, or no value if
+         * \return an octagonal almost normal 2-sphere, or \nullopt if
          * none exists.
          */
         std::optional<NormalSurface> octagonalAlmostNormalSphere() const;

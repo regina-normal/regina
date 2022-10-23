@@ -932,7 +932,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * and earlier, when the return type was simply \c bool.
          *
          * \return an isomorphism describing the reduction map from the
-         * original presentation to the new presentation, or no value if
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> intelligentSimplify();
@@ -962,7 +962,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * commutators, for example.
          *
          * \return an isomorphism describing the reduction map from the
-         * original presentation to the new presentation, or no value if
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> smallCancellation();
@@ -1201,7 +1201,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * and earlier, when the return type was simply \c bool.
          *
          * \return an isomorphism describing the map from the
-         * original presentation to the new presentation, or no value if
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> intelligentNielsen();
@@ -1232,7 +1232,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * and earlier, when the return type was simply \c bool.
          *
          * \return an isomorphism describing the reduction map from the
-         * original presentation to the new presentation, or no value if
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> homologicalAlignment();
@@ -1267,7 +1267,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * seeing standard relators like commutators.
          *
          * \return an isomorphism describing the map from the
-         * original presentation to the new presentation, or no value if
+         * original presentation to the new presentation, or \nullopt if
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> prettyRewriting();
@@ -1557,7 +1557,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * in future versions of this software, perhaps incorporated into a
          * bigger-and-better future algorithm.
          *
-         * \return a homomorphism if the algorithm was successful, or no value
+         * \return a homomorphism if the algorithm was successful, or \nullopt
          * if it was not.  If a homomorphism is returned, it will be an
          * automorphism of a presentation of the kernel of the map this to the
          * integers.

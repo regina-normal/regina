@@ -1881,7 +1881,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * dimension.
          *
          * A non-null return value is _not_ a guarantee that this surface
-         * _is_ such a link; however, if this routine returns no value then
+         * _is_ such a link; however, if this routine returns \nullopt then
          * this _is_ a guarantee that the surface is not such a link.
          *
          * The precise tests that this routine carries out involve a trade-off
@@ -1891,7 +1891,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This surface is non-empty.
          *
          * \return the precise multiple of this surface that _could_ be a
-         * normalised non-vertex face link, or no value if we can prove
+         * normalised non-vertex face link, or \nullopt if we can prove
          * that this surface is not such a link.
          */
         std::optional<NormalSurface> couldLinkFace() const;

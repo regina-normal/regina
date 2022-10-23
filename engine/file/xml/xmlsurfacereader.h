@@ -81,7 +81,7 @@ class XMLNormalSurfaceReader : public XMLElementReader {
         /**
          * Returns a reference to the normal surface that has been read.
          *
-         * \return the normal surface, or no value if an error occurred.
+         * \return the normal surface, or \nullopt if an error occurred.
          */
         std::optional<NormalSurface>& surface();
 

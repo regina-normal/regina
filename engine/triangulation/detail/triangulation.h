@@ -2092,7 +2092,7 @@ class TriangulationBase :
          *
          * If the triangulations are isomorphic, then this routine returns
          * one such boundary complete isomorphism (i.e., one such relabelling).
-         * Otherwise it returns no value.  Thus, to test whether an isomorphism
+         * Otherwise it returns \nullopt.  Thus, to test whether an isomorphism
          * exists, you can just call `if (isIsomorphicTo(other))`.
          *
          * There may be many such isomorphisms between the two triangulations.
@@ -2114,7 +2114,7 @@ class TriangulationBase :
          *
          * \param other the triangulation to compare with this one.
          * \return details of the isomorphism if the two triangulations
-         * are combinatorially isomorphic, or no value otherwise.
+         * are combinatorially isomorphic, or \nullopt otherwise.
          */
         std::optional<Isomorphism<dim>> isIsomorphicTo(
             const Triangulation<dim>& other) const;
@@ -2149,7 +2149,7 @@ class TriangulationBase :
          * \param other the triangulation in which to search for an
          * isomorphic copy of this triangulation.
          * \return details of the isomorphism if such a copy is found,
-         * or no value otherwise.
+         * or \nullopt otherwise.
          */
         std::optional<Isomorphism<dim>> isContainedIn(
             const Triangulation<dim>& other) const;

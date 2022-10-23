@@ -213,7 +213,7 @@ class FileInfo : public Output<FileInfo> {
          *
          * \param idPathname the pathname of the data file to be examined.
          * \return a FileInfo structure containing information about the
-         * given file, or no value if the file type could not be identified.
+         * given file, or \nullopt if the file type could not be identified.
          */
         static std::optional<FileInfo> identify(std::string idPathname);
 

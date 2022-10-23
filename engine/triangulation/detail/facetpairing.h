@@ -362,7 +362,7 @@ class FacetPairingBase :
          *
          * \param minSide the minimum number of simplices in each of the
          * two connected pieces; this must be at least 1.
-         * \return the best possible cut as described above, or no value
+         * \return the best possible cut as described above, or \nullopt
          * if no such cut exists.
          */
         std::optional<Cut> divideConnected(size_t minSide) const;

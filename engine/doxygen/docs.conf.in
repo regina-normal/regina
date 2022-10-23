@@ -33,6 +33,7 @@ VERBATIM_HEADERS     = NO
 
 # Aliases:
 ALIASES = \
+    "nullopt=no value" \
     "cpp=\par C++^^" \
     "ifacespython=\par Python^^" \
     "nocpp=\par C++^^Not present." \

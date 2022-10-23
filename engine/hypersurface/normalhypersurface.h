@@ -1333,7 +1333,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * dimension.
          *
          * A non-null return value is _not_ a guarantee that this hypersurface
-         * _is_ such a link; however, if this routine returns no value then
+         * _is_ such a link; however, if this routine returns \nullopt then
          * this _is_ a guarantee that the hypersurface is not such a link.
          *
          * The precise tests that this routine carries out involve a trade-off
@@ -1343,7 +1343,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \pre This hypersurface is non-empty.
          *
          * \return the precise multiple of this hypersurface that _could_ be a
-         * normalised non-vertex face link, or no value if we can prove
+         * normalised non-vertex face link, or \nullopt if we can prove
          * that this hypersurface is not such a link.
          */
         std::optional<NormalHypersurface> couldLinkFace() const;

@@ -307,6 +307,9 @@ def process_comment(comment, preserveAmpersands):
     s = re.sub(r'\\&', r'&', s)
     s = re.sub(r'\\%', r'%', s)
 
+    # Regina's short Doxygen macros:
+    s = re.sub(r'\\nullopt($|[^w])', r'``None``\1',s)
+
     s = s.replace('``true``', '``True``')
     s = s.replace('``false``', '``False``')
     s = s.replace('``null``', '``None``')

@@ -183,7 +183,7 @@ class BlockedSFS : public StandardTriangulation {
          * J. Knot Theory Ramifications 16 (2007), 545--574.
          *
          * \return the name of the plugged thin/thick I-bundle, if the
-         * triangulation is of this form, or no value if it is not.
+         * triangulation is of this form, or \nullopt if it is not.
          */
         std::optional<std::string> isPluggedIBundle() const;
 
@@ -235,7 +235,7 @@ class BlockedSFS : public StandardTriangulation {
          * thin/thick I-bundle will be returned.  Note that this name may be
          * normalised or otherwise modified to return a simpler set of
          * parameters for the same triangulation.  If either block is not a
-         * solid torus plug then no value will be returned.
+         * solid torus plug then \nullopt will be returned.
          *
          * \param thin \c true if the overall structure being identified
          * is a plugged thin I-bundle, or \c false if it is a plugged
@@ -266,7 +266,7 @@ class BlockedSFS : public StandardTriangulation {
          * and diagonal edges should be used instead.
          * \return the full parameterised name of this triangulation, if the
          * two given blocks are both solid torus plugs (either layered
-         * solid tori or Mobius bands), or no value otherwise.
+         * solid tori or Mobius bands), or \nullopt otherwise.
          */
         static std::optional<std::string> findPluggedTori(bool thin, int id,
             const SatBlock* torus0, bool horiz0,

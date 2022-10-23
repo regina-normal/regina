@@ -1022,7 +1022,7 @@ class DiscSetSurfaceDataImpl {
          * \return a pair (\a adj, \a perm), where \a adj is the normal disc
          * adjacent to the given disc along the given arc, and \a perm represents
          * the same directed normal arc that was passed but expressed in terms
-         * of the vertices of the adjacent tetrahedron.  This will be no value
+         * of the vertices of the adjacent tetrahedron.  This will be \nullopt
          * if there is no adjacent disc.
          */
         std::optional<std::pair<DiscSpec, Perm<4>>> adjacentDisc(

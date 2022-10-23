@@ -807,16 +807,16 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
             Normal form.  We also truncate off the trivial Z/Z factors so that
             reducedMatrix will not have the same dimensions as matrix. This
             means the torsion factors appear first, followed by the free
-            factors.  This is no value if it has not yet been computed. */
+            factors.  This is \nullopt if it has not yet been computed. */
         std::optional<MatrixInt> reducedMatrix_;
-        /** pointer to kernel of map, or no value if not yet computed. */
+        /** pointer to kernel of map, or \nullopt if not yet computed. */
         std::optional<AbelianGroup> kernel_;
-        /** pointer to coKernel of map, or no value if not yet computed. */
+        /** pointer to coKernel of map, or \nullopt if not yet computed. */
         std::optional<AbelianGroup> cokernel_;
-        /** pointer to image, or no value if not yet computed. */
+        /** pointer to image, or \nullopt if not yet computed. */
         std::optional<AbelianGroup> image_;
         /** pointer to a lattice which describes the kernel of the
-            homomorphism, or no value if not yet computed. */
+            homomorphism, or \nullopt if not yet computed. */
         std::optional<MatrixInt> reducedKernelLattice_;
 
         /** compute the ReducedKernelLattice if not yet done */

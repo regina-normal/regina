@@ -751,7 +751,7 @@ class SFSpace : public Manifold {
          * Determines if this Seifert fibred space is a Lens space.
          *
          * \return a structure containing the details of this Lens
-         * space, or no value if this is not a Lens space.
+         * space, or \nullopt if this is not a Lens space.
          */
         std::optional<LensSpace> isLensSpace() const;
 

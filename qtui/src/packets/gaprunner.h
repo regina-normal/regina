@@ -100,7 +100,7 @@ class GAPRunner : public QDialog {
          * the return value.  Further calls to this routine will result
          * in undefined behaviour.
          *
-         * If no simplified group has been created, then no value will
+         * If no simplified group has been created, then \nullopt will
          * be returned.
          */
         std::optional<regina::GroupPresentation> simplifiedGroup();
