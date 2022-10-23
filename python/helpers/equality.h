@@ -84,7 +84,7 @@ enum EqualityType {
 
 /**
  * Adds appropriate == and != operators to the python bindings for a C++ class,
- * with docstrings.
+ * with custom docstrings.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * <t>regina::python::add_eq_operators(c)</t>, where \a c is the
@@ -118,15 +118,17 @@ void add_eq_operators(pybind11::class_<C, options...>& c,
 
 /**
  * Adds appropriate == and != operators to the python bindings for a C++ class,
- * without docstrings.
+ * without custom docstrings.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * <t>regina::python::add_eq_operators(c)</t>, where \a c is the
  * pybind11::class_ object that wraps \a T.  The effect will be as follows:
  *
  * - If \a T provides both == and != operators (either as member
- *   functions or as global functions), then the python operators == and !=
- *   will compare by value.  No docstrings will be provided.
+ *   functions or as global functions), then this will generate a
+ *   compile error.  Instead you should be calling the variant of
+ *   add_eq_operators() that takes docstrings, and you should pass
+ *   custom docstrings that explain exactly what == and != are testing.
  *
  * - If \a T provides neither == nor != operators, then the python
  *   operators == and != will compare by reference.  Sensible docstrings
@@ -420,21 +422,16 @@ inline void add_eq_operators(pybind11::class_<C, options...>& c) {
     constexpr EqualityType equalityType =
         add_eq_operators_detail::EqualityOperators<C>::equalityType();
 
-    if constexpr (equalityType == BY_REFERENCE) {
-        c.def("__eq__",
-            &add_eq_operators_detail::EqualityOperators<C>::are_equal,
-            python::doc::common::eq_reference);
-        c.def("__ne__",
-            &add_eq_operators_detail::EqualityOperators<C>::are_not_equal,
-            python::doc::common::neq_reference);
-    } else {
-        // We are comparing by value, but do not have docstrings to tell the
-        // user what "by value" actually means.  Leave the docstrings empty.
-        c.def("__eq__",
-            &add_eq_operators_detail::EqualityOperators<C>::are_equal);
-        c.def("__ne__",
-            &add_eq_operators_detail::EqualityOperators<C>::are_not_equal);
-    }
+    static_assert(equalityType == BY_REFERENCE,
+        "The variant of add_eq_operators() that takes docstrings "
+        "should only be used for classes that compare by reference.");
+
+    c.def("__eq__",
+        &add_eq_operators_detail::EqualityOperators<C>::are_equal,
+        python::doc::common::eq_reference);
+    c.def("__ne__",
+        &add_eq_operators_detail::EqualityOperators<C>::are_not_equal,
+        python::doc::common::neq_reference);
 
     c.def("__eq__", [](const C&, std::nullptr_t) { return false; },
         doc::common::eq_None);
