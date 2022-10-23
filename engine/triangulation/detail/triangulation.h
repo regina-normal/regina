@@ -1120,21 +1120,10 @@ class TriangulationBase :
          *
          * Specifically, this counts the number of <i>subdim</i>-faces
          * for which isBoundary() returns \c true.  This may lead to some
-         * unexpected results in non-standard scenarios; for example:
+         * unexpected results in non-standard scenarios; see the documentation
+         * for the non-templated countBoundaryFaces(int) for details.
          *
-         * - In \ref stddim "non-standard dimensions", ideal vertices are not
-         *   recognised and so will not be counted as boundary;
-         *
-         * - In an invalid triangulation, the number of boundary faces reported
-         *   here may be smaller than the number of faces obtained when you
-         *   triangulate the boundary using BoundaryComponent::build().
-         *   This is because "pinched" faces (where separate parts of the
-         *   boundary are identified together) will only be counted once here,
-         *   but will "spring apart" into multiple faces when the boundary is
-         *   triangulated.
-         *
-         * \nopython Instead use the variant
-         * `countBoundaryFaces(subdim)`.
+         * \nopython Instead use the variant `countBoundaryFaces(subdim)`.
          *
          * \tparam subdim the face dimension; this must be between 0 and
          * <i>dim</i>-1 inclusive.
@@ -1156,8 +1145,18 @@ class TriangulationBase :
          *
          * Specifically, this counts the number of <i>subdim</i>-faces
          * for which isBoundary() returns \c true.  This may lead to some
-         * unexpected results in non-standard scenarios; see the documentation
-         * for the templated countBoundaryFaces<subdim>() for details.
+         * unexpected results in non-standard scenarios; for example:
+         *
+         * - In \ref stddim "non-standard dimensions", ideal vertices are not
+         *   recognised and so will not be counted as boundary;
+         *
+         * - In an invalid triangulation, the number of boundary faces reported
+         *   here may be smaller than the number of faces obtained when you
+         *   triangulate the boundary using BoundaryComponent::build().
+         *   This is because "pinched" faces (where separate parts of the
+         *   boundary are identified together) will only be counted once here,
+         *   but will "spring apart" into multiple faces when the boundary is
+         *   triangulated.
          *
          * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., negative or greater than <i>dim</i>-1).
@@ -1304,34 +1303,13 @@ class TriangulationBase :
          * Returns the <i>k</i>th homology group of this triangulation,
          * treating any ideal vertices as though they had been truncated.
          *
-         * A problem here is that, if \a dim is not one of Regina's
-         * \ref stddim "standard dimensions", then Regina cannot actually
-         * _detect_ ideal vertices (since in general this requires solving
-         * undecidable problems).  Currently we resolve this by insisting that,
-         * in higher dimensions, the homology dimension \a k is at most
-         * (<i>dim</i>-2); the underlying algorithm will then effectively
-         * truncate _all_ vertices (since truncating "ordinary" vertices
-         * whose links are spheres or balls does not affect the <i>k</i>th
-         * homology in such cases).
+         * For C++ programmers who know \a subdim at compile time, you should
+         * use this template function `homology<subdim>()`, which is
+         * slightly faster than passing \a subdim as an ordinary runtime
+         * argument to `homology(subdim)`.
          *
-         * In general, this routine insists on working with a valid
-         * triangulation (see isValid() for what this means).
-         * However, for historical reasons, if you are computing first
-         * homology (\a k = 1) then your triangulation is allowed to be
-         * invalid, though the results might or might not be useful to you.
-         * The homology will be computed using the dual skeleton: what this
-         * means is that any invalid faces of dimension 0,1,...,(<i>dim</i>-3)
-         * will be treated as though their centroids had been truncated,
-         * but any invalid (<i>dim</i>-2)-faces will be treated _without_
-         * such truncation.  A side-effect is that, after performing a
-         * barycentric on an invalid triangulation, the group returned by
-         * homology<1>() might change.
-         *
-         * \warning In dimension 3, if you are calling this from the subclass
-         * SnapPeaTriangulation then <b>any fillings on the cusps will be
-         * ignored</b>.  (This is the same as for every routine implemented by
-         * Regina's Triangulation<3> class.)  If you wish to compute homology
-         * with fillings, call SnapPeaTriangulation::homologyFilled() instead.
+         * See the non-templated homology(int) for full details on exactly what
+         * this function computes.
          *
          * \pre Unless you are computing first homology (\a k = 1), this
          * triangulation must be valid, and every face that is not a vertex
@@ -1365,8 +1343,34 @@ class TriangulationBase :
          * off using the template function homology<k>() instead, which
          * is slightly faster.
          *
-         * See the templated homology<k>() for full details on exactly what
-         * this function computes.
+         * A problem with computing homology is that, if \a dim is not one of
+         * Regina's \ref stddim "standard dimensions", then Regina cannot
+         * actually _detect_ ideal vertices (since in general this requires
+         * solving undecidable problems).  Currently we resolve this by
+         * insisting that, in higher dimensions, the homology dimension \a k
+         * is at most (<i>dim</i>-2); the underlying algorithm will then
+         * effectively truncate _all_ vertices (since truncating "ordinary"
+         * vertices whose links are spheres or balls does not affect the
+         * <i>k</i>th homology in such cases).
+         *
+         * In general, this routine insists on working with a valid
+         * triangulation (see isValid() for what this means).
+         * However, for historical reasons, if you are computing first
+         * homology (\a k = 1) then your triangulation is allowed to be
+         * invalid, though the results might or might not be useful to you.
+         * The homology will be computed using the dual skeleton: what this
+         * means is that any invalid faces of dimension 0,1,...,(<i>dim</i>-3)
+         * will be treated as though their centroids had been truncated,
+         * but any invalid (<i>dim</i>-2)-faces will be treated _without_
+         * such truncation.  A side-effect is that, after performing a
+         * barycentric on an invalid triangulation, the group returned by
+         * homology<1>() might change.
+         *
+         * \warning In dimension 3, if you are calling this from the subclass
+         * SnapPeaTriangulation then <b>any fillings on the cusps will be
+         * ignored</b>.  (This is the same as for every routine implemented by
+         * Regina's Triangulation<3> class.)  If you wish to compute homology
+         * with fillings, call SnapPeaTriangulation::homologyFilled() instead.
          *
          * \pre Unless you are computing first homology (\a k = 1), this
          * triangulation must be valid, and every face that is not a vertex
@@ -1400,6 +1404,40 @@ class TriangulationBase :
          * without truncating ideal vertices, but with explicit coordinates
          * that track the individual <i>k</i>-faces of this triangulation.
          *
+         * For C++ programmers who know \a subdim at compile time, you should
+         * use this template function `markedHomology<subdim>()`, which is
+         * slightly faster than passing \a subdim as an ordinary runtime
+         * argument to `markedHomology(subdim)`.
+         *
+         * See the non-templated markedHomology(int) for full details on what
+         * this function computes, some important caveats to be aware of,
+         * and how the group that it returns should be interpreted.
+         *
+         * \pre This triangulation is valid and non-empty.
+         *
+         * \exception FailedPrecondition This triangulation is empty or invalid.
+         *
+         * \nopython Instead use the variant `markedHomology(k)`.
+         *
+         * \tparam k the dimension of the homology group to compute; this must
+         * be between 1 and (<i>dim</i>-1) inclusive.
+         *
+         * \return the <i>k</i>th homology group of the union of all
+         * simplices in this triangulation, as described above.
+         */
+        template <int k = 1>
+        MarkedAbelianGroup markedHomology() const;
+
+        /**
+         * Returns the <i>k</i>th homology group of this triangulation,
+         * without truncating ideal vertices, but with explicit coordinates
+         * that track the individual <i>k</i>-faces of this triangulation,
+         * where the parameter \a k does not need to be known until runtime.
+         *
+         * For C++ programmers who know \a k at compile time, you are better
+         * off using the template function markedHomology<k>() instead, which
+         * is slightly faster.
+         *
          * This is a specialised homology routine; you should only use
          * it if you need to understand how individual <i>k</i>-faces
          * (or chains of <i>k</i>-faces) appear within the homology group.
@@ -1430,35 +1468,6 @@ class TriangulationBase :
          *
          * \exception FailedPrecondition This triangulation is empty or invalid.
          *
-         * \nopython Instead use the variant `markedHomology(k)`.
-         *
-         * \tparam k the dimension of the homology group to compute; this must
-         * be between 1 and (<i>dim</i>-1) inclusive.
-         *
-         * \return the <i>k</i>th homology group of the union of all
-         * simplices in this triangulation, as described above.
-         */
-        template <int k = 1>
-        MarkedAbelianGroup markedHomology() const;
-
-        /**
-         * Returns the <i>k</i>th homology group of this triangulation,
-         * without truncating ideal vertices, but with explicit coordinates
-         * that track the individual <i>k</i>-faces of this triangulation,
-         * where the parameter \a k does not need to be known until runtime.
-         *
-         * For C++ programmers who know \a k at compile time, you are better
-         * off using the template function markedHomology<k>() instead, which
-         * is slightly faster.
-         *
-         * See the templated markedHomology<k>() for full details on what
-         * this function computes, some important caveats to be aware of,
-         * and how the group that it returns should be interpreted.
-         *
-         * \pre This triangulation is valid and non-empty.
-         *
-         * \exception FailedPrecondition This triangulation is empty or invalid.
-         *
          * \exception InvalidArgument The homology dimension \a k is outside
          * the supported range (i.e., less than 1 or greater than or
          * equal to \a dim).
@@ -1476,6 +1485,37 @@ class TriangulationBase :
         /**
          * Returns the boundary map from <i>subdim</i>-faces to
          * (<i>subdim</i>-1)-faces of the triangulation.
+         *
+         * For C++ programmers who know \a subdim at compile time, you should
+         * use this template function `boundaryMap<subdim>()`, which is
+         * slightly faster than passing \a subdim as an ordinary runtime
+         * argument to `boundaryMap(subdim)`.
+         *
+         * See the non-templated boundaryMap(int) for full details on
+         * what this function computes and how the matrix it returns
+         * should be interpreted.
+         *
+         * \pre This triangulation is valid and non-empty.
+         *
+         * \nopython Instead use the variant `boundaryMap(subdim)`.
+         *
+         * \tparam subdim the face dimension; this must be between 1 and
+         * \a dim inclusive.
+         *
+         * \return the boundary map from <i>subdim</i>-faces to
+         * (<i>subdim</i>-1)-faces.
+         */
+        template <int subdim>
+        MatrixInt boundaryMap() const;
+
+        /**
+         * Returns the boundary map from <i>subdim</i>-faces to
+         * (<i>subdim</i>-1)-faces of the triangulation, where the
+         * face dimension does not need to be known until runtime.
+         *
+         * For C++ programmers who know \a subdim at compile time, you are
+         * better off using the template function boundaryMap<subdim>()
+         * instead, which is slightly faster.
          *
          * This is the boundary map that you would use if you were building
          * the homology groups manually from a chain complex.
@@ -1517,32 +1557,6 @@ class TriangulationBase :
          *
          * \pre This triangulation is valid and non-empty.
          *
-         * \nopython Instead use the variant `boundaryMap(subdim)`.
-         *
-         * \tparam subdim the face dimension; this must be between 1 and
-         * \a dim inclusive.
-         *
-         * \return the boundary map from <i>subdim</i>-faces to
-         * (<i>subdim</i>-1)-faces.
-         */
-        template <int subdim>
-        MatrixInt boundaryMap() const;
-
-        /**
-         * Returns the boundary map from <i>subdim</i>-faces to
-         * (<i>subdim</i>-1)-faces of the triangulation, where the
-         * face dimension does not need to be known until runtime.
-         *
-         * For C++ programmers who know \a subdim at compile time, you are
-         * better off using the template function boundaryMap<subdim>()
-         * instead, which is slightly faster.
-         *
-         * See the templated boundaryMap<subdim>() for full details on
-         * what this function computes and how the matrix it returns
-         * should be interpreted.
-         *
-         * \pre This triangulation is valid and non-empty.
-         *
          * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (i.e., less than 1 or greater than \a dim).
          *
@@ -1557,10 +1571,43 @@ class TriangulationBase :
          * Returns the boundary map from dual <i>subdim</i>-faces to
          * dual (<i>subdim</i>-1)-faces of the triangulation.
          *
-         * This is analogous to boundaryMap(), but is designed to work with
-         * dual faces instead of ordinary (primal) faces.  In particular,
-         * this is used in the implementation of homology(), which works with
-         * the dual skeleton in order to effectively truncate ideal vertices.
+         * For C++ programmers who know \a subdim at compile time, you should
+         * use this template function `dualBoundaryMap<subdim>()`, which is
+         * slightly faster than passing \a subdim as an ordinary runtime
+         * argument to `dualBoundaryMap(subdim)`.
+         *
+         * See the non-templated dualBoundaryMap(int) for full details on
+         * what this function computes and how the matrix it returns
+         * should be interpreted.
+         *
+         * \pre This triangulation is valid and non-empty.
+         *
+         * \nopython Instead use the variant `dualBoundaryMap(subdim)`.
+         *
+         * \tparam subdim the dual face dimension; this must be between
+         * 1 and \a dim inclusive if \a dim is one of Regina's standard
+         * dimensions, or between 1 and (\a dim - 1) inclusive otherwise.
+         *
+         * \return the boundary map from dual <i>subdim</i>-faces to
+         * dual (<i>subdim</i>-1)-faces.
+         */
+        template <int subdim>
+        MatrixInt dualBoundaryMap() const;
+
+        /**
+         * Returns the boundary map from dual <i>subdim</i>-faces to
+         * dual (<i>subdim</i>-1)-faces of the triangulation, where the
+         * face dimension does not need to be known until runtime.
+         *
+         * For C++ programmers who know \a subdim at compile time, you are
+         * better off using the template function dualBoundaryMap<subdim>()
+         * instead, which is slightly faster.
+         *
+         * This function is analogous to boundaryMap(), but is designed to
+         * work with dual faces instead of ordinary (primal) faces.
+         * In particular, this is used in the implementation of homology(),
+         * which works with the dual skeleton in order to effectively
+         * truncate ideal vertices.
          *
          * The matrix that is returned should be thought of as acting on
          * column vectors.  Specifically, the <i>c</i>th column of the matrix
@@ -1632,33 +1679,6 @@ class TriangulationBase :
          *
          * \pre This triangulation is valid and non-empty.
          *
-         * \nopython Instead use the variant `dualBoundaryMap(subdim)`.
-         *
-         * \tparam subdim the dual face dimension; this must be between
-         * 1 and \a dim inclusive if \a dim is one of Regina's standard
-         * dimensions, or between 1 and (\a dim - 1) inclusive otherwise.
-         *
-         * \return the boundary map from dual <i>subdim</i>-faces to
-         * dual (<i>subdim</i>-1)-faces.
-         */
-        template <int subdim>
-        MatrixInt dualBoundaryMap() const;
-
-        /**
-         * Returns the boundary map from dual <i>subdim</i>-faces to
-         * dual (<i>subdim</i>-1)-faces of the triangulation, where the
-         * face dimension does not need to be known until runtime.
-         *
-         * For C++ programmers who know \a subdim at compile time, you are
-         * better off using the template function dualBoundaryMap<subdim>()
-         * instead, which is slightly faster.
-         *
-         * See the templated dualBoundaryMap<subdim>() for full details on
-         * what this function computes and how the matrix it returns
-         * should be interpreted.
-         *
-         * \pre This triangulation is valid and non-empty.
-         *
          * \exception InvalidArgument The face dimension \a subdim is outside
          * the supported range (as documented for the \a subdim argument below).
          *
@@ -1673,6 +1693,40 @@ class TriangulationBase :
         /**
          * Returns a map from dual chains to primal chains that preserves
          * homology classes.
+         *
+         * For C++ programmers who know \a subdim at compile time, you should
+         * use this template function `dualToPrimal<subdim>()`, which is
+         * slightly faster than passing \a subdim as an ordinary runtime
+         * argument to `dualToPrimal(subdim)`.
+         *
+         * See the non-templated dualToPrimal(int) for full details on
+         * what this function computes and how the matrix it returns
+         * should be interpreted.
+         *
+         * \pre This trianguation is valid, non-empty, and non-ideal.
+         * Note that Regina can only detect ideal triangulations in
+         * \ref stddim "standard dimensions"; for higher dimensions it is
+         * the user's reponsibility to confirm this some other way.
+         *
+         * \nopython Instead use the variant `dualToPrimal(subdim)`.
+         *
+         * \tparam subdim the chain dimension; this must be between
+         * 0 and (\a dim - 1) inclusive.
+         *
+         * \return the map from dual <i>subdim</i>-chains to primal
+         * <i>subdim</i>-chains.
+         */
+        template <int subdim>
+        MatrixInt dualToPrimal() const;
+
+        /**
+         * Returns a map from dual chains to primal chains that preserves
+         * homology classes, where the chain dimension does not need to be
+         * known until runtime.
+         *
+         * For C++ programmers who know \a subdim at compile time, you are
+         * better off using the template function dualToPrimal<subdim>()
+         * instead, which is slightly faster.
          *
          * The matrix that is returned should be thought of as acting on
          * column vectors.  Specifically, the <i>c</i>th column of the matrix
@@ -1700,35 +1754,6 @@ class TriangulationBase :
          * each barycentre to vertex 0 of the corresponding face, and then
          * (iii) discarding any resulting simplices with repeated vertices
          * (which become "flattened" to a dimension less than \a subdim).
-         *
-         * \pre This trianguation is valid, non-empty, and non-ideal.
-         * Note that Regina can only detect ideal triangulations in
-         * \ref stddim "standard dimensions"; for higher dimensions it is
-         * the user's reponsibility to confirm this some other way.
-         *
-         * \nopython Instead use the variant `dualToPrimal(subdim)`.
-         *
-         * \tparam subdim the chain dimension; this must be between
-         * 0 and (\a dim - 1) inclusive.
-         *
-         * \return the map from dual <i>subdim</i>-chains to primal
-         * <i>subdim</i>-chains.
-         */
-        template <int subdim>
-        MatrixInt dualToPrimal() const;
-
-        /**
-         * Returns a map from dual chains to primal chains that preserves
-         * homology classes, where the chain dimension does not need to be
-         * known until runtime.
-         *
-         * For C++ programmers who know \a subdim at compile time, you are
-         * better off using the template function dualToPrimal<subdim>()
-         * instead, which is slightly faster.
-         *
-         * See the templated dualToPrimal<subdim>() for full details on
-         * what this function computes and how the matrix it returns
-         * should be interpreted.
          *
          * \pre This trianguation is valid, non-empty, and non-ideal.
          * Note that Regina can only detect ideal triangulations in

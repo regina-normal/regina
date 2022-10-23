@@ -618,7 +618,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
 
         /**
          * Returns a TeX representation of this expression.
-         * See writeTeX() for details on how this is formed.
+         *
+         * The text representation will be of the form `g_2^4 g_{13}^{-5} g_4`.
          *
          * \return a TeX representation of this expression.
          */
@@ -628,8 +629,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Writes a TeX represesentation of this expression to the given
          * output stream.
          *
-         * The text representation will be of the form
-         * `g_2^4 g_{13}^{-5} g_4`.
+         * The text representation will be of the form `g_2^4 g_{13}^{-5} g_4`.
          *
          * \nopython Instead use the variant tex() that takes no arguments
          * and returns a string.
@@ -1430,18 +1430,17 @@ class GroupPresentation : public Output<GroupPresentation> {
 
         /**
          * Returns a TeX representation of this group presentation.
-         * See writeTeX() for details on how this is formed.
+         *
+         * The output will be of the form `< generators | relators >`.
+         * There will be no final newline.
          *
          * \return a TeX representation of this group presentation.
          */
         std::string tex() const;
 
         /**
-         * Writes a TeX represesentation of this group presentation
-         * to the given output stream.
-         *
-         * The output will be of the form `< generators | relators >`.
-         * There will be no final newline.
+         * Writes a TeX represesentation of this group presentation to the
+         * given output stream.  See tex() for details on how this is formed.
          *
          * \nopython Instead use the variant tex() that takes no arguments
          * and returns a string.
@@ -1453,7 +1452,10 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Returns a compact one-line representation of this group presentation,
          * including details of all generators and relations.
-         * See writeTextCompact() for details on how this is formed.
+         *
+         * The output will be of the form `< generators | relators >`.
+         * The full relations will be included, and the entire output
+         * will be written on a single line.  There will be no final newline.
          *
          * Currently str() and compact() are identical functions, though the
          * output from str() may change in future versions of Regina.
@@ -1463,12 +1465,8 @@ class GroupPresentation : public Output<GroupPresentation> {
         std::string compact() const;
 
         /**
-         * Writes a compact represesentation of this group to the given
-         * output stream.
-         *
-         * The output will be of the form `< generators | relators >`.
-         * The full relations will be included, and the entire output
-         * will be written on a single line.  There will be no final newline.
+         * Writes a compact one-line represesentation of this group to the given
+         * output stream.  See compact() for details on how this is formed.
          *
          * Currently writeTextShort() and writeTextCompact() are identical
          * functions, though the output from writeTextShort() may change in
