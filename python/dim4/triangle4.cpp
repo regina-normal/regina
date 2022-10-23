@@ -72,7 +72,7 @@ void addTriangle4(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
-    auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2")
+    auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2", rdoc_scope)
         .def("index", &Triangle<4>::index)
         .def("embedding", &Triangle<4>::embedding)
         .def("embeddings", &Triangle<4>::embeddings)
@@ -102,7 +102,8 @@ void addTriangle4(pybind11::module_& m) {
         .def("isValid", &Triangle<4>::isValid)
         .def("hasBadIdentification", &Triangle<4>::hasBadIdentification)
         .def("hasBadLink", &Triangle<4>::hasBadLink)
-        .def("linkingSurface", &Triangle<4>::linkingSurface)
+        .def("linkingSurface", &Triangle<4>::linkingSurface,
+            rdoc::linkingSurface)
         .def_static("ordering", &Triangle<4>::ordering)
         .def_static("faceNumber", &Triangle<4>::faceNumber)
         .def_static("containsVertex", &Triangle<4>::containsVertex)

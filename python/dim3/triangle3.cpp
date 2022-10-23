@@ -71,7 +71,7 @@ void addTriangle3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
-    auto c = pybind11::class_<Face<3, 2>>(m, "Face3_2")
+    auto c = pybind11::class_<Face<3, 2>>(m, "Face3_2", rdoc_scope)
         .def("index", &Triangle<3>::index)
         .def("embedding", &Triangle<3>::embedding)
         .def("embeddings", &Triangle<3>::embeddings)
@@ -84,11 +84,12 @@ void addTriangle3(pybind11::module_& m) {
         .def("back", &Triangle<3>::back)
         .def("isBoundary", &Triangle<3>::isBoundary)
         .def("inMaximalForest", &Triangle<3>::inMaximalForest)
-        .def("type", &Triangle<3>::type)
-        .def("subtype", &Triangle<3>::subtype)
-        .def("isMobiusBand", &Triangle<3>::isMobiusBand)
-        .def("isCone", &Triangle<3>::isCone)
-        .def("linkingSurface", &Triangle<3>::linkingSurface)
+        .def("type", &Triangle<3>::type, rdoc::type)
+        .def("subtype", &Triangle<3>::subtype, rdoc::subtype)
+        .def("isMobiusBand", &Triangle<3>::isMobiusBand, rdoc::isMobiusBand)
+        .def("isCone", &Triangle<3>::isCone, rdoc::isCone)
+        .def("linkingSurface", &Triangle<3>::linkingSurface,
+            rdoc::linkingSurface)
         .def("isValid", &Triangle<3>::isValid)
         .def("hasBadIdentification", &Triangle<3>::hasBadIdentification)
         .def("hasBadLink", &Triangle<3>::hasBadLink)
@@ -122,19 +123,24 @@ void addTriangle3(pybind11::module_& m) {
     regina::python::addListView<
         decltype(std::declval<Triangle<3>>().embeddings())>(m);
 
+    RDOC_SCOPE_INNER_BEGIN(Type)
+
     // Embed this enum in the Triangle3 class.
-    pybind11::enum_<regina::Triangle<3>::Type>(c, "Type")
-        .value("UNKNOWN_TYPE", regina::Triangle<3>::UNKNOWN_TYPE)
-        .value("TRIANGLE", regina::Triangle<3>::TRIANGLE)
-        .value("SCARF", regina::Triangle<3>::SCARF)
-        .value("PARACHUTE", regina::Triangle<3>::PARACHUTE)
-        .value("CONE", regina::Triangle<3>::CONE)
-        .value("MOBIUS", regina::Triangle<3>::MOBIUS)
-        .value("HORN", regina::Triangle<3>::HORN)
-        .value("DUNCEHAT", regina::Triangle<3>::DUNCEHAT)
-        .value("L31", regina::Triangle<3>::L31)
+    pybind11::enum_<regina::Triangle<3>::Type>(c, "Type", rdoc_inner_scope)
+        .value("UNKNOWN_TYPE", regina::Triangle<3>::UNKNOWN_TYPE,
+            rdoc_inner::UNKNOWN_TYPE)
+        .value("TRIANGLE", regina::Triangle<3>::TRIANGLE, rdoc_inner::TRIANGLE)
+        .value("SCARF", regina::Triangle<3>::SCARF, rdoc_inner::SCARF)
+        .value("PARACHUTE", regina::Triangle<3>::PARACHUTE,
+            rdoc_inner::PARACHUTE)
+        .value("CONE", regina::Triangle<3>::CONE, rdoc_inner::CONE)
+        .value("MOBIUS", regina::Triangle<3>::MOBIUS, rdoc_inner::MOBIUS)
+        .value("HORN", regina::Triangle<3>::HORN, rdoc_inner::HORN)
+        .value("DUNCEHAT", regina::Triangle<3>::DUNCEHAT, rdoc_inner::DUNCEHAT)
+        .value("L31", regina::Triangle<3>::L31, rdoc_inner::L31)
         .export_values();
 
+    RDOC_SCOPE_INNER_END
     RDOC_SCOPE_END
 
     m.attr("TriangleEmbedding3") = m.attr("FaceEmbedding3_2");

@@ -71,7 +71,7 @@ void addTetrahedron4(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
-    auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3")
+    auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3", rdoc_scope)
         .def("index", &Tetrahedron<4>::index)
         .def("degree", &Tetrahedron<4>::degree)
         .def("embedding", &Tetrahedron<4>::embedding)
@@ -105,7 +105,8 @@ void addTetrahedron4(pybind11::module_& m) {
         .def("isLinkOrientable", &Tetrahedron<4>::isLinkOrientable)
         .def("isBoundary", &Tetrahedron<4>::isBoundary)
         .def("inMaximalForest", &Tetrahedron<4>::inMaximalForest)
-        .def("linkingSurface", &Tetrahedron<4>::linkingSurface)
+        .def("linkingSurface", &Tetrahedron<4>::linkingSurface,
+            rdoc::linkingSurface)
         .def_static("ordering", &Tetrahedron<4>::ordering)
         .def_static("faceNumber", &Tetrahedron<4>::faceNumber)
         .def_static("containsVertex", &Tetrahedron<4>::containsVertex)

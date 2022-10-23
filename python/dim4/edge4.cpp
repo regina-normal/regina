@@ -73,7 +73,7 @@ void addEdge4(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
-    auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1")
+    auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1", rdoc_scope)
         .def("index", &Edge<4>::index)
         .def("embedding", &Edge<4>::embedding)
         .def("embeddings", &Edge<4>::embeddings)
@@ -105,9 +105,10 @@ void addEdge4(pybind11::module_& m) {
             // This is because Python cannot enforce the constness of
             // the reference that would normally be returned.
             return new regina::Triangulation<2>(e.buildLink());
-        })
-        .def("buildLinkInclusion", &Edge<4>::buildLinkInclusion)
-        .def("linkingSurface", &Edge<4>::linkingSurface)
+        }, rdoc::buildLink)
+        .def("buildLinkInclusion", &Edge<4>::buildLinkInclusion,
+            rdoc::buildLinkInclusion)
+        .def("linkingSurface", &Edge<4>::linkingSurface, rdoc::linkingSurface)
         .def_static("ordering", &Edge<4>::ordering)
         .def_static("faceNumber", &Edge<4>::faceNumber)
         .def_static("containsVertex", &Edge<4>::containsVertex)

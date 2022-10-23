@@ -71,7 +71,7 @@ void addVertex3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
-    auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0")
+    auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0", rdoc_scope)
         .def("index", &Vertex<3>::index)
         .def("embedding", &Vertex<3>::embedding)
         .def("embeddings", &Vertex<3>::embeddings)
@@ -88,7 +88,7 @@ void addVertex3(pybind11::module_& m) {
         .def("boundaryComponent", &Vertex<3>::boundaryComponent,
             pybind11::return_value_policy::reference)
         .def("degree", &Vertex<3>::degree)
-        .def("linkType", &Vertex<3>::linkType)
+        .def("linkType", &Vertex<3>::linkType, rdoc::linkType)
         .def("link", [](const Vertex<3>&) {
             throw std::runtime_error(
                 "Vertex3::link() has been renamed to Vertex3::linkType().  "
@@ -100,18 +100,19 @@ void addVertex3(pybind11::module_& m) {
             // This is because Python cannot enforce the constness of
             // the reference that would normally be returned.
             return new regina::Triangulation<2>(v.buildLink());
-        })
-        .def("buildLinkInclusion", &Vertex<3>::buildLinkInclusion)
-        .def("isLinkClosed", &Vertex<3>::isLinkClosed)
-        .def("isIdeal", &Vertex<3>::isIdeal)
+        }, rdoc::buildLink)
+        .def("buildLinkInclusion", &Vertex<3>::buildLinkInclusion,
+            rdoc::buildLinkInclusion)
+        .def("isLinkClosed", &Vertex<3>::isLinkClosed, rdoc::isLinkClosed)
+        .def("isIdeal", &Vertex<3>::isIdeal, rdoc::isIdeal)
         .def("isBoundary", &Vertex<3>::isBoundary)
-        .def("isStandard", &Vertex<3>::isStandard)
+        .def("isStandard", &Vertex<3>::isStandard, rdoc::isStandard)
         .def("isValid", &Vertex<3>::isValid)
         .def("hasBadIdentification", &Vertex<3>::hasBadIdentification)
         .def("hasBadLink", &Vertex<3>::hasBadLink)
         .def("isLinkOrientable", &Vertex<3>::isLinkOrientable)
-        .def("linkEulerChar", &Vertex<3>::linkEulerChar)
-        .def("linkingSurface", &Vertex<3>::linkingSurface)
+        .def("linkEulerChar", &Vertex<3>::linkEulerChar, rdoc::linkEulerChar)
+        .def("linkingSurface", &Vertex<3>::linkingSurface, rdoc::linkingSurface)
         .def_static("ordering", &Vertex<3>::ordering)
         .def_static("faceNumber", &Vertex<3>::faceNumber)
         .def_static("containsVertex", &Vertex<3>::containsVertex)
@@ -127,15 +128,21 @@ void addVertex3(pybind11::module_& m) {
     regina::python::addListView<
         decltype(std::declval<Vertex<3>>().embeddings())>(m);
 
-    pybind11::enum_<regina::Vertex<3>::LinkType>(c, "LinkType")
-        .value("SPHERE", regina::Vertex<3>::SPHERE)
-        .value("DISC", regina::Vertex<3>::DISC)
-        .value("TORUS", regina::Vertex<3>::TORUS)
-        .value("KLEIN_BOTTLE", regina::Vertex<3>::KLEIN_BOTTLE)
-        .value("NON_STANDARD_CUSP", regina::Vertex<3>::NON_STANDARD_CUSP)
-        .value("INVALID", regina::Vertex<3>::INVALID)
+    RDOC_SCOPE_INNER_BEGIN(LinkType)
+
+    pybind11::enum_<regina::Vertex<3>::LinkType>(c, "LinkType",
+            rdoc_inner_scope)
+        .value("SPHERE", regina::Vertex<3>::SPHERE, rdoc_inner::SPHERE)
+        .value("DISC", regina::Vertex<3>::DISC, rdoc_inner::DISC)
+        .value("TORUS", regina::Vertex<3>::TORUS, rdoc_inner::TORUS)
+        .value("KLEIN_BOTTLE", regina::Vertex<3>::KLEIN_BOTTLE,
+            rdoc_inner::KLEIN_BOTTLE)
+        .value("NON_STANDARD_CUSP", regina::Vertex<3>::NON_STANDARD_CUSP,
+            rdoc_inner::NON_STANDARD_CUSP)
+        .value("INVALID", regina::Vertex<3>::INVALID, rdoc_inner::INVALID)
         .export_values();
 
+    RDOC_SCOPE_INNER_END
     RDOC_SCOPE_END
 
     m.attr("VertexEmbedding3") = m.attr("FaceEmbedding3_0");

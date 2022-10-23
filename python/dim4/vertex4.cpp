@@ -70,7 +70,7 @@ void addVertex4(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
-    auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0")
+    auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0", rdoc_scope)
         .def("index", &Vertex<4>::index)
         .def("embedding", &Vertex<4>::embedding)
         .def("embeddings", &Vertex<4>::embeddings)
@@ -92,15 +92,16 @@ void addVertex4(pybind11::module_& m) {
             // This is because Python cannot enforce the constness of
             // the reference that would normally be returned.
             return new regina::Triangulation<3>(v.buildLink());
-        })
-        .def("buildLinkInclusion", &Vertex<4>::buildLinkInclusion)
+        }, rdoc::buildLink)
+        .def("buildLinkInclusion", &Vertex<4>::buildLinkInclusion,
+            rdoc::buildLinkInclusion)
         .def("isLinkOrientable", &Vertex<4>::isLinkOrientable)
         .def("isValid", &Vertex<4>::isValid)
         .def("hasBadIdentification", &Vertex<4>::hasBadIdentification)
         .def("hasBadLink", &Vertex<4>::hasBadLink)
-        .def("isIdeal", &Vertex<4>::isIdeal)
+        .def("isIdeal", &Vertex<4>::isIdeal, rdoc::isIdeal)
         .def("isBoundary", &Vertex<4>::isBoundary)
-        .def("linkingSurface", &Vertex<4>::linkingSurface)
+        .def("linkingSurface", &Vertex<4>::linkingSurface, rdoc::linkingSurface)
         .def_static("ordering", &Vertex<4>::ordering)
         .def_static("faceNumber", &Vertex<4>::faceNumber)
         .def_static("containsVertex", &Vertex<4>::containsVertex)

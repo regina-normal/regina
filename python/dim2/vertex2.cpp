@@ -71,7 +71,7 @@ void addVertex2(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH_MAIN
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
-    auto c = pybind11::class_<Face<2, 0>>(m, "Face2_0")
+    auto c = pybind11::class_<Face<2, 0>>(m, "Face2_0", rdoc::Face)
         .def("index", &Vertex<2>::index)
         .def("isValid", &Vertex<2>::isValid)
         .def("hasBadIdentification", &Vertex<2>::hasBadIdentification)

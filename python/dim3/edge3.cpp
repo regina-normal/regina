@@ -72,7 +72,7 @@ void addEdge3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
-    auto c = pybind11::class_<Face<3, 1>>(m, "Face3_1")
+    auto c = pybind11::class_<Face<3, 1>>(m, "Face3_1", rdoc_scope)
         .def("index", &Edge<3>::index)
         .def("embedding", &Edge<3>::embedding)
         .def("embeddings", &Edge<3>::embeddings)
@@ -99,7 +99,7 @@ void addEdge3(pybind11::module_& m) {
         .def("hasBadIdentification", &Edge<3>::hasBadIdentification)
         .def("hasBadLink", &Edge<3>::hasBadLink)
         .def("isLinkOrientable", &Edge<3>::isLinkOrientable)
-        .def("linkingSurface", &Edge<3>::linkingSurface)
+        .def("linkingSurface", &Edge<3>::linkingSurface, rdoc::linkingSurface)
         .def_static("ordering", &Edge<3>::ordering)
         .def_static("faceNumber", &Edge<3>::faceNumber)
         .def_static("containsVertex", &Edge<3>::containsVertex)
