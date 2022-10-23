@@ -65,16 +65,17 @@ void addTriangulation2(pybind11::module_& m) {
         .def("isReadOnlySnapshot", &Triangulation<2>::isReadOnlySnapshot,
             rbase2::isReadOnlySnapshot)
         .def("size", &Triangulation<2>::size)
-        .def("countTriangles", &Triangulation<2>::countTriangles)
+        .def("countTriangles", &Triangulation<2>::countTriangles,
+            rbase::countTriangles)
         .def("triangles", &Triangulation<2>::triangles,
-            pybind11::keep_alive<0, 1>())
+            pybind11::keep_alive<0, 1>(), rbase::triangles)
         .def("simplices", &Triangulation<2>::simplices,
             pybind11::keep_alive<0, 1>())
         // Use a static cast because GCC struggles with the overload_cast here:
         .def("triangle",
             static_cast<regina::Simplex<2>* (Triangulation<2>::*)(size_t)>(
                 &Triangulation<2>::triangle),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rbase::triangle)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<2>::simplex),
             pybind11::return_value_policy::reference_internal)
@@ -116,40 +117,45 @@ void addTriangulation2(pybind11::module_& m) {
         .def("removeAllSimplices", &Triangulation<2>::removeAllSimplices)
         .def("swap", &Triangulation<2>::swap, rdoc::swap)
         .def("moveContentsTo", &Triangulation<2>::moveContentsTo)
-        .def("countComponents", &Triangulation<2>::countComponents)
+        .def("countComponents", &Triangulation<2>::countComponents,
+            rbase::countComponents)
         .def("countBoundaryComponents",
-            &Triangulation<2>::countBoundaryComponents)
+            &Triangulation<2>::countBoundaryComponents,
+            rbase::countBoundaryComponents)
         .def("countFaces", (regina::python::countFacesFunc<Triangulation<2>>)(
-            &Triangulation<2>::countFaces))
-        .def("countVertices", &Triangulation<2>::countVertices)
-        .def("countEdges", &Triangulation<2>::countEdges)
-        .def("fVector", &Triangulation<2>::fVector)
+            &Triangulation<2>::countFaces), rbase::countFaces)
+        .def("countVertices", &Triangulation<2>::countVertices,
+            rbase::countVertices)
+        .def("countEdges", &Triangulation<2>::countEdges, rbase::countEdges)
+        .def("fVector", &Triangulation<2>::fVector, rbase::fVector)
         .def("components", &Triangulation<2>::components,
-            pybind11::keep_alive<0, 1>())
+            pybind11::keep_alive<0, 1>(), rbase::components)
         .def("boundaryComponents", &Triangulation<2>::boundaryComponents,
-            pybind11::keep_alive<0, 1>())
+            pybind11::keep_alive<0, 1>(), rbase::boundaryComponents)
         .def("faces", (regina::python::facesFunc<Triangulation<2>>)(
             &Triangulation<2>::faces),
-            pybind11::keep_alive<0, 1>())
+            pybind11::keep_alive<0, 1>(), rbase::faces)
         .def("vertices", &Triangulation<2>::vertices,
-            pybind11::keep_alive<0, 1>())
+            pybind11::keep_alive<0, 1>(), rbase::vertices)
         .def("edges", &Triangulation<2>::edges,
-            pybind11::keep_alive<0, 1>())
+            pybind11::keep_alive<0, 1>(), rbase::edges)
         .def("component", &Triangulation<2>::component,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rbase::component)
         .def("boundaryComponent", &Triangulation<2>::boundaryComponent,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rbase::boundaryComponent)
         .def("face", (regina::python::faceFunc<Triangulation<2>>)(
             &Triangulation<2>::face),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rbase::face)
         .def("vertex", &Triangulation<2>::vertex,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rbase::vertex)
         .def("edge", &Triangulation<2>::edge,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rbase::edge)
         .def("translate", &Triangulation<2>::translate<0>,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rbase::translate)
         .def("translate", &Triangulation<2>::translate<1>,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rbase::translate)
         .def("pairing", &Triangulation<2>::pairing)
         .def("isIsomorphicTo", &Triangulation<2>::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<2>::findAllIsomorphisms<
@@ -184,12 +190,14 @@ void addTriangulation2(pybind11::module_& m) {
         .def("hasBoundaryFacets", &Triangulation<2>::hasBoundaryFacets)
         .def("hasBoundaryEdges", &Triangulation<2>::hasBoundaryEdges,
             rdoc::hasBoundaryEdges)
-        .def("countBoundaryFacets", &Triangulation<2>::countBoundaryFacets)
+        .def("countBoundaryFacets", &Triangulation<2>::countBoundaryFacets,
+            rbase::countBoundaryFacets)
         .def("countBoundaryEdges", &Triangulation<2>::countBoundaryEdges,
             rdoc::countBoundaryEdges)
         .def("countBoundaryFaces",
             static_cast<size_t (Triangulation<2>::*)(int) const>(
-            &Triangulation<2>::countBoundaryFaces))
+            &Triangulation<2>::countBoundaryFaces),
+            rbase::countBoundaryFaces)
         .def("isOrientable", &Triangulation<2>::isOrientable)
         .def("isOriented", &Triangulation<2>::isOriented)
         .def("isIdeal", &Triangulation<2>::isIdeal, rdoc::isIdeal)
@@ -203,32 +211,35 @@ void addTriangulation2(pybind11::module_& m) {
         .def("homology",
             static_cast<AbelianGroup (Triangulation<2>::*)(int) const>(
                 &Triangulation<2>::homology),
-            pybind11::arg("k") = 1)
+            pybind11::arg("k") = 1, rbase::homology)
         .def("markedHomology",
             static_cast<MarkedAbelianGroup (Triangulation<2>::*)(int) const>(
                 &Triangulation<2>::markedHomology),
-            pybind11::arg("k") = 1)
+            pybind11::arg("k") = 1, rbase::markedHomology)
         .def("boundaryMap",
             static_cast<MatrixInt (Triangulation<2>::*)(int) const>(
-            &Triangulation<2>::boundaryMap))
+            &Triangulation<2>::boundaryMap), rbase::boundaryMap)
         .def("dualBoundaryMap",
             static_cast<MatrixInt (Triangulation<2>::*)(int) const>(
-            &Triangulation<2>::dualBoundaryMap))
+            &Triangulation<2>::dualBoundaryMap), rbase::dualBoundaryMap)
         .def("dualToPrimal",
             static_cast<MatrixInt (Triangulation<2>::*)(int) const>(
-            &Triangulation<2>::dualToPrimal))
+            &Triangulation<2>::dualToPrimal), rbase::dualToPrimal)
         .def("pachner", &Triangulation<2>::pachner<2>,
             pybind11::arg(),
             pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
+            pybind11::arg("perform") = true,
+            rbase::pachner)
         .def("pachner", &Triangulation<2>::pachner<1>,
             pybind11::arg(),
             pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
+            pybind11::arg("perform") = true,
+            rbase::pachner)
         .def("pachner", &Triangulation<2>::pachner<0>,
             pybind11::arg(),
             pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
+            pybind11::arg("perform") = true,
+            rbase::pachner)
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<2>::makeDoubleCover)
         .def("barycentricSubdivision",

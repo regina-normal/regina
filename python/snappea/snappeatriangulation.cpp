@@ -39,6 +39,7 @@
 #include "snappea/snappeatriangulation.h"
 #include "../helpers.h"
 #include "../docstrings/snappea/snappeatriangulation.h"
+#include "../docstrings/triangulation/detail/triangulation.h" // for global_swap
 
 using pybind11::overload_cast;
 using regina::Cusp;
@@ -251,11 +252,14 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
 
     regina::python::add_global_swap<SnapPeaTriangulation>(m, rdoc::global_swap);
 
-    RDOC_SCOPE_END
+    RDOC_SCOPE_SWITCH_MAIN
 
     // Now we can define the global swap for the parent Triangulation<3> class.
     // See the notes beneath the Triangulation<3> bindings as to why this had
     // to wait until *after* the SnapPeaTriangulation swap.
-    regina::python::add_global_swap<Triangulation<3>>(m);
+    regina::python::add_global_swap<Triangulation<3>>(m,
+        rdoc::Triangulation_::global_swap);
+
+    RDOC_SCOPE_END
 }
 
