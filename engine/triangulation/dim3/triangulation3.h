@@ -2048,8 +2048,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Checks the eligibility of and/or performs a 0-2 move about the
          * (not necessarily distinct) triangles
-         * `e0.tetrahedron()->triangle( e0.vertices()[t0] )` and
-         * `e1.tetrahedron()->triangle( e1.vertices()[t1] )`.
+         * `e0.tetrahedron()->triangle(e0.vertices()[t0])` and
+         * `e1.tetrahedron()->triangle(e1.vertices()[t1])`.
          *
          * This involves fattening up these two triangles into a new pair of
          * tetrahedra around a new degree-two edge \a d; this is the inverse
@@ -2122,11 +2122,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * - For each \a i from 0 up to `e->degree()`, we assign the
          *   number \a i to the triangle
-         *   `e->embedding(i).tetrahedron()->triangle( e->embedding(i).vertices()[3] )`
+         *   `emb.tetrahedron()->triangle(emb.vertices()[3])`,
+         *   where \a emb denotes `e->embedding(i)`.
          *
          * - If \a e is a boundary edge, then we additionally assign the
          *   number `e->degree()` to the boundary triangle
-         *   `e->back().tetrahedron()->triangle( e->back().vertices()[2] )`
+         *   `emb.tetrahedron()->triangle(emb.vertices()[2])`,
+         *   where this time \a emb denotes `e->back()`.
          *
          * If the routine is asked to both check and perform, the move will
          * only be performed if the check shows it is legal.
