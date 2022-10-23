@@ -36,6 +36,12 @@
 #include "../helpers.h"
 #include "../helpers/tableview.h"
 #include "../generic/facehelper.h"
+#include "../docstrings/triangulation/alias/face.h"
+#include "../docstrings/triangulation/alias/facenumber.h"
+#include "../docstrings/triangulation/dim4/edge4.h"
+#include "../docstrings/triangulation/detail/face.h"
+#include "../docstrings/triangulation/detail/facenumbering.h"
+#include "../docstrings/triangulation/generic/faceembedding.h"
 
 using regina::Edge;
 using regina::EdgeEmbedding;
@@ -44,19 +50,28 @@ using regina::FaceEmbedding;
 using regina::python::wrapTableView;
 
 void addEdge4(pybind11::module_& m) {
-    auto e = pybind11::class_<FaceEmbedding<4, 1>>(m, "FaceEmbedding4_1")
-        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>())
-        .def(pybind11::init<const EdgeEmbedding<4>&>())
+    RDOC_SCOPE_BEGIN(FaceEmbedding)
+    RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
+        alias::SimplexVoid)
+
+    auto e = pybind11::class_<FaceEmbedding<4, 1>>(m, "FaceEmbedding4_1",
+            rdoc_scope)
+        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>(),
+            rdoc::__init)
+        .def(pybind11::init<const EdgeEmbedding<4>&>(), rdoc::__copy)
         .def("simplex", &EdgeEmbedding<4>::simplex,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::simplex)
         .def("pentachoron", &EdgeEmbedding<4>::pentachoron,
-            pybind11::return_value_policy::reference)
-        .def("face", &EdgeEmbedding<4>::face)
-        .def("edge", &EdgeEmbedding<4>::edge)
-        .def("vertices", &EdgeEmbedding<4>::vertices)
+            pybind11::return_value_policy::reference, rbase3::pentachoron)
+        .def("face", &EdgeEmbedding<4>::face, rbase::face)
+        .def("edge", &EdgeEmbedding<4>::edge, rbase2::edge)
+        .def("vertices", &EdgeEmbedding<4>::vertices, rbase::vertices)
     ;
     regina::python::add_output(e);
-    regina::python::add_eq_operators(e);
+    regina::python::add_eq_operators(e, rbase::__eq, rbase::__ne);
+
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1")
         .def("index", &Edge<4>::index)
@@ -108,6 +123,8 @@ void addEdge4(pybind11::module_& m) {
 
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 
     regina::python::addListView<
         decltype(std::declval<Edge<4>>().embeddings())>(m);

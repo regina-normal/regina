@@ -35,6 +35,12 @@
 #include "../helpers.h"
 #include "../helpers/tableview.h"
 #include "../generic/facehelper.h"
+#include "../docstrings/triangulation/alias/face.h"
+#include "../docstrings/triangulation/alias/facenumber.h"
+#include "../docstrings/triangulation/dim4/triangle4.h"
+#include "../docstrings/triangulation/detail/face.h"
+#include "../docstrings/triangulation/detail/facenumbering.h"
+#include "../docstrings/triangulation/generic/faceembedding.h"
 
 using regina::Triangle;
 using regina::TriangleEmbedding;
@@ -43,19 +49,28 @@ using regina::FaceEmbedding;
 using regina::python::wrapTableView;
 
 void addTriangle4(pybind11::module_& m) {
-    auto e = pybind11::class_<FaceEmbedding<4, 2>>(m, "FaceEmbedding4_2")
-        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>())
-        .def(pybind11::init<const TriangleEmbedding<4>&>())
+    RDOC_SCOPE_BEGIN(FaceEmbedding)
+    RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
+        alias::SimplexVoid)
+
+    auto e = pybind11::class_<FaceEmbedding<4, 2>>(m, "FaceEmbedding4_2",
+            rdoc_scope)
+        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>(),
+            rdoc::__init)
+        .def(pybind11::init<const TriangleEmbedding<4>&>(), rdoc::__copy)
         .def("simplex", &TriangleEmbedding<4>::simplex,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::simplex)
         .def("pentachoron", &TriangleEmbedding<4>::pentachoron,
-            pybind11::return_value_policy::reference)
-        .def("face", &TriangleEmbedding<4>::face)
-        .def("triangle", &TriangleEmbedding<4>::triangle)
-        .def("vertices", &TriangleEmbedding<4>::vertices)
+            pybind11::return_value_policy::reference, rbase3::pentachoron)
+        .def("face", &TriangleEmbedding<4>::face, rbase::face)
+        .def("triangle", &TriangleEmbedding<4>::triangle, rbase2::triangle)
+        .def("vertices", &TriangleEmbedding<4>::vertices, rbase::vertices)
     ;
     regina::python::add_output(e);
-    regina::python::add_eq_operators(e);
+    regina::python::add_eq_operators(e, rbase::__eq, rbase::__ne);
+
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2")
         .def("index", &Triangle<4>::index)
@@ -103,6 +118,8 @@ void addTriangle4(pybind11::module_& m) {
 
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 
     regina::python::addListView<
         decltype(std::declval<Triangle<4>>().embeddings())>(m);

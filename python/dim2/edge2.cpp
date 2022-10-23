@@ -34,6 +34,12 @@
 #include "triangulation/dim2.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
+#include "../docstrings/triangulation/alias/face.h"
+#include "../docstrings/triangulation/alias/facenumber.h"
+#include "../docstrings/triangulation/generic/face.h"
+#include "../docstrings/triangulation/generic/faceembedding.h"
+#include "../docstrings/triangulation/detail/face.h"
+#include "../docstrings/triangulation/detail/facenumbering.h"
 
 using regina::Edge;
 using regina::EdgeEmbedding;
@@ -41,19 +47,30 @@ using regina::Face;
 using regina::FaceEmbedding;
 
 void addEdge2(pybind11::module_& m) {
-    auto e = pybind11::class_<FaceEmbedding<2, 1>>(m, "FaceEmbedding2_1")
-        .def(pybind11::init<regina::Triangle<2>*, regina::Perm<3>>())
-        .def(pybind11::init<const EdgeEmbedding<2>&>())
+    RDOC_SCOPE_BEGIN(FaceEmbedding)
+    RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
+        alias::SimplexVoid)
+
+    auto e = pybind11::class_<FaceEmbedding<2, 1>>(m, "FaceEmbedding2_1",
+            rdoc_scope)
+        .def(pybind11::init<regina::Triangle<2>*, regina::Perm<3>>(),
+            rdoc::__init)
+        .def(pybind11::init<const EdgeEmbedding<2>&>(), rdoc::__copy)
         .def("simplex", &EdgeEmbedding<2>::simplex,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::simplex)
         .def("triangle", &EdgeEmbedding<2>::triangle,
-            pybind11::return_value_policy::reference)
-        .def("face", &EdgeEmbedding<2>::face)
-        .def("edge", &EdgeEmbedding<2>::edge)
-        .def("vertices", &EdgeEmbedding<2>::vertices)
+            pybind11::return_value_policy::reference, rbase3::triangle)
+        .def("face", &EdgeEmbedding<2>::face, rbase::face)
+        .def("edge", &EdgeEmbedding<2>::edge, rbase2::edge)
+        .def("vertices", &EdgeEmbedding<2>::vertices, rbase::vertices)
     ;
     regina::python::add_output(e);
-    regina::python::add_eq_operators(e);
+    regina::python::add_eq_operators(e, rbase::__eq, rbase::__ne);
+
+    // We use the global scope here because all of Face's members are
+    // inherited, and so Face's own docstring namespace does not exist.
+    RDOC_SCOPE_SWITCH_MAIN
+    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<2, 1>>(m, "Face2_1")
         .def("index", &Edge<2>::index)
@@ -94,6 +111,8 @@ void addEdge2(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
 
     regina::python::addListView<
         decltype(std::declval<Edge<2>>().embeddings())>(m);

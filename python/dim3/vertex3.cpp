@@ -35,6 +35,12 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/alias/face.h"
+#include "../docstrings/triangulation/alias/facenumber.h"
+#include "../docstrings/triangulation/dim3/vertex3.h"
+#include "../docstrings/triangulation/detail/face.h"
+#include "../docstrings/triangulation/detail/facenumbering.h"
+#include "../docstrings/triangulation/generic/faceembedding.h"
 
 using regina::Face;
 using regina::FaceEmbedding;
@@ -42,19 +48,28 @@ using regina::Vertex;
 using regina::VertexEmbedding;
 
 void addVertex3(pybind11::module_& m) {
-    auto e = pybind11::class_<FaceEmbedding<3, 0>>(m, "FaceEmbedding3_0")
-        .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())
-        .def(pybind11::init<const VertexEmbedding<3>&>())
+    RDOC_SCOPE_BEGIN(FaceEmbedding)
+    RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
+        alias::SimplexVoid)
+
+    auto e = pybind11::class_<FaceEmbedding<3, 0>>(m, "FaceEmbedding3_0",
+            rdoc_scope)
+        .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>(),
+            rdoc::__init)
+        .def(pybind11::init<const VertexEmbedding<3>&>(), rdoc::__copy)
         .def("simplex", &VertexEmbedding<3>::simplex,
-            pybind11::return_value_policy::reference)
+            pybind11::return_value_policy::reference, rbase::simplex)
         .def("tetrahedron", &VertexEmbedding<3>::tetrahedron,
-            pybind11::return_value_policy::reference)
-        .def("face", &VertexEmbedding<3>::face)
-        .def("vertex", &VertexEmbedding<3>::vertex)
-        .def("vertices", &VertexEmbedding<3>::vertices)
+            pybind11::return_value_policy::reference, rbase3::tetrahedron)
+        .def("face", &VertexEmbedding<3>::face, rbase::face)
+        .def("vertex", &VertexEmbedding<3>::vertex, rbase2::vertex)
+        .def("vertices", &VertexEmbedding<3>::vertices, rbase::vertices)
     ;
     regina::python::add_output(e);
-    regina::python::add_eq_operators(e);
+    regina::python::add_eq_operators(e, rbase::__eq, rbase::__ne);
+
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE_2(detail::FaceBase, detail::FaceNumberingAPI)
 
     auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0")
         .def("index", &Vertex<3>::index)
@@ -120,6 +135,8 @@ void addVertex3(pybind11::module_& m) {
         .value("NON_STANDARD_CUSP", regina::Vertex<3>::NON_STANDARD_CUSP)
         .value("INVALID", regina::Vertex<3>::INVALID)
         .export_values();
+
+    RDOC_SCOPE_END
 
     m.attr("VertexEmbedding3") = m.attr("FaceEmbedding3_0");
     m.attr("Vertex3") = m.attr("Face3_0");

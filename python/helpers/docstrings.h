@@ -92,9 +92,9 @@ namespace regina::python::doc::common {
  *
  * If you are within a ..._SCOPE(c) block for some class c and you also wish to
  * access docstrings for one or more of its base classes b1,b2,..., then you
- * can use RDOC_SCOPE_BASE(b1) or RDOC_SCOPE_BASE_2(b1, b2).  This will
- * preserve all existing declarations (including \a rdoc), and will also
- * declare new aliases \a rbase and (if relevant) \a rbase2 for the
+ * can use RDOC_SCOPE_BASE(b1) (or RDOC_SCOPE_BASE_2(b1, b2), or so on).
+ * This will preserve all existing declarations (including \a rdoc), and will
+ * also declare new aliases \a rbase and (if relevant) \a rbase2 for the
  * namespaces containing the members of \a b1 and \a b2 respectively.
  * There is no matching END macro; these base class declarations will last
  * until the scope for c is closed.
@@ -124,4 +124,8 @@ namespace regina::python::doc::common {
 #define RDOC_SCOPE_BASE_2(base, base2) \
     namespace rbase = regina::python::doc::base ##_; \
     namespace rbase2 = regina::python::doc::base2 ##_;
+#define RDOC_SCOPE_BASE_3(base, base2, base3) \
+    namespace rbase = regina::python::doc::base ##_; \
+    namespace rbase2 = regina::python::doc::base2 ##_; \
+    namespace rbase3 = regina::python::doc::base3 ##_;
 
