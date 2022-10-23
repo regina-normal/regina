@@ -264,11 +264,21 @@ triangulation.
 See FaceNumbering<subdim, lowerdim> for the conventions of how
 *lowerdim*-faces are numbered within a *subdim*-simplex.
 
+Precondition:
+    The dimension of this face (*subdim*) is strictly positive (i.e.,
+    this face is not a vertex). Note that, without this constraint,
+    there are no possible values for the template parameter
+    *lowerdim*.
+
 Python:
     Python does not support templates. Instead, Python users should
     call this function in the form ``face(lowerdim, face)``; that is,
     the template parameter *lowerdim* becomes the first argument of
     the function.
+
+Template parameter ``lowerdim``:
+    the dimension of subface to examine. This must be between 0 and
+    (*subdim* - 1) inclusive.
 
 Parameter ``face``:
     the *lowerdim*-face of this *subdim*-face to examine. This should
@@ -318,11 +328,21 @@ it handles the images of (*lowerdim*+1, ..., *dim*):
 See FaceNumbering<subdim, lowerdim> for the conventions of how
 *lowerdim*-faces are numbered within a *subdim*-simplex.
 
+Precondition:
+    The dimension of this face (*subdim*) is strictly positive (i.e.,
+    this face is not a vertex). Note that, without this constraint,
+    there are no possible values for the template parameter
+    *lowerdim*.
+
 Python:
     Python does not support templates. Instead, Python users should
     call this function in the form ``faceMapping(lowerdim, face)``;
     that is, the template parameter *lowerdim* becomes the first
     argument of the function.
+
+Template parameter ``lowerdim``:
+    the dimension of subface to examine. This must be between 0 and
+    (*subdim* - 1) inclusive.
 
 Parameter ``face``:
     the *lowerdim*-face of this *subdim*-face to examine. This should

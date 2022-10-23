@@ -320,7 +320,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Python-only constructor that copies the given SnapPy manifold.
          *
-         * Although the argument is described here as a `Snappy.Manifold`,
+         * Although the argument \a m would typically be a `SnapPy.Manifold`,
          * it could in fact be anything with a `_to_string()` method (so
          * you could instead pass a `SnapPy.Triangulation`, for example).
          * Regina will then call `m._to_string()` and pass the result to

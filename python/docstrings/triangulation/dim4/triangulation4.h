@@ -154,7 +154,7 @@ static const char *eulerCharManifold =
 R"doc(Returns the Euler characteristic of the corresponding compact
 manifold.
 
-Instead of simply calculating *V*-E+F-T+P, this routine also treats
+Instead of simply calculating ``V-E+F-T+P``, this routine also treats
 ideal vertices as 3-manifold boundary components (i.e., effectively
 truncates them).
 
@@ -972,8 +972,8 @@ that vertex and squashing them flat. This can be done if:
 
 * the two pentachora are distinct;
 
-* the tetrahedra opposite ``v`` in each pentachoron are distinct and
-  not both boundary;
+* the tetrahedra opposite *v* in each pentachoron are distinct and not
+  both boundary;
 
 * the two pentachora meet each other on all four facets touching the
   vertex (as opposed to meeting each other on two facets and being

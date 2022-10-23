@@ -88,7 +88,7 @@ See countBoundaryFacets() for further information.)doc";
 // Docstring regina::python::doc::Triangulation_::eulerChar
 static const char *eulerChar =
 R"doc(Returns the Euler characteristic of this triangulation. This will be
-evaluated as *V*-E+F.
+evaluated as ``V-E+F``.
 
 This returns the same result as eulerCharTri().
 
@@ -139,8 +139,8 @@ minimal if and only if it has one vertex per boundary component and no
 internal vertices.
 
 The proof is based on a simple Euler characteristic calculation,
-whereby the number of triangles ``T`` is ``T = 2Vi + Vb - 2C``, where
-``Vi`` and ``Vb`` are the number of internal and boundary vertices
+whereby the number of triangles ``T`` is ``T = 2I + B - 2C``, where
+``I`` and ``B`` are the number of internal and boundary vertices
 respectively, and where ``C`` is the Euler characteristic of the
 underlying manifold.
 

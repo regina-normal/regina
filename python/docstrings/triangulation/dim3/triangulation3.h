@@ -119,6 +119,14 @@ Parameter ``description``:
 static const char *__init_4 =
 R"doc(Python-only constructor that copies the given SnapPy manifold.
 
+Although the argument *m* would typically be a ``SnapPy.Manifold``, it
+could in fact be anything with a ``_to_string()`` method (so you could
+instead pass a ``SnapPy.Triangulation``, for example). Regina will
+then call ``m._to_string()`` and pass the result to the "magic" string
+constructor for Regina's Triangulation3 class. Typically, if *m* is a
+SnapPy object, this means that ``m._to_string()`` would need to return
+the contents of a SnapPy/SnapPea data file.
+
 .. warning::
     Only the tetrahedron gluings will be copied; all other SnapPy-
     specific information (such as peripheral curves) will be lost. See
@@ -127,19 +135,6 @@ R"doc(Python-only constructor that copies the given SnapPy manifold.
 
 Parameter ``m``:
     a SnapPy object of type snappy.Manifold.)doc";
-
-// Docstring regina::python::doc::Triangulation_::__init_5
-static const char *__init_5 =
-R"doc(Python-only constructor that copies the given SnapPy triangulation.
-
-.. warning::
-    Only the tetrahedron gluings will be copied; all other SnapPy-
-    specific information (such as peripheral curves) will be lost. See
-    fromSnapPea() for details, and for other alternatives that
-    preserve SnapPy-specific data.
-
-Parameter ``t``:
-    a SnapPy object of type snappy.Triangulation.)doc";
 
 // Docstring regina::python::doc::Triangulation_::allCalculatedTuraevViro
 static const char *allCalculatedTuraevViro =
@@ -369,7 +364,7 @@ static const char *eulerCharManifold =
 R"doc(Returns the Euler characteristic of the corresponding compact
 3-manifold.
 
-Instead of simply calculating *V*-E+F-T, this routine also:
+Instead of simply calculating ``V-E+F-T``, this routine also:
 
 * treats ideal vertices as surface boundary components (i.e.,
   effectively truncates them);
@@ -3094,8 +3089,8 @@ This can be done assuming the following conditions:
 * Consider the second tetrahedron to be merged (the one joined along
   the face opposite the given endpoint of the edge). Moreover,
   consider the two edges of this second tetrahedron that run from the
-  (identical) vertices of the original tetrahedron not touching ``e``
-  to the vertex of the second tetrahedron not touching the original
+  (identical) vertices of the original tetrahedron not touching *e* to
+  the vertex of the second tetrahedron not touching the original
   tetrahedron. These edges must be distinct and may not both be in the
   boundary.
 
@@ -3152,8 +3147,8 @@ that edge and squashing them flat. This can be done if:
 
 * the two tetrahedra are distinct;
 
-* the edges opposite ``e`` in each tetrahedron are distinct and not
-  both boundary;
+* the edges opposite *e* in each tetrahedron are distinct and not both
+  boundary;
 
 * if triangles *f1* and *f2* from one tetrahedron are to be flattened
   onto triangles *g1* and *g2* of the other respectively, then (a)
@@ -3205,8 +3200,8 @@ that vertex and squashing them flat. This can be done if:
 
 * the two tetrahedra are distinct;
 
-* the triangles opposite ``v`` in each tetrahedron are distinct and
-  not both boundary;
+* the triangles opposite *v* in each tetrahedron are distinct and not
+  both boundary;
 
 * the two tetrahedra meet each other on all three faces touching the
   vertex (as opposed to meeting each other on one face and being glued
@@ -3248,9 +3243,9 @@ Returns:
 // Docstring regina::python::doc::Triangulation_::zeroTwoMove
 static const char *zeroTwoMove =
 R"doc(Checks the eligibility of and/or performs a 0-2 move about the (not
-necessarily distinct) triangles ``e0.tetrahedron()->triangle(
-e0.vertices()[t0] )`` and ``e1.tetrahedron()->triangle(
-e1.vertices()[t1] )``.
+necessarily distinct) triangles
+``e0.tetrahedron()->triangle(e0.vertices()[t0])`` and
+``e1.tetrahedron()->triangle(e1.vertices()[t1])``.
 
 This involves fattening up these two triangles into a new pair of
 tetrahedra around a new degree-two edge *d*; this is the inverse of
@@ -3335,12 +3330,13 @@ if the following conditions are satisfied:
 The triangles incident to *e* are numbered as follows:
 
 * For each *i* from 0 up to ``e->degree()``, we assign the number *i*
-  to the triangle ``e->embedding(i).tetrahedron()->triangle(
-  e->embedding(i).vertices()[3] )``
+  to the triangle ``emb.tetrahedron()->triangle(emb.vertices()[3])``,
+  where *emb* denotes ``e->embedding(i)``.
 
 * If *e* is a boundary edge, then we additionally assign the number
   ``e->degree()`` to the boundary triangle
-  ``e->back().tetrahedron()->triangle( e->back().vertices()[2] )``
+  ``emb.tetrahedron()->triangle(emb.vertices()[2])``, where this time
+  *emb* denotes ``e->back()``.
 
 If the routine is asked to both check and perform, the move will only
 be performed if the check shows it is legal.
