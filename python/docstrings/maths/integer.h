@@ -943,11 +943,11 @@ gcd returned is guaranteed to be non-negative.
 If *d* is the gcd of *this* and *other*, then this routine returns the
 tuple (*d*, *u*, *v*), where *u* and *v* are coefficients for which:
 
-* ``u*this + v*other = d``;
+* ``u⋅this + v⋅other = d``;
 
-* ``-abs(this)/d < v*sign(other) ≤ 0``; and
+* ``-abs(this)/d < v⋅sign(other) ≤ 0``; and
 
-* ``1 ≤ u*sign(this) ≤ abs(other)/d``.
+* ``1 ≤ u⋅sign(this) ≤ abs(other)/d``.
 
 These equations are not satisfied when either of *this* or *other* are
 zero, but in this case *u* and *v* will both be 0, 1 or -1, using as
@@ -983,11 +983,11 @@ gcd returned is guaranteed to be non-negative.
 If *d* is the gcd of *this* and *other*, the values placed into *u*
 and *v* will be coefficients for which:
 
-* ``u*this + v*other = d``;
+* ``u⋅this + v⋅other = d``;
 
-* ``-abs(this)/d < v*sign(other) ≤ 0``; and
+* ``-abs(this)/d < v⋅sign(other) ≤ 0``; and
 
-* ``1 ≤ u*sign(this) ≤ abs(other)/d``.
+* ``1 ≤ u⋅sign(this) ≤ abs(other)/d``.
 
 These equations are not satisfied when either of *this* or *other* are
 zero, but in this case *u* and *v* will both be 0, 1 or -1, using as

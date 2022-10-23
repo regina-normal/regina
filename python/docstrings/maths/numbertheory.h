@@ -44,15 +44,15 @@ gcd(0,0) is considered to be zero.
 If *d* is the gcd of *a* and *b*, then this routine returns the tuple
 (*d*, *u*, *v*), where *u* and *v* are coefficients for which:
 
-* ``u*a + v*b = d``;
+* ``u⋅a + v⋅b = d``;
 
-* ``-abs(a)/d < v*sign(b) ≤ 0``; and
+* ``-abs(a)/d < v⋅sign(b) ≤ 0``; and
 
-* ``1 ≤ u*sign(a) ≤ abs(b)/d``.
+* ``1 ≤ u⋅sign(a) ≤ abs(b)/d``.
 
 In the special case where one of the given integers is zero, the
 corresponding coefficient will also be zero and the other coefficient
-will be 1 or -1 so that ``u*a + v*b = d`` still holds. If both given
+will be 1 or -1 so that ``u⋅a + v⋅b = d`` still holds. If both given
 integers are zero, both of the coefficients will be set to zero.
 
 Parameter ``a``:

@@ -537,7 +537,7 @@ polynomial, and finds a linear combination of these polynomials that
 gives this gcd.
 
 The greatest common divisor will be a monic polynomial. The
-polynomials returned in *u* and *v* will satisfy ``u*this + v*other =
+polynomials returned in *u* and *v* will satisfy ``u⋅this + v⋅other =
 gcd``.
 
 As a special case, gcd(0,0) is considered to be zero.

@@ -637,7 +637,7 @@ boundaryMap() for further details.
 The key feature of this map is that, if a column vector *v* represents
 a cycle *c* in the dual chain complex (i.e., it is a chain with zero
 boundary), and if this map is represented by the matrix *M*, then the
-vector ``M*v`` represents a cycle in the primal chain complex that
+vector ``M×v`` represents a cycle in the primal chain complex that
 belongs to the same *subdim*th homology class as *c*.
 
 Regarding implementation: the map is constructed by (i) subdividing
