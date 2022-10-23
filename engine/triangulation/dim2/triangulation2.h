@@ -316,7 +316,7 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         bool isValid() const;
         /**
          * Returns the Euler characteristic of this triangulation.
-         * This will be evaluated as \a V-E+F.
+         * This will be evaluated as `V-E+F`.
          *
          * This returns the same result as eulerCharTri().
          *
@@ -361,10 +361,9 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * it has one vertex per boundary component and no internal vertices.
          *
          * The proof is based on a simple Euler characteristic calculation,
-         * whereby the number of triangles `T` is
-         * `T = 2Vi + Vb - 2C`, where `Vi` and `Vb`
-         * are the number of internal and boundary vertices respectively,
-         * and where `C` is the Euler characteristic of the
+         * whereby the number of triangles `T` is `T = 2I + B - 2C`, where
+         * `I` and `B` are the number of internal and boundary vertices
+         * respectively, and where `C` is the Euler characteristic of the
          * underlying manifold.
          *
          * \return \c true if and only if this is a minimal triangulation.

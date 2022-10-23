@@ -320,6 +320,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Python-only constructor that copies the given SnapPy manifold.
          *
+         * Although the argument is described here as a `Snappy.Manifold`,
+         * it could in fact be anything with a `_to_string()` method (so
+         * you could instead pass a `SnapPy.Triangulation`, for example).
+         * Regina will then call `m._to_string()` and pass the result to
+         * the "magic" string constructor for Regina's Triangulation3 class.
+         * Typically, if \a m is a SnapPy object, this means that
+         * `m._to_string()` would need to return the contents of a
+         * SnapPy/SnapPea data file.
+         *
          * \warning Only the tetrahedron gluings will be copied; all other
          * SnapPy-specific information (such as peripheral curves) will
          * be lost.  See fromSnapPea() for details, and for other
@@ -330,19 +339,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param m a SnapPy object of type snappy.Manifold.
          */
         Triangulation(snappy::Manifold m);
-        /**
-         * Python-only constructor that copies the given SnapPy triangulation.
-         *
-         * \warning Only the tetrahedron gluings will be copied; all other
-         * SnapPy-specific information (such as peripheral curves) will
-         * be lost.  See fromSnapPea() for details, and for other
-         * alternatives that preserve SnapPy-specific data.
-         *
-         * \nocpp
-         *
-         * \param t a SnapPy object of type snappy.Triangulation.
-         */
-        Triangulation(snappy::Triangulation t);
 #endif
         /**
          * Destroys this triangulation.
@@ -632,7 +628,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Returns the Euler characteristic of the corresponding compact
          * 3-manifold.
          *
-         * Instead of simply calculating \a V-E+F-T, this routine also:
+         * Instead of simply calculating `V-E+F-T`, this routine also:
          *
          * - treats ideal vertices as surface boundary components
          *   (i.e., effectively truncates them);
@@ -1903,7 +1899,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * - the two tetrahedra are distinct;
          *
-         * - the edges opposite \c e in each tetrahedron are distinct and
+         * - the edges opposite \a e in each tetrahedron are distinct and
          *   not both boundary;
          *
          * - if triangles \a f1 and \a f2 from one tetrahedron are to be
@@ -1954,7 +1950,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * - the two tetrahedra are distinct;
          *
-         * - the triangles opposite \c v in each tetrahedron are distinct and
+         * - the triangles opposite \a v in each tetrahedron are distinct and
          *   not both boundary;
          *
          * - the two tetrahedra meet each other on all three faces touching
@@ -2007,7 +2003,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   joined along the face opposite the given endpoint of the edge).
          *   Moreover, consider the two edges of this second tetrahedron
          *   that run from the (identical) vertices of the original
-         *   tetrahedron not touching \c e to the vertex of the second
+         *   tetrahedron not touching \a e to the vertex of the second
          *   tetrahedron not touching the original tetrahedron.  These edges
          *   must be distinct and may not both be in the boundary.
          *

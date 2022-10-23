@@ -352,7 +352,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * Returns the Euler characteristic of the corresponding compact
          * manifold.
          *
-         * Instead of simply calculating \a V-E+F-T+P, this routine also
+         * Instead of simply calculating `V-E+F-T+P`, this routine also
          * treats ideal vertices as 3-manifold boundary components (i.e.,
          * effectively truncates them).
          *
@@ -801,7 +801,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * - the two pentachora are distinct;
          *
-         * - the tetrahedra opposite \c v in each pentachoron are distinct and
+         * - the tetrahedra opposite \a v in each pentachoron are distinct and
          *   not both boundary;
          *
          * - the two pentachora meet each other on all four facets touching

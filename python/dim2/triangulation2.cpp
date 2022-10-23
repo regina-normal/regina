@@ -41,6 +41,9 @@
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
 #include "../generic/isosig-bindings.h"
+#include "../docstrings/triangulation/dim2/triangulation2.h"
+#include "../docstrings/triangulation/detail/triangulation.h"
+#include "../docstrings/utilities/snapshot.h"
 
 using pybind11::overload_cast;
 using regina::AbelianGroup;
@@ -50,13 +53,17 @@ using regina::MatrixInt;
 using regina::Triangulation;
 
 void addTriangulation2(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(Triangulation)
+    RDOC_SCOPE_BASE_2(detail::TriangulationBase, Snapshottable)
+
     auto c = pybind11::class_<Triangulation<2>,
-            std::shared_ptr<Triangulation<2>>>(m, "Triangulation2")
-        .def(pybind11::init<>())
-        .def(pybind11::init<const Triangulation<2>&>())
-        .def(pybind11::init<const Triangulation<2>&, bool>())
-        .def(pybind11::init<const std::string&>())
-        .def("isReadOnlySnapshot", &Triangulation<2>::isReadOnlySnapshot)
+            std::shared_ptr<Triangulation<2>>>(m, "Triangulation2", rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const Triangulation<2>&>(), rdoc::__copy)
+        .def(pybind11::init<const Triangulation<2>&, bool>(), rdoc::__init)
+        .def(pybind11::init<const std::string&>(), rdoc::__init_2)
+        .def("isReadOnlySnapshot", &Triangulation<2>::isReadOnlySnapshot,
+            rbase2::isReadOnlySnapshot)
         .def("size", &Triangulation<2>::size)
         .def("countTriangles", &Triangulation<2>::countTriangles)
         .def("triangles", &Triangulation<2>::triangles,
@@ -73,13 +80,15 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("newTriangle", overload_cast<>(
             &Triangulation<2>::newTriangle),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::newTriangle)
         .def("newSimplex", overload_cast<>(
             &Triangulation<2>::newSimplex),
             pybind11::return_value_policy::reference_internal)
         .def("newTriangle", overload_cast<const std::string&>(
             &Triangulation<2>::newTriangle),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rdoc::newTriangle_2)
         .def("newSimplex", overload_cast<const std::string&>(
             &Triangulation<2>::newSimplex),
             pybind11::return_value_policy::reference_internal)
@@ -94,14 +103,18 @@ void addTriangulation2(pybind11::module_& m) {
             for (size_t i = 0; i < k; ++i)
                 ans[i] = t.newSimplex();
             return ans;
-        }, pybind11::return_value_policy::reference_internal)
-        .def("removeTriangle", &Triangulation<2>::removeTriangle)
+        }, pybind11::return_value_policy::reference_internal,
+            rdoc::newTriangles)
+        .def("removeTriangle", &Triangulation<2>::removeTriangle,
+            rdoc::removeTriangle)
         .def("removeSimplex", &Triangulation<2>::removeSimplex)
-        .def("removeTriangleAt", &Triangulation<2>::removeTriangleAt)
+        .def("removeTriangleAt", &Triangulation<2>::removeTriangleAt,
+            rdoc::removeTriangleAt)
         .def("removeSimplexAt", &Triangulation<2>::removeSimplexAt)
-        .def("removeAllTriangles", &Triangulation<2>::removeAllTriangles)
+        .def("removeAllTriangles", &Triangulation<2>::removeAllTriangles,
+            rdoc::removeAllTriangles)
         .def("removeAllSimplices", &Triangulation<2>::removeAllSimplices)
-        .def("swap", &Triangulation<2>::swap)
+        .def("swap", &Triangulation<2>::swap, rdoc::swap)
         .def("moveContentsTo", &Triangulation<2>::moveContentsTo)
         .def("countComponents", &Triangulation<2>::countComponents)
         .def("countBoundaryComponents",
@@ -164,24 +177,26 @@ void addTriangulation2(pybind11::module_& m) {
             return isos;
         })
         .def("isEmpty", &Triangulation<2>::isEmpty)
-        .def("isValid", &Triangulation<2>::isValid)
-        .def("eulerChar", &Triangulation<2>::eulerChar)
+        .def("isValid", &Triangulation<2>::isValid, rdoc::isValid)
+        .def("eulerChar", &Triangulation<2>::eulerChar, rdoc::eulerChar)
         .def("eulerCharTri", &Triangulation<2>::eulerCharTri)
-        .def("isClosed", &Triangulation<2>::isClosed)
+        .def("isClosed", &Triangulation<2>::isClosed, rdoc::isClosed)
         .def("hasBoundaryFacets", &Triangulation<2>::hasBoundaryFacets)
-        .def("hasBoundaryEdges", &Triangulation<2>::hasBoundaryEdges)
+        .def("hasBoundaryEdges", &Triangulation<2>::hasBoundaryEdges,
+            rdoc::hasBoundaryEdges)
         .def("countBoundaryFacets", &Triangulation<2>::countBoundaryFacets)
-        .def("countBoundaryEdges", &Triangulation<2>::countBoundaryEdges)
+        .def("countBoundaryEdges", &Triangulation<2>::countBoundaryEdges,
+            rdoc::countBoundaryEdges)
         .def("countBoundaryFaces",
             static_cast<size_t (Triangulation<2>::*)(int) const>(
             &Triangulation<2>::countBoundaryFaces))
         .def("isOrientable", &Triangulation<2>::isOrientable)
         .def("isOriented", &Triangulation<2>::isOriented)
-        .def("isIdeal", &Triangulation<2>::isIdeal)
+        .def("isIdeal", &Triangulation<2>::isIdeal, rdoc::isIdeal)
         .def("isConnected", &Triangulation<2>::isConnected)
         .def("fundamentalGroup", &Triangulation<2>::fundamentalGroup,
             pybind11::return_value_policy::reference_internal)
-        .def("isMinimal", &Triangulation<2>::isMinimal)
+        .def("isMinimal", &Triangulation<2>::isMinimal, rdoc::isMinimal)
         .def("orient", &Triangulation<2>::orient)
         .def("reflect", &Triangulation<2>::reflect)
         .def("triangulateComponents", &Triangulation<2>::triangulateComponents)
@@ -242,7 +257,7 @@ void addTriangulation2(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_tight_encoding(c);
-    regina::python::packet_eq_operators(c);
+    regina::python::packet_eq_operators(c, rbase::__eq, rbase::__ne);
     regina::python::add_packet_data(c);
 
     regina::python::addListView<decltype(Triangulation<2>().vertices())>(m);
@@ -254,14 +269,18 @@ void addTriangulation2(pybind11::module_& m) {
 
     auto wrap = regina::python::add_packet_wrapper<Triangulation<2>>(
         m, "PacketOfTriangulation2");
-    regina::python::add_packet_constructor<>(wrap);
-    regina::python::add_packet_constructor<const Triangulation<2>&, bool>(wrap);
-    regina::python::add_packet_constructor<const std::string&>(wrap);
+    regina::python::add_packet_constructor<>(wrap, rdoc::__default);
+    regina::python::add_packet_constructor<const Triangulation<2>&, bool>(wrap,
+        rdoc::__init);
+    regina::python::add_packet_constructor<const std::string&>(wrap,
+        rdoc::__init_2);
 
     // We cannot use add_global_swap() here, since add_global_swap() cannot
     // resolve regina::swap to the templated triangulation swap function.
     m.def("swap", static_cast<void(&)(Triangulation<2>&, Triangulation<2>&)>(
-        regina::swap));
+        regina::swap), rdoc::global_swap);
+
+    RDOC_SCOPE_END
 
     addIsoSigClassic<2>(m, "IsoSigClassic2");
     addIsoSigEdgeDegrees<2>(m, "IsoSigEdgeDegrees2");
