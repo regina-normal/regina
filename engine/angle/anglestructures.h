@@ -174,7 +174,7 @@ class AngleStructures :
          * Note that this enumeration can be extremely slow for larger
          * triangulations, and so there could be good reasons to do this.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this constructor runs, so you can use it with Python-based
          * multithreading.
          *
@@ -311,7 +311,7 @@ class AngleStructures :
         /**
          * Returns the number of angle structures stored in this list.
          *
-         * \ifacespython This is also used to implement the Python special
+         * \python This is also used to implement the Python special
          * method __len__().
          *
          * \return the number of angle structures.

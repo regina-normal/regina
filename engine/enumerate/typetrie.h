@@ -84,7 +84,7 @@ namespace regina {
  * \a nTypes for normal surface enumeration is either 4 or 7 (depending upon
  * whether we are supporting almost normal surfaces).
  *
- * \ifacespython This is available only for the template parameters
+ * \python This is available only for the template parameters
  * \a nTypes = 4 and 7, under the names TypeTrie4 and TypeTrie7 respectively.
  *
  * \ingroup enumerate
@@ -217,7 +217,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * the life of this trie; that is, it is the same every time
          * insert() or dominates() is called.
          *
-         * \ifacespython Instead of the arguments \a entry and \a len,
+         * \python Instead of the arguments \a entry and \a len,
          * you should pass a single argument which is a python sequence
          * of length \a len.  This list should be a type vector, and
          * each list element should be between 0 and (\a nTypes - 1) inclusive.
@@ -235,7 +235,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * the life of this trie; that is, it is the same every time
          * insert() or dominates() is called.
          *
-         * \ifacespython Instead of the arguments \a entry and \a len,
+         * \python Instead of the arguments \a vec and \a len,
          * you should pass a single argument which is a python sequence
          * of length \a len.  This list should be a type vector, and
          * each list element should be between 0 and (\a nTypes - 1) inclusive.

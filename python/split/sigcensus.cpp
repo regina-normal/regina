@@ -45,7 +45,7 @@ void addSigCensus(pybind11::module_& m) {
     auto c = pybind11::class_<SigCensus>(m, "SigCensus", rdoc_scope)
         .def_static("formCensus", &SigCensus::formCensus<const std::function<
             void(const regina::Signature&, const SigCensus::IsoList&)>&>,
-            rdoc::formCensus)
+            pybind11::arg("order"), pybind11::arg("action"), rdoc::formCensus)
     ;
     regina::python::no_eq_static(c);
 

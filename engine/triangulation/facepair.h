@@ -222,7 +222,7 @@ class FacePair {
          *
          * \pre This face pair is not currently past-the-end.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \python This routine is available under the name inc().
          *
          * \return a copy of this object before the change took place.
          */
@@ -253,7 +253,7 @@ class FacePair {
          *
          * \pre This face pair is not currently before-the-start.
          *
-         * \ifacespython This routine is available under the name dec().
+         * \python This routine is available under the name dec().
          *
          * \return a copy of this object before the change took place.
          */

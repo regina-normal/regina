@@ -214,7 +214,7 @@ class Bitmask {
          * \pre All indices in the given list are at least zero and
          * strictly less than the length of this bitmask.
          *
-         * \ifacespython Instead of a pair of iterators, you should pass
+         * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
          * list of indices).
          *
@@ -596,7 +596,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
- * \ifacespython Python does not support templates, and so instead Regina's
+ * \python Python does not support templates, and so instead Regina's
  * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
  * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
  * Bitmask256.  Each of these will be an optimised bitmask class that
@@ -747,7 +747,7 @@ class Bitmask1 {
          * \pre All indices in the given list are between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
          *
-         * \ifacespython Instead of a pair of iterators, you should pass
+         * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
          * list of indices).
          *
@@ -1019,7 +1019,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
- * \ifacespython Python does not support templates, and so instead Regina's
+ * \python Python does not support templates, and so instead Regina's
  * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
  * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
  * Bitmask256.  Each of these will be an optimised bitmask class that
@@ -1189,7 +1189,7 @@ class Bitmask2 {
          * \pre All indices in the given list are between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
          *
-         * \ifacespython Instead of a pair of iterators, you should pass
+         * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
          * list of indices).
          *

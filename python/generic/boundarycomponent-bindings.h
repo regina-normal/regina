@@ -70,13 +70,13 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
                 // This throws, but the compiler wants us to return a value.
                 return (size_t)0;
             }
-        }, rbase::countFaces)
+        }, pybind11::arg("subdim"), rbase::countFaces)
         .def("facets", &BoundaryComponent<dim>::facets, rbase::facets)
         .def("faces", [](const BoundaryComponent<dim>& b, int subdim) {
             if (subdim != dim - 1)
                 invalidFaceDimension("faces", dim - 1, dim - 1);
             return b.template faces<dim - 1>();
-        }, rbase::faces)
+        }, pybind11::arg("subdim"), rbase::faces)
         .def("facet", &BoundaryComponent<dim>::facet,
             pybind11::return_value_policy::reference, rbase::facet)
         .def("face", [](const BoundaryComponent<dim>& b, int subdim,
@@ -84,7 +84,8 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
             if (subdim != dim - 1)
                 invalidFaceDimension("face", dim - 1, dim - 1);
             return b.template face<dim - 1>(index);
-        }, pybind11::return_value_policy::reference, rbase::face)
+        }, pybind11::return_value_policy::reference,
+            pybind11::arg("subdim"), pybind11::arg("index"), rbase::face)
         .def("component", &BoundaryComponent<dim>::component,
             pybind11::return_value_policy::reference, rbase::component)
         .def("triangulation", &BoundaryComponent<dim>::triangulation,

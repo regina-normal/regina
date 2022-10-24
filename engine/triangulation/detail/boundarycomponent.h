@@ -68,7 +68,7 @@ template <int> class TriangulationBase;
  * Their memory is managed by the Triangulation class, and their locations
  * in memory define them.  See BoundaryComponent<dim> for further details.
  *
- * \ifacespython This base class is not present, but the "end user"
+ * \python This base class is not present, but the "end user"
  * class BoundaryComponent<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -227,7 +227,7 @@ class BoundaryComponentBase :
         /**
          * Returns the number of <i>subdim</i>-faces in this boundary component.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `countFaces(subdim)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
@@ -386,7 +386,7 @@ class BoundaryComponentBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `faces(subdim)`.
          *
@@ -506,7 +506,7 @@ class BoundaryComponentBase :
          * index of the corresponding <i>subdim</i>-face in the
          * (<i>dim</i>-1)-manifold triangulation returned by build().
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `face(subdim, index)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.

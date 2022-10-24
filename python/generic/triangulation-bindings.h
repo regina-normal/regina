@@ -82,7 +82,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
                 ans[i] = t.newSimplex();
             return ans;
         }, pybind11::return_value_policy::reference_internal,
-            rbase::newSimplices)
+            pybind11::arg("k"), rbase::newSimplices)
         .def("removeSimplex", &Triangulation<dim>::removeSimplex,
             rbase::removeSimplex)
         .def("removeSimplexAt", &Triangulation<dim>::removeSimplexAt,
@@ -213,6 +213,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("findAllIsomorphisms", &Triangulation<dim>::template
                 findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<dim>)>&>,
+            pybind11::arg("other"), pybind11::arg("action"),
             rbase::findAllIsomorphisms)
         .def("findAllIsomorphisms", [](const Triangulation<dim>& t,
                 const Triangulation<dim>& other) {
@@ -222,10 +223,11 @@ void addTriangulation(pybind11::module_& m, const char* name) {
                 return false;
             });
             return isos;
-        }, rbase::findAllIsomorphisms)
+        }, pybind11::arg("other"), rbase::findAllIsomorphisms)
         .def("findAllSubcomplexesIn", &Triangulation<dim>::template
                 findAllSubcomplexesIn<
                 const std::function<bool(const Isomorphism<dim>)>&>,
+            pybind11::arg("other"), pybind11::arg("action"),
             rbase::findAllSubcomplexesIn)
         .def("findAllSubcomplexesIn", [](const Triangulation<dim>& t,
                 const Triangulation<dim>& other) {
@@ -235,7 +237,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
                 return false;
             });
             return isos;
-        }, rbase::findAllSubcomplexesIn)
+        }, pybind11::arg("other"), rbase::findAllSubcomplexesIn)
         .def("makeCanonical", &Triangulation<dim>::makeCanonical,
             rbase::makeCanonical)
         .def("insertTriangulation", &Triangulation<dim>::insertTriangulation,
@@ -264,7 +266,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<dim+1>>>& g) {
             return Triangulation<dim>::fromGluings(size, g.begin(), g.end());
-        }, rbase::fromGluings)
+        }, pybind11::arg("size"), pybind11::arg("gluings"), rbase::fromGluings)
         .def_readonly_static("dimension", &Triangulation<dim>::dimension)
     ;
     regina::for_constexpr<0, dim>([&c](auto k) {

@@ -51,7 +51,8 @@ void addFaceNumbering(pybind11::module_& m) {
                 [=](auto d) {
             return regina::faceOppositeEdge<d.value>(i, j);
         });
-    }, rdoc::faceOppositeEdge);
+    }, pybind11::arg("dim"), pybind11::arg("i"), pybind11::arg("j"),
+        rdoc::faceOppositeEdge);
 
     RDOC_SCOPE_END
 }

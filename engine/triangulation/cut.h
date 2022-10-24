@@ -152,7 +152,7 @@ class Cut : public ShortOutput<Cut> {
          * \exception InvalidArgument Some element of the given sequence
          * is neither 0 nor 1.
          *
-         * \ifacespython Instead of a pair of iterators, this routine
+         * \python Instead of a pair of iterators, this routine
          * takes a python list of integers.
          *
          * \param begin an iterator pointing to the beginning of the
@@ -419,8 +419,12 @@ class Cut : public ShortOutput<Cut> {
          * all of the facet permutations within each top-dimensional
          * simplex will be identity permutations.
          *
-         * \ifacespython Since Python does not support templates, the
+         * \python Since Python does not support templates, the
          * dimension \a dim should be passed as an argument to this function.
+         *
+         * \tparam dim indicates which type of isomorphisms to return.
+         * Specifically, this integer parameter indicates the dimension of
+         * triangulation on which these isomorphisms act.
          *
          * \return the two inclusion maps corresponding to this partition.
          */

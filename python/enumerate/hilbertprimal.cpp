@@ -54,8 +54,8 @@ void addHilbertPrimal(pybind11::module_& m) {
                 GILCallbackManager<false>::ScopedAcquire acquire(manager);
                 a(std::move(v));
             }, r.begin(), r.end(), c, p);
-        }, pybind11::arg(), pybind11::arg(), pybind11::arg(),
-            pybind11::arg("tracker") = nullptr,
+        }, pybind11::arg("action"), pybind11::arg("rays"),
+            pybind11::arg("constraints"), pybind11::arg("tracker") = nullptr,
             rdoc::enumerate)
         .def_static("enumerate", [](const std::vector<VectorInt>& r,
                 const regina::ValidityConstraints& c,
@@ -65,7 +65,7 @@ void addHilbertPrimal(pybind11::module_& m) {
                 ans.push_back(std::move(v));
             }, r.begin(), r.end(), c, p);
             return ans;
-        }, pybind11::arg(), pybind11::arg(),
+        }, pybind11::arg("rays"), pybind11::arg("constraints"),
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::enumerate)

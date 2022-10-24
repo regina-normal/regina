@@ -141,7 +141,7 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
  *
  * If \a n is non-positive then this function will return 0.
  *
- * \ifacespython In Python, this routine fixes the integer type
+ * \python In Python, this routine fixes the integer type
  * \a IntType to be \c long.
  *
  * \tparam IntType any integer type, such as \c int, \c long, and so on.
@@ -162,7 +162,7 @@ constexpr int bitsRequired(IntType n) {
  *
  * If \a n is non-positive then this function will return 1.
  *
- * \ifacespython In Python, this routine fixes the integer type
+ * \python In Python, this routine fixes the integer type
  * \a IntType to be \c long.
  *
  * \warning Even though the return value is the same type as the

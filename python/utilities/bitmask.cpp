@@ -68,7 +68,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
                 }
             }
             b.set(arg.begin(), arg.end(), value);
-        }, rdoc::set_2)
+        }, pybind11::arg("indices"), pybind11::arg("value"), rdoc::set_2)
         .def(pybind11::self &= pybind11::self, rdoc::__iand)
         .def(pybind11::self |= pybind11::self, rdoc::__ior)
         .def(pybind11::self ^= pybind11::self, rdoc::__ixor)
@@ -111,7 +111,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
                 }
             }
             b.set(arg.begin(), arg.end(), value);
-        }, rdoc::set_2)
+        }, pybind11::arg("indices"), pybind11::arg("value"), rdoc::set_2)
         .def("reset", pybind11::overload_cast<>(&Bitmask::reset), rdoc::reset)
         .def("reset", pybind11::overload_cast<size_t>(&Bitmask::reset),
             rdoc::reset_2)

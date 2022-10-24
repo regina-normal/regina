@@ -137,7 +137,7 @@ class HilbertPrimal {
          * \exception UnsolvedCase Normaliz was unable to compute the
          * Hilbert basis for one or more maximal admissible faces.
          *
-         * \ifacespython There are two versions of this function available
+         * \python There are two versions of this function available
          * in Python.  The first version is
          * `enumerate(action, rays, constraints, tracker)`, which
          * mirrors the C++ function; here \a action may be a pure Python

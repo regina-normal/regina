@@ -222,7 +222,7 @@ def process_comment(comment, preserveAmpersands):
         'see': 'See also',
         'extends': 'Extends',
         'pre': 'Precondition',
-        'ifacespython': 'Python',
+        'python': 'Python',
         'snappy': 'SnapPy',
         'i18n': 'Internationalisation'
     }.items():

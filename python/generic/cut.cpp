@@ -57,7 +57,7 @@ void addCut(pybind11::module_& m) {
         .def(pybind11::init<const Cut&>(), rdoc::__copy)
         .def(pybind11::init([](const std::vector<int> sides) {
             return new Cut(sides.begin(), sides.end());
-        }), rdoc::__init_3)
+        }), pybind11::arg("sides"), rdoc::__init_3)
         .def("side", &Cut::side, rdoc::side)
         .def("set", &Cut::set, rdoc::set)
         .def("size", overload_cast<>(&Cut::size, pybind11::const_), rdoc::size)
@@ -214,7 +214,7 @@ void addCut(pybind11::module_& m) {
                         "dimensions 2..8.");
 #endif /* REGINA_HIGHDIM */
             }
-        }, rdoc::inclusion)
+        }, pybind11::arg("dim"), rdoc::inclusion)
         .def("swap", &Cut::swap, rdoc::swap)
         .def("inc", &Cut::inc, rdoc::inc)
         .def("incFixedSizes", &Cut::incFixedSizes, rdoc::incFixedSizes)

@@ -62,7 +62,7 @@ void addAttachment(pybind11::module_& m) {
             }
 
             return new Attachment(in, inlen, Attachment::DEEP_COPY, filename);
-        }), rdoc::__init_2)
+        }), pybind11::arg("data"), pybind11::arg("filename"), rdoc::__init_2)
         .def(pybind11::init<const Attachment&>(), rdoc::__copy)
         .def("swap", &Attachment::swap, rdoc::swap)
         .def("isNull", &Attachment::isNull, rdoc::isNull)
@@ -88,7 +88,7 @@ void addAttachment(pybind11::module_& m) {
             }
 
             a.reset(in, inlen, Attachment::DEEP_COPY, filename);
-        }, rdoc::reset_2)
+        }, pybind11::arg("data"), pybind11::arg("filename"), rdoc::reset_2)
         .def("save", &Attachment::save, rdoc::save)
         .def_readonly_static("typeID", &Attachment::typeID)
     ;

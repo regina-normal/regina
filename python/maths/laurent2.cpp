@@ -54,7 +54,7 @@ void addLaurent2(pybind11::module_& m) {
         .def(pybind11::init([](const std::vector<
                 std::tuple<long, long, regina::Integer>>& coeffs) {
             return new Laurent2<regina::Integer>(coeffs.begin(), coeffs.end());
-        }), rdoc::__init_3)
+        }), pybind11::arg("coefficients"), rdoc::__init_3)
         .def("init", overload_cast<>(
             &Laurent2<regina::Integer>::init), rdoc::init)
         .def("init", overload_cast<long, long>(

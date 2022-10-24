@@ -82,7 +82,7 @@ void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
             delete[] col;
 
             return ans;
-        }, rdoc::addRows)
+        }, pybind11::arg("init"), rdoc::addRows)
         .def_static("constrain", &LPConstraint::template constrain<Integer>,
             rdoc::constrain)
         .def_static("verify", overload_cast<const regina::NormalSurface&>(

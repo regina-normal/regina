@@ -277,7 +277,7 @@ class ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \python This routine is available under the name inc().
          *
          * \return a copy of this object before the change took place.
          */
@@ -314,7 +314,7 @@ class ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name dec().
+         * \python This routine is available under the name dec().
          *
          * \return a copy of this object before the change took place.
          */
@@ -899,7 +899,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \apinotfinal
          *
-         * \ifacespython This function is available in Python, and the
+         * \python This function is available in Python, and the
          * \a action argument may be a pure Python function.  However, its
          * form is more restricted: the argument \a args is removed, so you
          * simply call it as generateMinimalLinks(action).  Moreover,

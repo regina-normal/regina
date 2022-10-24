@@ -351,7 +351,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * \pre The given facet is a real simplex
          * facet (not boundary, before-the-start or past-the-end).
          *
-         * \ifacespython For Python users, permIndex() is a read-only function
+         * \python For Python users, permIndex() is a read-only function
          * that returns by value.  To edit this index, use the Python-only
          * routine setPermIndex() instead.
          *
@@ -376,7 +376,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * may be the special value -1 indicating that the permutation
          * has not yet been chosen.
          *
-         * \ifacespython For Python users, permIndex() is a read-only function
+         * \python For Python users, permIndex() is a read-only function
          * that returns by value.  To edit this index, use the Python-only
          * routine setPermIndex() instead.
          *

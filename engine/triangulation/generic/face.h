@@ -101,7 +101,7 @@ namespace regina {
  * responsible for their memory management; this is all taken care of by
  * the Triangulation to which they belong.
  *
- * \ifacespython Python does not support templates.  Instead
+ * \python Python does not support templates.  Instead
  * this class can be used by appending dimensions \a dim and \a subdim as
  * suffices (e.g., Face2_1 and Face3_0 for the two examples above).
  *
@@ -145,7 +145,7 @@ class Face : public detail::FaceBase<dim, subdim> {
  * This is the preferred way to refer to a vertex of a triangulation
  * (as opposed to the more clumsy notation Face<dim, 0>).
  *
- * \ifacespython Python does not support templates.  Instead this alias can
+ * \python Python does not support templates.  Instead this alias can
  * be used by appending the dimension \a dim as a suffix (e.g., \c Vertex8).
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -162,7 +162,7 @@ using Vertex = Face<dim, 0>;
  * This is the preferred way to refer to an edge of a triangulation
  * (as opposed to the more clumsy notation Face<dim, 1>).
  *
- * \ifacespython Python does not support templates.  Instead this alias can
+ * \python Python does not support templates.  Instead this alias can
  * be used by appending the dimension \a dim as a suffix (e.g., \c Edge5).
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -181,7 +181,7 @@ using Edge = Face<dim, 1>;
  * This is the preferred way to refer to a 2-face of a triangulation
  * (as opposed to the more clumsy notation Face<dim, 2>).
  *
- * \ifacespython Python does not support templates.  Instead this alias can
+ * \python Python does not support templates.  Instead this alias can
  * be used by appending the dimension \a dim as a suffix (e.g., \c Triangle4).
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -200,7 +200,7 @@ using Triangle = Face<dim, 2>;
  * This is the preferred way to refer to a 3-face of a triangulation
  * (as opposed to the more clumsy notation Face<dim, 3>).
  *
- * \ifacespython Python does not support templates.  Instead this alias can
+ * \python Python does not support templates.  Instead this alias can
  * be used by appending the dimension \a dim as a suffix
  * (e.g., \c Tetrahedron7).
  *
@@ -220,7 +220,7 @@ using Tetrahedron = Face<dim, 3>;
  * This is the preferred way to refer to a 4-face of a triangulation
  * (as opposed to the more clumsy notation Face<dim, 4>).
  *
- * \ifacespython Python does not support templates.  Instead this alias can
+ * \python Python does not support templates.  Instead this alias can
  * be used by appending the dimension \a dim as a suffix (e.g.,
  * \c Pentachoron9).
  *

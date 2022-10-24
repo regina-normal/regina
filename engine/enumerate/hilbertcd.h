@@ -120,7 +120,7 @@ class HilbertCD {
          * constraints.  Consider using the much faster HilbertPrimal or
          * HilbertDual instead.
          *
-         * \ifacespython There are two versions of this function available
+         * \python There are two versions of this function available
          * in Python.  The first version is the same as the C++ function;
          * here you must pass \a action, which may be a pure Python function.
          * The second form does not have an \a action argument; instead you

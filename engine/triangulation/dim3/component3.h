@@ -93,7 +93,7 @@ class Component<3> : public detail::ComponentBase<3> {
          * (the reason relates to the fact that tetrahedra are built manually,
          * whereas lower-dimensional faces are deduced properties).
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `countFaces(subdim)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
@@ -131,7 +131,7 @@ class Component<3> : public detail::ComponentBase<3> {
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `faces(subdim)`.
          *
@@ -149,7 +149,7 @@ class Component<3> : public detail::ComponentBase<3> {
          * Note that the index of a face in the component need
          * not be the index of the same face in the overall triangulation.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `face(subdim, index)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.

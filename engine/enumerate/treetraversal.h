@@ -153,7 +153,7 @@ class ProgressTracker;
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; moreover, it only serves
+ * \python This is a heavily templated class; moreover, it only serves
  * as a base class, and you will most likely not need to access this class
  * directly.  Instead see the subclasses TreeEnumeration, TautEnumeration
  * and TreeSingleSoln, each of which offers a more useful interface for
@@ -632,7 +632,7 @@ class TreeTraversal : public ShortOutput<
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
  * TreeEnumeration_<i>LPConstraint</i>_<i>BanConstraint</i>, where the suffixes
  * \a LPConstraint and \a BanConstraint are abbreviated versions of the
@@ -800,7 +800,7 @@ class TreeEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * \ifacespython This function is available, and \a action may be
+         * \python This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial TreeEnumeration object
          * (and therefore the additional \a args list is omitted here).
@@ -855,7 +855,7 @@ class TreeEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
@@ -908,7 +908,7 @@ class TreeEnumeration :
          * normal surface.  This is always the case any time after next()
          * returns \c true, or any time that run() calls its callback function.
          *
-         * \ifacespython This function is available and can be used directly,
+         * \python This function is available and can be used directly,
          * but you should not use it as a callback with run().  Currently this
          * causes a crash in Python, most likely coming from some confusion
          * in passing a C++ function as a C++ callback via a Python wrapper.
@@ -981,7 +981,7 @@ class TreeEnumeration :
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; however, the only
+ * \python This is a heavily templated class; however, the only
  * \a LPConstraint and \a BanConstraint options currently offered for
  * angle structures are the default LPConstraintNone and BanNone.
  * Therefore Python offers just one instance of this class (with all template
@@ -1119,7 +1119,7 @@ class TautEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * \ifacespython This function is available, and \a action may be
+         * \python This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial TautEnumeration object
          * (and therefore the additional \a args list is omitted here).
@@ -1174,7 +1174,7 @@ class TautEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
@@ -1228,7 +1228,7 @@ class TautEnumeration :
          * This is always the case any time after next() returns \c true,
          * or any time that run() calls its callback function.
          *
-         * \ifacespython This function is available and can be used directly,
+         * \python This function is available and can be used directly,
          * but you should not use it as a callback with run().  Currently this
          * causes a crash in Python, most likely coming from some confusion
          * in passing a C++ function as a C++ callback via a Python wrapper.
@@ -1346,7 +1346,7 @@ class TautEnumeration :
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
  * TreeSingleSoln_<i>LPConstraint</i>_<i>BanConstraint</i>, where the suffixes
  * \a LPConstraint and \a BanConstraint are abbreviated versions of the

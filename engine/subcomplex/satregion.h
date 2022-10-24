@@ -699,7 +699,7 @@ class SatRegion : public Output<SatRegion> {
          * automatically by this file.  If you wish to use this function
          * in your own code, you will need to include satregion-impl.h.
          *
-         * \ifacespython This function is available, and \a action may be a
+         * \python This function is available, and \a action may be a
          * pure Python function.  However, \a action must take only one
          * argument: the newly constructed SatRegion (i.e., the first argument
          * in the description above).  The SatBlock::TetList& argument will

@@ -202,7 +202,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \pre The iterator type \a iterator, when dereferenced, can be
          * assigned to a native C++ \c int.
          *
-         * \ifacespython Instead of the iterators \a begin and \a end,
+         * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of integers.
          *
          * \param begin the beginning of the list of coordinates to constraint
@@ -250,7 +250,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \pre The iterator type \a iterator, when dereferenced, can be
          * assigned to a native C++ \c int.
          *
-         * \ifacespython Instead of the iterators \a begin and \a end,
+         * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of integers.
          *
          * \param begin the beginning of the list of coordinates to constraint
@@ -309,7 +309,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * \pre A bitmask of type \a BitmaskType is large enough to store
          * \a len bits.
          *
-         * \ifacespython This routine uses the bitmask type regina::Bitmask.
+         * \python This routine uses the bitmask type regina::Bitmask.
          *
          * \tparam BitmaskType the bitmask type used to encode each constraint;
          * this must be one of Regina's own bitmask types, such as Bitmask,
@@ -349,7 +349,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * number of blocks.  Each bitmask that is returned will be created
          * with this length.
          *
-         * \ifacespython This routine uses the bitmask type regina::Bitmask.
+         * \python This routine uses the bitmask type regina::Bitmask.
          *
          * \tparam BitmaskType the bitmask type used to encode each constraint;
          * this must be one of Regina's own bitmask types, such as Bitmask,

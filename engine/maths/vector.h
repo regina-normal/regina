@@ -93,7 +93,7 @@ class Rational;
  * \pre An element \c t of type T can be written to an output stream
  * \c out using the standard expression `out << t`.
  *
- * \ifacespython Only the specific types Vector<Integer> and
+ * \python Only the specific types Vector<Integer> and
  * Vector<LargeInteger> are available, under the names VectorInt and
  * VectorLarge respectively.
  *
@@ -181,7 +181,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * \a iterator should be a random access iterator type for which
          * this operation is constant time.
          *
-         * \ifacespython Instead of a pair of iterators, this routine
+         * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
          *
          * \param begin the beginning of the sequence of elements.
@@ -238,7 +238,7 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Returns the number of elements in the vector.
          *
-         * \ifacespython This is also used to implement the Python special
+         * \python This is also used to implement the Python special
          * method __len__().
          *
          * \return the vector size.
@@ -794,7 +794,7 @@ std::ostream& operator << (std::ostream& out, const Vector<T>& vector) {
  * This is the underlying vector class that Regina uses to store
  * angle structures.
  *
- * \ifacespython This instance of the Vector template class is made
+ * \python This instance of the Vector template class is made
  * available to Python.
  *
  * \ingroup maths
@@ -807,7 +807,7 @@ using VectorInt = Vector<Integer>;
  * This is the underlying vector class that Regina uses to store
  * normal surfaces and hypersurfaces.
  *
- * \ifacespython This instance of the Vector template class is made
+ * \python This instance of the Vector template class is made
  * available to Python.
  *
  * \ingroup maths

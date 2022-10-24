@@ -176,7 +176,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \pre Rationals can be assigned values from dereferenced iterators
          * of type \a iterator.
          *
-         * \ifacespython Instead of a pair of iterators, this routine
+         * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
          *
          * \param field the order of the underlying cyclotomic field;
@@ -250,7 +250,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * been initialised (for instance, it was created using the
          * default constructor).
          *
-         * \ifacespython This is also used to implement the Python special
+         * \python This is also used to implement the Python special
          * method __len__().
          *
          * \return the degree of the polynomial that defines the
@@ -570,7 +570,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * \pre The given integer \a n must be strictly positive.
          *
-         * \ifacespython Since Python exposes the class Polynomial<Rational>
+         * \python Since Python exposes the class Polynomial<Rational>
          * but not Polynomial<Integer>, this routine will convert the result
          * to a Polynomial<Rational> (and will therefore return by value,
          * not by reference).

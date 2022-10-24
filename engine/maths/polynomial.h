@@ -70,7 +70,7 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython In Python, the class Polynomial refers to the specific
+ * \python In Python, the class Polynomial refers to the specific
  * template class Polynomial<Rational>.
  *
  * \ingroup maths
@@ -157,7 +157,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
          *
-         * \ifacespython Instead of a pair of iterators, this routine
+         * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
          *
          * \param begin the beginning of the sequence of coefficients.
@@ -216,7 +216,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
          *
-         * \ifacespython Instead of a pair of iterators, this routine
+         * \python Instead of a pair of iterators, this routine
          * takes a python list of coefficients.
          *
          * \param begin the beginning of the sequence of coefficients.
@@ -258,7 +258,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * If this is the zero polynomial, then the leading coefficient
          * will be zero.
          *
-         * \ifacespython This routine returns by value, not by reference,
+         * \python This routine returns by value, not by reference,
          * since constness is important here and Python cannot enforce
          * it otherwise.
          *
@@ -269,7 +269,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         /**
          * Returns the given coefficient of this polynomial.
          *
-         * \ifacespython Python users can also use this operator to _set_
+         * \python Python users can also use this operator to _set_
          * cofficients; that is, you can write `poly[exp] = value`.
          * However, when _getting_ a coefficient this operator will return
          * by value (to enforce constness), which means for example you
@@ -296,7 +296,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * operation is expensive, however, since it will require
          * deallocating and reallocating the full list of coefficients.
          *
-         * \ifacespython This set() routine is available, but you can
+         * \python This set() routine is available, but you can
          * also set coefficients directly using syntax of the form
          * `p[exp] = value`.
          *

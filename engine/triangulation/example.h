@@ -66,7 +66,7 @@ namespace regina {
  * headers (e.g., triangulation/example2.h for \a dim = 2, or
  * triangulation/example3.h for \a dim = 3).
  *
- * \ifacespython Python does not support templates.  Instead this class
+ * \python Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g., Example2
  * and Example3 for dimensions 2 and 3).
  *

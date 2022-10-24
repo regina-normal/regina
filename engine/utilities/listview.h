@@ -91,7 +91,7 @@ namespace regina {
  * ListView objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ifacespython The ListView classes are deliberately difficult to access: they
+ * \python The ListView classes are deliberately difficult to access: they
  * live within their own private Python namespaces, and are all give the same
  * class name (\a ListView).  You would typically only interact with a ListView
  * when it is returned from a function (e.g., `Link.crossings()`),
@@ -194,7 +194,7 @@ class ListView {
         /**
          * Returns the number of elements in this list.
          *
-         * \ifacespython This is also used to implement the Python special
+         * \python This is also used to implement the Python special
          * method __len__().
          *
          * \return the number of elements.
@@ -298,7 +298,7 @@ class ListView {
  * See the generic ListView class documentation for full details on how
  * this class works and how to use it.
  *
- * \ifacespython As with the generic ListView template classes, Python will
+ * \python As with the generic ListView template classes, Python will
  * automatically translate any C++ ListView object into an internal lightweight
  * class that supports both iteration and indexing at the Python level.
  *
@@ -414,7 +414,7 @@ class ListView<Element*> {
         /**
          * Returns the number of elements in this list.
          *
-         * \ifacespython This is also used to implement the Python special
+         * \python This is also used to implement the Python special
          * method __len__().
          *
          * \return the number of elements.
@@ -515,7 +515,7 @@ class ListView<Element*> {
  * See the generic ListView class documentation for full details on how
  * this class works and how to use it.
  *
- * \ifacespython As with the generic ListView template classes, Python will
+ * \python As with the generic ListView template classes, Python will
  * automatically translate any C++ ListView object into an internal lightweight
  * class that supports both iteration and indexing at the Python level.
  *
@@ -612,7 +612,7 @@ class ListView<Element[n]> {
         /**
          * Returns the number of elements in this list.
          *
-         * \ifacespython This is also used to implement the Python special
+         * \python This is also used to implement the Python special
          * method __len__().
          *
          * \return the number of elements.

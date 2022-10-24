@@ -113,7 +113,7 @@ class Matrix2;
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ifacespython The member arrays \a tet and \a roles are accessed for
+ * \python The member arrays \a tet and \a roles are accessed for
  * reading through functions \a tet() and \a roles() respectively.  For
  * instance, the first triangle tetrahedron for the saturated annulus \a a can
  * be accessed as `a.tet(0)`.  These same member arrays are

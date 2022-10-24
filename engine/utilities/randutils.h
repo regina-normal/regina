@@ -87,7 +87,7 @@ namespace regina {
  * create a second RandomEngine object before the previous one is destroyed,
  * the resulting behaviour is undefined.
  *
- * \ifacespython Python users only have access to the static member
+ * \python Python users only have access to the static member
  * functions in this class (which still supports basic random number
  * generation as well as reseeding).
  *
@@ -134,7 +134,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * consider creating a single RandomEngine object and accessing
          * engine() directly using the standard C++ randomness functions.
          *
-         * \ifacespython The integer type \a Int will be treated as \c long.
+         * \python The integer type \a Int will be treated as \c long.
          *
          * \tparam Int a native integer type (e.g., \c int, \c long,
          * \c size_t, `long long`, etc.); this may be either

@@ -334,7 +334,7 @@ class NormalSurfaces :
          * was unable to complete its portion of the task, which in theory
          * should never happen at all.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this constructor runs, so you can use it with Python-based
          * multithreading.
          *
@@ -566,7 +566,7 @@ class NormalSurfaces :
         /**
          * Returns the number of surfaces stored in this list.
          *
-         * \ifacespython This is also used to implement the Python special
+         * \python This is also used to implement the Python special
          * method __len__().
          *
          * \return the number of surfaces.
@@ -748,7 +748,7 @@ class NormalSurfaces :
          *
          * The implementation of this routine uses std::stable_sort.
          *
-         * \ifacespython This is available in Python, and \a comp may be
+         * \python This is available in Python, and \a comp may be
          * a pure Python function.
          *
          * \param comp a binary function (or other callable object) that

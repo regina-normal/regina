@@ -63,7 +63,7 @@ namespace regina {
  * For further information, see the documentation for the specialisations
  * GluingPermSearcher<2>, GluingPermSearcher<3> and GluingPermSearcher<4>.
  *
- * \ifacespython Python does not support templates.  Instead this class can
+ * \python Python does not support templates.  Instead this class can
  * be used by appending the dimension as a suffix (e.g., GluingPermSearcher2
  * and GluingPermSearcher3 for dimensions 2 and 3).
  *

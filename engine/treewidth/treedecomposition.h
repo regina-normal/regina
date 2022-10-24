@@ -725,7 +725,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for \ref stddim "standard dimensions".
          *
-         * \ifacespython This constructor is only available in Python when
+         * \python This constructor is only available in Python when
          * \a dim is one of Regina's \ref stddim "standard dimensions".
          *
          * \param triangulation the triangulation whose facet pairing
@@ -751,7 +751,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for \ref stddim "standard dimensions".
          *
-         * \ifacespython This constructor is only available in Python when
+         * \python This constructor is only available in Python when
          * \a dim is one of Regina's \ref stddim "standard dimensions".
          *
          * \param pairing the facet pairing graph that we are working with.
@@ -792,7 +792,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \exception InvalidArgument The adjacency matrix does not have
          * the same number of rows as columns.
          *
-         * \ifacespython The argument \a graph must be of type \c MatrixBool
+         * \python The argument \a graph must be of type \c MatrixBool
          * (which is the Python type corresponding to the C++ class
          * Matrix<bool>).
          *
@@ -828,7 +828,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \exception InvalidArgument The adjacency matrix does not have
          * the same number of rows as columns.
          *
-         * \ifacespython The adjacency matrix should be given as a list of
+         * \python The adjacency matrix should be given as a list of
          * lists.
          *
          * \param graph the adjacency matrix of the graph.
@@ -1088,7 +1088,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * there is no need to explicitly call compress() before calling
          * makeNice().
          *
-         * \ifacespython If a \e heightHint argument is given, it should
+         * \python If a \e heightHint argument is given, it should
          * be passed as a Python list of integers.
          *
          * \param heightHint an optional array where, for each node \a i,
@@ -1202,7 +1202,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for common types.
          *
-         * \ifacespython The \a costSame and \a costReverse arrays,
+         * \python The \a costSame and \a costReverse arrays,
          * as well as \a costRoot if it is given, should be passed as
          * Python lists of real numbers.
          *

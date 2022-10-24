@@ -172,7 +172,7 @@ class Attachment : public Packet {
          * which case the new packet will have no attachment stored
          * (so isNull() will return \c true).
          *
-         * \ifacespython The argument \a data should be a Python \c bytes
+         * \python The argument \a data should be a Python \c bytes
          * object.  The \a size and \a alloc arguments are not present,
          * since a \c bytes object knows its size, and in Python the
          * only available ownership policy is to make a deep copy.
@@ -261,7 +261,7 @@ class Attachment : public Packet {
          * (i.e., if isNull() returns \c true), then this routine will return
          * \c null.
          *
-         * \ifacespython This routine returns a Python \c bytes object.
+         * \python This routine returns a Python \c bytes object.
          * Unlike the C++ version of this routine, the Python version returns
          * a deep copy of the raw data (so this routine becomes slower, but
          * the resulting byte sequence can be freely modified).
@@ -338,7 +338,7 @@ class Attachment : public Packet {
          * \warning This cannot be used for self-assignment.  If the argument
          * \a data is in fact data() then this routine will most likely crash.
          *
-         * \ifacespython The argument \a data should be a Python \c bytes
+         * \python The argument \a data should be a Python \c bytes
          * object.  The \a size and \a alloc arguments are not present,
          * since a \c bytes object knows its size, and in Python the
          * only available ownership policy is to make a deep copy.

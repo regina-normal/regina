@@ -104,12 +104,15 @@ void addTriangle3(pybind11::module_& m) {
             pybind11::return_value_policy::reference, rbase::component)
         .def("boundaryComponent", &Triangle<3>::boundaryComponent,
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
-        .def("face", &regina::python::face<Triangle<3>, 2, int>, rbase::face)
+        .def("face", &regina::python::face<Triangle<3>, 2, int>,
+            pybind11::arg("lowerdim"), pybind11::arg("face"),
+            rbase::face)
         .def("vertex", &Triangle<3>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("edge", &Triangle<3>::edge,
             pybind11::return_value_policy::reference, rbase::edge)
         .def("faceMapping", &regina::python::faceMapping<Triangle<3>, 2, 4>,
+            pybind11::arg("lowerdim"), pybind11::arg("face"),
             rbase::faceMapping)
         .def("vertexMapping", &Triangle<3>::vertexMapping, rbase::vertexMapping)
         .def("edgeMapping", &Triangle<3>::edgeMapping, rbase::edgeMapping)

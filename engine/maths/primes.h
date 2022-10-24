@@ -177,7 +177,7 @@ class Primes {
          *
          * \todo \opt Add a version that does not return the factors by value.
          *
-         * \ifacespython In addition to this routine, the routine
+         * \python In addition to this routine, the routine
          * primeDecompInt() is also available.  The routine
          * primeDecompInt() behaves identically to this routine except
          * that the (i) return values are of ordinary integer type, not
@@ -230,7 +230,7 @@ class Primes {
          *
          * \todo \opt Add a version that does not return the factors by value.
          *
-         * \ifacespython In addition to this routine, the routine
+         * \python In addition to this routine, the routine
          * primePowerDecompInt() is also available.  The routine
          * primePowerDecompInt() behaves identically to this routine except
          * that the (i) return values are of ordinary integer type, not

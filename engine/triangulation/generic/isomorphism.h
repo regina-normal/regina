@@ -98,7 +98,7 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython Python does not support templates.  Instead
+ * \python Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Isomorphism2 and Isomorphism3 for dimensions 2 and 3).
  *
@@ -133,7 +133,7 @@ class Isomorphism :
          * The images of the simplices and their vertices must be
          * explicitly set using simpImage() and facetPerm().
          *
-         * \ifacespython For Python users, the images of the simplices and
+         * \python For Python users, the images of the simplices and
          * their vertices must be set using setSimpImage() and setFacetPerm()
          * instead.
          *
@@ -206,7 +206,7 @@ class Isomorphism :
          * less than or equal to the number of simplices in the
          * destination triangulation.
          *
-         * \ifacespython This is also used to implement the Python special
+         * \python This is also used to implement the Python special
          * method __len__().
          *
          * \return the number of simplices in the source triangulation.
@@ -570,7 +570,7 @@ class Isomorphism :
          * \pre The class Perm<dim+1> supports the preincrement operator;
          * currently this means that \a dim must be at most 6.
          *
-         * \ifacespython This routine is named inc() since Python does
+         * \python This routine is named inc() since Python does
          * not support the increment operator.  Unlike other Regina
          * classes, here inc() wraps the preincrement operator (not the
          * postincrement operator), since the postincrement operator is

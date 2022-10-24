@@ -111,7 +111,7 @@ template <class T, bool supportsUtf8 = false> struct Output;
  * objects of type \a T (which derives from Output<T>), but they cannot
  * construct objects of the parent class Output<T> itself.
  *
- * \ifacespython Not present, but the output routines str(), utf8() and
+ * \python Not present, but the output routines str(), utf8() and
  * detail() will be provided directly through the various subclasses.
  *
  * \ingroup engine
@@ -128,7 +128,7 @@ struct Output {
      * basis for the Python `__str__()` and `__repr__()`
      * functions.
      *
-     * \ifacespython The Python "stringification" function `__str__()`
+     * \python The Python "stringification" function `__str__()`
      * will use precisely this function, and for most classes the Python
      * `__repr__()` function will incorporate this into its output.
      *
@@ -210,7 +210,7 @@ std::ostream& operator << (std::ostream& out,
  * This ShortOutput base class will still provide a utf8() function, but it
  * will return the same output as short().
  *
- * \ifacespython Not present, but the output routines str(), utf8() and
+ * \python Not present, but the output routines str(), utf8() and
  * detail() will be provided directly through the various subclasses.
  *
  * \ingroup engine

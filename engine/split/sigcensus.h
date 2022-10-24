@@ -127,7 +127,7 @@ class SigCensus {
          *
          * \todo \feature Add support for symbols of differing case.
          *
-         * \ifacespython This function is available, and \a action may be a
+         * \python This function is available, and \a action may be a
          * pure Python function.  However, \a action cannot take any additional
          * arguments beyond the signature and its automorphisms (and
          * therefore the additional \a args list is omitted here).

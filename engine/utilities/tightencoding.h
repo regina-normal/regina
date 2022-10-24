@@ -160,7 +160,7 @@ class IntegerBase;
  * derived from the class \a T.  In other words, end users cannot
  * construct objects of the parent class TightEncodable<T>.
  *
- * \ifacespython Not present, but the routines tightEncoding() and
+ * \python Not present, but the routines tightEncoding() and
  * tightDecoding() will be provided directly through the various subclasses.
  *
  * \ingroup utilities
@@ -420,7 +420,7 @@ std::string tightEncoding(bool value);
  * _is_ a valid integer encoding but the integer itself is outside the
  * allowed range for the \a Int type.
  *
- * \ifacespython Since Python does not support templates, the interface
+ * \python Since Python does not support templates, the interface
  * for this routine is a little different.  The global routine
  * regina::tightDecoding() will return a Python integer; since these are
  * arbitrary precision, the decoding will never encounter an out-of-range

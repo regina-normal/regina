@@ -95,7 +95,7 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython Python does not support templates.  Instead
+ * \python Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., FacetPairing2 and FacetPairing3 for dimensions 2 and 3).
  *

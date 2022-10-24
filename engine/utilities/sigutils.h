@@ -125,7 +125,7 @@ struct Base64SigEncoding {
      * \pre The given integer \a val is non-negative, and fits within
      * 6<i>nChars</i> bits.
      *
-     * \ifacespython The template argument \a IntType is taken to be a
+     * \python The template argument \a IntType is taken to be a
      * native C++ \c long.
      *
      * \tparam IntType a native C++ integer type, such as \c uint8_t, or
@@ -155,7 +155,7 @@ struct Base64SigEncoding {
      *
      * \pre The given string contains at least \a nChars characters.
      *
-     * \ifacespython The template argument \a IntType is taken to be a
+     * \python The template argument \a IntType is taken to be a
      * native C++ \c long.
      *
      * \tparam IntType a native C++ integer type, such as \c uint8_t,

@@ -161,7 +161,7 @@ enum PermCodeType {
  * this template is generic and most operations require more time (in
  * particular, there are no harded-coded lookup tables).
  *
- * \ifacespython Python does not support templates.  For each
+ * \python Python does not support templates.  For each
  * \a n = 2,...,16, this class is available in Python under the
  * corresponding name Perm2, Perm3, ..., Perm16.
  *

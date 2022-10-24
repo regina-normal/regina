@@ -83,7 +83,8 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
         .def(pybind11::init<const Triangulation<3>&, NormalEncoding,
             BanArgs...>(), rdoc::__init)
         .def("solutions", &Tree::solutions, rdoc::solutions)
-        .def("run", &Tree::template run<Action>, rdoc::run)
+        .def("run", &Tree::template run<Action>,
+            pybind11::arg("action"), rdoc::run)
         .def("next", &Tree::next,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
@@ -109,7 +110,8 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
         .def(pybind11::init<const Triangulation<3>&, BanArgs...>(),
             rdoc::__init)
         .def("solutions", &Tree::solutions, rdoc::solutions)
-        .def("run", &Tree::template run<Action>, rdoc::run)
+        .def("run", &Tree::template run<Action>,
+            pybind11::arg("action"), rdoc::run)
         .def("next", &Tree::next,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),

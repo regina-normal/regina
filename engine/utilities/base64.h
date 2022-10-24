@@ -142,7 +142,7 @@ inline constexpr char base64Spare[] = "_-.";
  * The routine base64Length() can be used to precalculate precisely how
  * many output characters will be required.
  *
- * \ifacespython These base64 encoding routines are made available to Python
+ * \python These base64 encoding routines are made available to Python
  * in the form `base64Encode(input_bytes)`, where \a input_bytes is a
  * a Python \c bytes object, and the return value is a Python string.
  * You do not need to supply any input or output buffer lengths.
@@ -172,7 +172,7 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
  * If the output array is too large (in particular, the expected size
  * will overflow a \c size_t), the \a out pointer will be set to \c null.
  *
- * \ifacespython These base64 encoding routines are made available to Python
+ * \python These base64 encoding routines are made available to Python
  * in the form `base64Encode(input_bytes)`, where \a input_bytes is a
  * a Python \c bytes object, and the return value is a Python string.
  * You do not need to supply any input or output buffer lengths.
@@ -209,7 +209,7 @@ size_t base64Encode(const char* in, size_t inlen, char** out);
  * The total number of output bytes is important to know, since the output
  * array is not terminated in any special way.
  *
- * \ifacespython These base64 decoding routines are made available to Python
+ * \python These base64 decoding routines are made available to Python
  * in the form `base64Decode(input_string)`, where \a input_string is a
  * base64 string, and the return value is a Python \c bytes object.
  * You do not need to supply any input or output buffer lengths.
@@ -254,7 +254,7 @@ bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
  * null pointer may be passed in the \a outlen argument.  Note however
  * that the output array is not terminated in any special way.
  *
- * \ifacespython These base64 decoding routines are made available to Python
+ * \python These base64 decoding routines are made available to Python
  * in the form `base64Decode(input_string)`, where \a input_string is a
  * base64 string, and the return value is a Python \c bytes object.
  * You do not need to supply any input or output buffer lengths.

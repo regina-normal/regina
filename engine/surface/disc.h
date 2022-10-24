@@ -701,7 +701,7 @@ void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
  * in a particular tetrahedron can be represented by a long integer.
  * \pre This class should only be used with \a embedded normal surfaces.
  *
- * \ifacespython The only instance of this class that is available
+ * \python The only instance of this class that is available
  * through python is DiscSetSurface (i.e., the "vanilla" case where
  * \a TetData is the type DiscSetTet).
  *
@@ -1168,7 +1168,7 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  * \pre The number of normal discs of a particular type
  * in a particular tetrahedron can be represented by a long integer.
  *
- * \ifacespython The only instance of this class that is available
+ * \python The only instance of this class that is available
  * through python is the iterator for DiscSetSurface (i.e., the "vanilla"
  * case where \a TetData is the type DiscSetTet).  Moreover, instead of the
  * C++ interface described here, in Python DiscSetSurface and this class

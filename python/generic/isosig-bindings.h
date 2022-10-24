@@ -100,16 +100,18 @@ void addIsoSigPrintable(pybind11::module_& m, const char* name) {
         .def_static("emptySig", &Encoding::emptySig, rdoc::emptySig)
         .def_static("encode", [](
                 size_t size,
-                const std::vector<uint8_t>& facetActions,
+                const std::vector<uint8_t>& facetAction,
                 const std::vector<size_t>& joinDest,
                 const std::vector<typename Perm<dim+1>::Index>& joinGluing) {
             if (joinDest.size() != joinGluing.size())
                 throw regina::InvalidArgument("The arguments "
                     "joinDest and joinGluing must be lists of the same size");
-            return Encoding::encode(size, facetActions.size(),
-                facetActions.data(), joinDest.size(), joinDest.data(),
+            return Encoding::encode(size, facetAction.size(),
+                facetAction.data(), joinDest.size(), joinDest.data(),
                 joinGluing.data());
-        }, rdoc::encode)
+        }, pybind11::arg("size"), pybind11::arg("facetAction"),
+            pybind11::arg("joinDest"), pybind11::arg("joinGluing"),
+            rdoc::encode)
         ;
     regina::python::no_eq_static(s);
 

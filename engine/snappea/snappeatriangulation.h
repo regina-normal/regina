@@ -1773,7 +1773,7 @@ class SnapPeaTriangulation :
          *
          * \apinotfinal
          *
-         * \ifacespython There are two versions of this function available
+         * \python There are two versions of this function available
          * in Python.  The first form is
          * `enumerateCovers(sheets, type, action)`, which mirrors the
          * C++ function: it takes \a action which may be a pure Python function,

@@ -84,7 +84,7 @@ class Container;
  * or one of the Triangulation<dim> classes (indicating that the file contains
  * isomorphism signatures for <i>dim</i>-dimensional triangulations).
  *
- * \ifacespython Since Python does not support templates, the Python
+ * \python Since Python does not support templates, the Python
  * version of this function takes an extra first parameter \a dimension.
  * This should be the dimension of the underlying triangulation type, or 0 to
  * indicate that we are working with knot signatures.  Moreover, the Python

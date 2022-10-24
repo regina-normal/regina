@@ -50,7 +50,7 @@ namespace regina::detail {
  * Helper class that builds various <i>dim</i>-dimensional
  * triangulations from (<i>dim</i>-1)-dimensional triangulations.
  *
- * \ifacespython This base class is not present, but the "end user"
+ * \python This base class is not present, but the "end user"
  * class Example<dim> is.
  *
  * \tparam dim the dimension of the example triangulations to construct.
@@ -152,7 +152,7 @@ class ExampleFromLowDim<dim, false> {
  *
  * See the Example class notes for further information.
  *
- * \ifacespython This base class is not present, but the "end user"
+ * \python This base class is not present, but the "end user"
  * class Example<dim> is.
  *
  * \tparam dim the dimension of the example triangulations to construct.

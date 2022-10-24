@@ -103,7 +103,7 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def("setEulerChars", [](SurfaceFilterProperties& f,
                 const std::vector<regina::LargeInteger>& v) {
             f.setEulerChars(v.begin(), v.end());
-        }, rdoc::setEulerChars)
+        }, pybind11::arg("euler"), rdoc::setEulerChars)
         .def("setOrientability", &SurfaceFilterProperties::setOrientability,
             rdoc::setOrientability)
         .def("setCompactness", &SurfaceFilterProperties::setCompactness,

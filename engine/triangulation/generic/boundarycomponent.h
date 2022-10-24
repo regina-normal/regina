@@ -110,7 +110,7 @@ namespace regina {
  * responsible for their memory management; this is all taken care of by
  * the Triangulation to which they belong.
  *
- * \ifacespython Python does not support templates.  Instead
+ * \python Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., BoundaryComponent2 and BoundaryComponent3 for dimensions 2 and 3).
  *

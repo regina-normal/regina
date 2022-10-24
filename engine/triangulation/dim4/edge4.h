@@ -119,7 +119,7 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          *   compute with, you can call buildLinkInclusion() to retrieve
          *   this information as an isomorphism.
          *
-         * \ifacespython Since Python does not distinguish between const and
+         * \python Since Python does not distinguish between const and
          * non-const, this routine will return by value (thus making a
          * deep copy of the edge link).  You are free to modify the
          * triangulation that is returned.

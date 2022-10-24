@@ -286,7 +286,7 @@ class StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \python This routine is available under the name inc().
          *
          * \return a copy of this object before the change took place.
          */
@@ -321,7 +321,7 @@ class StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name dec().
+         * \python This routine is available under the name dec().
          *
          * \return a copy of this object before the change took place.
          */
@@ -1843,7 +1843,7 @@ class Link :
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, this
+         * in the argument \a threads.  Even in multithreaded mode, this
          * routine will not return until processing has finished (i.e., either
          * the diagram was simplified or the search was exhausted).
          *
@@ -1857,21 +1857,21 @@ class Link :
          * If a progress tracker was passed, it will be marked as finished
          * before the exception is thrown.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
          * \param height the maximum number of _additional_ crossings to
          * allow beyond the number of crossings originally present in this
          * diagram, or a negative number if this should not be bounded.
-         * \param nThreads the number of threads to use.  If this is
+         * \param threads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
          * \return \c true if and only if this diagram was successfully
          * simplified to fewer crossings.
          */
-        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
+        bool simplifyExhaustive(int height = 1, unsigned threads = 1,
             ProgressTrackerOpen* tracker = nullptr);
 
         /**
@@ -1949,7 +1949,7 @@ class Link :
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads in
-         * the argument \a nThreads.  Even in multithreaded mode, this routine
+         * the argument \a threads.  Even in multithreaded mode, this routine
          * will not return until processing has finished (i.e., either \a action
          * returned \c true, or the search was exhausted).  All calls to
          * \a action will be protected by a mutex (i.e., different threads will
@@ -1965,7 +1965,7 @@ class Link :
          *
          * \apinotfinal
          *
-         * \ifacespython This function is available in Python, and the
+         * \python This function is available in Python, and the
          * \a action argument may be a pure Python function.  However, its
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you simply call it as rewrite(height, threads, action).
@@ -1976,7 +1976,7 @@ class Link :
          * \param height the maximum number of _additional_ crossings to
          * allow beyond the number of crossings originally present in this
          * knot diagram, or a negative number if this should not be bounded.
-         * \param nThreads the number of threads to use.  If this is
+         * \param threads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
@@ -1989,7 +1989,7 @@ class Link :
          * completion.
          */
         template <typename Action, typename... Args>
-        bool rewrite(int height, unsigned nThreads,
+        bool rewrite(int height, unsigned threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
@@ -2191,7 +2191,7 @@ class Link :
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
@@ -2281,7 +2281,7 @@ class Link :
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
@@ -2365,7 +2365,7 @@ class Link :
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
@@ -2435,7 +2435,7 @@ class Link :
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
@@ -2474,7 +2474,7 @@ class Link :
          * crossings).  Note that, if you have such a link, then this function
          * (which is exponential time) would be intractably slow anyway.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
@@ -3572,7 +3572,7 @@ class Link :
          * \exception InvalidArgument A link could not be reconstructed from
          * the given data.
          *
-         * \ifacespython The signs should be passed as a single Python list of
+         * \python The signs should be passed as a single Python list of
          * integers (not an iterator pair).  Likewise, the components should be
          * passed as a Python list of lists of integers (not an iterator pair).
          * In the case of a knot (which has only one component), you are
@@ -3763,7 +3763,7 @@ class Link :
          * classical Gauss code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
-         * \ifacespython Instead of a pair of begin and past-the-end
+         * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
          *
          * \author Adam Gowty
@@ -3883,7 +3883,7 @@ class Link :
          * oriented Gauss code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
-         * \ifacespython Instead of a pair of begin and past-the-end
+         * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of strings.
          *
          * \param begin an iterator that points to the beginning of the
@@ -4014,7 +4014,7 @@ class Link :
          * encoding of a link in Jenkins' format.  As noted above, the
          * checks performed here are not exhaustive.
          *
-         * \ifacespython Instead of a pair of begin and past-the-end
+         * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
          *
          * \param begin an iterator that points to the beginning of the
@@ -4137,7 +4137,7 @@ class Link :
          * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
          * performed here are not exhaustive.
          *
-         * \ifacespython Instead of a pair of begin and past-the-end
+         * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
          *
          * \author Much of the code for this routine is based on the
@@ -4298,7 +4298,7 @@ class Link :
          * planar diagram code.  As noted above, the checks performed here
          * are not exhaustive.
          *
-         * \ifacespython Instead of a pair of begin and past-the-end
+         * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list.  Each element
          * of the list should be convertible to a tuple of integers.
          * In particular, a list of Python lists is fine, and a list of
@@ -4869,7 +4869,7 @@ inline StrandRef Link::translate(const StrandRef& other) const {
 }
 
 template <typename Action, typename... Args>
-inline bool Link::rewrite(int height, unsigned nThreads,
+inline bool Link::rewrite(int height, unsigned threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (countComponents() != 1) {
         if (tracker)
@@ -4885,27 +4885,27 @@ inline bool Link::rewrite(int height, unsigned nThreads,
         "The action that is passed to rewrite() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {
         return regina::detail::retriangulateInternal<Link, true>(
-            *this, height, nThreads, tracker,
+            *this, height, threads, tracker,
             [&](const std::string& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     } else {
         return regina::detail::retriangulateInternal<Link, false>(
-            *this, height, nThreads, tracker,
+            *this, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
     }
 }
 
-inline bool Link::simplifyExhaustive(int height, unsigned nThreads,
+inline bool Link::simplifyExhaustive(int height, unsigned threads,
         ProgressTrackerOpen* tracker) {
     if (isEmpty()) {
         if (tracker)
             tracker->setFinished();
         return false;
     }
-    return rewrite(height, nThreads, tracker,
+    return rewrite(height, threads, tracker,
         [](Link&& alt, Link& original, size_t minCrossings) {
             if (alt.size() < minCrossings) {
                 ChangeEventSpan span(original);

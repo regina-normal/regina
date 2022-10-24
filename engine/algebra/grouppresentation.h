@@ -304,7 +304,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * consisting of three terms `g1^2`, `g3^-1` and
          * `g6^1` in that order.
          *
-         * \ifacespython The list itself is not returned by reference
+         * \python The list itself is not returned by reference
          * (instead this routine returns a new Python list).  However,
          * the terms within this list are still returned by reference
          * (i.e., you can use the elements of this list to modify each
@@ -321,7 +321,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * consisting of three terms `g1^2`, `g3^-1` and
          * `g6^1` in that order.
          *
-         * \ifacespython The list itself is not returned by reference
+         * \python The list itself is not returned by reference
          * (instead this routine returns a new Python list).  However,
          * the terms within this list are still returned by reference.
          *
@@ -609,7 +609,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         /**
          * Writes a chunk of XML containing this expression.
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
          * \param out the output stream to which the XML should be written.
@@ -888,12 +888,12 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Returns the list of all relations in this group presentation.
          *
-         * \ifacespython This routine returns a python list of copied
+         * \python This routine returns a python list of copied
          * GroupExpression objects.  In particular, modifying this
          * list or the relations within it will not modify the group
          * presentation from which they came.
          *
-         * \ifacespython The list itself is not returned by reference
+         * \python The list itself is not returned by reference
          * (instead this routine returns a new Python list).  However,
          * the relations within this list are still returned by reference.
          *
@@ -1054,7 +1054,7 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Writes a chunk of XML containing this group presentation.
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
          * \param out the output stream to which the XML should be written.
@@ -1389,7 +1389,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \apinotfinal
          *
-         * \ifacespython There are two versions of this function available in
+         * \python There are two versions of this function available in
          * Python.  The first form is `enumerateCovers(index, action)`,
          * which mirrors the C++ function: it takes \a action which may
          * be a pure Python function, it returns the number of representations
@@ -1528,7 +1528,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * presentation in a format native to SageMath.
          *
          * \nocpp
-         * \ifacespython Only present when run within SageMath.
+         * \python Only present when run within SageMath.
          *
          * \return a copy of this group as a mathematical object native to
          * SageMath.

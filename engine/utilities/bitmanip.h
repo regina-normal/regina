@@ -315,7 +315,7 @@ class BitManipulatorBySize<T, 8> {
  * \pre Type \a T is an unsigned integral numeric type whose size in
  * bits is a power of two.
  *
- * \ifacespython For Python users, the class BitManipulator represents the
+ * \python For Python users, the class BitManipulator represents the
  * C++ type BitManipulator<unsigned long>.  In particular, you should be aware
  * that BitManipulator is designed specifically to work with native C++ integer
  * types, and _cannot_ handle Python's arbitrary-precision integers.  It is

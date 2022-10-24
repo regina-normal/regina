@@ -69,7 +69,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             c[len] = 0;
             t.insert(c, len);
             delete[] c;
-        }, rdoc::insert)
+        }, pybind11::arg("entry"), rdoc::insert)
         .def("dominates", [](const TypeTrie<nTypes>& t, pybind11::list arg) {
             char* c = new char[arg.size() + 1];
             size_t len = 0;
@@ -93,7 +93,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             bool ans = t.dominates(c, len);
             delete[] c;
             return ans;
-        }, rdoc::dominates)
+        }, pybind11::arg("vec"), rdoc::dominates)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output(c);

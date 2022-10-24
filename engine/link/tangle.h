@@ -911,7 +911,7 @@ class Tangle : public Output<Tangle> {
          * oriented Gauss code.  As noted above, the checks performed here
          * are not exhaustive.
          *
-         * \ifacespython Instead of a pair of begin and past-the-end
+         * \python Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of strings.
          *
          * \param begin an iterator that points to the beginning of the

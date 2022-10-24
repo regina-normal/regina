@@ -69,7 +69,7 @@ template <int> class TriangulationBase;
  * Their memory is managed by the Triangulation class, and their locations
  * in memory define them.  See Simplex<dim> for further details.
  *
- * \ifacespython This base class is not present, but the "end user" class
+ * \python This base class is not present, but the "end user" class
  * Simplex<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -359,10 +359,13 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * See FaceNumbering<dim, subdim> for the conventions of how
          * <i>subdim</i>-faces are numbered within a <i>dim</i>-simplex.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `face(subdim, face)`; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the dimension of the subface to examine.
+         * This must be between 0 and (\a dim - 1) inclusive.
          *
          * \param face the <i>subdim</i>-face of this simplex to examine.
          * This should be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
@@ -526,10 +529,13 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * FaceEmbedding<dim, subdim> object that refers to
          * <i>subdim</i>-face number \a face of this simplex.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `faceMapping(subdim, face)`; that is, the template
          * parameter \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the dimension of the subface to examine.
+         * This must be between 0 and (\a dim - 1) inclusive.
          *
          * \param face the <i>subdim</i>-face of this simplex to examine.
          * This should be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1

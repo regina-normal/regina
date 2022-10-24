@@ -89,7 +89,7 @@ namespace regina {
  *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
- * \ifacespython Since Python does not support templates, this class is
+ * \python Since Python does not support templates, this class is
  * made available under the name Perm5.
  *
  * \ingroup maths
@@ -936,7 +936,7 @@ class Perm<5> {
          * then this will wrap around to become the first permutation in
          * Perm<5>::Sn, which is the identity.
          *
-         * \ifacespython This routine is named inc() since python does
+         * \python This routine is named inc() since python does
          * not support the increment operator.
          *
          * \return a copy of this permutation before the increment took place.

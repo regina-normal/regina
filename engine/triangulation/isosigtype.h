@@ -86,7 +86,7 @@ namespace regina {
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
- * \ifacespython Python does not support templates.  Instead this class
+ * \python Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g.,
  * IsoSigClassic2 and IsoSigClassic3 for dimensions 2 and 3).
  *
@@ -190,7 +190,7 @@ class IsoSigClassic {
  * Typical users would have no need to create objects of this class or
  * call any of its functions directly.
  *
- * \ifacespython Python does not support templates, and there are far
+ * \python Python does not support templates, and there are far
  * too many of these classes to wrap.  Currently Python supports only
  * the cases where \a subdim is 1 or <i>dim</i>-2, using the type aliases
  * IsoSigEdgeDegrees and IsoSigRidgeDegrees respectively (these cover
@@ -338,7 +338,7 @@ class IsoSigDegrees {
  * Defines an alternate type of isomorphism signature based on edge degree
  * sequences.
  *
- * \ifacespython Python does not support templates.  You can access these
+ * \python Python does not support templates.  You can access these
  * classes by appending the appending the dimension as a suffix (e.g., use
  * IsoSigEdgeDegrees3 to use edge degrees in 3-manifold triangulations).
  *
@@ -351,7 +351,7 @@ using IsoSigEdgeDegrees = IsoSigDegrees<dim, 1>;
  * Defines an alternate type of isomorphism signature based on degree
  * sequences of (<i>dim</i>-2)-faces.
  *
- * \ifacespython Python does not support templates.  You can access these
+ * \python Python does not support templates.  You can access these
  * classes by appending the appending the dimension as a suffix (e.g., use
  * IsoSigRidgeDegrees4 to use triangle degrees in 4-manifold triangulations).
  *

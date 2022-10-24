@@ -151,7 +151,7 @@ class CensusDB {
          * end users can simply use the catch-all Census::lookup() routines
          * and will not need to call this more fine-grained routine.
          *
-         * \ifacespython This function is available in Python, and the
+         * \python This function is available in Python, and the
          * \a action argument may be a pure Python function.
          *
          * \param isoSig the isomorphism signature to search for.

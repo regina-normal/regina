@@ -451,7 +451,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * \ifacespython This routine returns a python set.
+         * \python This routine returns a python set.
          *
          * \return the set of all tags associated with this packet.
          */
@@ -1503,7 +1503,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Typically this will be called from the root of the packet tree,
          * which will write the entire packet tree to the output stream.
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
          * \param out the output stream to which the XML data file should
@@ -2032,7 +2032,7 @@ enum PacketHeldBy {
  * infrastructure (e.g., they do not touch packet labels, or the packet
  * tree, or event listeners).
  *
- * \ifacespython Since Python does not support templates, this class
+ * \python Since Python does not support templates, this class
  * will have a name of the form PacketOfHeld.  For example, the C++ class
  * Link is wrapped by the Python class \c PacketOfLink, and the C++ class
  * Triangulation<3> is wrapped by the Python class \c PacketOfTriangulation3.
@@ -2093,7 +2093,7 @@ class PacketOf : public Packet, public Held {
          * The new packet will not be inserted into any packet tree, and
          * will have an empty packet label.
          *
-         * \ifacespython The initial \c std::in_place argument is not present.
+         * \python The initial \c std::in_place argument is not present.
          * Just use PacketOf(args...).
          *
          * \param args the arguments to be forwarded to the appropriate
@@ -2191,7 +2191,7 @@ class PacketOf : public Packet, public Held {
  * set this value to HELD_BY_NONE; it is the responsibility of subclasses
  * (e.g., PacketOf<Held>) to change this where necessary.
  *
- * \ifacespython Not present, but the routines anonID() and packet() will be
+ * \python Not present, but the routines anonID() and packet() will be
  * provided directly through the various subclasses.
  */
 template <typename Held>
@@ -2404,7 +2404,7 @@ class PacketData {
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython The \a src argument is a const reference, and this routine
+ * \python The \a src argument is a const reference, and this routine
  * makes a deep copy of \a src.  This is because Python will still maintain a
  * reference to \a src, and so it is not possible to move from \a src.
  *
@@ -2435,7 +2435,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
  * wrapping the new packet in a std::shared_ptr, as is required for all
  * packets in Regina.
  *
- * \ifacespython The \a src argument is a const reference, and this routine
+ * \python The \a src argument is a const reference, and this routine
  * makes a deep copy of \a src.  This is because Python will still maintain a
  * reference to \a src, and so it is not possible to move from \a src.
  *
@@ -2585,7 +2585,7 @@ const Held& static_packet_cast(const Packet& p) {
  * \ref i18n "character encoding" used in the given file _name_, and simply
  * passes it through unchanged to low-level C/C++ file I/O routines.
  *
- * \ifacespython This function is not automatically imported into the
+ * \python This function is not automatically imported into the
  * global namespace when running regina-python, or when opening a Python
  * console in the graphical user interface, or even when typing
  * `from regina import *`.  This is to avoid overriding
@@ -2633,7 +2633,7 @@ std::shared_ptr<Packet> open(std::istream& in);
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the child packets.
  *
- * \ifacespython Instead of the C++ interface described here, in Python
+ * \python Instead of the C++ interface described here, in Python
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
  * the single function `__iter__()`, which returns a ChildIterator;
@@ -2784,7 +2784,7 @@ class ChildIterator {
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the packet tree.
  *
- * \ifacespython Instead of the C++ interface described here, in Python
+ * \python Instead of the C++ interface described here, in Python
  * this class implements the Python iterable/iterator interface.  It implements
  * the function `__iter__()`, which returns the iterator object itself;
  * it also implements `__next__()`, which either returns the next packet
@@ -3005,7 +3005,7 @@ class SubtreeIterator {
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the child packets.
  *
- * \ifacespython Instead of the C++ interface described here, in Python
+ * \python Instead of the C++ interface described here, in Python
  * the classes PacketChildren and ChildIterator together implement the
  * Python iterable/iterator interface.  The class PacketChildren has just
  * the single function `__iter__()`, which returns a ChildIterator;
@@ -3151,7 +3151,7 @@ class PacketChildren {
  * \tparam const_ Indicates whether this iterator should offer const or
  * non-const access to the packet tree.
  *
- * \ifacespython Instead of the C++ interface described here, in Python
+ * \python Instead of the C++ interface described here, in Python
  * the classes PacketDescendants and SubtreeIterator together implement the
  * Python iterable/iterator interface.  The class PacketDescendants has just
  * the single function `__iter__()`, which returns a SubtreeIterator;
@@ -3405,7 +3405,7 @@ class PacketShell {
          * temporary, since the underlying packet (and therefore the
          * set that is referenced) is in the process of being destroyed.
          *
-         * \ifacespython This routine returns a python set.
+         * \python This routine returns a python set.
          *
          * \return the set of all tags associated with this packet.
          */
@@ -3521,7 +3521,7 @@ bool operator != (const Packet* packet, PacketShell shell);
  * that no routines other than childWasAdded() will be called from a non-main
  * thread.
  *
- * \ifacespython You can happily make a pure Python subclass of PacketListener,
+ * \python You can happily make a pure Python subclass of PacketListener,
  * and packets will call whichever functions you override when events occur,
  * just as they would for a native C++ subclass.
  *

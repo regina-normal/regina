@@ -105,7 +105,7 @@ class MaxAdmissible {
          * you must be careful when using one of the fast but size-limited
          * types Bitmask1 or Bitmask2.
          *
-         * \ifacespython The extremal rays should be passed as a Python list
+         * \python The extremal rays should be passed as a Python list
          * of VectorInt objects, not a pair of iterators.  The bitmasks
          * that are returned will be of type regina::Bitmask.
          *

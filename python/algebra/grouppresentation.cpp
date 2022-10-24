@@ -211,7 +211,7 @@ void addGroupPresentation(pybind11::module_& m) {
                         "enumerateCovers() must be between 2 and 7 inclusive.");
             }
             return ans;
-        }, rdoc::enumerateCovers)
+        }, pybind11::arg("index"), rdoc::enumerateCovers)
         .def("enumerateCovers", [](const GroupPresentation& p, int index,
                 const std::function<void(GroupPresentation&&)>& action)
                 -> size_t {
@@ -225,7 +225,8 @@ void addGroupPresentation(pybind11::module_& m) {
             }
             throw regina::InvalidArgument("The index passed to "
                 "enumerateCovers() must be between 2 and 7 inclusive.");
-        }, rdoc::enumerateCovers)
+        }, pybind11::arg("index"), pybind11::arg("action"),
+            rdoc::enumerateCovers)
         .def("incidence", &GroupPresentation::incidence, rdoc::incidence)
         .def("tex", &GroupPresentation::tex, rdoc::tex)
         .def("compact", &GroupPresentation::compact, rdoc::compact)

@@ -57,8 +57,8 @@ void addDoubleDescription(pybind11::module_& m) {
                 action(std::move(v));
             }, s, c, p, r);
         },
-            pybind11::arg(), pybind11::arg(), pybind11::arg(),
-            pybind11::arg("tracker") = nullptr,
+            pybind11::arg("action"), pybind11::arg("subspace"),
+            pybind11::arg("constraints"), pybind11::arg("tracker") = nullptr,
             pybind11::arg("initialRows") = 0,
             rdoc::enumerate)
         .def_static("enumerate", [](const regina::MatrixInt& s,
@@ -69,7 +69,7 @@ void addDoubleDescription(pybind11::module_& m) {
                 ans.push_back(std::move(v));
             }, s, c, p, r);
             return ans;
-        }, pybind11::arg(), pybind11::arg(),
+        }, pybind11::arg("subspace"), pybind11::arg("constraints"),
             pybind11::arg("tracker") = nullptr,
             pybind11::arg("initialRows") = 0,
             pybind11::call_guard<regina::python::GILScopedRelease>(),

@@ -298,7 +298,7 @@ class Snapshot {
  * - modifications of objects that are freshly constructed, and cannot
  *   possibly have snapshots that refer to them yet.
  *
- * \ifacespython Not present, but the routine isReadOnlySnapshot() will be
+ * \python Not present, but the routine isReadOnlySnapshot() will be
  * provided directly through each corresponding subclass \a T.
  *
  * \ingroup utilities

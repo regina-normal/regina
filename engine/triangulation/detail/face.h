@@ -68,7 +68,7 @@ template <int dim> class TriangulationBase;
  *
  * See the FaceEmbedding template class notes for further information.
  *
- * \ifacespython This base class is not present, but the "end user" class
+ * \python This base class is not present, but the "end user" class
  * FaceEmbedding<dim, subdim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -314,7 +314,7 @@ struct FaceEmbeddingsList<dim, 1> {
  * Their memory is managed by the Triangulation class, and their locations
  * in memory define them.  See Face<dim> for further details.
  *
- * \ifacespython This base class is not present, but the "end user" class
+ * \python This base class is not present, but the "end user" class
  * Face<dim, subdim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
@@ -814,7 +814,7 @@ class FaceBase :
          * constraint, there are no possible values for the template
          * parameter \a lowerdim.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `face(lowerdim, face)`; that is, the template parameter
          * \a lowerdim becomes the first argument of the function.
@@ -922,7 +922,7 @@ class FaceBase :
          * constraint, there are no possible values for the template
          * parameter \a lowerdim.
          *
-         * \ifacespython Python does not support templates.  Instead,
+         * \python Python does not support templates.  Instead,
          * Python users should call this function in the form
          * `faceMapping(lowerdim, face)`; that is, the template
          * parameter \a lowerdim becomes the first argument of the function.

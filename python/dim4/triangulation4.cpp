@@ -104,7 +104,7 @@ void addTriangulation4(pybind11::module_& m) {
                 ans[i] = t.newSimplex();
             return ans;
         }, pybind11::return_value_policy::reference_internal,
-            rbase::newSimplices)
+            pybind11::arg("k"), rbase::newSimplices)
         .def("newPentachora", [](Triangulation<4>& t, size_t k) {
             pybind11::tuple ans(k);
             for (size_t i = 0; i < k; ++i)
@@ -197,6 +197,7 @@ void addTriangulation4(pybind11::module_& m) {
             rbase::isContainedIn)
         .def("findAllIsomorphisms", &Triangulation<4>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<4>)>&>,
+            pybind11::arg("other"), pybind11::arg("action"),
             rbase::findAllIsomorphisms)
         .def("findAllIsomorphisms", [](const Triangulation<4>& t,
                 const Triangulation<4>& other) {
@@ -206,9 +207,10 @@ void addTriangulation4(pybind11::module_& m) {
                 return false;
             });
             return isos;
-        }, rbase::findAllIsomorphisms)
+        }, pybind11::arg("other"), rbase::findAllIsomorphisms)
         .def("findAllSubcomplexesIn", &Triangulation<4>::findAllSubcomplexesIn<
                 const std::function<bool(const Isomorphism<4>)>&>,
+            pybind11::arg("other"), pybind11::arg("action"),
             rbase::findAllSubcomplexesIn)
         .def("findAllSubcomplexesIn", [](const Triangulation<4>& t,
                 const Triangulation<4>& other) {
@@ -218,7 +220,7 @@ void addTriangulation4(pybind11::module_& m) {
                 return false;
             });
             return isos;
-        }, rbase::findAllSubcomplexesIn)
+        }, pybind11::arg("other"), rbase::findAllSubcomplexesIn)
         .def("isEmpty", &Triangulation<4>::isEmpty, rbase::isEmpty)
         .def("eulerCharTri", &Triangulation<4>::eulerCharTri,
             rbase::eulerCharTri)
@@ -283,7 +285,7 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("perform") = true, rdoc::simplifyToLocalMinimum)
         .def("simplifyExhaustive", &Triangulation<4>::simplifyExhaustive,
             pybind11::arg("height") = 1,
-            pybind11::arg("nThreads") = 1,
+            pybind11::arg("threads") = 1,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::simplifyExhaustive)
@@ -300,7 +302,10 @@ void addTriangulation4(pybind11::module_& m) {
                         return action(sig, std::move(t));
                     });
             }
-        }, rdoc::retriangulate)
+        }, pybind11::arg("height"),
+            pybind11::arg("threads"),
+            pybind11::arg("action"),
+            rdoc::retriangulate)
         .def("pachner", &Triangulation<4>::pachner<4>,
             pybind11::arg(),
             pybind11::arg("check") = true,
@@ -416,7 +421,7 @@ void addTriangulation4(pybind11::module_& m) {
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<5>>>& g) {
             return Triangulation<4>::fromGluings(size, g.begin(), g.end());
-        }, rbase::fromGluings)
+        }, pybind11::arg("size"), pybind11::arg("gluings"), rbase::fromGluings)
         .def_readonly_static("dimension", &Triangulation<4>::dimension)
     ;
     regina::python::add_output(c);

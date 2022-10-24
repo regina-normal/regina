@@ -53,11 +53,11 @@ void addValidityConstraints(pybind11::module_& m) {
         .def("addLocal", [](ValidityConstraints& v,
                 const std::vector<int>& pos) {
             v.addLocal(pos.begin(), pos.end());
-        }, rdoc::addLocal)
+        }, pybind11::arg("coordinates"), rdoc::addLocal)
         .def("addGlobal", [](ValidityConstraints& v,
                 const std::vector<int>& pos) {
             v.addGlobal(pos.begin(), pos.end());
-        }, rdoc::addGlobal)
+        }, pybind11::arg("coordinates"), rdoc::addGlobal)
         .def("swap", &ValidityConstraints::swap, rdoc::swap)
         .def("bitmasks", pybind11::overload_cast<size_t>(
             &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_),

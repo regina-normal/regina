@@ -66,7 +66,8 @@ void addPentachoron4(pybind11::module_& m) {
             rbase::triangulation)
         .def("component", &Pentachoron<4>::component,
             pybind11::return_value_policy::reference, rbase::component)
-        .def("face", &regina::python::face<Pentachoron<4>, 4, int>, rbase::face)
+        .def("face", &regina::python::face<Pentachoron<4>, 4, int>,
+            pybind11::arg("subdim"), pybind11::arg("face"), rbase::face)
         .def("vertex", &Pentachoron<4>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("edge",
@@ -80,7 +81,7 @@ void addPentachoron4(pybind11::module_& m) {
         .def("tetrahedron", &Pentachoron<4>::tetrahedron,
             pybind11::return_value_policy::reference, rbase::tetrahedron)
         .def("faceMapping", &regina::python::faceMapping<Pentachoron<4>, 4>,
-            rbase::faceMapping)
+            pybind11::arg("subdim"), pybind11::arg("face"), rbase::faceMapping)
         .def("vertexMapping", &Pentachoron<4>::vertexMapping,
             rbase::vertexMapping)
         .def("edgeMapping", &Pentachoron<4>::edgeMapping, rbase::edgeMapping)

@@ -145,7 +145,11 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def("randomise", &SnapPeaTriangulation::randomise, rdoc::randomise)
         .def("enumerateCovers", &SnapPeaTriangulation::enumerateCovers<
                 const std::function<void(SnapPeaTriangulation&&,
-                    SnapPeaTriangulation::CoverType)>&>, rdoc::enumerateCovers)
+                    SnapPeaTriangulation::CoverType)>&>,
+            pybind11::arg("sheets"),
+            pybind11::arg("type"),
+            pybind11::arg("action"),
+            rdoc::enumerateCovers)
         .def("enumerateCovers", [](const SnapPeaTriangulation& tri,
                 int sheets, SnapPeaTriangulation::CoverEnumerationType type) {
             pybind11::list ans;
@@ -157,7 +161,9 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
                 ans.append(pair);
             });
             return ans;
-        }, rdoc::enumerateCovers)
+        },
+            pybind11::arg("sheets"), pybind11::arg("type"),
+            rdoc::enumerateCovers)
         .def_static("kernelMessagesEnabled",
             &SnapPeaTriangulation::kernelMessagesEnabled,
             rdoc::kernelMessagesEnabled)

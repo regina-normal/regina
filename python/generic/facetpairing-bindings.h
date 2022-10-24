@@ -100,6 +100,8 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
             &FacetPairing<dim>::template findAllPairings<
                 const std::function<void(const FacetPairing<dim>&,
                     typename FacetPairing<dim>::IsoList)>&>,
+            pybind11::arg("nSimplices"), pybind11::arg("boundary"),
+            pybind11::arg("nBdryFacets"), pybind11::arg("action"),
             rbase::findAllPairings)
     ;
     regina::python::add_output(c);

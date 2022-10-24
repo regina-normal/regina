@@ -81,7 +81,7 @@ namespace regina {
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ifacespython Python does not support templates.  Instead this class
+ * \python Python does not support templates.  Instead this class
  * can be used by appending dimensions \a dim and \a subdim as suffices
  * (e.g., FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples above).
  *
@@ -154,7 +154,7 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * This is the preferred way to refer to this class (as opposed to the
  * more clumsy notation FaceEmbedding<dim, 0>).
  *
- * \ifacespython Python does not support templates.  Instead this alias can
+ * \python Python does not support templates.  Instead this alias can
  * be used by appending the dimension \a dim as a suffix
  * (e.g., \c VertexEmbedding3).
  *
@@ -173,7 +173,7 @@ using VertexEmbedding = FaceEmbedding<dim, 0>;
  * This is the preferred way to refer to this class (as opposed to the
  * more clumsy notation FaceEmbedding<dim, 1>).
  *
- * \ifacespython Python does not support templates.  Instead this alias can
+ * \python Python does not support templates.  Instead this alias can
  * be used by appending the dimension \a dim as a suffix
  * (e.g., \c EdgeEmbedding5).
  *
@@ -192,7 +192,7 @@ using EdgeEmbedding = FaceEmbedding<dim, 1>;
  * This is the preferred way to refer to this class (as opposed to the
  * more clumsy notation FaceEmbedding<dim, 2>).
  *
- * \ifacespython Python does not support templates.  Instead this alias can
+ * \python Python does not support templates.  Instead this alias can
  * be used by appending the dimension \a dim as a suffix
  * (e.g., \c TriangleEmbedding12).
  *
@@ -211,7 +211,7 @@ using TriangleEmbedding = FaceEmbedding<dim, 2>;
  * This is the preferred way to refer to this class (as opposed to the
  * more clumsy notation FaceEmbedding<dim, 3>).
  *
- * \ifacespython Python does not support templates.  Instead this alias can
+ * \python Python does not support templates.  Instead this alias can
  * be used by appending the dimension \a dim as a suffix
  * (e.g., \c TetrahedronEmbedding7).
  *
@@ -230,7 +230,7 @@ using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
  * This is the preferred way to refer to this class (as opposed to the
  * more clumsy notation FaceEmbedding<dim, 4>).
  *
- * \ifacespython Python does not support templates.  Instead this alias can
+ * \python Python does not support templates.  Instead this alias can
  * be used by appending the dimension \a dim as a suffix
  * (e.g., \c PentachoronEmbedding14).
  *

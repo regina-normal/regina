@@ -606,7 +606,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          *
          * \todo \feature Allow cancellation of permutation set generation.
          *
-         * \ifacespython This function is available, and \a action may be
+         * \python This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial gluing permutation set
          * (and therefore the additional \a args list is omitted here).
@@ -649,6 +649,11 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * If the search tree is shallow enough (or if \a maxDepth is
          * large enough), it is possible that this routine will produce
          * complete gluing permutation sets.
+         *
+         * \python This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
          *
          * \param maxDepth the depth of the partial search to run.
          * A negative number indicates that a full search should be run.
@@ -777,7 +782,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * \ifacespython This routine is available, but the matching
+         * \python This routine is available, but the matching
          * input stream constructor is not.  Python users should use
          * taggedData() and fromTaggedData() instead.
          *
@@ -816,7 +821,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * by FacetPairing<4>::isCanonical().  Note that all facet pairings
          * constructed by FacetPairing<4>::findAllPairings() are of this form.
          *
-         * \ifacespython This function is available, and \a action may be
+         * \python This function is available, and \a action may be
          * a pure Python function.  However, \a action cannot take any
          * additional arguments beyond the initial gluing permutation set
          * (and therefore the additional \a args list is omitted here).

@@ -52,7 +52,7 @@ namespace regina {
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ifacespython Present only for some particular enumeration types \a T,
+ * \python Present only for some particular enumeration types \a T,
  * when explicitly noted in the corresponding enum documentation.
  * The enumeration type is typically the flag class name with the suffix
  * \c Flags or \c Fields; for instance, the flags classes NormalAlg

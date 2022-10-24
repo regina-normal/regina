@@ -69,7 +69,7 @@ namespace regina::detail {
  * See the FaceNumbering template class notes for further information,
  * including details of how the face numbering scheme works.
  *
- * \ifacespython This base class is not present, and neither is
+ * \python This base class is not present, and neither is
  * FaceNumbering<dim, subdim>.  Python users can access these routines
  * through the class Face<dim, subdim> (which in Python
  * becomes Face<i>dim</i>_<i>subdim</i>, or one of the type aliases
@@ -188,7 +188,7 @@ class FaceNumberingAPI {
  * See the FaceNumbering template class notes for further information,
  * including details of how the face numbering scheme works.
  *
- * \ifacespython This base class is not present, and neither is
+ * \python This base class is not present, and neither is
  * FaceNumbering<dim, subdim>.  Python users can access these routines
  * through the class Face<dim, subdim> (which in Python
  * becomes Face<i>dim</i>_<i>subdim</i>, or one of the type aliases

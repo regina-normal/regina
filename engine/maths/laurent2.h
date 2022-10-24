@@ -75,7 +75,7 @@ namespace regina {
  * See also the class Laurent, which describes Laurent polynomials in
  * just one variable.
  *
- * \ifacespython In Python, the class Laurent2 refers to the specific
+ * \python In Python, the class Laurent2 refers to the specific
  * template class Laurent2<Integer>.
  *
  * \ingroup maths
@@ -192,7 +192,7 @@ class Laurent2 :
          * with the same exponents are also allowed (these will be aggregated
          * using the += operator).
          *
-         * \ifacespython Instead of the iterators \a begin and \a end,
+         * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of tuples.
          *
          * \tparam iterator an iterator type which, when dereferenced, gives a
@@ -267,7 +267,7 @@ class Laurent2 :
          * Returns the given coefficient of this polynomial.
          * There are no restrictions on the exponents \a xExp and \a yExp.
          *
-         * \ifacespython In Python, this is the square bracket operator,
+         * \python In Python, this is the square bracket operator,
          * not the round bracket operator; that is, Python users can access
          * coefficients through the syntax `poly[xExp, yExp]`.
          * Moreover, this operator can also _set_ cofficients; that is,
@@ -294,7 +294,7 @@ class Laurent2 :
          * Moreover, the underlying data structures ensure that this
          * operation is cheap regardless of the exponents involved.
          *
-         * \ifacespython This set() routine is available, but you can
+         * \python This set() routine is available, but you can
          * also set coefficients directly using syntax of the form
          * `p[xExp, yExp] = value`.
          *

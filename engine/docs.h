@@ -184,7 +184,7 @@
  *  I/O routines (such as fopen() or std::ifstream::open()) without modifying
  *  them in any way.
  *
- *  \ifacespython The translation of international strings between Python and
+ *  \python The translation of international strings between Python and
  *  C++ should be seamless: all unicode strings passed from Python to C++ will
  *  be encoded using UTF-8, and all strings passed from C++ to Python will be
  *  assumed to be encoded in UTF-8.

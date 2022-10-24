@@ -139,7 +139,7 @@ namespace regina {
  * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
  * for \a dim = 3).
  *
- * \ifacespython Python does not support templates.  Instead
+ * \python Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Triangulation2 and Triangulation3 for dimensions 2 and 3).
  *

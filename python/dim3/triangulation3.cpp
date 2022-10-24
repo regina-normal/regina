@@ -163,7 +163,7 @@ void addTriangulation3(pybind11::module_& m) {
                 ans[i] = t.newSimplex();
             return ans;
         }, pybind11::return_value_policy::reference_internal,
-            rbase::newSimplices)
+            pybind11::arg("k"), rbase::newSimplices)
         .def("newTetrahedra", [](Triangulation<3>& t, size_t k) {
             pybind11::tuple ans(k);
             for (size_t i = 0; i < k; ++i)
@@ -241,6 +241,7 @@ void addTriangulation3(pybind11::module_& m) {
             rbase::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<3>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<3>)>&>,
+            pybind11::arg("other"), pybind11::arg("action"),
             rbase::findAllIsomorphisms)
         .def("findAllIsomorphisms", [](const Triangulation<3>& t,
                 const Triangulation<3>& other) {
@@ -250,9 +251,10 @@ void addTriangulation3(pybind11::module_& m) {
                 return false;
             });
             return isos;
-        }, rbase::findAllIsomorphisms)
+        }, pybind11::arg("other"), rbase::findAllIsomorphisms)
         .def("findAllSubcomplexesIn", &Triangulation<3>::findAllSubcomplexesIn<
                 const std::function<bool(const Isomorphism<3>)>&>,
+            pybind11::arg("other"), pybind11::arg("action"),
             rbase::findAllSubcomplexesIn)
         .def("findAllSubcomplexesIn", [](const Triangulation<3>& t,
                 const Triangulation<3>& other) {
@@ -262,7 +264,7 @@ void addTriangulation3(pybind11::module_& m) {
                 return false;
             });
             return isos;
-        }, rbase::findAllSubcomplexesIn)
+        }, pybind11::arg("other"), rbase::findAllSubcomplexesIn)
         .def("makeCanonical", &Triangulation<3>::makeCanonical,
             rbase::makeCanonical)
         .def("isContainedIn", &Triangulation<3>::isContainedIn,
@@ -411,7 +413,7 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("perform") = true, rdoc::simplifyToLocalMinimum)
         .def("simplifyExhaustive", &Triangulation<3>::simplifyExhaustive,
             pybind11::arg("height") = 1,
-            pybind11::arg("nThreads") = 1,
+            pybind11::arg("threads") = 1,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::simplifyExhaustive)
@@ -428,7 +430,10 @@ void addTriangulation3(pybind11::module_& m) {
                         return action(sig, std::move(t));
                     });
             }
-        }, rdoc::retriangulate)
+        }, pybind11::arg("height"),
+            pybind11::arg("threads"),
+            pybind11::arg("action"),
+            rdoc::retriangulate)
         .def("minimiseBoundary", &Triangulation<3>::minimiseBoundary,
             rdoc::minimiseBoundary)
         .def("minimizeBoundary", // deprecated
@@ -642,7 +647,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<4>>>& g) {
             return Triangulation<3>::fromGluings(size, g.begin(), g.end());
-        }, rbase::fromGluings)
+        }, pybind11::arg("size"), pybind11::arg("gluings"), rbase::fromGluings)
         .def_static("fromIsoSig", &Triangulation<3>::fromIsoSig,
             rbase::fromIsoSig)
         .def_static("fromSig", &Triangulation<3>::fromSig, rbase::fromSig)

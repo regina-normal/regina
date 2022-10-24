@@ -66,7 +66,7 @@ template <int> class TriangulationBase;
  * Their memory is managed by the Triangulation class, and their locations
  * in memory define them.  See Component<dim> for further details.
  *
- * \ifacespython This base class is not present, but the "end user"
+ * \python This base class is not present, but the "end user"
  * class Component<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.

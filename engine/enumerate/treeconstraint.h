@@ -97,7 +97,7 @@ class LPConstraintNone;
  * as a template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
- * \ifacespython This base class is not present, but all of the "real" linear
+ * \python This base class is not present, but all of the "real" linear
  * constraint subclasses are available.  However, as noted above, it is rare
  * that you would need to access any of these constraint classes directly
  * through Python.  Instead, to use a linear constraint class, you would
@@ -232,7 +232,7 @@ class LPConstraintBase {
          * throw exceptions in this way _must_ describe this behaviour in its
          * own class documentation.
          *
-         * \ifacespython The argument \a col is not present, since LPCol is
+         * \python The argument \a col is not present, since LPCol is
          * only designed to be used as part of the internal data storage for
          * LPInitialTableaux.  Instead, this routine returns a Python list of
          * constraints, where each constraint is presented as a Python list of
@@ -375,7 +375,7 @@ class LPConstraintSubspace : public LPConstraintBase {
  * as a template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
- * \ifacespython It is rare that you would need to access this class directly
+ * \python It is rare that you would need to access this class directly
  * through Python.  Instead, to use this do-nothing constraint class, you would
  * typically create a tree traversal object with no linear constraint class
  * suffix at all (since LPConstraintNone is the default behaviour).  For
@@ -431,7 +431,7 @@ class LPConstraintNone : public LPConstraintSubspace {
  * that includes triangle coordinates (i.e., the encoding for standard
  * normal or standard almost normal coordinates).
  *
- * \ifacespython It is rare that you would need to access this class directly
+ * \python It is rare that you would need to access this class directly
  * through Python.  Instead, to use a linear constraint class, you would
  * typically create a tree traversal object with the appropriate class suffix
  * (e.g., one such Python class is \c TreeSingleSolution_EulerPositive).
@@ -492,7 +492,7 @@ class LPConstraintEulerPositive : public LPConstraintBase {
  * coordinates, and that does _not_ include octagon coordinates (i.e,
  * the encoding for standard normal coordinates).
  *
- * \ifacespython It is rare that you would need to access this class directly
+ * \python It is rare that you would need to access this class directly
  * through Python.  Instead, to use a linear constraint class, you would
  * typically create a tree traversal object with the appropriate class suffix
  * (e.g., one such Python class is \c TreeEnumeration_EulerZero).
@@ -557,7 +557,7 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * coefficients of the slope equations are too large to store in a native
  * C++ long integer.
  *
- * \ifacespython It is rare that you would need to access this class directly
+ * \python It is rare that you would need to access this class directly
  * through Python.  Instead, to use a linear constraint class, you would
  * typically create a tree traversal object with the appropriate class suffix
  * (e.g., one such Python class is \c TreeEnumeration_NonSpun).
@@ -649,7 +649,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * as a template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
- * \ifacespython This base class is not present, but all subclasses are
+ * \python This base class is not present, but all subclasses are
  * available.  However, as noted above, it is rare that you would need
  * to access any of these ban constraint classes directly through Python.
  * Instead, to use a ban constraint class, you would typically create
@@ -830,7 +830,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
  * as a template parameter to one of the tree traversal subclasses
  * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
  *
- * \ifacespython It is rare that you would need to access this class directly
+ * \python It is rare that you would need to access this class directly
  * through Python.  Instead, to use this ban constraint class, you would
  * typically create a tree traversal object with no ban constraint class suffix
  * at all (since BanNone is the default behaviour).  For example, all of the
@@ -893,7 +893,7 @@ class BanNone : public ShortOutput<BanNone> {
  * calculation engine already includes explicit instantiations for common
  * template arguments.
  *
- * \ifacespython It is rare that you would need to access this class directly
+ * \python It is rare that you would need to access this class directly
  * through Python.  Instead, to use a ban constraint class, you would typically
  * create a tree traversal object with the appropriate class suffix (e.g., one
  * such Python class is \c TreeEnumeration_BanBoundary).  See the
@@ -956,7 +956,7 @@ class BanBoundary : public BanConstraintBase {
  * calculation engine already includes explicit instantiations for common
  * template arguments.
  *
- * \ifacespython It is rare that you would need to access this class directly
+ * \python It is rare that you would need to access this class directly
  * through Python.  Instead, to use a ban constraint class, you would typically
  * create a tree traversal object with the appropriate class suffix (e.g., one
  * such Python class is \c TreeEnumeration_BanEdge).  See the
@@ -1027,7 +1027,7 @@ class BanEdge : public BanConstraintBase {
  * calculation engine already includes explicit instantiations for common
  * template arguments.
  *
- * \ifacespython It is rare that you would need to access this class directly
+ * \python It is rare that you would need to access this class directly
  * through Python.  Instead, to use a ban constraint class, you would typically
  * create a tree traversal object with the appropriate class suffix (e.g., one
  * such Python class is \c TreeEnumeration_BanTorusBoundary).  See the

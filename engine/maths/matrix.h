@@ -159,7 +159,7 @@ template <class> class Vector;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython Only the specific types Matrix<Integer> and Matrix<bool>
+ * \python Only the specific types Matrix<Integer> and Matrix<bool>
  * are available, under the names MatrixInt and MatrixBool respectively.
  *
  * \tparam T the type of each individual matrix element.
@@ -270,7 +270,7 @@ class Matrix : public Output<Matrix<T>> {
          * \pre All elements of \a data (representing the rows of the matrix)
          * are lists of the same size.
          *
-         * \ifacespython The argument \a data should be a Python list of
+         * \python The argument \a data should be a Python list of
          * Python lists.
          *
          * \param data the rows of the matrix, each given as a list of elements.
@@ -455,7 +455,7 @@ class Matrix : public Output<Matrix<T>> {
          * Returns a read-write reference to the entry at the given
          * row and column.  Rows and columns are numbered beginning at zero.
          *
-         * \ifacespython In general, to assign values to matrix elements you
+         * \python In general, to assign values to matrix elements you
          * should use the Python-only set() routine.  This entry() routine does
          * give read-write access to matrix elements in Python, but it does
          * not allow them to be set using the assignment operator.
@@ -493,7 +493,7 @@ class Matrix : public Output<Matrix<T>> {
          * \nocpp For C++ users, entry() is used for both reading and
          * writing: just write `entry(row, column) = value`.
          *
-         * \ifacespython In general, to assign values to matrix elements you
+         * \python In general, to assign values to matrix elements you
          * should use the syntax `matrix.set(row, column, value)`.  The entry()
          * routine does give read-write access to matrix elements in Python,
          * but it does not allow them to be set using the assignment operator.
@@ -1548,7 +1548,7 @@ inline void swap(Matrix<T>& a, Matrix<T>& b) noexcept {
  * Regina's Integer class, calculations will be exact regardless of
  * how large the integers become.
  *
- * \ifacespython This instance of the Matrix template class is made
+ * \python This instance of the Matrix template class is made
  * available to Python.
  *
  * \ingroup maths
@@ -1561,7 +1561,7 @@ using MatrixInt = Matrix<Integer>;
  * This is used in a handful of places in Regina to represent incidence or
  * adjacency matrices.
  *
- * \ifacespython This instance of the Matrix template class is made
+ * \python This instance of the Matrix template class is made
  * available to Python.
  *
  * \ingroup maths

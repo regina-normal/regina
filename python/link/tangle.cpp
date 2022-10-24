@@ -102,7 +102,7 @@ void addTangle(pybind11::module_& m) {
         }, rdoc::fromOrientedGauss)
         .def_static("fromOrientedGauss", [](const std::vector<std::string>& v) {
             return Tangle::fromOrientedGauss(v.begin(), v.end());
-        }, rdoc::fromOrientedGauss_2)
+        }, pybind11::arg("tokens"), rdoc::fromOrientedGauss_2)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);

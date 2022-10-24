@@ -111,7 +111,7 @@ using MatrixInt = Matrix<Integer, true>;
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython The template argument \a IntType is taken to be
+ * \python The template argument \a IntType is taken to be
  * regina::Integer.
  *
  * \apinotfinal
@@ -275,7 +275,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
         /**
          * Returns a read-write reference to the given element of this matrix.
          *
-         * \ifacespython In general, to assign values to matrix elements you
+         * \python In general, to assign values to matrix elements you
          * should use the Python-only set() routine.  This entry() routine does
          * give read-write access to matrix elements in Python, but it does
          * not allow them to be set using the assignment operator.
@@ -307,7 +307,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * \nocpp For C++ users, entry() is used for both reading and
          * writing: just write `entry(row, column) = value`.
          *
-         * \ifacespython In general, to assign values to matrix elements you
+         * \python In general, to assign values to matrix elements you
          * should use the syntax `matrix.set(row, column, value)`.  The entry()
          * routine does give read-write access to matrix elements in Python,
          * but it does not allow them to be set using the assignment operator.
@@ -842,7 +842,7 @@ class LPSystem : public ShortOutput<LPSystem> {
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
  * LPInitialTableaux_<i>LPConstraint</i>, where the suffix \a LPConstraint
  * is an abbreviated version of the \a LPConstraint template parameter;
@@ -1103,7 +1103,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *   must be grouped by tetrahedron and ordered by angle type,
          *   and the final scaling coordinate must remain last.
          *
-         * \ifacespython This routine returns a Python list.
+         * \python This routine returns a Python list.
          *
          * \return details of the permutation describing how columns
          * were reordered.
@@ -1379,7 +1379,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  * engine already includes explicit instantiations for common combinations of
  * template arguments.
  *
- * \ifacespython This is a heavily templated class; nevertheless, many variants
+ * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
  * LPData_<i>LPConstraint</i>, where the suffix \a LPConstraint
  * is an abbreviated version of the \a LPConstraint template parameter;
@@ -1763,7 +1763,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * this ensures that all elements of a newly-created output vector
          * will be automatically initialised to zero.
          *
-         * \ifacespython The type vector should be passed as a Python list of
+         * \python The type vector should be passed as a Python list of
          * integers (for example, in the enumeration of normal surfaces, there
          * would be one integer per tetrahedron, each equal to 0, 1, 2 or 3).
          * The \a RayClass argument is taken to be Vector<Integer>.

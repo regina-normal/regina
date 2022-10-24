@@ -831,7 +831,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed and non-empty.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
@@ -929,7 +929,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * change from Regina 4.96 and earlier, which computed
          * floating-point approximations instead.
          *
-         * \ifacespython This routine returns a Python dictionary.
+         * \python This routine returns a Python dictionary.
          * It also returns by value, not by reference (i.e., if more
          * Turaev-Viro invariants are computed later on, the dictionary
          * that was originally returned will not change as a result).
@@ -1587,7 +1587,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, this
+         * in the argument \a threads.  Even in multithreaded mode, this
          * routine will not return until processing has finished (i.e., either
          * the triangulation was simplified or the search was exhausted).
          *
@@ -1600,21 +1600,21 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
          *
-         * \ifacespython The global interpreter lock will be released while
+         * \python The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
          *
          * \param height the maximum number of _additional_ tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
          * triangulation, or a negative number if this should not be bounded.
-         * \param nThreads the number of threads to use.  If this is
+         * \param threads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c nullptr if no progress reporting is required.
          * \return \c true if and only if the triangulation was successfully
          * simplified to fewer tetrahedra.
          */
-        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
+        bool simplifyExhaustive(int height = 1, unsigned threads = 1,
             ProgressTrackerOpen* tracker = nullptr);
 
         /**
@@ -1686,7 +1686,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads in
-         * the argument \a nThreads.  Even in multithreaded mode, this routine
+         * the argument \a threads.  Even in multithreaded mode, this routine
          * will not return until processing has finished (i.e., either \a action
          * returned \c true, or the search was exhausted).  All calls to
          * \a action will be protected by a mutex (i.e., different threads will
@@ -1702,7 +1702,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \apinotfinal
          *
-         * \ifacespython This function is available in Python, and the
+         * \python This function is available in Python, and the
          * \a action argument may be a pure Python function.  However, its
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you call it as retriangulate(height, threads, action).
@@ -1713,7 +1713,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \param height the maximum number of _additional_ tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
          * triangulation, or a negative number if this should not be bounded.
-         * \param nThreads the number of threads to use.  If this is
+         * \param threads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * \param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
@@ -1726,7 +1726,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * completion.
          */
         template <typename Action, typename... Args>
-        bool retriangulate(int height, unsigned nThreads,
+        bool retriangulate(int height, unsigned threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
@@ -4028,7 +4028,7 @@ inline const Triangulation<3>::TuraevViroSet&
 }
 
 template <typename Action, typename... Args>
-inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
+inline bool Triangulation<3>::retriangulate(int height, unsigned threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (countComponents() != 1) {
         if (tracker)
@@ -4046,13 +4046,13 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
     if constexpr (Traits::withSig) {
         return regina::detail::retriangulateInternal<Triangulation<3>, true>(
-            *this, height, nThreads, tracker,
+            *this, height, threads, tracker,
             [&](const std::string& sig, Triangulation<3>&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     } else {
         return regina::detail::retriangulateInternal<Triangulation<3>, false>(
-            *this, height, nThreads, tracker,
+            *this, height, threads, tracker,
             [&](Triangulation<3>&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
             });

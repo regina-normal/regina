@@ -176,7 +176,7 @@ namespace detail {
  * not affect users since the calculation engine includes explicit
  * instantiations for all possible template parameters.
  *
- * \ifacespython Both variants of this template are available through Python.
+ * \python Both variants of this template are available through Python.
  * For \a supportInfinity = \c false, use the name Integer.
  * For \a supportInfinity = \c true, use the name LargeInteger.
  *
@@ -235,7 +235,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \ifacespython In Python, this is the only native-integer
+         * \python In Python, this is the only native-integer
          * constructor available.
          *
          * \param value the new value of this integer.
@@ -793,7 +793,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator increments this integer by one, and returns a
          * copy of the integer _before_ the increment.
          *
-         * \ifacespython This routine is named inc() since python does not
+         * \python This routine is named inc() since python does not
          * support the increment operator.
          *
          * \return a copy of this integer before the increment took place.
@@ -817,7 +817,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator decrements this integer by one, and returns a
          * copy of the integer _before_ the decrement.
          *
-         * \ifacespython This routine is named dec() since python does not
+         * \python This routine is named dec() since python does not
          * support the decrement operator.
          *
          * \return a copy of this integer before the decrement took place.

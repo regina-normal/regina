@@ -78,7 +78,7 @@ namespace regina {
  * This class is specialised (and optimised) in Regina's
  * \ref stddim "standard dimensions".
  *
- * \ifacespython This class is not available in Python.  However, all of
+ * \python This class is not available in Python.  However, all of
  * its routines can be accessed through Face<dim, subdim> (which in Python
  * becomes Face<i>dim</i>_<i>subdim</i>, or one of the type aliases such as
  * Vertex3, Edge2 and so on).
@@ -103,7 +103,7 @@ class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
  *
  * The arguments \a i and \a j do not need to appear in ascending order.
  *
- * \ifacespython Python does not support templates.  Instead, Python users
+ * \python Python does not support templates.  Instead, Python users
  * should call this function in the form `faceOppositeEdge(dim, i, j)`;
  * that is, the template parameter \a dim becomes the first argument of
  * the function.

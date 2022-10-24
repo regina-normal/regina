@@ -129,25 +129,25 @@ void addLink(pybind11::module_& m) {
         }, rdoc::fromGauss)
         .def_static("fromGauss", [](const std::vector<int>& v) {
             return Link::fromGauss(v.begin(), v.end());
-        }, rdoc::fromGauss_2)
+        }, pybind11::arg("integers"), rdoc::fromGauss_2)
         .def_static("fromOrientedGauss", [](const std::string& s) {
             return Link::fromOrientedGauss(s);
         }, rdoc::fromOrientedGauss)
         .def_static("fromOrientedGauss", [](const std::vector<std::string>& v) {
             return Link::fromOrientedGauss(v.begin(), v.end());
-        }, rdoc::fromOrientedGauss_2)
+        }, pybind11::arg("tokens"), rdoc::fromOrientedGauss_2)
         .def_static("fromJenkins", [](const std::string& s) {
             return Link::fromJenkins(s);
         }, rdoc::fromJenkins)
         .def_static("fromJenkins", [](const std::vector<int>& v) {
             return Link::fromJenkins(v.begin(), v.end());
-        }, rdoc::fromJenkins_2)
+        }, pybind11::arg("integers"), rdoc::fromJenkins_2)
         .def_static("fromDT", [](const std::string& s) {
             return Link::fromDT(s);
         }, rdoc::fromDT)
         .def_static("fromDT", [](const std::vector<int>& v) {
             return Link::fromDT(v.begin(), v.end());
-        }, rdoc::fromDT_2)
+        }, pybind11::arg("integers"), rdoc::fromDT_2)
         .def_static("fromPD", [](const std::string& s) {
             return Link::fromPD(s);
         }, rdoc::fromPD)
@@ -176,11 +176,11 @@ void addLink(pybind11::module_& m) {
                 tuples.push_back(cppTuple);
             }
             return Link::fromPD(tuples.begin(), tuples.end());
-        }, rdoc::fromPD_2)
+        }, pybind11::arg("tuples"), rdoc::fromPD_2)
         .def_static("fromData", [](const std::vector<int>& s,
                 const std::vector<std::vector<int>>& c) {
             return Link::fromData(s.begin(), s.end(), c.begin(), c.end());
-        }, rdoc::fromData)
+        }, pybind11::arg("signs"), pybind11::arg("components"), rdoc::fromData)
         .def_static("fromData", [](const std::vector<int>& s,
                 const std::vector<int>& c) {
             // Allow [...] instead of [[...]]] if there is just one component.
@@ -188,7 +188,7 @@ void addLink(pybind11::module_& m) {
             // about to do is illegal C++; I hope not.
             auto begin = std::addressof(c);
             return Link::fromData(s.begin(), s.end(), begin, begin + 1);
-        }, rdoc::fromData)
+        }, pybind11::arg("signs"), pybind11::arg("component"), rdoc::fromData)
         .def_static("fromKnotSig", &Link::fromKnotSig, rdoc::fromKnotSig)
         .def_static("fromSig", &Link::fromSig, rdoc::fromSig)
         .def("swap", &Link::swap, rdoc::swap)
@@ -334,7 +334,7 @@ void addLink(pybind11::module_& m) {
             rdoc::simplifyToLocalMinimum)
         .def("simplifyExhaustive", &Link::simplifyExhaustive,
             pybind11::arg("height") = 1,
-            pybind11::arg("nThreads") = 1,
+            pybind11::arg("threads") = 1,
             pybind11::arg("tracker") = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::simplifyExhaustive)
@@ -350,7 +350,10 @@ void addLink(pybind11::module_& m) {
                         return action(sig, std::move(link));
                     });
             }
-        }, rdoc::rewrite)
+        }, pybind11::arg("height"),
+            pybind11::arg("threads"),
+            pybind11::arg("action"),
+            rdoc::rewrite)
         .def("insertTorusLink", &Link::insertTorusLink,
             pybind11::arg(),
             pybind11::arg(),

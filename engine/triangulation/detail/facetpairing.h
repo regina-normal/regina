@@ -69,7 +69,7 @@ namespace detail {
  * requirement.  These classes are designed to avoid deep copies wherever
  * possible, even when passing or returning objects by value.
  *
- * \ifacespython This base class is not present, but the "end user"
+ * \python This base class is not present, but the "end user"
  * class FacetPairing<dim> is.
  *
  * \tparam dim the dimension of the triangulation.
@@ -208,7 +208,7 @@ class FacetPairingBase :
          * Returns the number of simplices whose facets are described by
          * this facet pairing.
          *
-         * \ifacespython This is also used to implement the Python special
+         * \python This is also used to implement the Python special
          * method __len__().
          *
          * \return the number of simplices under consideration.
@@ -224,7 +224,7 @@ class FacetPairingBase :
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
          *
-         * \ifacespython This routine returns by value, not by reference,
+         * \python This routine returns by value, not by reference,
          * since Python cannot enforce constness otherwise.
          *
          * \param source the facet under investigation.
@@ -238,7 +238,7 @@ class FacetPairingBase :
          * the value returned will be boundary (as returned by
          * FacetSpec<dim>::isBoundary()).
          *
-         * \ifacespython This routine returns by value, not by reference,
+         * \python This routine returns by value, not by reference,
          * since Python cannot enforce constness otherwise.
          *
          * \param simp the simplex under investigation (this must be
@@ -262,7 +262,7 @@ class FacetPairingBase :
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
          *
-         * \ifacespython This routine returns by value, not by reference,
+         * \python This routine returns by value, not by reference,
          * since Python cannot enforce constness otherwise.
          *
          * \param source the facet under investigation.
@@ -746,7 +746,7 @@ class FacetPairingBase :
          * pairing.
          * \todo \feature Allow cancellation of facet pairing generation.
          *
-         * \ifacespython This function is available, and \a action may be a
+         * \python This function is available, and \a action may be a
          * pure Python function.  However, its form is more restricted:
          * \a action must take both a facet pairing and its automorphisms
          * (i.e., the automorphisms argument is not optional); moreover,

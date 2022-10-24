@@ -100,7 +100,7 @@ void addTriangulation2(pybind11::module_& m) {
                 ans[i] = t.newSimplex();
             return ans;
         }, pybind11::return_value_policy::reference_internal,
-            rbase::newSimplices)
+            pybind11::arg("k"), rbase::newSimplices)
         .def("newTriangles", [](Triangulation<2>& t, size_t k) {
             pybind11::tuple ans(k);
             for (size_t i = 0; i < k; ++i)
@@ -167,6 +167,7 @@ void addTriangulation2(pybind11::module_& m) {
             rbase::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<2>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<2>)>&>,
+            pybind11::arg("other"), pybind11::arg("action"),
             rbase::findAllIsomorphisms)
         .def("findAllIsomorphisms", [](const Triangulation<2>& t,
                 const Triangulation<2>& other) {
@@ -176,13 +177,14 @@ void addTriangulation2(pybind11::module_& m) {
                 return false;
             });
             return isos;
-        }, rbase::findAllIsomorphisms)
+        }, pybind11::arg("other"), rbase::findAllIsomorphisms)
         .def("makeCanonical", &Triangulation<2>::makeCanonical,
             rbase::makeCanonical)
         .def("isContainedIn", &Triangulation<2>::isContainedIn,
             rbase::isContainedIn)
         .def("findAllSubcomplexesIn", &Triangulation<2>::findAllSubcomplexesIn<
                 const std::function<bool(const Isomorphism<2>)>&>,
+            pybind11::arg("other"), pybind11::arg("action"),
             rbase::findAllSubcomplexesIn)
         .def("findAllSubcomplexesIn", [](const Triangulation<2>& t,
                 const Triangulation<2>& other) {
@@ -192,7 +194,7 @@ void addTriangulation2(pybind11::module_& m) {
                 return false;
             });
             return isos;
-        }, rbase::findAllSubcomplexesIn)
+        }, pybind11::arg("other"), rbase::findAllSubcomplexesIn)
         .def("isEmpty", &Triangulation<2>::isEmpty, rbase::isEmpty)
         .def("isValid", &Triangulation<2>::isValid, rbase::isValid)
         .def("eulerChar", &Triangulation<2>::eulerChar, rdoc::eulerChar)
@@ -296,7 +298,7 @@ void addTriangulation2(pybind11::module_& m) {
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<3>>>& g) {
             return Triangulation<2>::fromGluings(size, g.begin(), g.end());
-        }, rbase::fromGluings)
+        }, pybind11::arg("size"), pybind11::arg("gluings"), rbase::fromGluings)
         .def_readonly_static("dimension", &Triangulation<2>::dimension)
     ;
     regina::python::add_output(c);

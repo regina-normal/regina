@@ -50,7 +50,7 @@ void addComponent2(pybind11::module_& m) {
         .def("countTriangles", &Component<2>::countTriangles,
             rbase::countTriangles)
         .def("countFaces", &regina::python::countFaces<Component<2>, 2, 2>,
-            rdoc::countFaces)
+            pybind11::arg("subdim"), rdoc::countFaces)
         .def("countEdges", &Component<2>::countEdges, rbase::countEdges)
         .def("countVertices", &Component<2>::countVertices,
             rbase::countVertices)
@@ -58,7 +58,8 @@ void addComponent2(pybind11::module_& m) {
             rbase::countBoundaryComponents)
         .def("simplices", &Component<2>::simplices, rbase::simplices)
         .def("triangles", &Component<2>::triangles, rbase::triangles)
-        .def("faces", &regina::python::faces<Component<2>, 2>, rdoc::faces)
+        .def("faces", &regina::python::faces<Component<2>, 2>,
+            pybind11::arg("subdim"), rdoc::faces)
         .def("vertices", &Component<2>::vertices, rbase::vertices)
         .def("edges", &Component<2>::edges, rbase::edges)
         .def("boundaryComponents", &Component<2>::boundaryComponents,
@@ -67,7 +68,8 @@ void addComponent2(pybind11::module_& m) {
             pybind11::return_value_policy::reference, rbase::triangle)
         .def("simplex", &Component<2>::simplex,
             pybind11::return_value_policy::reference, rbase::simplex)
-        .def("face", &regina::python::face<Component<2>, 2, size_t>, rdoc::face)
+        .def("face", &regina::python::face<Component<2>, 2, size_t>,
+            pybind11::arg("subdim"), pybind11::arg("index"), rdoc::face)
         .def("edge", &Component<2>::edge,
             pybind11::return_value_policy::reference, rbase::edge)
         .def("vertex", &Component<2>::vertex,

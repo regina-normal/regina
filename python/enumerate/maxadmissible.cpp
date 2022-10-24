@@ -48,7 +48,8 @@ void addMaxAdmissible(pybind11::module_& m) {
                 const regina::ValidityConstraints& c) {
             return MaxAdmissible::enumerate<regina::Bitmask>(
                 rays.begin(), rays.end(), c);
-        }, rdoc::enumerate)
+        }, pybind11::arg("extremalRays"), pybind11::arg("constraints"),
+            rdoc::enumerate)
     ;
     regina::python::no_eq_static(c);
 

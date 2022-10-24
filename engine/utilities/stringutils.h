@@ -398,7 +398,7 @@ std::string stringToToken(std::string str);
  * for which the standard C++11 library routine std::to_string(T) is defined;
  * or (ii) a const reference to Integer or LargeInteger.
  *
- * \ifacespython This template function is instantiated in Python for types
+ * \python This template function is instantiated in Python for types
  * \a T = \c long, as well as const references to Integer and LargeInteger.
  *
  * \ingroup utilities
@@ -415,7 +415,7 @@ std::string superscript(T value);
  * for which the standard C++11 library routine std::to_string(T) is defined;
  * or (ii) a const reference to Integer or LargeInteger.
  *
- * \ifacespython This template function is instantiated in Python for types
+ * \python This template function is instantiated in Python for types
  * \a T = \c long, as well as const references to Integer and LargeInteger.
  *
  * \ingroup utilities

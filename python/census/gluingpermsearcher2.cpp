@@ -51,14 +51,18 @@ void addGluingPermSearcher2(pybind11::module_& m) {
         .def(pybind11::init<FacetPairing<2>, FacetPairing<2>::IsoList, bool>(),
             rdoc::__init)
         .def("runSearch", &GluingPermSearcher<2>::runSearch<Action>,
-            rdoc::runSearch)
+            pybind11::arg("action"), rdoc::runSearch)
         .def("partialSearch", &GluingPermSearcher<2>::partialSearch<Action>,
+            pybind11::arg("maxDepth"), pybind11::arg("action"),
             rdoc::partialSearch)
         .def("isComplete", &GluingPermSearcher<2>::isComplete, rdoc::isComplete)
         .def("taggedData", &GluingPermSearcher<2>::taggedData, rdoc::taggedData)
         .def("data", &GluingPermSearcher<2>::data, rdoc::data)
         .def_static("findAllPerms",
-            &GluingPermSearcher<2>::findAllPerms<Action>, rdoc::findAllPerms)
+            &GluingPermSearcher<2>::findAllPerms<Action>,
+            pybind11::arg("pairing"), pybind11::arg("autos"),
+            pybind11::arg("orientableOnly"), pybind11::arg("action"),
+            rdoc::findAllPerms)
         .def_static("bestSearcher", &GluingPermSearcher<2>::bestSearcher,
             rdoc::bestSearcher)
         .def_static("fromTaggedData",

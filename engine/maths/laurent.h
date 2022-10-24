@@ -74,7 +74,7 @@ namespace regina {
  * See also the class Laurent2, which describes Laurent polynomials in
  * two variables.
  *
- * \ifacespython In Python, the class Laurent refers to the specific
+ * \python In Python, the class Laurent refers to the specific
  * template class Laurent<Integer>.
  *
  * \ingroup maths
@@ -184,7 +184,7 @@ class Laurent :
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
          *
-         * \ifacespython Instead of the iterators \a begin and \a end,
+         * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of coefficients.
          *
          * \param minExp the exponent corresponding to the first
@@ -251,7 +251,7 @@ class Laurent :
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
          *
-         * \ifacespython Instead of the iterators \a begin and \a end,
+         * \python Instead of the iterators \a begin and \a end,
          * this routine takes a python list of coefficients.
          *
          * \param minExp the exponent corresponding to the first
@@ -292,7 +292,7 @@ class Laurent :
          * Returns the given coefficient of this polynomial.
          * There are no restrictions on the exponent \a exp.
          *
-         * \ifacespython Python users can also use this operator to _set_
+         * \python Python users can also use this operator to _set_
          * cofficients; that is, you can write `poly[exp] = value`.
          * However, when _getting_ a coefficient this operator will return
          * by value (to enforce constness), which means for example you
@@ -322,7 +322,7 @@ class Laurent :
          * maxExp() or minExp() is cheap, even though the range of
          * non-zero coefficients changes as a result.
          *
-         * \ifacespython This set() routine is available, but you can
+         * \python This set() routine is available, but you can
          * also set coefficients directly using syntax of the form
          * `p[exp] = value`.
          *

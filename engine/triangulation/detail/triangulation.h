@@ -123,7 +123,7 @@ namespace detail {
  *
  * - for other dimensions, Triangulation<dim> derives from Output directly.
  *
- * \ifacespython This base class is not present, but the "end user" class
+ * \python This base class is not present, but the "end user" class
  * Triangulation<dim> is.
  *
  * \tparam dim the dimension of the triangulation.
@@ -405,7 +405,7 @@ class TriangulationBase :
          * \a ret, then each simplex `ret[i]` will have index
          * `size()-k+i` in the overall triangulation.
          *
-         * \ifacespython For Python users, the two variants of newSimplices()
+         * \python For Python users, the two variants of newSimplices()
          * are essentially merged: the argument \a k is passed as an ordinary
          * runtime argument, and the new top-dimensional simplices will
          * be returned in a Python tuple of size \a k.
@@ -439,7 +439,7 @@ class TriangulationBase :
          * The new simplices will become the last \a k simplices in this
          * triangulation.
          *
-         * \ifacespython For Python users, the two variants of newSimplices()
+         * \python For Python users, the two variants of newSimplices()
          * are essentially merged: the argument \a k is passed as an ordinary
          * runtime argument, and the new top-dimensional simplices will
          * be returned in a Python tuple of size \a k.
@@ -1417,7 +1417,7 @@ class TriangulationBase :
          * dimension \a dim; for details see the documentation below for the
          * argument \a k.
          *
-         * \ifacespython Like the C++ template function homology<k>(),
+         * \python Like the C++ template function homology<k>(),
          * you can omit the homology dimension \a k; this will default to 1.
          *
          * \param k the dimension of the homology group to return;
@@ -1501,7 +1501,7 @@ class TriangulationBase :
          * the supported range (i.e., less than 1 or greater than or
          * equal to \a dim).
          *
-         * \ifacespython Like the C++ template function markedHomology<k>(),
+         * \python Like the C++ template function markedHomology<k>(),
          * you can omit the homology dimension \a k; this will default to 1.
          *
          * \param k the dimension of the homology group to compute; this must
@@ -2228,7 +2228,7 @@ class TriangulationBase :
          * extremely slow: its running time includes a factor of
          * (<i>dim</i>+1)!.
          *
-         * \ifacespython There are two versions of this function
+         * \python There are two versions of this function
          * available in Python.  The first form is
          * `findAllIsomorphisms(other, action)`, which mirrors the C++
          * function: it takes \a action which may be a pure Python function,
@@ -2285,7 +2285,7 @@ class TriangulationBase :
          * extremely slow: its running time includes a factor of
          * (<i>dim</i>+1)!.
          *
-         * \ifacespython There are two versions of this function
+         * \python There are two versions of this function
          * available in Python.  The first form is
          * `findAllSubcomplexesIn(other, action)`, which mirrors the C++
          * function: it takes \a action which may be a pure Python function,
@@ -2461,7 +2461,7 @@ class TriangulationBase :
          * `arXiv:1110.6080`.  The format for other dimensions is
          * essentially the same, but with minor dimension-specific adjustments.
          *
-         * \ifacespython Although this is a templated function, all of the
+         * \python Although this is a templated function, all of the
          * variants supplied with Regina are available to Python users.
          * For the default type and encoding, you can simply call isoSig().
          * For other signature types, you should call the function as
@@ -2507,7 +2507,7 @@ class TriangulationBase :
          * reconstructed from `fromIsoSig(sig)` will be identical to
          * `relabelling(this)`.
          *
-         * \ifacespython Although this is a templated function, all of the
+         * \python Although this is a templated function, all of the
          * variants supplied with Regina are available to Python users.  For
          * the default type and encoding, you can simply call isoSigDetail().
          * For other signature types, you should call the function as
@@ -2682,7 +2682,7 @@ class TriangulationBase :
          * correctly describe a triangulation with \a size top-dimensional
          * simplices.
          *
-         * \ifacespython The gluings should be passed as a single Python
+         * \python The gluings should be passed as a single Python
          * list of tuples (not an iterator pair).
          *
          * \param size the number of top-dimensional simplices in the

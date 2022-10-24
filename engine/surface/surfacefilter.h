@@ -418,7 +418,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Sets the allowable Euler characteristics to be all integers
          * in the given iterator range.  See eulerChars() for further details.
          *
-         * \ifacespython Instead of a pair of iterators, the set of
+         * \python Instead of a pair of iterators, the set of
          * allowable Euler characteristic should be passed as a Python list.
          *
          * \tparam Iterator an iterator type that, when dereferenced,

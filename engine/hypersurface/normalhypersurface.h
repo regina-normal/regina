@@ -248,7 +248,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
+         * \python Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
          *
          * \param triang the triangulation in which this normal hypersurface
@@ -376,7 +376,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the encoding
          * `HyperEncoding(coords)`.  This will not be checked!
          *
-         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
+         * \python Instead of a Vector<LargeInteger>, you may (if
          * you prefer) pass a Python list of integers.
          *
          * \param triang the triangulation in which this normal hypersurface
@@ -710,7 +710,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * of its properties.  This routine will be called from within
          * NormalHypersurfaces::writeXMLPacketData().
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
          * \param out the output stream to which the XML should be written.

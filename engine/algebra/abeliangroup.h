@@ -468,7 +468,7 @@ class AbelianGroup :
         /**
          * Writes a chunk of XML containing this abelian group.
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
          * \param out the output stream to which the XML should be written.

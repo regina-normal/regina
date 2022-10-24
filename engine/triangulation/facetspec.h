@@ -69,7 +69,7 @@ namespace regina {
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
- * \ifacespython Python does not support templates.  Instead this class
+ * \python Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g., FacetSpec2
  * and FacetSpec3 for dimensions 2 and 3).
  *
@@ -197,7 +197,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \pre This specifier is not past-the-end.
      *
-     * \ifacespython This routine is named inc() since python does not
+     * \python This routine is named inc() since python does not
      * support the increment operator.
      *
      * \return A copy of this specifier before it was incremented.
@@ -227,7 +227,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \pre This specifier is not before-the-start.
      *
-     * \ifacespython This routine is named dec() since python does not
+     * \python This routine is named dec() since python does not
      * support the decrement operator.
      *
      * \return A copy of this specifier before it was decremented.

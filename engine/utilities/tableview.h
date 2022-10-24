@@ -130,7 +130,7 @@ namespace detail {
  * std::swap(), with no need for any specialised move operations or swap
  * functions.
  *
- * \ifacespython The TableView classes are deliberately difficult to access:
+ * \python The TableView classes are deliberately difficult to access:
  * they live within their own private Python namespaces, and are all given the
  * same class name (\a TableView).  You would typically only interact with a
  * TableView when accessing a constant array (e.g., Edge<3>::edgeNumber).
@@ -418,7 +418,7 @@ class TableView {
          * \a dim is the dimension of this array, and where the <i>k</i>th
          * array subscript ranges from 0 to (\a s_k-1) inclusive.
          *
-         * \ifacespython In Python, the special method __len__() returns
+         * \python In Python, the special method __len__() returns
          * \a s_1.  That is, it indicates the allowed range for the
          * _first_ array subscript.
          *

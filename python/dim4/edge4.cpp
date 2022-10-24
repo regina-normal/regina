@@ -90,10 +90,13 @@ void addEdge4(pybind11::module_& m) {
             pybind11::return_value_policy::reference, rbase::component)
         .def("boundaryComponent", &Edge<4>::boundaryComponent,
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
-        .def("face", &regina::python::face<Edge<4>, 1, int>, rbase::face)
+        .def("face", &regina::python::face<Edge<4>, 1, int>,
+            pybind11::arg("lowerdim"), pybind11::arg("face"),
+            rbase::face)
         .def("vertex", &Edge<4>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("faceMapping", &regina::python::faceMapping<Edge<4>, 1, 5>,
+            pybind11::arg("lowerdim"), pybind11::arg("face"),
             rbase::faceMapping)
         .def("vertexMapping", &Edge<4>::vertexMapping, rbase::vertexMapping)
         .def("degree", &Edge<4>::degree, rbase::degree)

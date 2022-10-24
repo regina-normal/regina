@@ -51,7 +51,7 @@ void addPolynomial(pybind11::module_& m) {
         .def(pybind11::init<const Polynomial<Rational>&>(), rdoc::__copy)
         .def(pybind11::init([](const std::vector<Rational>& coeffs) {
             return new Polynomial<Rational>(coeffs.begin(), coeffs.end());
-        }), rdoc::__init_2)
+        }), pybind11::arg("coefficients"), rdoc::__init_2)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("init", static_cast<void (Polynomial<Rational>::*)()>(
@@ -61,7 +61,7 @@ void addPolynomial(pybind11::module_& m) {
         .def("init", [](Polynomial<Rational>& p,
                 const std::vector<Rational>& c) {
             p.init(c.begin(), c.end());
-        }, rdoc::init_3)
+        }, pybind11::arg("coefficients"), rdoc::init_3)
         .def("degree", &Polynomial<Rational>::degree, rdoc::degree)
         .def("isZero", &Polynomial<Rational>::isZero, rdoc::isZero)
         .def("isMonic", &Polynomial<Rational>::isMonic, rdoc::isMonic)

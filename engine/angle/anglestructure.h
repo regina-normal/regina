@@ -164,7 +164,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
          *
-         * \ifacespython Instead of a Vector<Integer>, you may (if you prefer)
+         * \python Instead of a Vector<Integer>, you may (if you prefer)
          * pass a Python list of integers.
          *
          * \param triang the triangulation on which this angle structure lies.
@@ -478,7 +478,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * of its properties.  This routine will be called from within
          * AngleStructures::writeXMLPacketData().
          *
-         * \ifacespython The argument \a out should be an open Python file
+         * \python The argument \a out should be an open Python file
          * object.
          *
          * \param out the output stream to which the XML should be written.
