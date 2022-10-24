@@ -103,7 +103,11 @@ Triangulation<4> Example<4>::k3() {
     // This is (with much work by multiple authors) derived from Spreer's
     // 17-vertex standard K3 simplicial complex.
     // Rhuaidi Burke has managed to get this down to 60 pentachora thus far.
-    Triangulation<4> ans = Triangulation<4>::fromIsoSig("8ALLAvvzwwLQAMzwvQAQMvAzLvwQPMwPwQQQQQAQQQLAAvQQQQQaaddeekkpttjjppvwxyopCDrCszzzuAwBOISRIRQUUWFFYZHHSSJJKKLLMMOOQW0P0RWSTTVXXXZ011223344556677qbGanbLbLbLbaaeanbDbDb2aKafavavbUaaaVbnafaIaIaqb0aBb0aDb0a2bWagbRaVbJadaaaCb3aVbIaIaPaPb2bWbSbGacaVbWaqb6aPbTbrafaibgaJaTboajatafataBaNaBbqb6ava2abbbayagaqbSaPbJaPbJa2boaGacaNabaqbub");
+    //Triangulation<4> ans = Triangulation<4>::fromIsoSig("8ALLAvvzwwLQAMzwvQAQMvAzLvwQPMwPwQQQQQAQQQLAAvQQQQQaaddeekkpttjjppvwxyopCDrCszzzuAwBOISRIRQUUWFFYZHHSSJJKKLLMMOOQW0P0RWSTTVXXXZ011223344556677qbGanbLbLbLbaaeanbDbDb2aKafavavbUaaaVbnafaIaIaqb0aBb0aDb0a2bWagbRaVbJadaaaCb3aVbIaIaPaPb2bWbSbGacaVbWaqb6aPbTbrafaibgaJaTboajatafataBaNaBbqb6ava2abbbayagaqbSaPbJaPbJa2boaGacaNabaqbub");
+    
+    // This triangulation is derived from a Kirby diagram of the standard K3 surface, 
+    // constructed and simplified by Rhuaidi Burke using DGT and the "Up-Down-Simplify" heuristic.
+    Triangulation<4> ans = Triangulation<4>::fromIsoSig("2ALAMMvAwvPLQwvPwLQPMvPQQQQLQPAwwALQQAAQPPzQPPaaddceffggikqpmllsorsquxwuttvxxFyyzzAABBCCDDJKIIGGHHMKLLNNOOPPQQSSUUTTVVWWXZZZ0011TbgaiaiakaqaaaMbaawaUbjbabPa5ayaGauara3bmagaNaUbybNa2aRa2aibbawboaraPbJa2aKaya1aqbub2afbPaZaUbcayaGawaca-aLb+aoatbfaNabagajaya1axbybrbebubgaubFbtbfaFbFbFbqbzaoaPboa");
     ans.reflect(); // so sig = -16, not 16
     return ans;
 }
