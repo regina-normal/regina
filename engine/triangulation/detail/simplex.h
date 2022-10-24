@@ -783,6 +783,8 @@ inline Component<dim>* SimplexBase<dim>::component() const {
 template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
+    static_assert(0 <= subdim && subdim < dim,
+        "Simplex<dim>::face<subdim>() requires 0 <= subdim < dim.");
     triangulation().ensureSkeleton();
     return std::get<subdim>(faces_)[face];
 }
@@ -826,6 +828,8 @@ inline Face<dim, 4>* SimplexBase<dim>::pentachoron(int i) const {
 template <int dim>
 template <int subdim>
 inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
+    static_assert(0 <= subdim && subdim < dim,
+        "Simplex<dim>::faceMapping<subdim>() requires 0 <= subdim < dim.");
     triangulation().ensureSkeleton();
     return std::get<subdim>(mappings_)[face];
 }

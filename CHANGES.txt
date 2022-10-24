@@ -47,6 +47,11 @@ Version 7.2  [ (to be determined) ]
             - New constructor to build the empty surface.
         Class NormalSurface:
             - New constructor to build the empty surface.
+        Class Simplex<dim>:
+            - Routines face<subdim> and faceMapping<subdim> now explicitly
+              require 0 <= subdim < dim (though this was always enforced in
+              Python, and other values of \a subdim would have always failed
+              to compile in C++).
         Class Snapshottable<T>:
             - Routine isReadOnlySnapshot() is now public, not protected.
         Class TableView:
