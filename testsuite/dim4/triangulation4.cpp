@@ -1526,7 +1526,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyLinksSpheres(cp2, 4, "CP^2");
             verifyLinksSpheres(s2xs2, 5, "S^2 x S^2");
             verifyLinksSpheres(s2xs2Twisted, 5, "S^2 x~ S^2");
-            verifyLinksSpheres(k3, 22, "K3");
+            verifyLinksSpheres(k3, 24, "K3");
             verifyLinksSpheres(rp4, 3, "RP^4");
             verifyLinksSpheres(twistedSphereBundle, 1, "Twisted sphere bundle");
             verifyLinksBalls(ball, 5, "Ball");
