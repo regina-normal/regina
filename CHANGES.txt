@@ -53,6 +53,9 @@ Version 7.2  [ (to be determined) ]
             - The class constructors now throw an exception if the given
               monodromy does not have determinant ±1 (note that this has
               always a precondition).
+        Class Triangulation<2>:
+            - The trivial isValid() routine is now provided by the common
+              base class TriangulationBase<2>, and is not reimplemented here.
         Class Triangulation<3>:
             - Renamed isHandlebody() to recogniseHandlebody().  There is no
               deprecated alias, since the issue here was users potentially

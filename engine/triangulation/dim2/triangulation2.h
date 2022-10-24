@@ -301,20 +301,6 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         /*@{*/
 
         /**
-         * Always returns \c true.
-         *
-         * This routine determines if this triangulation is valid; however,
-         * there is nothing that can go wrong with vertex links in 2-manifold
-         * triangulations, and so this routine always returns \c true.
-         *
-         * This no-op routine is provided for consistency with higher
-         * dimensional triangulations, and to assist with writing
-         * dimension-agnostic code.
-         *
-         * \return \c true.
-         */
-        bool isValid() const;
-        /**
          * Returns the Euler characteristic of this triangulation.
          * This will be evaluated as `V-E+F`.
          *
@@ -443,10 +429,6 @@ inline void Triangulation<2>::removeTriangleAt(size_t index) {
 
 inline void Triangulation<2>::removeAllTriangles() {
     removeAllSimplices();
-}
-
-inline bool Triangulation<2>::isValid() const {
-    return true;
 }
 
 inline long Triangulation<2>::eulerChar() const {

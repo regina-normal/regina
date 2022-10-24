@@ -3831,8 +3831,13 @@ inline bool TriangulationBase<dim>::isEmpty() const {
 
 template <int dim>
 inline bool TriangulationBase<dim>::isValid() const {
-    ensureSkeleton();
-    return valid_;
+    if constexpr (dim == 2) {
+        // There is nothing that can go wrong in dimension 2.
+        return true;
+    } else {
+        ensureSkeleton();
+        return valid_;
+    }
 }
 
 template <int dim>

@@ -194,7 +194,7 @@ void addTriangulation2(pybind11::module_& m) {
             return isos;
         }, rbase::findAllSubcomplexesIn)
         .def("isEmpty", &Triangulation<2>::isEmpty, rbase::isEmpty)
-        .def("isValid", &Triangulation<2>::isValid, rdoc::isValid)
+        .def("isValid", &Triangulation<2>::isValid, rbase::isValid)
         .def("eulerChar", &Triangulation<2>::eulerChar, rdoc::eulerChar)
         .def("eulerCharTri", &Triangulation<2>::eulerCharTri,
             rbase::eulerCharTri)

@@ -147,20 +147,6 @@ underlying manifold.
 Returns:
     ``True`` if and only if this is a minimal triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isValid
-static const char *isValid =
-R"doc(Always returns ``True``.
-
-This routine determines if this triangulation is valid; however, there
-is nothing that can go wrong with vertex links in 2-manifold
-triangulations, and so this routine always returns ``True``.
-
-This no-op routine is provided for consistency with higher dimensional
-triangulations, and to assist with writing dimension-agnostic code.
-
-Returns:
-    ``True``.)doc";
-
 // Docstring regina::python::doc::Triangulation_::newTriangle
 static const char *newTriangle =
 R"doc(A dimension-specific alias for newSimplex().
