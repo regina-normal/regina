@@ -89,7 +89,7 @@ class CoversTest : public CppUnit::TestFixture {
         template <int degree>
         std::vector<std::string> viaRegina(const Triangulation<3>& tri) {
             std::vector<std::string> covers;
-            tri.fundamentalGroup().enumerateCovers<degree>([&](
+            tri.group().enumerateCovers<degree>([&](
                     GroupPresentation&& g) {
                 AbelianGroup ab = g.abelianisation();
                 covers.push_back(ab.str());

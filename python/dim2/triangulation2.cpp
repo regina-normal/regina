@@ -217,6 +217,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("isIdeal", &Triangulation<2>::isIdeal, rdoc::isIdeal)
         .def("isConnected", &Triangulation<2>::isConnected,
             rbase::isConnected)
+        .def("group", &Triangulation<2>::group,
+            pybind11::return_value_policy::reference_internal, rbase::group)
         .def("fundamentalGroup", &Triangulation<2>::fundamentalGroup,
             pybind11::return_value_policy::reference_internal,
             rbase::fundamentalGroup)

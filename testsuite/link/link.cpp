@@ -971,8 +971,7 @@ class LinkTest : public CppUnit::TestFixture, public TightEncodingTest<Link> {
 
         void testComplementFree(const Link& l, unsigned nGen,
                 const char* name) {
-            const regina::GroupPresentation fg =
-                l.complement().fundamentalGroup();
+            const regina::GroupPresentation fg = l.complement().group();
             if (fg.countGenerators() != nGen || fg.countRelations() != 0) {
                 std::ostringstream msg;
                 msg << name << " complement: fundamental group is "
@@ -987,8 +986,7 @@ class LinkTest : public CppUnit::TestFixture, public TightEncodingTest<Link> {
             std::ostringstream expected;
             expected << nGen << " Z";
 
-            const regina::GroupPresentation fg =
-                l.complement().fundamentalGroup();
+            const regina::GroupPresentation fg = l.complement().group();
             if (fg.recogniseGroup() != expected.str()) {
                 std::ostringstream msg;
                 msg << name << " complement: fundamental group is "
@@ -3030,8 +3028,7 @@ class LinkTest : public CppUnit::TestFixture, public TightEncodingTest<Link> {
 
         void verifyGroup(const Link& link, const char* name) {
             regina::GroupPresentation fromLink = link.group();
-            regina::GroupPresentation fromComp =
-                link.complement().fundamentalGroup();
+            regina::GroupPresentation fromComp = link.complement().group();
 
             if (! lookIsomorphic(fromLink, fromComp)) {
                 std::ostringstream msg;

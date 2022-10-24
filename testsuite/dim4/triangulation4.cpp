@@ -1781,7 +1781,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             }
 
             // Tests for simply connected manifolds:
-            if (tri.fundamentalGroup().countGenerators() == 0) {
+            if (tri.group().countGenerators() == 0) {
                 if (f.even()) {
                     // Verify Rohlin's theorem:
                     if (f.signature() % 16 != 0) {

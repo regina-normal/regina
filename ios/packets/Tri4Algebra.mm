@@ -162,7 +162,7 @@
         self.fundName.text = @"Disconnected";
         self.fundGens.text = self.fundRels.text = self.fundRelsDetails.text = @"";
     } else {
-        [Tri4Algebra reloadGroup:self.packet->fundamentalGroup()
+        [Tri4Algebra reloadGroup:self.packet->group()
                                name:self.fundName
                                gens:self.fundGens
                                rels:self.fundRels

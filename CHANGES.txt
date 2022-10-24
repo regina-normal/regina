@@ -68,6 +68,8 @@ Version 7.2  [ (to be determined) ]
         Class Triangulation<dim>:
             - Renamed barycentricSubdivision() to subdivide().  The old
               name is kept as a deprecated alias.
+            - Renamed fundamentalGroup() to group().  The old, more expressive
+              name will be kept as a long-term alias (it is *not* deprecated).
         Function buildInfo():
             - New function that allows packagers to embed additional
               version/build-related information in the calculation engine.

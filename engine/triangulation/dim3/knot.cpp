@@ -68,9 +68,8 @@ namespace {
         // we already suspect that t is not a 3-sphere.  However, we
         // will try a few more things before giving up.
 
-        // Note that fundamentalGroup() already tries to simplify the
-        // group presentation.
-        if (t.fundamentalGroup().countGenerators() == 0) {
+        // Note that group() already tries to simplify the group presentation.
+        if (t.group().countGenerators() == 0) {
             // Poincare conjecture says yes!
             return true;
         }

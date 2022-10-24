@@ -187,7 +187,7 @@ void Tri4HomologyFundUI::refresh() {
         fgMsg->show();
     } else {
         fgMsg->hide();
-        fgGroup->setGroup(tri->fundamentalGroup());
+        fgGroup->setGroup(tri->group());
         fgGroup->show();
     }
 

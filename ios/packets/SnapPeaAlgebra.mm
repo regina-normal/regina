@@ -133,7 +133,7 @@
         self.unfilledFundDetails.hidden = NO;
 
         self.unfilledHomology.text = @(self.packet->homology().utf8().c_str());
-        [Tri3Algebra reloadGroup:self.packet->fundamentalGroup()
+        [Tri3Algebra reloadGroup:self.packet->group()
                            name:self.unfilledFundName
                            gens:self.unfilledFundGens
                            rels:self.unfilledFundRels

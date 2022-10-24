@@ -1646,13 +1646,13 @@ class SnapPeaTriangulation :
          * the current Dehn filling (if any).  Any complete cusps (without
          * fillings) will be treated as though they had been truncated.
          *
-         * This is different from the inherited fundamentalGroup() routine
-         * from the parent Triangulation<3> class:
+         * This is different from the inherited group() routine (and its
+         * alias fundamentalGroup()) from the parent Triangulation<3> class:
          *
          * - This routine fundamentalGroupFilled() respects Dehn fillings, and
          *   directly uses SnapPea's code to compute fundamental groups.
          *
-         * - The inherited fundamentalGroup() routine uses only Regina's code,
+         * - The inherited group() routine uses only Regina's code,
          *   and works purely within Regina's parent Triangulation<3> class.
          *   Since Triangulation<3> knows nothing about SnapPea or fillings,
          *   this means that any fillings on the cusps (which are specific

@@ -1047,6 +1047,35 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::fundamentalGroup
 constexpr const char *fundamentalGroup =
+R"doc(An alias for group(), which returns the fundamental group of this
+triangulation.
+
+See group() for further details, including how ideal vertices and
+invalid faces are managed.
+
+.. note::
+    In Regina 7.2, the routine fundamentalGroup() was renamed to
+    group() for brevity and for consistency with Link::group(). This
+    more expressive name fundamentalGroup() will be kept as a long-
+    term alias, and you are welcome to continue using it if you
+    prefer.
+
+Precondition:
+    This triangulation has at most one component.
+
+.. warning::
+    In dimension 3, if you are calling this from the subclass
+    SnapPeaTriangulation then **any fillings on the cusps will be
+    ignored**. (This is the same as for every routine implemented by
+    Regina's Triangulation<3> class.) If you wish to compute the
+    fundamental group with fillings, call
+    SnapPeaTriangulation::fundamentalGroupFilled() instead.
+
+Returns:
+    the fundamental group.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::group
+constexpr const char *group =
 R"doc(Returns the fundamental group of this triangulation.
 
 The fundamental group is computed in the dual 2-skeleton. This means:
@@ -1066,13 +1095,18 @@ The fundamental group is computed in the dual 2-skeleton. This means:
   itself in reverse, then the fundamental group will be computed
   without truncating the resulting projective plane cusp. This means
   that, if a barycentric subdivision is performed on a such a
-  triangulation, the result of fundamentalGroup() might change.
+  triangulation, the result of group() might change.
 
 Bear in mind that each time the triangulation changes, the fundamental
 group will be deleted. Thus the reference that is returned from this
-routine should not be kept for later use. Instead, fundamentalGroup()
-should be called again; this will be instantaneous if the group has
-already been calculated.
+routine should not be kept for later use. Instead, group() should be
+called again; this will be instantaneous if the group has already been
+calculated.
+
+Before Regina 7.2, this routine was called fundamentalGroup(). It has
+since been renamed to group() for brevity and for consistency with
+Link::group(). The more expressive name fundamentalGroup() will be
+kept, and you are welcome to use that instead if you prefer.
 
 Precondition:
     This triangulation has at most one component.
@@ -2011,7 +2045,7 @@ If the fundamental group has not yet been calculated for this
 triangulation, then this routine will store the new group as the
 fundamental group, under the assumption that you have worked out the
 group through some other clever means without ever having needed to
-call fundamentalGroup() at all.
+call group() at all.
 
 Note that this routine will not fire a packet change event.
 

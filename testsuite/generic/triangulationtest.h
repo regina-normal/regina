@@ -922,7 +922,7 @@ class TriangulationTest : public CppUnit::TestFixture,
 
         static void verifyFundGroup(const Triangulation<dim>& tri,
                 const char* group, const char* name) {
-            std::string ans = tri.fundamentalGroup().recogniseGroup();
+            std::string ans = tri.group().recogniseGroup();
             if (ans != group) {
                 std::string showAns = ans;
                 if (showAns.empty())

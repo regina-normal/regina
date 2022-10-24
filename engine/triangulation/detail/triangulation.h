@@ -1253,14 +1253,43 @@ class TriangulationBase :
          *   triangulation has an edge identified with itself in reverse,
          *   then the fundamental group will be computed without truncating
          *   the resulting projective plane cusp.  This means that, if a
-         *   barycentric subdivision is performed on a such a
-         *   triangulation, the result of fundamentalGroup() might change.
+         *   barycentric subdivision is performed on a such a triangulation,
+         *   the result of group() might change.
          *
          * Bear in mind that each time the triangulation changes, the
          * fundamental group will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
-         * Instead, fundamentalGroup() should be called again; this will
-         * be instantaneous if the group has already been calculated.
+         * Instead, group() should be called again; this will be instantaneous
+         * if the group has already been calculated.
+         *
+         * Before Regina 7.2, this routine was called fundamentalGroup().
+         * It has since been renamed to group() for brevity and for consistency
+         * with Link::group().  The more expressive name fundamentalGroup()
+         * will be kept, and you are welcome to use that instead if you prefer.
+         *
+         * \pre This triangulation has at most one component.
+         *
+         * \warning In dimension 3, if you are calling this from the subclass
+         * SnapPeaTriangulation then **any fillings on the cusps will be
+         * ignored**.  (This is the same as for every routine implemented by
+         * Regina's Triangulation<3> class.)  If you wish to compute the
+         * fundamental group with fillings, call
+         * SnapPeaTriangulation::fundamentalGroupFilled() instead.
+         *
+         * \return the fundamental group.
+         */
+        const GroupPresentation& group() const;
+        /**
+         * An alias for group(), which returns the fundamental group of this
+         * triangulation.
+         *
+         * See group() for further details, including how ideal vertices and
+         * invalid faces are managed.
+         *
+         * \note In Regina 7.2, the routine fundamentalGroup() was renamed to
+         * group() for brevity and for consistency with Link::group().  This
+         * more expressive name fundamentalGroup() will be kept as a long-term
+         * alias, and you are welcome to continue using it if you prefer.
          *
          * \pre This triangulation has at most one component.
          *
@@ -1290,7 +1319,7 @@ class TriangulationBase :
          * triangulation, then this routine will store the new group as the
          * fundamental group, under the assumption that you have worked out
          * the group through some other clever means without ever having
-         * needed to call fundamentalGroup() at all.
+         * needed to call group() at all.
          *
          * Note that this routine will not fire a packet change event.
          *
@@ -4819,6 +4848,12 @@ std::vector<Triangulation<dim>>
 
     delete[] newSimp;
     return ans;
+}
+
+template <int dim>
+inline const GroupPresentation& TriangulationBase<dim>::fundamentalGroup()
+        const {
+    return group();
 }
 
 template <int dim>

@@ -245,6 +245,8 @@ void addTriangulation4(pybind11::module_& m) {
         .def("isOriented", &Triangulation<4>::isOriented, rbase::isOriented)
         .def("isConnected", &Triangulation<4>::isConnected,
             rbase::isConnected)
+        .def("group", &Triangulation<4>::group,
+            pybind11::return_value_policy::reference_internal, rbase::group)
         .def("fundamentalGroup", &Triangulation<4>::fundamentalGroup,
             pybind11::return_value_policy::reference_internal,
             rbase::fundamentalGroup)

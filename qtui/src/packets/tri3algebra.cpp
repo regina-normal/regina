@@ -261,7 +261,7 @@ void Tri3HomologyFundUI::refresh() {
 
     if (tri->countComponents() <= 1) {
         fgMsg->hide();
-        fgGroup->setGroup(tri->fundamentalGroup());
+        fgGroup->setGroup(tri->group());
         fgGroup->show();
     } else {
         fgGroup->hide();

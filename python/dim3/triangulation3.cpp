@@ -305,6 +305,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("isOrdered", &Triangulation<3>::isOrdered, rdoc::isOrdered)
         .def("isConnected", &Triangulation<3>::isConnected,
             rbase::isConnected)
+        .def("group", &Triangulation<3>::group,
+            pybind11::return_value_policy::reference_internal, rbase::group)
         .def("fundamentalGroup", &Triangulation<3>::fundamentalGroup,
             pybind11::return_value_policy::reference_internal,
             rbase::fundamentalGroup)

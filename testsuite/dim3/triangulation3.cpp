@@ -2187,7 +2187,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         static void verifyFundGroupVsH1(const Triangulation<3>& tri,
                 const char* name) {
-            GroupPresentation pi1(tri.fundamentalGroup());
+            GroupPresentation pi1(tri.group());
 
             pi1.intelligentSimplify();
 

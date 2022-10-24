@@ -108,7 +108,7 @@ template MatrixInt TriangulationBase<15>::dualToPrimal<12>() const;
 template MatrixInt TriangulationBase<15>::dualToPrimal<13>() const;
 template MatrixInt TriangulationBase<15>::dualToPrimal<14>() const;
 
-template const GroupPresentation& TriangulationBase<15>::fundamentalGroup() const;
+template const GroupPresentation& TriangulationBase<15>::group() const;
 
 template void TriangulationBase<15>::calculateSkeleton();
 template void TriangulationBase<15>::clearBaseProperties();

@@ -174,7 +174,7 @@ AbelianGroup TriangulationBase<dim>::homology() const {
 }
 
 template <int dim>
-const GroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
+const GroupPresentation& TriangulationBase<dim>::group() const {
     if (fundGroup_.has_value())
         return *fundGroup_;
 

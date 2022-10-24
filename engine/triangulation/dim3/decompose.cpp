@@ -235,7 +235,7 @@ bool Triangulation<3>::isSphere() const {
     start.intelligentSimplify();
 
     // The Poincare conjecture!
-    if (start.fundamentalGroup().countGenerators() == 0) {
+    if (start.group().countGenerators() == 0) {
         prop_.threeSphere_ = true;
 
         // Some other things that come for free:
