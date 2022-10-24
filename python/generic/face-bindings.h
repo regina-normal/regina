@@ -105,13 +105,6 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def("boundaryComponent", &Face<dim, subdim>::boundaryComponent,
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("isBoundary", &Face<dim, subdim>::isBoundary, rbase::isBoundary)
-        .def("face", &regina::python::face<Face<dim, subdim>, subdim, int>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::face)
-        .def("faceMapping",
-            &regina::python::faceMapping<Face<dim, subdim>, subdim, dim + 1>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::faceMapping)
         .def_static("ordering", &Face<dim, subdim>::ordering, rbase2::ordering)
         .def_static("faceNumber", &Face<dim, subdim>::faceNumber,
             rbase2::faceNumber)
@@ -123,6 +116,15 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def_readonly_static("dimension", &Face<dim, subdim>::dimension)
         .def_readonly_static("subdimension", &Face<dim, subdim>::subdimension)
     ;
+    if constexpr (subdim > 0) {
+        c.def("face", &regina::python::face<Face<dim, subdim>, subdim, int>,
+            pybind11::arg("lowerdim"), pybind11::arg("face"),
+            rbase::face);
+        c.def("faceMapping",
+            &regina::python::faceMapping<Face<dim, subdim>, subdim, dim + 1>,
+            pybind11::arg("lowerdim"), pybind11::arg("face"),
+            rbase::faceMapping);
+    }
     if constexpr (subdim > 4) {
         c.def("pentachoron", &Face<dim, subdim>::pentachoron,
             pybind11::return_value_policy::reference, rbase::pentachoron);
