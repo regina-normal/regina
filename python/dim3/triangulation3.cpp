@@ -551,6 +551,22 @@ void addTriangulation3(pybind11::module_& m) {
             rdoc::knowsSolidTorus)
         .def("recogniseHandlebody", &Triangulation<3>::recogniseHandlebody,
             rdoc::recogniseHandlebody)
+        .def("isHandlebody", [](const Triangulation<3>&) -> ssize_t {
+            // Removed completely in v7.2.  C++ does not get a deprecated
+            // alias.  Keep this here for Python users for a little while so
+            // that people can see what needs to be done.  We can remove this
+            // placeholder routine in Regina 8.0.
+            throw std::runtime_error(
+                "Triangulation3::isHandlebody() has been renamed to "
+                "Triangulation3::recogniseHandlebody(), since treating the "
+                "integer return value as a boolean could lead to "
+                "misinterpretation.");
+        }, R"doc(Old routine that was renamed in Regina 7.2.
+
+Please update your code to use Triangulation3.recogniseHandlebody()
+instead, which does exactly what Triangulation3.isHandlebody() used to
+do in Regina 7.1.  The name isHandlebody() has _not_ been kept as an
+alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def("knowsHandlebody", &Triangulation<3>::knowsHandlebody,
             rdoc::knowsHandlebody)
         .def("isTxI", &Triangulation<3>::isTxI, rdoc::isTxI)

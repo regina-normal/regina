@@ -90,9 +90,9 @@ void addVertex3(pybind11::module_& m) {
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("degree", &Vertex<3>::degree, rbase::degree)
         .def("linkType", &Vertex<3>::linkType, rdoc::linkType)
-        .def("link", [](const Vertex<3>&) {
+        .def("link", [](const Vertex<3>&) -> Vertex<3>::LinkType {
             // Removed completely in v7.0.  C++ does not get a deprecated
-            // alias.  Keep this here for Python users for a little white so
+            // alias.  Keep this here for Python users for a little while so
             // that people can see what needs to be done.  Probably we can
             // remove this placeholder routine in Regina 8.0.
             throw std::runtime_error(
