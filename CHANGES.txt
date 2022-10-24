@@ -9,6 +9,11 @@ Regina - A Normal Surface Theory Calculator
 
 Version 7.2  [ (to be determined) ]
 
+    GENERAL:
+        - Regina now has docstrings throughout its Python module!  These are
+          extracted automatically from the hand-written C++ documentation, so
+          you will still find C++ terminology.  Neverhtless, these are now
+          available in Python for all of Regina's classes and functions.
     ENGINE:
         Class DegreeLessThan, DegreeGreaterThan:
             - Deprecated, since these are one-liners that can be done using a
@@ -87,10 +92,6 @@ Version 7.2  [ (to be determined) ]
         - Updated the included pybind11 library from 2.8.1 to 2.10.0.
           This means we can now support Python 3.11, but no longer support
           Python 3.4 or 3.5.
-        - Everything in Regina now has docstrings!  These are extracted
-          automatically from the (human-written) C++ documentation, so you
-          will still find C++ terminology.  Neverhtless, these are now
-          available in Python for all of Regina's classes and functions.
         - Several classes that provide array-like access (__getitem__) now
           implement the special __len__() function also.  Note that this
           affects how objects are evaluated in a boolean context.  Affected
