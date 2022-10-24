@@ -126,13 +126,13 @@ void addTriangulation3(pybind11::module_& m) {
             rdoc::inAnyPacket)
         .def("isSnapPea", overload_cast<>(&Triangulation<3>::isSnapPea),
             rdoc::isSnapPea)
-        .def("size", &Triangulation<3>::size)
+        .def("size", &Triangulation<3>::size, rbase::size)
         .def("countTetrahedra", &Triangulation<3>::countTetrahedra,
             rbase::countTetrahedra)
         .def("tetrahedra", &Triangulation<3>::tetrahedra,
             pybind11::keep_alive<0, 1>(), rbase::tetrahedra)
         .def("simplices", &Triangulation<3>::simplices,
-            pybind11::keep_alive<0, 1>())
+            pybind11::keep_alive<0, 1>(), rbase::simplices)
         // Use a static cast because GCC struggles with the overload_cast here:
         .def("tetrahedron",
             static_cast<regina::Simplex<3>* (Triangulation<3>::*)(size_t)>(
@@ -141,27 +141,29 @@ void addTriangulation3(pybind11::module_& m) {
             rbase::tetrahedron)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<3>::simplex),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal, rbase::simplex)
         .def("newTetrahedron", overload_cast<>(
             &Triangulation<3>::newTetrahedron),
             pybind11::return_value_policy::reference_internal,
             rdoc::newTetrahedron)
-        .def("newSimplex", overload_cast<>(
-            &Triangulation<3>::newSimplex),
-            pybind11::return_value_policy::reference_internal)
+        .def("newSimplex", overload_cast<>(&Triangulation<3>::newSimplex),
+            pybind11::return_value_policy::reference_internal,
+            rbase::newSimplex)
         .def("newTetrahedron", overload_cast<const std::string&>(
             &Triangulation<3>::newTetrahedron),
             pybind11::return_value_policy::reference_internal,
             rdoc::newTetrahedron_2)
         .def("newSimplex", overload_cast<const std::string&>(
             &Triangulation<3>::newSimplex),
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rbase::newSimplex_2)
         .def("newSimplices", [](Triangulation<3>& t, size_t k) {
             pybind11::tuple ans(k);
             for (size_t i = 0; i < k; ++i)
                 ans[i] = t.newSimplex();
             return ans;
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::reference_internal,
+            rbase::newSimplices)
         .def("newTetrahedra", [](Triangulation<3>& t, size_t k) {
             pybind11::tuple ans(k);
             for (size_t i = 0; i < k; ++i)
@@ -171,15 +173,19 @@ void addTriangulation3(pybind11::module_& m) {
             rdoc::newTetrahedra)
         .def("removeTetrahedron", &Triangulation<3>::removeTetrahedron,
             rdoc::removeTetrahedron)
-        .def("removeSimplex", &Triangulation<3>::removeSimplex)
+        .def("removeSimplex", &Triangulation<3>::removeSimplex,
+            rbase::removeSimplex)
         .def("removeTetrahedronAt", &Triangulation<3>::removeTetrahedronAt,
             rdoc::removeTetrahedronAt)
-        .def("removeSimplexAt", &Triangulation<3>::removeSimplexAt)
+        .def("removeSimplexAt", &Triangulation<3>::removeSimplexAt,
+            rbase::removeSimplexAt)
         .def("removeAllTetrahedra", &Triangulation<3>::removeAllTetrahedra,
             rdoc::removeAllTetrahedra)
-        .def("removeAllSimplices", &Triangulation<3>::removeAllSimplices)
+        .def("removeAllSimplices", &Triangulation<3>::removeAllSimplices,
+            rbase::removeAllSimplices)
         .def("swap", &Triangulation<3>::swap, rdoc::swap)
-        .def("moveContentsTo", &Triangulation<3>::moveContentsTo)
+        .def("moveContentsTo", &Triangulation<3>::moveContentsTo,
+            rbase::moveContentsTo)
         .def("countComponents", &Triangulation<3>::countComponents,
             rbase::countComponents)
         .def("countBoundaryComponents",
@@ -230,10 +236,12 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal, rbase::translate)
         .def("translate", &Triangulation<3>::translate<2>,
             pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("pairing", &Triangulation<3>::pairing)
-        .def("isIsomorphicTo", &Triangulation<3>::isIsomorphicTo)
+        .def("pairing", &Triangulation<3>::pairing, rbase::pairing)
+        .def("isIsomorphicTo", &Triangulation<3>::isIsomorphicTo,
+            rbase::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<3>::findAllIsomorphisms<
-                const std::function<bool(const Isomorphism<3>)>&>)
+                const std::function<bool(const Isomorphism<3>)>&>,
+            rbase::findAllIsomorphisms)
         .def("findAllIsomorphisms", [](const Triangulation<3>& t,
                 const Triangulation<3>& other) {
             std::vector<Isomorphism<3>> isos;
@@ -242,9 +250,10 @@ void addTriangulation3(pybind11::module_& m) {
                 return false;
             });
             return isos;
-        })
+        }, rbase::findAllIsomorphisms)
         .def("findAllSubcomplexesIn", &Triangulation<3>::findAllSubcomplexesIn<
-                const std::function<bool(const Isomorphism<3>)>&>)
+                const std::function<bool(const Isomorphism<3>)>&>,
+            rbase::findAllSubcomplexesIn)
         .def("findAllSubcomplexesIn", [](const Triangulation<3>& t,
                 const Triangulation<3>& other) {
             std::vector<Isomorphism<3>> isos;
@@ -253,9 +262,11 @@ void addTriangulation3(pybind11::module_& m) {
                 return false;
             });
             return isos;
-        })
-        .def("makeCanonical", &Triangulation<3>::makeCanonical)
-        .def("isContainedIn", &Triangulation<3>::isContainedIn)
+        }, rbase::findAllSubcomplexesIn)
+        .def("makeCanonical", &Triangulation<3>::makeCanonical,
+            rbase::makeCanonical)
+        .def("isContainedIn", &Triangulation<3>::isContainedIn,
+            rbase::isContainedIn)
         .def("hasTwoSphereBoundaryComponents",
             &Triangulation<3>::hasTwoSphereBoundaryComponents,
             rdoc::hasTwoSphereBoundaryComponents)
@@ -266,14 +277,16 @@ void addTriangulation3(pybind11::module_& m) {
             rdoc::hasMinimalBoundary)
         .def("hasMinimalVertices", &Triangulation<3>::hasMinimalVertices,
             rdoc::hasMinimalVertices)
-        .def("isEmpty", &Triangulation<3>::isEmpty)
-        .def("eulerCharTri", &Triangulation<3>::eulerCharTri)
+        .def("isEmpty", &Triangulation<3>::isEmpty, rbase::isEmpty)
+        .def("eulerCharTri", &Triangulation<3>::eulerCharTri,
+            rbase::eulerCharTri)
         .def("eulerCharManifold", &Triangulation<3>::eulerCharManifold,
             rdoc::eulerCharManifold)
-        .def("isValid", &Triangulation<3>::isValid)
+        .def("isValid", &Triangulation<3>::isValid, rbase::isValid)
         .def("isIdeal", &Triangulation<3>::isIdeal, rdoc::isIdeal)
         .def("isStandard", &Triangulation<3>::isStandard, rdoc::isStandard)
-        .def("hasBoundaryFacets", &Triangulation<3>::hasBoundaryFacets)
+        .def("hasBoundaryFacets", &Triangulation<3>::hasBoundaryFacets,
+            rbase::hasBoundaryFacets)
         .def("hasBoundaryTriangles", &Triangulation<3>::hasBoundaryTriangles,
             rdoc::hasBoundaryTriangles)
         .def("countBoundaryFacets", &Triangulation<3>::countBoundaryFacets,
@@ -286,14 +299,18 @@ void addTriangulation3(pybind11::module_& m) {
             &Triangulation<3>::countBoundaryFaces),
             rbase::countBoundaryFaces)
         .def("isClosed", &Triangulation<3>::isClosed, rdoc::isClosed)
-        .def("isOrientable", &Triangulation<3>::isOrientable)
-        .def("isOriented", &Triangulation<3>::isOriented)
+        .def("isOrientable", &Triangulation<3>::isOrientable,
+            rbase::isOrientable)
+        .def("isOriented", &Triangulation<3>::isOriented, rbase::isOriented)
         .def("isOrdered", &Triangulation<3>::isOrdered, rdoc::isOrdered)
-        .def("isConnected", &Triangulation<3>::isConnected)
+        .def("isConnected", &Triangulation<3>::isConnected,
+            rbase::isConnected)
         .def("fundamentalGroup", &Triangulation<3>::fundamentalGroup,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::reference_internal,
+            rbase::fundamentalGroup)
         .def("simplifiedFundamentalGroup",
-            &Triangulation<3>::simplifiedFundamentalGroup)
+            &Triangulation<3>::simplifiedFundamentalGroup,
+            rbase::simplifiedFundamentalGroup)
         .def("homology",
             static_cast<AbelianGroup (Triangulation<3>::*)(int) const>(
                 &Triangulation<3>::homology),
@@ -386,7 +403,7 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("canJoinBoundaries") = true,
             rdoc::maximalForestInSkeleton)
         .def("intelligentSimplify",
-        &Triangulation<3>::intelligentSimplify, rdoc::intelligentSimplify)
+            &Triangulation<3>::intelligentSimplify, rdoc::intelligentSimplify)
         .def("simplifyToLocalMinimum",
             &Triangulation<3>::simplifyToLocalMinimum,
             pybind11::arg("perform") = true, rdoc::simplifyToLocalMinimum)
@@ -517,11 +534,12 @@ void addTriangulation3(pybind11::module_& m) {
             rdoc::collapseEdge)
         .def("reorderTetrahedraBFS", &Triangulation<3>::reorderTetrahedraBFS,
             pybind11::arg("reverse") = false, rdoc::reorderTetrahedraBFS)
-        .def("orient", &Triangulation<3>::orient)
-        .def("reflect", &Triangulation<3>::reflect)
+        .def("orient", &Triangulation<3>::orient, rbase::orient)
+        .def("reflect", &Triangulation<3>::reflect, rbase::reflect)
         .def("order", &Triangulation<3>::order,
             pybind11::arg("forceOriented") = false, rdoc::order)
-        .def("triangulateComponents", &Triangulation<3>::triangulateComponents)
+        .def("triangulateComponents", &Triangulation<3>::triangulateComponents,
+            rbase::triangulateComponents)
         .def("summands", &Triangulation<3>::summands, rdoc::summands)
         .def("isSphere", &Triangulation<3>::isSphere, rdoc::isSphere)
         .def("knowsSphere", &Triangulation<3>::knowsSphere, rdoc::knowsSphere)
@@ -553,11 +571,15 @@ void addTriangulation3(pybind11::module_& m) {
         .def("niceTreeDecomposition", &Triangulation<3>::niceTreeDecomposition,
             pybind11::return_value_policy::reference_internal,
             rdoc::niceTreeDecomposition)
-        .def("makeDoubleCover", &Triangulation<3>::makeDoubleCover)
+        .def("makeDoubleCover", &Triangulation<3>::makeDoubleCover,
+            rbase::makeDoubleCover)
         .def("idealToFinite", &Triangulation<3>::idealToFinite,
             rdoc::idealToFinite)
-        .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal)
-        .def("barycentricSubdivision", &Triangulation<3>::barycentricSubdivision)
+        .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal,
+            rbase::finiteToIdeal)
+        .def("barycentricSubdivision",
+            &Triangulation<3>::barycentricSubdivision,
+            rbase::barycentricSubdivision)
         .def("pinchEdge", &Triangulation<3>::pinchEdge, rdoc::pinchEdge)
         .def("puncture", &Triangulation<3>::puncture,
             pybind11::arg("tet") = nullptr, rdoc::puncture)
@@ -580,28 +602,36 @@ void addTriangulation3(pybind11::module_& m) {
             rdoc::insertLayeredSolidTorus)
         .def("connectedSumWith", &Triangulation<3>::connectedSumWith,
             rdoc::connectedSumWith)
-        .def("insertTriangulation", &Triangulation<3>::insertTriangulation)
+        .def("insertTriangulation", &Triangulation<3>::insertTriangulation,
+            rbase::insertTriangulation)
         .def("dehydrate", &Triangulation<3>::dehydrate, rdoc::dehydrate)
         .def_static("rehydrate", &Triangulation<3>::rehydrate, rdoc::rehydrate)
-        .def("isoSig", &Triangulation<3>::isoSig<>)
+        .def("isoSig", &Triangulation<3>::isoSig<>, rbase::isoSig)
         .def("isoSig_EdgeDegrees",
-            &Triangulation<3>::isoSig<regina::IsoSigEdgeDegrees<3>>)
+            &Triangulation<3>::isoSig<regina::IsoSigEdgeDegrees<3>>,
+            rbase::isoSig)
         .def("isoSig_RidgeDegrees",
-            &Triangulation<3>::isoSig<regina::IsoSigRidgeDegrees<3>>)
-        .def("isoSigDetail", &Triangulation<3>::isoSigDetail<>)
+            &Triangulation<3>::isoSig<regina::IsoSigRidgeDegrees<3>>,
+            rbase::isoSig)
+        .def("isoSigDetail", &Triangulation<3>::isoSigDetail<>,
+            rbase::isoSigDetail)
         .def("isoSigDetail_EdgeDegrees",
-            &Triangulation<3>::isoSigDetail<regina::IsoSigEdgeDegrees<3>>)
+            &Triangulation<3>::isoSigDetail<regina::IsoSigEdgeDegrees<3>>,
+            rbase::isoSigDetail)
         .def("isoSigDetail_RidgeDegrees",
-            &Triangulation<3>::isoSigDetail<regina::IsoSigRidgeDegrees<3>>)
+            &Triangulation<3>::isoSigDetail<regina::IsoSigRidgeDegrees<3>>,
+            rbase::isoSigDetail)
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<4>>>& g) {
             return Triangulation<3>::fromGluings(size, g.begin(), g.end());
-        })
-        .def_static("fromIsoSig", &Triangulation<3>::fromIsoSig)
-        .def_static("fromSig", &Triangulation<3>::fromSig)
+        }, rbase::fromGluings)
+        .def_static("fromIsoSig", &Triangulation<3>::fromIsoSig,
+            rbase::fromIsoSig)
+        .def_static("fromSig", &Triangulation<3>::fromSig, rbase::fromSig)
         .def_static("isoSigComponentSize",
-            &Triangulation<3>::isoSigComponentSize)
-        .def("dumpConstruction", &Triangulation<3>::dumpConstruction)
+            &Triangulation<3>::isoSigComponentSize, rbase::isoSigComponentSize)
+        .def("dumpConstruction", &Triangulation<3>::dumpConstruction,
+            rbase::dumpConstruction)
         .def("snapPea", overload_cast<>(
             &Triangulation<3>::snapPea, pybind11::const_), rdoc::snapPea)
         .def("saveSnapPea", &Triangulation<3>::saveSnapPea, rdoc::saveSnapPea)
