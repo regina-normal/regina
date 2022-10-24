@@ -1962,11 +1962,17 @@ Returns:
 
 // Docstring regina::python::doc::Triangulation_::minimizeBoundary
 static const char *minimizeBoundary =
-R"doc(A synonym for minimiseBoundary(). This ensures that the boundary
-contains the smallest possible number of triangles, potentially adding
-tetrahedra to do this.
+R"doc(A deprecated synonym for minimiseBoundary(). This ensures that the
+boundary contains the smallest possible number of triangles,
+potentially adding tetrahedra to do this.
 
 See minimiseBoundary() for further details.
+
+.. deprecated::
+    Regina uses British English throughout its API. This synonym was a
+    special case where Regina used to offer both British and American
+    alternatives, but this will be removed in a future release. See
+    the page on spelling throughout Regina for further details.
 
 Precondition:
     This triangulation is valid.
@@ -1977,11 +1983,17 @@ Returns:
 
 // Docstring regina::python::doc::Triangulation_::minimizeVertices
 static const char *minimizeVertices =
-R"doc(A synonym for minimiseVertices(). This ensures that the triangulation
-contains the smallest possible number of vertices, potentially adding
-tetrahedra to do this.
+R"doc(A deprecated synonym for minimiseVertices(). This ensures that the
+triangulation contains the smallest possible number of vertices,
+potentially adding tetrahedra to do this.
 
 See minimiseVertices() for further details.
+
+.. deprecated::
+    Regina uses British English throughout its API. This synonym was a
+    special case where Regina used to offer both British and American
+    alternatives, but this will be removed in a future release. See
+    the page on spelling throughout Regina for further details.
 
 Precondition:
     This triangulation is valid.
