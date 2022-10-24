@@ -356,7 +356,7 @@ class [[deprecated]] DegreeLessThan {
          *
          * \param tri the triangulation with which we are working.
          */
-        DegreeLessThan(const Triangulation<dim>& tri);
+        DegreeLessThan(const Triangulation<dim>& tri) : tri_(tri) {}
         /**
          * Creates a new clone of the given function object.
          */
@@ -378,7 +378,10 @@ class [[deprecated]] DegreeLessThan {
          * \return \c true if and only if face \a a has smaller degree than
          * face \a b within the given triangulation.
          */
-        bool operator() (unsigned a, unsigned b) const;
+        bool operator() (unsigned a, unsigned b) const {
+            return (tri_.template face<subdim>(a)->degree() <
+                    tri_.template face<subdim>(b)->degree());
+        }
 
         // Make this class non-assignable, since \a tri_ is a reference.
         DegreeLessThan& operator = (const DegreeLessThan&) = delete;
@@ -425,7 +428,7 @@ class [[deprecated]] DegreeGreaterThan {
          *
          * \param tri the triangulation with which we are working.
          */
-        DegreeGreaterThan(const Triangulation<dim>& tri);
+        DegreeGreaterThan(const Triangulation<dim>& tri) : tri_(tri) {}
         /**
          * Creates a new clone of the given function object.
          */
@@ -447,7 +450,10 @@ class [[deprecated]] DegreeGreaterThan {
          * \return \c true if and only if face \a a has greater degree than
          * face \a b within the given triangulation.
          */
-        bool operator() (unsigned a, unsigned b) const;
+        bool operator() (unsigned a, unsigned b) const {
+            return (tri_.template face<subdim>(a)->degree() >
+                    tri_.template face<subdim>(b)->degree());
+        }
 
         // Make this class non-assignable, since \a tri_ is a reference.
         DegreeGreaterThan& operator = (const DegreeGreaterThan&) = delete;
@@ -492,32 +498,6 @@ void Triangulation<dim>::swap(Triangulation<dim>& other) {
 
     // Note: swapBaseData() calls Snapshottable::swap().
     this->swapBaseData(other);
-}
-
-// Inline functions for DegreeLessThan / DegreeGreaterThan
-
-template <int dim, int subdim>
-inline DegreeLessThan<dim, subdim>::DegreeLessThan(
-        const Triangulation<dim>& tri) : tri_(tri) {
-}
-
-template <int dim, int subdim>
-inline bool DegreeLessThan<dim, subdim>::operator () (
-        unsigned a, unsigned b) const {
-    return (tri_.template face<subdim>(a)->degree() <
-            tri_.template face<subdim>(b)->degree());
-}
-
-template <int dim, int subdim>
-inline DegreeGreaterThan<dim, subdim>::DegreeGreaterThan(
-        const Triangulation<dim>& tri) : tri_(tri) {
-}
-
-template <int dim, int subdim>
-inline bool DegreeGreaterThan<dim, subdim>::operator () (
-        unsigned a, unsigned b) const {
-    return (tri_.template face<subdim>(a)->degree() >
-            tri_.template face<subdim>(b)->degree());
 }
 
 } // namespace regina
