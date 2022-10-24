@@ -577,9 +577,9 @@ void addTriangulation3(pybind11::module_& m) {
             rdoc::idealToFinite)
         .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal,
             rbase::finiteToIdeal)
-        .def("barycentricSubdivision",
-            &Triangulation<3>::barycentricSubdivision,
-            rbase::barycentricSubdivision)
+        .def("subdivide", &Triangulation<3>::subdivide, rbase::subdivide)
+        .def("barycentricSubdivision", // deprecated
+            &Triangulation<3>::subdivide, rbase::barycentricSubdivision)
         .def("pinchEdge", &Triangulation<3>::pinchEdge, rdoc::pinchEdge)
         .def("puncture", &Triangulation<3>::puncture,
             pybind11::arg("tet") = nullptr, rdoc::puncture)

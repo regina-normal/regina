@@ -77,7 +77,7 @@ t.join(2, t, regina.Perm4(1,0,3,2))
 printEuler(tri, "Invalid edge")
 
 # Subdivide to obtain a valid triangulation:
-tri.barycentricSubdivision()
+tri.subdivide()
 printEuler(tri, "Two projective plane cusps")
 
 # Invalid boundary vertex links:

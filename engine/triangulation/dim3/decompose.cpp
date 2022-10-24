@@ -447,15 +447,10 @@ bool Triangulation<3>::isSolidTorus() const {
     while (true) {
         // INVARIANT: working is homeomorphic to our original manifold.
         if (working.countVertices() > 1) {
-            // Try *really* hard to get to a 1-vertex triangulation,
-            // since this will make nonTrivialSphereOrDisc() much
-            // faster (it will be able to use linear programming).
-            working.intelligentSimplify();
-            if (working.countVertices() > 1) {
-                working.barycentricSubdivision();
-                working.intelligentSimplify();
-                working.intelligentSimplify();
-            }
+            // We really want a 1-vertex triangulation, since this will make
+            // nonTrivialSphereOrDisc() much faster (it will be able to use
+            // linear programming).
+            working.minimiseVertices();
         }
 
         // Find a non-trivial normal disc or sphere.
@@ -635,15 +630,10 @@ ssize_t Triangulation<3>::recogniseHandlebody() const {
         // handlebody with positive genus.
         Triangulation<3>& top = toProcess.top();
         if ( top.countVertices() > 1 ) {
-            // Try *really* hard to get to a 1-vertex triangulation, since
-            // this will make nonTrivialSphereOrDisc() much faster (it will
-            // be able to use linear programming).
-            top.intelligentSimplify();
-            if ( top.countVertices() > 1 ) {
-                top.barycentricSubdivision();
-                top.intelligentSimplify();
-                top.intelligentSimplify();
-            }
+            // We really want a 1-vertex triangulation, since this will make
+            // nonTrivialSphereOrDisc() much faster (it will be able to use
+            // linear programming).
+            top.minimiseVertices();
         }
 
         // Find a non-trivial normal disc or sphere.
@@ -1053,9 +1043,12 @@ bool Triangulation<3>::hasCompressingDisc() const {
 
             if (use.countVertices() > 1) {
                 // Try harder.
-                use.barycentricSubdivision();
-                use.intelligentSimplify();
+                use.minimiseVertices();
                 if (use.countVertices() > 1) {
+                    // We could still be stuck with more than one vertex
+                    // (for example, if the original triangulation were
+                    // disconnected.
+                    //
                     // Fall back to a full vertex enumeration.
                     // This mirrors the code for non-orientable
                     // triangulations; see that later block for details.

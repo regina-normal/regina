@@ -369,9 +369,9 @@ void addTriangulation4(pybind11::module_& m) {
             rbase::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<4>::makeDoubleCover,
             rbase::makeDoubleCover)
-        .def("barycentricSubdivision",
-            &Triangulation<4>::barycentricSubdivision,
-            rbase::barycentricSubdivision)
+        .def("subdivide", &Triangulation<4>::subdivide, rbase::subdivide)
+        .def("barycentricSubdivision", // deprecated
+            &Triangulation<4>::subdivide, rbase::barycentricSubdivision)
         .def("idealToFinite", &Triangulation<4>::idealToFinite,
             rdoc::idealToFinite)
         .def("snapEdge", &Triangulation<4>::snapEdge,

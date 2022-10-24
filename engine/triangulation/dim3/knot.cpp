@@ -78,7 +78,7 @@ namespace {
         // At this point we suspect very strongly that t is not a 3-sphere.
 
         // Still: try kicking it, just in case.
-        t.barycentricSubdivision();
+        t.subdivide();
         while (t.intelligentSimplify())
             ;
         if (t.size() <= 10)

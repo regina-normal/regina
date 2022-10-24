@@ -285,7 +285,7 @@ class Triangulation2Test : public TriangulationTest<2> {
             if (b.isOrientable())
                 b.orient();
 
-            b.barycentricSubdivision();
+            b.subdivide();
             clearProperties(b);
 
             if (tri.hasBoundaryEdges() != b.hasBoundaryEdges()) {

@@ -121,7 +121,7 @@ def vitalStats(tri, name):
 	
 	print("Barycentric subdivision:")
 	t = regina.Triangulation3(tri)
-	t.barycentricSubdivision()
+	t.subdivide()
 	print("Checksum =", checksum(t.detail()))
 	
 	try:

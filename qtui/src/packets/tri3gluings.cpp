@@ -832,7 +832,7 @@ void Tri3GluingsUI::reflect() {
 void Tri3GluingsUI::barycentricSubdivide() {
     endEdit();
 
-    tri->barycentricSubdivision();
+    tri->subdivide();
 }
 
 void Tri3GluingsUI::idealToFinite() {

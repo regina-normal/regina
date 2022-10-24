@@ -444,7 +444,7 @@
     if (! [self checkEditable])
         return;
 
-    self.packet->barycentricSubdivision();
+    self.packet->subdivide();
 }
 
 - (IBAction)idealToFinite:(id)sender

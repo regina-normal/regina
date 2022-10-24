@@ -1430,10 +1430,12 @@ namespace {
                     // The LP-and-crushing method only works for
                     // 1-vertex triangulations (at present).
                     if (t_[side]->countVertices() > 1) {
-                        // Try harder.
-                        t_[side]->barycentricSubdivision();
-                        t_[side]->intelligentSimplify();
+                        t_[side]->minimiseVertices();
                         if (t_[side]->countVertices() > 1) {
+                            // We could still end up here (for example)
+                            // if the surface was non-separating and so
+                            // we have two boundary components.
+                            //
                             // Fall back to the old (slow and uncancellable)
                             // method.
                             if (t_[side]->hasCompressingDisc())

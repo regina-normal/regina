@@ -319,7 +319,7 @@
     if (! [self checkEditable])
         return;
 
-    self.packet->barycentricSubdivision();
+    self.packet->subdivide();
 }
 
 - (IBAction)reflect:(id)sender

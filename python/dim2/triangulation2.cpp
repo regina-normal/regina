@@ -264,9 +264,9 @@ void addTriangulation2(pybind11::module_& m) {
             rbase::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<2>::makeDoubleCover,
             rbase::makeDoubleCover)
-        .def("barycentricSubdivision",
-            &Triangulation<2>::barycentricSubdivision,
-            rbase::barycentricSubdivision)
+        .def("subdivide", &Triangulation<2>::subdivide, rbase::subdivide)
+        .def("barycentricSubdivision", // deprecated
+            &Triangulation<2>::subdivide, rbase::barycentricSubdivision)
         .def("insertTriangulation", &Triangulation<2>::insertTriangulation,
             rbase::insertTriangulation)
         .def("isoSig", &Triangulation<2>::isoSig<>, rbase::isoSig)

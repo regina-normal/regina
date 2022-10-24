@@ -105,7 +105,7 @@ struct BarycentricHelper;
 template <int dim>
 struct BarycentricHelper<dim, true> {
     static void subdivideAndSimplify(Triangulation<dim>& t) {
-        t.barycentricSubdivision();
+        t.subdivide();
         t.intelligentSimplify();
     }
 };

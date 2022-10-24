@@ -175,63 +175,16 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::barycentricSubdivision
 constexpr const char *barycentricSubdivision =
-R"doc(Does a barycentric subdivision of the triangulation. This is done in-
-place, i.e., the triangulation will be modified directly.
+R"doc(Deprecated routine that performs a barycentric subdivision of the
+triangulation.
 
-Each top-dimensional simplex *s* is divided into (*dim* + 1) factorial
-sub-simplices by placing an extra vertex at the centroid of every face
-of every dimension. Each of these sub-simplices *t* is described by a
-permutation *p* of (0, ..., *dim*). The vertices of such a sub-simplex
-*t* are:
-
-* vertex *p*[0] of *s*;
-
-* the centre of edge (*p*[0], *p*[1]) of *s*;
-
-* the centroid of triangle (*p*[0], *p*[1], *p*[2]) of *s*;
-
-* ...
-
-* the centroid of face (*p*[0], *p*[1], *p*[2], *p*[*dim*]) of *s*,
-  which is the entire simplex *s* itself.
-
-The sub-simplices have their vertices numbered in a way that mirrors
-the original simplex *s:*
-
-* vertex *p*[0] of *s* will be labelled *p*[0] in *t*;
-
-* the centre of edge (*p*[0], *p*[1]) of *s* will be labelled *p*[1]
-  in *t*;
-
-* the centroid of triangle (*p*[0], *p*[1], *p*[2]) of *s* will be
-  labelled *p*[2] in *t*;
-
-* ...
-
-* the centroid of *s* itself will be labelled *p*[*dim*] in *t*.
-
-In particular, if this triangulation is currently oriented, then this
-barycentric subdivision will preserve the orientation.
-
-If simplex *s* has index *i* in the original triangulation, then its
-sub-simplex corresponding to permutation *p* will have index ``((dim +
-1)! * i + p.orderedSnIndex())`` in the resulting triangulation. In
-other words: sub-simplices are ordered first according to the original
-simplex that contains them, and then according to the lexicographical
-ordering of the corresponding permutations *p*.
+.. deprecated::
+    This routine has been renamed to subdivide(), both to shorten the
+    name but also to make it clearer that this triangulation will be
+    modified directly.
 
 Precondition:
-    *dim* is one of Regina's standard dimensions. This precondition is
-    a safety net, since in higher dimensions the triangulation would
-    explode too quickly in size (and for the highest dimensions,
-    possibly beyond the limits of ``size_t``).
-
-.. warning::
-    In dimensions 3 and 4, both the labelling and ordering of sub-
-    simplices in the subdivided triangulation has changed as of Regina
-    5.1. (Earlier versions of Regina made no guarantee about the
-    labelling and ordering; these guarantees are also new to Regina
-    5.1).)doc";
+    *dim* is one of Regina's standard dimensions.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::boundaryComponent
 constexpr const char *boundaryComponent =
@@ -2072,6 +2025,66 @@ R"doc(Returns the number of top-dimensional simplices in the triangulation.
 
 Returns:
     The number of top-dimensional simplices.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::subdivide
+constexpr const char *subdivide =
+R"doc(Does a barycentric subdivision of the triangulation. This is done in-
+place, i.e., the triangulation will be modified directly.
+
+Each top-dimensional simplex *s* is divided into (*dim* + 1) factorial
+sub-simplices by placing an extra vertex at the centroid of every face
+of every dimension. Each of these sub-simplices *t* is described by a
+permutation *p* of (0, ..., *dim*). The vertices of such a sub-simplex
+*t* are:
+
+* vertex *p*[0] of *s*;
+
+* the centre of edge (*p*[0], *p*[1]) of *s*;
+
+* the centroid of triangle (*p*[0], *p*[1], *p*[2]) of *s*;
+
+* ...
+
+* the centroid of face (*p*[0], *p*[1], *p*[2], *p*[*dim*]) of *s*,
+  which is the entire simplex *s* itself.
+
+The sub-simplices have their vertices numbered in a way that mirrors
+the original simplex *s:*
+
+* vertex *p*[0] of *s* will be labelled *p*[0] in *t*;
+
+* the centre of edge (*p*[0], *p*[1]) of *s* will be labelled *p*[1]
+  in *t*;
+
+* the centroid of triangle (*p*[0], *p*[1], *p*[2]) of *s* will be
+  labelled *p*[2] in *t*;
+
+* ...
+
+* the centroid of *s* itself will be labelled *p*[*dim*] in *t*.
+
+In particular, if this triangulation is currently oriented, then this
+barycentric subdivision will preserve the orientation.
+
+If simplex *s* has index *i* in the original triangulation, then its
+sub-simplex corresponding to permutation *p* will have index ``((dim +
+1)! * i + p.orderedSnIndex())`` in the resulting triangulation. In
+other words: sub-simplices are ordered first according to the original
+simplex that contains them, and then according to the lexicographical
+ordering of the corresponding permutations *p*.
+
+Precondition:
+    *dim* is one of Regina's standard dimensions. This precondition is
+    a safety net, since in higher dimensions the triangulation would
+    explode too quickly in size (and for the highest dimensions,
+    possibly beyond the limits of ``size_t``).
+
+.. warning::
+    In dimensions 3 and 4, both the labelling and ordering of sub-
+    simplices in the subdivided triangulation has changed as of Regina
+    5.1. (Earlier versions of Regina made no guarantee about the
+    labelling and ordering; these guarantees are also new to Regina
+    5.1).)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::tetrahedra
 constexpr const char *tetrahedra =

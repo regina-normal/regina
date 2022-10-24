@@ -1502,7 +1502,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             // Do a barycentric subdivision to turn any invalid edges
             // into proper RP^2 ideal boundaries.
             Triangulation<3> t = tri.vertex(whichVertex)->buildLink();
-            t.barycentricSubdivision();
+            t.subdivide();
             t.intelligentSimplify();
 
             std::string ans = t.homology().str();
@@ -1949,7 +1949,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             if (b.isOrientable())
                 b.orient();
 
-            b.barycentricSubdivision();
+            b.subdivide();
             clearProperties(b);
 
             // Note that subdivisions can turn invalid into valid, but
@@ -2076,7 +2076,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            use.barycentricSubdivision();
+            use.subdivide();
 
             if (! use.isValid()) {
                 std::ostringstream msg;

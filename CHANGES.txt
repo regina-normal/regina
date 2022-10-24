@@ -65,6 +65,9 @@ Version 7.2  [ (to be determined) ]
               minimiseVertices() respectively) are now deprecated.  Going
               forward we will stick to just one style of spelling (British
               English, which Regina has always offered).
+        Class Triangulation<dim>:
+            - Renamed barycentricSubdivision() to subdivide().  The old
+              name is kept as a deprecated alias.
         Function buildInfo():
             - New function that allows packagers to embed additional
               version/build-related information in the calculation engine.

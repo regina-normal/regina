@@ -1941,7 +1941,19 @@ class TriangulationBase :
          * subdivision, which may change properties such as
          * Triangulation<4>::knownSimpleLinks).
          */
-        void barycentricSubdivision();
+        void subdivide();
+
+        /**
+         * Deprecated routine that performs a barycentric subdivision of the
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to subdivide(), both to
+         * shorten the name but also to make it clearer that this triangulation
+         * will be modified directly.
+         *
+         * \pre \a dim is one of Regina's standard dimensions.
+         */
+        [[deprecated]] void barycentricSubdivision();
 
         /**
          * Converts each real boundary component into a cusp (i.e., an
@@ -4617,7 +4629,7 @@ void TriangulationBase<dim>::makeDoubleCover() {
 }
 
 template <int dim>
-void TriangulationBase<dim>::barycentricSubdivision() {
+void TriangulationBase<dim>::subdivide() {
     size_t nOld = simplices_.size();
     if (nOld == 0)
         return;
@@ -4627,14 +4639,14 @@ void TriangulationBase<dim>::barycentricSubdivision() {
     ChangeEventSpan span(staging);
 
     static_assert(standardDim(dim),
-        "barycentricSubdivision() may only be used in standard dimensions.");
+        "subdivide() may only be used in standard dimensions.");
 
     auto* newSimp = new Simplex<dim>*[nOld * Perm<dim+1>::nPerms];
 
     // A top-dimensional simplex in the subdivision is uniquely defined
     // by a permutation p on (dim+1) elements.
     //
-    // As described in the documentation for barycentricSubdivision(),
+    // As described in the documentation for subdivide(),
     // this is the simplex that:
     // - meets the boundary in the facet opposite vertex p[dim];
     // - meets that facet in the (dim-2)-face opposite vertex p[dim-1];
@@ -4684,6 +4696,11 @@ void TriangulationBase<dim>::barycentricSubdivision() {
     // triangulation to be valid, then preserve vertex link properties.
     static_cast<Triangulation<dim>*>(this)->swap(staging);
     delete[] newSimp;
+}
+
+template <int dim>
+inline void TriangulationBase<dim>::barycentricSubdivision() {
+    subdivide();
 }
 
 template <int dim>

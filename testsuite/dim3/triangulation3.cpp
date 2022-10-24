@@ -300,10 +300,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             cuspedGenusTwoTorus = Example<3>::cuspedGenusTwoTorus();
 
             singleTet_bary.newTetrahedron();
-            singleTet_bary.barycentricSubdivision();
+            singleTet_bary.subdivide();
 
             fig8_bary = Example<3>::figureEight();
-            fig8_bary.barycentricSubdivision();
+            fig8_bary.subdivide();
 
             // The rest alas must be done manually.
 
@@ -326,7 +326,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             twoProjPlaneCusps.insertTriangulation(invalidEdges);
-            twoProjPlaneCusps.barycentricSubdivision();
+            twoProjPlaneCusps.subdivide();
 
             {
                 // To construct a solid torus with a pinched longitude, we
@@ -2727,7 +2727,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Try again with a barycentric subdivision.
             Triangulation<3> big(tri);
-            big.barycentricSubdivision();
+            big.subdivide();
             clearProperties(big);
             if (! big.isSphere()) {
                 std::ostringstream msg;
@@ -2761,7 +2761,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Try again with a barycentric subdivision.
             Triangulation<3> big(tri);
-            big.barycentricSubdivision();
+            big.subdivide();
             clearProperties(big);
             if (big.isSphere()) {
                 std::ostringstream msg;
@@ -3069,7 +3069,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Try again with a barycentric subdivision.
             Triangulation<3> big(tri);
-            big.barycentricSubdivision();
+            big.subdivide();
             clearProperties(big);
             if (! big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-ball "
@@ -3087,7 +3087,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Try again with a barycentric subdivision.
             Triangulation<3> big(tri);
-            big.barycentricSubdivision();
+            big.subdivide();
             clearProperties(big);
             if (big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-ball "
@@ -3141,7 +3141,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Make a punctured Poincare homology sphere.
             {
                 Triangulation<3> tri = Example<3>::poincare();
-                tri.barycentricSubdivision();
+                tri.subdivide();
                 tri.removeTetrahedronAt(0);
                 tri.intelligentSimplify();
                 verifyNotThreeBall(tri, "Punctured Poincare homology sphere");
@@ -3216,11 +3216,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             clearProperties(ideal);
 
             Triangulation<3> boundedBig(bounded);
-            boundedBig.barycentricSubdivision();
+            boundedBig.subdivide();
             clearProperties(boundedBig);
 
             Triangulation<3> idealBig(ideal);
-            idealBig.barycentricSubdivision();
+            idealBig.subdivide();
             clearProperties(idealBig);
 
             if (! bounded.isSolidTorus()) {
@@ -3262,11 +3262,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             clearProperties(ideal);
 
             Triangulation<3> boundedBig(bounded);
-            boundedBig.barycentricSubdivision();
+            boundedBig.subdivide();
             clearProperties(boundedBig);
 
             Triangulation<3> idealBig(ideal);
-            idealBig.barycentricSubdivision();
+            idealBig.subdivide();
             clearProperties(idealBig);
 
             if (bounded.isSolidTorus()) {
@@ -3420,11 +3420,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             clearProperties(ideal);
 
             Triangulation<3> boundedBig(bounded);
-            boundedBig.barycentricSubdivision();
+            boundedBig.subdivide();
             clearProperties(boundedBig);
 
             Triangulation<3> idealBig(ideal);
-            idealBig.barycentricSubdivision();
+            idealBig.subdivide();
             clearProperties(idealBig);
 
             if ( bounded.recogniseHandlebody() != genus ) {
@@ -3468,11 +3468,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             clearProperties(ideal);
 
             Triangulation<3> boundedBig(bounded);
-            boundedBig.barycentricSubdivision();
+            boundedBig.subdivide();
             clearProperties(boundedBig);
 
             Triangulation<3> idealBig(ideal);
-            idealBig.barycentricSubdivision();
+            idealBig.subdivide();
             clearProperties(idealBig);
 
             if ( bounded.recogniseHandlebody() != -1 ) {
@@ -3590,11 +3590,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             clearProperties(ideal);
 
             Triangulation<3> boundedBig(bounded);
-            boundedBig.barycentricSubdivision();
+            boundedBig.subdivide();
             clearProperties(boundedBig);
 
             Triangulation<3> idealBig(ideal);
-            idealBig.barycentricSubdivision();
+            idealBig.subdivide();
             clearProperties(idealBig);
 
             if (! bounded.isTxI()) {
@@ -3635,11 +3635,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             clearProperties(ideal);
 
             Triangulation<3> boundedBig(bounded);
-            boundedBig.barycentricSubdivision();
+            boundedBig.subdivide();
             clearProperties(boundedBig);
 
             Triangulation<3> idealBig(ideal);
-            idealBig.barycentricSubdivision();
+            idealBig.subdivide();
             clearProperties(idealBig);
 
             if (bounded.isTxI()) {
@@ -3903,7 +3903,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (b.isOrientable())
                 b.orient();
 
-            b.barycentricSubdivision();
+            b.subdivide();
             clearProperties(b);
 
             // Note that subdivisions can turn invalid into valid, but
@@ -5382,7 +5382,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             {
                 Triangulation<3> t = disjoint2;
-                t.barycentricSubdivision();
+                t.subdivide();
                 verifyMinimiseVertices(t,
                     "Subdivided Gieseking U (cusped genus 2 torus)");
             }

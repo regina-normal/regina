@@ -560,7 +560,7 @@ void Tri2GluingsUI::reflect() {
 void Tri2GluingsUI::barycentricSubdivide() {
     endEdit();
 
-    tri->barycentricSubdivision();
+    tri->subdivide();
 }
 
 void Tri2GluingsUI::doubleCover() {
