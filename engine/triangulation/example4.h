@@ -145,7 +145,7 @@ class Example<4> : public detail::ExampleBase<4> {
         /**
          * Returns a triangulation of the standard K3 surface.
          *
-         * Be warned: this triangulation is extremely large.
+         * Be warned: this triangulation is fairly large.
          *
          * \return the K3 surface.
          */

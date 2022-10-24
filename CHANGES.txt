@@ -16,6 +16,8 @@ Version 7.2  [ (to be determined) ]
         Class Example<3>:
             - Renamed whiteheadLink() to whitehead().  The old name is kept
               as a deprecated alias.
+        Class Example<4>:
+            - Shrunk k3() to 54 pentachora (thanks again to Rhuaidi Burke).  
         Class Face<dim, subdim>
             - Routines face<lowerdim> and faceMapping<lowerdim> now explicitly
               require 0 <= lowerdim < subdim (though this was always enforced
