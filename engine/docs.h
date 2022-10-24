@@ -211,6 +211,28 @@
 // Put ourselves in the regina namespace so that automatic links work.
 namespace regina {
 
+/*! \page spelling Spelling throughout Regina
+ *
+ *  Regina has always offered British English spelling throughout its API.
+ *  See for example Triangulation<3>::minimiseVertices(), or
+ *  GroupPresentation::recogniseGroup().
+ *
+ *  There are some cases where Regina will continue to offer both British and
+ *  American English spellings for the same functions:
+ *
+ *  - when referring to the name of another software package that uses
+ *    American English, such as in Triangulation<3>::recognizer();
+ *
+ *  - when mirroring functions in another software package that uses
+ *    American English, such as in SnapPeaTriangulation::randomize().
+ *
+ *  In all other cases, Regina will offer the British English spelling only
+ *  (since one consistent convention is easier for the developers to maintain).
+ *  Any legacy aliases that used to offer American alternatives (such as
+ *  Triangulation<3>::minimizeVertices()) are now deprecated, and will
+ *  eventually be removed.
+ */
+
 /*! \page bgl Boost Graph Library interface
  *
  * The namespace regina::graph provides an interface for various types of

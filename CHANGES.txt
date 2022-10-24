@@ -60,6 +60,11 @@ Version 7.2  [ (to be determined) ]
             - Renamed isHandlebody() to recogniseHandlebody().  There is no
               deprecated alias, since the issue here was users potentially
               misinterpreting the return type because of the function name.
+            - The synonyms minimizeBoundary() and minimizeVertices() (which
+              were convenience routines that called minimiseBoundary() and
+              minimiseVertices() respectively) are now deprecated.  Going
+              forward we will stick to just one style of spelling (British
+              English, which Regina has always offered).
         Function buildInfo():
             - New function that allows packagers to embed additional
               version/build-related information in the calculation engine.

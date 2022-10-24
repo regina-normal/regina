@@ -1771,18 +1771,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool minimiseBoundary();
 
         /**
-         * A synonym for minimiseBoundary().
+         * A deprecated synonym for minimiseBoundary().
          * This ensures that the boundary contains the smallest possible
          * number of triangles, potentially adding tetrahedra to do this.
          *
          * See minimiseBoundary() for further details.
+         *
+         * \deprecated Regina uses British English throughout its API.
+         * This synonym was a special case where Regina used to offer both
+         * British and American alternatives, but this will be removed in a
+         * future release.  See the page on
+         * \ref spelling "spelling throughout Regina" for further details.
          *
          * \pre This triangulation is valid.
          *
          * \return \c true if the triangulation was changed, or \c false if
          * every boundary component was already minimal to begin with.
          */
-        bool minimizeBoundary();
+        [[deprecated]] bool minimizeBoundary();
 
         /**
          * Ensures that this triangulation contains the smallest possible
@@ -1828,18 +1834,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool minimiseVertices();
 
         /**
-         * A synonym for minimiseVertices().
+         * A deprecated synonym for minimiseVertices().
          * This ensures that the triangulation contains the smallest possible
          * number of vertices, potentially adding tetrahedra to do this.
          *
          * See minimiseVertices() for further details.
+         *
+         * \deprecated Regina uses British English throughout its API.
+         * This synonym was a special case where Regina used to offer both
+         * British and American alternatives, but this will be removed in a
+         * future release.  See the page on
+         * \ref spelling "spelling throughout Regina" for further details.
          *
          * \pre This triangulation is valid.
          *
          * \return \c true if the triangulation was changed, or \c false if
          * the number of vertices was already minimal to begin with.
          */
-        bool minimizeVertices();
+        [[deprecated]] bool minimizeVertices();
 
         /**
          * Checks the eligibility of and/or performs a 4-4 move
