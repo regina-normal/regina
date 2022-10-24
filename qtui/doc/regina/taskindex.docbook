@@ -565,9 +565,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>documentation</primaryie>
-  <secondaryie><link linkend="python-docs">&regina; objects, classes
-   and methods</link></secondaryie>
+  <primaryie>documentation, &regina; objects, classes and methods</primaryie>
+  <secondaryie><link linkend="python-docstrings">accessing inline through
+   &python;</link></secondaryie>
+  <secondaryie><link linkend="python-docs">overview</link></secondaryie>
+  <secondaryie><ulink url='https://regina-normal.github.io/engine-docs/'>read online</ulink></secondaryie>
  </indexentry>
 
  <indexentry>

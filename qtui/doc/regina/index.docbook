@@ -213,6 +213,8 @@
   <!ENTITY sessiontriangulation SYSTEM "triangulation.session">
   <!ENTITY sessiontree SYSTEM "tree.session">
   <!ENTITY sessionprogress SYSTEM "progress.session">
+  <!ENTITY docstring1 SYSTEM "docstring1.txt">
+  <!ENTITY docstring2 SYSTEM "docstring2.txt">
 
   <!ENTITY submani18n SYSTEM "submani18n.docbook">
 
