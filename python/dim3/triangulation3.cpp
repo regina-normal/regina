@@ -429,12 +429,12 @@ void addTriangulation3(pybind11::module_& m) {
         }, rdoc::retriangulate)
         .def("minimiseBoundary", &Triangulation<3>::minimiseBoundary,
             rdoc::minimiseBoundary)
-        .def("minimizeBoundary", &Triangulation<3>::minimizeBoundary,
-            rdoc::minimizeBoundary)
+        .def("minimizeBoundary", // deprecated
+            &Triangulation<3>::minimiseBoundary, rdoc::minimizeBoundary)
         .def("minimiseVertices", &Triangulation<3>::minimiseVertices,
             rdoc::minimiseVertices)
-        .def("minimizeVertices", &Triangulation<3>::minimizeVertices,
-            rdoc::minimizeVertices)
+        .def("minimizeVertices", // deprecated
+            &Triangulation<3>::minimiseVertices, rdoc::minimizeVertices)
         .def("pachner", &Triangulation<3>::pachner<3>,
             pybind11::arg(),
             pybind11::arg("check") = true,
