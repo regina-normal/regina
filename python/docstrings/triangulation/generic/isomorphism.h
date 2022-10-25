@@ -470,7 +470,7 @@ Parameter ``sourceSimp``:
     the index of the source simplex containing the original (*dim* +
     1) facets; this must be between 0 and ``size()-1`` inclusive.
 
-Returns:
+Parameter ``perm``:
     the new permutation that should be applied to the facets of the
     source simplex.)doc";
 

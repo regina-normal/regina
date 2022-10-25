@@ -1821,6 +1821,9 @@ inline Perm<5> Perm<5>::rand(bool even) {
     return rand(engine.engine(), even);
 }
 
+#ifndef __DOXYGEN
+// Doxygen does not match this to the documented declaration.  I think the
+// issue is that the return type "looks" different due to the explicit <T>.
 template <class URBG>
 inline Perm<5> Perm<5>::rand(URBG&& gen, bool even) {
     if (even) {
@@ -1831,6 +1834,7 @@ inline Perm<5> Perm<5>::rand(URBG&& gen, bool even) {
         return S5[d(gen)];
     }
 }
+#endif // __DOXYGEN
 
 inline void Perm<5>::tightEncode(std::ostream& out) const {
     // Since 5! is only slightly larger than 94, we use a variable-length
@@ -1871,6 +1875,9 @@ inline Perm<5> Perm<5>::tightDecode(std::istream& input) {
         std::istreambuf_iterator<char>(), false);
 }
 
+#ifndef __DOXYGEN
+// Doxygen does not match this to the documented declaration.  I think the
+// issue is that the return type "looks" different due to the explicit <T>.
 template <typename iterator>
 Perm<5> Perm<5>::tightDecode(iterator start, iterator limit,
         bool noTrailingData) {
@@ -1894,6 +1901,7 @@ Perm<5> Perm<5>::tightDecode(iterator start, iterator limit,
 
     return Perm<5>(code);
 }
+#endif // __DOXYGEN
 
 inline constexpr Perm<5>::Index Perm<5>::S5Index() const {
     return code2_;

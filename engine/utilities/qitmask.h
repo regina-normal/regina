@@ -272,8 +272,11 @@ class Qitmask1 {
             return ((mask1 | mask2) & (other.mask1 | other.mask2));
         }
 
+#ifndef __DOXYGEN
+    // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T>(std::ostream& out,
         const Qitmask1<T>& mask);
+#endif
 };
 
 template <typename T, typename U>
@@ -529,8 +532,11 @@ class Qitmask2 {
                 ((high1 | high2) & (other.high1 | other.high2));
         }
 
+#ifndef __DOXYGEN
+    // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T, U>(std::ostream& out,
         const Qitmask2<T, U>& mask);
+#endif
 };
 
 } // namespace regina

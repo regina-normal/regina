@@ -967,8 +967,11 @@ class Bitmask1 {
             return BitManipulator<T>::bits(mask) <= 1;
         }
 
+#ifndef __DOXYGEN
+    // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T>(std::ostream& out,
         const Bitmask1<T>& mask);
+#endif
 };
 
 template <typename T, typename U>
@@ -1440,8 +1443,11 @@ class Bitmask2 {
                 BitManipulator<U>::bits(high)) <= 1;
         }
 
+#ifndef __DOXYGEN
+    // Doxygen gets confused by the "<< <" combination here.
     friend std::ostream& operator << <T, U>(std::ostream& out,
         const Bitmask2<T, U>& mask);
+#endif
 };
 
 // Inline functions for Bitmask

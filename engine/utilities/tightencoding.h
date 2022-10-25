@@ -710,6 +710,8 @@ inline std::string tightEncoding(bool value) {
         return "M"; // encoding of 0
 }
 
+#ifndef __DOXYGEN
+// Doxygen gets confused by these specialisatons.
 template <>
 inline bool tightDecoding<bool>(const std::string& enc) {
     if (enc.empty())
@@ -736,6 +738,7 @@ inline bool tightDecode<bool>(std::istream& input) {
         default: throw InvalidInput("The tight encoding is invalid");
     }
 }
+#endif
 
 template<typename Int>
 inline Int tightDecoding(const std::string& enc) {

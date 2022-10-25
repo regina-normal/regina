@@ -1062,6 +1062,9 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<T>& value) {
     return *this;
 }
 
+#ifndef __DOXYGEN
+// Doxygen does not match this to the documented declaration.  I think the
+// issue is that the return type "looks" different due to the explicit <T>.
 template <typename T>
 template <typename U>
 Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
@@ -1077,6 +1080,7 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
         coeff_[i] = value[i];
     return *this;
 }
+#endif // __DOXYGEN
 
 template <typename T>
 inline Polynomial<T>& Polynomial<T>::operator = (Polynomial<T>&& value)

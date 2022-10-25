@@ -330,7 +330,7 @@ class Isomorphism :
          * \param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
          * `size()-1` inclusive.
-         * \return the new permutation that should be applied to the facets
+         * \param perm the new permutation that should be applied to the facets
          * of the source simplex.
          */
         void setFacetPerm(size_t sourceSimp, Perm<dim+1> perm);

@@ -962,6 +962,9 @@ inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
     return *this;
 }
 
+#ifndef __DOXYGEN
+// Doxygen does not match this to the documented declaration.  I think the
+// issue is that the return type "looks" different due to the explicit <T>.
 template <typename T>
 template <typename U>
 inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
@@ -969,6 +972,7 @@ inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
     coeff_ = other.coeff_;
     return *this;
 }
+#endif // __DOXYGEN
 
 template <typename T>
 inline void Laurent2<T>::swap(Laurent2<T>& other) noexcept {

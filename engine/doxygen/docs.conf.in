@@ -64,10 +64,7 @@ WARN_IF_UNDOCUMENTED = YES
 
 # Input related options:
 
-INPUT = \
-    "@PROJECT_SOURCE_DIR@/engine" \
-    "@PROJECT_SOURCE_DIR@/python/constarray.h" \
-    "@PROJECT_SOURCE_DIR@/python/globalarray.h"
+INPUT = "@PROJECT_SOURCE_DIR@/engine"
 FILE_PATTERNS        = *.h
 RECURSIVE            = YES
 EXCLUDE = \

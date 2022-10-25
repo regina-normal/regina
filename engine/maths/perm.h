@@ -454,7 +454,7 @@ class Perm {
          * \return \c true if and only if the given code is a valid
          * internal permutation code.
          */
-        static constexpr bool isPermCode(Code newCode);
+        static constexpr bool isPermCode(Code code);
 
         /**
          * Returns the image pack that represents this permutation.
@@ -1215,6 +1215,9 @@ Perm<n> Perm<n>::rand(bool even) {
     return rand(engine.engine(), even);
 }
 
+#ifndef __DOXYGEN
+// Doxygen does not match this to the documented declaration.  I think the
+// issue is that the return type "looks" different due to the explicit <T>.
 template <int n>
 template <class URBG>
 Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
@@ -1239,6 +1242,7 @@ Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
         return orderedSn[d(gen)];
     }
 }
+#endif // __DOXYGEN
 
 template <int n>
 std::string Perm<n>::str() const {

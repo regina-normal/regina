@@ -2393,9 +2393,12 @@ class NativeInteger {
          */
         void tryReduce();
 
+#ifndef __DOXYGEN
+    // Doxygen is not able to match this up to the documented version below.
     template <int bytes_>
     friend std::ostream& operator << (std::ostream& out,
         const NativeInteger<bytes_>& large);
+#endif
 };
 
 /**
