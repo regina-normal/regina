@@ -217,7 +217,7 @@
    and the main routine to read a data file is <literal>regina.open</literal>.
   </para>
   <sect2 id="python-autoimport">
-   <title>Automatic imports</title>
+   <title>Automatic Imports</title>
    <para>
     Whenever &regina; gives you access to &python; (either through a
     <link linkend="python-gui">graphical console</link>,
@@ -249,7 +249,7 @@
  </sect1>
 
  <sect1 id="python-docs">
-  <title>&api; documentation</title>
+  <title>&api; Documentation</title>
   <para>
    &regina; includes a complete &api; reference for its calculation engine,
    which describes in detail the objects, classes and methods that are
@@ -291,7 +291,7 @@
   </para>
 
   <sect2 id="python-docstrings">
-   <title>Inline documentation</title>
+   <title>Inline Documentation</title>
    <para>
     As of version;&nbsp;7.2, &regina; now provides &python; docstrings
     for all of its classes and functions.  This means that you can get help
