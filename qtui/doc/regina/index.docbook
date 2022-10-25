@@ -97,6 +97,7 @@
   <!ENTITY debian "<application>Debian</application>">
   <!ENTITY dgt "<application><acronym>DGT</acronym></application>">
   <!ENTITY dmanifold "<replaceable>d</replaceable>-manifold">
+  <!ENTITY doxygen "<application>Doxygen</application>">
   <!ENTITY dsimplex "<replaceable>d</replaceable>-simplex">
   <!ENTITY dsimplices "<replaceable>d</replaceable>-simplices">
   <!ENTITY evince "<application>Evince</application>">
@@ -202,6 +203,7 @@
   <!ENTITY reginapython SYSTEM "python.docbook">
   <!ENTITY reginaoptions SYSTEM "options.docbook">
   <!ENTITY reginacompiling SYSTEM "compiling.docbook">
+  <!ENTITY reginacontributing SYSTEM "contributing.docbook">
   <!ENTITY reginatrouble SYSTEM "trouble.docbook">
   <!ENTITY reginaservices SYSTEM "services.docbook">
   <!ENTITY reginacredits SYSTEM "credits.docbook">
@@ -283,6 +285,7 @@
  &reginapython;
  &reginaoptions;
  &reginacompiling;
+ &reginacontributing;
  &reginatrouble;
  &reginaservices;
 
