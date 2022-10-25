@@ -11349,11 +11349,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					"\"$(SRCROOT)\"",
-					/usr/include/libxml2,
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				MACH_O_TYPE = mh_bundle;
@@ -11391,11 +11386,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					"\"$(SRCROOT)\"",
-					/usr/include/libxml2,
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				MACH_O_TYPE = mh_bundle;
@@ -11421,14 +11411,7 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-					"\"$(SRCROOT)\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = regtestsuite;
 			};
@@ -11446,14 +11429,7 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREPROCESSOR_DEFINITIONS = "";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-					"\"$(SRCROOT)\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = regtestsuite;
 			};
@@ -11485,9 +11461,6 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/preconfig/ios-xcode5\"",
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -11527,9 +11500,6 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/preconfig/ios-xcode5\"",
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -11569,13 +11539,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11606,13 +11569,6 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11644,13 +11600,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11678,13 +11627,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11716,13 +11658,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11750,13 +11685,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11788,13 +11716,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11822,13 +11743,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11860,13 +11774,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11894,13 +11801,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11932,13 +11832,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11966,13 +11859,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12007,13 +11893,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -12044,13 +11923,6 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12082,13 +11954,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -12116,13 +11981,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12167,10 +12025,6 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
 					"$(HOME)/Qt/6.3.2/macos/lib/QtCore.framework/Headers",
 					"$(HOME)/Qt/6.3.2/macos/lib/QtGui.framework/Headers",
@@ -12180,7 +12034,6 @@
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
-				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -12221,10 +12074,6 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
 					"$(HOME)/Qt/6.3.2/macos/lib/QtCore.framework/Headers",
 					"$(HOME)/Qt/6.3.2/macos/lib/QtGui.framework/Headers",
@@ -12234,7 +12083,6 @@
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
-				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -12298,6 +12146,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/macos\"",
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
@@ -12355,6 +12204,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/macos\"",
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
@@ -12383,14 +12233,6 @@
 					"REGINA_XCODE_BUNDLE=1",
 					"$(inherited)",
 				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					"\"$(SRCROOT)\"",
-					/usr/include/libxml2,
-				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "regina-engine";
 				SKIP_INSTALL = YES;
@@ -12412,14 +12254,6 @@
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					"\"$(SRCROOT)\"",
-					/usr/include/libxml2,
-				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "regina-engine";
 				SKIP_INSTALL = YES;
@@ -12444,13 +12278,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -12478,13 +12305,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12520,13 +12340,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -12558,13 +12371,6 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12597,13 +12403,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(USER_LIBRARY_DIR)/Frameworks",
 					"@executable_path",
@@ -12635,13 +12434,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(USER_LIBRARY_DIR)/Frameworks",
 					"@executable_path",
@@ -12675,14 +12467,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					"\"$(SRCROOT)\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = mkcensusdb;
@@ -12703,14 +12487,6 @@
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					"\"$(SRCROOT)\"",
-					/usr/include/libxml2,
-				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = mkcensusdb;
