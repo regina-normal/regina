@@ -901,6 +901,8 @@
 		0543AEC61811E12A002758F8 /* shortrunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F61811D920002CC2AE /* shortrunner.h */; };
 		054535B919D8EA7100BED767 /* TextPopover.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054535B819D8EA7100BED767 /* TextPopover.mm */; };
 		054535BC19D90C3A00BED767 /* Skeleton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054535BB19D90C3A00BED767 /* Skeleton.mm */; };
+		0549B4962907D34800C911AF /* tableview.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0549B4952907D34800C911AF /* tableview.cpp */; };
+		0549B4972907D34800C911AF /* tableview.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0549B4952907D34800C911AF /* tableview.cpp */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -3437,6 +3439,37 @@
 		054535B819D8EA7100BED767 /* TextPopover.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextPopover.mm; sourceTree = "<group>"; };
 		054535BA19D90C3A00BED767 /* Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
 		054535BB19D90C3A00BED767 /* Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Skeleton.mm; sourceTree = "<group>"; };
+		0549B4952907D34800C911AF /* tableview.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tableview.cpp; sourceTree = "<group>"; };
+		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
+		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
+		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
+		0549B49B2907D38E00C911AF /* data-filtercomb.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-filtercomb.docbook"; sourceTree = "<group>"; };
+		0549B49C2907D38E00C911AF /* data-regina.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-regina.docbook"; sourceTree = "<group>"; };
+		0549B49D2907D38F00C911AF /* data-angles.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-angles.docbook"; sourceTree = "<group>"; };
+		0549B49E2907D38F00C911AF /* data-anonref.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anonref.docbook"; sourceTree = "<group>"; };
+		0549B49F2907D38F00C911AF /* data-link.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-link.docbook"; sourceTree = "<group>"; };
+		0549B4A02907D38F00C911AF /* data-textdata.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-textdata.docbook"; sourceTree = "<group>"; };
+		0549B4A12907D38F00C911AF /* data-packet-link.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-link.docbook"; sourceTree = "<group>"; };
+		0549B4A22907D39000C911AF /* data-hypersurfaces.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-hypersurfaces.docbook"; sourceTree = "<group>"; };
+		0549B4A32907D39000C911AF /* data-script.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-script.docbook"; sourceTree = "<group>"; };
+		0549B4A42907D39000C911AF /* data-snappeadata.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-snappeadata.docbook"; sourceTree = "<group>"; };
+		0549B4A52907D39000C911AF /* data-filtertrivial.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-filtertrivial.docbook"; sourceTree = "<group>"; };
+		0549B4A62907D39100C911AF /* data-attachment.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-attachment.docbook"; sourceTree = "<group>"; };
+		0549B4A72907D39100C911AF /* data-container.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-container.docbook"; sourceTree = "<group>"; };
+		0549B4A82907D39100C911AF /* data-connections.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-connections.docbook"; sourceTree = "<group>"; };
+		0549B4A92907D39100C911AF /* data-crossings.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-crossings.docbook"; sourceTree = "<group>"; };
+		0549B4AA2907D39100C911AF /* data-components.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-components.docbook"; sourceTree = "<group>"; };
+		0549B4AB2907D39200C911AF /* data-surfaces.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-surfaces.docbook"; sourceTree = "<group>"; };
+		0549B4AC2907D39200C911AF /* data-code.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-code.docbook"; sourceTree = "<group>"; };
+		0549B4AD2907D39200C911AF /* data-filterprop.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-filterprop.docbook"; sourceTree = "<group>"; };
+		0549B4AE2907D39200C911AF /* data-handlebody.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-handlebody.docbook"; sourceTree = "<group>"; };
+		0549B4AF2907D48000C911AF /* contributing.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = contributing.docbook; sourceTree = "<group>"; };
+		0549B4B02907D48100C911AF /* docstring1.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstring1.txt; sourceTree = "<group>"; };
+		0549B4B12907D48100C911AF /* links.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = links.docbook; sourceTree = "<group>"; };
+		0549B4B22907D48100C911AF /* docstring2.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = docstring2.txt; sourceTree = "<group>"; };
+		0549B4B32907D4B900C911AF /* arch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = arch.cpp; path = admin/arch.cpp; sourceTree = "<group>"; };
+		0549B4B42907D4B900C911AF /* env.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = env.in; path = admin/env.in; sourceTree = "<group>"; };
+		0549B4B52907D4BA00C911AF /* verify_build.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = verify_build.in; path = admin/verify_build.in; sourceTree = "<group>"; };
 		054C6A4E1DCC1FE7005373F0 /* example-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "example-bindings.h"; sourceTree = "<group>"; };
 		054C6A4F1DCC1FE7005373F0 /* example5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example5.cpp; sourceTree = "<group>"; };
 		054C6A501DCC1FE7005373F0 /* example6.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example6.cpp; sourceTree = "<group>"; };
@@ -6025,12 +6058,16 @@
 			isa = PBXGroup;
 			children = (
 				0514CAE71D9CD4B500EDB2E6 /* index.docbook */,
+				0549B4B12907D48100C911AF /* links.docbook */,
 				05685F911F9710C400085B44 /* about.docbook */,
 				05685F8A1F9710C300085B44 /* angles.docbook */,
 				05685F881F9710C200085B44 /* bibliography.docbook */,
 				05685F9E1F9710C700085B44 /* CMakeLists.txt */,
 				05685FA11F9710C800085B44 /* compiling.docbook */,
+				0549B4AF2907D48000C911AF /* contributing.docbook */,
 				05685F9D1F9710C600085B44 /* credits.docbook */,
+				0549B4B02907D48100C911AF /* docstring1.txt */,
+				0549B4B22907D48100C911AF /* docstring2.txt */,
 				05685F9B1F9710C600085B44 /* featureset.docbook */,
 				05685F8B1F9710C300085B44 /* foreign.docbook */,
 				05685F961F9710C500085B44 /* gpl-license.html */,
@@ -6064,15 +6101,27 @@
 				05685FD01F9710FD00085B44 /* data-allowstrict.docbook */,
 				05685FC01F9710F800085B44 /* data-allowtaut.docbook */,
 				05685FD71F9710FF00085B44 /* data-angleparams.docbook */,
+				0549B49D2907D38F00C911AF /* data-angles.docbook */,
+				0549B4982907D38D00C911AF /* data-anon.docbook */,
+				0549B49E2907D38F00C911AF /* data-anonref.docbook */,
+				0549B4A62907D39100C911AF /* data-attachment.docbook */,
+				0549B4AC2907D39200C911AF /* data-code.docbook */,
 				05685FC51F9710FA00085B44 /* data-compact-filter.docbook */,
 				05685FA41F9710F000085B44 /* data-compact-surface.docbook */,
+				0549B4AA2907D39100C911AF /* data-components.docbook */,
 				05685FB61F9710F500085B44 /* data-compressingdisc.docbook */,
 				05685FA31F9710F000085B44 /* data-connected.docbook */,
+				0549B4A82907D39100C911AF /* data-connections.docbook */,
+				0549B4A72907D39100C911AF /* data-container.docbook */,
+				0549B4A92907D39100C911AF /* data-crossings.docbook */,
 				05685FA81F9710F100085B44 /* data-euler-filter.docbook */,
 				05685FCB1F9710FB00085B44 /* data-euler-surface.docbook */,
 				05685FB71F9710F600085B44 /* data-filter-combination.docbook */,
 				05685FA91F9710F100085B44 /* data-filter-properties.docbook */,
 				05685FD11F9710FD00085B44 /* data-filter.docbook */,
+				0549B49B2907D38E00C911AF /* data-filtercomb.docbook */,
+				0549B4AD2907D39200C911AF /* data-filterprop.docbook */,
+				0549B4A52907D39000C911AF /* data-filtertrivial.docbook */,
 				05685FB91F9710F600085B44 /* data-flags.docbook */,
 				05685FC41F9710F900085B44 /* data-fundgroup.docbook */,
 				05685FBD1F9710F700085B44 /* data-group.docbook */,
@@ -6081,9 +6130,12 @@
 				05685FB31F9710F400085B44 /* data-H1Rel.docbook */,
 				05685FB81F9710F600085B44 /* data-H2.docbook */,
 				05685FBC1F9710F700085B44 /* data-haken.docbook */,
+				0549B4AE2907D39200C911AF /* data-handlebody.docbook */,
 				05685FCF1F9710FD00085B44 /* data-hypersurface.docbook */,
+				0549B4A22907D39000C911AF /* data-hypersurfaces.docbook */,
 				05685FB21F9710F400085B44 /* data-irreducible.docbook */,
 				05685FB11F9710F400085B44 /* data-line.docbook */,
+				0549B49F2907D38F00C911AF /* data-link.docbook */,
 				05685FDA1F97110000085B44 /* data-op.docbook */,
 				05685FBA1F9710F600085B44 /* data-orbl-filter.docbook */,
 				05685FA51F9710F000085B44 /* data-orbl-surface.docbook */,
@@ -6092,6 +6144,7 @@
 				05685FBB1F9710F700085B44 /* data-packet-dim2triangulation.docbook */,
 				05685FE51F97110300085B44 /* data-packet-dim3triangulation.docbook */,
 				05685FEB1F97110500085B44 /* data-packet-dim4triangulation.docbook */,
+				0549B4A12907D38F00C911AF /* data-packet-link.docbook */,
 				05685FDE1F97110100085B44 /* data-packet-normalhypersurfacelist.docbook */,
 				05685FE41F97110300085B44 /* data-packet-normalsurfacelist.docbook */,
 				05685FA61F9710F000085B44 /* data-packet-pdf.docbook */,
@@ -6107,27 +6160,34 @@
 				05685FC31F9710F900085B44 /* data-pentachora.docbook */,
 				05685FDB1F97110000085B44 /* data-realbdry-filter.docbook */,
 				05685FDC1F97110100085B44 /* data-realbdry-surface.docbook */,
+				0549B49C2907D38E00C911AF /* data-regina.docbook */,
 				05685FE71F97110400085B44 /* data-reginadata.docbook */,
 				05685FCD1F9710FC00085B44 /* data-reln.docbook */,
+				0549B4A32907D39000C911AF /* data-script.docbook */,
 				05685FAE1F9710F300085B44 /* data-simplex.docbook */,
 				05685FCE1F9710FC00085B44 /* data-simplices.docbook */,
 				05685FDD1F97110100085B44 /* data-snappea.docbook */,
+				0549B4A42907D39000C911AF /* data-snappeadata.docbook */,
 				05685FE81F97110400085B44 /* data-solidtorus.docbook */,
 				05685FAB1F9710F200085B44 /* data-spanstrict.docbook */,
 				05685FAF1F9710F300085B44 /* data-spantaut.docbook */,
 				05685FE21F97110200085B44 /* data-splitsfce.docbook */,
 				05685FD21F9710FE00085B44 /* data-struct.docbook */,
 				05685FEC1F97110500085B44 /* data-surface.docbook */,
+				0549B4AB2907D39200C911AF /* data-surfaces.docbook */,
 				05685FD31F9710FE00085B44 /* data-tag.docbook */,
 				05685FD41F9710FE00085B44 /* data-tet.docbook */,
 				05685FAC1F9710F200085B44 /* data-tetrahedra.docbook */,
 				05685FE11F97110200085B44 /* data-text.docbook */,
+				0549B4A02907D38F00C911AF /* data-textdata.docbook */,
 				05685FD81F9710FF00085B44 /* data-threeball.docbook */,
 				05685FE91F97110400085B44 /* data-threesphere.docbook */,
+				0549B4992907D38E00C911AF /* data-tri.docbook */,
 				05685FB51F9710F500085B44 /* data-triangle.docbook */,
 				05685FD51F9710FE00085B44 /* data-triangles.docbook */,
 				05685FA71F9710F100085B44 /* data-turaevviro.docbook */,
 				05685FB41F9710F500085B44 /* data-twosided.docbook */,
+				0549B49A2907D38E00C911AF /* data-txi.docbook */,
 				05685FD61F9710FF00085B44 /* data-var.docbook */,
 				05685FAA1F9710F200085B44 /* data-zeroeff.docbook */,
 				05685FE31F97110300085B44 /* dataformat.docbook */,
@@ -6219,6 +6279,7 @@
 				05277ABD25CF9D16001E4134 /* link.cpp */,
 				05277ABC25CF9D16001E4134 /* perm.cpp */,
 				05277AB425CF9D16001E4134 /* snappea.cpp */,
+				0549B4952907D34800C911AF /* tableview.cpp */,
 				05277AB825CF9D16001E4134 /* triangulation.cpp */,
 			);
 			path = "compile-time";
@@ -7955,8 +8016,11 @@
 				0577E71E1F970D4600CBDF15 /* LICENSE.txt */,
 				0577E71D1F970D4600CBDF15 /* README.md */,
 				05685F641F970E2600085B44 /* admin */,
+				0549B4B32907D4B900C911AF /* arch.cpp */,
 				05685F701F970F0500085B44 /* cmake */,
+				0549B4B42907D4B900C911AF /* env.in */,
 				05685F7C1F970FC100085B44 /* timing */,
+				0549B4B52907D4BA00C911AF /* verify_build.in */,
 			);
 			name = admin;
 			sourceTree = "<group>";
@@ -9717,6 +9781,7 @@
 				05FB46C81DD92CF900BB00E5 /* grouppresentation.cpp in Sources */,
 				052FA1121806088B00FAE4DF /* runalltests.cpp in Sources */,
 				05277B0225CF9D59001E4134 /* binom.cpp in Sources */,
+				0549B4962907D34800C911AF /* tableview.cpp in Sources */,
 				052FA1181806088B00FAE4DF /* connectedsumdecomp.cpp in Sources */,
 				052FA10C1806088B00FAE4DF /* perm4.cpp in Sources */,
 				052FA11B1806088B00FAE4DF /* isomorphism.cpp in Sources */,
@@ -10457,6 +10522,7 @@
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
 				052FA1AA1806129B00FAE4DF /* script.cpp in Sources */,
 				05C265C52830A4AD00232420 /* facetpairing2.cpp in Sources */,
+				0549B4972907D34800C911AF /* tableview.cpp in Sources */,
 				05F2033520A17C2500FC74ED /* dt.cpp in Sources */,
 				05249F0F1DBC16F9001FE29E /* triangulation8.cpp in Sources */,
 				05C0645E1C56B1F7006E6483 /* Tri4ViewController.mm in Sources */,
