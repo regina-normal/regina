@@ -12,7 +12,7 @@ Version 7.2  [ 28 October, 2022 ]
     GENERAL:
         - Regina now has docstrings throughout its Python module!  These are
           extracted automatically from the hand-written C++ documentation, so
-          you will still find C++ terminology.  Neverhtless, these are now
+          you will still find C++ terminology.  Nevertheless, these are now
           available in Python for all of Regina's classes and functions.
     ENGINE:
         Class DegreeLessThan, DegreeGreaterThan:
