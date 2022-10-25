@@ -8,6 +8,23 @@ Regina - A Normal Surface Theory Calculator
 
 Version 7.2  [ 28 October, 2022 ]
 
+    Overview:
+        - The main focus of this release is Python.  See the detailed
+          changelog for other minor enhancements across Regina's codebase.
+    Python:
+        - Regina now provides docstrings throughout its Python module, which
+          means you can get comprehensive help directly from within Python.
+          See https://regina-normal.github.io/docs/python-docs.html for
+          some important caveats regarding this inline documentation.
+        - Regina now supports the newly-released Python 3.11, but no longer
+          supports Python 3.4 or 3.5.
+        - Undertook a full audit of Python bindings for the entire calculation
+          engine: a few bindings were missing, and these have now been added.
+        - Added __len__() functions to classes where this is meaningful.
+        - Fixed two errors in the Python bindings (Cyclotomic::negate() and
+          swap(BitmaskN, BitmaskN)).  These are unlikely to have affected users:
+          see https://regina-normal.github.io/bugs.html for details.
+
 Version 7.1  [ 30 September, 2022 ]
 
     Overview:
