@@ -125,7 +125,7 @@ Returns:
 static const char *k3 =
 R"doc(Returns a triangulation of the standard K3 surface.
 
-Be warned: this triangulation is extremely large.
+Be warned: this triangulation is fairly large.
 
 Returns:
     the K3 surface.)doc";

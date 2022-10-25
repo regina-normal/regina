@@ -3264,7 +3264,7 @@ call this routine in a new detached thread.
 
 To assist with performance, this routine can run in parallel
 (multithreaded) mode; simply pass the number of parallel threads in
-the argument *nThreads*. Even in multithreaded mode, this routine will
+the argument *threads*. Even in multithreaded mode, this routine will
 not return until processing has finished (i.e., either *action*
 returned ``True``, or the search was exhausted). All calls to *action*
 will be protected by a mutex (i.e., different threads will never be
@@ -3302,7 +3302,7 @@ Parameter ``height``:
     number of crossings originally present in this knot diagram, or a
     negative number if this should not be bounded.
 
-Parameter ``nThreads``:
+Parameter ``threads``:
     the number of threads to use. If this is 1 or smaller then the
     routine will run single-threaded.
 
@@ -3394,7 +3394,7 @@ detached thread.
 
 To assist with performance, this routine can run in parallel
 (multithreaded) mode; simply pass the number of parallel threads in
-the argument *nThreads*. Even in multithreaded mode, this routine will
+the argument *threads*. Even in multithreaded mode, this routine will
 not return until processing has finished (i.e., either the diagram was
 simplified or the search was exhausted).
 
@@ -3419,7 +3419,7 @@ Parameter ``height``:
     number of crossings originally present in this diagram, or a
     negative number if this should not be bounded.
 
-Parameter ``nThreads``:
+Parameter ``threads``:
     the number of threads to use. If this is 1 or smaller then the
     routine will run single-threaded.
 

@@ -179,6 +179,10 @@ Python:
     the template parameter *subdim* becomes the first argument of the
     function.
 
+Template parameter ``subdim``:
+    the dimension of the subface to examine. This must be between 0
+    and (*dim* - 1) inclusive.
+
 Parameter ``face``:
     the *subdim*-face of this simplex to examine. This should be
     between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.
@@ -270,6 +274,10 @@ Python:
     call this function in the form ``faceMapping(subdim, face)``; that
     is, the template parameter *subdim* becomes the first argument of
     the function.
+
+Template parameter ``subdim``:
+    the dimension of the subface to examine. This must be between 0
+    and (*dim* - 1) inclusive.
 
 Parameter ``face``:
     the *subdim*-face of this simplex to examine. This should be

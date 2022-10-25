@@ -294,6 +294,11 @@ Python:
     Since Python does not support templates, the dimension *dim*
     should be passed as an argument to this function.
 
+Template parameter ``dim``:
+    indicates which type of isomorphisms to return. Specifically, this
+    integer parameter indicates the dimension of triangulation on
+    which these isomorphisms act.
+
 Returns:
     the two inclusion maps corresponding to this partition.)doc";
 

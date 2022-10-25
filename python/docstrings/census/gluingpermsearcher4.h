@@ -265,6 +265,12 @@ If the search tree is shallow enough (or if *maxDepth* is large
 enough), it is possible that this routine will produce complete gluing
 permutation sets.
 
+Python:
+    This function is available, and *action* may be a pure Python
+    function. However, *action* cannot take any additional arguments
+    beyond the initial gluing permutation set (and therefore the
+    additional *args* list is omitted here).
+
 Parameter ``maxDepth``:
     the depth of the partial search to run. A negative number
     indicates that a full search should be run.
