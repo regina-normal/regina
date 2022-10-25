@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 7.2  [ (to be determined) ]
+Version 7.2  [ 28 October, 2022 ]
 
     GENERAL:
         - Regina now has docstrings throughout its Python module!  These are

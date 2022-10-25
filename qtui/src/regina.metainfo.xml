@@ -61,7 +61,7 @@
   </provides>
 
   <releases>
-    <release version="7.2" date="2022-09-30">
+    <release version="7.2" date="2022-10-28">
       <description>
         <p>
           Significant updates for Python users, including comprehensive
