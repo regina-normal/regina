@@ -279,7 +279,7 @@
     </listitem>
     <listitem>
      Some functions differ in how they are called from &cpp;
-     versus &python;.  In such cases you will see the &cpp; description;,
+     versus &python;.  In such cases you will see the &cpp; description,
      but there will also be a &ldquo;&python;&rdquo; paragraph explaining
      how things differ in &python;.
     </listitem>
@@ -304,17 +304,28 @@
     as useful and natural as possible, it is still automated.
     Therefore you will find:
     <itemizedlist>
-     <listitem>the documentation still uses some &cpp; terminology
-     (e.g., <literal>std::string</literal>, pointers and references,
-     move semantics, etc.);</listitem>
-     <listitem>some functions differ in how they are called from
-     &cpp; versus &python; (in which case look for a &ldquo;&python;&rdquo;
-     paragraph explaining the differences, as noted above);</listitem>
-     <listitem>some parts of the documentation are not accessible at all
-     through &python;, since they do not correspond to entities that
-     hold docstrings (e.g., class constants such as
-     <literal>Perm4::nPerms</literal>, or standalone pages such as the
-     discussion on Seifert fibred space notation).</listitem>
+     <listitem>The documentation still uses some &cpp; terminology
+      (e.g., <literal>std::string</literal>, pointers and references,
+      move semantics, etc.).</listitem>
+     <listitem>Function arguments are often not named in the synopsis
+      at the beginning of the docstring (you will see them called
+      <literal>arg0</literal>, <literal>arg1</literal>, etc.).
+      However, they <emphasis>are</emphasis> named in the detailed
+      descriptions of the arguments that follow.</listitem>
+     <listitem>Some functions differ in how they are called from &cpp;
+      versus &python; (e.g., <literal>Tetrahedron3.face()</literal>, or
+      <literal>Link.rewrite()</literal>).
+      In these cases, the detailed hand-written argument descriptions will
+      follow the &cpp; variant, but the initial synopsis will be written for
+      &python;.  For clarity, here the arguments in the &python; synopsis
+      <emphasis>will</emphasis> be named.
+      Look also for a &ldquo;&python;&rdquo; paragraph that explains
+      exactly how the &cpp; and &python; versions differ.</listitem>
+     <listitem>Some parts of the documentation are not accessible at all
+      through &python;, since they do not correspond to entities that
+      hold docstrings (e.g., class constants such as
+      <literal>Perm4::nPerms</literal>, or standalone pages such as the
+      discussion on Seifert fibred space notation).</listitem>
     </itemizedlist>
     Ultimately, <emphasis>it is the &cpp; documentation that is
     authoritative</emphasis>, not the inline &python; documentation.
