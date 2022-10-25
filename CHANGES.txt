@@ -10,10 +10,14 @@ Regina - A Normal Surface Theory Calculator
 Version 7.2  [ 28 October, 2022 ]
 
     GENERAL:
-        - Regina now has docstrings throughout its Python module!  These are
+        - Regina now has docstrings throughout its Python module.  These are
           extracted automatically from the hand-written C++ documentation, so
           you will still find C++ terminology.  Nevertheless, these are now
           available in Python for all of Regina's classes and functions.
+        - Began moving to a more readable markdown format for documentation
+          in the C++ headers.  A lot of work is already done here, but this is
+          an ongoing project.  See also the new style guide for API docs in
+          the Regina Handbook (in the new chapter on Contributing to Regina).
     ENGINE:
         Class DegreeLessThan, DegreeGreaterThan:
             - Deprecated, since these are one-liners that can be done using a
