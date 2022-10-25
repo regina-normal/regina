@@ -113,7 +113,7 @@
      <literal>αβπ</literal>, and
      <literal>¹²³</literal>.</listitem>
     <listitem>Use &doxygen;-style backslash tags such as
-    <literal>\param</literal>, not <application>javadoc</application>-style
+    <literal>\param</literal>, not <application>Javadoc</application>-style
     tags such as <literal>@param</literal>.</listitem>
    </itemizedlist>
   </para></listitem>
