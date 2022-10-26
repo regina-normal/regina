@@ -46,6 +46,7 @@
 #include <QFont>
 #include <QList>
 #include <QMutex>
+#include <QObject>
 #include <QString>
 #include <QSize>
 #include <QUrl>

@@ -32,6 +32,7 @@
 
 #include "packetcreator.h"
 #include "reginasupport.h"
+#include <QObject>
 
 void PacketCreator::explainNoParents() {
     ReginaSupport::sorry(getInterface(),
