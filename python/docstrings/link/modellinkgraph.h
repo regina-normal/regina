@@ -89,8 +89,8 @@ of by the ModelLinkGraph to which they belong.)doc";
 
 namespace ModelLinkGraphArc_ {
 
-// Docstring regina::python::doc::ModelLinkGraphArc_::__bool
-static const char *__bool =
+// Docstring regina::python::doc::ModelLinkGraphArc_::__as_bool
+static const char *__as_bool =
 R"doc(Tests whether this is a non-null arc.
 
 Returns:

@@ -119,6 +119,7 @@ case "$1" in
 esac
 
 if ! tar "$taropts" "$1" | sed -e 's%^[^/]*/%%' -e 's%/$%%' | \
+    grep -v '\(^\|/\)\.clang-tidy$' | \
     sort > "$distlist"; then
   echo "The contents of the distribution tarball $1 could not be listed."
   exit 1
