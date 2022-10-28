@@ -21,7 +21,7 @@ fi
 # For the include path, we grab the pre-rolled macOS config file.
 # The choice of config file shouldn't actually affect the docstrings.
 export PYTHONPATH=".:$PYTHONPATH"
-export CPP_INCLUDE_DIRS="../../engine ../../preconfig/osx-xcode5"
+export CPP_INCLUDE_DIRS="../../engine ../../preconfig/macos"
 
 for dir in $dirs; do
   case "$dir" in

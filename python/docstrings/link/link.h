@@ -3630,8 +3630,8 @@ Returns:
 
 namespace StrandRef_ {
 
-// Docstring regina::python::doc::StrandRef_::__bool
-static const char *__bool =
+// Docstring regina::python::doc::StrandRef_::__as_bool
+static const char *__as_bool =
 R"doc(Tests whether this is a non-null reference.
 
 Returns:

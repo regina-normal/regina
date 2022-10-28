@@ -42,8 +42,8 @@ functions.)doc";
 
 namespace DiscType_ {
 
-// Docstring regina::python::doc::DiscType_::__bool
-static const char *__bool =
+// Docstring regina::python::doc::DiscType_::__as_bool
+static const char *__as_bool =
 R"doc(Returns ``True`` if this disc type is non-null.
 
 The implementation will assume that a non-null disc type has non-
