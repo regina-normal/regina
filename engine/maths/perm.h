@@ -203,7 +203,7 @@ class Perm {
          * Indicates the native unsigned integer type used to store a
          * single image pack.  See the class notes for more information
          * on image packs, and how they are used as permutation codes
-         * for \a n ≥ 7.
+         * for \a n ≥ 8.
          */
         using ImagePack = typename IntOfMinSize<(imageBits * n + 7) / 8>::utype;
 
@@ -462,7 +462,7 @@ class Perm {
          * See the class notes for more information on image packs, and how
          * they are used to build permutation codes.
          *
-         * For \a n ≥ 7, this routine is identical to permCode().
+         * For \a n ≥ 8, this routine is identical to permCode().
          *
          * \return the image pack for this permutation.
          */
@@ -474,7 +474,7 @@ class Perm {
          * See the class notes for more information on image packs, and how
          * they are used to build permutation codes.
          *
-         * For \a n ≥ 7, this routine is identical to fromPermCode().
+         * For \a n ≥ 8, this routine is identical to fromPermCode().
          *
          * \pre The argument \a pack is a valid image pack; see isImagePack()
          * for details.
@@ -491,7 +491,7 @@ class Perm {
          * See the class notes for more information on image packs, and how
          * they are used to build permutation codes.
          *
-         * For \a n ≥ 7, this routine is identical to isPermCode().
+         * For \a n ≥ 8, this routine is identical to isPermCode().
          *
          * \param pack the candidate image pack to test.
          * \return \c true if and only if \a pack is a valid image pack.

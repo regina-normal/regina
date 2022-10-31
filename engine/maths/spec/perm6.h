@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file maths/spec/perm5.h
+/*! \file maths/spec/perm6.h
  *  \brief Internal header for permutations of {0,1,2,3,4,5}.
  *
  *  This file is automatically included from perm.h; there is no need for
