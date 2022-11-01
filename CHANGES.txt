@@ -7,6 +7,14 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Verison 7,3  [ (to be determined) ]
+
+    ENGINE:
+        Class Perm<n>:
+            - Added isConjugacyMinimal() to the generic Perm<n> class.
+              Note that this routine was already present in the specialised
+              classes for smaller n.
+
 Version 7.2  [ 28 October, 2022 ]
 
     GENERAL:

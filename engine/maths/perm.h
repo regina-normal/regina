@@ -43,6 +43,7 @@
 #define __REGINA_PERM_H
 #endif
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <cstdlib>
@@ -305,6 +306,28 @@ class Perm {
              */
             static constexpr Index size() { return nPerms; }
         };
+
+        /**
+         * The table of all conjugacy minimal permutations, or \c null if
+         * this table has not yet been generated.  See isConjugacyMinimal()
+         * for details.
+         */
+        static Code* conjugacyMinimal_;
+
+        /**
+         * The number of conjugacy minimal permutations.
+         * This is the number of unordered partitions of n.
+         */
+        static constexpr int nConjugacyMinimal = (
+            n == 8 ? 22 :
+            n == 9 ? 30 :
+            n == 10 ? 42 :
+            n == 11 ? 56 :
+            n == 12 ? 77 :
+            n == 13 ? 101 :
+            n == 14 ? 135 :
+            n == 15 ? 176 :
+            /* n == 16 */ 231);
 
     public:
         /**
@@ -840,6 +863,36 @@ class Perm {
         template <int k>
         static constexpr Perm contract(Perm<k> p);
 
+        /**
+         * Is this permutation minimal in its conjugacy class?
+         *
+         * Here "minimal" means that, amongst all its conjugates, this
+         * permutation has the smallest index in the array Perm<n>::Sn.
+         *
+         * See Sn for further information on how permutations are indexed.
+         *
+         * Whereas smaller permutation classes use a hard-coded lookup table,
+         * this generic implementation operates as follows:
+         *
+         * - The first time isConjugacyMinimal() is called for this value of
+         *   \a n, a table of all conjugacy minimal permutations will be
+         *   automatically generated.  This process is fast (it iterates
+         *   through conjugacy classes, not all permutations); moreover, the
+         *   table is relatively small (there are just 231 such permutations
+         *   for the largest case \a n = 16).
+         *
+         * - The test itself then involves a binary search through this table
+         *   (which, given the small size of the table, is also very fast).
+         *
+         * Unlike the specialised implementations for smaller permutation
+         * classes, this generic implementation is not \c constexpr (since
+         * it needs to generate a table of all conjugacy minimal permutations).
+         *
+         * \return \c true if and only if this permutation is minimal in its
+         * conjugacy class.
+         */
+        bool isConjugacyMinimal() const;
+
     protected:
         /**
          * Creates a permutation from the given internal code.
@@ -853,6 +906,15 @@ class Perm {
         constexpr Perm(Code code);
 
     private:
+        /**
+         * Generates the table of all conjugacy minimal permutations.
+         *
+         * See isConjugacyMinimal() for further details.
+         *
+         * \pre This table has not yet been generated.
+         */
+        static void generateConjugacyMinimal();
+
         /**
          * Reconstructs a permutation from its given tight encoding.
          *
@@ -913,6 +975,11 @@ template <> class Perm<4>;
 template <> class Perm<5>;
 template <> class Perm<6>;
 template <> class Perm<7>;
+
+// Non-const static members for Perm
+
+template <int n>
+typename Perm<n>::Code* Perm<n>::conjugacyMinimal_ = nullptr;
 
 // Inline functions for Perm
 
@@ -1272,6 +1339,15 @@ inline Perm<n> Perm<n>::tightDecoding(const std::string& enc) {
         // For strings we use a different exception type.
         throw InvalidArgument(exc.what());
     }
+}
+
+template <int n>
+inline bool Perm<n>::isConjugacyMinimal() const {
+    if (! conjugacyMinimal_)
+        generateConjugacyMinimal();
+
+    return std::binary_search(conjugacyMinimal_,
+        conjugacyMinimal_ + nConjugacyMinimal, code_);
 }
 
 template <int n>

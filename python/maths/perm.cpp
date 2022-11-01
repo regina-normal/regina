@@ -74,6 +74,7 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("SnIndex", &Perm<n>::SnIndex, rdoc::SnIndex)
         .def("orderedSnIndex", &Perm<n>::orderedSnIndex,
             rdoc::orderedSnIndex)
+        .def("isConjugacyMinimal", &Perm<n>::isConjugacyMinimal /* TODO */)
         .def_readonly_static("codeType", &Perm<n>::codeType)
         .def_readonly_static("imageBits", &Perm<n>::imageBits)
         .def_readonly_static("imageMask", &Perm<n>::imageMask)

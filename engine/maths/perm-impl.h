@@ -408,6 +408,61 @@ inline void Perm<n>::clear(unsigned from) {
     }
 }
 
+template <int n>
+void Perm<n>::generateConjugacyMinimal() {
+    // The size of the array is already known.
+    conjugacyMinimal_ = new Code[nConjugacyMinimal];
+
+    int index = 0;
+
+    // Generate all conjugacy classes, i.e., partitions of n.
+    int conj[n];
+    std::fill(conj, conj + n, 1);
+    int conjLen = n;
+
+    while (true) {
+        // Generate the minimal representative for this conjugacy class.
+        {
+            std::array<int, n> img;
+            int k = 0;
+            for (int c = 0; c < conjLen; ++c) {
+                for (int j = 0; j < conj[c] - 1; ++j)
+                    img[k + j] = k + j + 1;
+                img[k + conj[c] - 1] = k;
+                k += conj[c];
+            }
+            conjugacyMinimal_[index++] = Perm(img).code_;
+        }
+
+        // Move to the next conjugacy class.
+        if (conjLen == 1)
+            break;
+
+        if (conj[conjLen - 2] <= conj[conjLen - 1] - 2) {
+            // Replace ... x y -> ... (x+1) (x+1) ... (x+1) (leftover)
+            int leftover = conj[conjLen - 1] - 1;
+            int base = ++conj[conjLen - 2];
+            --conjLen;
+            while (leftover >= 2 * base) {
+                conj[conjLen++] = base;
+                leftover -= base;
+            }
+            conj[conjLen++] = leftover;
+        } else {
+            // Replace ... x y -> ... (x+y)
+            conj[conjLen - 2] += conj[conjLen - 1];
+            --conjLen;
+        }
+    }
+
+    // Note: we should have index == nConjugacyMinimal at this point.
+
+    // TODO: If we ever move to using Sn indices as permutation codes,
+    // this sort will become unnecessary (since we have already generated
+    // our minimal representatives in order of appearance in Sn).
+    std::sort(conjugacyMinimal_, conjugacyMinimal_ + nConjugacyMinimal);
+}
+
 } // namespace regina
 
 #endif // __PERM_IMPL_H
