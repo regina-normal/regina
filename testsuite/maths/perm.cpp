@@ -595,6 +595,7 @@ class PermTest<8> : public LargePermTest<8> {
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacy);
     CPPUNIT_TEST(tightEncoding);
 
@@ -612,6 +613,25 @@ class PermTest<9> : public LargePermTest<9> {
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(increment);
+    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(tightEncoding);
+
+    CPPUNIT_TEST_SUITE_END();
+};
+
+template <>
+class PermTest<10> : public LargePermTest<10> {
+    CPPUNIT_TEST_SUITE(PermTest);
+
+    CPPUNIT_TEST(index);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(reverse);
+    CPPUNIT_TEST(comprehensive);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacy);
     CPPUNIT_TEST(tightEncoding);
 
@@ -621,7 +641,7 @@ class PermTest<9> : public LargePermTest<9> {
 void addPerm(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(PermTest<8>::suite()); // 3-bit images, 32-bit code
     runner.addTest(PermTest<9>::suite()); // 4-bit images, 64-bit code
-    // runner.addTest(PermTest<10>::suite());
+    runner.addTest(PermTest<10>::suite());
     runner.addTest(PermTest<11>::suite());
     // runner.addTest(PermTest<12>::suite());
     runner.addTest(PermTest<13>::suite());

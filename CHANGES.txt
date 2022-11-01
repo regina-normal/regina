@@ -11,8 +11,8 @@ Verison 7,3  [ (to be determined) ]
 
     ENGINE:
         Class Perm<n>:
-            - Added isConjugacyMinimal() to the generic Perm<n> class.
-              Note that this routine was already present in the specialised
+            - Added ++ operators and isConjugacyMinimal() to the generic
+              Perm<n> class, making it more consistent with the specialised
               classes for smaller n.
             - Switched the generic Perm<n>::sign() from a low-overhead
               quadratic algorithm to a higher-overhead linear algorithm.

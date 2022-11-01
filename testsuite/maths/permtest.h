@@ -151,6 +151,41 @@ class GeneralPermTest : public CppUnit::TestFixture,
 
         // Warning: Use this only when it is feasible to iterate through
         // all n! permutations.
+        void increment() {
+            Index i = 0;
+            Perm<n> p;
+            Perm<n> q;
+
+            do {
+                if (p != q) {
+                    std::ostringstream msg;
+                    msg << "Preincrement and postincrement do not match for "
+                        "permutation " << i << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (p.SnIndex() != i) {
+                    std::ostringstream msg;
+                    msg << "Increment gives wrong index for permutation "
+                        << i << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                ++i; ++p; q++; // test both pre- and post-increments
+            } while (! p.isIdentity());
+
+            if (i != nPerms) {
+                std::ostringstream msg;
+                msg << "Increment does not wrap around after "
+                    << nPerms << " steps.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! q.isIdentity()) {
+                CPPUNIT_FAIL("Preincrement and postincrement do not "
+                    "wrap around together.");
+            }
+        }
+
+        // Warning: Use this only when it is feasible to iterate through
+        // all n! permutations.
         void conjugacy() {
             for (Index i = 0; i < nPerms; ++i) {
                 Perm<n> p = Perm<n>::Sn[i];
@@ -1015,39 +1050,6 @@ class SmallPermTest : public GeneralPermTest<n> {
                             << " gives the wrong image " << p[j] << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
-            }
-        }
-
-        void increment() {
-            Index i = 0;
-            Perm<n> p;
-            Perm<n> q;
-
-            do {
-                if (p != q) {
-                    std::ostringstream msg;
-                    msg << "Preincrement and postincrement do not match for "
-                        "permutation " << i << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                if (p.SnIndex() != i) {
-                    std::ostringstream msg;
-                    msg << "Increment gives wrong index for permutation "
-                        << i << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                ++i; ++p; ++q;
-            } while (! p.isIdentity());
-
-            if (i != nPerms) {
-                std::ostringstream msg;
-                msg << "Increment does not wrap around after "
-                    << nPerms << " steps.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (! q.isIdentity()) {
-                CPPUNIT_FAIL("Preincrement and postincrement do not "
-                    "wrap around together.");
             }
         }
 

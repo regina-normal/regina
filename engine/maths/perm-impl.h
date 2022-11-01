@@ -401,6 +401,79 @@ Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
 }
 
 template <int n>
+Perm<n>& Perm<n>::operator ++() {
+    // We implement a lexicographic "next permutation" algorithm; however,
+    // we want to increment according to Sn index, not orderedSn index.
+    // Thus some mod 2 fiddling around signs is required.
+
+    if (sign() > 0) {
+        // Going from even to odd, we always just swap the last two elements.
+        swapImages(n - 2, n - 1);
+        return *this;
+    }
+
+    bool needSignChange = true;
+
+    // The algorithm for lexicographical "next permutation": find the *last*
+    // point in the sequence of images where successive images increase:
+    // ..... p < q > r > s > ... > z
+    // We then change p to whichever of z,...,s,r,q first exceeds it,
+    // and then place the remaining images (along with p) in increasing order.
+    // The sign changes iff the length of the sequence q > r > ... > z
+    // is 0 or 1 (mod 4).
+
+    int q = (*this)[n - 1];
+    int p = (*this)[n - 2];
+    int pIdx = n - 2;
+    if (p < q) {
+        // The next permutation just swaps the last two images.
+        // However, since we started with an odd permutation, this will be
+        // going *backwards* in the Sn ordering.
+        // Swap them now, and carry on to get the *following* permutation.
+        swapImages(n - 2, n - 1);
+        std::swap(p, q);
+        needSignChange = false;
+    }
+    while (p > q && pIdx > 0) {
+        q = p;
+        --pIdx;
+        p = (*this)[pIdx];
+    }
+    if (p > q) {
+        // The sequence was entirely decreasing.
+        // We have reached the end of our iteration.
+        code_ = idCode_;
+        return *this;
+    }
+
+    // Reverse the sequence from pIdx onwards.
+    for (int i = 1; pIdx + i < n - i; ++i)
+        swapImages(pIdx + i, n - i);
+
+    // Now identify which element needs to be swapped with p.
+    for (int i = pIdx + 1; i < n; ++i)
+        if ((*this)[i] > p) {
+            swapImages(pIdx, i);
+            break;
+        }
+
+    // Did the sign change?
+    int seqRem = (n - 1 - pIdx) % 4;
+    if (seqRem == 0 || seqRem == 1) {
+        // The sign changed.
+        if (! needSignChange)
+            swapImages(n - 2, n - 1);
+    } else {
+        // The sign did not change.
+        if (needSignChange)
+            swapImages(n - 2, n - 1);
+    }
+
+    // Woof.
+    return *this;
+}
+
+template <int n>
 inline void Perm<n>::clear(unsigned from) {
     for (int i = from; i < n; ++i) {
         code_ &= ~(imageMask << (imageBits * i));

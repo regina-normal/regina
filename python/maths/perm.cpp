@@ -66,6 +66,9 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("pre", &Perm<n>::pre, rdoc::pre)
         .def("compareWith", &Perm<n>::compareWith, rdoc::compareWith)
         .def("isIdentity", &Perm<n>::isIdentity, rdoc::isIdentity)
+        .def("inc", [](Perm<n>& p) {
+            return p++;
+        } /* TODO */)
         .def_static("rot", &Perm<n>::rot, rdoc::rot)
         .def_static("rand", static_cast<Perm<n>(&)(bool)>(Perm<n>::rand),
             pybind11::arg("even") = false, rdoc::rand)

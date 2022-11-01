@@ -629,6 +629,32 @@ class Perm {
         constexpr bool isIdentity() const;
 
         /**
+         * A preincrement operator that changes this to be the next permutation
+         * in the array Perm<n>::Sn.  If this is the last such permutation
+         * then this will wrap around to become the first permutation in
+         * Perm<n>::Sn, which is the identity.
+         *
+         * \nopython The postincrement operator is present in Python as the
+         * member function inc().
+         *
+         * \return a reference to this permutation after the increment.
+         */
+        Perm<n>& operator ++();
+
+        /**
+         * A postincrement operator that changes this to be the next permutation
+         * in the array Perm<n>::Sn.  If this is the last such permutation
+         * then this will wrap around to become the first permutation in
+         * Perm<n>::Sn, which is the identity.
+         *
+         * \python This routine is named inc() since python does
+         * not support the increment operator.
+         *
+         * \return a copy of this permutation before the increment took place.
+         */
+        Perm<n> operator ++(int);
+
+        /**
          * Returns the <i>i</i>th rotation.
          * This maps \a k to \a k + \a i (mod \a n) for all \a k.
          *
@@ -906,6 +932,13 @@ class Perm {
         constexpr Perm(Code code);
 
     private:
+        /**
+         * Swaps the images of a and b in this permutation.
+         *
+         * \pre a < b.
+         */
+        constexpr void swapImages(int a, int b);
+
         /**
          * Generates the table of all conjugacy minimal permutations.
          *
@@ -1250,6 +1283,15 @@ inline constexpr bool Perm<n>::isIdentity() const {
 }
 
 template <int n>
+inline Perm<n> Perm<n>::operator ++(int) {
+    // Note: this cannot be constexpr, since it calls the (non-constexpr)
+    // preincrement operator.
+    Perm<n> ans(code_);
+    ++(*this);
+    return ans;
+}
+
+template <int n>
 constexpr Perm<n> Perm<n>::rot(int i) {
     Code code = 0;
     Code src = 0;
@@ -1385,6 +1427,15 @@ template <int n>
 inline Perm<n> Perm<n>::tightDecode(std::istream& input) {
     return tightDecode(std::istreambuf_iterator<char>(input),
         std::istreambuf_iterator<char>(), false);
+}
+
+template <int n>
+inline constexpr void Perm<n>::swapImages(int a, int b) {
+    Code aImg = code_ & (imageMask << (imageBits * a));
+    Code bImg = code_ & (imageMask << (imageBits * b));
+    code_ ^= (aImg | bImg);
+    int shift = imageBits * (b - a);
+    code_ |= ((aImg << shift) | (bImg >> shift));
 }
 
 } // namespace regina
