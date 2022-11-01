@@ -34,6 +34,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/perm.h"
+#include "testsuite/maths/permtest.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/utilities/tightencodingtest.h"
 
@@ -45,22 +46,11 @@ static const int64_t increment[] = {
 };
 
 template <int n>
-class PermTest :
-        public CppUnit::TestFixture, public TightEncodingTest<regina::Perm<n>> {
-    CPPUNIT_TEST_SUITE(PermTest);
-
-    CPPUNIT_TEST(index);
-    CPPUNIT_TEST(products);
-    CPPUNIT_TEST(compareWith);
-    CPPUNIT_TEST(reverse);
-    CPPUNIT_TEST(comprehensive);
-    CPPUNIT_TEST(clear);
-    CPPUNIT_TEST(rot);
-    CPPUNIT_TEST(tightEncoding);
-
-    CPPUNIT_TEST_SUITE_END();
-
+class LargePermTest : public GeneralPermTest<n> {
     public:
+        using GeneralPermTest<n>::looksLikeIdentity;
+        using GeneralPermTest<n>::looksEqual;
+        using GeneralPermTest<n>::looksDistinct;
         using TightEncodingTest<regina::Perm<n>>::verifyTightEncoding;
 
     private:
@@ -127,26 +117,6 @@ class PermTest :
                     }
                 }
             }
-        }
-
-        bool looksLikeIdentity(const Perm& p) {
-            return (p.isIdentity() && p == Perm() && p.str() == idStr);
-        }
-
-        bool looksEqual(const Perm& p, const Perm& q) {
-            return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.permCode() == q.permCode());
-        }
-
-        bool looksEqual(const Perm& p, const Perm& q,
-                const std::string& qStr) {
-            return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.permCode() == q.permCode() && p.str() == qStr);
-        }
-
-        bool looksDistinct(const Perm& p, const Perm& q) {
-            return (p != q && (! (p == q)) && p.str() != q.str() &&
-                p.permCode() != q.permCode());
         }
 
         int expectedSign(const Perm& p) {
@@ -593,6 +563,59 @@ class PermTest :
             for (int i = 0; i < nIdx; ++i)
                 verifyTightEncoding(Perm::orderedSn[idx[i]]);
         }
+};
+
+template <int n>
+class PermTest : public LargePermTest<n> {
+    CPPUNIT_TEST_SUITE(PermTest);
+
+    CPPUNIT_TEST(index);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(reverse);
+    CPPUNIT_TEST(comprehensive);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(tightEncoding);
+
+    CPPUNIT_TEST_SUITE_END();
+};
+
+// Add some extra tests for those values of n where we can feasibly
+// iterate through all permutations.
+
+template <>
+class PermTest<8> : public LargePermTest<8> {
+    CPPUNIT_TEST_SUITE(PermTest);
+
+    CPPUNIT_TEST(index);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(reverse);
+    CPPUNIT_TEST(comprehensive);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(tightEncoding);
+
+    CPPUNIT_TEST_SUITE_END();
+};
+
+template <>
+class PermTest<9> : public LargePermTest<9> {
+    CPPUNIT_TEST_SUITE(PermTest);
+
+    CPPUNIT_TEST(index);
+    CPPUNIT_TEST(products);
+    CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(reverse);
+    CPPUNIT_TEST(comprehensive);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(tightEncoding);
+
+    CPPUNIT_TEST_SUITE_END();
 };
 
 void addPerm(CppUnit::TextUi::TestRunner& runner) {

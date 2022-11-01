@@ -30,6 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
+#ifndef __TIGHTENCODINGTEST_H
+#define __TIGHTENCODINGTEST_H
+
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -150,4 +153,6 @@ class TightEncodingTest {
             }
         }
 };
+
+#endif
 
