@@ -1169,6 +1169,7 @@ inline constexpr Perm<n> Perm<n>::reverse() const {
 
 template <int n>
 constexpr int Perm<n>::sign() const {
+#if 0
     // This algorithm is quadratic in n.  Surely we can do better?
     bool even = true;
     for (int i = 0; i < n; ++i)
@@ -1176,6 +1177,36 @@ constexpr int Perm<n>::sign() const {
             if ((*this)[i] > (*this)[j])
                 even = ! even;
     return (even ? 1 : -1);
+#endif
+    // Yes, we can.
+    // The algorithm commented out above is quadratic with low overhead;
+    // this one is linear with a little more overhead.  Testing on my
+    // build machine suggests this linear algorithm is indeed faster for
+    // the cases we care about (8 <= n <= 16)/
+    bool evenPerm = true;
+
+    // Use a bitmask to track which indices we've seen, since we want to
+    // be constexpr (which rules out anything that requires std::fill).
+    static_assert(sizeof(int) * 8 >= n);
+    int seen = 0;
+
+    for (int i = 0; i < n; ++i) {
+        if (seen & (1 << i))
+            continue;
+
+        int j = i;
+        bool oddCycle = true;
+        do {
+            j = (*this)[j];
+            seen |= (1 << j);
+            oddCycle = ! oddCycle;
+        } while (j != i);
+
+        if (oddCycle)
+            evenPerm = ! evenPerm;
+    }
+
+    return (evenPerm ? 1 : -1);
 }
 
 template <int n>
