@@ -187,9 +187,8 @@ class GeneralPermTest : public CppUnit::TestFixture,
         // Warning: Use this only when it is feasible to iterate through
         // all n! permutations.
         void conjugacy() {
-            for (Index i = 0; i < nPerms; ++i) {
-                Perm<n> p = Perm<n>::Sn[i];
-
+            Perm<n> p;
+            do {
                 // Manually decide if p is conjugacy minimal.
                 bool min = true;
                 int prevCycle = 0;
@@ -218,7 +217,9 @@ class GeneralPermTest : public CppUnit::TestFixture,
                         "for isConjugacyMinimal().";
                     CPPUNIT_FAIL(msg.str());
                 }
-            }
+
+                ++p;
+            } while (! p.isIdentity());
         }
 };
 
