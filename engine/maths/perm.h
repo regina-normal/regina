@@ -896,7 +896,7 @@ class Perm {
  * \return a reference to \a out.
  *
  * \tparam n the number of objects being permuted.
- * This must be between 3 and 16 inclusive.
+ * This must be between 2 and 16 inclusive.
  *
  * \ingroup maths
  */
