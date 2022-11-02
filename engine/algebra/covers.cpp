@@ -37,16 +37,21 @@
 namespace regina {
 
 namespace {
-    // The S_n indices representing conjugacy minimal permutations,
-    // currently computed for n <= 7.
-    constexpr int allMinimalPerms[] = {
-        0, 1, 2, 6, 9, 27, 32, 127, 128, 146, 153, 746, 753, 849, 872
-    };
-
     // The maximum size of an automorphism group for a conjugacy minimal
-    // permutation, excluding the case where the automorphism group is
-    // all of S_n.  For n >= 5 this should be 2 * (n-2)!.
-    constexpr int maxMinimalAutGroup[] = { 0, 0, 0, 3, 8, 12, 48, 240 };
+    // permutation, excluding the case where the automorphism group is all
+    // of S_n.
+    //
+    // - For n ≤ 2, the automorphism group is always S_n.
+    // - For n = 3, the worst case is a single 3-cycle.
+    // - For n = 4, the worst case is a pair of 2-cycles.
+    // - For n ≥ 5 it can be shown that this is precisely 2 * (n-2)!,
+    //   corresponding to the conjugacy class 11...12 which represents a
+    //   single pair swap.
+    //
+    constexpr int64_t maxMinimalAutGroup[] = {
+        0, 0, 0, 3, 8, 12, 48, 240, 1440, 10080, 80640, 725760, 7257600,
+        79833600, 958003200, 12454041600, 174356582400
+    };
 
     // The (-1)-terminated automorphism group corresponding to each
     // conjugacy minimal permutation, or an empty list if the automorphism
@@ -928,7 +933,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                             // Set up the automorphism group for this rep
                             // by explicitly listing the automorphisms.
                             int idx = 0;
-                            while (allMinimalPerms[idx] !=
+                            while (regina::detail::permClassRep[idx] !=
                                     scheme.rep[pos].SnIndex())
                                 ++idx;
 
