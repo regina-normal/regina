@@ -40,6 +40,7 @@
 #include "../docstrings/maths/perm.h"
 
 using regina::Perm;
+using regina::PermClass;
 
 template <int n>
 void addPerm(pybind11::module_& m, const char* name) {
@@ -107,6 +108,23 @@ void addPerm(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
+template <int n>
+void addPermClass(pybind11::module_& m, const char* name) {
+    auto c = pybind11::class_<PermClass<n>>(m, name)
+        .def(pybind11::init<>())
+        .def(pybind11::init<const PermClass<n>&>())
+        .def("isIdentity", &PermClass<n>::isIdentity)
+        .def("rep", &PermClass<n>::rep)
+        .def("str", &PermClass<n>::str)
+        .def("inc", [](PermClass<n>& p) {
+            return p++;
+        })
+        .def("__bool__", &PermClass<n>::operator bool)
+    ;
+    regina::python::add_output_basic(c, "TODO");
+    regina::python::add_eq_operators(c, "TODO", "TODO");
+}
+
 void addPerm(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
@@ -134,5 +152,21 @@ void addPerm(pybind11::module_& m) {
     addPerm<14>(m, "Perm14");
     addPerm<15>(m, "Perm15");
     addPerm<16>(m, "Perm16");
+
+    addPermClass<2>(m, "PermClass2");
+    addPermClass<3>(m, "PermClass3");
+    addPermClass<4>(m, "PermClass4");
+    addPermClass<5>(m, "PermClass5");
+    addPermClass<6>(m, "PermClass6");
+    addPermClass<7>(m, "PermClass7");
+    addPermClass<8>(m, "PermClass8");
+    addPermClass<9>(m, "PermClass9");
+    addPermClass<10>(m, "PermClass10");
+    addPermClass<11>(m, "PermClass11");
+    addPermClass<12>(m, "PermClass12");
+    addPermClass<13>(m, "PermClass13");
+    addPermClass<14>(m, "PermClass14");
+    addPermClass<15>(m, "PermClass15");
+    addPermClass<16>(m, "PermClass16");
 }
 

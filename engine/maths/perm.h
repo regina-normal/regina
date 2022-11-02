@@ -1009,6 +1009,208 @@ template <> class Perm<5>;
 template <> class Perm<6>;
 template <> class Perm<7>;
 
+/**
+ * Represents a conjugacy class of permutations on \a n elements.
+ *
+ * Each such conjugacy class correpsonds to an unordered partition of \a n,
+ * describing the cycle structure of the permutations in the conjugacy class.
+ *
+ * There is a special "past-the-end" conjugacy class, which effectively
+ * holds no value; the only way you can obtain such a class is to iterate
+ * through \e all classes using the increment operators.  You can test
+ * for a past-the-end value by casting to \c bool.
+ *
+ * PermClass objects are, in their current implementation, entirely
+ * stack-based.  This means they cannot support fast move or swap operations.
+ * However, their size is linear in \a n, so while copy operations are
+ * not enormously expensive, they are not as cheap as copying a Perm object
+ * (which just holds a single machine-native integer).  This decision is a
+ * deliberate trade-off between speed versus space; the implication for
+ * end users is that you should be economical about copying PermClass objects,
+ * and work with them in-place where possible.
+ *
+ * \python Python does not support templates.  For each
+ * \a n = 2,...,16, this class is available in Python under the
+ * corresponding name PermClass2, PermClass3, ..., PermClass16.
+ *
+ * \tparam n the number of objects being permuted.
+ * This must be between 2 and 16 inclusive.
+ *
+ * \ingroup maths
+ */
+template <int n>
+class PermClass {
+    private:
+        int nCycles_;
+            /**< The number of cycles in a permutation in this conjugacy
+                 class. */
+        int cycle_[n];
+            /**< The individual cycle lengths for a permutation in this
+                 conjugacy class; these are stored in increasing order. */
+
+    public:
+        /**
+         * Creates the conjugacy class for the identity permutation.
+         *
+         * The corresponding cycle structure (i.e., partition of \a n)
+         * is \a n cycles, each of length 1.
+         */
+        PermClass();
+        /**
+         * Creates a copy of the given conjugacy class.
+         *
+         * \param src the conjugacy class to clone.
+         */
+        PermClass(const PermClass& src);
+
+        /**
+         * Sets this to be a copy of the given conjugacy class.
+         *
+         * \param src the conjugacy class to clone.
+         * \return a reference to this conjugacy class.
+         */
+        PermClass& operator = (const PermClass& src);
+
+        /**
+         * Determines whether this and the given object describe the
+         * same conjugacy class.
+         *
+         * Two past-the-end conjugacy classes will be treated as equal.
+         *
+         * \param other the conjugacy class to compare with this.
+         * \return \c true if and only if this and the given conjugacy class
+         * are identical.
+         */
+        bool operator == (const PermClass& other) const;
+        /**
+         * Determines whether this and the given object describe
+         * different conjugacy classes.
+         *
+         * Two past-the-end conjugacy classes will be treated as equal.
+         *
+         * \param other the conjugacy class to compare with this.
+         * \return \c true if and only if this and the given conjugacy class
+         * are different.
+         */
+        bool operator != (const PermClass& other) const;
+
+        /**
+         * Determines whether this is the conjugacy class for the identity
+         * permutation.
+         *
+         * \return \c true if and only if this conjugacy class represents
+         * the identity permutation.
+         */
+        bool isIdentity() const;
+
+        /**
+         * Returns the minimal representative of this conjugacy class.
+         *
+         * The _minimal representative_ is the permutation belonging to this
+         * class with the smallest index in Perm<n>::Sn.
+         *
+         * Because all permutations in the same class must have the same sign,
+         * it follows that this is also the permutation in this class with the
+         * smallest index in Perm<n>::orderedSn.
+         *
+         * \pre This is not the past-the-end conjugacy class.
+         *
+         * \return the minimal representative of this conjugacy class.
+         */
+        Perm<n> rep() const;
+
+        /**
+         * Returns a string representation of this conjugacy class.
+         *
+         * At present, the string representation consists of a sequence
+         * of digits indicating the cycle lengths (where cycle lengths
+         * 10,11,...,16 use `a,b,...,g` for their respective digits).
+         *
+         * If this is the past-the-end conjugacy class, a suitable
+         * string will be returned.
+         *
+         * \return a string representation of this conjugacy class.
+         */
+        std::string str() const;
+
+        /**
+         * A preincrement operator that changes this to become the next
+         * conjugacy class in a lexicographical enumeration.
+         *
+         * Specifically, the increment operators work through conjugacy
+         * classes in lexicographical order, where each class is represented
+         * by its sequence of cycle lengths (given in increasing order).
+         * Thus the conjugacy class `11...1` (representing the identity
+         * permutation) will come first, and the conjugacy class `n`
+         * (representing a single long cycle) will come last.
+         *
+         * If there are no more conjugacy classes (i.e., this represents
+         * a single cycle of length \a n), then this object will be set
+         * to the special past-the-end value (which can be tested by
+         * casting to a \c bool).
+         *
+         * \nopython The postincrement operator is present in Python as the
+         * member function inc().
+         *
+         * \return a reference to this conjugacy class after the increment.
+         */
+        PermClass& operator ++();
+        /**
+         * A postincrement operator that changes this to become the next
+         * conjugacy class in a lexicographical enumeration.
+         *
+         * Specifically, the increment operators work through conjugacy
+         * classes in lexicographical order, where each class is represented
+         * by its sequence of cycle lengths (given in increasing order).
+         * Thus the conjugacy class `11...1` (representing the identity
+         * permutation) will come first, and the conjugacy class `n`
+         * (representing a single long cycle) will come last.
+         *
+         * If there are no more conjugacy classes (i.e., this represents
+         * a single cycle of length \a n), then this object will be set
+         * to the special past-the-end value (which can be tested by
+         * casting to a \c bool).
+         *
+         * \python This routine is named inc() since python does
+         * not support the increment operator.
+         *
+         * \return a copy of this conjugacy class before the increment took
+         * place.
+         */
+        PermClass operator ++(int);
+
+        /**
+         * Determines whether this represents a genuine conjugacy class,
+         * or whether it represents the special past-the-end value.
+         *
+         * See the class notes and the increment operators for further
+         * discussion on what past-the-end represents.
+         *
+         * \return \c false if this is the past-the-end conjugacy class,
+         * or \c true otherwise.
+         */
+        operator bool() const;
+};
+
+/**
+ * Writes a string representation of the given conjugacy class of permutations
+ * to the given output stream.  The format will be the same as is used by
+ * PermClass<n>::str().
+ *
+ * \param out the output stream to which to write.
+ * \param p the conjugacy class to write.
+ * \return a reference to \a out.
+ *
+ * \tparam n the number of objects being permuted.  This must be between
+ * 2 and 16 inclusive.
+ *
+ * \ingroup maths
+ */
+template <int n>
+inline std::ostream& operator << (std::ostream& out, const PermClass<n>& c) {
+    return (out << c.str());
+}
+
 // Non-const static members for Perm
 
 template <int n>
@@ -1436,6 +1638,125 @@ inline constexpr void Perm<n>::swapImages(int a, int b) {
     code_ ^= (aImg | bImg);
     int shift = imageBits * (b - a);
     code_ |= ((aImg << shift) | (bImg >> shift));
+}
+
+template <int n>
+void Perm<n>::generateConjugacyMinimal() {
+    // The size of the array is already known.
+    conjugacyMinimal_ = new Code[nConjugacyMinimal];
+
+    // Generate all conjugacy classes, i.e., partitions of n.
+    int index = 0;
+    for (PermClass<n> c; c; ++c)
+        conjugacyMinimal_[index++] = c.rep().code_;
+
+    // Note: we should have index == nConjugacyMinimal at this point.
+
+    // TODO: If we ever move to using Sn indices as permutation codes,
+    // this sort will become unnecessary (since we have already generated
+    // our minimal representatives in order of appearance in Sn).
+    std::sort(conjugacyMinimal_, conjugacyMinimal_ + nConjugacyMinimal);
+}
+
+// Inline functions for PermClass
+
+template <int n>
+inline PermClass<n>::PermClass() : nCycles_(n) {
+    std::fill(cycle_, cycle_ + n, 1);
+}
+
+template <int n>
+inline PermClass<n>::PermClass(const PermClass& src) : nCycles_(src.nCycles_) {
+    std::copy(src.cycle_, src.cycle_ + n, cycle_);
+}
+
+template <int n>
+inline PermClass<n>& PermClass<n>::operator = (const PermClass& src) {
+    nCycles_ = src.nCycles_;
+    std::copy(src.cycle_, src.cycle_ + n, cycle_);
+    return *this;
+}
+
+template <int n>
+inline bool PermClass<n>::operator == (const PermClass& other) const {
+    return nCycles_ == other.nCycles_ &&
+        std::equal(cycle_, cycle_ + n, other.cycle_);
+}
+
+template <int n>
+inline bool PermClass<n>::operator != (const PermClass& other) const {
+    return nCycles_ != other.nCycles_ ||
+        ! std::equal(cycle_, cycle_ + n, other.cycle_);
+}
+
+template <int n>
+inline bool PermClass<n>::isIdentity() const {
+    return nCycles_ == n;
+}
+
+template <int n>
+inline PermClass<n>::operator bool() const {
+    return nCycles_;
+}
+
+template <int n>
+inline Perm<n> PermClass<n>::rep() const {
+    std::array<int, n> img;
+    int pos = 0;
+    for (int c = 0; c < nCycles_; ++c) {
+        for (int j = 0; j < cycle_[c] - 1; ++j)
+            img[pos + j] = pos + j + 1;
+        img[pos + cycle_[c] - 1] = pos;
+        pos += cycle_[c];
+    }
+    return Perm<n>(img);
+}
+
+template <int n>
+inline std::string PermClass<n>::str() const {
+    if (nCycles_) {
+        char ans[n + 1];
+        for (int i = 0; i < nCycles_; ++i)
+            ans[i] = regina::digit(cycle_[i]);
+        ans[nCycles_] = 0;
+
+        return ans;
+    } else {
+        return "(past-the-end)";
+    }
+}
+
+template <int n>
+inline PermClass<n>& PermClass<n>::operator ++() {
+    if (nCycles_ <= 1) {
+        // End of the line.
+        nCycles_ = 0;
+    } else {
+        if (cycle_[nCycles_ - 2] <= cycle_[nCycles_ - 1] - 2) {
+            // Replace ... x y -> ... (x+1) (x+1) ... (x+1) (leftover)
+            int leftover = cycle_[nCycles_ - 1] - 1;
+            int base = ++cycle_[nCycles_ - 2];
+            --nCycles_;
+            while (leftover >= 2 * base) {
+                cycle_[nCycles_++] = base;
+                leftover -= base;
+            }
+            cycle_[nCycles_++] = leftover;
+        } else {
+            // Replace ... x y -> ... (x+y)
+            cycle_[nCycles_ - 2] += cycle_[nCycles_ - 1];
+            --nCycles_;
+        }
+    }
+
+    return *this;
+}
+
+template <int n>
+inline PermClass<n> PermClass<n>::operator ++(int) {
+    PermClass<n> ans = *this;
+    ++(*this);
+    return ans;
 }
 
 } // namespace regina

@@ -16,6 +16,8 @@ Verison 7,3  [ (to be determined) ]
               classes for smaller n.
             - Switched the generic Perm<n>::sign() from a low-overhead
               quadratic algorithm to a higher-overhead linear algorithm.
+        Class PermClass<n>:
+            - New class to describe a conjugacy class of permutations.
 
 Version 7.2  [ 28 October, 2022 ]
 
