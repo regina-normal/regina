@@ -46,7 +46,7 @@ namespace {
 
     // The maximum size of an automorphism group for a conjugacy minimal
     // permutation, excluding the case where the automorphism group is
-    // all of S_n.  For n >= 5 this should be 2 * (n-1)!.
+    // all of S_n.  For n >= 5 this should be 2 * (n-2)!.
     constexpr int maxMinimalAutGroup[] = { 0, 0, 0, 3, 8, 12, 48, 240 };
 
     // The (-1)-terminated automorphism group corresponding to each
@@ -313,9 +313,9 @@ namespace {
         //
         // Note that for index <= 5 the Perm<index> class already uses lookup
         // tables out-of-the-box and so there is no need for us to manage this
-        // ourselves here.  For index >= 7 the Perm<index> class does not (yet)
+        // ourselves here.  For index > 7 the Perm<index> class does not (yet)
         // have a runtime precomputation facility built in.  So this leaves
-        // index == 6 as the only case where this is relevant.
+        // index == 6,7 as the only cases where this is relevant.
         static constexpr bool cacheProducts = (index == 6 || index == 7);
 
         RelationScheme(const GroupPresentation& g) {
@@ -892,6 +892,9 @@ size_t GroupPresentation::enumerateCoversInternal(
     // All representatives will be initialised to the identity.
     size_t nReps = 0;
 
+    // Note: the automorphism groups stored in aut[] do *not* need to be
+    // in any particular order (i.e., if we are generating them then we
+    // are free to do this in any order also).
     auto* nAut = new size_t[nGenerators_];
     auto* aut = new Perm<index>[nGenerators_][maxMinimalAutGroup[index] + 1];
 

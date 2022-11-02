@@ -51,8 +51,7 @@ def genAut(cls, code2 = False):
                     code = code + str(r[1][i])
                 elif i == len(r[1]):
                     code = code + '-1'
-                else:
-                    code = code + '0'
+                    break
         code = code + ' }'
         if line != len(results) - 1:
             code = code + ','
