@@ -120,6 +120,7 @@ void addPermClass(pybind11::module_& m, const char* name) {
             return p++;
         }, RDOC_TODO)
         .def("__bool__", &PermClass<n>::operator bool, RDOC_TODO)
+        .def("centraliser", &PermClass<n>::centraliser, RDOC_TODO)
         .def_readonly_static("count", &PermClass<n>::count)
     ;
     regina::python::add_output_basic(c, RDOC_TODO);

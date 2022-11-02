@@ -12,22 +12,15 @@ def genAut(permClass, conjClass, code2 = False):
     c = conjClass()
     while c:
         p = c.rep()
+        if c.isIdentity():
+            aut = []
+        else:
+            aut = [ x.SnIndex() for x in c.centraliser() ]
+            aut.sort()
+            if len(aut) > maxAut:
+                maxAut = len(aut)
         c.inc()
 
-        aut = []    # all automorphisms
-
-        for j in permClass.Sn:
-            conj = j * p * j.inverse()
-            if conj.SnIndex() < p.SnIndex():
-                print('ERROR: Representative not minimal!')
-                break
-            elif conj == p:
-                idx = j.SnIndex()
-                aut.append(idx)
-        if len(aut) == permClass.nPerms:
-            aut = []
-        elif len(aut) > maxAut:
-            maxAut = len(aut)
         results.append((p.SnIndex(), aut))
 
     print('Max #aut:', maxAut)
@@ -52,8 +45,10 @@ def genAut(permClass, conjClass, code2 = False):
             code = code + ','
         print(code)
 
-genAut(Perm2, PermClass2)
-print()
+# For n=2, the centraliser of any permutation is always all of S_2.
+# genAut(Perm2, PermClass2)
+# print()
+
 genAut(Perm3, PermClass3)
 print()
 genAut(Perm4, PermClass4, True)

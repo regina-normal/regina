@@ -1257,6 +1257,30 @@ class PermClass {
          * or \c true otherwise.
          */
         operator bool() const;
+
+        /**
+         * Returns the set of all permutations that fix the minimal
+         * representative of this conjugacy class under conjugation.
+         *
+         * Specifically, if \a r is the minimal representative of this class
+         * as returned by rep(), then this routine constructs the subgroup of
+         * all permutations \a p for which `p.inverse() * r * p == r`.
+         *
+         * The permutations will be returned in an arbitrary order
+         * (and in particular, this order may be subject to change in
+         * future releases of Regina).
+         *
+         * \warning This group could get \e very large.  If this conjugacy
+         * class represents the identity permutation, then the centraliser
+         * will be all of S_n.  For \a n ≥ 5, it can be show that the
+         * next-worst case is where this conjugacy class represents a single
+         * pair swap, in which case the centraliser has size `2⋅(n-2)!`.
+         *
+         * \pre This is not the past-the-end conjugacy class.
+         *
+         * \return all permutations that leave rep() fixed under conjugation.
+         */
+        std::vector<Perm<n>> centraliser() const;
 };
 
 /**

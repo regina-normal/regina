@@ -481,6 +481,90 @@ inline void Perm<n>::clear(unsigned from) {
     }
 }
 
+template <int n>
+std::vector<Perm<n>> PermClass<n>::centraliser() const {
+    size_t count = 1;
+
+    // Identify groups of cycles of the same size.
+    int nGroups = 0;
+    int groupCycle[n]; // cycle length for this group
+    int groupSize[n];  // number of cycles in this group
+    int groupStart[n]; // first cycle in this group
+
+    int start = 0;
+    int end = 1;
+    while (true) {
+        groupStart[nGroups] = start;
+        groupCycle[nGroups] = cycle_[start];
+        count *= groupCycle[nGroups];
+        while (end < nCycles_ && cycle_[start] == cycle_[end]) {
+            ++end;
+            count *= groupCycle[nGroups];
+        }
+        groupSize[nGroups] = end - start;
+        count *= regina::factorial(groupSize[nGroups]);
+
+        ++nGroups;
+
+        if (end == nCycles_)
+            break;
+        start = end;
+        ++end;
+    }
+
+    std::vector<Perm<n>> ans;
+    ans.reserve(count);
+
+    int cycleStart[n + 1];
+    cycleStart[0] = 0;
+    for (int i = 0; i < nCycles_; ++i)
+        cycleStart[i + 1] = cycleStart[i] + cycle_[i];
+
+    // Prepare to iterate through permutations.
+    int cycleMap[n];   // mapping between cycles
+    int cycleShift[n]; // shift to apply to each permutation
+    std::array<int, n> img;
+
+    for (int i = 0; i < nCycles_; ++i)
+        cycleMap[i] = i;
+    std::fill(cycleShift, cycleShift + nCycles_, 0);
+
+    int mapDepth, shiftDepth;
+    while (true) {
+        // Process this mapping between cycles.
+        while (true) {
+            // Process this set of shifts.
+            for (int i = 0; i < nCycles_; ++i)
+                for (int j = 0; j < cycle_[i]; ++j)
+                    img[cycleStart[i] + j] = cycleStart[cycleMap[i]] +
+                        ((j + cycleShift[i]) % cycle_[i]);
+            ans.emplace_back(img);
+
+            // Move to the next set of shifts.
+            for (shiftDepth = nCycles_ - 1; shiftDepth >= 0; --shiftDepth) {
+                if (++cycleShift[shiftDepth] < cycle_[shiftDepth])
+                    break;
+                cycleShift[shiftDepth] = 0;
+            }
+            if (shiftDepth < 0)
+                break;
+        }
+
+        // Move to the next mapping.
+        for (mapDepth = nGroups - 1; mapDepth >= 0; --mapDepth) {
+            if (groupSize[mapDepth] == 1)
+                continue;
+            if (std::next_permutation(cycleMap + groupStart[mapDepth],
+                    cycleMap + groupStart[mapDepth] + groupSize[mapDepth]))
+                break;
+        }
+        if (mapDepth < 0)
+            break;
+    }
+
+    return ans;
+}
+
 } // namespace regina
 
 #endif // __PERM_IMPL_H
