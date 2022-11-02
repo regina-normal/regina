@@ -120,6 +120,7 @@ void addPermClass(pybind11::module_& m, const char* name) {
             return p++;
         })
         .def("__bool__", &PermClass<n>::operator bool)
+        .def_readonly_static("count", &PermClass<n>::count)
     ;
     regina::python::add_output_basic(c, "TODO");
     regina::python::add_eq_operators(c, "TODO", "TODO");

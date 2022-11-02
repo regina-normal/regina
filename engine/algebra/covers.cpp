@@ -42,7 +42,6 @@ namespace {
     constexpr int allMinimalPerms[] = {
         0, 1, 2, 6, 9, 27, 32, 127, 128, 146, 153, 746, 753, 849, 872
     };
-    constexpr int nMinimalPerms[] = { 1, 1, 2, 3, 5, 7, 11, 15 };
 
     // The maximum size of an automorphism group for a conjugacy minimal
     // permutation, excluding the case where the automorphism group is
@@ -55,7 +54,7 @@ namespace {
     // The code that generated these arrays can be found in aut.py, in the same
     // directory as this source file.
     template <int n> constexpr int
-        minimalAutGroup[nMinimalPerms[n]][maxMinimalAutGroup[n] + 1];
+        minimalAutGroup[PermClass<n>::count][maxMinimalAutGroup[n] + 1];
 #if 0
     // We never actually use the group for n=2, so hide it from the compiler.
     template <> constexpr int minimalAutGroup<2>[][1] = {

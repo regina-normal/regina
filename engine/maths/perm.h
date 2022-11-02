@@ -125,6 +125,21 @@ enum PermCodeType {
     PERM_CODE_INDEX = 2
 };
 
+namespace detail {
+    /**
+     * Stores the total number of conjugacy classes of permutations on
+     * \a n elements, for all \a n ≤ 16.
+     *
+     * See OEIS, sequence A000041.
+     *
+     * This hard-coded array is an implementation detail; these numbers
+     * should be accessed by end users as PermClass<n>::count.
+     */
+    constexpr int countPermClasses[17] = {
+        1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231
+    };
+}
+
 /**
  * Represents a permutation of {0,1,...,<i>n</i>-1}.
  * Amongst other things, such permutations are used to describe
@@ -318,16 +333,7 @@ class Perm {
          * The number of conjugacy minimal permutations.
          * This is the number of unordered partitions of n.
          */
-        static constexpr int nConjugacyMinimal = (
-            n == 8 ? 22 :
-            n == 9 ? 30 :
-            n == 10 ? 42 :
-            n == 11 ? 56 :
-            n == 12 ? 77 :
-            n == 13 ? 101 :
-            n == 14 ? 135 :
-            n == 15 ? 176 :
-            /* n == 16 */ 231);
+        static constexpr int nConjugacyMinimal = detail::countPermClasses[n];
 
     public:
         /**
@@ -1040,6 +1046,13 @@ template <> class Perm<7>;
  */
 template <int n>
 class PermClass {
+    public:
+        /**
+         * The total number of distinct conjugacy classes of permutations
+         * on \a n elements.
+         */
+        static constexpr int count = detail::countPermClasses[n];
+
     private:
         int nCycles_;
             /**< The number of cycles in a permutation in this conjugacy
