@@ -483,6 +483,30 @@ inline void Perm<n>::clear(unsigned from) {
 
 template <int n>
 std::vector<Perm<n>> PermClass<n>::centraliser() const {
+    // The centraliser could in the worst case have size (n!).
+    // Throw an exception on systems where size_t is not large enough for this.
+    //
+    // Note: the C++ standard guarantees that sizeof(size_t) ≥ 2.
+    // The only values we really expect to see in the wild are 2, 4 or ≥ 8,
+    // but this is a compile-time test and so we will be pedantic and check
+    // for unusual sizes (3, 5) also.
+    //
+    // Also, note: we exclude n == 8 on 16-bit systems because 8! is too
+    // large for a _signed_ 16-bit integer (even though it fits into uint8_t).
+    //
+    if constexpr (sizeof(size_t) == 2 && n >= 8)
+        throw FailedPrecondition("This system only supports 16-bit array "
+            "sizes, which is not large enough to hold all of S_n for n ≥ 8");
+    else if constexpr (sizeof(size_t) == 3 && n >= 11)
+        throw FailedPrecondition("This system only supports 24-bit array "
+            "sizes, which is not large enough to hold all of S_n for n ≥ 11");
+    else if constexpr (sizeof(size_t) == 4 && n >= 13)
+        throw FailedPrecondition("This system only supports 32-bit array "
+            "sizes, which is not large enough to hold all of S_n for n ≥ 13");
+    else if constexpr (sizeof(size_t) == 5 && n >= 15)
+        throw FailedPrecondition("This system only supports 40-bit array "
+            "sizes, which is not large enough to hold all of S_n for n ≥ 15");
+
     size_t count = 1;
 
     // Identify groups of cycles of the same size.

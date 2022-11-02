@@ -1278,6 +1278,17 @@ class PermClass {
          *
          * \pre This is not the past-the-end conjugacy class.
          *
+         * \pre Arrays on this system can be large enough to store n! objects.
+         * This is a technical condition on the bit-size of \c size_t that will
+         * be explicitly checked (with an exception thrown if it fails).
+         * On a 64-bit system this condition should be true for all supported
+         * \a n (that is, \a n ≤ 16), but on a 32-bit or 16-bit system it will
+         * mean that centraliser() cannot be used for larger values of \a n.
+         *
+         * \exception FailedPrecondition A signed integer of the same bit-size
+         * as \c size_t cannot hold (n!).  See the precondition above for
+         * further discussion on this constraint.
+         *
          * \return all permutations that leave rep() fixed under conjugation.
          */
         std::vector<Perm<n>> centraliser() const;
