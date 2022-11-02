@@ -69,7 +69,7 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("isIdentity", &Perm<n>::isIdentity, rdoc::isIdentity)
         .def("inc", [](Perm<n>& p) {
             return p++;
-        } /* TODO */)
+        }, RDOC_TODO)
         .def_static("rot", &Perm<n>::rot, rdoc::rot)
         .def_static("rand", static_cast<Perm<n>(&)(bool)>(Perm<n>::rand),
             pybind11::arg("even") = false, rdoc::rand)
@@ -78,7 +78,7 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("SnIndex", &Perm<n>::SnIndex, rdoc::SnIndex)
         .def("orderedSnIndex", &Perm<n>::orderedSnIndex,
             rdoc::orderedSnIndex)
-        .def("isConjugacyMinimal", &Perm<n>::isConjugacyMinimal /* TODO */)
+        .def("isConjugacyMinimal", &Perm<n>::isConjugacyMinimal, RDOC_TODO)
         .def_readonly_static("codeType", &Perm<n>::codeType)
         .def_readonly_static("imageBits", &Perm<n>::imageBits)
         .def_readonly_static("imageMask", &Perm<n>::imageMask)
@@ -110,20 +110,20 @@ void addPerm(pybind11::module_& m, const char* name) {
 
 template <int n>
 void addPermClass(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<PermClass<n>>(m, name)
-        .def(pybind11::init<>())
-        .def(pybind11::init<const PermClass<n>&>())
-        .def("isIdentity", &PermClass<n>::isIdentity)
-        .def("rep", &PermClass<n>::rep)
-        .def("str", &PermClass<n>::str)
+    auto c = pybind11::class_<PermClass<n>>(m, name, RDOC_TODO)
+        .def(pybind11::init<>(), RDOC_TODO)
+        .def(pybind11::init<const PermClass<n>&>(), RDOC_TODO)
+        .def("isIdentity", &PermClass<n>::isIdentity, RDOC_TODO)
+        .def("rep", &PermClass<n>::rep, RDOC_TODO)
+        .def("str", &PermClass<n>::str, RDOC_TODO)
         .def("inc", [](PermClass<n>& p) {
             return p++;
-        })
-        .def("__bool__", &PermClass<n>::operator bool)
+        }, RDOC_TODO)
+        .def("__bool__", &PermClass<n>::operator bool, RDOC_TODO)
         .def_readonly_static("count", &PermClass<n>::count)
     ;
-    regina::python::add_output_basic(c, "TODO");
-    regina::python::add_eq_operators(c, "TODO", "TODO");
+    regina::python::add_output_basic(c, RDOC_TODO);
+    regina::python::add_eq_operators(c, RDOC_TODO, RDOC_TODO);
 }
 
 void addPerm(pybind11::module_& m) {

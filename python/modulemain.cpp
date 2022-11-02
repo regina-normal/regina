@@ -135,6 +135,11 @@ R"doc(Disabled in Regina.
 This is an abstract base class, and so objects of this base class
 cannot be created directly. Instead its various subclasses are
 responsible for providing their own comparison operators == and !=.)doc";
+
+    const char* todo =
+R"doc(The Python documentation for this class or function has not yet been
+extracted from the C++ source code. Please inform the Regina developers
+about this omission.)doc";
 }
 
 void addAlgebraClasses(pybind11::module_& m);

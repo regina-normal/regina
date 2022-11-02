@@ -56,6 +56,8 @@ namespace regina::python::doc::common {
     extern const char* eq_packet_invalid;
     extern const char* eq_none_static;
     extern const char* eq_none_abstract;
+
+    extern const char* todo;
 }
 
 /**
@@ -102,6 +104,12 @@ namespace regina::python::doc::common {
  * Each BEGIN ... SWITCH or BEGIN ... END block will be contained within
  * curly braces (in particular, local variables will go out of scope at the
  * end of the block).
+ *
+ * Finally: if you are writing new code and have not yet generated the
+ * docstrings, please do not just leave them out - it will be very easy
+ * to forget to insert them later.  Instead use the docstring RDOC_TODO,
+ * which will expand to a "still to be written" string, and importantly
+ * can be searched (and ideally _fixed_) before each formal Regina release.
  */
 #define RDOC_SCOPE_BEGIN(scope)  { \
     const char* rdoc_scope = regina::python::doc::scope; \
@@ -128,4 +136,6 @@ namespace regina::python::doc::common {
     namespace rbase = regina::python::doc::base ##_; \
     namespace rbase2 = regina::python::doc::base2 ##_; \
     namespace rbase3 = regina::python::doc::base3 ##_;
+
+#define RDOC_TODO regina::python::doc::common::todo
 
