@@ -20,9 +20,10 @@ Verison 7,3  [ (to be determined) ]
               g0^4 g1^-2 (i.e., exponents will be used even if the input does
               not supply them).
         Class Perm<n>:
-            - Added ++ operators, pow() and isConjugacyMinimal() to the generic
-              Perm<n> class, making it more consistent with the specialised
-              classes for smaller n.
+            - Extended the generic Perm<n> class to make its API (almost) as
+              rich as the specialised classes for smaller n.  This means the
+              generic class now supports ++ operators, pow(), order(), and
+              isConjugacyMinimal().
             - Switched the generic Perm<n>::sign() from a low-overhead
               quadratic algorithm to a higher-overhead linear algorithm.
         Class PermClass<n>:

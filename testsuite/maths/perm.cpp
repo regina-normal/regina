@@ -586,6 +586,27 @@ class LargePermTest : public GeneralPermTest<n> {
             }
         }
 
+        void order() {
+            for (Index i = 0; i < Perm::nPerms; i += increment[n]) {
+                Perm p = Perm::Sn[i];
+
+                int j = 0;
+                Perm q;
+                do {
+                    q = q * p;
+                    ++j;
+                } while (! q.isIdentity());
+
+                if (j != p.order()) {
+                    std::ostringstream msg;
+                    msg << "Permutation " << p << "^" << j << " is the "
+                        "identity, but the reported order is " << p.order()
+                        << "." << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
         void rot() {
             int i, j;
             for (i = 0; i < n; ++i) {
@@ -617,6 +638,7 @@ class PermTest : public LargePermTest<n> {
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(order);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(tightEncoding);
 
@@ -637,6 +659,7 @@ class PermTest<8> : public LargePermTest<8> {
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(order);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacy);
@@ -656,6 +679,7 @@ class PermTest<9> : public LargePermTest<9> {
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(order);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacy);
@@ -675,6 +699,7 @@ class PermTest<10> : public LargePermTest<10> {
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(order);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacy);
@@ -694,6 +719,7 @@ class PermTest<11> : public LargePermTest<11> {
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(pow);
+    CPPUNIT_TEST(order);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacy);

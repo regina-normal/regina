@@ -620,6 +620,20 @@ class Perm {
         constexpr Perm pow(long exp) const;
 
         /**
+         * Returns the order of this permutation.
+         *
+         * In other words; this routine returns the smallest positive
+         * integer \a k for which the <i>k</i>th power of this
+         * permutation is the identity.
+         *
+         * Note that the largest possible order for the largest supported \a n
+         * (\a n = 16) is 140.  See OEIS sequence A000793 for details.
+         *
+         * \return the order of this permutation.
+         */
+        constexpr int order() const;
+
+        /**
          * Finds the reverse of this permutation.
          *
          * Here _reverse_ means that we reverse the images of
@@ -1552,6 +1566,35 @@ constexpr Perm<n> Perm<n>::pow(long exp) const {
     }
 
     return Perm<n>(c);
+}
+
+template <int n>
+constexpr int Perm<n>::order() const {
+    // Work out the order by using the cycle structure.
+    int ans = 1;
+
+    // Use a bitmask to track which elements we've visited, since we want to
+    // be constexpr (which rules out anything that requires std::fill).
+    static_assert(sizeof(int) * 8 >= n);
+    int seen = 0;
+
+    for (int i = 0; i < n; ++i) {
+        if (seen & (1 << i))
+            continue;
+
+        int len = 0;
+
+        int j = i;
+        do {
+            seen |= (1 << j);
+            j = (*this)[j];
+            ++len;
+        } while (j != i);
+
+        ans = std::lcm(ans, len);
+    }
+
+    return ans;
 }
 
 template <int n>
