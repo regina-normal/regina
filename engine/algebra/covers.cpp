@@ -576,7 +576,7 @@ namespace {
                             comb = gen.cachedPow(t.exponent).cachedComp(comb);
                             break;
                     }
-                } else if constexpr (index <= maxSmallRegime) {
+                } else {
                     switch (t.exponent) {
                         case 1:
                             comb = gen * comb;
@@ -587,16 +587,6 @@ namespace {
                         default:
                             comb = gen.pow(t.exponent) * comb;
                             break;
-                    }
-                } else {
-                    // TODO: Use a faster exponentiation algorithm here.
-                    if (t.exponent > 0) {
-                        for (long i = 0; i < t.exponent; ++i)
-                            comb = gen * comb;
-                    } else if (t.exponent < 0) {
-                        Perm<index> inv = gen.inverse();
-                        for (long i = 0; i > t.exponent; --i)
-                            comb = inv * comb;
                     }
                 }
             }

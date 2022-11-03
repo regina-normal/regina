@@ -545,6 +545,47 @@ class LargePermTest : public GeneralPermTest<n> {
             clearFrom<n - 2>();
         }
 
+        void pow() {
+            for (Index i = 0; i < Perm::nPerms; i += increment[n]) {
+                Perm p = Perm::Sn[i];
+
+                if (! p.pow(0).isIdentity()) {
+                    std::ostringstream msg;
+                    msg << "pow(" << p << ", 0) is not the identity."
+                        << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+                {
+                    Perm q;
+                    int j = 0;
+                    do {
+                        Perm pow = p.pow(++j);
+                        q = q * p;
+                        if (! looksEqual(pow, q)) {
+                            std::ostringstream msg;
+                            msg << "pow(" << p << ", " << j
+                                << ") is not " << q << "." << std::endl;
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } while (! q.isIdentity());
+                }
+                {
+                    Perm q;
+                    int j = 0;
+                    do {
+                        Perm pow = p.pow(--j);
+                        q = q * p.inverse();
+                        if (! looksEqual(pow, q)) {
+                            std::ostringstream msg;
+                            msg << "pow(" << p << ", " << j
+                                << ") is not " << q << "." << std::endl;
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } while (! q.isIdentity());
+                }
+            }
+        }
+
         void rot() {
             int i, j;
             for (i = 0; i < n; ++i) {
@@ -575,6 +616,7 @@ class PermTest : public LargePermTest<n> {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(pow);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(tightEncoding);
 
@@ -594,6 +636,7 @@ class PermTest<8> : public LargePermTest<8> {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(pow);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacy);
@@ -612,6 +655,7 @@ class PermTest<9> : public LargePermTest<9> {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(pow);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacy);
@@ -630,6 +674,7 @@ class PermTest<10> : public LargePermTest<10> {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(pow);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacy);
@@ -648,6 +693,7 @@ class PermTest<11> : public LargePermTest<11> {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(pow);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacy);

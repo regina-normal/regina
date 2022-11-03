@@ -609,6 +609,17 @@ class Perm {
         constexpr Perm inverse() const;
 
         /**
+         * Computes the given power of this permutation.
+         *
+         * This routine runs in time linear in \a n (in particular, the
+         * running time does not depend upon the given exponent).
+         *
+         * \param exp the exponent; this may be positive, zero or negative.
+         * \return this permutation raised to the power of \a exp.
+         */
+        constexpr Perm pow(long exp) const;
+
+        /**
          * Finds the reverse of this permutation.
          *
          * Here _reverse_ means that we reverse the images of
@@ -1493,6 +1504,53 @@ inline constexpr Perm<n> Perm<n>::inverse() const {
     Code c = 0;
     for (int i = 0; i < n; ++i)
         c |= (static_cast<Code>(i) << (imageBits * (*this)[i]));
+    return Perm<n>(c);
+}
+
+template <int n>
+constexpr Perm<n> Perm<n>::pow(long exp) const {
+    // Get the trivial cases out of the way first.
+    if (exp == 0)
+        return Perm<n>();
+    else if (exp == 1)
+        return *this;
+    else if (exp == -1)
+        return inverse();
+
+    // Work out the power by using the cycle structure.
+
+    // Use a bitmask to track which elements we've visited, since we want to
+    // be constexpr (which rules out anything that requires std::fill).
+    static_assert(sizeof(int) * 8 >= n);
+    int seen = 0;
+
+    Code c = 0;
+
+    for (int i = 0; i < n; ++i) {
+        if (seen & (1 << i))
+            continue;
+
+        int len = 0;
+        Code cycle[n];
+
+        int j = i;
+        do {
+            cycle[len] = j;
+            seen |= (1 << j);
+            j = (*this)[j];
+            ++len;
+        } while (j != i);
+
+        int shift = exp % len;
+        if (shift < 0)
+            shift += len;
+
+        for (j = 0; j < len; ++j) {
+            // cycle[j] maps to cycle[(j + shift) % len].
+            c |= (cycle[(j + shift) % len] << (imageBits * cycle[j]));
+        }
+    }
+
     return Perm<n>(c);
 }
 

@@ -13,7 +13,7 @@ Verison 7,3  [ (to be determined) ]
         Class GroupPresentation:
             - Routine enumerateCovers() now accepts indices ≤ 9, not ≤ 7.
         Class Perm<n>:
-            - Added ++ operators and isConjugacyMinimal() to the generic
+            - Added ++ operators, pow() and isConjugacyMinimal() to the generic
               Perm<n> class, making it more consistent with the specialised
               classes for smaller n.
             - Switched the generic Perm<n>::sign() from a low-overhead
