@@ -807,7 +807,11 @@ This routine produces a constant stream of output (i.e., it calls
     The running time is ``(k!)^g``, where *k* is the subgroup index
     described above, and *g* is the number of generators of this group
     presentation. In particular, the running time grows _extremely_
-    quickly with *k*.
+    quickly with *k*. Moreover, for larger indices this routine may
+    precompute some tables that will never be released (but which only
+    need to be computed the first time that index is used); for index
+    10 these tables will consume roughly 30MB, and for index 11 they
+    will consume around 320MB.
 
 .. warning::
     This routine does _not_ simplify the group presentation before it
@@ -844,9 +848,9 @@ Python:
 
 Template parameter ``index``:
     the number *k* in the description above; in other words, the index
-    of the resulting subgroups. Currently this must be between 2 and 9
-    inclusive; this range is limited because some of the cached
-    precomputations can become expensive for larger indices.
+    of the resulting subgroups. Currently this must be between 2 and
+    11 inclusive; this range is limited because some of the cached
+    precomputations can consume a _lot_ of space for larger indices.
 
 Parameter ``action``:
     a function (or other callable object) to call for each
