@@ -53,35 +53,44 @@ namespace {
         79833600, 958003200, 12454041600, 174356582400
     };
 
-    // We have two "regimes" for computation in this code:
+    // We use two "regimes" for computation:
     //
     // - The "small regime" uses specialised permutation classes whose
     //   codes are Sn indices, and uses hard-coded automorphism groups
-    //   for conjugacy minimal permutations.
+    //   for conjugacy minimal permutations (see the tables below).
     //
     // - The "large regime" uses the generic permutation class whose
-    //   codes are image packs, and generates its automorphism groups
-    //   on demand.
+    //   codes are image packs.  We precompute the automorphism groups
+    //   on demand, and we also precompute a mapping from Sn indices to
+    //   permutations.  This latter map requires 8(n!) bytes for n ≥ 9;
+    //   this means ~3M of memory for n = 9, and ~30M of memory for n = 10.
     //
     static constexpr int maxSmallRegime = 7;
 
     // ---------- Large regime automorphism groups ----------
 
-    template <int n> typename Perm<n>::Code classCode[PermClass<n>::count - 1];
-    template <int n> std::vector<Perm<n>> centraliser[PermClass<n>::count - 1];
+    template <int n> Perm<n>* precompSn = nullptr;
+
+    template <int n> std::vector<Perm<n>> centraliser[PermClass<n>::count];
 
     template <int n>
-    void computeAutGroup() {
+    void precompute() {
         static_assert(n > maxSmallRegime);
 
-        typename Perm<n>::Index i = 0;
-        PermClass<n> c;
+        // Precompute the Sn index -> permutation map.
 
-        // Skip the identity, whose centraliser is all of S_n.
-        for (++c; c; ++c, ++i) {
-            classCode<n>[i] = c.rep().permCode();
+        precompSn<n> = new Perm<n>[Perm<n>::nPerms];
+
+        typename Perm<n>::Index i = 0;
+        Perm<n> p;
+        for ( ; i != Perm<n>::nPerms; ++i, ++p)
+            precompSn<n>[i] = p;
+
+        // Precompute automorphism groups for conjugacy minimal permutations.
+        // Here we skip the identity, whose corresponding group is all of S_n.
+        PermClass<n> c;
+        for (++c, i = 1; c; ++c, ++i)
             centraliser<n>[i] = c.centraliser();
-        }
     }
 
     // ---------- Small regime automorphism groups ----------
@@ -303,10 +312,11 @@ namespace {
      * The idea is the following:
      *
      * - The members rep[0..(nGen-1)] are the representatives of the
-     *   group generators in S_n.
+     *   group generators in S_n.  These are stored using Sn indices;
+     *   the perm() function will convert this to a real permutation.
      *
      * - The members computed[nGen...] are additional elements of S_n
-     *   that correpsond to formulae (i.e., group expressions) involving
+     *   that correspond to formulae (i.e., group expressions) involving
      *   the generators.  These formulae typically appear as contiguous
      *   subexpressions of the group relations.
      *
@@ -342,7 +352,7 @@ namespace {
         size_t nGen;
         std::vector<Formula> formulae;
         size_t* compCount; // length nGenerators + 1
-        Perm<index>* rep;
+        typename Perm<index>::Index* rep;
         Perm<index>* computed;
 
         // Do we want to compose permutations using precomputed tables that are
@@ -354,6 +364,15 @@ namespace {
         // have a runtime precomputation facility built in.  So this leaves
         // index == 6,7 as the only cases where this is relevant.
         static constexpr bool cacheProducts = (index == 6 || index == 7);
+
+        // Give an easy way to convert rep[i] from an Sn index to a permutation.
+        inline Perm<index> perm(unsigned long gen) const {
+            if constexpr (index <= maxSmallRegime) {
+                return Perm<index>::Sn[rep[gen]];
+            } else {
+                return precompSn<index>[rep[gen]];
+            }
+        }
 
         RelationScheme(const GroupPresentation& g) {
             if constexpr (cacheProducts) {
@@ -538,7 +557,8 @@ namespace {
 
             // Now everything else is done: prepare for the big search
             // for representatives, which is where the *real* work happens.
-            rep = new Perm<index>[nGen];
+            rep = new typename Perm<index>::Index[nGen];
+            std::fill(rep, rep + nGen, 0);
             computed = new Perm<index>[compCount[nGen]];
         }
 
@@ -560,8 +580,8 @@ namespace {
         bool computePiece(size_t piece) {
             Perm<index> comb;
             for (const auto& t : formulae[piece].terms) {
-                Perm<index> gen = (t.generator < nGen ?
-                    rep[t.generator] : computed[t.generator - nGen]);
+                Perm<index> gen = (t.generator < nGen ? perm(t.generator) :
+                    computed[t.generator - nGen]);
                 // Pull out exponents ±1, since in practice these are
                 // common and we can avoid the (small) overhead of pow().
                 if constexpr (cacheProducts) {
@@ -897,8 +917,8 @@ size_t GroupPresentation::enumerateCoversInternal(
     }
 
     if constexpr (index > maxSmallRegime)
-        if (centraliser<index>[0].empty())
-            computeAutGroup<index>();
+        if (! precompSn<index>)
+            precompute<index>();
 
     if (nGenerators_ == 1) {
         // To be transitive, the representation of the unique generator must
@@ -929,7 +949,8 @@ size_t GroupPresentation::enumerateCoversInternal(
     SignScheme signs(*this);
 
     // Prepare to choose an S(index) representative for each generator.
-    // The representative for generator i will be scheme.rep[i].
+    // The representative for generator i will be scheme.rep[i] (though this
+    // is stored as an S_n index; the actual permutation is scheme.perm(i)).
     // All representatives will be initialised to the identity.
     size_t nReps = 0;
 
@@ -962,22 +983,25 @@ size_t GroupPresentation::enumerateCoversInternal(
                     // Currently the automorphism group for the entire
                     // set of reps chosen before now is all of S_index.
                     // This means that rep[pos] needs to be conjugacy minimal.
-                    if (scheme.rep[pos].isConjugacyMinimal()) {
-                        if (scheme.rep[pos].isIdentity()) {
+                    if (scheme.perm(pos).isConjugacyMinimal()) {
+                        if (scheme.rep[pos] == 0 /* identity */) {
                             // The automorphism group remains all of S_index.
                             nAut[pos] = 0;
                         } else {
                             // Set up the automorphism group for this rep
                             // by explicitly listing the automorphisms.
-                            if constexpr (index <= maxSmallRegime) {
-                                // Permutation codes use Sn index, and
-                                // the automorphism groups are hard-coded.
-                                int idx = 0;
-                                while (regina::detail::permClassRep[idx] !=
-                                        scheme.rep[pos].SnIndex())
-                                    ++idx;
 
-                                nAut[pos] = 0;
+                            // TODO: Perhaps use a binary search here?
+                            // The tables are already in sorted order.
+                            int idx = 0;
+                            while (regina::detail::permClassRep[idx] !=
+                                    scheme.rep[pos])
+                                ++idx;
+
+                            nAut[pos] = 0;
+
+                            if constexpr (index <= maxSmallRegime) {
+                                // The automorphism groups are hard-coded.
                                 while (minimalAutGroup<index>[idx][nAut[pos]]
                                         >= 0) {
                                     aut[pos][nAut[pos]] = Perm<index>::Sn[
@@ -985,18 +1009,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                                     ++nAut[pos];
                                 }
                             } else {
-                                // Permutation codes use image packs, and the
-                                // automorphism groups are generated on demand.
-                                // TODO: Perhaps use a binary search here,
-                                // since these tables start to get a bit larger.
-                                // This will require sorting the tables when
-                                // they are precomputed.
-                                int idx = 0;
-                                while (classCode<index>[idx] !=
-                                        scheme.rep[pos].permCode())
-                                    ++idx;
-
-                                nAut[pos] = 0;
+                                // The automorphism groups were precomputed.
                                 for (const auto& i : centraliser<index>[idx])
                                     aut[pos][nAut[pos]++] = i;
                             }
@@ -1012,28 +1025,33 @@ size_t GroupPresentation::enumerateCoversInternal(
                     for (size_t a = 0; a < nAut[pos - 1]; ++a) {
                         Perm<index> p = aut[pos - 1][a];
                         if constexpr (RelationScheme<index>::cacheProducts) {
-                            conj = p.cachedComp(scheme.rep[pos], p.inverse());
+                            conj = p.cachedComp(scheme.perm(pos), p.inverse());
                         } else {
-                            conj = p * scheme.rep[pos] * p.inverse();
+                            conj = p * scheme.perm(pos) * p.inverse();
                         }
                         if constexpr (index <= maxSmallRegime) {
-                            if (conj < scheme.rep[pos]) {
+                            // Here SnIndex() is extremely cheap.
+                            if (conj.SnIndex() < scheme.rep[pos]) {
                                 // Not conjugacy minimal.
                                 backtrack = true;
                                 break;
-                            } else if (conj == scheme.rep[pos]) {
+                            } else if (conj.SnIndex() == scheme.rep[pos]) {
                                 // This remains part of our automorphism
                                 // group going forwards.
                                 aut[pos][nAut[pos]++] = p;
                             }
                         } else {
+                            // Here SnIndex() is expensive, but lookup from
+                            // an index to a permutation has already been
+                            // precomputed.
+                            //
                             // For minimality we need Sn comparisons;
                             // with image packs we use orderedSn comparisons,
                             // which are faster.  Since conjugates have the
                             // same sign (and since Sn and orderedSn can only
                             // differ by swapping the last two images),
                             // the comparisons should give the same result.
-                            int cmp = conj.compareWith(scheme.rep[pos]);
+                            int cmp = conj.compareWith(scheme.perm(pos));
                             if (cmp < 0) {
                                 // Not conjugacy minimal.
                                 backtrack = true;
@@ -1082,7 +1100,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                 while (nFound < index && stackSize > 0) {
                     int from = stack[--stackSize];
                     for (unsigned long i = 0; i < nGenerators_; ++i) {
-                        int to = scheme.rep[i][from];
+                        int to = scheme.perm(i)[from];
                         if (! seen[to]) {
                             seen[to] = true;
                             stack[stackSize++] = to;
@@ -1133,11 +1151,11 @@ size_t GroupPresentation::enumerateCoversInternal(
                                             t.generator * index + sheet];
                                         if (gen < sub.nGenerators_)
                                             e.addTermLast(gen, 1);
-                                        sheet = scheme.rep[t.generator][sheet];
+                                        sheet = scheme.perm(t.generator)[sheet];
                                     }
                                 } else if (t.exponent < 0) {
                                     for (long i = 0; i > t.exponent; --i) {
-                                        sheet = scheme.rep[t.generator]
+                                        sheet = scheme.perm(t.generator)
                                             .pre(sheet);
                                         gen = rewrite[
                                             t.generator * index + sheet];
@@ -1164,11 +1182,11 @@ size_t GroupPresentation::enumerateCoversInternal(
                     // We have just moved onto the next generator, and
                     // its sign is constrained.  Work out if the sign
                     // needs to be positive or negative.
-                    int sign = 0;
+                    bool needOdd = false;
                     for (auto g : *signs.constraint[pos])
-                        if (scheme.rep[g].sign() < 0)
-                            sign ^= 1;
-                    if (sign != 0)
+                        if (scheme.rep[g] & 1 /* odd permutation */)
+                            needOdd = ! needOdd;
+                    if (needOdd)
                         ++scheme.rep[pos];
                 }
                 continue;
@@ -1180,12 +1198,17 @@ size_t GroupPresentation::enumerateCoversInternal(
                 // Move on to the next permutation, or if we are constraining
                 // the sign of rep[pos] then increment *twice*.
                 ++scheme.rep[pos];
-                if (signs.constraint[pos] && ! scheme.rep[pos].isIdentity())
+                if (signs.constraint[pos] &&
+                        scheme.rep[pos] != Perm<index>::nPerms)
                     ++scheme.rep[pos];
-                if (! scheme.rep[pos].isIdentity())
+
+                if (scheme.rep[pos] != Perm<index>::nPerms)
                     break;
+
+                // We are out of options for this permutation.
                 if (pos == 0)
                     goto finished;
+                scheme.rep[pos] = 0;
                 --pos;
             }
         }
