@@ -703,6 +703,10 @@ GroupExpression::GroupExpression( const char* input )
 
     // we reached the end of input without any errors
     terms_.push_back(buildTerm);
+
+    // Since some people use the form "aaaaBBB", combine adjacent terms
+    // where we can.
+    simplify();
 }
 
 //             **********  GroupPresentation below **************
