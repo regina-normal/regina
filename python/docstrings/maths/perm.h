@@ -61,6 +61,38 @@ Template parameter ``n``:
     the number of objects being permuted. This must be between 2 and
     16 inclusive.)doc";
 
+// Docstring regina::python::doc::PermClass
+static const char *PermClass =
+R"doc(Represents a conjugacy class of permutations on *n* elements.
+
+Each such conjugacy class correpsonds to an unordered partition of
+*n*, describing the cycle structure of the permutations in the
+conjugacy class.
+
+There is a special "past-the-end" conjugacy class, which effectively
+holds no value; the only way you can obtain such a class is to iterate
+through *all* classes using the increment operators. You can test for
+a past-the-end value by casting to ``bool``.
+
+PermClass objects are, in their current implementation, entirely
+stack-based. This means they cannot support fast move or swap
+operations. However, their size is linear in *n*, so while copy
+operations are not enormously expensive, they are not as cheap as
+copying a Perm object (which just holds a single machine-native
+integer). This decision is a deliberate trade-off between speed versus
+space; the implication for end users is that you should be economical
+about copying PermClass objects, and work with them in-place where
+possible.
+
+Python:
+    Python does not support templates. For each *n* = 2,...,16, this
+    class is available in Python under the corresponding name
+    PermClass2, PermClass3, ..., PermClass16.
+
+Template parameter ``n``:
+    the number of objects being permuted. This must be between 2 and
+    16 inclusive.)doc";
+
 // Docstring regina::python::doc::PermCodeType
 static const char *PermCodeType =
 R"doc(Represents the different kinds of internal permutation codes that are
@@ -98,6 +130,166 @@ Parameter ``n``:
 
 Returns:
     the factorial of *n*..)doc";
+
+namespace PermClass_ {
+
+// Docstring regina::python::doc::PermClass_::__as_bool
+static const char *__as_bool =
+R"doc(Determines whether this represents a genuine conjugacy class, or
+whether it represents the special past-the-end value.
+
+See the class notes and the increment operators for further discussion
+on what past-the-end represents.
+
+Returns:
+    ``False`` if this is the past-the-end conjugacy class, or ``True``
+    otherwise.)doc";
+
+// Docstring regina::python::doc::PermClass_::__copy
+static const char *__copy =
+R"doc(Creates a copy of the given conjugacy class.
+
+Parameter ``src``:
+    the conjugacy class to clone.)doc";
+
+// Docstring regina::python::doc::PermClass_::__default
+static const char *__default =
+R"doc(Creates the conjugacy class for the identity permutation.
+
+The corresponding cycle structure (i.e., partition of *n*) is *n*
+cycles, each of length 1.)doc";
+
+// Docstring regina::python::doc::PermClass_::__eq
+static const char *__eq =
+R"doc(Determines whether this and the given object describe the same
+conjugacy class.
+
+Two past-the-end conjugacy classes will be treated as equal.
+
+Parameter ``other``:
+    the conjugacy class to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given conjugacy class are
+    identical.)doc";
+
+// Docstring regina::python::doc::PermClass_::__inc
+static const char *__inc =
+R"doc(A postincrement operator that changes this to become the next
+conjugacy class in a lexicographical enumeration.
+
+Specifically, the increment operators work through conjugacy classes
+in lexicographical order, where each class is represented by its
+sequence of cycle lengths (given in increasing order). Thus the
+conjugacy class ``11...1`` (representing the identity permutation)
+will come first, and the conjugacy class ``n`` (representing a single
+long cycle) will come last.
+
+If there are no more conjugacy classes (i.e., this represents a single
+cycle of length *n*), then this object will be set to the special
+past-the-end value (which can be tested by casting to a ``bool``).
+
+Python:
+    This routine is named inc() since python does not support the
+    increment operator.
+
+Returns:
+    a copy of this conjugacy class before the increment took place.)doc";
+
+// Docstring regina::python::doc::PermClass_::__ne
+static const char *__ne =
+R"doc(Determines whether this and the given object describe different
+conjugacy classes.
+
+Two past-the-end conjugacy classes will be treated as equal.
+
+Parameter ``other``:
+    the conjugacy class to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given conjugacy class are
+    different.)doc";
+
+// Docstring regina::python::doc::PermClass_::centraliser
+static const char *centraliser =
+R"doc(Returns the set of all permutations that fix the minimal
+representative of this conjugacy class under conjugation.
+
+Specifically, if *r* is the minimal representative of this class as
+returned by rep(), then this routine constructs the subgroup of all
+permutations *p* for which ``p.inverse() * r * p == r``.
+
+The permutations will be returned in an arbitrary order (and in
+particular, this order may be subject to change in future releases of
+Regina).
+
+.. warning::
+    This group could get *very* large. If this conjugacy class
+    represents the identity permutation, then the centraliser will be
+    all of S_n. For *n* ≥ 5, it can be show that the next-worst case
+    is where this conjugacy class represents a single pair swap, in
+    which case the centraliser has size ``2⋅(n-2)!``.
+
+Precondition:
+    This is not the past-the-end conjugacy class.
+
+Precondition:
+    Arrays on this system can be large enough to store n! objects.
+    This is a technical condition on the bit-size of ``size_t`` that
+    will be explicitly checked (with an exception thrown if it fails).
+    On a 64-bit system this condition should be true for all supported
+    *n* (that is, *n* ≤ 16), but on a 32-bit or 16-bit system it will
+    mean that centraliser() cannot be used for larger values of *n*.
+
+Exception ``FailedPrecondition``:
+    A signed integer of the same bit-size as ``size_t`` cannot hold
+    (n!). See the precondition above for further discussion on this
+    constraint.
+
+Returns:
+    all permutations that leave rep() fixed under conjugation.)doc";
+
+// Docstring regina::python::doc::PermClass_::isIdentity
+static const char *isIdentity =
+R"doc(Determines whether this is the conjugacy class for the identity
+permutation.
+
+Returns:
+    ``True`` if and only if this conjugacy class represents the
+    identity permutation.)doc";
+
+// Docstring regina::python::doc::PermClass_::rep
+static const char *rep =
+R"doc(Returns the minimal representative of this conjugacy class.
+
+The _minimal representative_ is the permutation belonging to this
+class with the smallest index in Perm<n>::Sn.
+
+Because all permutations in the same class must have the same sign, it
+follows that this is also the permutation in this class with the
+smallest index in Perm<n>::orderedSn.
+
+Precondition:
+    This is not the past-the-end conjugacy class.
+
+Returns:
+    the minimal representative of this conjugacy class.)doc";
+
+// Docstring regina::python::doc::PermClass_::str
+static const char *str =
+R"doc(Returns a string representation of this conjugacy class.
+
+At present, the string representation consists of a sequence of digits
+indicating the cycle lengths (where cycle lengths 10,11,...,16 use
+``a,b,...,g`` for their respective digits).
+
+If this is the past-the-end conjugacy class, a suitable string will be
+returned.
+
+Returns:
+    a string representation of this conjugacy class.)doc";
+
+}
 
 namespace PermCodeType_ {
 
@@ -177,6 +369,20 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if this and the given permutation are equal.)doc";
+
+// Docstring regina::python::doc::Perm_::__inc
+static const char *__inc =
+R"doc(A postincrement operator that changes this to be the next permutation
+in the array Perm<n>::Sn. If this is the last such permutation then
+this will wrap around to become the first permutation in Perm<n>::Sn,
+which is the identity.
+
+Python:
+    This routine is named inc() since python does not support the
+    increment operator.
+
+Returns:
+    a copy of this permutation before the increment took place.)doc";
 
 // Docstring regina::python::doc::Perm_::__init
 static const char *__init =
@@ -306,7 +512,7 @@ R"doc(Creates a permutation from the given image pack.
 See the class notes for more information on image packs, and how they
 are used to build permutation codes.
 
-For *n* ≥ 7, this routine is identical to fromPermCode().
+For *n* ≥ 8, this routine is identical to fromPermCode().
 
 Precondition:
     The argument *pack* is a valid image pack; see isImagePack() for
@@ -339,7 +545,7 @@ R"doc(Returns the image pack that represents this permutation.
 See the class notes for more information on image packs, and how they
 are used to build permutation codes.
 
-For *n* ≥ 7, this routine is identical to permCode().
+For *n* ≥ 8, this routine is identical to permCode().
 
 Returns:
     the image pack for this permutation.)doc";
@@ -350,6 +556,36 @@ R"doc(Finds the inverse of this permutation.
 
 Returns:
     the inverse of this permutation.)doc";
+
+// Docstring regina::python::doc::Perm_::isConjugacyMinimal
+static const char *isConjugacyMinimal =
+R"doc(Is this permutation minimal in its conjugacy class?
+
+Here "minimal" means that, amongst all its conjugates, this
+permutation has the smallest index in the array Perm<n>::Sn.
+
+See Sn for further information on how permutations are indexed.
+
+Whereas smaller permutation classes use a hard-coded lookup table,
+this generic implementation operates as follows:
+
+* The first time isConjugacyMinimal() is called for this value of *n*,
+  a table of all conjugacy minimal permutations will be automatically
+  generated. This process is fast (it iterates through conjugacy
+  classes, not all permutations); moreover, the table is relatively
+  small (there are just 231 such permutations for the largest case *n*
+  = 16).
+
+* The test itself then involves a binary search through this table
+  (which, given the small size of the table, is also very fast).
+
+Unlike the specialised implementations for smaller permutation
+classes, this generic implementation is not ``constexpr`` (since it
+needs to generate a table of all conjugacy minimal permutations).
+
+Returns:
+    ``True`` if and only if this permutation is minimal in its
+    conjugacy class.)doc";
 
 // Docstring regina::python::doc::Perm_::isIdentity
 static const char *isIdentity =
@@ -367,7 +603,7 @@ R"doc(Determines whether the given argument is the image pack of some
 See the class notes for more information on image packs, and how they
 are used to build permutation codes.
 
-For *n* ≥ 7, this routine is identical to isPermCode().
+For *n* ≥ 8, this routine is identical to isPermCode().
 
 Parameter ``pack``:
     the candidate image pack to test.
@@ -409,6 +645,19 @@ isPermCode().
 
 Returns:
     the internal code.)doc";
+
+// Docstring regina::python::doc::Perm_::pow
+static const char *pow =
+R"doc(Computes the given power of this permutation.
+
+This routine runs in time linear in *n* (in particular, the running
+time does not depend upon the given exponent).
+
+Parameter ``exp``:
+    the exponent; this may be positive, zero or negative.
+
+Returns:
+    this permutation raised to the power of *exp*.)doc";
 
 // Docstring regina::python::doc::Perm_::pre
 static const char *pre =

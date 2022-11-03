@@ -844,9 +844,9 @@ Python:
 
 Template parameter ``index``:
     the number *k* in the description above; in other words, the index
-    of the resulting subgroups. Currently this must be between 2 and 7
-    inclusive; this range is chosen because those are the *k* for
-    which Regina's permutation class Perm<k> is highly optimised.
+    of the resulting subgroups. Currently this must be between 2 and 9
+    inclusive; this range is limited because some of the cached
+    precomputations can become expensive for larger indices.
 
 Parameter ``action``:
     a function (or other callable object) to call for each
