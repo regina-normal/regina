@@ -377,7 +377,7 @@ class CoversTest : public CppUnit::TestFixture {
             if (ans != expectedCount) {
                 std::ostringstream msg;
                 msg << "Free abelian(" << rank << ") yielded " << ans
-                    << "subgroups for index " << index
+                    << " subgroups for index " << index
                     << " instead of the expected "
                     << expectedCount << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -501,7 +501,7 @@ class CoversTest : public CppUnit::TestFixture {
             if (ans != expectedCount) {
                 std::ostringstream msg;
                 msg << "Free(" << rank << ") yielded " << ans
-                    << "subgroups for index " << index
+                    << " subgroups for index " << index
                     << " instead of the expected "
                     << expectedCount << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -577,7 +577,7 @@ class CoversTest : public CppUnit::TestFixture {
                 if (ans != 1) {
                     std::ostringstream msg;
                     msg << "Z_" << order << " yielded " << ans
-                        << "subgroups for index " << index
+                        << " subgroups for index " << index
                         << " instead of the expected 1.";
                     CPPUNIT_FAIL(msg.str());
                 }
