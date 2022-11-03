@@ -53,6 +53,39 @@ namespace {
         79833600, 958003200, 12454041600, 174356582400
     };
 
+    // We have two "regimes" for computation in this code:
+    //
+    // - The "small regime" uses specialised permutation classes whose
+    //   codes are Sn indices, and uses hard-coded automorphism groups
+    //   for conjugacy minimal permutations.
+    //
+    // - The "large regime" uses the generic permutation class whose
+    //   codes are image packs, and generates its automorphism groups
+    //   on demand.
+    //
+    static constexpr int maxSmallRegime = 7;
+
+    // ---------- Large regime automorphism groups ----------
+
+    template <int n> typename Perm<n>::Code classCode[PermClass<n>::count - 1];
+    template <int n> std::vector<Perm<n>> centraliser[PermClass<n>::count - 1];
+
+    template <int n>
+    void computeAutGroup() {
+        static_assert(n > maxSmallRegime);
+
+        typename Perm<n>::Index i = 0;
+        PermClass<n> c;
+
+        // Skip the identity, whose centraliser is all of S_n.
+        for (++c; c; ++c, ++i) {
+            classCode<n>[i] = c.rep().permCode();
+            centraliser<n>[i] = c.centraliser();
+        }
+    }
+
+    // ---------- Small regime automorphism groups ----------
+
     // The (-1)-terminated automorphism group corresponding to each
     // conjugacy minimal permutation, or an empty list if the automorphism
     // group is all of S_n.
@@ -543,7 +576,7 @@ namespace {
                             comb = gen.cachedPow(t.exponent).cachedComp(comb);
                             break;
                     }
-                } else {
+                } else if constexpr (index <= maxSmallRegime) {
                     switch (t.exponent) {
                         case 1:
                             comb = gen * comb;
@@ -554,6 +587,16 @@ namespace {
                         default:
                             comb = gen.pow(t.exponent) * comb;
                             break;
+                    }
+                } else {
+                    // TODO: Use a faster exponentiation algorithm here.
+                    if (t.exponent > 0) {
+                        for (long i = 0; i < t.exponent; ++i)
+                            comb = gen * comb;
+                    } else if (t.exponent < 0) {
+                        Perm<index> inv = gen.inverse();
+                        for (long i = 0; i > t.exponent; --i)
+                            comb = inv * comb;
                     }
                 }
             }
@@ -854,14 +897,18 @@ void GroupPresentation::minimaxGenerators() {
 template <int index>
 size_t GroupPresentation::enumerateCoversInternal(
         std::function<void(GroupPresentation&&)>&& action) {
-    static_assert(2 <= index && index <= 7,
-        "Currently enumerateCovers() is only available for 2 <= index <= 7.");
+    static_assert(2 <= index && index <= 9,
+        "Currently enumerateCovers() is only available for 2 <= index <= 9.");
 
     if (nGenerators_ == 0) {
         // We have the trivial group.
         // There is only one trivial representation, and it is not transitive.
         return 0;
     }
+
+    if constexpr (index > maxSmallRegime)
+        if (centraliser<index>[0].empty())
+            computeAutGroup<index>();
 
     if (nGenerators_ == 1) {
         // To be transitive, the representation of the unique generator must
@@ -932,17 +979,36 @@ size_t GroupPresentation::enumerateCoversInternal(
                         } else {
                             // Set up the automorphism group for this rep
                             // by explicitly listing the automorphisms.
-                            int idx = 0;
-                            while (regina::detail::permClassRep[idx] !=
-                                    scheme.rep[pos].SnIndex())
-                                ++idx;
+                            if constexpr (index <= maxSmallRegime) {
+                                // Permutation codes use Sn index, and
+                                // the automorphism groups are hard-coded.
+                                int idx = 0;
+                                while (regina::detail::permClassRep[idx] !=
+                                        scheme.rep[pos].SnIndex())
+                                    ++idx;
 
-                            nAut[pos] = 0;
-                            while (minimalAutGroup<index>[idx][nAut[pos]]
-                                    >= 0) {
-                                aut[pos][nAut[pos]] = Perm<index>::Sn[
-                                    minimalAutGroup<index>[idx][nAut[pos]]];
-                                ++nAut[pos];
+                                nAut[pos] = 0;
+                                while (minimalAutGroup<index>[idx][nAut[pos]]
+                                        >= 0) {
+                                    aut[pos][nAut[pos]] = Perm<index>::Sn[
+                                        minimalAutGroup<index>[idx][nAut[pos]]];
+                                    ++nAut[pos];
+                                }
+                            } else {
+                                // Permutation codes use image packs, and the
+                                // automorphism groups are generated on demand.
+                                // TODO: Perhaps use a binary search here,
+                                // since these tables start to get a bit larger.
+                                // This will require sorting the tables when
+                                // they are precomputed.
+                                int idx = 0;
+                                while (classCode<index>[idx] !=
+                                        scheme.rep[pos].permCode())
+                                    ++idx;
+
+                                nAut[pos] = 0;
+                                for (const auto& i : centraliser<index>[idx])
+                                    aut[pos][nAut[pos]++] = i;
                             }
                         }
                     } else {
@@ -960,14 +1026,33 @@ size_t GroupPresentation::enumerateCoversInternal(
                         } else {
                             conj = p * scheme.rep[pos] * p.inverse();
                         }
-                        if (conj < scheme.rep[pos]) {
-                            // Not conjugacy minimal.
-                            backtrack = true;
-                            break;
-                        } else if (conj == scheme.rep[pos]) {
-                            // This remains part of our automorphism
-                            // group going forwards.
-                            aut[pos][nAut[pos]++] = p;
+                        if constexpr (index <= maxSmallRegime) {
+                            if (conj < scheme.rep[pos]) {
+                                // Not conjugacy minimal.
+                                backtrack = true;
+                                break;
+                            } else if (conj == scheme.rep[pos]) {
+                                // This remains part of our automorphism
+                                // group going forwards.
+                                aut[pos][nAut[pos]++] = p;
+                            }
+                        } else {
+                            // For minimality we need Sn comparisons;
+                            // with image packs we use orderedSn comparisons,
+                            // which are faster.  Since conjugates have the
+                            // same sign (and since Sn and orderedSn can only
+                            // differ by swapping the last two images),
+                            // the comparisons should give the same result.
+                            int cmp = conj.compareWith(scheme.rep[pos]);
+                            if (cmp < 0) {
+                                // Not conjugacy minimal.
+                                backtrack = true;
+                                break;
+                            } else if (cmp == 0) {
+                                // This remains part of our automorphism
+                                // group going forwards.
+                                aut[pos][nAut[pos]++] = p;
+                            }
                         }
                     }
                 }
@@ -1135,6 +1220,10 @@ template size_t GroupPresentation::enumerateCoversInternal<5>(
 template size_t GroupPresentation::enumerateCoversInternal<6>(
         std::function<void(GroupPresentation&&)>&& action);
 template size_t GroupPresentation::enumerateCoversInternal<7>(
+        std::function<void(GroupPresentation&&)>&& action);
+template size_t GroupPresentation::enumerateCoversInternal<8>(
+        std::function<void(GroupPresentation&&)>&& action);
+template size_t GroupPresentation::enumerateCoversInternal<9>(
         std::function<void(GroupPresentation&&)>&& action);
 
 } // namespace regina

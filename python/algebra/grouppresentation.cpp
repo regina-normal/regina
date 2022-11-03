@@ -206,9 +206,11 @@ void addGroupPresentation(pybind11::module_& m) {
                 case 5: p.enumerateCovers<5>(push); break;
                 case 6: p.enumerateCovers<6>(push); break;
                 case 7: p.enumerateCovers<7>(push); break;
+                case 8: p.enumerateCovers<8>(push); break;
+                case 9: p.enumerateCovers<9>(push); break;
                 default:
                     throw regina::InvalidArgument("The index passed to "
-                        "enumerateCovers() must be between 2 and 7 inclusive.");
+                        "enumerateCovers() must be between 2 and 9 inclusive.");
             }
             return ans;
         }, pybind11::arg("index"), rdoc::enumerateCovers)

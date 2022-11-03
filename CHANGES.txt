@@ -10,6 +10,8 @@ Regina - A Normal Surface Theory Calculator
 Verison 7,3  [ (to be determined) ]
 
     ENGINE:
+        Class GroupPresentation:
+            - Routine enumerateCovers() now accepts indices ≤ 9, not ≤ 7.
         Class Perm<n>:
             - Added ++ operators and isConjugacyMinimal() to the generic
               Perm<n> class, making it more consistent with the specialised
