@@ -15,7 +15,7 @@ Verison 7,3  [ (to be determined) ]
               g0^4 g1^-2 (i.e., exponents will be used even if the input does
               not supply them).
         Class GroupPresentation:
-            - Routine enumerateCovers() now accepts indices ≤ 9, not ≤ 7.
+            - Routine enumerateCovers() now accepts indices ≤ 11, not ≤ 7.
             - The string constructor now contracts terms like "aaaaBB" to become
               g0^4 g1^-2 (i.e., exponents will be used even if the input does
               not supply them).

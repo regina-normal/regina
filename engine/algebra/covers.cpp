@@ -928,8 +928,8 @@ void GroupPresentation::minimaxGenerators() {
 template <int index>
 size_t GroupPresentation::enumerateCoversInternal(
         std::function<void(GroupPresentation&&)>&& action) {
-    static_assert(2 <= index && index <= 9,
-        "Currently enumerateCovers() is only available for 2 <= index <= 9.");
+    static_assert(2 <= index && index <= 11,
+        "Currently enumerateCovers() is only available for 2 <= index <= 11.");
 
     if (nGenerators_ == 0) {
         // We have the trivial group.
@@ -1282,6 +1282,10 @@ template size_t GroupPresentation::enumerateCoversInternal<7>(
 template size_t GroupPresentation::enumerateCoversInternal<8>(
         std::function<void(GroupPresentation&&)>&& action);
 template size_t GroupPresentation::enumerateCoversInternal<9>(
+        std::function<void(GroupPresentation&&)>&& action);
+template size_t GroupPresentation::enumerateCoversInternal<10>(
+        std::function<void(GroupPresentation&&)>&& action);
+template size_t GroupPresentation::enumerateCoversInternal<11>(
         std::function<void(GroupPresentation&&)>&& action);
 
 } // namespace regina

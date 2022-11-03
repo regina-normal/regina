@@ -167,7 +167,7 @@ class CoversTest : public CppUnit::TestFixture {
 
         void trivial() {
             // No covers:
-            compareResults<9>(regina::Example<3>::sphere(), "Sphere");
+            compareResults<11>(regina::Example<3>::sphere(), "Sphere");
         }
 
         void manifolds() {
@@ -176,7 +176,7 @@ class CoversTest : public CppUnit::TestFixture {
                 "Poincare homology sphere");
 
             // Cover (which is trivial) only for degree 3:
-            compareResults<9>(regina::Example<3>::lens(3, 1), "L(3,1)");
+            compareResults<10>(regina::Example<3>::lens(3, 1), "L(3,1)");
 
             // Several covers for degree 5 and a few for degrees ≥ 7:
             compareResults<9>(regina::Example<3>::weeks(), "Weeks");
@@ -403,6 +403,8 @@ class CoversTest : public CppUnit::TestFixture {
                 verifyFreeAbelian<8>(rank);
             for (int rank = 1; rank <= 2; ++rank)
                 verifyFreeAbelian<9>(rank);
+            for (int rank = 1; rank <= 2; ++rank)
+                verifyFreeAbelian<10>(rank);
         }
 
         template <int index>
@@ -606,6 +608,10 @@ class CoversTest : public CppUnit::TestFixture {
                 verifyCyclic<8>(order);
             for (int order = 1; order <= 15; ++order)
                 verifyCyclic<9>(order);
+            for (int order = 1; order <= 15; ++order)
+                verifyCyclic<10>(order);
+            for (int order = 1; order <= 15; ++order)
+                verifyCyclic<11>(order);
         }
 };
 
