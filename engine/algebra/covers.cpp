@@ -211,6 +211,27 @@ namespace {
         /* 872 */ { 0, 872, 1744, 2610, 3456, 4200, 4320, -1 }
     };
 
+    // ---------- Other helper code ----------
+
+    /**
+     * Given the Sn index of a permutation that is known to be conjugacy
+     * minimal, determines the index of the corresponding conjugacy class.
+     */
+    template <int n>
+    inline int whichPermClass(typename Perm<n>::Index index) {
+#if 0
+        // Option 1: Simple linear scan, since thsese tables are small.
+        int ans = 0;
+        while (regina::detail::permClassRep[ans] != index)
+            ++ans;
+        return ans;
+#endif
+        // Option 2: Binary search.
+        return std::lower_bound(regina::detail::permClassRep,
+            regina::detail::permClassRep + PermClass<n>::count, index) -
+            regina::detail::permClassRep;
+    }
+
     /**
      * A class similar in nature to GroupExpression, which is used by
      * RelationScheme to represent both group relations and also contiguous
@@ -990,27 +1011,21 @@ size_t GroupPresentation::enumerateCoversInternal(
                         } else {
                             // Set up the automorphism group for this rep
                             // by explicitly listing the automorphisms.
-
-                            // TODO: Perhaps use a binary search here?
-                            // The tables are already in sorted order.
-                            int idx = 0;
-                            while (regina::detail::permClassRep[idx] !=
-                                    scheme.rep[pos])
-                                ++idx;
+                            int cls = whichPermClass<index>(scheme.rep[pos]);
 
                             nAut[pos] = 0;
 
                             if constexpr (index <= maxSmallRegime) {
                                 // The automorphism groups are hard-coded.
-                                while (minimalAutGroup<index>[idx][nAut[pos]]
+                                while (minimalAutGroup<index>[cls][nAut[pos]]
                                         >= 0) {
                                     aut[pos][nAut[pos]] = Perm<index>::Sn[
-                                        minimalAutGroup<index>[idx][nAut[pos]]];
+                                        minimalAutGroup<index>[cls][nAut[pos]]];
                                     ++nAut[pos];
                                 }
                             } else {
                                 // The automorphism groups were precomputed.
-                                for (const auto& i : centraliser<index>[idx])
+                                for (const auto& i : centraliser<index>[cls])
                                     aut[pos][nAut[pos]++] = i;
                             }
                         }
@@ -1188,6 +1203,9 @@ size_t GroupPresentation::enumerateCoversInternal(
                             needOdd = ! needOdd;
                     if (needOdd)
                         ++scheme.rep[pos];
+
+                    // At this point, scheme.rep[pos] should be either 0 or 1.
+                    // Note that both of these are conjugacy minimal.
                 }
                 continue;
             }
@@ -1195,15 +1213,42 @@ size_t GroupPresentation::enumerateCoversInternal(
 
         if (backtrack) {
             while (true) {
-                // Move on to the next permutation, or if we are constraining
-                // the sign of rep[pos] then increment *twice*.
-                ++scheme.rep[pos];
-                if (signs.constraint[pos] &&
-                        scheme.rep[pos] != Perm<index>::nPerms)
+                // Move on to the next permutation.
+
+                if (index > 2 && (pos == 0 || nAut[pos - 1] == 0)) {
+                    // We are only interested in conjugacy minimal
+                    // permutations.  Jump forwards to the next one.
+                    int cls = whichPermClass<index>(scheme.rep[pos]);
+
+                    if (signs.constraint[pos]) {
+                        // Actually, we need to jump to the next one
+                        // with the same sign.
+                        int sign = (scheme.rep[pos] & 1);
+
+                        ++cls;
+                        while (cls < PermClass<index>::count &&
+                                (regina::detail::permClassRep[cls] & 1) != sign)
+                            ++cls;
+                    } else
+                        ++cls;
+
+                    if (cls < PermClass<index>::count) {
+                        scheme.rep[pos] = regina::detail::permClassRep[cls];
+                        break;
+                    }
+                    // Out of options.
+                } else {
                     ++scheme.rep[pos];
 
-                if (scheme.rep[pos] != Perm<index>::nPerms)
-                    break;
+                    // If we are constraining the sign of rep[pos] then
+                    // we should actually increment *twice*.
+                    if (signs.constraint[pos] &&
+                            scheme.rep[pos] != Perm<index>::nPerms)
+                        ++scheme.rep[pos];
+
+                    if (scheme.rep[pos] != Perm<index>::nPerms)
+                        break;
+                }
 
                 // We are out of options for this permutation.
                 if (pos == 0)
