@@ -1572,11 +1572,13 @@ inline constexpr bool Perm<n>::operator != (const Perm& other) const {
 
 template <int n>
 constexpr int Perm<n>::compareWith(const Perm& other) const {
+    Code mask = imageMask;
     for (int i = 0; i < n; ++i) {
-        if ((*this)[i] < other[i])
+        if ((code_ & mask) < (other.code_ & mask))
             return -1;
-        if ((*this)[i] > other[i])
+        if ((code_ & mask) > (other.code_ & mask))
             return 1;
+        mask <<= imageBits;
     }
     return 0;
 }
