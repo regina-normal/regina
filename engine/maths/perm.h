@@ -1577,7 +1577,7 @@ constexpr int Perm<n>::sign() const {
     // The algorithm commented out above is quadratic with low overhead;
     // this one is linear with a little more overhead.  Testing on my
     // build machine suggests this linear algorithm is indeed faster for
-    // the cases we care about (8 <= n <= 16)/
+    // the cases we care about (8 <= n <= 16).
     bool evenPerm = true;
 
     // Use a bitmask to track which indices we've seen, since we want to
