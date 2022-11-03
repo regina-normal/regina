@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <mutex>
 #include "algebra/grouppresentation.h"
 #include "maths/perm.h"
 #include "maths/matrix.h"
@@ -37,6 +38,86 @@
 namespace regina {
 
 namespace {
+    // We use two forms of precomputation here:
+    //
+    // - If Perm<n> stores image packs internally (not Sn indices), then
+    //   we compute a mapping from Sn indices to permutations, so that
+    //   iteration over Sn and lookups from indices will be fast.
+    //   This map requires 8(n!) bytes for n ≥ 9; this means (for example)
+    //   ~3M of memory for n = 9, and ~30M of memory for n = 10.
+    //
+    // - For larger n, we also precompute the automorphism groups for
+    //   conjugacy minimal permutations.  For smaller n, these groups
+    //   are hard-coded into this source file (see the tables below).
+    //   These tables are very small (i.e., their memory consumption is
+    //   insignificant).
+    //
+    // All precomputation is done on demand, the first time that an index
+    // is used.
+    //
+    // It is assumed that the threshold for precomputing automorphism groups
+    // is <= the threshold for precomputing Sn.  (This assumption is reasonable,
+    // because over time we may gain more specialised permutation classes that
+    // store Sn indices internally; however, there is no pressing reason to
+    // extend the hard-coded tables here in this source file, since computing
+    // these groups is fast.)  This is enforced through the compile-time
+    // assertion below.
+
+    // The first index for which we need to precompute automorphism groups:
+    static constexpr int precomputeAutGroupsFrom = 8;
+
+    static_assert(Perm<precomputeAutGroupsFrom - 1>::codeType ==
+        PERM_CODE_INDEX, "The threshold for precomputing automorphism "
+        "groups should be <= the threshold for precomputing Sn.");
+
+    // The precomputed Sn tables, for those n where Perm<n> stores image packs
+    // internally and not Sn indices:
+    template <int n> Perm<n>* precompSn = nullptr;
+
+    // The precomputed automorphism groups, for n >= precomputeAutGroupsFrom:
+    template <int n> std::vector<Perm<n>> centraliser[PermClass<n>::count];
+
+    // A flag to indicate whether precomputation has been done yet for a
+    // given index, and a mutex to make precomputation thread-safe:
+    template <int n> bool precomputed = false;
+    template <int n> std::mutex precomputeLock;
+
+    template <int n>
+    void precompute() {
+        static_assert(n >= precomputeAutGroupsFrom);
+
+        // We use a full mutex here for thread-safety, not just an atomic bool,
+        // since if several threads try to precompute simultaneously then
+        // they will all have to wait for the entire precomputation process
+        // to finish before they can continue.
+        std::scoped_lock lock(precomputeLock<n>);
+
+        if (precomputed<n>)
+            return;
+
+        if constexpr (Perm<n>::codeType == PERM_CODE_IMAGES) {
+            // Precompute the Sn index -> permutation map.
+            precompSn<n> = new Perm<n>[Perm<n>::nPerms];
+
+            typename Perm<n>::Index i = 0;
+            Perm<n> p;
+            for ( ; i != Perm<n>::nPerms; ++i, ++p)
+                precompSn<n>[i] = p;
+        }
+
+        if constexpr (n >= precomputeAutGroupsFrom) {
+            // Precompute automorphism groups for conjugacy minimal
+            // permutations.  Here we skip the identity, whose corresponding
+            // group is all of S_n.
+            PermClass<n> c;
+            typename Perm<n>::Index i;
+            for (++c, i = 1; c; ++c, ++i)
+                centraliser<n>[i] = c.centraliser();
+        }
+
+        precomputed<n> = true;
+    }
+
     // The maximum size of an automorphism group for a conjugacy minimal
     // permutation, excluding the case where the automorphism group is all
     // of S_n.
@@ -53,51 +134,11 @@ namespace {
         79833600, 958003200, 12454041600, 174356582400
     };
 
-    // We use two "regimes" for computation:
-    //
-    // - The "small regime" uses specialised permutation classes whose
-    //   codes are Sn indices, and uses hard-coded automorphism groups
-    //   for conjugacy minimal permutations (see the tables below).
-    //
-    // - The "large regime" uses the generic permutation class whose
-    //   codes are image packs.  We precompute the automorphism groups
-    //   on demand, and we also precompute a mapping from Sn indices to
-    //   permutations.  This latter map requires 8(n!) bytes for n ≥ 9;
-    //   this means ~3M of memory for n = 9, and ~30M of memory for n = 10.
-    //
-    static constexpr int maxSmallRegime = 7;
-
-    // ---------- Large regime automorphism groups ----------
-
-    template <int n> Perm<n>* precompSn = nullptr;
-
-    template <int n> std::vector<Perm<n>> centraliser[PermClass<n>::count];
-
-    template <int n>
-    void precompute() {
-        static_assert(n > maxSmallRegime);
-
-        // Precompute the Sn index -> permutation map.
-
-        precompSn<n> = new Perm<n>[Perm<n>::nPerms];
-
-        typename Perm<n>::Index i = 0;
-        Perm<n> p;
-        for ( ; i != Perm<n>::nPerms; ++i, ++p)
-            precompSn<n>[i] = p;
-
-        // Precompute automorphism groups for conjugacy minimal permutations.
-        // Here we skip the identity, whose corresponding group is all of S_n.
-        PermClass<n> c;
-        for (++c, i = 1; c; ++c, ++i)
-            centraliser<n>[i] = c.centraliser();
-    }
-
-    // ---------- Small regime automorphism groups ----------
-
     // The (-1)-terminated automorphism group corresponding to each
     // conjugacy minimal permutation, or an empty list if the automorphism
-    // group is all of S_n.
+    // group is all of S_n.  These lists are hard-coded for small indices
+    // (for larger indices we precompute these on demand).
+    //
     // The code that generated these arrays can be found in aut.py, in the same
     // directory as this source file.
     template <int n> constexpr int
@@ -210,8 +251,6 @@ namespace {
                     -1 },
         /* 872 */ { 0, 872, 1744, 2610, 3456, 4200, 4320, -1 }
     };
-
-    // ---------- Other helper code ----------
 
     /**
      * Given the Sn index of a permutation that is known to be conjugacy
@@ -388,11 +427,10 @@ namespace {
 
         // Give an easy way to convert rep[i] from an Sn index to a permutation.
         inline Perm<index> perm(unsigned long gen) const {
-            if constexpr (index <= maxSmallRegime) {
+            if constexpr (Perm<index>::codeType == PERM_CODE_INDEX)
                 return Perm<index>::Sn[rep[gen]];
-            } else {
+            else
                 return precompSn<index>[rep[gen]];
-            }
         }
 
         RelationScheme(const GroupPresentation& g) {
@@ -937,9 +975,8 @@ size_t GroupPresentation::enumerateCoversInternal(
         return 0;
     }
 
-    if constexpr (index > maxSmallRegime)
-        if (! precompSn<index>)
-            precompute<index>();
+    if constexpr (index >= precomputeAutGroupsFrom)
+        precompute<index>();
 
     if (nGenerators_ == 1) {
         // To be transitive, the representation of the unique generator must
@@ -1015,8 +1052,12 @@ size_t GroupPresentation::enumerateCoversInternal(
 
                             nAut[pos] = 0;
 
-                            if constexpr (index <= maxSmallRegime) {
+                            if constexpr (index < precomputeAutGroupsFrom) {
                                 // The automorphism groups are hard-coded.
+                                // In this regime we also assume that
+                                // Perm<index>::Sn[...] is fast.
+                                static_assert(Perm<index>::codeType ==
+                                    PERM_CODE_INDEX);
                                 while (minimalAutGroup<index>[cls][nAut[pos]]
                                         >= 0) {
                                     aut[pos][nAut[pos]] = Perm<index>::Sn[
@@ -1044,7 +1085,8 @@ size_t GroupPresentation::enumerateCoversInternal(
                         } else {
                             conj = p * scheme.perm(pos) * p.inverse();
                         }
-                        if constexpr (index <= maxSmallRegime) {
+                        if constexpr (Perm<index>::codeType ==
+                                PERM_CODE_INDEX) {
                             // Here SnIndex() is extremely cheap.
                             if (conj.SnIndex() < scheme.rep[pos]) {
                                 // Not conjugacy minimal.
@@ -1060,7 +1102,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                             // an index to a permutation has already been
                             // precomputed.
                             //
-                            // For minimality we need Sn comparisons;
+                            // For minimality we need Sn comparisons; here
                             // with image packs we use orderedSn comparisons,
                             // which are faster.  Since conjugates have the
                             // same sign (and since Sn and orderedSn can only
