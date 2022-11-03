@@ -724,7 +724,7 @@ class Perm {
          *
          * \return a reference to this permutation after the increment.
          */
-        Perm<n>& operator ++();
+        Perm& operator ++();
 
         /**
          * A postincrement operator that changes this to be the next permutation
@@ -737,7 +737,29 @@ class Perm {
          *
          * \return a copy of this permutation before the increment took place.
          */
-        Perm<n> operator ++(int);
+        Perm operator ++(int);
+
+        /**
+         * Determines if this appears earlier than the given permutation
+         * in the array Perm<n>::Sn.
+         *
+         * Note that this is _not_ the same ordering of permutations as
+         * the ordering implied by compareWith().  This is, however,
+         * consistent with the ordering implied by the ++ operators.
+         *
+         * Unlike the smaller permutation classes that use \a Sn indices
+         * as internal permutation codes, for this generic Perm class the
+         * ordering defined here is _slower_ to compute than compareWith().
+         * It is recommended that, unless you specifically need to align
+         * your ordering with \a Sn indices, you either (i) use compareWith()
+         * for lexicographical ordering (which is a little faster), or else
+         * (ii) just compare permutation codes if you are happy with an
+         * arbitrary ordering (which will be _much_ faster).
+         *
+         * \param rhs the permutation to compare this against.
+         * \return \c true if and only if this appears before \a rhs in \a Sn.
+         */
+        constexpr bool operator < (const Perm& rhs) const;
 
         /**
          * Returns the <i>i</i>th rotation.
@@ -1696,6 +1718,26 @@ inline Perm<n> Perm<n>::operator ++(int) {
     Perm<n> ans(code_);
     ++(*this);
     return ans;
+}
+
+template <int n>
+constexpr bool Perm<n>::operator < (const Perm<n>& rhs) const {
+    if (code_ == rhs.code_)
+        return false;
+
+    // The following mask blots out the images of n-2 and n-1.
+    Code mask = ~((imageMask | (imageMask << imageBits))
+        << (imageBits * (n-2)));
+    if ((code_ & mask) == (rhs.code_ & mask)) {
+        // The two permutations differ precisely in the last two images.
+        // In this case, the even permutation will have smaller Sn index.
+        return sign() > 0;
+    } else {
+        // The two permutations do not just differ in the last two images.
+        // This means that comparison by Sn indices will give the same
+        // result as comparison by orderedSn indices.
+        return compareWith(rhs) < 0;
+    }
 }
 
 template <int n>

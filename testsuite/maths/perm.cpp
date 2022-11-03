@@ -431,6 +431,71 @@ class LargePermTest : public GeneralPermTest<n> {
             }
         }
 
+        void lessThan() {
+            Index i, j;
+            Perm p, q;
+
+            for (i = 0; i < nIdx; ++i) {
+                p = Perm::Sn[idx[i]];
+                if (p < p) {
+                    std::ostringstream msg;
+                    msg << "Operator < incorrectly concludes that "
+                        << p.str() << " < " << p.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (! p.isIdentity()) {
+                    Perm prev = Perm::Sn[idx[i] - 1];
+                    if (! (prev < p)) {
+                        std::ostringstream msg;
+                        msg << "Operator < does not conclude that "
+                            << prev.str() << " < " << p.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (p < prev) {
+                        std::ostringstream msg;
+                        msg << "Operator < incorrectly concludes that "
+                            << p.str() << " < " << prev.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                if (idx[i] != Perm::nPerms - 1) {
+                    Perm next = Perm::Sn[idx[i] + 1];
+                    if (! (p < next)) {
+                        std::ostringstream msg;
+                        msg << "Operator < does not conclude that "
+                            << p.str() << " < " << next.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (next < p) {
+                        std::ostringstream msg;
+                        msg << "Operator < incorrectly concludes that "
+                            << next.str() << " < " << p.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+
+            for (i = 0; i < nIdx; ++i) {
+                p = Perm::Sn[idx[i]];
+                for (j = i + 1; j < nIdx; ++j) {
+                    q = Perm::Sn[idx[j]];
+
+                    if (! (p < q)) {
+                        std::ostringstream msg;
+                        msg << "Operator < does not conclude that "
+                            << p.str() << " < " << q.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (q < p) {
+                        std::ostringstream msg;
+                        msg << "Operator < incorrectly concludes that "
+                            << q.str() << " < " << p.str() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
         void reverse() {
             for (int i = 0; i < nIdx; ++i) {
                 Perm p = Perm::orderedSn[idx[i]];
@@ -634,6 +699,7 @@ class PermTest : public LargePermTest<n> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(lessThan);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
@@ -655,6 +721,7 @@ class PermTest<8> : public LargePermTest<8> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(lessThan);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
@@ -675,6 +742,7 @@ class PermTest<9> : public LargePermTest<9> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(lessThan);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
@@ -695,6 +763,7 @@ class PermTest<10> : public LargePermTest<10> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(lessThan);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
@@ -715,6 +784,7 @@ class PermTest<11> : public LargePermTest<11> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(lessThan);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
