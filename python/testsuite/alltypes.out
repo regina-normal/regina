@@ -960,6 +960,51 @@ Equality type : EqualityType.BY_VALUE
 Perm9 : class
 Equality type : EqualityType.BY_VALUE
 
+PermClass10 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass11 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass12 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass13 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass14 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass15 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass16 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass2 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass3 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass4 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass5 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass6 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass7 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass8 : class
+Equality type : EqualityType.BY_VALUE
+
+PermClass9 : class
+Equality type : EqualityType.BY_VALUE
+
 PillowTwoSphere : class
 Equality type : EqualityType.BY_VALUE
 

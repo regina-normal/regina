@@ -171,21 +171,22 @@ class GroupPresentationTest : public CppUnit::TestFixture {
         word2.simplify();
         if (word1.countTerms() != 6)
             CPPUNIT_FAIL("GroupExpression::number of terms (1). "+word1.str());
-        if (word1.countTerms() != 6)
-            CPPUNIT_FAIL("GroupExpression::number of terms (2). "+word1.str());
+        if (word2.countTerms() != 6)
+            CPPUNIT_FAIL("GroupExpression::number of terms (2). "+word2.str());
         word1.simplify(true);
         word2.simplify(true);
         if (word1.countTerms() != 6)
             CPPUNIT_FAIL("GroupExpression::number of terms (3). "+word1.str());
-        if (word1.countTerms() != 6)
-            CPPUNIT_FAIL("GroupExpression::number of terms (4). "+word1.str());
+        if (word2.countTerms() != 6)
+            CPPUNIT_FAIL("GroupExpression::number of terms (4). "+word2.str());
 
         word1.addTermsLast(word2);
         word1.simplify();
         if (word1.countTerms() != 0)
             CPPUNIT_FAIL("GroupExpression::inverse (2). "+word1.str());
 
-        if (word3.countTerms() != 11)
+        // The constructor will automatically merge cc, CC -> c^2, C^-2.
+        if (word3.countTerms() != 9)
             CPPUNIT_FAIL("GroupExpression::number of terms (5). "+word3.str());
         word3.simplify();
         if (word3.countTerms() != 9)
