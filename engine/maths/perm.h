@@ -376,19 +376,6 @@ class Perm {
             static constexpr Index size() { return nPerms; }
         };
 
-        /**
-         * The table of all conjugacy minimal permutations, or \c null if
-         * this table has not yet been generated.  See isConjugacyMinimal()
-         * for details.
-         */
-        static Code* conjugacyMinimal_;
-
-        /**
-         * The number of conjugacy minimal permutations.
-         * This is the number of unordered partitions of n.
-         */
-        static constexpr int nConjugacyMinimal = detail::countPermClasses[n];
-
     public:
         /**
          * Gives array-like access to all possible permutations of
@@ -1004,27 +991,10 @@ class Perm {
          *
          * See Sn for further information on how permutations are indexed.
          *
-         * Whereas smaller permutation classes use a hard-coded lookup table,
-         * this generic implementation operates as follows:
-         *
-         * - The first time isConjugacyMinimal() is called for this value of
-         *   \a n, a table of all conjugacy minimal permutations will be
-         *   automatically generated.  This process is fast (it iterates
-         *   through conjugacy classes, not all permutations); moreover, the
-         *   table is relatively small (there are just 231 such permutations
-         *   for the largest case \a n = 16).
-         *
-         * - The test itself then involves a binary search through this table
-         *   (which, given the small size of the table, is also very fast).
-         *
-         * Unlike the specialised implementations for smaller permutation
-         * classes, this generic implementation is not \c constexpr (since
-         * it needs to generate a table of all conjugacy minimal permutations).
-         *
          * \return \c true if and only if this permutation is minimal in its
          * conjugacy class.
          */
-        bool isConjugacyMinimal() const;
+        constexpr bool isConjugacyMinimal() const;
 
     protected:
         /**
@@ -1045,15 +1015,6 @@ class Perm {
          * \pre a < b.
          */
         constexpr void swapImages(int a, int b);
-
-        /**
-         * Generates the table of all conjugacy minimal permutations.
-         *
-         * See isConjugacyMinimal() for further details.
-         *
-         * \pre This table has not yet been generated.
-         */
-        static void generateConjugacyMinimal();
 
         /**
          * Reconstructs a permutation from its given tight encoding.
@@ -1359,11 +1320,6 @@ template <int n>
 inline std::ostream& operator << (std::ostream& out, const PermClass<n>& c) {
     return (out << c.str());
 }
-
-// Non-const static members for Perm
-
-template <int n>
-typename Perm<n>::Code* Perm<n>::conjugacyMinimal_ = nullptr;
 
 // Inline functions for Perm
 
@@ -1864,12 +1820,25 @@ inline Perm<n> Perm<n>::tightDecoding(const std::string& enc) {
 }
 
 template <int n>
-inline bool Perm<n>::isConjugacyMinimal() const {
-    if (! conjugacyMinimal_)
-        generateConjugacyMinimal();
-
-    return std::binary_search(conjugacyMinimal_,
-        conjugacyMinimal_ + nConjugacyMinimal, code_);
+constexpr bool Perm<n>::isConjugacyMinimal() const {
+    int prevCycle = 0;
+    int currCycle = 0;
+    for (int j = 0; j < n; ++j) {
+        int img = (*this)[j];
+        if (img > j + 1)
+            return false;
+        else if (img == j + 1)
+            ++currCycle;
+        else {
+            // We have closed off a cycle.
+            ++currCycle;
+            if (currCycle < prevCycle)
+                return false;
+            prevCycle = currCycle;
+            currCycle = 0;
+        }
+    }
+    return true;
 }
 
 template <int n>
@@ -1885,24 +1854,6 @@ inline constexpr void Perm<n>::swapImages(int a, int b) {
     code_ ^= (aImg | bImg);
     int shift = imageBits * (b - a);
     code_ |= ((aImg << shift) | (bImg >> shift));
-}
-
-template <int n>
-void Perm<n>::generateConjugacyMinimal() {
-    // The size of the array is already known.
-    conjugacyMinimal_ = new Code[nConjugacyMinimal];
-
-    // Generate all conjugacy classes, i.e., partitions of n.
-    int index = 0;
-    for (PermClass<n> c; c; ++c)
-        conjugacyMinimal_[index++] = c.rep().code_;
-
-    // Note: we should have index == nConjugacyMinimal at this point.
-
-    // TODO: If we ever move to using Sn indices as permutation codes,
-    // this sort will become unnecessary (since we have already generated
-    // our minimal representatives in order of appearance in Sn).
-    std::sort(conjugacyMinimal_, conjugacyMinimal_ + nConjugacyMinimal);
 }
 
 // Inline functions for PermClass
