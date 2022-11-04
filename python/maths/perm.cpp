@@ -62,7 +62,7 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def(pybind11::self * pybind11::self, rdoc::__mul)
         .def("inverse", &Perm<n>::inverse, rdoc::inverse)
         .def("pow", &Perm<n>::pow, rdoc::pow)
-        .def("order", &Perm<n>::order, RDOC_TODO)
+        .def("order", &Perm<n>::order, rdoc::order)
         .def("reverse", &Perm<n>::reverse, rdoc::reverse)
         .def("sign", &Perm<n>::sign, rdoc::sign)
         .def("__getitem__", &Perm<n>::operator[], rdoc::__array)
@@ -72,6 +72,7 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("inc", [](Perm<n>& p) {
             return p++;
         }, rdoc::__inc)
+        .def(pybind11::self < pybind11::self, rdoc::__lt)
         .def_static("rot", &Perm<n>::rot, rdoc::rot)
         .def_static("rand", static_cast<Perm<n>(&)(bool)>(Perm<n>::rand),
             pybind11::arg("even") = false, rdoc::rand)
