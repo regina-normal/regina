@@ -409,6 +409,30 @@ Precondition:
 Parameter ``image``:
     the array of images.)doc";
 
+// Docstring regina::python::doc::Perm_::__lt
+static const char *__lt =
+R"doc(Determines if this appears earlier than the given permutation in the
+array Perm<n>::Sn.
+
+Note that this is _not_ the same ordering of permutations as the
+ordering implied by compareWith(). This is, however, consistent with
+the ordering implied by the ++ operators.
+
+Unlike the smaller permutation classes that use *Sn* indices as
+internal permutation codes, for this generic Perm class the ordering
+defined here is _slower_ to compute than compareWith(). It is
+recommended that, unless you specifically need to align your ordering
+with *Sn* indices, you either (i) use compareWith() for
+lexicographical ordering (which is a little faster), or else (ii) just
+compare permutation codes if you are happy with an arbitrary ordering
+(which will be _much_ faster).
+
+Parameter ``rhs``:
+    the permutation to compare this against.
+
+Returns:
+    ``True`` if and only if this appears before *rhs* in *Sn*.)doc";
+
 // Docstring regina::python::doc::Perm_::__mul
 static const char *__mul =
 R"doc(Returns the composition of this permutation with the given
@@ -566,23 +590,6 @@ permutation has the smallest index in the array Perm<n>::Sn.
 
 See Sn for further information on how permutations are indexed.
 
-Whereas smaller permutation classes use a hard-coded lookup table,
-this generic implementation operates as follows:
-
-* The first time isConjugacyMinimal() is called for this value of *n*,
-  a table of all conjugacy minimal permutations will be automatically
-  generated. This process is fast (it iterates through conjugacy
-  classes, not all permutations); moreover, the table is relatively
-  small (there are just 231 such permutations for the largest case *n*
-  = 16).
-
-* The test itself then involves a binary search through this table
-  (which, given the small size of the table, is also very fast).
-
-Unlike the specialised implementations for smaller permutation
-classes, this generic implementation is not ``constexpr`` (since it
-needs to generate a table of all conjugacy minimal permutations).
-
 Returns:
     ``True`` if and only if this permutation is minimal in its
     conjugacy class.)doc";
@@ -623,6 +630,19 @@ Parameter ``code``:
 Returns:
     ``True`` if and only if the given code is a valid internal
     permutation code.)doc";
+
+// Docstring regina::python::doc::Perm_::order
+static const char *order =
+R"doc(Returns the order of this permutation.
+
+In other words; this routine returns the smallest positive integer *k*
+for which the *k*th power of this permutation is the identity.
+
+Note that the largest possible order for the largest supported *n*
+(*n* = 16) is 140. See OEIS sequence A000793 for details.
+
+Returns:
+    the order of this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::orderedSnIndex
 static const char *orderedSnIndex =
