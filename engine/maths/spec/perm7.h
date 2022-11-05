@@ -652,13 +652,26 @@ class Perm<7> {
         constexpr Perm<7> inverse() const;
 
         /**
-         * An alias for inverse(), since the specialised Perm<7> class does
-         * not use precomputation for its optimisations.
+         * An alias for inverse(), provided to assist with writing
+         * generic code.
          *
-         * This routine is provided for consistency with some of the
-         * larger Perm<n> classes, which do provide an optimised cachedInverse()
-         * function that makes use of precomputation.  See the generic
-         * Perm<n>::cachedInverse() for an example of this.
+         * This specialised Perm<7> class does not use precomputation to
+         * compute inverses.  The only point of having cachedInverse() in
+         * Perm<7> is to make it easier to write generic code that works with
+         * Perm<n> for any \a n.
+         *
+         * - If you know you are only working with Perm<7>, you should just
+         *   call inverse() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedInverse().
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedInverse().  For
+         * Perm<7>, precompute() does not affect inverse computations;
+         * however, for other Perm<n> classes a failure to do this will
+         * almost certainly crash your program.
          *
          * \return the inverse of this permutation.
          */

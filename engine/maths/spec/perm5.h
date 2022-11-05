@@ -323,13 +323,20 @@ class Perm<5> {
 
     public:
         /**
-         * Does nothing, since the specialised Perm<5> class does not
-         * use precomputation for its optimisations.
+         * A do-nothing routine that assists with writing generic code.
          *
-         * This routine is provided for consistency with some of the
-         * larger Perm<n> classes, which do make use of precomputation
-         * for optimised operations.  See Perm<7>::precompute() for an
-         * example of this.
+         * This specialised Perm<5> class does not use precomputation for its
+         * optimisations, and so this precompute() function does nothing.
+         * The only point of having precompute() in Perm<5> is to make it
+         * easier to write generic code that works with Perm<n> for any \a n.
+         *
+         * - If you know you are only working with Perm<5>, you do not need to
+         *   call this function at all.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using any of the optimised `cachedXXX()` functions,
+         *   such as cachedComp(), cachedInverse(), and so on.
          *
          * All Perm<n>::precompute() routines are thread-safe, and are
          * harmless if called multiple times (since any call after the
@@ -828,13 +835,27 @@ class Perm<5> {
         constexpr Perm<5> inverse() const;
 
         /**
-         * An alias for inverse(), since the specialised Perm<5> class does
-         * not use precomputation for its optimisations.
+         * An alias for inverse(), provided to assist with writing
+         * generic code.
          *
-         * This routine is provided for consistency with some of the
-         * larger Perm<n> classes, which do provide an optimised cachedInverse()
-         * function that makes use of precomputation.  See the generic
-         * Perm<n>::cachedInverse() for an example of this.
+         * This specialised Perm<5> class does not use precomputation for its
+         * optimisations.  The only point of having cachedInverse() in Perm<5>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<5>, you should just
+         *   call inverse() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedInverse().  (For Perm<5>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedInverse().  For
+         * Perm<5>, precompute() does nothing; however, for other Perm<n>
+         * classes a failure to do this will almost certainly crash your
+         * program.
          *
          * \return the inverse of this permutation.
          */
