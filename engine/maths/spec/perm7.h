@@ -652,6 +652,19 @@ class Perm<7> {
         constexpr Perm<7> inverse() const;
 
         /**
+         * An alias for inverse(), since the specialised Perm<7> class does
+         * not use precomputation for its optimisations.
+         *
+         * This routine is provided for consistency with some of the
+         * larger Perm<n> classes, which do provide an optimised cachedInverse()
+         * function that makes use of precomputation.  See the generic
+         * Perm<n>::cachedInverse() for an example of this.
+         *
+         * \return the inverse of this permutation.
+         */
+        constexpr Perm<7> cachedInverse() const;
+
+        /**
          * Computes the given power of this permutation.
          *
          * This routine runs in constant time.
@@ -1923,6 +1936,10 @@ inline Perm<7> Perm<7>::cachedComp(const Perm<7>& q, const Perm<7>& r) const {
 }
 
 inline constexpr Perm<7> Perm<7>::inverse() const {
+    return Perm<7>(invS7[code2_]);
+}
+
+inline constexpr Perm<7> Perm<7>::cachedInverse() const {
     return Perm<7>(invS7[code2_]);
 }
 

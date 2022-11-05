@@ -434,9 +434,7 @@ namespace {
         }
 
         RelationScheme(const GroupPresentation& g) {
-            if constexpr (cacheProducts) {
-                Perm<index>::precompute();
-            }
+            Perm<index>::precompute();
 
             nGen = g.countGenerators();
             compCount = new size_t[nGen + 1];
@@ -649,7 +647,7 @@ namespace {
                             comb = gen.cachedComp(comb);
                             break;
                         case -1:
-                            comb = gen.inverse().cachedComp(comb);
+                            comb = gen.cachedInverse().cachedComp(comb);
                             break;
                         default:
                             comb = gen.cachedPow(t.exponent).cachedComp(comb);
@@ -661,7 +659,7 @@ namespace {
                             comb = gen * comb;
                             break;
                         case -1:
-                            comb = gen.inverse() * comb;
+                            comb = gen.cachedInverse() * comb;
                             break;
                         default:
                             comb = gen.pow(t.exponent) * comb;
@@ -1081,9 +1079,10 @@ size_t GroupPresentation::enumerateCoversInternal(
                     for (size_t a = 0; a < nAut[pos - 1]; ++a) {
                         Perm<index> p = aut[pos - 1][a];
                         if constexpr (RelationScheme<index>::cacheProducts) {
-                            conj = p.cachedComp(scheme.perm(pos), p.inverse());
+                            conj = p.cachedComp(scheme.perm(pos),
+                                p.cachedInverse());
                         } else {
-                            conj = p * scheme.perm(pos) * p.inverse();
+                            conj = p * scheme.perm(pos) * p.cachedInverse();
                         }
                         if constexpr (Perm<index>::codeType ==
                                 PERM_CODE_INDEX) {

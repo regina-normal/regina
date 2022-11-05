@@ -288,6 +288,21 @@ class Perm<2> {
 
     public:
         /**
+         * Does nothing, since the specialised Perm<2> class does not
+         * use precomputation for its optimisations.
+         *
+         * This routine is provided for consistency with some of the
+         * larger Perm<n> classes, which do make use of precomputation
+         * for optimised operations.  See Perm<7>::precompute() for an
+         * example of this.
+         *
+         * All Perm<n>::precompute() routines are thread-safe, and are
+         * harmless if called multiple times (since any call after the
+         * first will do nothing).
+         */
+        static constexpr void precompute();
+
+        /**
          * Creates the identity permutation.
          */
         constexpr Perm();
@@ -393,6 +408,19 @@ class Perm<2> {
          * \return the inverse of this permutation.
          */
         constexpr Perm<2> inverse() const;
+
+        /**
+         * An alias for inverse(), since the specialised Perm<2> class does
+         * not use precomputation for its optimisations.
+         *
+         * This routine is provided for consistency with some of the
+         * larger Perm<n> classes, which do provide an optimised cachedInverse()
+         * function that makes use of precomputation.  See the generic
+         * Perm<n>::cachedInverse() for an example of this.
+         *
+         * \return the inverse of this permutation.
+         */
+        constexpr Perm<2> cachedInverse() const;
 
         /**
          * Computes the given power of this permutation.
@@ -849,6 +877,9 @@ inline constexpr Perm<2> Perm<2>::S1Lookup::operator[] (int) const {
     return Perm<2>();
 }
 
+inline constexpr void Perm<2>::precompute() {
+}
+
 inline constexpr Perm<2>::Perm() : code_(0) {
 }
 
@@ -884,6 +915,10 @@ inline constexpr Perm<2> Perm<2>::operator * (const Perm<2>& q) const {
 }
 
 inline constexpr Perm<2> Perm<2>::inverse() const {
+    return *this;
+}
+
+inline constexpr Perm<2> Perm<2>::cachedInverse() const {
     return *this;
 }
 

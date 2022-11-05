@@ -323,6 +323,21 @@ class Perm<5> {
 
     public:
         /**
+         * Does nothing, since the specialised Perm<5> class does not
+         * use precomputation for its optimisations.
+         *
+         * This routine is provided for consistency with some of the
+         * larger Perm<n> classes, which do make use of precomputation
+         * for optimised operations.  See Perm<7>::precompute() for an
+         * example of this.
+         *
+         * All Perm<n>::precompute() routines are thread-safe, and are
+         * harmless if called multiple times (since any call after the
+         * first will do nothing).
+         */
+        static constexpr void precompute();
+
+        /**
          * Gives fast array-like access to all possible permutations of
          * five elements.
          *
@@ -811,6 +826,19 @@ class Perm<5> {
          * \return the inverse of this permutation.
          */
         constexpr Perm<5> inverse() const;
+
+        /**
+         * An alias for inverse(), since the specialised Perm<5> class does
+         * not use precomputation for its optimisations.
+         *
+         * This routine is provided for consistency with some of the
+         * larger Perm<n> classes, which do provide an optimised cachedInverse()
+         * function that makes use of precomputation.  See the generic
+         * Perm<n>::cachedInverse() for an example of this.
+         *
+         * \return the inverse of this permutation.
+         */
+        constexpr Perm<5> cachedInverse() const;
 
         /**
          * Computes the given power of this permutation.
@@ -1620,6 +1648,9 @@ inline constexpr Perm<5> Perm<5>::S2Lookup::operator[] (int index) const {
     return Perm<5>(index == 0 ? 0 : 25);
 }
 
+inline constexpr void Perm<5>::precompute() {
+}
+
 inline constexpr Perm<5>::Perm() : code2_(0) {
 }
 
@@ -1720,6 +1751,10 @@ inline constexpr Perm<5> Perm<5>::operator *(const Perm<5>& q) const {
 }
 
 inline constexpr Perm<5> Perm<5>::inverse() const {
+    return Perm<5>(invS5[code2_]);
+}
+
+inline constexpr Perm<5> Perm<5>::cachedInverse() const {
     return Perm<5>(invS5[code2_]);
 }
 

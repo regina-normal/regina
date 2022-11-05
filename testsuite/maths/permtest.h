@@ -240,14 +240,9 @@ class SmallPermTest : public GeneralPermTest<n> {
         using GeneralPermTest<n>::looksDistinct;
         using TightEncodingTest<Perm<n>>::verifyTightEncoding;
 
-    private:
-        static constexpr bool requiresPrecompute = (n == 6 || n == 7);
-
     public:
         void setUp() override {
-            if constexpr (requiresPrecompute) {
-                Perm<n>::precompute();
-            }
+            Perm<n>::precompute();
         }
 
         void tearDown() override {

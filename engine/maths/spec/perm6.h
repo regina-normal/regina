@@ -636,6 +636,19 @@ class Perm<6> {
         constexpr Perm<6> inverse() const;
 
         /**
+         * An alias for inverse(), since the specialised Perm<6> class does
+         * not use precomputation for its optimisations.
+         *
+         * This routine is provided for consistency with some of the
+         * larger Perm<n> classes, which do provide an optimised cachedInverse()
+         * function that makes use of precomputation.  See the generic
+         * Perm<n>::cachedInverse() for an example of this.
+         *
+         * \return the inverse of this permutation.
+         */
+        constexpr Perm<6> cachedInverse() const;
+
+        /**
          * Computes the given power of this permutation.
          *
          * This routine runs in constant time.
@@ -3240,6 +3253,10 @@ inline Perm<6> Perm<6>::cachedComp(const Perm<6>& q, const Perm<6>& r) const {
 }
 
 inline constexpr Perm<6> Perm<6>::inverse() const {
+    return Perm<6>(invS6[code2_]);
+}
+
+inline constexpr Perm<6> Perm<6>::cachedInverse() const {
     return Perm<6>(invS6[code2_]);
 }
 

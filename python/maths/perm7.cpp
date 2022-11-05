@@ -76,6 +76,7 @@ void addPerm7(pybind11::module_& m) {
         .def("cachedComp", overload_cast<const Perm<7>&, const Perm<7>&>(
             &Perm<7>::cachedComp, pybind11::const_), rdoc::cachedComp_2)
         .def("inverse", &Perm<7>::inverse, rdoc::inverse)
+        .def("cachedInverse", &Perm<7>::cachedInverse, RDOC_TODO)
         .def("pow", &Perm<7>::pow, rdoc::pow)
         .def("cachedPow", &Perm<7>::cachedPow, rdoc::cachedPow)
         .def("order", &Perm<7>::order, rdoc::order)

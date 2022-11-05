@@ -327,6 +327,21 @@ class Perm<3> {
 
     public:
         /**
+         * Does nothing, since the specialised Perm<3> class does not
+         * use precomputation for its optimisations.
+         *
+         * This routine is provided for consistency with some of the
+         * larger Perm<n> classes, which do make use of precomputation
+         * for optimised operations.  See Perm<7>::precompute() for an
+         * example of this.
+         *
+         * All Perm<n>::precompute() routines are thread-safe, and are
+         * harmless if called multiple times (since any call after the
+         * first will do nothing).
+         */
+        static constexpr void precompute();
+
+        /**
          * Creates the identity permutation.
          */
         constexpr Perm();
@@ -460,6 +475,19 @@ class Perm<3> {
          * \return the inverse of this permutation.
          */
         constexpr Perm<3> inverse() const;
+
+        /**
+         * An alias for inverse(), since the specialised Perm<3> class does
+         * not use precomputation for its optimisations.
+         *
+         * This routine is provided for consistency with some of the
+         * larger Perm<n> classes, which do provide an optimised cachedInverse()
+         * function that makes use of precomputation.  See the generic
+         * Perm<n>::cachedInverse() for an example of this.
+         *
+         * \return the inverse of this permutation.
+         */
+        constexpr Perm<3> cachedInverse() const;
 
         /**
          * Computes the given power of this permutation.
@@ -1021,6 +1049,9 @@ inline constexpr Perm<3> Perm<3>::S2Lookup::operator[] (int index) const {
     return Perm<3>(index == 0 ? code012 : code102);
 }
 
+inline constexpr void Perm<3>::precompute() {
+}
+
 inline constexpr Perm<3>::Perm() : code_(0) {
 }
 
@@ -1086,6 +1117,10 @@ inline constexpr Perm<3> Perm<3>::operator * (const Perm<3>& q) const {
 }
 
 inline constexpr Perm<3> Perm<3>::inverse() const {
+    return Perm<3>(invS3[code_]);
+}
+
+inline constexpr Perm<3> Perm<3>::cachedInverse() const {
     return Perm<3>(invS3[code_]);
 }
 

@@ -317,6 +317,39 @@ class Perm {
 
     private:
         /**
+         * A bitmask that can be applied to an image pack to isolate the
+         * images of [0..n/2), where n/2 is rounded up for odd \a n.
+         */
+        static constexpr ImagePack lowerMask =
+            (static_cast<ImagePack>(1) << (((n+1)/2) * Perm<n>::imageBits)) - 1;
+
+        /**
+         * `2^k`, where \a k is the number of bits set in \a lowerMask.
+         */
+        static constexpr ImagePack lowerCount =
+            (static_cast<ImagePack>(1) << (((n+1)/2) * Perm<n>::imageBits));
+
+        /**
+         * The number of bits consumed by \a lowerMask.  Equivalently,
+         * this is the number of zero bits at the end of \a upperMask.
+         */
+        static constexpr int upperShift = ((n+1)/2) * Perm<n>::imageBits;
+
+        /**
+         * A bitmask that can be applied to an image pack to isolate the
+         * images of [n/2..n), where n/2 is rounded up for odd \a n.
+         */
+        static constexpr ImagePack upperMask =
+            ((static_cast<ImagePack>(1) << ((n/2) * Perm<n>::imageBits)) - 1)
+                << upperShift;
+
+        /**
+         * `2^k`, where \a k is the number of bits set in \a upperMask.
+         */
+        static constexpr ImagePack upperCount =
+            (static_cast<ImagePack>(1) << ((n/2) * Perm<n>::imageBits));
+
+        /**
          * The number of characters used in a tight encoding.
          * This is the smallest exponent k for which 94^k ≥ n!.
          *
@@ -444,7 +477,40 @@ class Perm {
         static constexpr Code idCode_ = idCodePartial(n - 1);
             /**< The internal code for the identity permutation. */
 
+        static std::mutex precomputeMutex;
+            /**< A mutex to make precomputation threadsafe. */
+
+        static ImagePack *invLower_;
+            /**< A precomputed table of "half-inverse" image packs.
+                 The array index should be the lower half of an image pack
+                 (i.e., should encode the images of [0..n/2).
+                 Array elements whose indices do not correspond to a
+                 "half image pack" will be left uninitialised. */
+        static ImagePack *invUpper_;
+            /**< A precomputed table of "half-inverse" image packs.
+                 The array index should be the upper half of an image pack
+                 (i.e., should encode the images of [n/2..n).
+                 Array elements whose indices do not correspond to a
+                 "half image pack" will be left uninitialised. */
+
     public:
+        /**
+         * Performs the precomputation necessary for using the optimised
+         * cachedInverse() routine.
+         *
+         * This _must_ be called before calling cachedInverse().
+         *
+         * This only needs to be done once in the lifetime of the program.
+         * If you do try to call precompute() a second time then it will
+         * do nothing and return immediately.
+         *
+         * TODO: Add details on how much memory the precomputed tables
+         * will consume.
+         *
+         * This routine is thread-safe.
+         */
+        static void precompute();
+
         /**
          * Creates the identity permutation.
          */
@@ -591,9 +657,49 @@ class Perm {
         /**
          * Finds the inverse of this permutation.
          *
+         * For permutations of seven and fewer objects, inversion is extremely
+         * fast because it uses hard-coded lookup tables.  However, for this
+         * generic Perm<n> class, inversion cannot uses these lookup tables
+         * (for multiple reasons), and so inverse() takes time linear in \a n.
+         *
+         * If you are going to make significant use of the generic Perm<n>
+         * class for some particular value of \a n, you should instead:
+         *
+         * - call precompute() to precompute some "partial lookup tables"
+         *   in advance (see precompute() for details on how much memory
+         *   they will consume); and then
+         *
+         * - call cachedInverse() instead of inverse() to compute your
+         *   inverses.
+         *
          * \return the inverse of this permutation.
          */
         constexpr Perm inverse() const;
+
+        /**
+         * Finds the inverse of this permutation, optimised using precomputed
+         * "partial lookup tables".
+         *
+         * The advantage of this routine is speed: calling cachedInverse()
+         * involves two table lookups and some simple arithmetic to combine
+         * the results, whereas inverse() requires time linear in \a n.
+         *
+         * The disadvantages of this routine are that (1) you must remember
+         * to call precompute() in advance, and (2) the precomputed lookup
+         * tables will consume additional memory for the lifetime of your
+         * program.  See precompute() for details on just how much memory
+         * these tables will consume for each \a n.
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling inverse().
+         *
+         * \pre You _must_ have called the routine precompute() at least once
+         * in the lifetime of the program before using cachedInverse().
+         * Otherwise this routine will almost certainly crash your program.
+         *
+         * \return the inverse of this permutation.
+         */
+        constexpr Perm cachedInverse() const;
 
         /**
          * Computes the given power of this permutation.
@@ -1321,6 +1427,12 @@ inline std::ostream& operator << (std::ostream& out, const PermClass<n>& c) {
     return (out << c.str());
 }
 
+// Static variables for Perm
+
+template <int n> std::mutex Perm<n>::precomputeMutex;
+template <int n> typename Perm<n>::ImagePack* Perm<n>::invLower_ = nullptr;
+template <int n> typename Perm<n>::ImagePack* Perm<n>::invUpper_ = nullptr;
+
 // Inline functions for Perm
 
 template <int n>
@@ -1415,6 +1527,104 @@ inline constexpr typename Perm<n>::Code Perm<n>::idCodePartial(int k) {
 }
 
 template <int n>
+inline void Perm<n>::precompute() {
+    std::scoped_lock lock(precomputeMutex);
+    if (invLower_)
+        return;
+
+    invLower_ = new ImagePack[lowerCount];
+    invUpper_ = new ImagePack[upperCount];
+
+    int img[(n+1)/2];
+    int seen[n];
+
+    std::fill(seen, seen + n, false);
+    for (int i = 0; i < (n+1)/2; ++i) {
+        img[i] = i;
+        seen[i] = true;
+    }
+    while (true) {
+        {
+            Code c = 0;
+            Code d = 0;
+            for (int i = 0; i < (n+1)/2; ++i) {
+                c |= (static_cast<Code>(img[i]) << (imageBits * i));
+                d |= (static_cast<Code>(i) << (imageBits * img[i]));
+            }
+            invLower_[c] = d;
+        }
+
+        int pos = (n-1)/2;
+        while (pos >= 0) {
+            seen[img[pos]] = false;
+            ++img[pos];
+            while (img[pos] < n && seen[img[pos]])
+                ++img[pos];
+            if (img[pos] < n) {
+                seen[img[pos]] = true;
+                break;
+            }
+            --pos;
+        }
+
+        if (pos < 0)
+            break;
+
+        ++pos;
+        int next = 0;
+        while (pos < (n+1)/2) {
+            while (seen[next])
+                ++next;
+            seen[next] = true;
+            img[pos++] = next++;
+        }
+    }
+
+    std::fill(seen, seen + n, false);
+    for (int i = 0; i < n/2; ++i) {
+        img[i] = i;
+        seen[i] = true;
+    }
+    while (true) {
+        {
+            Code c = 0;
+            Code d = 0;
+            for (int i = 0; i < n/2; ++i) {
+                c |= (static_cast<Code>(img[i]) << (imageBits * i));
+                d |= (static_cast<Code>(i + (n+1)/2)
+                    << (imageBits * img[i]));
+            }
+            invUpper_[c] = d;
+        }
+
+        int pos = n/2 - 1;
+        while (pos >= 0) {
+            seen[img[pos]] = false;
+            ++img[pos];
+            while (img[pos] < n && seen[img[pos]])
+                ++img[pos];
+            if (img[pos] < n) {
+                seen[img[pos]] = true;
+                break;
+            }
+            --pos;
+        }
+
+        if (pos < 0)
+            break;
+
+        ++pos;
+        int next = 0;
+        while (pos < n/2) {
+            while (seen[next])
+                ++next;
+            seen[next] = true;
+            img[pos++] = next++;
+        }
+    }
+}
+
+template <int n>
 inline constexpr Perm<n>::Perm() : code_(idCode_) {
 }
 
@@ -1497,6 +1707,12 @@ inline constexpr Perm<n> Perm<n>::inverse() const {
     for (int i = 0; i < n; ++i)
         c |= (static_cast<Code>(i) << (imageBits * (*this)[i]));
     return Perm<n>(c);
+}
+
+template <int n>
+inline constexpr Perm<n> Perm<n>::cachedInverse() const {
+    return invLower_[code_ & lowerMask] |
+        invUpper_[(code_ & upperMask) >> upperShift];
 }
 
 template <int n>
