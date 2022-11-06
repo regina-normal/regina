@@ -492,10 +492,6 @@ class Perm {
                  (i.e., should encode the images of [n/2..n).
                  Array elements whose indices do not correspond to a
                  "half image pack" will be left uninitialised. */
-        static ImagePack (*compLowerLower_)[lowerCount];
-        static ImagePack (*compLowerUpper_)[upperCount];
-        static ImagePack (*compUpperLower_)[lowerCount];
-        static ImagePack (*compUpperUpper_)[upperCount];
 
     public:
         /**
@@ -1589,14 +1585,6 @@ inline std::ostream& operator << (std::ostream& out, const PermClass<n>& c) {
 template <int n> std::mutex Perm<n>::precomputeMutex;
 template <int n> typename Perm<n>::ImagePack* Perm<n>::invLower_ = nullptr;
 template <int n> typename Perm<n>::ImagePack* Perm<n>::invUpper_ = nullptr;
-template <int n> typename Perm<n>::ImagePack
-    (*Perm<n>::compLowerLower_)[Perm<n>::lowerCount] = nullptr;
-template <int n> typename Perm<n>::ImagePack
-    (*Perm<n>::compLowerUpper_)[Perm<n>::upperCount] = nullptr;
-template <int n> typename Perm<n>::ImagePack
-    (*Perm<n>::compUpperLower_)[Perm<n>::lowerCount] = nullptr;
-template <int n> typename Perm<n>::ImagePack
-    (*Perm<n>::compUpperUpper_)[Perm<n>::upperCount] = nullptr;
 
 // Inline functions for Perm
 
@@ -1700,98 +1688,22 @@ inline void Perm<n>::precompute() {
     invLower_ = new ImagePack[lowerCount];
     invUpper_ = new ImagePack[upperCount];
 
-    {
-        LowerSlice lower;
-        do {
-            ImagePack d = 0;
-            for (int i = 0; i < LowerSlice::length; ++i)
-                d |= (static_cast<ImagePack>(i)
-                    << (imageBits * lower.image[i]));
-            invLower_[lower.pack()] = d;
-        } while (lower.inc());
-    }
-    {
-        UpperSlice upper;
-        do {
-            ImagePack d = 0;
-            for (int i = 0; i < UpperSlice::length; ++i)
-                d |= (static_cast<ImagePack>(i + LowerSlice::length)
-                    << (imageBits * upper.image[i]));
-            invUpper_[upper.pack()] = d;
-        } while (upper.inc());
-    }
+    LowerSlice lower;
+    do {
+        ImagePack d = 0;
+        for (int i = 0; i < LowerSlice::length; ++i)
+            d |= (static_cast<ImagePack>(i) << (imageBits * lower.image[i]));
+        invLower_[lower.pack()] = d;
+    } while (lower.inc());
 
-    if constexpr (n <= 11) {
-        compLowerLower_ = new ImagePack[lowerCount][lowerCount];
-        compLowerUpper_ = new ImagePack[lowerCount][upperCount];
-        compUpperLower_ = new ImagePack[upperCount][lowerCount];
-        compUpperUpper_ = new ImagePack[upperCount][upperCount];
-
-        {
-            LowerSlice left;
-            do {
-                ImagePack leftPack = left.pack();
-                LowerSlice right;
-                do {
-                    ImagePack d = 0;
-                    for (int i = 0; i < LowerSlice::length; ++i)
-                        if (right.image[i] < LowerSlice::length)
-                            d |= (static_cast<ImagePack>(
-                                left.image[right.image[i]])
-                                << (imageBits * i));
-                    compLowerLower_[leftPack][right.pack()] = d;
-                } while (right.inc());
-            } while (left.inc());
-        }
-        {
-            LowerSlice left;
-            do {
-                ImagePack leftPack = left.pack();
-                UpperSlice right;
-                do {
-                    ImagePack d = 0;
-                    for (int i = 0; i < UpperSlice::length; ++i)
-                        if (right.image[i] < LowerSlice::length)
-                            d |= (static_cast<ImagePack>(
-                                left.image[right.image[i]])
-                                << (imageBits * (i + LowerSlice::length)));
-                    compLowerUpper_[leftPack][right.pack()] = d;
-                } while (right.inc());
-            } while (left.inc());
-        }
-        {
-            UpperSlice left;
-            do {
-                ImagePack leftPack = left.pack();
-                LowerSlice right;
-                do {
-                    ImagePack d = 0;
-                    for (int i = 0; i < LowerSlice::length; ++i)
-                        if (right.image[i] >= LowerSlice::length)
-                            d |= (static_cast<ImagePack>(
-                                left.image[right.image[i] - LowerSlice::length])
-                                << (imageBits * i));
-                    compUpperLower_[leftPack][right.pack()] = d;
-                } while (right.inc());
-            } while (left.inc());
-        }
-        {
-            UpperSlice left;
-            do {
-                ImagePack leftPack = left.pack();
-                UpperSlice right;
-                do {
-                    ImagePack d = 0;
-                    for (int i = 0; i < UpperSlice::length; ++i)
-                        if (right.image[i] >= LowerSlice::length)
-                            d |= (static_cast<ImagePack>(
-                                left.image[right.image[i] - LowerSlice::length])
-                                << (imageBits * (i + LowerSlice::length)));
-                    compUpperUpper_[leftPack][right.pack()] = d;
-                } while (right.inc());
-            } while (left.inc());
-        }
-    }
+    UpperSlice upper;
+    do {
+        ImagePack d = 0;
+        for (int i = 0; i < UpperSlice::length; ++i)
+            d |= (static_cast<ImagePack>(i + LowerSlice::length)
+                << (imageBits * upper.image[i]));
+        invUpper_[upper.pack()] = d;
+    } while (upper.inc());
 }
 
 template <int n>
@@ -1873,14 +1785,10 @@ inline constexpr Perm<n> Perm<n>::operator * (const Perm& q) const {
 
 template <int n>
 inline constexpr Perm<n> Perm<n>::cachedComp(const Perm& q) const {
-    return Perm<n>(
-        compLowerLower_[code_ & lowerMask][q.code_ & lowerMask] |
-        compLowerUpper_[code_ & lowerMask]
-            [(q.code_ & upperMask) >> upperShift] |
-        compUpperLower_[(code_ & upperMask) >> upperShift]
-            [q.code_ & lowerMask] |
-        compUpperUpper_[(code_ & upperMask) >> upperShift]
-            [(q.code_ & upperMask) >> upperShift]);
+    Code c = 0;
+    for (int i = 0; i < n; ++i)
+        c |= (static_cast<Code>((*this)[q[i]]) << (imageBits * i));
+    return Perm<n>(c);
 }
 
 template <int n>
@@ -1902,8 +1810,8 @@ inline constexpr Perm<n> Perm<n>::inverse() const {
 
 template <int n>
 inline constexpr Perm<n> Perm<n>::cachedInverse() const {
-    return Perm<n>(invLower_[code_ & lowerMask] |
-        invUpper_[(code_ & upperMask) >> upperShift]);
+    return invLower_[code_ & lowerMask] |
+        invUpper_[(code_ & upperMask) >> upperShift];
 }
 
 template <int n>
