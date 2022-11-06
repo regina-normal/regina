@@ -45,6 +45,7 @@ class Perm3Test : public SmallPermTest<3> {
     CPPUNIT_TEST(exhaustive);
     CPPUNIT_TEST(swaps);
     CPPUNIT_TEST(products);
+    CPPUNIT_TEST(cachedProducts);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(clear);

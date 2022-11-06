@@ -655,6 +655,67 @@ class Perm {
         constexpr Perm operator * (const Perm& q) const;
 
         /**
+         * An alias for the composition operator, provided to assist with
+         * writing generic code.
+         *
+         * This generic Perm<n> class does not use precomputation to compute
+         * compositions.  The only point of having cachedComp() in this generic
+         * Perm<n> class is to make it easier to write generic code that works
+         * with Perm<n> for any \a n.
+         *
+         * - If you know you are only working with the generic Perm<n>, you
+         *   should just use the composition operator instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedComp().
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling `(*this) * q`.
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedComp().  For generic
+         * Perm<n>, precompute() does not affect compositions; however, for
+         * other Perm<n> classes a failure to do this will almost certainly
+         * crash your program.
+         *
+         * \param q the permutation to compose this with.
+         * \return the composition of both permutations.
+         */
+        constexpr Perm cachedComp(const Perm& q) const;
+
+        /**
+         * An alias for using the composition operator twice, provided to
+         * assist with writing generic code.
+         *
+         * This generic Perm<n> class does not use precomputation to compute
+         * compositions.  The only point of having cachedComp() in this generic
+         * Perm<n> class is to make it easier to write generic code that works
+         * with Perm<n> for any \a n.
+         *
+         * - If you know you are only working with the generic Perm<n>, you
+         *   should just use the composition operator instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedComp().
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling `(*this) * q * r`.
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedComp().  For generic
+         * Perm<n>, precompute() does not affect compositions; however, for
+         * other Perm<n> classes a failure to do this will almost certainly
+         * crash your program.
+         *
+         * \param q the first permutation to compose this with.
+         * \param r the second permutation to compose this with.
+         * \return the composition of both permutations.
+         */
+        constexpr Perm cachedComp(const Perm& q, const Perm& r) const;
+
+        /**
          * Finds the inverse of this permutation.
          *
          * For permutations of seven and fewer objects, inversion is extremely
@@ -1698,6 +1759,23 @@ inline constexpr Perm<n> Perm<n>::operator * (const Perm& q) const {
     Code c = 0;
     for (int i = 0; i < n; ++i)
         c |= (static_cast<Code>((*this)[q[i]]) << (imageBits * i));
+    return Perm<n>(c);
+}
+
+template <int n>
+inline constexpr Perm<n> Perm<n>::cachedComp(const Perm& q) const {
+    Code c = 0;
+    for (int i = 0; i < n; ++i)
+        c |= (static_cast<Code>((*this)[q[i]]) << (imageBits * i));
+    return Perm<n>(c);
+}
+
+template <int n>
+inline constexpr Perm<n> Perm<n>::cachedComp(const Perm& q, const Perm& r)
+        const {
+    Code c = 0;
+    for (int i = 0; i < n; ++i)
+        c |= (static_cast<Code>((*this)[q[r[i]]]) << (imageBits * i));
     return Perm<n>(c);
 }
 

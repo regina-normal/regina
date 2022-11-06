@@ -477,6 +477,67 @@ class Perm<3> {
         constexpr Perm<3> operator * (const Perm<3>& q) const;
 
         /**
+         * An alias for the composition operator, provided to assist with
+         * writing generic code.
+         *
+         * This specialised Perm<3> class does not use precomputation for its
+         * optimisations.  The only point of having cachedComp() in Perm<3>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<3>, you should just
+         *   use the composition operator instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedComp().  (For Perm<3>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling `(*this) * q`.
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedComp().  For Perm<3>,
+         * precompute() does nothing; however, for other Perm<n> classes
+         * a failure to do this will almost certainly crash your program.
+         *
+         * \param q the permutation to compose this with.
+         * \return the composition of both permutations.
+         */
+        constexpr Perm<3> cachedComp(const Perm<3>& q) const;
+
+        /**
+         * An alias for using the composition operator twice, provided to
+         * assist with writing generic code.
+         *
+         * This specialised Perm<3> class does not use precomputation for its
+         * optimisations.  The only point of having cachedComp() in Perm<3>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<3>, you should just
+         *   use the composition operator instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedComp().  (For Perm<3>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling `(*this) * q * r`.
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedComp().  For Perm<3>,
+         * precompute() does nothing; however, for other Perm<n> classes
+         * a failure to do this will almost certainly crash your program.
+         *
+         * \param q the first permutation to compose this with.
+         * \param r the second permutation to compose this with.
+         * \return the composition of both permutations.
+         */
+        constexpr Perm<3> cachedComp(const Perm<3>& q, const Perm<3>& r) const;
+
+        /**
          * Finds the inverse of this permutation.
          *
          * \return the inverse of this permutation.
@@ -1135,6 +1196,15 @@ inline constexpr bool Perm<3>::isPermCode(Code code) {
 
 inline constexpr Perm<3> Perm<3>::operator * (const Perm<3>& q) const {
     return Perm<3>(productTable[code_][q.code_]);
+}
+
+inline constexpr Perm<3> Perm<3>::cachedComp(const Perm<3>& q) const {
+    return Perm<3>(productTable[code_][q.code_]);
+}
+
+inline constexpr Perm<3> Perm<3>::cachedComp(const Perm<3>& q,
+        const Perm<3>& r) const {
+    return Perm<3>(productTable[code_][productTable[q.code_][r.code_]]);
 }
 
 inline constexpr Perm<3> Perm<3>::inverse() const {

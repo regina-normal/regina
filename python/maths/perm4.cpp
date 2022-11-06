@@ -39,6 +39,7 @@
 #include "../helpers/arraylike.h"
 #include "../docstrings/maths/perm4.h"
 
+using pybind11::overload_cast;
 using regina::Perm;
 
 void addPerm4(pybind11::module_& m) {
@@ -68,6 +69,10 @@ void addPerm4(pybind11::module_& m) {
             rdoc::fromImagePack)
         .def_static("isImagePack", &Perm<4>::isImagePack, rdoc::isImagePack)
         .def(pybind11::self * pybind11::self, rdoc::__mul)
+        .def("cachedComp", overload_cast<const Perm<4>&>(
+            &Perm<4>::cachedComp, pybind11::const_), RDOC_TODO)
+        .def("cachedComp", overload_cast<const Perm<4>&, const Perm<4>&>(
+            &Perm<4>::cachedComp, pybind11::const_), RDOC_TODO)
         .def("inverse", &Perm<4>::inverse, rdoc::inverse)
         .def("cachedInverse", &Perm<4>::cachedInverse, RDOC_TODO)
         .def("pow", &Perm<4>::pow, rdoc::pow)

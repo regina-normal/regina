@@ -828,6 +828,67 @@ class Perm<5> {
         constexpr Perm<5> operator * (const Perm<5>& q) const;
 
         /**
+         * An alias for the composition operator, provided to assist with
+         * writing generic code.
+         *
+         * This specialised Perm<5> class does not use precomputation for its
+         * optimisations.  The only point of having cachedComp() in Perm<5>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<5>, you should just
+         *   use the composition operator instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedComp().  (For Perm<5>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling `(*this) * q`.
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedComp().  For Perm<5>,
+         * precompute() does nothing; however, for other Perm<n> classes
+         * a failure to do this will almost certainly crash your program.
+         *
+         * \param q the permutation to compose this with.
+         * \return the composition of both permutations.
+         */
+        constexpr Perm<5> cachedComp(const Perm<5>& q) const;
+
+        /**
+         * An alias for using the composition operator twice, provided to
+         * assist with writing generic code.
+         *
+         * This specialised Perm<5> class does not use precomputation for its
+         * optimisations.  The only point of having cachedComp() in Perm<5>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<5>, you should just
+         *   use the composition operator instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedComp().  (For Perm<5>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling `(*this) * q * r`.
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedComp().  For Perm<5>,
+         * precompute() does nothing; however, for other Perm<n> classes
+         * a failure to do this will almost certainly crash your program.
+         *
+         * \param q the first permutation to compose this with.
+         * \param r the second permutation to compose this with.
+         * \return the composition of both permutations.
+         */
+        constexpr Perm<5> cachedComp(const Perm<5>& q, const Perm<5>& r) const;
+
+        /**
          * Finds the inverse of this permutation.
          *
          * \return the inverse of this permutation.
@@ -1769,6 +1830,15 @@ inline constexpr bool Perm<5>::isImagePack(ImagePack pack) {
 
 inline constexpr Perm<5> Perm<5>::operator *(const Perm<5>& q) const {
     return Perm<5>(productTable[code2_][q.code2_]);
+}
+
+inline constexpr Perm<5> Perm<5>::cachedComp(const Perm<5>& q) const {
+    return Perm<5>(productTable[code2_][q.code2_]);
+}
+
+inline constexpr Perm<5> Perm<5>::cachedComp(const Perm<5>& q,
+        const Perm<5>& r) const {
+    return Perm<5>(productTable[code2_][productTable[q.code2_][r.code2_]]);
 }
 
 inline constexpr Perm<5> Perm<5>::inverse() const {
