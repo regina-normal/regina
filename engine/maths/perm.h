@@ -1228,6 +1228,47 @@ class Perm {
 
     private:
         /**
+         * Encodes a "partial" permutation, as a one-to-one map from [0..len)
+         * into [0..n).  The main point of this class is to iterate through
+         * all such partial permutations, for use in building our precomputed
+         * tables.
+         */
+        template <int len>
+        struct Slice {
+            int image[len];
+                /**< The image of \a i, for each \a i. */
+            bool used[n];
+                /**< Indicates which values are seen in the range of this
+                     map. */
+
+            static constexpr int length = len;
+                /**< The number of images encoded in this partial
+                     permutation. */
+
+            /**
+             * Initialises this to the first partial permutation, which
+             * maps \a i to \a i.
+             */
+            Slice();
+
+            /**
+             * Increments this to become the next partial permutation in
+             * a lexicographical ordering.  If there is no next permutation
+             * then this does nothing and returns \c false.
+             */
+            bool inc();
+
+            /**
+             * Constructs a "partial image pack" corresponding to this
+             * partial permutation.
+             */
+            ImagePack pack() const;
+        };
+
+        using LowerSlice = Slice<(n + 1) / 2>;
+        using UpperSlice = Slice<n / 2>;
+
+        /**
          * Swaps the images of a and b in this permutation.
          *
          * \pre a < b.
@@ -1647,93 +1688,22 @@ inline void Perm<n>::precompute() {
     invLower_ = new ImagePack[lowerCount];
     invUpper_ = new ImagePack[upperCount];
 
-    int img[(n+1)/2];
-    int seen[n];
+    LowerSlice lower;
+    do {
+        ImagePack d = 0;
+        for (int i = 0; i < LowerSlice::length; ++i)
+            d |= (static_cast<ImagePack>(i) << (imageBits * lower.image[i]));
+        invLower_[lower.pack()] = d;
+    } while (lower.inc());
 
-    std::fill(seen, seen + n, false);
-    for (int i = 0; i < (n+1)/2; ++i) {
-        img[i] = i;
-        seen[i] = true;
-    }
-    while (true) {
-        {
-            Code c = 0;
-            Code d = 0;
-            for (int i = 0; i < (n+1)/2; ++i) {
-                c |= (static_cast<Code>(img[i]) << (imageBits * i));
-                d |= (static_cast<Code>(i) << (imageBits * img[i]));
-            }
-            invLower_[c] = d;
-        }
-
-        int pos = (n-1)/2;
-        while (pos >= 0) {
-            seen[img[pos]] = false;
-            ++img[pos];
-            while (img[pos] < n && seen[img[pos]])
-                ++img[pos];
-            if (img[pos] < n) {
-                seen[img[pos]] = true;
-                break;
-            }
-            --pos;
-        }
-
-        if (pos < 0)
-            break;
-
-        ++pos;
-        int next = 0;
-        while (pos < (n+1)/2) {
-            while (seen[next])
-                ++next;
-            seen[next] = true;
-            img[pos++] = next++;
-        }
-    }
-
-    std::fill(seen, seen + n, false);
-    for (int i = 0; i < n/2; ++i) {
-        img[i] = i;
-        seen[i] = true;
-    }
-    while (true) {
-        {
-            Code c = 0;
-            Code d = 0;
-            for (int i = 0; i < n/2; ++i) {
-                c |= (static_cast<Code>(img[i]) << (imageBits * i));
-                d |= (static_cast<Code>(i + (n+1)/2)
-                    << (imageBits * img[i]));
-            }
-            invUpper_[c] = d;
-        }
-
-        int pos = n/2 - 1;
-        while (pos >= 0) {
-            seen[img[pos]] = false;
-            ++img[pos];
-            while (img[pos] < n && seen[img[pos]])
-                ++img[pos];
-            if (img[pos] < n) {
-                seen[img[pos]] = true;
-                break;
-            }
-            --pos;
-        }
-
-        if (pos < 0)
-            break;
-
-        ++pos;
-        int next = 0;
-        while (pos < n/2) {
-            while (seen[next])
-                ++next;
-            seen[next] = true;
-            img[pos++] = next++;
-        }
-    }
+    UpperSlice upper;
+    do {
+        ImagePack d = 0;
+        for (int i = 0; i < UpperSlice::length; ++i)
+            d |= (static_cast<ImagePack>(i + LowerSlice::length)
+                << (imageBits * upper.image[i]));
+        invUpper_[upper.pack()] = d;
+    } while (upper.inc());
 }
 
 template <int n>
@@ -2209,6 +2179,56 @@ inline constexpr void Perm<n>::swapImages(int a, int b) {
     code_ ^= (aImg | bImg);
     int shift = imageBits * (b - a);
     code_ |= ((aImg << shift) | (bImg >> shift));
+}
+
+template <int n>
+template <int len>
+inline Perm<n>::Slice<len>::Slice() {
+    for (int i = 0; i < len; ++i)
+        image[i] = i;
+    std::fill(used, used + len, true);
+    std::fill(used + len, used + n, false);
+}
+
+template <int n>
+template <int len>
+bool Perm<n>::Slice<len>::inc() {
+    int pos = len - 1;
+    while (pos >= 0) {
+        used[image[pos]] = false;
+        ++image[pos];
+        while (image[pos] < n && used[image[pos]])
+            ++image[pos];
+        if (image[pos] < n) {
+            used[image[pos]] = true;
+            break;
+        }
+        --pos;
+    }
+
+    if (pos < 0)
+        return false;
+
+    ++pos;
+    int next = 0;
+    while (pos < len) {
+        while (used[next])
+            ++next;
+        used[next] = true;
+        image[pos++] = next++;
+    }
+
+    return true;
+}
+
+template <int n>
+template <int len>
+inline typename Perm<n>::ImagePack Perm<n>::Slice<len>::pack() const {
+    ImagePack ans = 0;
+    for (int i = 0; i < len; ++i)
+        ans |= (static_cast<ImagePack>(image[i])
+            << (imageBits * i));
+    return ans;
 }
 
 // Inline functions for PermClass
