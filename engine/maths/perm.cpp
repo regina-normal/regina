@@ -54,6 +54,12 @@ template Perm<14>& Perm<14>::operator ++();
 template Perm<15>& Perm<15>::operator ++();
 template Perm<16>& Perm<16>::operator ++();
 
+template std::vector<Perm<2>> PermClass<2>::centraliser() const;
+template std::vector<Perm<3>> PermClass<3>::centraliser() const;
+template std::vector<Perm<4>> PermClass<4>::centraliser() const;
+template std::vector<Perm<5>> PermClass<5>::centraliser() const;
+template std::vector<Perm<6>> PermClass<6>::centraliser() const;
+template std::vector<Perm<7>> PermClass<7>::centraliser() const;
 template std::vector<Perm<8>> PermClass<8>::centraliser() const;
 template std::vector<Perm<9>> PermClass<9>::centraliser() const;
 template std::vector<Perm<10>> PermClass<10>::centraliser() const;
