@@ -39,8 +39,7 @@
 
 // We include perm.h before the header guard, to ensure that the
 // various permutation headers are processed in exactly the right order.
-// This specialisation header will be re-included at the beginning of
-// perm-impl.h.
+// This specialisation header will be re-included within perm.h.
 #include "maths/perm.h"
 
 #ifndef __REGINA_PERM2_H
