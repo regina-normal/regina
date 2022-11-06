@@ -98,6 +98,15 @@ class GeneralPermTest : public CppUnit::TestFixture,
         using Index = typename Perm<n>::Index;
         static constexpr Index nPerms = Perm<n>::nPerms;
         static constexpr bool usesCode2 = (n >= 4 && n <= 7);
+        static constexpr bool iterationFeasible = (n <= 11);
+
+        void setUp() override {
+            if constexpr (iterationFeasible)
+                Perm<n>::precompute();
+        }
+
+        void tearDown() override {
+        }
 
         bool looksLikeIdentity(const Perm<n>& p) {
             if ((! p.isIdentity()) || (! (p == Perm<n>())))
@@ -149,9 +158,12 @@ class GeneralPermTest : public CppUnit::TestFixture,
             }
         }
 
-        // Warning: Use this only when it is feasible to iterate through
-        // all n! permutations.
         void increment() {
+            static_assert(iterationFeasible,
+                "The increment() test should only be used where n is "
+                "sufficiently small that a full iteration of permutations "
+                "is feasible.");
+
             Index i = 0;
             Perm<n> p;
             Perm<n> q;
@@ -184,9 +196,30 @@ class GeneralPermTest : public CppUnit::TestFixture,
             }
         }
 
-        // Warning: Use this only when it is feasible to iterate through
-        // all n! permutations.
+        void cachedInverse() {
+            static_assert(iterationFeasible,
+                "The cachedInverse() test should only be used where n is "
+                "sufficiently small that a full iteration of permutations "
+                "is feasible.");
+
+            Perm<n> p;
+            do {
+                if (p.inverse() != p.cachedInverse()) {
+                    std::ostringstream msg;
+                    msg << "Inverse of " << p.str() << " does not "
+                        "match its cached inverse.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                ++p;
+            } while (! p.isIdentity());
+        }
+
         void conjugacy() {
+            static_assert(iterationFeasible,
+                "The conjugacy() test should only be used where n is "
+                "sufficiently small that a full iteration of permutations "
+                "is feasible.");
+
             Perm<n> p;
             do {
                 // Manually decide if p is conjugacy minimal.
@@ -241,13 +274,6 @@ class SmallPermTest : public GeneralPermTest<n> {
         using TightEncodingTest<Perm<n>>::verifyTightEncoding;
 
     public:
-        void setUp() override {
-            Perm<n>::precompute();
-        }
-
-        void tearDown() override {
-        }
-
         void permCode() {
             for (Index i = 0; i < nPerms; ++i) {
                 if constexpr (usesCode2) {

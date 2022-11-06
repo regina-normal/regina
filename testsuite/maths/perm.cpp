@@ -64,6 +64,8 @@ class LargePermTest : public GeneralPermTest<n> {
 
     public:
         void setUp() override {
+            GeneralPermTest<n>::setUp();
+
             idx = new Index[(Perm::nPerms / increment[n]) + 2];
             nIdx = 0;
             for (Index i = 0; i < Perm::nPerms; i += increment[n])
@@ -78,6 +80,8 @@ class LargePermTest : public GeneralPermTest<n> {
 
         void tearDown() override {
             delete[] idx;
+
+            GeneralPermTest<n>::tearDown();
         }
 
         void index() {
@@ -719,6 +723,7 @@ class PermTest<8> : public LargePermTest<8> {
     CPPUNIT_TEST_SUITE(PermTest);
 
     CPPUNIT_TEST(index);
+    CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(lessThan);
@@ -740,6 +745,7 @@ class PermTest<9> : public LargePermTest<9> {
     CPPUNIT_TEST_SUITE(PermTest);
 
     CPPUNIT_TEST(index);
+    CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(lessThan);
@@ -761,6 +767,7 @@ class PermTest<10> : public LargePermTest<10> {
     CPPUNIT_TEST_SUITE(PermTest);
 
     CPPUNIT_TEST(index);
+    CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(lessThan);
@@ -782,6 +789,7 @@ class PermTest<11> : public LargePermTest<11> {
     CPPUNIT_TEST_SUITE(PermTest);
 
     CPPUNIT_TEST(index);
+    CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(lessThan);

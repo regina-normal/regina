@@ -44,6 +44,7 @@ class Perm2Test : public SmallPermTest<2> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(exhaustive);
     CPPUNIT_TEST(swaps);
+    CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(cachedProducts);
     CPPUNIT_TEST(compareWith);
