@@ -415,16 +415,6 @@ namespace {
         typename Perm<index>::Index* rep;
         Perm<index>* computed;
 
-        // Do we want to compose permutations using precomputed tables that are
-        // generated at runtime?
-        //
-        // Note that for index <= 5 the Perm<index> class already uses lookup
-        // tables out-of-the-box and so there is no need for us to manage this
-        // ourselves here.  For index > 7 the Perm<index> class does not (yet)
-        // have a runtime precomputation facility built in.  So this leaves
-        // index == 6,7 as the only cases where this is relevant.
-        static constexpr bool cacheProducts = (index == 6 || index == 7);
-
         // Give an easy way to convert rep[i] from an Sn index to a permutation.
         inline Perm<index> perm(unsigned long gen) const {
             if constexpr (Perm<index>::codeType == PERM_CODE_INDEX)
@@ -641,30 +631,16 @@ namespace {
                     computed[t.generator - nGen]);
                 // Pull out exponents ±1, since in practice these are
                 // common and we can avoid the (small) overhead of pow().
-                if constexpr (cacheProducts) {
-                    switch (t.exponent) {
-                        case 1:
-                            comb = gen.cachedComp(comb);
-                            break;
-                        case -1:
-                            comb = gen.cachedInverse().cachedComp(comb);
-                            break;
-                        default:
-                            comb = gen.cachedPow(t.exponent).cachedComp(comb);
-                            break;
-                    }
-                } else {
-                    switch (t.exponent) {
-                        case 1:
-                            comb = gen * comb;
-                            break;
-                        case -1:
-                            comb = gen.cachedInverse() * comb;
-                            break;
-                        default:
-                            comb = gen.pow(t.exponent) * comb;
-                            break;
-                    }
+                switch (t.exponent) {
+                    case 1:
+                        comb = gen.cachedComp(comb);
+                        break;
+                    case -1:
+                        comb = gen.cachedInverse().cachedComp(comb);
+                        break;
+                    default:
+                        comb = gen.cachedPow(t.exponent).cachedComp(comb);
+                        break;
                 }
             }
             if (formulae[piece].isRelation && ! comb.isIdentity())

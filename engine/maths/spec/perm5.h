@@ -933,6 +933,33 @@ class Perm<5> {
         constexpr Perm<5> pow(long exp) const;
 
         /**
+         * An alias for pow(), provided to assist with writing generic code.
+         *
+         * This specialised Perm<5> class does not use precomputation for its
+         * optimisations.  The only point of having cachedPow() in Perm<5>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<5>, you should just
+         *   call pow() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedPow().  (For Perm<5>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedPow().  For
+         * Perm<5>, precompute() does nothing; however, for other Perm<n>
+         * classes a failure to do this will almost certainly crash your
+         * program.
+         *
+         * \param exp the exponent; this may be positive, zero or negative.
+         * \return this permutation raised to the power of \a exp.
+         */
+        constexpr Perm<5> cachedPow(long exp) const;
+
+        /**
          * Returns the order of this permutation.
          *
          * In other words; this routine returns the smallest positive
@@ -942,6 +969,32 @@ class Perm<5> {
          * \return the order of this permutation.
          */
         constexpr int order() const;
+
+        /**
+         * An alias for order(), provided to assist with writing generic code.
+         *
+         * This specialised Perm<5> class does not use precomputation for its
+         * optimisations.  The only point of having cachedOrder() in Perm<5>
+         * is to make it easier to write generic code that works with Perm<n>
+         * for any \a n.
+         *
+         * - If you know you are only working with Perm<5>, you should just
+         *   call order() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedOrder().  (For Perm<5>, which does not use
+         *   precomputation for its optimisations, precompute() does nothing.)
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedOrder().  For
+         * Perm<5>, precompute() does nothing; however, for other Perm<n>
+         * classes a failure to do this will almost certainly crash your
+         * program.
+         *
+         * \return the order of this permutation.
+         */
+        constexpr int cachedOrder() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -1873,7 +1926,15 @@ inline constexpr Perm<5> Perm<5>::pow(long exp) const {
     }
 }
 
+inline constexpr Perm<5> Perm<5>::cachedPow(long exp) const {
+    return pow(exp);
+}
+
 inline constexpr int Perm<5>::order() const {
+    return orderTable[code2_];
+}
+
+inline constexpr int Perm<5>::cachedOrder() const {
     return orderTable[code2_];
 }
 

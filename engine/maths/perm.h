@@ -774,6 +774,32 @@ class Perm {
         constexpr Perm pow(long exp) const;
 
         /**
+         * An alias for pow(), provided to assist with writing generic code.
+         *
+         * This specialised Perm<n> class does not use precomputation to
+         * compute powers.  The only point of having cachedPow() in this
+         * generic Perm<n> class is to make it easier to write generic code
+         * that works with Perm<n> for any \a n.
+         *
+         * - If you know you are only working with the generic Perm<n>, you
+         *   should just call pow() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedPow().
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedPow().  For generic
+         * Perm<n>, precompute() does not affect powers; however, for other
+         * Perm<n> classes a failure to do this will almost certainly crash
+         * your program.
+         *
+         * \param exp the exponent; this may be positive, zero or negative.
+         * \return this permutation raised to the power of \a exp.
+         */
+        constexpr Perm<n> cachedPow(long exp) const;
+
+        /**
          * Returns the order of this permutation.
          *
          * In other words; this routine returns the smallest positive
@@ -786,6 +812,31 @@ class Perm {
          * \return the order of this permutation.
          */
         constexpr int order() const;
+
+        /**
+         * An alias for order(), provided to assist with writing generic code.
+         *
+         * This specialised Perm<n> class does not use precomputation to
+         * compute orders.  The only point of having cachedOrder() in this
+         * generic Perm<n> class is to make it easier to write generic code
+         * that works with Perm<n> for any \a n.
+         *
+         * - If you know you are only working with the generic Perm<n>, you
+         *   should just call order() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedOrder().
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedOrder().  For generic
+         * Perm<n>, precompute() does not affect order computations; however,
+         * for other Perm<n> classes a failure to do this will almost certainly
+         * crash your program.
+         *
+         * \return the order of this permutation.
+         */
+        constexpr int cachedOrder() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -1841,6 +1892,11 @@ constexpr Perm<n> Perm<n>::pow(long exp) const {
 }
 
 template <int n>
+inline constexpr Perm<n> Perm<n>::cachedPow(long exp) const {
+    return pow(exp);
+}
+
+template <int n>
 constexpr int Perm<n>::order() const {
     // Work out the order by using the cycle structure.
     int ans = 1;
@@ -1867,6 +1923,11 @@ constexpr int Perm<n>::order() const {
     }
 
     return ans;
+}
+
+template <int n>
+inline constexpr int Perm<n>::cachedOrder() const {
+    return order();
 }
 
 template <int n>

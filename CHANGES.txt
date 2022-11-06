@@ -28,9 +28,9 @@ Verison 7,3  [ (to be determined) ]
               quadratic algorithm to a higher-overhead linear algorithm.
             - The generic Perm<n> now offers the precomptuation-assisted
               operations cachedInverse().
-            - All Perm<n> classes now have precompute(), cachedInverse()
-              and cachedComp() functions, even for smaller n where these are
-              unnecessary.  This is to assist with generic code.
+            - All Perm<n> classes now have precompute(), cachedInverse(),
+              cachedComp(), cachedPow() and cachedOrder(), even for smaller n
+              where these are unnecessary, to assist with writing generic code.
         Class PermClass<n>:
             - New class to describe a conjugacy class of permutations.
 
