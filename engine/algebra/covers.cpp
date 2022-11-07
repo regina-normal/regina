@@ -989,8 +989,9 @@ size_t GroupPresentation::enumerateCoversInternal(
     // Note: the automorphism groups stored in aut[] do *not* need to be
     // in any particular order (i.e., if we are generating them then we
     // are free to do this in any order also).
-    auto* nAut = new size_t[nGenerators_];
-    auto* aut = new Perm<index>[nGenerators_][maxMinimalAutGroup[index] + 1];
+    std::unique_ptr<size_t[]> nAut(new size_t[nGenerators_]);
+    std::unique_ptr<Perm<index>[][maxMinimalAutGroup[index] + 1]> aut(
+        new Perm<index>[nGenerators_][maxMinimalAutGroup[index] + 1]);
 
     size_t pos = 0; // The generator whose current rep we are about to try.
     // Note: if we are constraining the sign of rep[0], then it must be
@@ -1152,7 +1153,8 @@ size_t GroupPresentation::enumerateCoversInternal(
 
                     std::sort(spanningTree, spanningTree + index - 1);
 
-                    auto* rewrite = new unsigned long[sub.nGenerators_];
+                    std::unique_ptr<unsigned long[]> rewrite(
+                        new unsigned long[sub.nGenerators_]);
 
                     // Work out how the subgroup generators will be relabelled
                     // once the spanning tree is removed.
@@ -1196,8 +1198,6 @@ size_t GroupPresentation::enumerateCoversInternal(
                                 sub.relations_.push_back(std::move(e));
                         }
                     }
-
-                    delete[] rewrite;
 
                     ++nReps;
                     action(std::move(sub));
@@ -1265,18 +1265,14 @@ size_t GroupPresentation::enumerateCoversInternal(
 
                 // We are out of options for this permutation.
                 if (pos == 0)
-                    goto finished;
+                    return nReps;
                 scheme.rep[pos] = 0;
                 --pos;
             }
         }
     }
-
-finished:
-
-    delete[] aut;
-    delete[] nAut;
-    return nReps;
+    // We should never reach this point.
+    return 0;
 }
 
 // Instantiate templates for all valid indices.
