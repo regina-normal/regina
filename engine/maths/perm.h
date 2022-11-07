@@ -1693,8 +1693,9 @@ inline constexpr Perm<n>::Perm(int a, int b) : code_(idCode_) {
 
 template <int n>
 inline constexpr Perm<n>::Perm(const std::array<int, n>& image) : code_(0) {
-    for (int i = 0; i < n; ++i)
-        code_ |= (static_cast<Code>(image[i]) << (imageBits * i));
+    int bits = 0;
+    for (int i = 0; i < n; ++i, bits += imageBits)
+        code_ |= (static_cast<Code>(image[i]) << bits);
 }
 
 template <int n>
@@ -1719,11 +1720,11 @@ inline constexpr Perm<n> Perm<n>::fromPermCode(Code code) {
 template <int n>
 constexpr bool Perm<n>::isPermCode(Code code) {
     unsigned mask = 0;
-    for (int i = 0; i < n; ++i)
-        mask |= ((unsigned)1 << ((code >> (imageBits * i)) & imageMask));
+    int bits = 0;
+    for (int i = 0; i < n; ++i, bits += imageBits)
+        mask |= ((unsigned)1 << ((code >> bits) & imageMask));
     if constexpr (n < 16) {
-        return (mask + 1 == ((unsigned)1 << n) &&
-            (code >> (imageBits * n)) == 0);
+        return (mask + 1 == ((unsigned)1 << n) && (code >> bits) == 0);
     } else {
         // We should not increment mask, since this could overflow on
         // some platforms (since unsigned might be only 16 bits long).
@@ -1751,16 +1752,18 @@ inline constexpr bool Perm<n>::isImagePack(ImagePack pack) {
 template <int n>
 inline constexpr Perm<n> Perm<n>::operator * (const Perm& q) const {
     Code c = 0;
-    for (int i = 0; i < n; ++i)
-        c |= (static_cast<Code>((*this)[q[i]]) << (imageBits * i));
+    int bits = 0;
+    for (int i = 0; i < n; ++i, bits += imageBits)
+        c |= (static_cast<Code>((*this)[q[i]]) << bits);
     return Perm<n>(c);
 }
 
 template <int n>
 inline constexpr Perm<n> Perm<n>::cachedComp(const Perm& q) const {
     Code c = 0;
-    for (int i = 0; i < n; ++i)
-        c |= (static_cast<Code>((*this)[q[i]]) << (imageBits * i));
+    int bits = 0;
+    for (int i = 0; i < n; ++i, bits += imageBits)
+        c |= (static_cast<Code>((*this)[q[i]]) << bits);
     return Perm<n>(c);
 }
 
@@ -1768,8 +1771,9 @@ template <int n>
 inline constexpr Perm<n> Perm<n>::cachedComp(const Perm& q, const Perm& r)
         const {
     Code c = 0;
-    for (int i = 0; i < n; ++i)
-        c |= (static_cast<Code>((*this)[q[r[i]]]) << (imageBits * i));
+    int bits = 0;
+    for (int i = 0; i < n; ++i, bits += imageBits)
+        c |= (static_cast<Code>((*this)[q[r[i]]]) << bits);
     return Perm<n>(c);
 }
 
@@ -1876,8 +1880,9 @@ inline constexpr int Perm<n>::cachedOrder() const {
 template <int n>
 inline constexpr Perm<n> Perm<n>::reverse() const {
     Code c = 0;
-    for (int i = 0; i < n; ++i)
-        c |= (static_cast<Code>((*this)[i]) << (imageBits * (n - 1 - i)));
+    int bits = imageBits * (n - 1);
+    for (int i = 0; i < n; ++i, bits -= imageBits)
+        c |= (static_cast<Code>((*this)[i]) << bits);
     return Perm<n>(c);
 }
 
@@ -1930,8 +1935,9 @@ inline constexpr int Perm<n>::operator[](int source) const {
 
 template <int n>
 inline constexpr int Perm<n>::pre(int image) const {
-    for (int i = 0; i < n; ++i)
-        if (((code_ >> (imageBits * i)) & imageMask) == image)
+    int bits = 0;
+    for (int i = 0; i < n; ++i, bits += imageBits)
+        if (((code_ >> bits) & imageMask) == image)
             return i;
     // We should never reach this point.
     return -1;
@@ -1999,11 +2005,13 @@ constexpr Perm<n> Perm<n>::rot(int i) {
     Code code = 0;
     Code src = 0;
     Code dest = i;
+    int bits = 0;
     while (src < n) {
-        code |= (dest << (imageBits * src));
+        code |= (dest << bits);
         ++src;
         if (++dest == n)
             dest = 0;
+        bits += imageBits;
     }
     return Perm<n>(code);
 }
@@ -2090,8 +2098,9 @@ Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
 template <int n>
 std::string Perm<n>::str() const {
     char ans[n + 1];
-    for (int i = 0; i < n; ++i)
-        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask);
+    int bits = 0;
+    for (int i = 0; i < n; ++i, bits += imageBits)
+        ans[i] = regina::digit((code_ >> bits) & imageMask);
     ans[n] = 0;
 
     return ans;
@@ -2100,8 +2109,9 @@ std::string Perm<n>::str() const {
 template <int n>
 std::string Perm<n>::trunc(int len) const {
     char ans[n + 1];
-    for (int i = 0; i < len; ++i)
-        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask);
+    int bits = 0;
+    for (int i = 0; i < len; ++i, bits += imageBits)
+        ans[i] = regina::digit((code_ >> bits) & imageMask);
     ans[len] = 0;
 
     return ans;
@@ -2120,10 +2130,11 @@ constexpr Perm<n> Perm<n>::extend(Perm<k> p) {
 
     Code c = 0;
     int i = 0;
-    for ( ; i < k; ++i)
-        c |= (static_cast<Code>(p[i]) << (imageBits * i));
-    for ( ; i < n; ++i)
-        c |= (static_cast<Code>(i) << (imageBits * i));
+    int bits = 0;
+    for ( ; i < k; ++i, bits += imageBits)
+        c |= (static_cast<Code>(p[i]) << bits);
+    for ( ; i < n; ++i, bits += imageBits)
+        c |= (static_cast<Code>(i) << bits);
 
     return Perm<n>(c);
 }
@@ -2141,8 +2152,9 @@ constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
 
     Code c = 0;
     int i = 0;
-    for ( ; i < n; ++i)
-        c |= (static_cast<Code>(p[i]) << (imageBits * i));
+    int bits = 0;
+    for ( ; i < n; ++i, bits += imageBits)
+        c |= (static_cast<Code>(p[i]) << bits);
 
     return Perm<n>(c);
 }
@@ -2152,9 +2164,10 @@ inline void Perm<n>::clear(unsigned from) {
     static_assert(n > 7, "The generic implementation of Perm<n>::clear() "
         "should not be used for n <= 7.");
 
-    for (int i = from; i < n; ++i) {
-        code_ &= ~(imageMask << (imageBits * i));
-        code_ |= (static_cast<Code>(i) << (imageBits * i));
+    if (from < n) {
+        Code mask = (~static_cast<Code>(0)) << (from * imageBits);
+        code_ &= ~mask;
+        code_ |= (idCode_ & mask);
     }
 }
 
@@ -2309,9 +2322,9 @@ template <int n>
 template <int len>
 inline typename Perm<n>::ImagePack Perm<n>::Slice<len>::pack() const {
     ImagePack ans = 0;
-    for (int i = 0; i < len; ++i)
-        ans |= (static_cast<ImagePack>(image[i])
-            << (imageBits * i));
+    int bits = 0;
+    for (int i = 0; i < len; ++i, bits += imageBits)
+        ans |= (static_cast<ImagePack>(image[i]) << bits);
     return ans;
 }
 
