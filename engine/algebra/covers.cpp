@@ -993,6 +993,12 @@ size_t GroupPresentation::enumerateCoversInternal(
     std::unique_ptr<Perm<index>[][maxMinimalAutGroup[index] + 1]> aut(
         new Perm<index>[nGenerators_][maxMinimalAutGroup[index] + 1]);
 
+    // The rewrite[] array is used when we build the explicit subgroup for
+    // each solution that is found.  Since the size of this array is already
+    // known, we allocate it once now to avoid (re/de)-allocating per solution.
+    std::unique_ptr<unsigned long[]> rewrite(
+        new unsigned long[index * nGenerators_]);
+
     size_t pos = 0; // The generator whose current rep we are about to try.
     // Note: if we are constraining the sign of rep[0], then it must be
     // constrained to even permutations (so 0 is still the correct starting
@@ -1152,9 +1158,6 @@ size_t GroupPresentation::enumerateCoversInternal(
                     sub.relations_.reserve(index * relations_.size());
 
                     std::sort(spanningTree, spanningTree + index - 1);
-
-                    std::unique_ptr<unsigned long[]> rewrite(
-                        new unsigned long[sub.nGenerators_]);
 
                     // Work out how the subgroup generators will be relabelled
                     // once the spanning tree is removed.
