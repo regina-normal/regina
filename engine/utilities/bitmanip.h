@@ -203,7 +203,7 @@ class BitManipulatorBySize {
          * \param x the integer of type \a T to examine.
          * \return the number of bits that are set.
          */
-        inline static int bits(T x) {
+        inline static constexpr int bits(T x) {
             return BitManipulatorBySize<T, (size >> 1)>::bits(x) +
                 BitManipulatorBySize<T, (size >> 1)>::bits(x >> (4 * size));
         }
@@ -219,7 +219,7 @@ class BitManipulatorBySize<T, 1> {
     public:
         static constexpr bool specialised = true;
 
-        inline static int bits(T x) {
+        inline static constexpr int bits(T x) {
             x = (x & T(0x55)) + ((x & T(0xAA)) >> 1);
             x = (x & T(0x33)) + ((x & T(0xCC)) >> 2);
             return (x & T(0x0F)) + ((x & T(0xF0)) >> 4);
@@ -231,7 +231,7 @@ class BitManipulatorBySize<T, 2> {
     public:
         static constexpr bool specialised = true;
 
-        inline static int bits(T x) {
+        inline static constexpr int bits(T x) {
             x = (x & T(0x5555)) + ((x & T(0xAAAA)) >> 1);
             x = (x & T(0x3333)) + ((x & T(0xCCCC)) >> 2);
             x = (x & T(0x0F0F)) + ((x & T(0xF0F0)) >> 4);
@@ -244,7 +244,7 @@ class BitManipulatorBySize<T, 4> {
     public:
         static constexpr bool specialised = true;
 
-        inline static int bits(T x) {
+        inline static constexpr int bits(T x) {
             x = (x & T(0x55555555)) + ((x & T(0xAAAAAAAA)) >> 1);
             x = (x & T(0x33333333)) + ((x & T(0xCCCCCCCC)) >> 2);
             x = (x & T(0x0F0F0F0F)) + ((x & T(0xF0F0F0F0)) >> 4);
@@ -261,7 +261,7 @@ class BitManipulatorBySize<T, 8> {
     public:
         static constexpr bool specialised = true;
 
-        inline static int bits(T x) {
+        inline static constexpr int bits(T x) {
             x = (x & T(0x5555555555555555)) +
                 ((x & T(0xAAAAAAAAAAAAAAAA)) >> 1);
             x = (x & T(0x3333333333333333)) +
@@ -282,7 +282,7 @@ class BitManipulatorBySize<T, 8> {
     public:
         static constexpr bool specialised = true;
 
-        inline static int bits(T x) {
+        inline static constexpr int bits(T x) {
             x = (x & T(0x5555555555555555LL)) +
                 ((x & T(0xAAAAAAAAAAAAAAAALL)) >> 1);
             x = (x & T(0x3333333333333333LL)) +
@@ -353,7 +353,7 @@ class BitManipulator :
          * \return the position of the first \c true bit, or -1 if there
          * are no \c true bits.
          */
-        inline static int firstBit(T x) {
+        inline static constexpr int firstBit(T x) {
             if (! x)
                 return -1;
 
@@ -379,7 +379,7 @@ class BitManipulator :
          * \return the position of the last \c true bit, or -1 if there
          * are no \c true bits.
          */
-        inline static int lastBit(T x) {
+        inline static constexpr int lastBit(T x) {
             if (! x)
                 return -1;
 

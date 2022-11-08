@@ -51,6 +51,7 @@
 #include <iterator>
 #include <string>
 #include "regina-core.h"
+#include "utilities/bitmanip.h"
 #include "utilities/exception.h"
 #include "utilities/intutils.h"
 #include "utilities/randutils.h"
@@ -2019,15 +2020,18 @@ constexpr Perm<n> Perm<n>::rot(int i) {
 template <int n>
 constexpr typename Perm<n>::Index Perm<n>::orderedSnIndex() const {
     Index ans = 0;
-    Code c = code_;
+    uint16_t seen = 0; // bitmask
     int p = 0, pos1 = 0;
     for ( ; p < n - 1; ++p, pos1 += imageBits) {
         // position pos1 holds the (p)th image
-        Code pImg = (c >> pos1) & imageMask; // image at pos1
-        for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
-                pos2 += imageBits)
-            if (((c >> pos2) & imageMask) > pImg)
-                c -= (Code(1) << pos2); // decrement image at pos2
+        Code pImg = (code_ >> pos1) & imageMask; // image at pos1
+        seen |= (1 << pImg);
+
+        // Identify how many images we have already seen that are less
+        // than pImg: this tells us how to "rescale" pImg.
+        pImg -= BitManipulator<uint16_t>::bits(
+            seen & ((uint16_t(1) << pImg) - 1));
+
         ans *= (n - p);
         ans += pImg;
     }
@@ -2038,25 +2042,27 @@ template <int n>
 constexpr typename Perm<n>::Index Perm<n>::SnIndex() const {
     Index ans = 0;
     bool even = true;
-    Code c = code_;
+    uint16_t seen = 0; // bitmask
     int p = 0, pos1 = 0;
-    for ( ; p < n - 1; ++p, pos1 += imageBits) {
+    // Unlike orderedSnIndex(), we need to run this loop all the way to
+    // position n-1 since we need it for the sign test.
+    for ( ; p < n; ++p, pos1 += imageBits) {
         // position pos1 holds the (p)th image
-        Code pImg = (c >> pos1) & imageMask; // image at pos1
-        // The following loop preserves the relative order of the images
-        // at positions *after* pos1.
-        for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
-                pos2 += imageBits) {
-            // Compare image at pos2 with image at pos1.
-            if (((c >> pos2) & imageMask) > pImg)
-                c -= (Code(1) << pos2); // decrement image at pos2
-            else
-                even = ! even; // an inversion for the sign computation
-        }
+        Code pImg = (code_ >> pos1) & imageMask; // image at pos1
+        seen |= (1 << pImg);
+
+        // Identify how many images we have already seen that are less
+        // than pImg: this tells us how to "rescale" pImg.
+        int lower = BitManipulator<uint16_t>::bits(
+            seen & ((uint16_t(1) << pImg) - 1));
+        pImg -= lower;
+        if ((p - lower) & 1)
+            even = ! even; // odd # of inversions for the sign computation
+
         ans *= (n - p);
         ans += pImg;
-        // From this point we never look at positions 0..pos1 again.
     }
+
     return (even == (ans % 2 == 0) ? ans : (ans ^ 1));
 }
 
