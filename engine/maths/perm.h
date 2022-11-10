@@ -1755,7 +1755,8 @@ inline constexpr Perm<n> Perm<n>::operator * (const Perm& q) const {
     Code c = 0;
     int bits = 0;
     for (int i = 0; i < n; ++i, bits += imageBits)
-        c |= (static_cast<Code>((*this)[q[i]]) << bits);
+        c |= (static_cast<Code>((*this)[(q.code_ >> bits) & imageMask])
+            << bits);
     return Perm<n>(c);
 }
 
@@ -1764,7 +1765,8 @@ inline constexpr Perm<n> Perm<n>::cachedComp(const Perm& q) const {
     Code c = 0;
     int bits = 0;
     for (int i = 0; i < n; ++i, bits += imageBits)
-        c |= (static_cast<Code>((*this)[q[i]]) << bits);
+        c |= (static_cast<Code>((*this)[(q.code_ >> bits) & imageMask])
+            << bits);
     return Perm<n>(c);
 }
 
@@ -1774,7 +1776,8 @@ inline constexpr Perm<n> Perm<n>::cachedComp(const Perm& q, const Perm& r)
     Code c = 0;
     int bits = 0;
     for (int i = 0; i < n; ++i, bits += imageBits)
-        c |= (static_cast<Code>((*this)[q[r[i]]]) << bits);
+        c |= (static_cast<Code>((*this)[q[(r.code_ >> bits) & imageMask]])
+            << bits);
     return Perm<n>(c);
 }
 
@@ -2277,11 +2280,9 @@ constexpr bool Perm<n>::isConjugacyMinimal() const {
 
 template <int n>
 inline constexpr void Perm<n>::swapImages(int a, int b) {
-    Code aImg = code_ & (imageMask << (imageBits * a));
-    Code bImg = code_ & (imageMask << (imageBits * b));
-    code_ ^= (aImg | bImg);
-    int shift = imageBits * (b - a);
-    code_ |= ((aImg << shift) | (bImg >> shift));
+    Code diff = ((code_ >> (a * imageBits)) ^ (code_ >> (b * imageBits)))
+        & imageMask;
+    code_ = code_ ^ (diff << (a * imageBits)) ^ (diff << (b * imageBits));
 }
 
 template <int n>
