@@ -1061,8 +1061,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                     Perm<index> conj;
                     for (size_t a = 0; a < nAut[pos - 1]; ++a) {
                         Perm<index> p = aut[pos - 1][a];
-                        conj = p.cachedComp(scheme.perm(pos),
-                            p.cachedInverse());
+                        conj = scheme.perm(pos).cachedConjugate(p);
                         if constexpr (Perm<index>::codeType ==
                                 PERM_CODE_INDEX) {
                             // Here SnIndex() is extremely cheap.

@@ -49,13 +49,15 @@ class Perm4Test : public SmallPermTest<4> {
     CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(cachedProducts);
+    CPPUNIT_TEST(conjugates);
+    CPPUNIT_TEST(cachedConjugates);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(order);
     CPPUNIT_TEST(pow);
     CPPUNIT_TEST(rot);
-    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(conjugacyMinimal);
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(tightEncoding);
 

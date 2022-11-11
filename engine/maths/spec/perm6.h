@@ -602,20 +602,16 @@ class Perm<6> {
         Perm<6> cachedComp(const Perm<6>& q) const;
 
         /**
-         * Returns the composition of this and the given two permutations,
-         * using fast precomputed lookup tables.
-         *
-         * The advantage of this routine is speed: calling cachedComp()
-         * with two arguments requires just two lookups, whereas using
-         * the * operator twice would involve four lookups and a handful
-         * of steps of mathematical computation.
-         *
-         * The disadvantages of this routine are that (1) you must remember
-         * to call precompute() in advance, and (2) the resulting lookup table
-         * will consume roughly 1MB of memory for the lifetime of your program.
+         * Deprecated function that performs two compositions using fast
+         * precomputed lookup tables.
          *
          * The permutation that is returned is the same as you would
          * obtain by calling `(*this) * q * r`.
+         *
+         * \deprecated The three-way cachedComp() was originally written to
+         * support conjugation.  If you are indeed conjugating, then call
+         * cachedConjugate() instead; otherwise just call the two-way
+         * cachedComp() twice.
          *
          * \pre You _must_ have called the routine precompute() at least once
          * in the lifetime of this program before using cachedComp().
@@ -625,7 +621,60 @@ class Perm<6> {
          * \param r the second permutation to compose this with.
          * \return the composition of both permutations.
          */
-        Perm<6> cachedComp(const Perm<6>& q, const Perm<6>& r) const;
+        [[deprecated]] Perm<6> cachedComp(const Perm<6>& q, const Perm<6>& r)
+            const;
+
+        /**
+         * Computes the conjugate of this permutation by \a q.
+         *
+         * Specifically, calling `p.conjugate(q)` is equivalent to computing
+         * `q * p * q.inverse()`.  The resulting permutation will have the
+         * same cycle structure as \a p, but with the cycle elements
+         * translated according to \a q.
+         *
+         * For permutations of five and fewer objects, conjugation is
+         * extremely fast because it uses hard-coded lookup tables.
+         * However, for Perm<6> these tables would grow too large and so
+         * Regina adopts a hybrid approach: it uses "partial tables" which
+         * are significantly smaller, combined with some additional computation.
+         *
+         * If you do need conjugation to be as fast as possible,
+         * with no computation required at all, then you can:
+         *
+         * - call precompute() to precompute a full 720-by-720 product table
+         *   in advance (this will consume roughly 1MB of memory); and then
+         *
+         * - call cachedConjugate() instead of conjugate() to compute your
+         *   conjugations.
+         *
+         * \param q the permutation to conjugate this by.
+         * \return the conjugate of this permutation by \a q.
+         */
+        constexpr Perm<6> conjugate(const Perm<6>& q) const;
+
+        /**
+         * Computes the conjugate of this permutation by \a q, using fast
+         * precomputed lookup tables.
+         *
+         * The advantage of this routine is speed: calling cachedConjugate()
+         * is just three table lookups, whereas conjugate() requires five
+         * lookups plus some additional mathematical computation.
+         *
+         * The disadvantages of this routine are that (1) you must remember
+         * to call precompute() in advance, and (2) the resulting lookup table
+         * will consume roughly 1MB of memory for the lifetime of your program.
+         *
+         * The permutation that is returned is the same as you would
+         * obtain by calling conjugate().
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedConjugate().
+         * Otherwise this routine will almost certainly crash your program.
+         *
+         * \param q the permutation to conjugate this by.
+         * \return the conjugate of this permutation by \a q.
+         */
+        Perm<6> cachedConjugate(const Perm<6>& q) const;
 
         /**
          * Finds the inverse of this permutation.
@@ -3262,6 +3311,16 @@ inline Perm<6> Perm<6>::cachedComp(const Perm<6>& q) const {
 
 inline Perm<6> Perm<6>::cachedComp(const Perm<6>& q, const Perm<6>& r) const {
     return Perm<6>(products_[code2_][products_[q.code2_][r.code2_]]);
+}
+
+inline constexpr Perm<6> Perm<6>::conjugate(const Perm<6>& q) const {
+    // For now, just let this be shorthand for what it actually means.
+    // People who want speed should be using cachedConjugate() anyway.
+    return q * (*this) * q.inverse();
+}
+
+inline Perm<6> Perm<6>::cachedConjugate(const Perm<6>& q) const {
+    return Perm<6>(products_[q.code2_][products_[code2_][invS6[q.code2_]]]);
 }
 
 inline constexpr Perm<6> Perm<6>::inverse() const {

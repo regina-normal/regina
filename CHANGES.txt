@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Verison 7,3  [ (to be determined) ]
+Verison 7.3  [ (to be determined) ]
 
     ENGINE:
         Class BitManipulator<T>:
@@ -30,6 +30,11 @@ Verison 7,3  [ (to be determined) ]
               that were originally quadratic in n.
             - The generic Perm<n> now offers the precomptuation-assisted
               operations cachedInverse().
+            - New routines conjugate() and cachedConjugate(), to replace the
+              three-way cachedComp() (which was designed for conjugation).
+              The three-way cachedComp() is now deprecated; instead call
+              cachedConjugate() if you are conjugating, or else call the
+              two-way cachedComp() twice.
             - All Perm<n> classes now have precompute(), cachedInverse(),
               cachedComp(), cachedPow() and cachedOrder(), even for smaller n
               where these are unnecessary, to assist with writing generic code.

@@ -71,10 +71,13 @@ void addPerm6(pybind11::module_& m) {
         .def(pybind11::self * pybind11::self, rdoc::__mul)
         .def("cachedComp", overload_cast<const Perm<6>&>(
             &Perm<6>::cachedComp, pybind11::const_), rdoc::cachedComp)
-        .def("cachedComp", overload_cast<const Perm<6>&, const Perm<6>&>(
-            &Perm<6>::cachedComp, pybind11::const_), rdoc::cachedComp_2)
+        .def("cachedComp", [](Perm<6> p, Perm<6> q, Perm<6> r) { // deprecated
+            return p.cachedComp(q).cachedComp(r);
+        }, RDOC_TODO)
         .def("inverse", &Perm<6>::inverse, rdoc::inverse)
         .def("cachedInverse", &Perm<6>::cachedInverse, RDOC_TODO)
+        .def("conjugate", &Perm<6>::conjugate, RDOC_TODO)
+        .def("cachedConjugate", &Perm<6>::cachedConjugate, RDOC_TODO)
         .def("pow", &Perm<6>::pow, rdoc::pow)
         .def("cachedPow", &Perm<6>::cachedPow, rdoc::cachedPow)
         .def("order", &Perm<6>::order, rdoc::order)

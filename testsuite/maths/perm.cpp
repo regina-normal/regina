@@ -388,6 +388,47 @@ class LargePermTest : public GeneralPermTest<n> {
             }
         }
 
+        void conjugates() {
+            Index i, j;
+            int x;
+            Perm p, q, r;
+
+            for (i = 0; i < nIdx; ++i) {
+                p = Perm::orderedSn[idx[i]];
+                for (j = 0; j < nIdx; ++j) {
+                    q = Perm::orderedSn[idx[j]];
+
+                    if (p.conjugate(q) != q * p * q.inverse()) {
+                        std::ostringstream msg;
+                        msg << "Conjugating " << p.str() << " by " << q.str()
+                            << " gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void cachedConjugates() {
+            Index i, j;
+            int x;
+            Perm p, q, r;
+
+            for (i = 0; i < nIdx; ++i) {
+                p = Perm::orderedSn[idx[i]];
+                for (j = 0; j < nIdx; ++j) {
+                    q = Perm::orderedSn[idx[j]];
+
+                    if (p.cachedConjugate(q) != q.cachedComp(p).cachedComp(
+                            q.cachedInverse())) {
+                        std::ostringstream msg;
+                        msg << "Conjugating " << p.str() << " by " << q.str()
+                            << " gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
         void compareWith() {
             Index i, j;
             Perm p, q;
@@ -725,6 +766,8 @@ class PermTest<8> : public LargePermTest<8> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
+    CPPUNIT_TEST(conjugates);
+    CPPUNIT_TEST(cachedConjugates);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(lessThan);
     CPPUNIT_TEST(reverse);
@@ -734,7 +777,7 @@ class PermTest<8> : public LargePermTest<8> {
     CPPUNIT_TEST(order);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
-    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(conjugacyMinimal);
     CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
@@ -747,6 +790,8 @@ class PermTest<9> : public LargePermTest<9> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
+    CPPUNIT_TEST(conjugates);
+    CPPUNIT_TEST(cachedConjugates);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(lessThan);
     CPPUNIT_TEST(reverse);
@@ -756,7 +801,7 @@ class PermTest<9> : public LargePermTest<9> {
     CPPUNIT_TEST(order);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
-    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(conjugacyMinimal);
     CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
@@ -769,6 +814,8 @@ class PermTest<10> : public LargePermTest<10> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
+    CPPUNIT_TEST(conjugates);
+    CPPUNIT_TEST(cachedConjugates);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(lessThan);
     CPPUNIT_TEST(reverse);
@@ -778,7 +825,7 @@ class PermTest<10> : public LargePermTest<10> {
     CPPUNIT_TEST(order);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
-    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(conjugacyMinimal);
     CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
@@ -791,6 +838,8 @@ class PermTest<11> : public LargePermTest<11> {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(cachedInverse);
     CPPUNIT_TEST(products);
+    CPPUNIT_TEST(conjugates);
+    CPPUNIT_TEST(cachedConjugates);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(lessThan);
     CPPUNIT_TEST(reverse);
@@ -800,7 +849,7 @@ class PermTest<11> : public LargePermTest<11> {
     CPPUNIT_TEST(order);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(increment);
-    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(conjugacyMinimal);
     CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();

@@ -686,23 +686,16 @@ class Perm {
         constexpr Perm cachedComp(const Perm& q) const;
 
         /**
-         * An alias for using the composition operator twice, provided to
-         * assist with writing generic code.
-         *
-         * This generic Perm<n> class does not use precomputation to compute
-         * compositions.  The only point of having cachedComp() in this generic
-         * Perm<n> class is to make it easier to write generic code that works
-         * with Perm<n> for any \a n.
-         *
-         * - If you know you are only working with the generic Perm<n>, you
-         *   should just use the composition operator instead.
-         *
-         * - If you are writing generic code, you _must_ remember to call
-         *   precompute() at least once in the lifetime of this program
-         *   before using cachedComp().
+         * Deprecated alias for using the composition operator twice, provided
+         * to assist with writing generic code.
          *
          * The permutation that is returned is the same as you would
          * obtain by calling `(*this) * q * r`.
+         *
+         * \deprecated The three-way cachedComp() was originally written to
+         * support conjugation.  If you are indeed conjugating, then call
+         * cachedConjugate() instead; otherwise just call the two-way
+         * cachedComp() twice.
          *
          * \pre You _must_ have called precompute() at least once in the
          * lifetime of this program before calling cachedComp().  For generic
@@ -714,7 +707,48 @@ class Perm {
          * \param r the second permutation to compose this with.
          * \return the composition of both permutations.
          */
-        constexpr Perm cachedComp(const Perm& q, const Perm& r) const;
+        [[deprecated]] constexpr Perm cachedComp(const Perm& q, const Perm& r)
+            const;
+
+        /**
+         * Computes the conjugate of this permutation by \a q.
+         *
+         * Specifically, calling `p.conjugate(q)` is equivalent to computing
+         * `q * p * q.inverse()`.  The resulting permutation will have the
+         * same cycle structure as \a p, but with the cycle elements
+         * translated according to \a q.
+         *
+         * \param q the permutation to conjugate this by.
+         * \return the conjugate of this permutation by \a q.
+         */
+        constexpr Perm conjugate(const Perm& q) const;
+
+        /**
+         * An alias for conjugate(), provided to assist with writing generic
+         * code.
+         *
+         * This generic Perm<n> class does not use precomputation to compute
+         * conjugates.  The only point of having cachedConjugate() in this
+         * generic Perm<n> class is to make it easier to write generic code
+         * that works with Perm<n> for any \a n.
+         *
+         * - If you know you are only working with the generic Perm<n>, you
+         *   should just call conjugate() instead.
+         *
+         * - If you are writing generic code, you _must_ remember to call
+         *   precompute() at least once in the lifetime of this program
+         *   before using cachedConjugate().
+         *
+         * \pre You _must_ have called precompute() at least once in the
+         * lifetime of this program before calling cachedConjugate().  For
+         * generic Perm<n>, precompute() does not affect conjugate
+         * computations; however, for other Perm<n> classes a failure to do
+         * this will almost certainly crash your program.
+         *
+         * \param q the permutation to conjugate this by.
+         * \return the conjugate of this permutation by \a q.
+         */
+        constexpr Perm cachedConjugate(const Perm& q) const;
 
         /**
          * Finds the inverse of this permutation.
@@ -1778,6 +1812,28 @@ inline constexpr Perm<n> Perm<n>::cachedComp(const Perm& q, const Perm& r)
     for (int i = 0; i < n; ++i, bits += imageBits)
         c |= (static_cast<Code>((*this)[q[(r.code_ >> bits) & imageMask]])
             << bits);
+    return Perm<n>(c);
+}
+
+template <int n>
+inline constexpr Perm<n> Perm<n>::conjugate(const Perm<n>& q) const {
+    Code c = 0;
+    for (int bits = 0; bits < imageBits * n; bits += imageBits) {
+        // q[i] -> q[this[i]]
+        c |= (static_cast<Code>(q[(code_ >> bits) & imageMask])
+            << (imageBits * ((q.code_ >> bits) & imageMask)));
+    }
+    return Perm<n>(c);
+}
+
+template <int n>
+inline constexpr Perm<n> Perm<n>::cachedConjugate(const Perm<n>& q) const {
+    Code c = 0;
+    for (int bits = 0; bits < imageBits * n; bits += imageBits) {
+        // q[i] -> q[this[i]]
+        c |= (static_cast<Code>(q[(code_ >> bits) & imageMask])
+            << (imageBits * ((q.code_ >> bits) & imageMask)));
+    }
     return Perm<n>(c);
 }
 

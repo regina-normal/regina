@@ -214,9 +214,9 @@ class GeneralPermTest : public CppUnit::TestFixture,
             } while (! p.isIdentity());
         }
 
-        void conjugacy() {
+        void conjugacyMinimal() {
             static_assert(iterationFeasible,
-                "The conjugacy() test should only be used where n is "
+                "The conjugacyMinimal() test should only be used where n is "
                 "sufficiently small that a full iteration of permutations "
                 "is feasible.");
 
@@ -796,6 +796,39 @@ class SmallPermTest : public GeneralPermTest<n> {
                                 << p.str() << " * " << q.str() << ".";
                             CPPUNIT_FAIL(msg.str());
                         }
+                    }
+                }
+            }
+        }
+
+        void conjugates() {
+            for (Index i = 0; i < nPerms; ++i) {
+                Perm<n> p = Perm<n>::Sn[i];
+                for (Index j = 0; j < nPerms; ++j) {
+                    Perm<n> q = Perm<n>::Sn[j];
+
+                    if (p.conjugate(q) != q * p * q.inverse()) {
+                        std::ostringstream msg;
+                        msg << "Conjugating " << p.str() << " by " << q.str()
+                            << " gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void cachedConjugates() {
+            for (Index i = 0; i < nPerms; ++i) {
+                Perm<n> p = Perm<n>::Sn[i];
+                for (Index j = 0; j < nPerms; ++j) {
+                    Perm<n> q = Perm<n>::Sn[j];
+
+                    if (p.cachedConjugate(q) != q.cachedComp(p).cachedComp(
+                            q.cachedInverse())) {
+                        std::ostringstream msg;
+                        msg << "Conjugating " << p.str() << " by " << q.str()
+                            << " gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
                     }
                 }
             }
