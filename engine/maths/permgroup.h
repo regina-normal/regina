@@ -698,12 +698,16 @@ inline PermGroup<n>::PermGroup(const PermGroup& parent, Test&& test,
         int count = 0;
         int unusedSlot = n - 1;
 
-        // TODO: Opportunistically fill ahead where we can using inverses.
-
         for (int j = 0; j < k; ++j) {
             if (parent.term_[k][j].isIdentity()) {
                 // The parent group cannot map k -> j.
                 usable[unusedSlot--] = j;
+                continue;
+            }
+            if (! term_[k][j].isIdentity()) {
+                // We already have a candidate ready, which we opportunistically
+                // pre-filled when we saw its inverse, back when j was smaller.
+                usable[count++] = j;
                 continue;
             }
 
@@ -726,6 +730,15 @@ inline PermGroup<n>::PermGroup(const PermGroup& parent, Test&& test,
                     term_[k][j] = current;
                     term_[j][k] = current.inverse();
                     usable[count++] = j;
+
+                    // See if the inverse lets us fill in a later term
+                    // that we won't have to compute.
+                    int jInv = term_[j][k][k];
+                    if (jInv > j) {
+                        // Yes!  We will collect this when j reaches jInv.
+                        term_[k][jInv] = term_[j][k];
+                        term_[jInv][k] = term_[k][j];
+                    }
                     break;
                 }
 
