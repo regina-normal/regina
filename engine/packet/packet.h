@@ -2715,6 +2715,8 @@ class ChildIterator {
         /**
          * Preincrement operator.
          *
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
+         *
          * \nopython For Python users, ChildIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
@@ -2723,6 +2725,8 @@ class ChildIterator {
         ChildIterator& operator ++ ();
         /**
          * Postincrement operator.
+         *
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
          *
          * \nopython For Python users, ChildIterator implements the
          * Python iterator interface instead.  See __next__() for details.
@@ -2749,6 +2753,8 @@ class ChildIterator {
 
         /**
          * Returns the packet that this iterator is currently pointing to.
+         *
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
          *
          * \nopython For Python users, ChildIterator implements the
          * Python iterator interface instead.  See __next__() for details.
@@ -2917,6 +2923,8 @@ class SubtreeIterator {
         /**
          * Preincrement operator.
          *
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
+         *
          * \nopython For Python users, SubtreeIterator implements the
          * Python iterator interface instead.  See __next__() for details.
          *
@@ -2925,6 +2933,8 @@ class SubtreeIterator {
         SubtreeIterator& operator ++ ();
         /**
          * Postincrement operator.
+         *
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
          *
          * \nopython For Python users, SubtreeIterator implements the
          * Python iterator interface instead.  See __next__() for details.
@@ -2952,6 +2962,8 @@ class SubtreeIterator {
 
         /**
          * Returns the packet that this iterator is currently pointing to.
+         *
+         * \pre This iterator is dereferenceable (i.e., it is not past-the-end).
          *
          * \nopython For Python users, SubtreeIterator implements the
          * Python iterator interface instead.  See __next__() for details.
