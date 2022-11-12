@@ -33,6 +33,7 @@ if (${REGINA_INSTALL_DEV})
     matrixops.h
     numbertheory.h
     perm.h
+    permgroup.h
     polynomial.h
     primes.h
     rational.h
