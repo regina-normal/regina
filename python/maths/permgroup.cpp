@@ -58,7 +58,7 @@ void addPermGroup(pybind11::module_& m, const char* name) {
             RDOC_TODO)
     ;
     // TODO regina::python::add_output_basic(c, RDOC_TODO);
-    // TODO regina::python::add_eq_operators(c, RDOC_TODO, RDOC_TODO);
+    regina::python::add_eq_operators(c, RDOC_TODO, RDOC_TODO);
 
     using iterator = typename PermGroup<n>::iterator;
     auto it = pybind11::class_<iterator>(c, "iterator", RDOC_TODO)

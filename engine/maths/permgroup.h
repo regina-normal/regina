@@ -387,12 +387,6 @@ class PermGroup {
          * the _only_ permutations passed to \a test will be permutations
          * that are already known to belong to \a parent.
          *
-         * If you wish to modify a group directly, you might wish to call
-         * restrict() instead.  Calling `p.restrict(test, args...)` is
-         * functionally identical to calling `p = PermGroup(p, test, args...)`,
-         * but the in-place conversion allows for a slightly more streamlined
-         * implementation.
-         *
          * \pre The given membership test does actually define a subgroup
          * (that is, it behaves appropriately with respect to identity,
          * inverse and closure).
@@ -453,8 +447,6 @@ class PermGroup {
          * \other the group to compare this with.
          * \return \c true if and only if this and the given group contain
          * the same permutations.
-         *
-         * TODO: Implement
          */
         bool operator == (const PermGroup& other) const;
         /**
@@ -472,8 +464,6 @@ class PermGroup {
          * \other the group to compare this with.
          * \return \c true if and only if there is some permutation that
          * belongs to one group but not the other.
-         *
-         * TODO: Implement
          */
         bool operator != (const PermGroup& other) const;
 
@@ -520,49 +510,6 @@ class PermGroup {
          */
         auto __iter__() const;
 #endif
-
-        /**
-         * Converts this into the subgroup of all elements within this
-         * group that pass the given membership test.
-         *
-         * Specifically, this generates the subgroup of all permutations \a p
-         * in this group for which `test(p, args...)` returns \c true.
-         *
-         * Calling `p.restrict(test, args...)` is functionally identical
-         * to calling `p = PermGroup(p, test, args...)`.  The reason for
-         * offering restrict() as a separate function is that the in-place
-         * conversion allows restrict() to be a little more streamlined.
-         *
-         * The argument \a test should be a function or some other callable
-         * object.  It must return a boolean, and its first argument should
-         * be a permutation (either by value as type `Perm<n>`, or by
-         * const reference as type `const Perm<n>&`).  If there are
-         * any additional arguments supplied in the list \a args, these
-         * will be forwarded through as additional arguments to \a test.
-         *
-         * Note that \a test will not necessarily be called for _all_
-         * permutations in this group, since this routine will deduce
-         * some subgroup members using the standard subgroup properties
-         * (e.g., closure and inverse).  It is, however, guaranteed that
-         * the _only_ permutations passed to \a test will be permutations
-         * that were originally part of this group.
-         *
-         * \pre The given membership test does actually define a subgroup
-         * (that is, it behaves appropriately with respect to identity,
-         * inverse and closure).
-         *
-         * \python This function is available in Python, and the \a test
-         * argument may be a pure Python function.  However, its form is more
-         * restricted: \a test must take exactly one argument (the permutation),
-         * and the \a args argument to this function is not present.
-         *
-         * \param test a function (or other callable object) that determines
-         * which permutations in this group will be kept.
-         * \param any additional arguments that should be passed to \a test,
-         * following the initial permutation argument.
-         */
-        template <typename Test, typename... Args>
-        void restrict(Test&& test, Args&&... args);
 
     private:
         /**
@@ -817,12 +764,6 @@ inline PermGroup<n>::PermGroup(const PermGroup& parent, Test&& test,
 }
 
 template <int n>
-template <typename Test, typename... Args>
-inline void PermGroup<n>::restrict(Test&& test, Args&&... args) {
-    // TODO: Implement
-}
-
-template <int n>
 inline typename Perm<n>::Index PermGroup<n>::size() const {
     using Index = typename Perm<n>::Index;
     Index ans = 1;
@@ -856,6 +797,47 @@ bool PermGroup<n>::contains(Perm<n> p) const {
 
     // Once we hit i == 0, p must be the identity.
     return true;
+}
+
+template <int n>
+bool PermGroup<n>::operator == (const PermGroup& other) const {
+    // A quick pre-check on count_[], which should be identical.
+    if (! std::equal(count_, count_ + n, other.count_))
+        return false;
+
+    // Check that every generator of this group belongs to other.
+    // If so, the groups are equal (since the sizes are the same, so we do
+    // not need to do the same test in reverse).
+
+    for (int k = 1; k < n; ++k) {
+        // Do not test the last generator term_[k][k], since this is the
+        // identity and so will pass for free.
+        for (int i = 0; i < count_[k] - 1; ++i) {
+            // Examine the following generator:
+            Perm<n> p = term_[k][usable_[k][i]];
+
+            // Our containment test is similar to contains(), but uses
+            // the fact that we already know that our term fixes k+1,...,n.
+            // See the contains() implementation for a full explanation.
+
+            for (int j = k; j > 0; --j) {
+                int img = p[j];
+                if (img == j)
+                    continue;
+
+                if (other.term_[j][img].isIdentity())
+                    return false;
+                p = other.term_[img][j] /* inverse term */ * p;
+            }
+        }
+    }
+
+    return true;
+}
+
+template <int n>
+inline bool PermGroup<n>::operator != (const PermGroup& other) const {
+    return ! ((*this) == other);
 }
 
 template <int n>
