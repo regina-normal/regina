@@ -98,7 +98,6 @@ enum NamedPermGroup {
 template <int n>
 class PermGroup {
     private:
-        // TODO: Use a tighter representation for term_[][]?
         /**
          * The permutation term_[k][j] for k >= j is:
          *
@@ -118,6 +117,10 @@ class PermGroup {
          *
          * Note that term_[0][...] must always be term_[0][0] == identity,
          * which is why we exclude it from the representation above.
+         *
+         * Finally: since we have the space for it, we use term_[j][k] to hold
+         * the _inverse_ of term_[k][j].  (The case j == k is not a problem,
+         * since - as noted above - these are always identity permutations).
          */
         Perm<n> term_[n][n];
 
@@ -619,8 +622,9 @@ typename PermGroup<n>::iterator& PermGroup<n>::iterator::operator ++() {
     // were identities, since we insist that term_[i][i] == id.
     // Therefore the only term that we need to remove before the increment
     // is the term for k.
-    current_ = current_ * group_->term_[k][group_->usable_[k][pos_[k]]].
-        inverse();
+
+    current_ = current_ *
+        group_->term_[group_->usable_[k][pos_[k]]][k]; /* inverse term */
 
     ++pos_[k];
     current_ = current_ * group_->term_[k][group_->usable_[k][pos_[k]]];
@@ -670,8 +674,10 @@ PermGroup<n>::PermGroup(NamedPermGroup group) {
     switch (group) {
         case PERM_GROUP_SYMMETRIC:
             for (int k = 1; k < n; ++k)
-                for (int j = 0; j < k; ++j)
-                    term_[k][j] = Perm<n>(j, k);
+                for (int j = 0; j < k; ++j) {
+                    // These terms are all self-inverse.
+                    term_[k][j] = term_[j][k] = Perm<n>(j, k);
+                }
             for (int i = 0; i < n; ++i)
                 count_[i] = i + 1;
             // Each usable_[i] should be the identity.
@@ -680,8 +686,11 @@ PermGroup<n>::PermGroup(NamedPermGroup group) {
             for (int k = 2; k < n; ++k) {
                 // Each non-trivial term should be a 3-cycle.
                 term_[k][0] = Perm<n>(0, k) * Perm<n>(0, 1);
-                for (int j = 1; j < k; ++j)
+                term_[0][k] = term_[k][0].inverse();
+                for (int j = 1; j < k; ++j) {
                     term_[k][j] = Perm<n>(j, k) * Perm<n>(0, j);
+                    term_[j][k] = term_[k][j].inverse();
+                }
             }
             count_[0] = 1;
             count_[1] = 1; // this is where A_n differs from S_n
@@ -706,8 +715,10 @@ PermGroup<n>::PermGroup(int k) {
     // Remember: all permutations not explicitly set here will be
     // initialised to the identity.
     for (int upper = 1; upper < k; ++upper)
-        for (int lower = 0; lower < upper; ++lower)
-            term_[upper][lower] = Perm<n>(lower, upper);
+        for (int lower = 0; lower < upper; ++lower) {
+            // These terms are all self-inverse.
+            term_[upper][lower] = term_[lower][upper] = Perm<n>(lower, upper);
+        }
     for (int i = 0; i < k; ++i)
         count_[i] = i + 1;
     std::fill(count_ + k, count_ + n, 1);
@@ -730,7 +741,6 @@ inline typename Perm<n>::Index PermGroup<n>::size() const {
 template <int n>
 bool PermGroup<n>::contains(Perm<n> p) const {
     // TODO: Check that this is a sensible way to implement this.
-    // TODO: Perhaps it is a good idea to store term_ inverses?
     for (int i = n - 1; i > 0; --i) {
         // INV: p fixes all elements > i, and if p is in the group then it has
         // a unique representation of the form:
@@ -748,7 +758,7 @@ bool PermGroup<n>::contains(Perm<n> p) const {
             // We cannot map i -> img.
             return false;
         }
-        p = term_[i][img].inverse() * p;
+        p = term_[img][i] /* inverse term */ * p;
     }
 
     // Once we hit i == 0, p must be the identity.
