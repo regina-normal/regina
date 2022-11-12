@@ -290,7 +290,7 @@ class Vector : public ShortOutput<Vector<T>> {
             return elts_;
         }
         /**
-         * Returns a C++ non-const iterator pointing to the first element of
+         * Returns a C++ const iterator pointing to the first element of
          * this vector.
          *
          * The iterator range from begin() to end() runs through all the
