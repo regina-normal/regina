@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "maths/permgroup.h"
 #include "../helpers.h"
 
@@ -44,6 +45,11 @@ void addPermGroup(pybind11::module_& m, const char* name) {
         .def(pybind11::init<const PermGroup<n>&>(), RDOC_TODO)
         .def(pybind11::init<regina::NamedPermGroup>(), RDOC_TODO)
         .def(pybind11::init<int>(), RDOC_TODO)
+        .def(pybind11::init([](const PermGroup<n>& parent,
+                const std::function<bool(Perm<n>)>& test) {
+            return new PermGroup<n>(parent, test);
+        }), pybind11::arg("parent"), pybind11::arg("test"),
+            RDOC_TODO)
         .def("size", &PermGroup<n>::size, RDOC_TODO)
         .def("contains", &PermGroup<n>::contains, RDOC_TODO)
         .def("__iter__", [](const PermGroup<n>& g) {

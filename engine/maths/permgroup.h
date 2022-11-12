@@ -93,6 +93,8 @@ enum NamedPermGroup {
  * \tparam n the number of objects being permuted.
  * This must be between 2 and 16 inclusive.
  *
+ * TODO: Add a template parameter for cached vs non-cached computations
+ *
  * \ingroup maths
  */
 template <int n>
@@ -395,14 +397,17 @@ class PermGroup {
          * (that is, it behaves appropriately with respect to identity,
          * inverse and closure).
          *
+         * \python This constructor is available in Python, and the \a test
+         * argument may be a pure Python function.  However, its form is more
+         * restricted: \a test must take exactly one argument (the permutation),
+         * and the \a args argument to this constructor is not present.
+         *
          * \param parent the "starting" group of all permutations under
          * consideration.
          * \param test a function (or other callable object) that determines
          * which permutations in \a parent become members of this subgroup.
          * \param any additional arguments that should be passed to \a test,
          * following the initial permutation argument.
-         *
-         * TODO: Implement
          */
         template <typename Test, typename... Args>
         PermGroup(const PermGroup& parent, Test&& test, Args&&... args);
@@ -546,12 +551,15 @@ class PermGroup {
          * (that is, it behaves appropriately with respect to identity,
          * inverse and closure).
          *
+         * \python This function is available in Python, and the \a test
+         * argument may be a pure Python function.  However, its form is more
+         * restricted: \a test must take exactly one argument (the permutation),
+         * and the \a args argument to this function is not present.
+         *
          * \param test a function (or other callable object) that determines
          * which permutations in this group will be kept.
          * \param any additional arguments that should be passed to \a test,
          * following the initial permutation argument.
-         *
-         * TODO: Implement
          */
         template <typename Test, typename... Args>
         void restrict(Test&& test, Args&&... args);
@@ -727,6 +735,91 @@ PermGroup<n>::PermGroup(int k) {
         usable_[i] = Perm<n>(0, i);
 
     setup();
+}
+
+template <int n>
+template <typename Test, typename... Args>
+inline PermGroup<n>::PermGroup(const PermGroup& parent, Test&& test,
+        Args&&... args) {
+    // Go through and fix term_[k][j] (k >= j), in order of increasing k.
+
+    count_[0] = 1;
+    // usable_[0] and term_[0][0] are already (correctly) identities.
+
+    for (int k = 1; k < n; ++k) {
+        std::array<int, n> usable;
+        int count = 0;
+        int unusedSlot = n - 1;
+
+        // TODO: Opportunistically fill ahead where we can using inverses.
+
+        for (int j = 0; j < k; ++j) {
+            if (parent.term_[k][j].isIdentity()) {
+                // The parent group cannot map k -> j.
+                usable[unusedSlot--] = j;
+                continue;
+            }
+
+            // Every member of the parent group that maps k -> j is of the form
+            // parent.term_[k][j] * parent.term_[k-1][...] * ... .
+            // Iterate through the subgroup
+            // { parent.term_[k-1][...] * ...  * parent.term_[0][...] }
+            // until we find a permutation that passes our membership test.
+
+            // The iteration code below basically follows what the iterator
+            // class does; see that class for further explanation.
+
+            int pos[n];
+            std::fill(pos, pos + k, 0);
+            Perm<n> current = parent.term_[k][j] * parent.initSeq_[k - 1];
+
+            while (true) {
+                if (test(current, std::forward<Args>(args)...)) {
+                    // Found one!
+                    term_[k][j] = current;
+                    term_[j][k] = current.inverse();
+                    usable[count++] = j;
+                    break;
+                }
+
+                // Work out which pos_[i] needs to be incremented.
+                int inc = 1;
+                while (inc < k && pos[inc] == parent.count_[inc] - 1)
+                    ++inc;
+                if (inc == k) {
+                    // Out of options.
+                    usable[unusedSlot--] = j;
+                    break;
+                }
+
+                current = current * parent.term_[
+                    parent.usable_[inc][pos[inc]]][inc]; /* inverse term */
+
+                ++pos[inc];
+                current = current * parent.term_[
+                    inc][parent.usable_[inc][pos[inc]]];
+
+                if (inc > 1) {
+                    std::fill(pos + 1, pos + inc, 0);
+                    current = current * parent.initSeq_[inc - 1];
+                }
+            }
+        }
+
+        // term_[k][k] is already (correctly) the identity.
+        usable[count++] = k;
+
+        count_[k] = count;
+        usable_[k] = Perm<n>(usable);
+    }
+
+    setup();
+}
+
+template <int n>
+template <typename Test, typename... Args>
+inline void PermGroup<n>::restrict(Test&& test, Args&&... args) {
+    // TODO: Implement
 }
 
 template <int n>
