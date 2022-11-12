@@ -231,7 +231,7 @@ class TableView {
          *
          * - For a one-dimensional table, the deference operator returns
          *   by reference as usual: \a value_type is Element, and
-         *   \a reference_type is `const Element&`.
+         *   \a reference is `const Element&`.
          *
          * Both \a iterator and \a const_iterator are the same type, since
          * TableView only offers read-only access to the underlying data.
@@ -289,7 +289,7 @@ class TableView {
                     return current_ == rhs.current_;
                 }
                 /**
-                 * Compares this with the given iterator for equality.
+                 * Compares this with the given iterator for inequality.
                  *
                  * \param rhs the iterator to compare this with.
                  * \return \c false if the iterators point to the same
