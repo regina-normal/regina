@@ -48,6 +48,7 @@ void addPerm5(pybind11::module_& m);
 void addPerm6(pybind11::module_& m);
 void addPerm7(pybind11::module_& m);
 void addPerm(pybind11::module_& m);
+void addPermGroup(pybind11::module_& m);
 void addPolynomial(pybind11::module_& m);
 void addPrimes(pybind11::module_& m);
 void addRational(pybind11::module_& m);
@@ -73,6 +74,7 @@ void addMathsClasses(pybind11::module_& m) {
     addPerm6(m);
     addPerm7(m);
     addPerm(m);
+    addPermGroup(m);
     addPolynomial(m);
     addCyclotomic(m);
     addLaurent(m);

@@ -18,6 +18,7 @@ SET ( FILES
   perm5.cpp
   perm6.cpp
   perm7.cpp
+  permgroup.cpp
   polynomial.cpp
   primes.cpp
   pymaths.cpp

@@ -44,6 +44,31 @@
 namespace regina {
 
 /**
+ * Constants that represent particular well-known classes of permutation groups.
+ *
+ * These constants are intended to be used with permutation groups on
+ * \a n elements for arbitrary \a n.  (In particular, you can pass them
+ * to the PermGroup<n> constructor.)
+ */
+enum NamedPermGroup {
+    /**
+     * Represents the trivial group on \a n elements, containing only the
+     * identity permutation.
+     */
+    PERM_GROUP_TRIVIAL = 0,
+    /**
+     * Represents the symmetric group on \a n elements, containing all `n!`
+     * possible permutations.
+     */
+    PERM_GROUP_SYMMETRIC = 1,
+    /**
+     * Represents the alternating group on \a n elements, containing all `n!/2`
+     * even permutations.
+     */
+    PERM_GROUP_ALTERNATING = 2
+};
+
+/**
  * Represents a group of permutations on \a n elements.  This is a subgroup
  * of the symmetric group `S_n`.
  *
@@ -72,6 +97,54 @@ namespace regina {
  */
 template <int n>
 class PermGroup {
+    private:
+        // TODO: Use a tighter representation for term_[][]?
+        /**
+         * The permutation term_[k][j] for k >= j is:
+         *
+         * - any group element that maps k to j and fixes (k+1),...,(n-1),
+         *   if the group has such an element;
+         *
+         * - the identity permutation if the group has no such element.
+         *
+         * In the special case k == j, we insist (for now) on using the
+         * identity.
+         *
+         * Every group element then has a unique representation of the form
+         * `term_[n-1][...] * term_[n-2][...] * ... * term_[1][...]`,
+         * where we only allow identity terms of the form term_[k][k]
+         * (that is, if term_[k][j] is the identity for k > j, then we never
+         * use that term at all).
+         *
+         * Note that term_[0][...] must always be term_[0][0] == identity,
+         * which is why we exclude it from the representation above.
+         */
+        Perm<n> term_[n][n];
+
+        /**
+         * Indicates how many terms term_[k][j] are usable for each \a k.
+         * For each \a k, we have 1 ≤ count_[k] ≤ (k+1).
+         */
+        int count_[n];
+
+        /**
+         * Indicates which terms term_[k][j] are usable for each \a k.
+         * Specifically, if the usable terms for some \a k are
+         * term_[k][a], term_[k][b], ..., term_[k][z], term_[k][k]
+         * where `a < b < ... < z < k`, then usable_[k] maps
+         * (0,1,...,count_[k]-1) to (a,b,...,z,k).
+         */
+        Perm<n> usable_[n];
+
+        /**
+         * Each initSeq_[i] is the precomputed product
+         * term_[i][usable_[i][0]] * ... * term_[0][usable_[0][0]].
+         * Note that initSeq_[0] will always be the identity, but it is
+         * not doing too much harm to keep this around (and save other +/-1
+         * operations on indices later on).
+         */
+        Perm<n> initSeq_[n];
+
     public:
         /**
          * The iterator type for this group.
@@ -99,6 +172,25 @@ class PermGroup {
                     /**< The type returned by the dereference operator,
                          which for this iterator type is by value.
                          See the iterator class notes for details. */
+
+            private:
+                const PermGroup* group_;
+                    /**< The group over which we are iterating.  This is
+                         a pointer (not a reference) so that we can
+                         support the assignment operator. */
+                int pos_[n];
+                    /**< Indicates which of the terms PermGroup::term_[k][j]
+                         are actually being used for the current permutation.
+                         Specifically, for each \a k we use
+                         term_[k][usable_[k][pos_[k]]].
+                         We have 0 <= pos_[i] < count_[i] for each \a i.
+                         For a past-the-end iterator, we set
+                         pos_[0] = count_[0] (which is always 1), and we allow
+                         pos_[i] to be undefined for \a i > 0. */
+                Perm<n> current_;
+                    /**< The curent permutation.
+                         For a past-the-end iterator, this is undefined. */
+
             public:
                 /**
                  * Creates a new uninitialised iterator.
@@ -115,17 +207,25 @@ class PermGroup {
                  * PermGroup \a g is to iterate over \a g (i.e., to call
                  * `g.__iter__()`).
                  */
-                iterator(const iterator&);
+                iterator(const iterator&) = default;
 
                 /**
                  * Makes this a copy of the given iterator.
                  *
                  * \return a reference to this iterator.
                  */
-                iterator& operator = (const iterator&);
+                iterator& operator = (const iterator&) = default;
 
                 /**
                  * Compares this with the given iterator for equality.
+                 *
+                 * To be considered equal, two iterators must be pointing
+                 * to the same permutation within the same group.
+                 * (The second condition means that the underlying PermGroup
+                 * pointers must be the same - it is not enough to have
+                 * two distinct PermGorup objects with identical contents.)
+                 *
+                 * Two past-the-end iterators will always be considered equal.
                  *
                  * \param rhs the iterator to compare this with.
                  * \return \c true if the iterators point to the same
@@ -134,6 +234,14 @@ class PermGroup {
                 bool operator == (const iterator& rhs) const;
                 /**
                  * Compares this with the given iterator for inequality.
+                 *
+                 * To be considered equal, two iterators must be pointing
+                 * to the same permutation within the same group.
+                 * (The second condition means that the underlying PermGroup
+                 * pointers must be the same - it is not enough to have
+                 * two distinct PermGorup objects with identical contents.)
+                 *
+                 * Two past-the-end iterators will always be considered equal.
                  *
                  * \param rhs the iterator to compare this with.
                  * \return \c false if the iterators point to the same
@@ -202,7 +310,14 @@ class PermGroup {
                  */
                 operator bool() const;
 
-                friend class PermGroup;
+            private:
+                /**
+                 * Creates a new iterator with group_ set to the given
+                 * group, but with all other data members left uninitialised.
+                 */
+                iterator(const PermGroup* group);
+
+                friend class PermGroup<n>;
         };
 
         /**
@@ -221,6 +336,15 @@ class PermGroup {
          */
         PermGroup();
         /**
+         * Construct the given well-known permutation group.
+         * This constructor can (for example) be used to easily construct
+         * the symmetric or alternating group on \a n elements.
+         *
+         * \param group indicates which well-known permutation group to
+         * construct.
+         */
+        PermGroup(NamedPermGroup group);
+        /**
          * Constructs the symmetric group `S_k`, formed from all
          * permutations of 1,...,\a k.  The elements (\a k + 1),...,\a n
          * will remain fixed under all permutations in this group.
@@ -236,7 +360,7 @@ class PermGroup {
          *
          * \param src the group to copy.
          */
-        PermGroup(const PermGroup& src);
+        PermGroup(const PermGroup& src) = default;
         /**
          * Generates the subgroup of all elements in the given group
          * that pass the given membership test.
@@ -274,6 +398,8 @@ class PermGroup {
          * which permutations in \a parent become members of this subgroup.
          * \param any additional arguments that should be passed to \a test,
          * following the initial permutation argument.
+         *
+         * TODO: Implement
          */
         template <typename Test, typename... Args>
         PermGroup(const PermGroup& parent, Test&& test, Args&&... args);
@@ -284,10 +410,12 @@ class PermGroup {
          * \param src the group to copy.
          * \return a reference to this group.
          */
-        PermGroup& operator = (const PermGroup& src);
+        PermGroup& operator = (const PermGroup& src) = default;
 
         /**
          * Returns the total number of elements in this group.
+         *
+         * \return the size of this group.
          */
         typename Perm<n>::Index size() const;
 
@@ -317,6 +445,8 @@ class PermGroup {
          * \other the group to compare this with.
          * \return \c true if and only if this and the given group contain
          * the same permutations.
+         *
+         * TODO: Implement
          */
         bool operator == (const PermGroup& other) const;
         /**
@@ -334,6 +464,8 @@ class PermGroup {
          * \other the group to compare this with.
          * \return \c true if and only if there is some permutation that
          * belongs to one group but not the other.
+         *
+         * TODO: Implement
          */
         bool operator != (const PermGroup& other) const;
 
@@ -350,7 +482,7 @@ class PermGroup {
          *
          * \return an iterator pointing to the first element of this group.
          */
-        auto begin() const;
+        iterator begin() const;
         /**
          * Returns a C++ iterator beyond the last element of this group.
          *
@@ -364,7 +496,7 @@ class PermGroup {
          *
          * \return an iterator beyond the last element of this group.
          */
-        auto begin() const;
+        iterator end() const;
 #ifdef __APIDOCS
         /**
          * Returns a Python iterator over the elements of this group.
@@ -415,10 +547,241 @@ class PermGroup {
          * which permutations in this group will be kept.
          * \param any additional arguments that should be passed to \a test,
          * following the initial permutation argument.
+         *
+         * TODO: Implement
          */
         template <typename Test, typename... Args>
         void restrict(Test&& test, Args&&... args);
+
+    private:
+        /**
+         * Additional initialisation tasks that are common to all
+         * constructors.
+         *
+         * Currently this just fills the initSeq_[] array.
+         */
+        void setup();
 };
+
+// Inline functions for PermGroup::iterator
+
+template <int n>
+inline PermGroup<n>::iterator::iterator() : group_(nullptr) {
+}
+
+template <int n>
+inline PermGroup<n>::iterator::iterator(const PermGroup<n>* group) :
+        group_(group) {
+}
+
+template <int n>
+inline bool PermGroup<n>::iterator::operator == (
+        const PermGroup<n>::iterator& rhs) const {
+    if (*this) {
+        // This is dereferenceable.
+        // Compare the permutations before the groups, since the groups will
+        // always be equal in "normal" scenarios.
+        // Note that, for dereferenceable iterators, the permutations are
+        // enough to define all of pos_[...].
+        return rhs && (current_ == rhs.current_) && (group_ == rhs.group_);
+    } else {
+        // This is past-the-end.
+        return (! rhs);
+    }
+}
+
+template <int n>
+inline bool PermGroup<n>::iterator::operator != (
+        const PermGroup<n>::iterator& rhs) const {
+    // See the == operator for an explanation.
+    if (*this) {
+        // This is dereferenceable.
+        return (! rhs) || (current_ != rhs.current_) || (group_ != rhs.group_);
+    } else {
+        // This is past-the-end.
+        return rhs;
+    }
+}
+
+template <int n>
+typename PermGroup<n>::iterator& PermGroup<n>::iterator::operator ++() {
+    int k = 1;
+    // Work out which pos_[k] needs to be incremented.
+    while (k < n && pos_[k] == group_->count_[k] - 1)
+        ++k;
+    if (k == n) {
+        // Out of options.
+        pos_[0] = 1; // past-the-end
+        return *this;
+    }
+
+    // Conveniently, all the terms term_[i][j] that we _were_ using for i < k
+    // were identities, since we insist that term_[i][i] == id.
+    // Therefore the only term that we need to remove before the increment
+    // is the term for k.
+    current_ = current_ * group_->term_[k][group_->usable_[k][pos_[k]]].
+        inverse();
+
+    ++pos_[k];
+    current_ = current_ * group_->term_[k][group_->usable_[k][pos_[k]]];
+
+    if (k > 1) {
+        std::fill(pos_ + 1, pos_ + k, 0);
+        current_ = current_ * group_->initSeq_[k - 1];
+    }
+
+    return *this;
+}
+
+template <int n>
+inline typename PermGroup<n>::iterator PermGroup<n>::iterator::operator ++(int)
+        {
+    iterator prev = *this;
+    ++(*this);
+    return prev;
+}
+
+template <int n>
+inline Perm<n> PermGroup<n>::iterator::operator * () const {
+    return current_;
+}
+
+template <int n>
+inline PermGroup<n>::iterator::operator bool() const {
+    return pos_[0] == 0;
+}
+
+// Inline functions for PermGroup
+
+template <int n>
+inline PermGroup<n>::PermGroup() {
+    // All permutations term_[k][j] are already initialised to the identity.
+    std::fill(count_, count_ + n, 1);
+    for (int i = 1; i < n; ++i)
+        usable_[i] = Perm<n>(0, i);
+
+    setup();
+}
+
+template <int n>
+PermGroup<n>::PermGroup(NamedPermGroup group) {
+    // Remember: all permutations not explicitly set here will be
+    // initialised to the identity.
+    switch (group) {
+        case PERM_GROUP_SYMMETRIC:
+            for (int k = 1; k < n; ++k)
+                for (int j = 0; j < k; ++j)
+                    term_[k][j] = Perm<n>(j, k);
+            for (int i = 0; i < n; ++i)
+                count_[i] = i + 1;
+            // Each usable_[i] should be the identity.
+            break;
+        case PERM_GROUP_ALTERNATING:
+            for (int k = 2; k < n; ++k) {
+                // Each non-trivial term should be a 3-cycle.
+                term_[k][0] = Perm<n>(0, k) * Perm<n>(0, 1);
+                for (int j = 1; j < k; ++j)
+                    term_[k][j] = Perm<n>(j, k) * Perm<n>(0, j);
+            }
+            count_[0] = 1;
+            count_[1] = 1; // this is where A_n differs from S_n
+            for (int i = 2; i < n; ++i)
+                count_[i] = i + 1;
+            // All usable_[k] should be the identity for k != 1.
+            usable_[1] = Perm<n>(0, 1);
+            break;
+        default:
+            // Each term_[k][j] should be the identity.
+            std::fill(count_, count_ + n, 1);
+            for (int i = 1; i < n; ++i)
+                usable_[i] = Perm<n>(0, i);
+            break;
+    }
+
+    setup();
+}
+
+template <int n>
+PermGroup<n>::PermGroup(int k) {
+    // Remember: all permutations not explicitly set here will be
+    // initialised to the identity.
+    for (int upper = 1; upper < k; ++upper)
+        for (int lower = 0; lower < upper; ++lower)
+            term_[upper][lower] = Perm<n>(lower, upper);
+    for (int i = 0; i < k; ++i)
+        count_[i] = i + 1;
+    std::fill(count_ + k, count_ + n, 1);
+    // Each usable_[0..(k-1)] should be the identity.
+    for (int i = k; i < n; ++i)
+        usable_[i] = Perm<n>(0, i);
+
+    setup();
+}
+
+template <int n>
+inline typename Perm<n>::Index PermGroup<n>::size() const {
+    using Index = typename Perm<n>::Index;
+    Index ans = 1;
+    for (int i = 1; i < n; ++i)
+        ans *= static_cast<Index>(count_[i]);
+    return ans;
+}
+
+template <int n>
+bool PermGroup<n>::contains(Perm<n> p) const {
+    // TODO: Check that this is a sensible way to implement this.
+    // TODO: Perhaps it is a good idea to store term_ inverses?
+    for (int i = n - 1; i > 0; --i) {
+        // INV: p fixes all elements > i, and if p is in the group then it has
+        // a unique representation of the form:
+        // term_[i][...] * term_[i-1][...] * ... * term_[1][...].
+
+        int img = p[i];
+        if (img == i) {
+            // We are insisting for now that term_[i][i] is the identity.
+            // Nothing more to do other than move down to the next i.
+            continue;
+        }
+
+        // At this point we must have img < i.
+        if (term_[i][img].isIdentity()) {
+            // We cannot map i -> img.
+            return false;
+        }
+        p = term_[i][img].inverse() * p;
+    }
+
+    // Once we hit i == 0, p must be the identity.
+    return true;
+}
+
+template <int n>
+inline typename PermGroup<n>::iterator PermGroup<n>::begin() const {
+    iterator ans(this);
+    std::fill(ans.pos_, ans.pos_ + n, 0);
+    ans.current_ = initSeq_[n - 1];
+    return ans;
+}
+
+template <int n>
+inline typename PermGroup<n>::iterator PermGroup<n>::end() const {
+    iterator ans(this);
+    ans.pos_[0] = 1;
+    // pos_[1..] and current_ may be left undefined.
+    return ans;
+}
+
+template <int n>
+inline void PermGroup<n>::setup() {
+    // initSeq_[0] is already (correctly) the identity.
+    for (int k = 1; k < n; ++k)
+        if (count_[k] == 1) {
+            // The next term to multiply by is the identity.
+            // Save the multiplication and just copy instead.
+            initSeq_[k] = initSeq_[k - 1];
+        } else
+            initSeq_[k] = term_[k][usable_[k][0]] * initSeq_[k - 1];
+}
 
 } // namespace regina
 
