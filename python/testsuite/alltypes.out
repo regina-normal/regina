@@ -1005,6 +1005,96 @@ Equality type : EqualityType.BY_VALUE
 PermClass9 : class
 Equality type : EqualityType.BY_VALUE
 
+PermGroup10 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup10_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup11 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup11_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup12 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup12_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup13 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup13_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup14 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup14_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup15 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup15_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup16 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup16_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup2 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup2_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup3 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup3_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup4 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup4_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup5 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup5_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup6 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup6_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup7 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup7_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup8 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup8_Cached : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup9 : class
+Equality type : EqualityType.BY_VALUE
+
+PermGroup9_Cached : class
+Equality type : EqualityType.BY_VALUE
+
 PillowTwoSphere : class
 Equality type : EqualityType.BY_VALUE
 
