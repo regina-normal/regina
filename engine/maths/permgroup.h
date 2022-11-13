@@ -86,18 +86,24 @@ enum NamedPermGroup {
  * end users is that you should be economical about copying PermGroup objects,
  * and work with them in-place where possible.
  *
- * \python Python does not support templates.  For each
- * \a n = 2,...,16, this class is available in Python under the
- * corresponding name PermGroup2, PermGroup3, ..., PermGroup16.
+ * \python Python does not support templates.  In Python, the "vanilla"
+ * non-cached variants `Perm<n>` are available under the names
+ * PermGroup2, PermGroup3, ..., PermGroup16, and the cached variants
+ * `Perm<n, true>` are available under the names
+ * PermGroup2_Cached, PermGroup3_Cached, ..., PermGroup16_Cached.
  *
  * \tparam n the number of objects being permuted.
  * This must be between 2 and 16 inclusive.
- *
- * TODO: Add a template parameter for cached vs non-cached computations
+ * \tparam cached \c true if we should use precomputation-assisted routines
+ * such as Perm<n>::cachedComp() and Perm<n>::cachedInverse(), or \c false
+ * (the default) if we should just use the composition operator, inverse(),
+ * and so on.  If this argument is \c true, you _must_ have called
+ * Perm<n>::precompute() at least once in the lifetime of the program
+ * before using this class.
  *
  * \ingroup maths
  */
-template <int n>
+template <int n, bool cached = false>
 class PermGroup {
     private:
         /**
@@ -322,7 +328,7 @@ class PermGroup {
                  */
                 iterator(const PermGroup* group);
 
-                friend class PermGroup<n>;
+                friend class PermGroup<n, cached>;
         };
 
         /**
@@ -523,18 +529,18 @@ class PermGroup {
 
 // Inline functions for PermGroup::iterator
 
-template <int n>
-inline PermGroup<n>::iterator::iterator() : group_(nullptr) {
+template <int n, bool cached>
+inline PermGroup<n, cached>::iterator::iterator() : group_(nullptr) {
 }
 
-template <int n>
-inline PermGroup<n>::iterator::iterator(const PermGroup<n>* group) :
-        group_(group) {
+template <int n, bool cached>
+inline PermGroup<n, cached>::iterator::iterator(
+        const PermGroup<n, cached>* group) : group_(group) {
 }
 
-template <int n>
-inline bool PermGroup<n>::iterator::operator == (
-        const PermGroup<n>::iterator& rhs) const {
+template <int n, bool cached>
+inline bool PermGroup<n, cached>::iterator::operator == (
+        const PermGroup<n, cached>::iterator& rhs) const {
     if (*this) {
         // This is dereferenceable.
         // Compare the permutations before the groups, since the groups will
@@ -548,9 +554,9 @@ inline bool PermGroup<n>::iterator::operator == (
     }
 }
 
-template <int n>
-inline bool PermGroup<n>::iterator::operator != (
-        const PermGroup<n>::iterator& rhs) const {
+template <int n, bool cached>
+inline bool PermGroup<n, cached>::iterator::operator != (
+        const PermGroup<n, cached>::iterator& rhs) const {
     // See the == operator for an explanation.
     if (*this) {
         // This is dereferenceable.
@@ -561,8 +567,9 @@ inline bool PermGroup<n>::iterator::operator != (
     }
 }
 
-template <int n>
-typename PermGroup<n>::iterator& PermGroup<n>::iterator::operator ++() {
+template <int n, bool cached>
+typename PermGroup<n, cached>::iterator&
+        PermGroup<n, cached>::iterator::operator ++() {
     int k = 1;
     // Work out which pos_[k] needs to be incremented.
     while (k < n && pos_[k] == group_->count_[k] - 1)
@@ -578,42 +585,54 @@ typename PermGroup<n>::iterator& PermGroup<n>::iterator::operator ++() {
     // Therefore the only term that we need to remove before the increment
     // is the term for k.
 
-    current_ = current_ *
-        group_->term_[group_->usable_[k][pos_[k]]][k]; /* inverse term */
+    if constexpr (cached)
+        current_ = current_.cachedComp(
+            group_->term_[group_->usable_[k][pos_[k]]][k]); /* inverse term */
+    else
+        current_ = current_ *
+            group_->term_[group_->usable_[k][pos_[k]]][k]; /* inverse term */
 
     ++pos_[k];
-    current_ = current_ * group_->term_[k][group_->usable_[k][pos_[k]]];
+
+    if constexpr (cached)
+        current_ = current_.cachedComp(
+            group_->term_[k][group_->usable_[k][pos_[k]]]);
+    else
+        current_ = current_ * group_->term_[k][group_->usable_[k][pos_[k]]];
 
     if (k > 1) {
         std::fill(pos_ + 1, pos_ + k, 0);
-        current_ = current_ * group_->initSeq_[k - 1];
+        if constexpr (cached)
+            current_ = current_.cachedComp(group_->initSeq_[k - 1]);
+        else
+            current_ = current_ * group_->initSeq_[k - 1];
     }
 
     return *this;
 }
 
-template <int n>
-inline typename PermGroup<n>::iterator PermGroup<n>::iterator::operator ++(int)
-        {
+template <int n, bool cached>
+inline typename PermGroup<n, cached>::iterator
+        PermGroup<n, cached>::iterator::operator ++(int) {
     iterator prev = *this;
     ++(*this);
     return prev;
 }
 
-template <int n>
-inline Perm<n> PermGroup<n>::iterator::operator * () const {
+template <int n, bool cached>
+inline Perm<n> PermGroup<n, cached>::iterator::operator * () const {
     return current_;
 }
 
-template <int n>
-inline PermGroup<n>::iterator::operator bool() const {
+template <int n, bool cached>
+inline PermGroup<n, cached>::iterator::operator bool() const {
     return pos_[0] == 0;
 }
 
 // Inline functions for PermGroup
 
-template <int n>
-inline PermGroup<n>::PermGroup() {
+template <int n, bool cached>
+inline PermGroup<n, cached>::PermGroup() {
     // All permutations term_[k][j] are already initialised to the identity.
     std::fill(count_, count_ + n, 1);
     for (int i = 1; i < n; ++i)
@@ -622,8 +641,8 @@ inline PermGroup<n>::PermGroup() {
     setup();
 }
 
-template <int n>
-PermGroup<n>::PermGroup(NamedPermGroup group) {
+template <int n, bool cached>
+PermGroup<n, cached>::PermGroup(NamedPermGroup group) {
     // Remember: all permutations not explicitly set here will be
     // initialised to the identity.
     switch (group) {
@@ -640,11 +659,21 @@ PermGroup<n>::PermGroup(NamedPermGroup group) {
         case PERM_GROUP_ALTERNATING:
             for (int k = 2; k < n; ++k) {
                 // Each non-trivial term should be a 3-cycle.
-                term_[k][0] = Perm<n>(0, k) * Perm<n>(0, 1);
-                term_[0][k] = term_[k][0].inverse();
+                if constexpr (cached) {
+                    term_[k][0] = Perm<n>(0, k).cachedComp(Perm<n>(0, 1));
+                    term_[0][k] = term_[k][0].cachedInverse();
+                } else {
+                    term_[k][0] = Perm<n>(0, k) * Perm<n>(0, 1);
+                    term_[0][k] = term_[k][0].inverse();
+                }
                 for (int j = 1; j < k; ++j) {
-                    term_[k][j] = Perm<n>(j, k) * Perm<n>(0, j);
-                    term_[j][k] = term_[k][j].inverse();
+                    if constexpr (cached) {
+                        term_[k][j] = Perm<n>(j, k).cachedComp(Perm<n>(0, j));
+                        term_[j][k] = term_[k][j].cachedInverse();
+                    } else {
+                        term_[k][j] = Perm<n>(j, k) * Perm<n>(0, j);
+                        term_[j][k] = term_[k][j].inverse();
+                    }
                 }
             }
             count_[0] = 1;
@@ -665,8 +694,8 @@ PermGroup<n>::PermGroup(NamedPermGroup group) {
     setup();
 }
 
-template <int n>
-PermGroup<n>::PermGroup(int k) {
+template <int n, bool cached>
+PermGroup<n, cached>::PermGroup(int k) {
     // Remember: all permutations not explicitly set here will be
     // initialised to the identity.
     for (int upper = 1; upper < k; ++upper)
@@ -684,9 +713,9 @@ PermGroup<n>::PermGroup(int k) {
     setup();
 }
 
-template <int n>
+template <int n, bool cached>
 template <typename Test, typename... Args>
-inline PermGroup<n>::PermGroup(const PermGroup& parent, Test&& test,
+inline PermGroup<n, cached>::PermGroup(const PermGroup& parent, Test&& test,
         Args&&... args) {
     // Go through and fix term_[k][j] (k >= j), in order of increasing k.
 
@@ -722,13 +751,20 @@ inline PermGroup<n>::PermGroup(const PermGroup& parent, Test&& test,
 
             int pos[n];
             std::fill(pos, pos + k, 0);
-            Perm<n> current = parent.term_[k][j] * parent.initSeq_[k - 1];
+            Perm<n> current;
+            if constexpr (cached)
+                current = parent.term_[k][j].cachedComp(parent.initSeq_[k - 1]);
+            else
+                current = parent.term_[k][j] * parent.initSeq_[k - 1];
 
             while (true) {
                 if (test(current, std::forward<Args>(args)...)) {
                     // Found one!
                     term_[k][j] = current;
-                    term_[j][k] = current.inverse();
+                    if (cached)
+                        term_[j][k] = current.cachedInverse();
+                    else
+                        term_[j][k] = current.inverse();
                     usable[count++] = j;
 
                     // See if the inverse lets us fill in a later term
@@ -752,16 +788,27 @@ inline PermGroup<n>::PermGroup(const PermGroup& parent, Test&& test,
                     break;
                 }
 
-                current = current * parent.term_[
-                    parent.usable_[inc][pos[inc]]][inc]; /* inverse term */
+                if constexpr (cached)
+                    current = current.cachedComp( /* rhs is inverse */
+                        parent.term_[parent.usable_[inc][pos[inc]]][inc]);
+                else
+                    current = current * /* rhs is inverse */
+                        parent.term_[parent.usable_[inc][pos[inc]]][inc];
 
                 ++pos[inc];
-                current = current * parent.term_[
-                    inc][parent.usable_[inc][pos[inc]]];
+                if constexpr (cached)
+                    current = current.cachedComp(
+                        parent.term_[inc][parent.usable_[inc][pos[inc]]]);
+                else
+                    current = current *
+                        parent.term_[inc][parent.usable_[inc][pos[inc]]];
 
                 if (inc > 1) {
                     std::fill(pos + 1, pos + inc, 0);
-                    current = current * parent.initSeq_[inc - 1];
+                    if constexpr (cached)
+                        current = current.cachedComp(parent.initSeq_[inc - 1]);
+                    else
+                        current = current * parent.initSeq_[inc - 1];
                 }
             }
         }
@@ -776,8 +823,8 @@ inline PermGroup<n>::PermGroup(const PermGroup& parent, Test&& test,
     setup();
 }
 
-template <int n>
-inline typename Perm<n>::Index PermGroup<n>::size() const {
+template <int n, bool cached>
+inline typename Perm<n>::Index PermGroup<n, cached>::size() const {
     using Index = typename Perm<n>::Index;
     Index ans = 1;
     for (int i = 1; i < n; ++i)
@@ -785,8 +832,8 @@ inline typename Perm<n>::Index PermGroup<n>::size() const {
     return ans;
 }
 
-template <int n>
-bool PermGroup<n>::contains(Perm<n> p) const {
+template <int n, bool cached>
+bool PermGroup<n, cached>::contains(Perm<n> p) const {
     // TODO: Check that this is a sensible way to implement this.
     for (int i = n - 1; i > 0; --i) {
         // INV: p fixes all elements > i, and if p is in the group then it has
@@ -805,15 +852,18 @@ bool PermGroup<n>::contains(Perm<n> p) const {
             // We cannot map i -> img.
             return false;
         }
-        p = term_[img][i] /* inverse term */ * p;
+        if (cached)
+            p = term_[img][i].cachedComp(p); /* lhs is inverse */
+        else
+            p = term_[img][i] /* inverse term */ * p;
     }
 
     // Once we hit i == 0, p must be the identity.
     return true;
 }
 
-template <int n>
-bool PermGroup<n>::operator == (const PermGroup& other) const {
+template <int n, bool cached>
+bool PermGroup<n, cached>::operator == (const PermGroup& other) const {
     // A quick pre-check on count_[], which should be identical.
     if (! std::equal(count_, count_ + n, other.count_))
         return false;
@@ -840,7 +890,10 @@ bool PermGroup<n>::operator == (const PermGroup& other) const {
 
                 if (other.term_[j][img].isIdentity())
                     return false;
-                p = other.term_[img][j] /* inverse term */ * p;
+                if (cached)
+                    p = other.term_[img][j].cachedComp(p); /* lhs is inverse */
+                else
+                    p = other.term_[img][j] /* inverse term */ * p;
             }
         }
     }
@@ -848,37 +901,44 @@ bool PermGroup<n>::operator == (const PermGroup& other) const {
     return true;
 }
 
-template <int n>
-inline bool PermGroup<n>::operator != (const PermGroup& other) const {
+template <int n, bool cached>
+inline bool PermGroup<n, cached>::operator != (const PermGroup& other) const {
     return ! ((*this) == other);
 }
 
-template <int n>
-inline typename PermGroup<n>::iterator PermGroup<n>::begin() const {
+template <int n, bool cached>
+inline typename PermGroup<n, cached>::iterator PermGroup<n, cached>::begin()
+        const {
     iterator ans(this);
     std::fill(ans.pos_, ans.pos_ + n, 0);
     ans.current_ = initSeq_[n - 1];
     return ans;
 }
 
-template <int n>
-inline typename PermGroup<n>::iterator PermGroup<n>::end() const {
+template <int n, bool cached>
+inline typename PermGroup<n, cached>::iterator PermGroup<n, cached>::end()
+        const {
     iterator ans(this);
     ans.pos_[0] = 1;
     // pos_[1..] and current_ may be left undefined.
     return ans;
 }
 
-template <int n>
-inline void PermGroup<n>::setup() {
+template <int n, bool cached>
+inline void PermGroup<n, cached>::setup() {
     // initSeq_[0] is already (correctly) the identity.
     for (int k = 1; k < n; ++k)
         if (count_[k] == 1) {
             // The next term to multiply by is the identity.
             // Save the multiplication and just copy instead.
             initSeq_[k] = initSeq_[k - 1];
-        } else
-            initSeq_[k] = term_[k][usable_[k][0]] * initSeq_[k - 1];
+        } else {
+            if (cached)
+                initSeq_[k] =
+                    term_[k][usable_[k][0]].cachedComp(initSeq_[k - 1]);
+            else
+                initSeq_[k] = term_[k][usable_[k][0]] * initSeq_[k - 1];
+        }
 }
 
 } // namespace regina

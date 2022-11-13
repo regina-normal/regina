@@ -38,21 +38,23 @@
 using regina::Perm;
 using regina::PermGroup;
 
-template <int n>
+template <int n, bool cached = false>
 void addPermGroup(pybind11::module_& m, const char* name) {
-    auto c = pybind11::class_<PermGroup<n>>(m, name, RDOC_TODO)
+    using Group = PermGroup<n, cached>;
+
+    auto c = pybind11::class_<Group>(m, name, RDOC_TODO)
         .def(pybind11::init<>(), RDOC_TODO)
-        .def(pybind11::init<const PermGroup<n>&>(), RDOC_TODO)
+        .def(pybind11::init<const Group&>(), RDOC_TODO)
         .def(pybind11::init<regina::NamedPermGroup>(), RDOC_TODO)
         .def(pybind11::init<int>(), RDOC_TODO)
-        .def(pybind11::init([](const PermGroup<n>& parent,
+        .def(pybind11::init([](const Group& parent,
                 const std::function<bool(Perm<n>)>& test) {
-            return new PermGroup<n>(parent, test);
+            return new Group(parent, test);
         }), pybind11::arg("parent"), pybind11::arg("test"),
             RDOC_TODO)
-        .def("size", &PermGroup<n>::size, RDOC_TODO)
-        .def("contains", &PermGroup<n>::contains, RDOC_TODO)
-        .def("__iter__", [](const PermGroup<n>& g) {
+        .def("size", &Group::size, RDOC_TODO)
+        .def("contains", &Group::contains, RDOC_TODO)
+        .def("__iter__", [](const Group& g) {
             return g.begin();
         }, pybind11::keep_alive<0, 1>(), // iterator keeps group alive
             RDOC_TODO)
@@ -60,7 +62,7 @@ void addPermGroup(pybind11::module_& m, const char* name) {
     // TODO regina::python::add_output_basic(c, RDOC_TODO);
     regina::python::add_eq_operators(c, RDOC_TODO, RDOC_TODO);
 
-    using iterator = typename PermGroup<n>::iterator;
+    using iterator = typename Group::iterator;
     auto it = pybind11::class_<iterator>(c, "iterator", RDOC_TODO)
         .def("__next__", [](iterator& it) {
             if (it)
@@ -97,5 +99,21 @@ void addPermGroup(pybind11::module_& m) {
     addPermGroup<14>(m, "PermGroup14");
     addPermGroup<15>(m, "PermGroup15");
     addPermGroup<16>(m, "PermGroup16");
+
+    addPermGroup<2, true>(m, "PermGroup2_Cached");
+    addPermGroup<3, true>(m, "PermGroup3_Cached");
+    addPermGroup<4, true>(m, "PermGroup4_Cached");
+    addPermGroup<5, true>(m, "PermGroup5_Cached");
+    addPermGroup<6, true>(m, "PermGroup6_Cached");
+    addPermGroup<7, true>(m, "PermGroup7_Cached");
+    addPermGroup<8, true>(m, "PermGroup8_Cached");
+    addPermGroup<9, true>(m, "PermGroup9_Cached");
+    addPermGroup<10, true>(m, "PermGroup10_Cached");
+    addPermGroup<11, true>(m, "PermGroup11_Cached");
+    addPermGroup<12, true>(m, "PermGroup12_Cached");
+    addPermGroup<13, true>(m, "PermGroup13_Cached");
+    addPermGroup<14, true>(m, "PermGroup14_Cached");
+    addPermGroup<15, true>(m, "PermGroup15_Cached");
+    addPermGroup<16, true>(m, "PermGroup16_Cached");
 }
 
