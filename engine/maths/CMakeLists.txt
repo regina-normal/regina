@@ -10,6 +10,7 @@ SET ( FILES
   matrixops.cpp
   numbertheory.cpp
   perm.cpp
+  permgroup.cpp
   primes.cpp
   rational.cpp
   seedprimes.cpp

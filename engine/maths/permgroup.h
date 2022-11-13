@@ -589,50 +589,6 @@ inline bool PermGroup<n, cached>::iterator::operator != (
 }
 
 template <int n, bool cached>
-typename PermGroup<n, cached>::iterator&
-        PermGroup<n, cached>::iterator::operator ++() {
-    int k = 1;
-    // Work out which pos_[k] needs to be incremented.
-    while (k < n && pos_[k] == group_->count_[k] - 1)
-        ++k;
-    if (k == n) {
-        // Out of options.
-        pos_[0] = 1; // past-the-end
-        return *this;
-    }
-
-    // Conveniently, all the terms term_[i][j] that we _were_ using for i < k
-    // were identities, since we insist that term_[i][i] == id.
-    // Therefore the only term that we need to remove before the increment
-    // is the term for k.
-
-    if constexpr (cached)
-        current_ = current_.cachedComp(
-            group_->term_[group_->usable_[k][pos_[k]]][k]); /* inverse term */
-    else
-        current_ = current_ *
-            group_->term_[group_->usable_[k][pos_[k]]][k]; /* inverse term */
-
-    ++pos_[k];
-
-    if constexpr (cached)
-        current_ = current_.cachedComp(
-            group_->term_[k][group_->usable_[k][pos_[k]]]);
-    else
-        current_ = current_ * group_->term_[k][group_->usable_[k][pos_[k]]];
-
-    if (k > 1) {
-        std::fill(pos_ + 1, pos_ + k, 0);
-        if constexpr (cached)
-            current_ = current_.cachedComp(group_->initSeq_[k - 1]);
-        else
-            current_ = current_ * group_->initSeq_[k - 1];
-    }
-
-    return *this;
-}
-
-template <int n, bool cached>
 inline typename PermGroup<n, cached>::iterator
         PermGroup<n, cached>::iterator::operator ++(int) {
     iterator prev = *this;
@@ -657,78 +613,6 @@ inline PermGroup<n, cached>::PermGroup() {
     // All permutations term_[k][j] are already initialised to the identity.
     std::fill(count_, count_ + n, 1);
     for (int i = 1; i < n; ++i)
-        usable_[i] = Perm<n>(0, i);
-
-    setup();
-}
-
-template <int n, bool cached>
-PermGroup<n, cached>::PermGroup(NamedPermGroup group) {
-    // Remember: all permutations not explicitly set here will be
-    // initialised to the identity.
-    switch (group) {
-        case PERM_GROUP_SYMMETRIC:
-            for (int k = 1; k < n; ++k)
-                for (int j = 0; j < k; ++j) {
-                    // These terms are all self-inverse.
-                    term_[k][j] = term_[j][k] = Perm<n>(j, k);
-                }
-            for (int i = 0; i < n; ++i)
-                count_[i] = i + 1;
-            // Each usable_[i] should be the identity.
-            break;
-        case PERM_GROUP_ALTERNATING:
-            for (int k = 2; k < n; ++k) {
-                // Each non-trivial term should be a 3-cycle.
-                if constexpr (cached) {
-                    term_[k][0] = Perm<n>(0, k).cachedComp(Perm<n>(0, 1));
-                    term_[0][k] = term_[k][0].cachedInverse();
-                } else {
-                    term_[k][0] = Perm<n>(0, k) * Perm<n>(0, 1);
-                    term_[0][k] = term_[k][0].inverse();
-                }
-                for (int j = 1; j < k; ++j) {
-                    if constexpr (cached) {
-                        term_[k][j] = Perm<n>(j, k).cachedComp(Perm<n>(0, j));
-                        term_[j][k] = term_[k][j].cachedInverse();
-                    } else {
-                        term_[k][j] = Perm<n>(j, k) * Perm<n>(0, j);
-                        term_[j][k] = term_[k][j].inverse();
-                    }
-                }
-            }
-            count_[0] = 1;
-            count_[1] = 1; // this is where A_n differs from S_n
-            for (int i = 2; i < n; ++i)
-                count_[i] = i + 1;
-            // All usable_[k] should be the identity for k != 1.
-            usable_[1] = Perm<n>(0, 1);
-            break;
-        default:
-            // Each term_[k][j] should be the identity.
-            std::fill(count_, count_ + n, 1);
-            for (int i = 1; i < n; ++i)
-                usable_[i] = Perm<n>(0, i);
-            break;
-    }
-
-    setup();
-}
-
-template <int n, bool cached>
-PermGroup<n, cached>::PermGroup(int k) {
-    // Remember: all permutations not explicitly set here will be
-    // initialised to the identity.
-    for (int upper = 1; upper < k; ++upper)
-        for (int lower = 0; lower < upper; ++lower) {
-            // These terms are all self-inverse.
-            term_[upper][lower] = term_[lower][upper] = Perm<n>(lower, upper);
-        }
-    for (int i = 0; i < k; ++i)
-        count_[i] = i + 1;
-    std::fill(count_ + k, count_ + n, 1);
-    // Each usable_[0..(k-1)] should be the identity.
-    for (int i = k; i < n; ++i)
         usable_[i] = Perm<n>(0, i);
 
     setup();
@@ -854,75 +738,6 @@ inline typename Perm<n>::Index PermGroup<n, cached>::size() const {
 }
 
 template <int n, bool cached>
-bool PermGroup<n, cached>::contains(Perm<n> p) const {
-    // TODO: Check that this is a sensible way to implement this.
-    for (int i = n - 1; i > 0; --i) {
-        // INV: p fixes all elements > i, and if p is in the group then it has
-        // a unique representation of the form:
-        // term_[i][...] * term_[i-1][...] * ... * term_[1][...].
-
-        int img = p[i];
-        if (img == i) {
-            // We are insisting for now that term_[i][i] is the identity.
-            // Nothing more to do other than move down to the next i.
-            continue;
-        }
-
-        // At this point we must have img < i.
-        if (term_[i][img].isIdentity()) {
-            // We cannot map i -> img.
-            return false;
-        }
-        if (cached)
-            p = term_[img][i].cachedComp(p); /* lhs is inverse */
-        else
-            p = term_[img][i] /* inverse term */ * p;
-    }
-
-    // Once we hit i == 0, p must be the identity.
-    return true;
-}
-
-template <int n, bool cached>
-bool PermGroup<n, cached>::operator == (const PermGroup& other) const {
-    // A quick pre-check on count_[], which should be identical.
-    if (! std::equal(count_, count_ + n, other.count_))
-        return false;
-
-    // Check that every generator of this group belongs to other.
-    // If so, the groups are equal (since the sizes are the same, so we do
-    // not need to do the same test in reverse).
-
-    for (int k = 1; k < n; ++k) {
-        // Do not test the last generator term_[k][k], since this is the
-        // identity and so will pass for free.
-        for (int i = 0; i < count_[k] - 1; ++i) {
-            // Examine the following generator:
-            Perm<n> p = term_[k][usable_[k][i]];
-
-            // Our containment test is similar to contains(), but uses
-            // the fact that we already know that our term fixes k+1,...,n.
-            // See the contains() implementation for a full explanation.
-
-            for (int j = k; j > 0; --j) {
-                int img = p[j];
-                if (img == j)
-                    continue;
-
-                if (other.term_[j][img].isIdentity())
-                    return false;
-                if (cached)
-                    p = other.term_[img][j].cachedComp(p); /* lhs is inverse */
-                else
-                    p = other.term_[img][j] /* inverse term */ * p;
-            }
-        }
-    }
-
-    return true;
-}
-
-template <int n, bool cached>
 inline bool PermGroup<n, cached>::operator != (const PermGroup& other) const {
     return ! ((*this) == other);
 }
@@ -951,32 +766,6 @@ inline void PermGroup<n, cached>::writeTextShort(std::ostream& out) const {
     out << (s == 1 ? "Trivial" : s == Perm<n>::nPerms ? "Symmetric" :
         (s << 1) == Perm<n>::nPerms ? "Alternating" : "Permutation");
     out << " group of degree " << n << ", order " << s;
-}
-
-template <int n, bool cached>
-void PermGroup<n, cached>::writeTextLong(std::ostream& out) const {
-    // We repeat the code for writeTextShort() because we would like to
-    // hang on to the computed group size for a bit longer.
-    auto s = size();
-    out << (s == 1 ? "Trivial" : s == Perm<n>::nPerms ? "Symmetric" :
-        (s << 1) == Perm<n>::nPerms ? "Alternating" : "Permutation");
-    out << " group of degree " << n << ", order " << s;
-    out << std::endl;
-
-    if (s == 1)
-        out << "No generators" << std::endl;
-    else {
-        out << "Generators:" << std::endl;
-        for (int k = 1; k < n; ++k)
-            if (count_[k] > 1) {
-                for (int i = 0; i < count_[k] - 1; ++i) {
-                    if (i > 0)
-                        out << ' ';
-                    out << term_[k][usable_[k][i]];
-                }
-                out << std::endl;
-            }
-    }
 }
 
 template <int n, bool cached>
