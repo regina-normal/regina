@@ -73,9 +73,10 @@ enum NamedPermGroup {
  * Represents a group of permutations on \a n elements.  This is a subgroup
  * of the symmetric group `S_n`.
  *
- * Groups are stored internally using Sims tables (see Knuth volume 4A for
- * a description of how these work).  This means that, even though such a group
- * could have size factorial in \a n, the storage space required is only
+ * Groups are stored internally using Sims tables (see Knuth volume 4A for a
+ * description of how these work); these are called _stabiliser chains_ in
+ * many places.  This storage mechanism means that, even though a permutation
+ * group could have size factorial in \a n, the storage space required is only
  * quadratic in \a n.
  *
  * PermGroup objects are, in their current implementation, entirely
