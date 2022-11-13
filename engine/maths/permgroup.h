@@ -39,6 +39,7 @@
  *  \brief Implements groups of permutations on \a n objects.
  */
 
+#include "core/output.h"
 #include "maths/perm.h"
 
 namespace regina {
@@ -104,7 +105,7 @@ enum NamedPermGroup {
  * \ingroup maths
  */
 template <int n, bool cached = false>
-class PermGroup {
+class PermGroup : public Output<PermGroup<n, cached>> {
     private:
         /**
          * The permutation term_[k][j] for k >= j is:
@@ -517,6 +518,26 @@ class PermGroup {
         auto __iter__() const;
 #endif
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \nopython Use str() instead.
+         *
+         * \param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \nopython Use detail() instead.
+         *
+         * \param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
+
     private:
         /**
          * Additional initialisation tasks that are common to all
@@ -922,6 +943,40 @@ inline typename PermGroup<n, cached>::iterator PermGroup<n, cached>::end()
     ans.pos_[0] = 1;
     // pos_[1..] and current_ may be left undefined.
     return ans;
+}
+
+template <int n, bool cached>
+inline void PermGroup<n, cached>::writeTextShort(std::ostream& out) const {
+    auto s = size();
+    out << (s == 1 ? "Trivial" : s == Perm<n>::nPerms ? "Symmetric" :
+        (s << 1) == Perm<n>::nPerms ? "Alternating" : "Permutation");
+    out << " group of degree " << n << ", order " << s;
+}
+
+template <int n, bool cached>
+void PermGroup<n, cached>::writeTextLong(std::ostream& out) const {
+    // We repeat the code for writeTextShort() because we would like to
+    // hang on to the computed group size for a bit longer.
+    auto s = size();
+    out << (s == 1 ? "Trivial" : s == Perm<n>::nPerms ? "Symmetric" :
+        (s << 1) == Perm<n>::nPerms ? "Alternating" : "Permutation");
+    out << " group of degree " << n << ", order " << s;
+    out << std::endl;
+
+    if (s == 1)
+        out << "No generators" << std::endl;
+    else {
+        out << "Generators:" << std::endl;
+        for (int k = 1; k < n; ++k)
+            if (count_[k] > 1) {
+                for (int i = 0; i < count_[k] - 1; ++i) {
+                    if (i > 0)
+                        out << ' ';
+                    out << term_[k][usable_[k][i]];
+                }
+                out << std::endl;
+            }
+    }
 }
 
 template <int n, bool cached>

@@ -59,7 +59,7 @@ void addPermGroup(pybind11::module_& m, const char* name) {
         }, pybind11::keep_alive<0, 1>(), // iterator keeps group alive
             RDOC_TODO)
     ;
-    // TODO regina::python::add_output_basic(c, RDOC_TODO);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c, RDOC_TODO, RDOC_TODO);
 
     using iterator = typename Group::iterator;
