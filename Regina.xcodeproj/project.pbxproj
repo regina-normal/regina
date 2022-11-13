@@ -1265,7 +1265,6 @@
 		057EDF1A25823779004F0068 /* XZ.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDF1925823779004F0068 /* XZ.xcframework */; };
 		057EDF1B25823779004F0068 /* XZ.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDF1925823779004F0068 /* XZ.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057EE01D2582416B004F0068 /* DBChooser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EE01C2582416B004F0068 /* DBChooser.framework */; };
-		057EE4351C6009A700C4D155 /* perm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 057EE4341C6009A700C4D155 /* perm-impl.h */; };
 		057EE4C81C600A3600C4D155 /* triangulation5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE49C1C600A3000C4D155 /* triangulation5.cpp */; };
 		057EE4C91C600A3600C4D155 /* triangulation6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE49D1C600A3000C4D155 /* triangulation6.cpp */; };
 		057EE4CA1C600A3600C4D155 /* triangulation7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE49E1C600A3000C4D155 /* triangulation7.cpp */; };
@@ -1401,6 +1400,13 @@
 		059474EE1F981E5700F04273 /* Tri2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F01F981E5700F04273 /* Tri2.storyboard */; };
 		059474F11F981F0300F04273 /* Tri3.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F31F981F0300F04273 /* Tri3.storyboard */; };
 		059474F41F981F1800F04273 /* Tri4.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F61F981F1800F04273 /* Tri4.storyboard */; };
+		059493072920B1C300940F0D /* permgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059493042920B1C200940F0D /* permgroup.cpp */; };
+		059493082920B1C300940F0D /* permgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059493042920B1C200940F0D /* permgroup.cpp */; };
+		059493092920B1C300940F0D /* permgroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 059493052920B1C300940F0D /* permgroup.h */; };
+		0594930A2920B1C300940F0D /* perm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059493062920B1C300940F0D /* perm.cpp */; };
+		0594930B2920B1C300940F0D /* perm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059493062920B1C300940F0D /* perm.cpp */; };
+		0594930D2920B21600940F0D /* permgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0594930C2920B21600940F0D /* permgroup.cpp */; };
+		0594930E2920B21600940F0D /* permgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0594930C2920B21600940F0D /* permgroup.cpp */; };
 		0594AC22272AD73500A03372 /* listeners.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0594AC21272AD72F00A03372 /* listeners.cpp */; };
 		0594AC23272AD73600A03372 /* listeners.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0594AC21272AD72F00A03372 /* listeners.cpp */; };
 		059802DD26683C6D002D5D57 /* xmlsnappeareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802BD26683C6D002D5D57 /* xmlsnappeareader.h */; };
@@ -4049,7 +4055,6 @@
 		057EDEF82582370B004F0068 /* Python.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Python.xcframework; path = ../../Library/Frameworks/Python.xcframework; sourceTree = "<group>"; };
 		057EDF1925823779004F0068 /* XZ.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = XZ.xcframework; path = ../../Library/Frameworks/XZ.xcframework; sourceTree = "<group>"; };
 		057EE01C2582416B004F0068 /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
-		057EE4341C6009A700C4D155 /* perm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-impl.h"; sourceTree = "<group>"; };
 		057EE4361C6009E600C4D155 /* component-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "component-bindings.h"; sourceTree = "<group>"; };
 		057EE4421C6009E600C4D155 /* facetpairing-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "facetpairing-bindings.h"; sourceTree = "<group>"; };
 		057EE4431C6009E600C4D155 /* isomorphism-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "isomorphism-bindings.h"; sourceTree = "<group>"; };
@@ -4233,6 +4238,10 @@
 		059474EF1F981E5700F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri2.storyboard; sourceTree = "<group>"; };
 		059474F21F981F0300F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri3.storyboard; sourceTree = "<group>"; };
 		059474F51F981F1800F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri4.storyboard; sourceTree = "<group>"; };
+		059493042920B1C200940F0D /* permgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = permgroup.cpp; sourceTree = "<group>"; };
+		059493052920B1C300940F0D /* permgroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = permgroup.h; sourceTree = "<group>"; };
+		059493062920B1C300940F0D /* perm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm.cpp; sourceTree = "<group>"; };
+		0594930C2920B21600940F0D /* permgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = permgroup.cpp; sourceTree = "<group>"; };
 		0594AC21272AD72F00A03372 /* listeners.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = listeners.cpp; sourceTree = "<group>"; };
 		059802752667067A002D5D57 /* callbacks.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = callbacks.test; sourceTree = "<group>"; };
 		059802762667067B002D5D57 /* callbacks.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = callbacks.out; sourceTree = "<group>"; };
@@ -5684,6 +5693,7 @@
 				050F5D361B9BAB9C00C1F681 /* perm5.cpp */,
 				05772EEC270CFB2000D26D8A /* perm6.cpp */,
 				05772EED270CFB2000D26D8A /* perm7.cpp */,
+				0594930C2920B21600940F0D /* permgroup.cpp */,
 				050F5D371B9BAB9C00C1F681 /* polynomial.cpp */,
 				050F5D381B9BAB9C00C1F681 /* primes.cpp */,
 				050F5D3C1B9BAB9C00C1F681 /* pymaths.cpp */,
@@ -6504,8 +6514,10 @@
 				052F9CE2180600FA00FAE4DF /* matrixops.h */,
 				052F9CF6180600FA00FAE4DF /* numbertheory.cpp */,
 				052F9CF7180600FA00FAE4DF /* numbertheory.h */,
+				059493062920B1C300940F0D /* perm.cpp */,
 				05431F2A1C40F2DB009BC072 /* perm.h */,
-				057EE4341C6009A700C4D155 /* perm-impl.h */,
+				059493042920B1C200940F0D /* permgroup.cpp */,
+				059493052920B1C300940F0D /* permgroup.h */,
 				0541AF4A1B8BE2F5002E166B /* polynomial.h */,
 				052F9CF0180600FA00FAE4DF /* primes.cpp */,
 				052F9CF1180600FA00FAE4DF /* primes.h */,
@@ -8697,6 +8709,7 @@
 				05772EC5270CF98F00D26D8A /* xmlwriter.h in Headers */,
 				052F9EF7180600FB00FAE4DF /* treelp.h in Headers */,
 				0512E09026DF34D100DDB222 /* sfsalt.h in Headers */,
+				059493092920B1C300940F0D /* permgroup.h in Headers */,
 				059D023A25BB08B7004150F7 /* retriangulate-impl.h in Headers */,
 				052F9F5E180600FB00FAE4DF /* text.h in Headers */,
 				05A067111DFA68190047872E /* blockedsfstriple.h in Headers */,
@@ -8752,7 +8765,6 @@
 				058E398D1DCBC67C00D463A4 /* generic.h in Headers */,
 				059802EF26683C6D002D5D57 /* xmlpacketreaders.h in Headers */,
 				05F0A0001DBF078800117BFC /* pentachoron4.h in Headers */,
-				057EE4351C6009A700C4D155 /* perm-impl.h in Headers */,
 				055114D41DCC71A700EC753C /* facenumbering.h in Headers */,
 				05CAE69A274AA785007C93F3 /* isosigencoding.h in Headers */,
 				0591E85F1C50D28700793A9C /* hyperflags.h in Headers */,
@@ -9660,6 +9672,7 @@
 				054209011DF0DA450018AB24 /* handlebody.cpp in Sources */,
 				057EE4CA1C600A3600C4D155 /* triangulation7.cpp in Sources */,
 				05DADB1821928EC400DC80E1 /* binom.cpp in Sources */,
+				0594930D2920B21600940F0D /* permgroup.cpp in Sources */,
 				050F5DF91B9BAB9C00C1F681 /* matrix2.cpp in Sources */,
 				057EE4E11C600A3600C4D155 /* facetpairing6.cpp in Sources */,
 				0550010C1C4D9EF900501C24 /* face8.cpp in Sources */,
@@ -9924,6 +9937,7 @@
 				05249F1A1DBC1704001FE29E /* normalhypersurfaces.cpp in Sources */,
 				054208C81DF0D29C0018AB24 /* graphpair.cpp in Sources */,
 				050C646E1DA101A900C9420F /* anglestructures.cpp in Sources */,
+				0594930E2920B21600940F0D /* permgroup.cpp in Sources */,
 				0588C2AB1FD8D17A0093C2C9 /* cover.c in Sources */,
 				05F0A0661DBF0B7000117BFC /* vertex3.cpp in Sources */,
 				05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */,
@@ -10222,6 +10236,7 @@
 				052FA1E41806129B00FAE4DF /* surfacefilter.cpp in Sources */,
 				05249EE61DBC16E4001FE29E /* facehelper.cpp in Sources */,
 				051261A8278D65B9006A55B1 /* intersectionform.cpp in Sources */,
+				059493082920B1C300940F0D /* permgroup.cpp in Sources */,
 				05F0A05F1DBF0B7000117BFC /* skeleton.cpp in Sources */,
 				05249F001DBC16F1001FE29E /* pygeneric.cpp in Sources */,
 				05A067531DFA68470047872E /* satblock.cpp in Sources */,
@@ -10303,6 +10318,7 @@
 				052FA20D1806129B00FAE4DF /* stringutils.cpp in Sources */,
 				050C648A1DA1249B00C9420F /* globaldirs.cpp in Sources */,
 				05F0A0571DBF0B7000117BFC /* homology.cpp in Sources */,
+				0594930B2920B1C300940F0D /* perm.cpp in Sources */,
 				05CAE68C27472264007C93F3 /* treetraversal.cpp in Sources */,
 				057B0CAA26A2ABF60017F5EA /* tightencoding.cpp in Sources */,
 				052FA239180612DD00FAE4DF /* transcendentals.c in Sources */,
@@ -10836,6 +10852,7 @@
 				0534FAE222DFDDA7000A96A3 /* memstream.cpp in Sources */,
 				052F9F9B180600FB00FAE4DF /* subdivide.c in Sources */,
 				05A0672E1DFA68190047872E /* satblocktypes.cpp in Sources */,
+				0594930A2920B1C300940F0D /* perm.cpp in Sources */,
 				05721EF11F97153E00A83FFC /* link.cpp in Sources */,
 				0568742D20C5D86B001C435B /* pass.cpp in Sources */,
 				05721EE71F97153E00A83FFC /* examplelink.cpp in Sources */,
@@ -10855,6 +10872,7 @@
 				054208841DF0D0B50018AB24 /* state.cpp in Sources */,
 				059802ED26683C6D002D5D57 /* xmlcallback.cpp in Sources */,
 				053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */,
+				059493072920B1C300940F0D /* permgroup.cpp in Sources */,
 				05A067301DFA68190047872E /* satregion.cpp in Sources */,
 				05F0A0421DBF0B5E00117BFC /* reorder.cpp in Sources */,
 				05A0673E1DFA68190047872E /* trivialtri.cpp in Sources */,
