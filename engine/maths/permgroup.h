@@ -116,8 +116,7 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          *
          * - the identity permutation if the group has no such element.
          *
-         * In the special case k == j, we insist (for now) on using the
-         * identity.
+         * In the special case k == j, we insist on using the identity.
          *
          * Every group element then has a unique representation of the form
          * `term_[n-1][...] * term_[n-2][...] * ... * term_[1][...]`,

@@ -275,7 +275,6 @@ template PermGroup<16, true>::PermGroup(int);
 
 template <int n, bool cached>
 bool PermGroup<n, cached>::contains(Perm<n> p) const {
-    // TODO: Check that this is a sensible way to implement this.
     for (int i = n - 1; i > 0; --i) {
         // INV: p fixes all elements > i, and if p is in the group then it has
         // a unique representation of the form:
@@ -283,7 +282,7 @@ bool PermGroup<n, cached>::contains(Perm<n> p) const {
 
         int img = p[i];
         if (img == i) {
-            // We are insisting for now that term_[i][i] is the identity.
+            // We are insisting that term_[i][i] is the identity.
             // Nothing more to do other than move down to the next i.
             continue;
         }
