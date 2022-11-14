@@ -4242,6 +4242,7 @@
 		059493052920B1C300940F0D /* permgroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = permgroup.h; sourceTree = "<group>"; };
 		059493062920B1C300940F0D /* perm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm.cpp; sourceTree = "<group>"; };
 		0594930C2920B21600940F0D /* permgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = permgroup.cpp; sourceTree = "<group>"; };
+		0594930F2922E93D00940F0D /* permgroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = permgroup.h; sourceTree = "<group>"; };
 		0594AC21272AD72F00A03372 /* listeners.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = listeners.cpp; sourceTree = "<group>"; };
 		059802752667067A002D5D57 /* callbacks.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = callbacks.test; sourceTree = "<group>"; };
 		059802762667067B002D5D57 /* callbacks.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = callbacks.out; sourceTree = "<group>"; };
@@ -5249,6 +5250,7 @@
 				05098AA228F44AAD005E4716 /* perm5.h */,
 				05098AA128F44AAD005E4716 /* perm6.h */,
 				05098AAB28F44AAF005E4716 /* perm7.h */,
+				0594930F2922E93D00940F0D /* permgroup.h */,
 				05098A9228F24D98005E4716 /* polynomial.h */,
 				05098A9328F24D98005E4716 /* primes.h */,
 				05098AA928F44AAE005E4716 /* rational.h */,
@@ -5567,10 +5569,10 @@
 				050F5D001B9BAB9C00C1F681 /* algebra */,
 				050F5D071B9BAB9C00C1F681 /* angle */,
 				050F5DC01B9BAB9C00C1F681 /* census */,
-				05098A6B28F24D98005E4716 /* docstrings */,
 				050F5D0C1B9BAB9C00C1F681 /* dim2 */,
 				050F5DAA1B9BAB9C00C1F681 /* dim3 */,
 				0591E7F71C4F760500793A9C /* dim4 */,
+				05098A6B28F24D98005E4716 /* docstrings */,
 				05772F13270CFBA900D26D8A /* enumerate */,
 				050F5D181B9BAB9C00C1F681 /* file */,
 				050F5DC81B9BAB9C00C1F681 /* foreign */,
