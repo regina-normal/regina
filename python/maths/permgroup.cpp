@@ -34,6 +34,7 @@
 #include "../pybind11/functional.h"
 #include "maths/permgroup.h"
 #include "../helpers.h"
+#include "../docstrings/maths/permgroup.h"
 
 using regina::Perm;
 using regina::PermGroup;
@@ -77,9 +78,10 @@ void addPermGroup(pybind11::module_& m, const char* name) {
     regina::python::add_eq_operators(it, rdoc_inner::__eq, rdoc_inner::__ne);
 
     RDOC_SCOPE_INNER_END
-    RDOC_SCOPE_END
 
     c.attr("const_iterator") = c.attr("iterator");
+
+    RDOC_SCOPE_END
 }
 
 void addPermGroup(pybind11::module_& m) {
