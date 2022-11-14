@@ -325,19 +325,17 @@ Returns:
 
 // Docstring regina::python::doc::Perm_::cachedComp_2
 static const char *cachedComp_2 =
-R"doc(Returns the composition of this and the given two permutations, using
-fast precomputed lookup tables.
-
-The advantage of this routine is speed: calling cachedComp() with two
-arguments requires just two table lookups, whereas using the *
-operator twice involves significant computational overhead.
-
-The disadvantages of this routine are that (1) you must remember to
-call precompute() in advance, and (2) the resulting lookup tables will
-consume roughly 50MB of memory for the lifetime of your program.
+R"doc(Deprecated function that performs two compositions using fast
+precomputed lookup tables.
 
 The permutation that is returned is the same as you would obtain by
 calling ``(*this) * q * r``.
+
+.. deprecated::
+    The three-way cachedComp() was originally written to support
+    conjugation. If you are indeed conjugating, then call
+    cachedConjugate() instead; otherwise just call the two-way
+    cachedComp() twice.
 
 Precondition:
     You _must_ have called the routine precompute() at least once in
@@ -352,6 +350,59 @@ Parameter ``r``:
 
 Returns:
     the composition of both permutations.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedConjugate
+static const char *cachedConjugate =
+R"doc(Computes the conjugate of this permutation by *q*, using fast
+precomputed lookup tables.
+
+The advantage of this routine is speed: calling cachedConjugate() is
+just three table lookups, whereas conjugate() requires significant
+computational overhead.
+
+The disadvantages of this routine are that (1) you must remember to
+call precompute() in advance, and (2) the resulting lookup table will
+consume roughly 50MB of memory for the lifetime of your program.
+
+The permutation that is returned is the same as you would obtain by
+calling conjugate().
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedConjugate(). Otherwise this
+    routine will almost certainly crash your program.
+
+Parameter ``q``:
+    the permutation to conjugate this by.
+
+Returns:
+    the conjugate of this permutation by *q*.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedInverse
+static const char *cachedInverse =
+R"doc(An alias for inverse(), provided to assist with writing generic code.
+
+This specialised Perm<7> class does not use precomputation to compute
+inverses. The only point of having cachedInverse() in Perm<7> is to
+make it easier to write generic code that works with Perm<n> for any
+*n*.
+
+* If you know you are only working with Perm<7>, you should just call
+  inverse() instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedInverse().
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedInverse(). For Perm<7>,
+    precompute() does not affect inverse computations; however, for
+    other Perm<n> classes a failure to do this will almost certainly
+    crash your program.
+
+Returns:
+    the inverse of this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::cachedOrder
 static const char *cachedOrder =
@@ -446,6 +497,35 @@ Returns:
     -1 if this permutation produces a smaller image, 0 if the
     permutations are equal and 1 if this permutation produces a
     greater image.)doc";
+
+// Docstring regina::python::doc::Perm_::conjugate
+static const char *conjugate =
+R"doc(Computes the conjugate of this permutation by *q*.
+
+Specifically, calling ``p.conjugate(q)`` is equivalent to computing
+``q * p * q.inverse()``. The resulting permutation will have the same
+cycle structure as *p*, but with the cycle elements translated
+according to *q*.
+
+For permutations of five and fewer objects, conjugation is extremely
+fast because it uses hard-coded lookup tables. However, for Perm<7>
+these tables would grow too large, and so instead this routine
+involves significant computational overhead.
+
+If you do need conjugation to be as fast as possible, with no
+computation required at all, then you can:
+
+* call precompute() to precompute a full 5040-by-5040 product table in
+  advance (this will consume roughly 50MB of memory); and then
+
+* call cachedConjugate() instead of conjugate() to compute your
+  conjugations.
+
+Parameter ``q``:
+    the permutation to conjugate this by.
+
+Returns:
+    the conjugate of this permutation by *q*.)doc";
 
 // Docstring regina::python::doc::Perm_::contract
 static const char *contract =

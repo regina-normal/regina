@@ -457,6 +457,180 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given permutation differ.)doc";
 
+// Docstring regina::python::doc::Perm_::cachedComp
+static const char *cachedComp =
+R"doc(An alias for the composition operator, provided to assist with writing
+generic code.
+
+This generic Perm<n> class does not use precomputation to compute
+compositions. The only point of having cachedComp() in this generic
+Perm<n> class is to make it easier to write generic code that works
+with Perm<n> for any *n*.
+
+* If you know you are only working with the generic Perm<n>, you
+  should just use the composition operator instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedComp().
+
+The permutation that is returned is the same as you would obtain by
+calling ``(*this) * q``.
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedComp(). For generic Perm<n>,
+    precompute() does not affect compositions; however, for other
+    Perm<n> classes a failure to do this will almost certainly crash
+    your program.
+
+Parameter ``q``:
+    the permutation to compose this with.
+
+Returns:
+    the composition of both permutations.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedComp_2
+static const char *cachedComp_2 =
+R"doc(Deprecated alias for using the composition operator twice, provided to
+assist with writing generic code.
+
+The permutation that is returned is the same as you would obtain by
+calling ``(*this) * q * r``.
+
+.. deprecated::
+    The three-way cachedComp() was originally written to support
+    conjugation. If you are indeed conjugating, then call
+    cachedConjugate() instead; otherwise just call the two-way
+    cachedComp() twice.
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedComp(). For generic Perm<n>,
+    precompute() does not affect compositions; however, for other
+    Perm<n> classes a failure to do this will almost certainly crash
+    your program.
+
+Parameter ``q``:
+    the first permutation to compose this with.
+
+Parameter ``r``:
+    the second permutation to compose this with.
+
+Returns:
+    the composition of both permutations.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedConjugate
+static const char *cachedConjugate =
+R"doc(An alias for conjugate(), provided to assist with writing generic
+code.
+
+This generic Perm<n> class does not use precomputation to compute
+conjugates. The only point of having cachedConjugate() in this generic
+Perm<n> class is to make it easier to write generic code that works
+with Perm<n> for any *n*.
+
+* If you know you are only working with the generic Perm<n>, you
+  should just call conjugate() instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedConjugate().
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedConjugate(). For generic
+    Perm<n>, precompute() does not affect conjugate computations;
+    however, for other Perm<n> classes a failure to do this will
+    almost certainly crash your program.
+
+Parameter ``q``:
+    the permutation to conjugate this by.
+
+Returns:
+    the conjugate of this permutation by *q*.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedInverse
+static const char *cachedInverse =
+R"doc(Finds the inverse of this permutation, optimised using precomputed
+"partial lookup tables".
+
+The advantage of this routine is speed: calling cachedInverse()
+involves two table lookups and some simple arithmetic to combine the
+results, whereas inverse() requires time linear in *n*.
+
+The disadvantages of this routine are that (1) you must remember to
+call precompute() in advance, and (2) the precomputed lookup tables
+will consume additional memory for the lifetime of your program. See
+precompute() for details on just how much memory these tables will
+consume for each *n*.
+
+The permutation that is returned is the same as you would obtain by
+calling inverse().
+
+Precondition:
+    You _must_ have called the routine precompute() at least once in
+    the lifetime of the program before using cachedInverse().
+    Otherwise this routine will almost certainly crash your program.
+
+Returns:
+    the inverse of this permutation.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedOrder
+static const char *cachedOrder =
+R"doc(An alias for order(), provided to assist with writing generic code.
+
+This specialised Perm<n> class does not use precomputation to compute
+orders. The only point of having cachedOrder() in this generic Perm<n>
+class is to make it easier to write generic code that works with
+Perm<n> for any *n*.
+
+* If you know you are only working with the generic Perm<n>, you
+  should just call order() instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedOrder().
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedOrder(). For generic Perm<n>,
+    precompute() does not affect order computations; however, for
+    other Perm<n> classes a failure to do this will almost certainly
+    crash your program.
+
+Returns:
+    the order of this permutation.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedPow
+static const char *cachedPow =
+R"doc(An alias for pow(), provided to assist with writing generic code.
+
+This specialised Perm<n> class does not use precomputation to compute
+powers. The only point of having cachedPow() in this generic Perm<n>
+class is to make it easier to write generic code that works with
+Perm<n> for any *n*.
+
+* If you know you are only working with the generic Perm<n>, you
+  should just call pow() instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedPow().
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedPow(). For generic Perm<n>,
+    precompute() does not affect powers; however, for other Perm<n>
+    classes a failure to do this will almost certainly crash your
+    program.
+
+Parameter ``exp``:
+    the exponent; this may be positive, zero or negative.
+
+Returns:
+    this permutation raised to the power of *exp*.)doc";
+
 // Docstring regina::python::doc::Perm_::clear
 static const char *clear =
 R"doc(Resets the images of all integers from *from* onwards to the identity
@@ -486,6 +660,21 @@ Returns:
     -1 if this permutation produces a smaller image, 0 if the
     permutations are equal, and 1 if this permutation produces a
     greater image.)doc";
+
+// Docstring regina::python::doc::Perm_::conjugate
+static const char *conjugate =
+R"doc(Computes the conjugate of this permutation by *q*.
+
+Specifically, calling ``p.conjugate(q)`` is equivalent to computing
+``q * p * q.inverse()``. The resulting permutation will have the same
+cycle structure as *p*, but with the cycle elements translated
+according to *q*.
+
+Parameter ``q``:
+    the permutation to conjugate this by.
+
+Returns:
+    the conjugate of this permutation by *q*.)doc";
 
 // Docstring regina::python::doc::Perm_::contract
 static const char *contract =
@@ -577,6 +766,20 @@ Returns:
 // Docstring regina::python::doc::Perm_::inverse
 static const char *inverse =
 R"doc(Finds the inverse of this permutation.
+
+For permutations of seven and fewer objects, inversion is extremely
+fast because it uses hard-coded lookup tables. However, for this
+generic Perm<n> class, inversion cannot uses these lookup tables (for
+multiple reasons), and so inverse() takes time linear in *n*.
+
+If you are going to make significant use of the generic Perm<n> class
+for some particular value of *n*, you should instead:
+
+* call precompute() to precompute some "partial lookup tables" in
+  advance (see precompute() for details on how much memory they will
+  consume); and then
+
+* call cachedInverse() instead of inverse() to compute your inverses.
 
 Returns:
     the inverse of this permutation.)doc";
@@ -689,6 +892,22 @@ Parameter ``image``:
 
 Returns:
     the preimage of *image*.)doc";
+
+// Docstring regina::python::doc::Perm_::precompute
+static const char *precompute =
+R"doc(Performs the precomputation necessary for using the optimised
+cachedInverse() routine.
+
+This _must_ be called before calling cachedInverse().
+
+This only needs to be done once in the lifetime of the program. If you
+do try to call precompute() a second time then it will do nothing and
+return immediately.
+
+TODO: Add details on how much memory the precomputed tables will
+consume.
+
+This routine is thread-safe.)doc";
 
 // Docstring regina::python::doc::Perm_::rand
 static const char *rand =

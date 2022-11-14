@@ -42,47 +42,60 @@ template <int n, bool cached = false>
 void addPermGroup(pybind11::module_& m, const char* name) {
     using Group = PermGroup<n, cached>;
 
-    auto c = pybind11::class_<Group>(m, name, RDOC_TODO)
-        .def(pybind11::init<>(), RDOC_TODO)
-        .def(pybind11::init<const Group&>(), RDOC_TODO)
-        .def(pybind11::init<regina::NamedPermGroup>(), RDOC_TODO)
-        .def(pybind11::init<int>(), RDOC_TODO)
+    RDOC_SCOPE_BEGIN(PermGroup)
+
+    auto c = pybind11::class_<Group>(m, name, rdoc_scope)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const Group&>(), rdoc::__copy)
+        .def(pybind11::init<regina::NamedPermGroup>(), rdoc::__init)
+        .def(pybind11::init<int>(), rdoc::__init_2)
         .def(pybind11::init([](const Group& parent,
                 const std::function<bool(Perm<n>)>& test) {
             return new Group(parent, test);
         }), pybind11::arg("parent"), pybind11::arg("test"),
-            RDOC_TODO)
-        .def("size", &Group::size, RDOC_TODO)
-        .def("contains", &Group::contains, RDOC_TODO)
+            rdoc::__init_3)
+        .def("size", &Group::size, rdoc::size)
+        .def("contains", &Group::contains, rdoc::contains)
         .def("__iter__", [](const Group& g) {
             return g.begin();
         }, pybind11::keep_alive<0, 1>(), // iterator keeps group alive
-            RDOC_TODO)
+            rdoc::__iter__)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c, RDOC_TODO, RDOC_TODO);
+    regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
+
+    RDOC_SCOPE_INNER_BEGIN(iterator)
 
     using iterator = typename Group::iterator;
-    auto it = pybind11::class_<iterator>(c, "iterator", RDOC_TODO)
+    auto it = pybind11::class_<iterator>(c, "iterator", rdoc_inner_scope)
         .def("__next__", [](iterator& it) {
             if (it)
                 return *it++;
             else
                 throw pybind11::stop_iteration();
-        }, RDOC_TODO);
-    regina::python::add_eq_operators(it, RDOC_TODO, RDOC_TODO);
+        }, rdoc_inner::__next__);
+    regina::python::add_eq_operators(it, rdoc_inner::__eq, rdoc_inner::__ne);
+
+    RDOC_SCOPE_INNER_END
+    RDOC_SCOPE_END
 
     c.attr("const_iterator") = c.attr("iterator");
 }
 
 void addPermGroup(pybind11::module_& m) {
-    pybind11::enum_<regina::NamedPermGroup>(m, "NamedPermGroup", RDOC_TODO)
-        .value("PERM_GROUP_TRIVIAL", regina::PERM_GROUP_TRIVIAL, RDOC_TODO)
-        .value("PERM_GROUP_SYMMETRIC", regina::PERM_GROUP_SYMMETRIC, RDOC_TODO)
+    RDOC_SCOPE_BEGIN(NamedPermGroup)
+
+    pybind11::enum_<regina::NamedPermGroup>(m, "NamedPermGroup", rdoc_scope)
+        .value("PERM_GROUP_TRIVIAL", regina::PERM_GROUP_TRIVIAL,
+            rdoc::PERM_GROUP_TRIVIAL)
+        .value("PERM_GROUP_SYMMETRIC", regina::PERM_GROUP_SYMMETRIC,
+            rdoc::PERM_GROUP_SYMMETRIC)
         .value("PERM_GROUP_ALTERNATING", regina::PERM_GROUP_ALTERNATING,
-            RDOC_TODO)
+            rdoc::PERM_GROUP_ALTERNATING)
         .export_values()
         ;
+
+    RDOC_SCOPE_END
 
     addPermGroup<2>(m, "PermGroup2");
     addPermGroup<3>(m, "PermGroup3");

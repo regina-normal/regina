@@ -53,7 +53,7 @@ void addPerm4(pybind11::module_& m) {
         .def(pybind11::init<int, int, int, int,
                             int, int, int, int>(), rdoc::__init_4)
         .def(pybind11::init<const Perm<4>&>(), rdoc::__copy)
-        .def_static("precompute", &Perm<4>::precompute, RDOC_TODO)
+        .def_static("precompute", &Perm<4>::precompute, rdoc::precompute)
         .def("permCode1", &Perm<4>::permCode1, rdoc::permCode1)
         .def("permCode2", &Perm<4>::permCode2, rdoc::permCode2)
         .def("setPermCode1", &Perm<4>::setPermCode1, rdoc::setPermCode1)
@@ -70,18 +70,19 @@ void addPerm4(pybind11::module_& m) {
         .def_static("isImagePack", &Perm<4>::isImagePack, rdoc::isImagePack)
         .def(pybind11::self * pybind11::self, rdoc::__mul)
         .def("cachedComp", overload_cast<const Perm<4>&>(
-            &Perm<4>::cachedComp, pybind11::const_), RDOC_TODO)
+            &Perm<4>::cachedComp, pybind11::const_), rdoc::cachedComp)
         .def("cachedComp", [](Perm<4> p, Perm<4> q, Perm<4> r) { // deprecated
             return p.cachedComp(q).cachedComp(r);
-        }, RDOC_TODO)
+        }, rdoc::cachedComp_2)
         .def("inverse", &Perm<4>::inverse, rdoc::inverse)
-        .def("cachedInverse", &Perm<4>::cachedInverse, RDOC_TODO)
-        .def("conjugate", &Perm<4>::conjugate, RDOC_TODO)
-        .def("cachedConjugate", &Perm<4>::cachedConjugate, RDOC_TODO)
+        .def("cachedInverse", &Perm<4>::cachedInverse, rdoc::cachedInverse)
+        .def("conjugate", &Perm<4>::conjugate, rdoc::conjugate)
+        .def("cachedConjugate", &Perm<4>::cachedConjugate,
+            rdoc::cachedConjugate)
         .def("pow", &Perm<4>::pow, rdoc::pow)
-        .def("cachedPow", &Perm<4>::cachedPow, RDOC_TODO)
+        .def("cachedPow", &Perm<4>::cachedPow, rdoc::cachedPow)
         .def("order", &Perm<4>::order, rdoc::order)
-        .def("cachedOrder", &Perm<4>::cachedOrder, RDOC_TODO)
+        .def("cachedOrder", &Perm<4>::cachedOrder, rdoc::cachedOrder)
         .def("reverse", &Perm<4>::reverse, rdoc::reverse)
         .def("sign", &Perm<4>::sign, rdoc::sign)
         .def("__getitem__", &Perm<4>::operator[], rdoc::__array)

@@ -263,6 +263,179 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given permutation differ.)doc";
 
+// Docstring regina::python::doc::Perm_::cachedComp
+static const char *cachedComp =
+R"doc(An alias for the composition operator, provided to assist with writing
+generic code.
+
+This specialised Perm<4> class does not use precomputation for its
+optimisations. The only point of having cachedComp() in Perm<4> is to
+make it easier to write generic code that works with Perm<n> for any
+*n*.
+
+* If you know you are only working with Perm<4>, you should just use
+  the composition operator instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedComp(). (For Perm<4>, which does not use precomputation
+  for its optimisations, precompute() does nothing.)
+
+The permutation that is returned is the same as you would obtain by
+calling ``(*this) * q``.
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedComp(). For Perm<4>,
+    precompute() does nothing; however, for other Perm<n> classes a
+    failure to do this will almost certainly crash your program.
+
+Parameter ``q``:
+    the permutation to compose this with.
+
+Returns:
+    the composition of both permutations.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedComp_2
+static const char *cachedComp_2 =
+R"doc(Deprecated alias for using the composition operator twice, provided to
+assist with writing generic code.
+
+The permutation that is returned is the same as you would obtain by
+calling ``(*this) * q * r``.
+
+.. deprecated::
+    The three-way cachedComp() was originally written to support
+    conjugation. If you are indeed conjugating, then call
+    cachedConjugate() instead; otherwise just call the two-way
+    cachedComp() twice.
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedComp(). For Perm<4>,
+    precompute() does nothing; however, for other Perm<n> classes a
+    failure to do this will almost certainly crash your program.
+
+Parameter ``q``:
+    the first permutation to compose this with.
+
+Parameter ``r``:
+    the second permutation to compose this with.
+
+Returns:
+    the composition of both permutations.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedConjugate
+static const char *cachedConjugate =
+R"doc(An alias for conjugate(), provided to assist with writing generic
+code.
+
+This specialised Perm<4> class does not use precomputation for its
+optimisations. The only point of having cachedConjugate() in Perm<4>
+is to make it easier to write generic code that works with Perm<n> for
+any *n*.
+
+* If you know you are only working with Perm<4>, you should just call
+  conjugate() instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedConjugate(). (For Perm<4>, which does not use
+  precomputation for its optimisations, precompute() does nothing.)
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedConjugate(). For Perm<6>,
+    precompute() does nothing; however, for other Perm<n> classes a
+    failure to do this will almost certainly crash your program.
+
+Parameter ``q``:
+    the permutation to conjugate this by.
+
+Returns:
+    the conjugate of this permutation by *q*.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedInverse
+static const char *cachedInverse =
+R"doc(An alias for inverse(), provided to assist with writing generic code.
+
+This specialised Perm<4> class does not use precomputation for its
+optimisations. The only point of having cachedInverse() in Perm<4> is
+to make it easier to write generic code that works with Perm<n> for
+any *n*.
+
+* If you know you are only working with Perm<4>, you should just call
+  inverse() instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedInverse(). (For Perm<4>, which does not use
+  precomputation for its optimisations, precompute() does nothing.)
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedInverse(). For Perm<4>,
+    precompute() does nothing; however, for other Perm<n> classes a
+    failure to do this will almost certainly crash your program.
+
+Returns:
+    the inverse of this permutation.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedOrder
+static const char *cachedOrder =
+R"doc(An alias for order(), provided to assist with writing generic code.
+
+This specialised Perm<4> class does not use precomputation for its
+optimisations. The only point of having cachedOrder() in Perm<4> is to
+make it easier to write generic code that works with Perm<n> for any
+*n*.
+
+* If you know you are only working with Perm<4>, you should just call
+  order() instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedOrder(). (For Perm<4>, which does not use precomputation
+  for its optimisations, precompute() does nothing.)
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedOrder(). For Perm<4>,
+    precompute() does nothing; however, for other Perm<n> classes a
+    failure to do this will almost certainly crash your program.
+
+Returns:
+    the order of this permutation.)doc";
+
+// Docstring regina::python::doc::Perm_::cachedPow
+static const char *cachedPow =
+R"doc(An alias for pow(), provided to assist with writing generic code.
+
+This specialised Perm<4> class does not use precomputation for its
+optimisations. The only point of having cachedPow() in Perm<4> is to
+make it easier to write generic code that works with Perm<n> for any
+*n*.
+
+* If you know you are only working with Perm<4>, you should just call
+  pow() instead.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using cachedPow(). (For Perm<4>, which does not use precomputation
+  for its optimisations, precompute() does nothing.)
+
+Precondition:
+    You _must_ have called precompute() at least once in the lifetime
+    of this program before calling cachedPow(). For Perm<4>,
+    precompute() does nothing; however, for other Perm<n> classes a
+    failure to do this will almost certainly crash your program.
+
+Parameter ``exp``:
+    the exponent; this may be positive, zero or negative.
+
+Returns:
+    this permutation raised to the power of *exp*.)doc";
+
 // Docstring regina::python::doc::Perm_::clear
 static const char *clear =
 R"doc(Resets the images of all integers from *from* onwards to the identity
@@ -296,6 +469,21 @@ Returns:
     -1 if this permutation produces a smaller image, 0 if the
     permutations are equal and 1 if this permutation produces a
     greater image.)doc";
+
+// Docstring regina::python::doc::Perm_::conjugate
+static const char *conjugate =
+R"doc(Computes the conjugate of this permutation by *q*.
+
+Specifically, calling ``p.conjugate(q)`` is equivalent to computing
+``q * p * q.inverse()``. The resulting permutation will have the same
+cycle structure as *p*, but with the cycle elements translated
+according to *q*.
+
+Parameter ``q``:
+    the permutation to conjugate this by.
+
+Returns:
+    the conjugate of this permutation by *q*.)doc";
 
 // Docstring regina::python::doc::Perm_::contract
 static const char *contract =
@@ -595,6 +783,27 @@ Parameter ``image``:
 
 Returns:
     the preimage of *image*.)doc";
+
+// Docstring regina::python::doc::Perm_::precompute
+static const char *precompute =
+R"doc(A do-nothing routine that assists with writing generic code.
+
+This specialised Perm<4> class does not use precomputation for its
+optimisations, and so this precompute() function does nothing. The
+only point of having precompute() in Perm<4> is to make it easier to
+write generic code that works with Perm<n> for any *n*.
+
+* If you know you are only working with Perm<4>, you do not need to
+  call this function at all.
+
+* If you are writing generic code, you _must_ remember to call
+  precompute() at least once in the lifetime of this program before
+  using any of the optimised ``cachedXXX()`` functions, such as
+  cachedComp(), cachedInverse(), and so on.
+
+All Perm<n>::precompute() routines are thread-safe, and are harmless
+if called multiple times (since any call after the first will do
+nothing).)doc";
 
 // Docstring regina::python::doc::Perm_::rand
 static const char *rand =
