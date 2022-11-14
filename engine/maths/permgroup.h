@@ -407,8 +407,8 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          * consideration.
          * \param test a function (or other callable object) that determines
          * which permutations in \a parent become members of this subgroup.
-         * \param any additional arguments that should be passed to \a test,
-         * following the initial permutation argument.
+         * \param args any additional arguments that should be passed to
+         * \a test, following the initial permutation argument.
          */
         template <typename Test, typename... Args>
         PermGroup(const PermGroup& parent, Test&& test, Args&&... args);
