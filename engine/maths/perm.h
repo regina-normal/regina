@@ -1976,9 +1976,7 @@ constexpr int Perm<n>::sign() const {
         int j = i;
         bool oddCycle = true;
         do {
-            // Note: using j = (*this)[j] is causing problems with
-            // constexpr evaluation on older gccs.
-            j = (code_ >> (imageBits * j)) & imageMask;
+            j = (*this)[j];
             seen |= (1 << j);
             oddCycle = ! oddCycle;
         } while (j != i);
