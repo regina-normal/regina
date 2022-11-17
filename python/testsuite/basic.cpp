@@ -180,7 +180,7 @@ int main(int argc, char* argv[]) {
     // run directly out of the source tree.
     regina::python::PythonInterpreter py(out, err, false);
     if (! py.importRegina(false)) {
-        std::cerr << "ERROR: Could not import regina";
+        std::cerr << "ERROR: Could not import regina" << std::endl;
         exit(2);
     }
 
