@@ -1970,19 +1970,21 @@ constexpr int Perm<n>::sign() const {
     int seen = 0;
 
     for (int i = 0; i < n; ++i) {
-        if (seen & (1 << i))
-            continue;
+        // We cannot use a continue statement here due to a bug in gcc7.
+        // See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86767
+        // Put everything inside if/else branches instead.
+        if (! (seen & (1 << i))) {
+            int j = i;
+            bool oddCycle = true;
+            do {
+                j = (*this)[j];
+                seen |= (1 << j);
+                oddCycle = ! oddCycle;
+            } while (j != i);
 
-        int j = i;
-        bool oddCycle = true;
-        do {
-            j = (*this)[j];
-            seen |= (1 << j);
-            oddCycle = ! oddCycle;
-        } while (j != i);
-
-        if (oddCycle)
-            evenPerm = ! evenPerm;
+            if (oddCycle)
+                evenPerm = ! evenPerm;
+        }
     }
 
     return (evenPerm ? 1 : -1);
