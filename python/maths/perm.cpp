@@ -133,6 +133,8 @@ void addPermClass(pybind11::module_& m, const char* name) {
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const PermClass<n>&>(), rdoc::__copy)
         .def("isIdentity", &PermClass<n>::isIdentity, rdoc::isIdentity)
+        .def("cycle", &PermClass<n>::cycle, RDOC_TODO)
+        .def("countCycles", &PermClass<n>::countCycles, RDOC_TODO)
         .def("rep", &PermClass<n>::rep, rdoc::rep)
         .def("inc", [](PermClass<n>& p) {
             return p++;

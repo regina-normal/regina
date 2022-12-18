@@ -61,6 +61,7 @@ void addPermGroup(pybind11::module_& m, const char* name) {
             return g.begin();
         }, pybind11::keep_alive<0, 1>(), // iterator keeps group alive
             rdoc::__iter__)
+        .def_static("centraliser", &Group::centraliser, RDOC_TODO)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);

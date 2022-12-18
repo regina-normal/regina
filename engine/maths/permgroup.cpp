@@ -482,5 +482,194 @@ template void PermGroup<14, true>::writeTextLong(std::ostream&) const;
 template void PermGroup<15, true>::writeTextLong(std::ostream&) const;
 template void PermGroup<16, true>::writeTextLong(std::ostream&) const;
 
+template <int n, bool cached>
+PermGroup<n, cached> PermGroup<n, cached>::centraliser(
+        const PermClass<n>& conj) {
+    // Begin with the trivial group.
+    PermGroup ans;
+
+    // The only k with non-trivial term_[k][j] (k > j) are those k that
+    // occur at the end of a cycle.
+
+    // Work through each group of cycles of the same size.
+
+    int eltStart = 0; // first element in the first cycle of this group
+    int eltEnd = 0;   // first element in the first cycle of the *next* group
+
+    int cycleStart = 0; // first cycle of this group
+    int cycleEnd = 1;   // first cycle of the *next* group
+
+    while (true) {
+        // INV: eltEnd == eltStart
+        // INV: cycleEnd == cycleStart + 1
+
+        int cycleLen = conj.cycle(cycleStart);
+        eltEnd += cycleLen;
+
+        int groupSize = 1;
+        while (true) {
+            // Process k as the last element of cycle #(cycleEnd - 1).
+            // We can move k to any j in the range eltStart ≤ j < k.
+
+            int k = eltEnd - 1;
+            if (k != eltStart) {
+                ans.count_[k] = eltEnd - eltStart;
+                ans.usable_[k] = Perm<n>::rot(eltStart);
+
+                if (cycleLen == 1) {
+                    // This is a group of fixed points (length 1 cycles),
+                    // so our terms can all just be pair swaps.
+                    for (int j = eltStart; j < k; ++j)
+                        ans.term_[k][j] = ans.term_[j][k] = Perm<n>(j, k);
+                } else {
+                    int kCycleStart = k + 1 - cycleLen;
+                    std::array<int, n> img;
+
+                    // Permutations moving k to an earlier cycle in this group:
+                    int j = eltStart;
+                    for (int c = 0; c < groupSize - 1; ++c) {
+                        // Build the cycle ( j j+1 ... j+cycleLen-1 )
+                        for (int i = 0; i < j; ++i)
+                            img[i] = i;
+                        for (int i = j; i < j + cycleLen - 1; ++i)
+                            img[i] = i + 1;
+                        img[j + cycleLen - 1] = j;
+                        for (int i = j + cycleLen; i < n; ++i)
+                            img[i] = i;
+                        Perm<n> shift(img);
+
+                        // Build a swap between cycles:
+                        // ( j j+1 ... ) <-> ( k kCycleStart ... k-1 )
+                        for (int i = 0; i < j; ++i)
+                            img[i] = i;
+                        img[j] = k;
+                        for (int i = j + 1; i < j + cycleLen; ++i)
+                            img[i] = i + k - j - cycleLen;
+                        for (int i = j + cycleLen; i < kCycleStart; ++i)
+                            img[i] = i;
+                        for (int i = kCycleStart; i < k; ++i)
+                            img[i] = i + j + cycleLen - k;
+                        img[k] = j;
+                        for (int i = k + 1; i < n; ++i)
+                            img[i] = i;
+                        Perm<n> term(img);
+
+                        for (int i = 0; i < cycleLen; ++i) {
+                            ans.term_[k][j] = term;
+                            ans.term_[j][k] = term.inverse();
+
+                            term = shift * term;
+                            ++j;
+                        }
+                    }
+
+                    // Permutations moving k within its own cycle:
+
+                    // Build the cycle ( kCycleStart kCycleStart+1 ... k )
+                    for (int i = 0; i < kCycleStart; ++i)
+                        img[i] = i;
+                    for (int i = kCycleStart; i < k; ++i)
+                        img[i] = i + 1;
+                    img[k] = kCycleStart;
+                    for (int i = k + 1; i < n; ++i)
+                        img[i] = i;
+                    Perm<n> shift(img);
+
+                    Perm<n> term = shift;
+
+                    for (int i = 0; i < cycleLen - 1; ++i) {
+                        ans.term_[k][j] = term;
+                        ans.term_[j][k] = term.inverse();
+
+                        term = shift * term;
+                        ++j;
+                    }
+
+                    // At this point we should have j == k, and we are done.
+                }
+            }
+
+            if (eltEnd == n)
+                goto done;
+            if (conj.cycle(cycleStart) != conj.cycle(cycleEnd))
+                break;
+
+            eltEnd += cycleLen;
+            ++cycleEnd;
+            ++groupSize;
+        }
+
+        // Move on to the next cycle group.
+        eltStart = eltEnd;
+        cycleStart = cycleEnd;
+        ++cycleEnd;
+    }
+
+done:
+    ans.setup();
+    return ans;
+}
+
+template PermGroup<2, false> PermGroup<2, false>::centraliser(
+    const PermClass<2>&);
+template PermGroup<3, false> PermGroup<3, false>::centraliser(
+    const PermClass<3>&);
+template PermGroup<4, false> PermGroup<4, false>::centraliser(
+    const PermClass<4>&);
+template PermGroup<5, false> PermGroup<5, false>::centraliser(
+    const PermClass<5>&);
+template PermGroup<6, false> PermGroup<6, false>::centraliser(
+    const PermClass<6>&);
+template PermGroup<7, false> PermGroup<7, false>::centraliser(
+    const PermClass<7>&);
+template PermGroup<8, false> PermGroup<8, false>::centraliser(
+    const PermClass<8>&);
+template PermGroup<9, false> PermGroup<9, false>::centraliser(
+    const PermClass<9>&);
+template PermGroup<10, false> PermGroup<10, false>::centraliser(
+    const PermClass<10>&);
+template PermGroup<11, false> PermGroup<11, false>::centraliser(
+    const PermClass<11>&);
+template PermGroup<12, false> PermGroup<12, false>::centraliser(
+    const PermClass<12>&);
+template PermGroup<13, false> PermGroup<13, false>::centraliser(
+    const PermClass<13>&);
+template PermGroup<14, false> PermGroup<14, false>::centraliser(
+    const PermClass<14>&);
+template PermGroup<15, false> PermGroup<15, false>::centraliser(
+    const PermClass<15>&);
+template PermGroup<16, false> PermGroup<16, false>::centraliser(
+    const PermClass<16>&);
+template PermGroup<2, true> PermGroup<2, true>::centraliser(
+    const PermClass<2>&);
+template PermGroup<3, true> PermGroup<3, true>::centraliser(
+    const PermClass<3>&);
+template PermGroup<4, true> PermGroup<4, true>::centraliser(
+    const PermClass<4>&);
+template PermGroup<5, true> PermGroup<5, true>::centraliser(
+    const PermClass<5>&);
+template PermGroup<6, true> PermGroup<6, true>::centraliser(
+    const PermClass<6>&);
+template PermGroup<7, true> PermGroup<7, true>::centraliser(
+    const PermClass<7>&);
+template PermGroup<8, true> PermGroup<8, true>::centraliser(
+    const PermClass<8>&);
+template PermGroup<9, true> PermGroup<9, true>::centraliser(
+    const PermClass<9>&);
+template PermGroup<10, true> PermGroup<10, true>::centraliser(
+    const PermClass<10>&);
+template PermGroup<11, true> PermGroup<11, true>::centraliser(
+    const PermClass<11>&);
+template PermGroup<12, true> PermGroup<12, true>::centraliser(
+    const PermClass<12>&);
+template PermGroup<13, true> PermGroup<13, true>::centraliser(
+    const PermClass<13>&);
+template PermGroup<14, true> PermGroup<14, true>::centraliser(
+    const PermClass<14>&);
+template PermGroup<15, true> PermGroup<15, true>::centraliser(
+    const PermClass<15>&);
+template PermGroup<16, true> PermGroup<16, true>::centraliser(
+    const PermClass<16>&);
+
 } // namespace regina
 

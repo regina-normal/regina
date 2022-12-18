@@ -1473,6 +1473,38 @@ class PermClass {
         bool isIdentity() const;
 
         /**
+         * Returns the length of the given cycle in this conjugacy class.
+         *
+         * Recall from the class notes that a conjugacy class identifies
+         * the cycle structure of a permutation.  If the cycle lengths
+         * are listed in order from shortest to longest, then this
+         * routine returns the <i>which</i>th cycle length in this sequence.
+         * Fixed points are included in this sequence (they are considered
+         * to be cycles of length 1, and will appear at the beginning of
+         * the sequence).
+         *
+         * For example, for a conjugacy class in `PermClass<9>` with
+         * cycle lengths `(1,1,3,4)`, calling `cycle(2)` will return 3.
+         *
+         * \param which indicates which cycle length to return; this
+         * must be between 0 and countCycles()-1 inclusive.
+         * \return the requested cycle length.
+         */
+        int cycle(int which) const;
+
+        /**
+         * Returns the number of cycles in this conjugacy class.
+         *
+         * Recall from the class notes that a conjugacy class identifies
+         * the cycle structure of a permutation.  This routine simply
+         * returns the number of cycles for this conjugacy class.  Fixed points
+         * are also counted (they are considered to be cycles of length 1).
+         *
+         * \return the number of cycles.
+         */
+        int countCycles() const;
+
+        /**
          * Returns the minimal representative of this conjugacy class.
          *
          * The _minimal representative_ is the permutation belonging to this
@@ -2427,6 +2459,16 @@ inline bool PermClass<n>::operator != (const PermClass& other) const {
 template <int n>
 inline bool PermClass<n>::isIdentity() const {
     return nCycles_ == n;
+}
+
+template <int n>
+inline int PermClass<n>::cycle(int which) const {
+    return cycle_[which];
+}
+
+template <int n>
+inline int PermClass<n>::countCycles() const {
+    return nCycles_;
 }
 
 template <int n>

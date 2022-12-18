@@ -538,6 +538,29 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          */
         void writeTextLong(std::ostream& out) const;
 
+        /**
+         * Returns the set of all permutations that fix the minimal
+         * representative of the given conjugacy class under conjugation.
+         *
+         * Specifically, if \a r is the minimal representative of the
+         * given class as returned by `conj.rep()`, then this routine
+         * constructs the subgroup of all permutations \a p for which
+         * `p.inverse() * r * p == r`.
+         *
+         * \warning While "most" such centraliser groups are small,
+         * they _could_ get very large.  For example, if \a conj
+         * represents the identity permutation, then the centraliser
+         * will be all of S_n.  For \a n ≥ 5, it can be show that the
+         * next-worst case is where \a conj represents a single pair
+         * swap, in which case the centraliser has size `2⋅(n-2)!`.
+         *
+         * \pre \a conj is not the past-the-end conjugacy class.
+         *
+         * \return the group of all permutations that leave rep()
+         * fixed under conjugation.
+         */
+        static PermGroup centraliser(const PermClass<n>& conj);
+
     private:
         /**
          * Additional initialisation tasks that are common to (almost) all
