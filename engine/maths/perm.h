@@ -1593,7 +1593,7 @@ class PermClass {
         operator bool() const;
 
         /**
-         * Returns the set of all permutations that fix the minimal
+         * Returns the group of all permutations that fix the minimal
          * representative of this conjugacy class under conjugation.
          *
          * Specifically, if \a r is the minimal representative of this class
@@ -1604,11 +1604,12 @@ class PermClass {
          * (and in particular, this order may be subject to change in
          * future releases of Regina).
          *
-         * \warning This group could get \e very large.  If this conjugacy
-         * class represents the identity permutation, then the centraliser
-         * will be all of S_n.  For \a n ≥ 5, it can be show that the
-         * next-worst case is where this conjugacy class represents a single
-         * pair swap, in which case the centraliser has size `2⋅(n-2)!`.
+         * \warning While "most" such centraliser groups are small, they
+         * _could_ get very large.  For example, if this conjugacy class
+         * represents the identity permutation, then the centraliser will be
+         * all of S_n.  For \a n ≥ 5, it can be show that the next-worst case
+         * is where this conjugacy class represents a single pair swap,
+         * in which case the centraliser has size `2⋅(n-2)!`.
          *
          * \pre This is not the past-the-end conjugacy class.
          *

@@ -572,6 +572,10 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          * then the default constructor (which builds the trivial group) will
          * need to be adjusted - currently it does not call setup() because
          * the default initialisation of initSeq_[] is correct in this case.
+         *
+         * \pre This is called from the class constructor.  In particular,
+         * the permutations in initSeq_[] are set to their default values,
+         * i.e., the identity permutation.
          */
         void setup();
 };
