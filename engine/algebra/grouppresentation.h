@@ -1391,6 +1391,17 @@ class GroupPresentation : public Output<GroupPresentation> {
          * abelianisations then you are better off using the _abelian_ group
          * simplification / computation instead (which is much faster).
          *
+         * \pre Arrays on this system can be large enough to store `2⋅(n-2)!`
+         * objects.  This is a technical condition on the bit-size of \c size_t
+         * that will be explicitly checked (with an exception thrown if it
+         * fails).  On a 64-bit system this condition will be true for all
+         * supported \a n, but on a 32-bit system or smaller it will mean that
+         * enumerateCovers() cannot be used for larger values of \a n.
+         *
+         * \exception FailedPrecondition A signed integer of the same bit-size
+         * as \c size_t cannot hold `2⋅(n-2)!`.  See the precondition above
+         * for further discussion on this constraint.
+         *
          * \apinotfinal
          *
          * \python There are two versions of this function available in

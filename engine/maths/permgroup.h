@@ -539,7 +539,7 @@ class PermGroup : public Output<PermGroup<n, cached>> {
         void writeTextLong(std::ostream& out) const;
 
         /**
-         * Returns the set of all permutations that fix the minimal
+         * Returns the group of all permutations that fix the minimal
          * representative of the given conjugacy class under conjugation.
          *
          * Specifically, if \a r is the minimal representative of the

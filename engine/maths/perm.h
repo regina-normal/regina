@@ -1591,42 +1591,6 @@ class PermClass {
          * or \c true otherwise.
          */
         operator bool() const;
-
-        /**
-         * Returns the group of all permutations that fix the minimal
-         * representative of this conjugacy class under conjugation.
-         *
-         * Specifically, if \a r is the minimal representative of this class
-         * as returned by rep(), then this routine constructs the subgroup of
-         * all permutations \a p for which `p.inverse() * r * p == r`.
-         *
-         * The permutations will be returned in an arbitrary order
-         * (and in particular, this order may be subject to change in
-         * future releases of Regina).
-         *
-         * \warning While "most" such centraliser groups are small, they
-         * _could_ get very large.  For example, if this conjugacy class
-         * represents the identity permutation, then the centraliser will be
-         * all of S_n.  For \a n ≥ 5, it can be show that the next-worst case
-         * is where this conjugacy class represents a single pair swap,
-         * in which case the centraliser has size `2⋅(n-2)!`.
-         *
-         * \pre This is not the past-the-end conjugacy class.
-         *
-         * \pre Arrays on this system can be large enough to store n! objects.
-         * This is a technical condition on the bit-size of \c size_t that will
-         * be explicitly checked (with an exception thrown if it fails).
-         * On a 64-bit system this condition should be true for all supported
-         * \a n (that is, \a n ≤ 16), but on a 32-bit or 16-bit system it will
-         * mean that centraliser() cannot be used for larger values of \a n.
-         *
-         * \exception FailedPrecondition A signed integer of the same bit-size
-         * as \c size_t cannot hold (n!).  See the precondition above for
-         * further discussion on this constraint.
-         *
-         * \return all permutations that leave rep() fixed under conjugation.
-         */
-        std::vector<Perm<n>> centraliser() const;
 };
 
 /**

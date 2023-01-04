@@ -33,6 +33,7 @@
 #include <mutex>
 #include "algebra/grouppresentation.h"
 #include "maths/perm.h"
+#include "maths/permgroup.h"
 #include "maths/matrix.h"
 
 namespace regina {
@@ -109,10 +110,36 @@ namespace {
             // Precompute automorphism groups for conjugacy minimal
             // permutations.  Here we skip the identity, whose corresponding
             // group is all of S_n.
+
+            // For n ≥ 5, the maximum possible group size is 2*(n-2)!.
+            // Make sure a vector can hold this many elements.
+            // To be extra careful, we compare 2*(n-2)! with the maximum
+            // value of a _signed_ integer of the same size as size_t.
+            //
+            // Note: 24-bit systems do (or at least did) exist, so we
+            // check for this also.  (As a compile-time test, this does
+            // not cost us at runtime at all.)
+            if constexpr (sizeof(size_t) == 2 && n > 9)
+                throw FailedPrecondition("This system only supports 16-bit "
+                    "array sizes, which is not large enough to hold the "
+                    "centraliser for a non-identity permutation for n > 9");
+            else if constexpr (sizeof(size_t) == 3 && n > 12)
+                throw FailedPrecondition("This system only supports 24-bit "
+                    "array sizes, which is not large enough to hold the "
+                    "centraliser for a non-identity permutation for n > 12");
+            else if constexpr (sizeof(size_t) == 4 && n > 14)
+                throw FailedPrecondition("This system only supports 32-bit "
+                    "array sizes, which is not large enough to hold the "
+                    "centraliser for a non-identity permutation for n > 14");
+
             PermClass<n> c;
             typename Perm<n>::Index i;
-            for (++c, i = 1; c; ++c, ++i)
-                centraliser<n>[i] = c.centraliser();
+            for (++c, i = 1; c; ++c, ++i) {
+                auto g = PermGroup<n, true>::centraliser(c);
+                centraliser<n>[i].reserve(g.size());
+                for (auto p : g)
+                    centraliser<n>[i].emplace_back(p);
+            }
         }
 
         precomputed<n> = true;
