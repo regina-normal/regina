@@ -155,6 +155,9 @@ struct GroupExpressionTerm {
  * The term will be written in the format `g3^-7`, where in this
  * example the term represents generator number 3 raised to the -7th power.
  *
+ * Note that generators are indexed start from 0 (so `g3` is in fact the
+ * _fourth_ generator in the group presentation, not the third).
+ *
  * If the term has exponent 0 or 1, the output format will be
  * appropriately simplified.
  *
@@ -174,6 +177,9 @@ std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
  *
  * For instance, the expression `g1^2 g3^-1 g6` contains the
  * three terms `g1^2`, `g3^-1` and `g6^1` in that order.
+ *
+ * Note that generators are indexed starting from 0 (so, for example, `g3`
+ * represents the _fourth_ generator in the group presentation, not the third).
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -227,6 +233,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          *
          * The string may contain whitespace, which will simply be ignored.
          *
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
+         *
          * \exception InvalidArgument The given string could not be
          * interpreted as a group expression.
          *
@@ -243,6 +253,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * - `g0^7g1^-2`
          *
          * The string may contain whitespace, which will simply be ignored.
+         *
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
          *
          * \exception InvalidArgument The given string could not be
          * interpreted as a group expression.
@@ -655,6 +669,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * through the ShortOutput base class.  This zero-argument str()
          * gives the same output as `str(false)`.
          *
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
+         *
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
@@ -697,6 +715,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * and will write the word using lower-case ASCII, i.e.,
          * `c^4 n^-5 e`.  If the \a utf8 flag is \c true, all exponents
          * will be written using superscript characters encoded in UTF-8.
+         *
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
          *
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
