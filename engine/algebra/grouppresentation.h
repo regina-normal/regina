@@ -232,6 +232,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * - `g0^7g1^-2`
          *
          * The string may contain whitespace, which will simply be ignored.
+         * The empty string will be treated as an expression with no terms.
          *
          * Note that generators are numbered starting from 0.  This means,
          * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
@@ -261,6 +262,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * - `g0^7g1^-2`
          *
          * The string may contain whitespace, which will simply be ignored.
+         * The empty string will be treated as an expression with no terms.
          *
          * Note that generators are numbered starting from 0.  This means,
          * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`

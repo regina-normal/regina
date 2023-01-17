@@ -701,6 +701,16 @@ GroupExpression::GroupExpression(const char* input, unsigned long nGens) {
         throw InvalidArgument("Invalid character in group expression");
     } // end i loop
 
+    // end of input
+    if (WS == WSNULL) {
+        // Term is empty
+        return;
+    }
+    if (WS == WSEXP || WS == WSEXPSIG) {
+        // Term ends with ^ or ^-
+        throw InvalidArgument("Unexpected end of string in group expression");
+    }
+
     // we reached the end of input without any errors
     if (nGens && buildTerm.generator >= nGens)
         throw InvalidArgument("Generator out of range in group expression");
