@@ -16,11 +16,16 @@ Verison 7.3  [ (to be determined) ]
             - The string constructor now contracts terms like "aaaaBB" to become
               g0^4 g1^-2 (i.e., exponents will be used even if the input does
               not supply them).
+            - The string constructor now takes the number of generators as an
+              optional argument, and throws an exception if some generator in
+              the string is out of range.
         Class GroupPresentation:
             - Routine enumerateCovers() now accepts indices ≤ 11, not ≤ 7.
             - The string constructor now contracts terms like "aaaaBB" to become
               g0^4 g1^-2 (i.e., exponents will be used even if the input does
               not supply them).
+            - The string constructor now throws an exception if some relation
+              contains a generator that is out of range.
         Class Perm<n>:
             - Extended the generic Perm<n> class to make its API as rich as the
               specialised classes for smaller n.  This means the generic class

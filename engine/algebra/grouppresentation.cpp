@@ -563,11 +563,10 @@ namespace { // anonymous namespace
 }
 
 /**
- *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
+ * Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
  * converts the word into g_i2^j2 ... g_in^jn g_i1^j1
  */
-void GroupExpression::cycleRight()
-{
+void GroupExpression::cycleRight() {
     if (terms_.size() > 1) {
         GroupExpressionTerm temp(terms_.front());
         terms_.pop_front();
@@ -576,11 +575,10 @@ void GroupExpression::cycleRight()
 }
 
 /**
- *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
+ * Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
  * converts the word into g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1
  */
-void GroupExpression::cycleLeft()
-{
+void GroupExpression::cycleLeft() {
     if (terms_.size() > 1) {
         GroupExpressionTerm temp(terms_.back());
         terms_.pop_back();
@@ -588,8 +586,7 @@ void GroupExpression::cycleLeft()
     }
 }
 
-GroupExpression::GroupExpression( const char* input )
-{
+GroupExpression::GroupExpression(const char* input, unsigned long nGens) {
     // interpret input as GroupExpression as one of forms a^7b^-2,
     // a^7B^2, aaaaaaaBB, g0^7g1^-2.
 
@@ -621,6 +618,9 @@ GroupExpression::GroupExpression( const char* input )
                 continue;
             } else if ( (WS==WSVARLET) || (WS==WSVARNUM) || (WS==WSEXPNUM) ) {
                 // new letter but previous letter to finish
+                if (nGens && buildTerm.generator >= nGens)
+                    throw InvalidArgument(
+                        "Generator out of range in group expression");
                 terms_.push_back(buildTerm);
                 if ( *i >= 'a' && *i <= 'z' ) {
                     buildTerm.generator = *i - 'a';
@@ -702,6 +702,8 @@ GroupExpression::GroupExpression( const char* input )
     } // end i loop
 
     // we reached the end of input without any errors
+    if (nGens && buildTerm.generator >= nGens)
+        throw InvalidArgument("Generator out of range in group expression");
     terms_.push_back(buildTerm);
 
     // Since some people use the form "aaaaBBB", combine adjacent terms
@@ -712,17 +714,25 @@ GroupExpression::GroupExpression( const char* input )
 //             **********  GroupPresentation below **************
 
 GroupPresentation::GroupPresentation(unsigned long nGens,
-            const std::vector<std::string> &rels)
-{
+        const std::vector<std::string> &rels) {
     nGenerators_ = nGens;
 
     relations_.reserve(rels.size());
     for (const std::string& r : rels)
-        relations_.emplace_back(r);
+        relations_.emplace_back(r, nGens);
+
+    if (nGens == 0) {
+        // In this case the GroupExpression constructor will not verify
+        // that all generators are in range.  Check this now (which for
+        // nGens == 0 simply means ensuring each relation is empty).
+        for (const auto& r : relations_)
+            if (! r.isTrivial())
+                throw InvalidArgument(
+                    "Generator out of range in group presentation");
+    }
 }
 
-bool GroupPresentation::simplifyWord( GroupExpression &input ) const
-{
+bool GroupPresentation::simplifyWord(GroupExpression &input) const {
     bool retval( input.simplify(false) );
     if (input.isTrivial())
         return retval;

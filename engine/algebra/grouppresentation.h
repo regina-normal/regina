@@ -237,12 +237,20 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
          * respectively.
          *
+         * If the optional argument \a nGens is passed and is positive, then
+         * this constructor will explicitly check that the given string only
+         * uses generators 0,...,(\a nGens-1).
+         *
          * \exception InvalidArgument The given string could not be
-         * interpreted as a group expression.
+         * interpreted as a group expression, or else \a nGens was positive
+         * and the given string contains an out-of-range generator.
          *
          * \param input the input string that is to be interpreted.
+         * \param nGens the number of generators in the group presentation.
+         * If this is 0 (the default), then this argument will be ignored and
+         * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const char* input);
+        GroupExpression(const char* input, unsigned long nGens = 0);
         /**
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
@@ -258,12 +266,20 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
          * respectively.
          *
+         * If the optional argument \a nGens is passed and is positive, then
+         * this constructor will explicitly check that the given string only
+         * uses generators 0,...,(\a nGens-1).
+         *
          * \exception InvalidArgument The given string could not be
-         * interpreted as a group expression.
+         * interpreted as a group expression, or else \a nGens was positive
+         * and the given string contains an out-of-range generator.
          *
          * \param input the input string that is to be interpreted.
+         * \param nGens the number of generators in the group presentation.
+         * If this is 0 (the default), then this argument will be ignored and
+         * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const std::string &input);
+        GroupExpression(const std::string &input, unsigned long nGens = 0);
 
         /**
          * Makes this expression a clone of the given expression.
@@ -822,7 +838,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * `GroupPresentation(nGens, { "rel1", "rel2", ... })`.
          *
          * \exception InvalidArgument One or more of the given strings
-         * could not be interpreted as a group expression.
+         * could not be interpreted as a group expression, and/or contains
+         * an out-of-range generator.
          *
          * \param nGens the number of generators.
          * \param rels a vector of relations each given in string form,
@@ -1817,8 +1834,8 @@ inline GroupExpression::GroupExpression(unsigned long generator,
     terms_.emplace_back(generator, exponent);
 }
 
-inline GroupExpression::GroupExpression(const std::string &input) :
-        GroupExpression(input.c_str()) {
+inline GroupExpression::GroupExpression(const std::string &input,
+        unsigned long nGens) : GroupExpression(input.c_str(), nGens) {
 }
 
 inline void GroupExpression::swap(GroupExpression& other) noexcept {
