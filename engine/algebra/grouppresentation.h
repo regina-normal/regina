@@ -1649,39 +1649,43 @@ class GroupPresentation : public Output<GroupPresentation> {
          *   on the above substitution, so the score is also 4.
          */
         struct WordSubstitutionData {
-                unsigned long start_sub_at;
-                    /**< Where in A do we start? */
-                unsigned long start_from;
-                    /**< Where in B do we start? */
-                unsigned long sub_length;
-                    /**< The number of letters from B to use. */
-                bool invertB;
-                    /**< Invert B before making the substitution? */
-                long int score;
-                    /**< The score, i.e., the decrease in the word letter count
-                         provided this substitution is made. */
-                bool operator<( const WordSubstitutionData &other ) const {
-                        if (score < other.score) return false;
-                        if (score > other.score) return true;
-                        if (sub_length < other.sub_length) return false;
-                        if (sub_length > other.sub_length) return true;
-                        if ( (invertB == true)  && (other.invertB == false) )
-                                return false;
-                        if ( (invertB == false) && (other.invertB == true)  )
-                                return true;
-                        if (start_from < other.start_from) return false;
-                        if (start_from > other.start_from) return true;
-                        if (start_sub_at < other.start_sub_at) return false;
-                        if (start_sub_at > other.start_sub_at) return true;
+            unsigned long start_sub_at;
+                /**< Where in A do we start? */
+            unsigned long start_from;
+                /**< Where in B do we start? */
+            unsigned long sub_length;
+                /**< The number of letters from B to use. */
+            bool invertB;
+                /**< Invert B before making the substitution? */
+            long int score;
+                /**< The score, i.e., the decrease in the word letter count
+                     provided this substitution is made. */
+
+            bool operator<( const WordSubstitutionData &other ) const {
+                if (score < other.score) return false;
+                if (score > other.score) return true;
+                if (sub_length < other.sub_length) return false;
+                if (sub_length > other.sub_length) return true;
+                if ( (invertB == true)  && (other.invertB == false) )
                         return false;
-                }
-                void writeTextShort(std::ostream& out) const
-                {
-                        out<<"Target position "<<start_sub_at<<
-                        " length of substitution "<<sub_length<<(invertB ?
-                         " inverse reducer position " : " reducer position ")
-                        <<start_from<<" score "<<score;
-                }
+                if ( (invertB == false) && (other.invertB == true)  )
+                        return true;
+                if (start_from < other.start_from) return false;
+                if (start_from > other.start_from) return true;
+                if (start_sub_at < other.start_sub_at) return false;
+                if (start_sub_at > other.start_sub_at) return true;
+                return false;
+            }
+            void writeTextShort(std::ostream& out) const {
+                out<<"Target position "<<start_sub_at<<
+                    " length of substitution "<<sub_length<<(invertB ?
+                     " inverse reducer position " : " reducer position ")
+                    <<start_from<<" score "<<score;
+            }
+            /**
+             * Gives a string that describes the substitution.
+             */
+            std::string substitutionString(const GroupExpression &word) const;
         };
         /**
          *  A routine internal to the small cancellation simplification

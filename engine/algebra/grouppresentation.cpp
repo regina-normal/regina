@@ -519,47 +519,42 @@ namespace { // anonymous namespace
      for ( const auto& t : word)
          expVec[ t.generator ] += std::abs( t.exponent );
     }
+}
 
-    /*
-     * Commenting out since this is not used, and requires access to a
-     * private struct.  If you want to put it back, it should probably
-     * be a member function of WordSubstitutionData. - bab
-     *
-    // gives a string that describes the substitution
-    std::string substitutionString( const GroupExpression &word,
-                    const GroupPresentation::WordSubstitutionData &subData )
-    {
-     std::string retval;
-     // cut subData into bits, assemble what we're cutting
-     //  out and what we're pasting in.
-     unsigned long word_length ( word.wordLength() );
-     std::vector< GroupExpressionTerm > reducer;
-     reducer.reserve( word_length );
-      // splay word
-     for (auto it = word.terms().begin(); it!=word.terms().end(); it++)
-      { for (unsigned long i=0; i<std::abs((*it).exponent); i++)
-         reducer.push_back( GroupExpressionTerm( (*it).generator,
-                          ((*it).exponent>0) ? 1 : -1 ) );    }
-     // done splaying, produce inv_reducer
-     std::vector< GroupExpressionTerm > inv_reducer( word_length );
-     for (unsigned long i=0; i<word_length; i++)
-        inv_reducer[word_length-(i+1)] = reducer[i].inverse();
-     GroupExpression del_word, rep_word;
-            // produce word to delete, and word to replace with.
-
-     for (unsigned long i=0; i<(word_length - subData.sub_length); i++)
-      rep_word.addTermLast( subData.invertB ?
-            reducer[(word_length - subData.start_from + i) % word_length] :
-        inv_reducer[(word_length - subData.start_from + i) % word_length] );
-     for (unsigned long i=0; i<subData.sub_length; i++)
-      del_word.addTermLast( subData.invertB ?
-            inv_reducer[(subData.start_from + i) % word_length] :
-                reducer[(subData.start_from + i) % word_length] );
-     rep_word.simplify(); del_word.simplify();
-     retval = del_word.str()+" -> "+rep_word.str();
-     return retval;
+// gives a string that describes the substitution
+std::string GroupPresentation::WordSubstitutionData::substitutionString(
+        const GroupExpression &word) const {
+    std::string retval;
+    // cut the substitution data into bits, assemble what we're cutting
+    //  out and what we're pasting in.
+    unsigned long word_length ( word.wordLength() );
+    std::vector< GroupExpressionTerm > reducer;
+    reducer.reserve( word_length );
+    // splay word
+    for (auto it = word.terms().begin(); it!=word.terms().end(); it++) {
+        for (unsigned long i=0; i<std::abs((*it).exponent); i++)
+            reducer.push_back( GroupExpressionTerm( (*it).generator,
+                ((*it).exponent>0) ? 1 : -1 ) );
     }
-    */
+    // done splaying, produce inv_reducer
+    std::vector< GroupExpressionTerm > inv_reducer( word_length );
+    for (unsigned long i=0; i<word_length; i++)
+        inv_reducer[word_length-(i+1)] = reducer[i].inverse();
+    GroupExpression del_word, rep_word;
+        // produce word to delete, and word to replace with.
+
+    for (unsigned long i=0; i<(word_length - sub_length); i++)
+        rep_word.addTermLast( invertB ?
+            reducer[(word_length - start_from + i) % word_length] :
+            inv_reducer[(word_length - start_from + i) % word_length] );
+    for (unsigned long i=0; i<sub_length; i++)
+        del_word.addTermLast( invertB ?
+            inv_reducer[(start_from + i) % word_length] :
+            reducer[(start_from + i) % word_length] );
+    rep_word.simplify();
+    del_word.simplify();
+    retval = del_word.str()+" -> "+rep_word.str();
+    return retval;
 }
 
 /**
