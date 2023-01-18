@@ -505,8 +505,7 @@ class Perm {
          * If you do try to call precompute() a second time then it will
          * do nothing and return immediately.
          *
-         * TODO: Add details on how much memory the precomputed tables
-         * will consume.
+         * TODO: Details on how much memory the precomputed tables will consume.
          *
          * This routine is thread-safe.
          */
