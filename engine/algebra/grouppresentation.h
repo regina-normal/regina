@@ -1010,8 +1010,12 @@ class GroupPresentation : public Output<GroupPresentation> {
 
         /**
          * Uses small cancellation theory to reduce the input word,
-         * using the current presentation of the group.  The input word
-         * will be modified directly.
+         * modulo conjugation, using the current presentation of the group.
+         * The input word will be modified directly.
+         *
+         * By "modulo conjugation", we mean: if \a w represents the input word,
+         * then this routine might (as part of the reduction process) transform
+         * \a w into a different group element of the form `g w g^-1`.
          *
          * \warning This routine is only as good as the relator table for the
          * group.  You might want to consider running intelligentSimplify(),
