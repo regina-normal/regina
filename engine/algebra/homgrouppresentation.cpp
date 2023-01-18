@@ -281,7 +281,7 @@ bool HomGroupPresentation::verifyIsomorphism() const
    GroupExpression tempW( invEvaluate(evaluate(i)) );
    tempW.addTermLast( i, -1 );
    domain_.simplifyWord(tempW);
-   if (tempW.countTerms()>0) return false;
+   if (! tempW.isTrivial()) return false;
   }
  // for every generator in the codomain compute f(f^-1(x))x^-1 and reduce
  for (unsigned long i=0; i<codomain_.countGenerators(); i++)
@@ -289,7 +289,7 @@ bool HomGroupPresentation::verifyIsomorphism() const
    GroupExpression tempW( evaluate(invEvaluate(i)) );
    tempW.addTermLast( i, -1 );
    codomain_.simplifyWord(tempW);
-   if (tempW.countTerms()>0) return false;
+   if (! tempW.isTrivial()) return false;
   }
  return true;
 }
