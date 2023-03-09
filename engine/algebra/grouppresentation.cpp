@@ -519,55 +519,49 @@ namespace { // anonymous namespace
      for ( const auto& t : word)
          expVec[ t.generator ] += std::abs( t.exponent );
     }
+}
 
-    /*
-     * Commenting out since this is not used, and requires access to a
-     * private struct.  If you want to put it back, it should probably
-     * be a member function of WordSubstitutionData. - bab
-     *
-    // gives a string that describes the substitution
-    std::string substitutionString( const GroupExpression &word,
-                    const GroupPresentation::WordSubstitutionData &subData )
-    {
-     std::string retval;
-     // cut subData into bits, assemble what we're cutting
-     //  out and what we're pasting in.
-     unsigned long word_length ( word.wordLength() );
-     std::vector< GroupExpressionTerm > reducer;
-     reducer.reserve( word_length );
-      // splay word
-     for (auto it = word.terms().begin(); it!=word.terms().end(); it++)
-      { for (unsigned long i=0; i<std::abs((*it).exponent); i++)
-         reducer.push_back( GroupExpressionTerm( (*it).generator,
-                          ((*it).exponent>0) ? 1 : -1 ) );    }
-     // done splaying, produce inv_reducer
-     std::vector< GroupExpressionTerm > inv_reducer( word_length );
-     for (unsigned long i=0; i<word_length; i++)
-        inv_reducer[word_length-(i+1)] = reducer[i].inverse();
-     GroupExpression del_word, rep_word;
-            // produce word to delete, and word to replace with.
-
-     for (unsigned long i=0; i<(word_length - subData.sub_length); i++)
-      rep_word.addTermLast( subData.invertB ?
-            reducer[(word_length - subData.start_from + i) % word_length] :
-        inv_reducer[(word_length - subData.start_from + i) % word_length] );
-     for (unsigned long i=0; i<subData.sub_length; i++)
-      del_word.addTermLast( subData.invertB ?
-            inv_reducer[(subData.start_from + i) % word_length] :
-                reducer[(subData.start_from + i) % word_length] );
-     rep_word.simplify(); del_word.simplify();
-     retval = del_word.str()+" -> "+rep_word.str();
-     return retval;
+// gives a string that describes the substitution
+std::string GroupPresentation::WordSubstitutionData::substitutionString(
+        const GroupExpression &word) const {
+    std::string retval;
+    // cut the substitution data into bits, assemble what we're cutting
+    //  out and what we're pasting in.
+    unsigned long word_length ( word.wordLength() );
+    std::vector< GroupExpressionTerm > reducer;
+    reducer.reserve( word_length );
+    // splay word
+    for (auto it = word.terms().begin(); it!=word.terms().end(); it++) {
+        for (unsigned long i=0; i<std::abs((*it).exponent); i++)
+            reducer.push_back( GroupExpressionTerm( (*it).generator,
+                ((*it).exponent>0) ? 1 : -1 ) );
     }
-    */
+    // done splaying, produce inv_reducer
+    std::vector< GroupExpressionTerm > inv_reducer( word_length );
+    for (unsigned long i=0; i<word_length; i++)
+        inv_reducer[word_length-(i+1)] = reducer[i].inverse();
+    GroupExpression del_word, rep_word;
+        // produce word to delete, and word to replace with.
+
+    for (unsigned long i=0; i<(word_length - sub_length); i++)
+        rep_word.addTermLast( invertB ?
+            reducer[(word_length - start_from + i) % word_length] :
+            inv_reducer[(word_length - start_from + i) % word_length] );
+    for (unsigned long i=0; i<sub_length; i++)
+        del_word.addTermLast( invertB ?
+            inv_reducer[(start_from + i) % word_length] :
+            reducer[(start_from + i) % word_length] );
+    rep_word.simplify();
+    del_word.simplify();
+    retval = del_word.str()+" -> "+rep_word.str();
+    return retval;
 }
 
 /**
- *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
+ * Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
  * converts the word into g_i2^j2 ... g_in^jn g_i1^j1
  */
-void GroupExpression::cycleRight()
-{
+void GroupExpression::cycleRight() {
     if (terms_.size() > 1) {
         GroupExpressionTerm temp(terms_.front());
         terms_.pop_front();
@@ -576,11 +570,10 @@ void GroupExpression::cycleRight()
 }
 
 /**
- *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
+ * Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
  * converts the word into g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1
  */
-void GroupExpression::cycleLeft()
-{
+void GroupExpression::cycleLeft() {
     if (terms_.size() > 1) {
         GroupExpressionTerm temp(terms_.back());
         terms_.pop_back();
@@ -588,8 +581,7 @@ void GroupExpression::cycleLeft()
     }
 }
 
-GroupExpression::GroupExpression( const char* input )
-{
+GroupExpression::GroupExpression(const char* input, unsigned long nGens) {
     // interpret input as GroupExpression as one of forms a^7b^-2,
     // a^7B^2, aaaaaaaBB, g0^7g1^-2.
 
@@ -621,6 +613,9 @@ GroupExpression::GroupExpression( const char* input )
                 continue;
             } else if ( (WS==WSVARLET) || (WS==WSVARNUM) || (WS==WSEXPNUM) ) {
                 // new letter but previous letter to finish
+                if (nGens && buildTerm.generator >= nGens)
+                    throw InvalidArgument(
+                        "Generator out of range in group expression");
                 terms_.push_back(buildTerm);
                 if ( *i >= 'a' && *i <= 'z' ) {
                     buildTerm.generator = *i - 'a';
@@ -701,7 +696,19 @@ GroupExpression::GroupExpression( const char* input )
         throw InvalidArgument("Invalid character in group expression");
     } // end i loop
 
+    // end of input
+    if (WS == WSNULL) {
+        // Term is empty
+        return;
+    }
+    if (WS == WSEXP || WS == WSEXPSIG) {
+        // Term ends with ^ or ^-
+        throw InvalidArgument("Unexpected end of string in group expression");
+    }
+
     // we reached the end of input without any errors
+    if (nGens && buildTerm.generator >= nGens)
+        throw InvalidArgument("Generator out of range in group expression");
     terms_.push_back(buildTerm);
 
     // Since some people use the form "aaaaBBB", combine adjacent terms
@@ -712,17 +719,25 @@ GroupExpression::GroupExpression( const char* input )
 //             **********  GroupPresentation below **************
 
 GroupPresentation::GroupPresentation(unsigned long nGens,
-            const std::vector<std::string> &rels)
-{
+        const std::vector<std::string> &rels) {
     nGenerators_ = nGens;
 
     relations_.reserve(rels.size());
     for (const std::string& r : rels)
-        relations_.emplace_back(r);
+        relations_.emplace_back(r, nGens);
+
+    if (nGens == 0) {
+        // In this case the GroupExpression constructor will not verify
+        // that all generators are in range.  Check this now (which for
+        // nGens == 0 simply means ensuring each relation is empty).
+        for (const auto& r : relations_)
+            if (! r.isTrivial())
+                throw InvalidArgument(
+                    "Generator out of range in group presentation");
+    }
 }
 
-bool GroupPresentation::simplifyWord( GroupExpression &input ) const
-{
+bool GroupPresentation::simplifyWord(GroupExpression &input) const {
     bool retval( input.simplify(false) );
     if (input.isTrivial())
         return retval;

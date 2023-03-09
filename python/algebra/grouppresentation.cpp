@@ -73,7 +73,8 @@ void addGroupPresentation(pybind11::module_& m) {
         .def(pybind11::init<const GroupExpressionTerm&>(), rdoc::__init)
         .def(pybind11::init<unsigned long, long>(), rdoc::__init_2)
         .def(pybind11::init<const GroupExpression&>(), rdoc::__copy)
-        .def(pybind11::init<const std::string&>(), rdoc::__init_3)
+        .def(pybind11::init<const std::string&, unsigned long>(),
+            pybind11::arg(), pybind11::arg("nGens") = 0, rdoc::__init_3)
         .def("swap", &GroupExpression::swap, rdoc::swap)
         .def("terms", overload_cast<>(&GroupExpression::terms),
             pybind11::return_value_policy::reference_internal, rdoc::terms)

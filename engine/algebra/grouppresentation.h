@@ -155,6 +155,9 @@ struct GroupExpressionTerm {
  * The term will be written in the format `g3^-7`, where in this
  * example the term represents generator number 3 raised to the -7th power.
  *
+ * Note that generators are indexed start from 0 (so `g3` is in fact the
+ * _fourth_ generator in the group presentation, not the third).
+ *
  * If the term has exponent 0 or 1, the output format will be
  * appropriately simplified.
  *
@@ -174,6 +177,9 @@ std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
  *
  * For instance, the expression `g1^2 g3^-1 g6` contains the
  * three terms `g1^2`, `g3^-1` and `g6^1` in that order.
+ *
+ * Note that generators are indexed starting from 0 (so, for example, `g3`
+ * represents the _fourth_ generator in the group presentation, not the third).
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -226,13 +232,26 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * - `g0^7g1^-2`
          *
          * The string may contain whitespace, which will simply be ignored.
+         * The empty string will be treated as an expression with no terms.
+         *
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
+         *
+         * If the optional argument \a nGens is passed and is positive, then
+         * this constructor will explicitly check that the given string only
+         * uses generators 0,...,(\a nGens-1).
          *
          * \exception InvalidArgument The given string could not be
-         * interpreted as a group expression.
+         * interpreted as a group expression, or else \a nGens was positive
+         * and the given string contains an out-of-range generator.
          *
          * \param input the input string that is to be interpreted.
+         * \param nGens the number of generators in the group presentation.
+         * If this is 0 (the default), then this argument will be ignored and
+         * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const char* input);
+        GroupExpression(const char* input, unsigned long nGens = 0);
         /**
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
@@ -243,13 +262,26 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * - `g0^7g1^-2`
          *
          * The string may contain whitespace, which will simply be ignored.
+         * The empty string will be treated as an expression with no terms.
+         *
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
+         *
+         * If the optional argument \a nGens is passed and is positive, then
+         * this constructor will explicitly check that the given string only
+         * uses generators 0,...,(\a nGens-1).
          *
          * \exception InvalidArgument The given string could not be
-         * interpreted as a group expression.
+         * interpreted as a group expression, or else \a nGens was positive
+         * and the given string contains an out-of-range generator.
          *
          * \param input the input string that is to be interpreted.
+         * \param nGens the number of generators in the group presentation.
+         * If this is 0 (the default), then this argument will be ignored and
+         * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const std::string &input);
+        GroupExpression(const std::string &input, unsigned long nGens = 0);
 
         /**
          * Makes this expression a clone of the given expression.
@@ -655,6 +687,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * through the ShortOutput base class.  This zero-argument str()
          * gives the same output as `str(false)`.
          *
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
+         *
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
@@ -697,6 +733,10 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * and will write the word using lower-case ASCII, i.e.,
          * `c^4 n^-5 e`.  If the \a utf8 flag is \c true, all exponents
          * will be written using superscript characters encoded in UTF-8.
+         *
+         * Note that generators are numbered starting from 0.  This means,
+         * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
+         * respectively.
          *
          * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
@@ -800,7 +840,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * `GroupPresentation(nGens, { "rel1", "rel2", ... })`.
          *
          * \exception InvalidArgument One or more of the given strings
-         * could not be interpreted as a group expression.
+         * could not be interpreted as a group expression, and/or contains
+         * an out-of-range generator.
          *
          * \param nGens the number of generators.
          * \param rels a vector of relations each given in string form,
@@ -969,8 +1010,12 @@ class GroupPresentation : public Output<GroupPresentation> {
 
         /**
          * Uses small cancellation theory to reduce the input word,
-         * using the current presentation of the group.  The input word
-         * will be modified directly.
+         * modulo conjugation, using the current presentation of the group.
+         * The input word will be modified directly.
+         *
+         * By "modulo conjugation", we mean: if \a w represents the input word,
+         * then this routine might (as part of the reduction process) transform
+         * \a w into a different group element of the form `g w g^-1`.
          *
          * \warning This routine is only as good as the relator table for the
          * group.  You might want to consider running intelligentSimplify(),
@@ -1619,39 +1664,43 @@ class GroupPresentation : public Output<GroupPresentation> {
          *   on the above substitution, so the score is also 4.
          */
         struct WordSubstitutionData {
-                unsigned long start_sub_at;
-                    /**< Where in A do we start? */
-                unsigned long start_from;
-                    /**< Where in B do we start? */
-                unsigned long sub_length;
-                    /**< The number of letters from B to use. */
-                bool invertB;
-                    /**< Invert B before making the substitution? */
-                long int score;
-                    /**< The score, i.e., the decrease in the word letter count
-                         provided this substitution is made. */
-                bool operator<( const WordSubstitutionData &other ) const {
-                        if (score < other.score) return false;
-                        if (score > other.score) return true;
-                        if (sub_length < other.sub_length) return false;
-                        if (sub_length > other.sub_length) return true;
-                        if ( (invertB == true)  && (other.invertB == false) )
-                                return false;
-                        if ( (invertB == false) && (other.invertB == true)  )
-                                return true;
-                        if (start_from < other.start_from) return false;
-                        if (start_from > other.start_from) return true;
-                        if (start_sub_at < other.start_sub_at) return false;
-                        if (start_sub_at > other.start_sub_at) return true;
+            unsigned long start_sub_at;
+                /**< Where in A do we start? */
+            unsigned long start_from;
+                /**< Where in B do we start? */
+            unsigned long sub_length;
+                /**< The number of letters from B to use. */
+            bool invertB;
+                /**< Invert B before making the substitution? */
+            long int score;
+                /**< The score, i.e., the decrease in the word letter count
+                     provided this substitution is made. */
+
+            bool operator<( const WordSubstitutionData &other ) const {
+                if (score < other.score) return false;
+                if (score > other.score) return true;
+                if (sub_length < other.sub_length) return false;
+                if (sub_length > other.sub_length) return true;
+                if ( (invertB == true)  && (other.invertB == false) )
                         return false;
-                }
-                void writeTextShort(std::ostream& out) const
-                {
-                        out<<"Target position "<<start_sub_at<<
-                        " length of substitution "<<sub_length<<(invertB ?
-                         " inverse reducer position " : " reducer position ")
-                        <<start_from<<" score "<<score;
-                }
+                if ( (invertB == false) && (other.invertB == true)  )
+                        return true;
+                if (start_from < other.start_from) return false;
+                if (start_from > other.start_from) return true;
+                if (start_sub_at < other.start_sub_at) return false;
+                if (start_sub_at > other.start_sub_at) return true;
+                return false;
+            }
+            void writeTextShort(std::ostream& out) const {
+                out<<"Target position "<<start_sub_at<<
+                    " length of substitution "<<sub_length<<(invertB ?
+                     " inverse reducer position " : " reducer position ")
+                    <<start_from<<" score "<<score;
+            }
+            /**
+             * Gives a string that describes the substitution.
+             */
+            std::string substitutionString(const GroupExpression &word) const;
         };
         /**
          *  A routine internal to the small cancellation simplification
@@ -1806,8 +1855,8 @@ inline GroupExpression::GroupExpression(unsigned long generator,
     terms_.emplace_back(generator, exponent);
 }
 
-inline GroupExpression::GroupExpression(const std::string &input) :
-        GroupExpression(input.c_str()) {
+inline GroupExpression::GroupExpression(const std::string &input,
+        unsigned long nGens) : GroupExpression(input.c_str(), nGens) {
 }
 
 inline void GroupExpression::swap(GroupExpression& other) noexcept {

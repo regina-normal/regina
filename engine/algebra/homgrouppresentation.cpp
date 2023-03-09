@@ -270,31 +270,30 @@ bool HomGroupPresentation::verify() const {
     return true;
 }
 
-bool HomGroupPresentation::verifyIsomorphism() const
-{
- if (! inv_) return false;
+bool HomGroupPresentation::verifyIsomorphism() const {
+    if (! inv_)
+        return false;
 
- if (inv_->size() != codomain_.countGenerators()) return false;
- // for every generator in the domain compute f^-1(f(x))x^-1 and reduce
- for (unsigned long i=0; i<domain_.countGenerators(); i++)
-  {
-   GroupExpression tempW( invEvaluate(evaluate(i)) );
-   tempW.addTermLast( i, -1 );
-   domain_.simplifyWord(tempW);
-   if (tempW.countTerms()>0) return false;
-  }
- // for every generator in the codomain compute f(f^-1(x))x^-1 and reduce
- for (unsigned long i=0; i<codomain_.countGenerators(); i++)
-  {
-   GroupExpression tempW( evaluate(invEvaluate(i)) );
-   tempW.addTermLast( i, -1 );
-   codomain_.simplifyWord(tempW);
-   if (tempW.countTerms()>0) return false;
-  }
- return true;
+    if (inv_->size() != codomain_.countGenerators())
+        return false;
+    // for every generator in the domain compute f^-1(f(x))x^-1 and reduce
+    for (unsigned long i=0; i<domain_.countGenerators(); i++) {
+        GroupExpression tempW( invEvaluate(evaluate(i)) );
+        tempW.addTermLast( i, -1 );
+        domain_.simplifyWord(tempW);
+        if (! tempW.isTrivial())
+            return false;
+    }
+    // for every generator in the codomain compute f(f^-1(x))x^-1 and reduce
+    for (unsigned long i=0; i<codomain_.countGenerators(); i++) {
+        GroupExpression tempW( evaluate(invEvaluate(i)) );
+        tempW.addTermLast( i, -1 );
+        codomain_.simplifyWord(tempW);
+        if (! tempW.isTrivial())
+            return false;
+    }
+    return true;
 }
-
-
 
 } // namespace regina
 
