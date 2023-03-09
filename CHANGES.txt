@@ -47,6 +47,9 @@ Verison 7.3  [ (to be determined) ]
             - New class to describe a conjugacy class of permutations.
         Class PermGroup<n>:
             - New class to describe groups of permutations.
+        Class SnapPeaTriangulation:
+            - Fixed a buffer overflow in the SnapPea kernel, which was
+              accessible via SnapPeaTriangulation::snapPea().
 
 Version 7.2  [ 28 October, 2022 ]
 

@@ -1,0 +1,46 @@
+diff --git a/testsuite/generic/triangulationtest.h b/testsuite/generic/triangulationtest.h
+index efd37d730..d76efbe71 100644
+--- a/testsuite/generic/triangulationtest.h
++++ b/testsuite/generic/triangulationtest.h
+@@ -1162,6 +1162,17 @@ class TriangulationTest : public CppUnit::TestFixture,
+                     // appear to be ordered and labelled correctly.
+ 
+                     BoundaryHelper<dim, dim-2>::verifyFaces(bc, built, name);
++
++                    // Do the same thing but with a deep copy of the
++                    // triangulated boundary, not a reference to the
++                    // original that is cached within BoundaryComponent.
++                    // This essentially tests that the Triangulation
++                    // copy constructor preserves the numbering/labelling of
++                    // faces of all dimensions.
++
++                    std::string name2 = std::string(name) + " (cloned bdry)";
++                    BoundaryHelper<dim, dim-2>::verifyFaces(bc,
++                        Triangulation<dim-1>(built), name);
+                 }
+         }
+ 
+diff --git a/timing/CMakeLists.txt b/timing/CMakeLists.txt
+index b592a772c..e48715c1b 100644
+--- a/timing/CMakeLists.txt
++++ b/timing/CMakeLists.txt
+@@ -3,6 +3,7 @@ include_directories(${ENGINE_INCLUDES})
+ include_directories(${CMAKE_BINARY_DIR}/engine)
+ 
+ set(TIMING_APPS
++  covers
+   loadlarge
+   sizes
+   tree
+diff --git a/timing/README.txt b/timing/README.txt
+index c07be8ca4..6953d15d8 100644
+--- a/timing/README.txt
++++ b/timing/README.txt
+@@ -7,3 +7,7 @@ Developers can time these programs to help estimate how well various
+ tweaks / modifications / environmental changes are working in practice.
+ 
+ Programs must be run manually from the corresponding build directory.
++
++On macOS/Xcode, to trace from the command line:
++
++  xctrace record --output <path/to/output.trace> --template "Time Profiler" --launch <executable>
