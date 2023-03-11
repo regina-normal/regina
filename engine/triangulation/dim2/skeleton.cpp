@@ -52,5 +52,20 @@ void Triangulation<2>::calculateSkeleton() {
         e->component()->edges_.push_back(e);
 }
 
+void Triangulation<2>::cloneSkeleton(const Triangulation& src) {
+    TriangulationBase<2>::cloneSkeleton(src);
+
+    {
+        auto me = components_.begin();
+        auto you = src.components_.begin();
+        for ( ; me != components_.end(); ++me, ++you) {
+            for (auto f : (*you)->vertices_)
+                (*me)->vertices_.push_back(vertex(f->index()));
+            for (auto f : (*you)->edges_)
+                (*me)->edges_.push_back(edge(f->index()));
+        }
+    }
+}
+
 } // namespace regina
 

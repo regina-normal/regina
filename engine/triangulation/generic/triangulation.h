@@ -180,25 +180,42 @@ class Triangulation : public detail::TriangulationBase<dim> {
         /**
          * Creates a new copy of the given triangulation.
          *
-         * This will clone any computed properties (such as homology,
-         * fundamental group, and so on) of the given triangulation also.
-         * If you want a "clean" copy that resets all properties to unknown,
-         * you can use the two-argument copy constructor instead.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, the same numbering and
+         * labelling will be used for all skeletal objects.
          *
-         * \param copy the triangulation to copy.
+         * If you want a "clean" copy that resets all properties to unknown
+         * and leaves the skeleton uncomputed, you can use the two-argument
+         * copy constructor instead.
+         *
+         * \param src the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy);
+        Triangulation(const Triangulation& src) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
          *
-         * \param copy the triangulation to copy.
+         * If \a cloneProps is \c true, then this constructor will also clone
+         * any computed properties (such as homology, fundamental group, and
+         * so on), as well as the skeleton (vertices, edges, components, etc.).
+         * In particular, the same numbering and labelling will be used for
+         * all skeletal objects in both triangulations.
+         *
+         * If \a cloneProps is \c false, then these properties and skeletal
+         * objects will be marked as unknown in the new triangulation, and
+         * will be recomputed on demand if/when they are required.  Note
+         * in particular that, when the skeleton is recomputed, there is
+         * no guarantee that the numbering and labelling for skeletal objects
+         * will be the same as in the source triangulation.
+         *
+         * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
-         * properties of the given triangulation (such as homology,
-         * fundamental group, and so on), or \c false if the new triangulation
-         * should have all properties marked as unknown.
+         * properties as well as the skeleton of the given triangulation,
+         * or \c false if the new triangulation should have such properties
+         * and skeletal data marked as unknown.
          */
-        Triangulation(const Triangulation& copy, bool cloneProps);
+        Triangulation(const Triangulation& src, bool cloneProps);
         /**
          * Moves the given triangulation into this new triangulation.
          *
@@ -240,6 +257,12 @@ class Triangulation : public detail::TriangulationBase<dim> {
 
         /**
          * Sets this to be a (deep) copy of the given triangulation.
+         *
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, this triangulation
+         * will use the same numbering and labelling for all skeletal objects
+         * as in the source triangulation.
          *
          * \return a reference to this triangulation.
          */
@@ -466,14 +489,8 @@ inline Triangulation<dim>::Triangulation() : detail::TriangulationBase<dim>() {
 }
 
 template <int dim>
-inline Triangulation<dim>::Triangulation(const Triangulation& copy) :
-        detail::TriangulationBase<dim>(copy) {
-    // All properties to clone are held by TriangulationBase.
-}
-
-template <int dim>
-inline Triangulation<dim>::Triangulation(const Triangulation& copy,
-        bool cloneProps) : detail::TriangulationBase<dim>(copy, cloneProps) {
+inline Triangulation<dim>::Triangulation(const Triangulation& src,
+        bool cloneProps) : detail::TriangulationBase<dim>(src, cloneProps) {
     // All properties to clone are held by TriangulationBase.
 }
 

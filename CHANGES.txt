@@ -50,6 +50,10 @@ Verison 7.3  [ (to be determined) ]
         Class SnapPeaTriangulation:
             - Fixed a buffer overflow in the SnapPea kernel, which was
               accessible via SnapPeaTriangulation::snapPea().
+        Class Triangulation<dim>, TriangulationBase<dim>:
+            - The copy constructor and copy assignment operator now clones
+              skeletal objects as well, with the guarantee that they will use
+              the same numbering and labelling as in the source triangulation.
 
 Version 7.2  [ 28 October, 2022 ]
 

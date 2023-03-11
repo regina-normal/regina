@@ -68,6 +68,7 @@ template MatrixInt TriangulationBase<4>::dualToPrimal<3>() const;
 template const GroupPresentation& TriangulationBase<4>::group() const;
 
 template void TriangulationBase<4>::calculateSkeleton();
+template void TriangulationBase<4>::cloneSkeleton(const TriangulationBase<4>&);
 template void TriangulationBase<4>::clearBaseProperties();
 template void TriangulationBase<4>::swapBaseData(TriangulationBase<4>&);
 

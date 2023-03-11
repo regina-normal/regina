@@ -637,6 +637,107 @@ void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     H1_.swap(other.H1_);
 }
 
+template <int dim>
+template <typename FaceList>
+void TriangulationBase<dim>::cloneFaces(const FaceList& srcFaces) {
+    static constexpr int subdim =
+        std::remove_reference_t<decltype(*srcFaces.front())>::subdimension;
+
+    for (auto you : srcFaces) {
+        auto me = new Face<dim, subdim>(components_[you->component_->index()]);
+        std::get<subdim>(faces_).push_back(me);
+
+        if (you->boundaryComponent_)
+            me->boundaryComponent_ =
+                boundaryComponents_[you->boundaryComponent_->index()];
+
+        for (auto emb : you->embeddings_)
+            me->embeddings_.push_back(FaceEmbedding<dim, subdim>(
+                simplices_[emb.simplex()->index()], emb.vertices()));
+
+        if constexpr (Face<dim, subdim>::allowsNonOrientableLinks)
+            me->linkOrientable_ = you->linkOrientable_;
+        if constexpr (Face<dim, subdim>::allowsInvalidFaces) {
+            if constexpr (standardDim(dim))
+                me->whyInvalid_ = you->whyInvalid_;
+            else
+                me->valid_ = you->valid_;
+        }
+    }
+}
+
+template <int dim>
+void TriangulationBase<dim>::cloneSkeleton(const TriangulationBase<dim>& src) {
+    // Boundary components:
+    for (auto you : src.boundaryComponents_) {
+        auto me = new BoundaryComponent<dim>();
+        boundaryComponents_.push_back(me);
+
+        // We will clone the face lists later, once we have cloned the faces.
+
+        if constexpr (! BoundaryComponent<dim>::allFaces)
+            me->nRidges_ = you->nRidges_;
+
+        me->orientable_ = you->orientable_;
+
+        // Leave boundary_ as build-on-demand for now.
+    }
+
+    // Components (uses boundary components):
+    for (auto you : src.components_) {
+        auto me = new Component<dim>();
+        components_.push_back(me);
+
+        for (auto s : you->simplices_)
+            me->simplices_.push_back(simplices_[s->index()]);
+        for (auto b : you->boundaryComponents_)
+            me->boundaryComponents_.push_back(boundaryComponents_[b->index()]);
+        me->valid_ = you->valid_;
+        me->boundaryFacets_ = you->boundaryFacets_;
+        me->orientable_ = you->orientable_;
+    }
+
+    // Faces (uses components, boundary components):
+    std::apply([this](auto&&... kFaces) {
+        (cloneFaces(kFaces), ...);
+    }, src.faces_);
+
+    // Face lists in boundary components:
+    {
+        auto me = boundaryComponents_.begin();
+        auto you = src.boundaryComponents_.begin();
+        for ( ; me != boundaryComponents_.end(); ++me, ++you) {
+            std::apply([this, me](auto&&... kFaces) {
+                (cloneBoundaryFaces(*me, kFaces), ...);
+            }, (*you)->faces_);
+        }
+    }
+
+    // Simplices (uses faces, components):
+    {
+        auto me = simplices_.begin();
+        auto you = src.simplices_.begin();
+        for ( ; me != simplices_.end(); ++me, ++you) {
+            for_constexpr<0, dim>([this, me, you](auto subdim) {
+                auto dest = std::get<subdim.value>((*me)->faces_).begin();
+                for (auto f : std::get<subdim.value>((*you)->faces_))
+                    *dest++ = clonedFace(f);
+            });
+            (*me)->mappings_ = (*you)->mappings_;
+            (*me)->orientation_ = (*you)->orientation_;
+            (*me)->component_ = components_[(*you)->component_->index()];
+            (*me)->dualForest_ = (*you)->dualForest_;
+        }
+    }
+
+    // Other properties of the triangulation:
+    nBoundaryFaces_ = src.nBoundaryFaces_;
+    valid_ = src.valid_;
+    orientable_ = src.orientable_;
+
+    calculatedSkeleton_ = true;
+}
+
 } // namespace regina::detail
 
 #endif

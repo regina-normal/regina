@@ -258,4 +258,38 @@ void Triangulation<4>::calculateEdgeLinks() {
         }
 }
 
+void Triangulation<4>::cloneSkeleton(const Triangulation& src) {
+    TriangulationBase<4>::cloneSkeleton(src);
+
+    vertexLinkSummary_ = src.vertexLinkSummary_;
+
+    {
+        auto me = vertices().begin();
+        auto you = src.vertices().begin();
+        for ( ; me != vertices().end(); ++me, ++you) {
+            (*me)->link_ = new Triangulation<3>(*((*you)->link_));
+            (*me)->ideal_ = (*you)->ideal_;
+        }
+    }
+
+    // Leave Edge::link_ as built-on-demand for now.
+
+    {
+        auto me = components_.begin();
+        auto you = src.components_.begin();
+        for ( ; me != components_.end(); ++me, ++you) {
+            (*me)->ideal_ = (*you)->ideal_;
+
+            for (auto f : (*you)->vertices_)
+                (*me)->vertices_.push_back(vertex(f->index()));
+            for (auto f : (*you)->edges_)
+                (*me)->edges_.push_back(edge(f->index()));
+            for (auto f : (*you)->triangles_)
+                (*me)->triangles_.push_back(triangle(f->index()));
+            for (auto f : (*you)->tetrahedra_)
+                (*me)->tetrahedra_.push_back(tetrahedron(f->index()));
+        }
+    }
+}
+
 } // namespace regina

@@ -189,25 +189,25 @@ bool Triangulation<3>::hasMinimalVertices() const {
     return true;
 }
 
-Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
-        TriangulationBase<3>(X, cloneProps) {
+Triangulation<3>::Triangulation(const Triangulation<3>& src, bool cloneProps) :
+        TriangulationBase<3>(src, cloneProps) {
     if (! cloneProps)
         return;
 
     // Clone properties:
-    prop_ = X.prop_;
+    prop_ = src.prop_;
 
     // Any cached angle structures must be remade to live in this triangulation.
-    if (std::holds_alternative<AngleStructure>(X.strictAngleStructure_))
+    if (std::holds_alternative<AngleStructure>(src.strictAngleStructure_))
         strictAngleStructure_ = AngleStructure(
-            std::get<AngleStructure>(X.strictAngleStructure_), *this);
+            std::get<AngleStructure>(src.strictAngleStructure_), *this);
     else
-        strictAngleStructure_ = std::get<bool>(X.strictAngleStructure_);
-    if (std::holds_alternative<AngleStructure>(X.generalAngleStructure_))
+        strictAngleStructure_ = std::get<bool>(src.strictAngleStructure_);
+    if (std::holds_alternative<AngleStructure>(src.generalAngleStructure_))
         generalAngleStructure_ = AngleStructure(
-            std::get<AngleStructure>(X.generalAngleStructure_), *this);
+            std::get<AngleStructure>(src.generalAngleStructure_), *this);
     else
-        generalAngleStructure_ = std::get<bool>(X.generalAngleStructure_);
+        generalAngleStructure_ = std::get<bool>(src.generalAngleStructure_);
 
     // We do not need to copy skeletal properties (e.g., ideal_ or standard_),
     // since this is computed on demand with the rest of the skeleton.

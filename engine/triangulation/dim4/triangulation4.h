@@ -134,31 +134,48 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         Triangulation() = default;
         /**
-         * Creates a copy of the given triangulation.
+         * Creates a new copy of the given triangulation.
          *
-         * This will clone any computed properties (such as homology,
-         * fundamental group, and so on) of the given triangulation also.
-         * If you want a "clean" copy that resets all properties to unknown,
-         * you can use the two-argument copy constructor instead.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, the same numbering and
+         * labelling will be used for all skeletal objects.
          *
-         * \param copy the triangulation to copy.
+         * If you want a "clean" copy that resets all properties to unknown
+         * and leaves the skeleton uncomputed, you can use the two-argument
+         * copy constructor instead.
+         *
+         * \param src the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy) = default;
+        Triangulation(const Triangulation& src) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
+         *
+         * If \a cloneProps is \c true, then this constructor will also clone
+         * any computed properties (such as homology, fundamental group, and
+         * so on), as well as the skeleton (vertices, edges, components, etc.).
+         * In particular, the same numbering and labelling will be used for
+         * all skeletal objects in both triangulations.
+         *
+         * If \a cloneProps is \c false, then these properties and skeletal
+         * objects will be marked as unknown in the new triangulation, and
+         * will be recomputed on demand if/when they are required.  Note
+         * in particular that, when the skeleton is recomputed, there is
+         * no guarantee that the numbering and labelling for skeletal objects
+         * will be the same as in the source triangulation.
          *
          * Regardless of the argument \a cloneProps, if it is known that
          * all vertex links of \a copy are 3-sphere or 3-balls, this
          * knowledge will be copied over to the new triangulation.
          *
-         * \param copy the triangulation to copy.
+         * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
-         * properties of the given triangulation (such as homology,
-         * fundamental group, and so on), or \c false if the new triangulation
-         * should have all properties marked as unknown.
+         * properties as well as the skeleton of the given triangulation,
+         * or \c false if the new triangulation should have such properties
+         * and skeletal data marked as unknown.
          */
-        Triangulation(const Triangulation& copy, bool cloneProps);
+        Triangulation(const Triangulation& src, bool cloneProps);
         /**
          * Moves the given triangulation into this new triangulation.
          *
@@ -263,6 +280,12 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
 
         /**
          * Sets this to be a (deep) copy of the given triangulation.
+         *
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, this triangulation
+         * will use the same numbering and labelling for all skeletal objects
+         * as in the source triangulation.
          *
          * \param src the triangulation to copy.
          * \return a reference to this triangulation.
@@ -1161,6 +1184,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         void clearAllProperties();
 
         void calculateSkeleton();
+        void cloneSkeleton(const Triangulation& src);
 
         /**
          * Internal to calculateSkeleton().  See the comments within

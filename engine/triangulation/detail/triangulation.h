@@ -198,12 +198,12 @@ class TriangulationBase :
                 >::subdimension;
         }
 
+    protected:
         MarkedVector<Component<dim>> components_;
             /**< The connected components that form the triangulation.
                  This list is only filled if/when the skeleton of the
                  triangulation is computed. */
 
-    protected:
         MarkedVector<BoundaryComponent<dim>> boundaryComponents_;
             /**< The components that form the boundary of the triangulation. */
 
@@ -256,25 +256,42 @@ class TriangulationBase :
         /**
          * Creates a new copy of the given triangulation.
          *
-         * This will clone any computed properties (such as homology,
-         * fundamental group, and so on) of the given triangulation also.
-         * If you want a "clean" copy that resets all properties to unknown,
-         * you can use the two-argument copy constructor instead.
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, the same numbering and
+         * labelling will be used for all skeletal objects.
          *
-         * \param copy the triangulation to copy.
+         * If you want a "clean" copy that resets all properties to unknown
+         * and leaves the skeleton uncomputed, you can use the two-argument
+         * copy constructor instead.
+         *
+         * \param src the triangulation to copy.
          */
-        TriangulationBase(const TriangulationBase<dim>& copy);
+        TriangulationBase(const TriangulationBase<dim>& src);
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
          *
-         * \param copy the triangulation to copy.
+         * If \a cloneProps is \c true, then this constructor will also clone
+         * any computed properties (such as homology, fundamental group, and
+         * so on), as well as the skeleton (vertices, edges, components, etc.).
+         * In particular, the same numbering and labelling will be used for
+         * all skeletal objects in both triangulations.
+         *
+         * If \a cloneProps is \c false, then these properties and skeletal
+         * objects will be marked as unknown in the new triangulation, and
+         * will be recomputed on demand if/when they are required.  Note
+         * in particular that, when the skeleton is recomputed, there is
+         * no guarantee that the numbering and labelling for skeletal objects
+         * will be the same as in the source triangulation.
+         *
+         * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
-         * properties of the given triangulation (such as homology,
-         * fundamental group, and so on), or \c false if the new triangulation
-         * should have all properties marked as unknown.
+         * properties as well as the skeleton of the given triangulation,
+         * or \c false if the new triangulation should have such properties
+         * and skeletal data marked as unknown.
          */
-        TriangulationBase(const TriangulationBase<dim>& copy, bool cloneProps);
+        TriangulationBase(const TriangulationBase<dim>& src, bool cloneProps);
         /**
          * Moves the given triangulation into this new triangulation.
          *
@@ -2833,6 +2850,12 @@ class TriangulationBase :
         /**
          * Sets this to be a (deep) copy of the given triangulation.
          *
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, this triangulation
+         * will use the same numbering and labelling for all skeletal objects
+         * as in the source triangulation.
+         *
          * TriangulationBase never calls this operator itself; it is only
          * ever called by the Triangulation<dim> assignment operator.
          *
@@ -2906,15 +2929,70 @@ class TriangulationBase :
          * You should never call this function directly; instead call
          * ensureSkeleton() instead.
          *
+         * For developers: any data members that are computed and stored by
+         * calculateSkeleton() would typically also need to be cloned by
+         * cloneSkeleton().  Therefore any changes or extensions to
+         * calculateSkeleton() would typically need to come with analogous
+         * changes or extensions to cloneSkeleton() also.
+         *
          * \pre No skeletal objects have been computed, and the
          * corresponding internal lists are all empty.
          *
          * \warning Any call to calculateSkeleton() must first cast down to
-         * Triangulation<dim>.  You should never directly call this
+         * Triangulation<dim>, to ensure that you are catching the subclass
+         * implementation if this exists.  You should never directly call this
          * parent implementation (unless of course you are reimplementing
          * calculateSkeleton() in a Triangulation<dim> subclass).
          */
         void calculateSkeleton();
+
+        /**
+         * Builds the skeleton of this triangulation as a clone of the skeleton
+         * of the given triangulation.  This clones all skeletal objects (e.g.,
+         * faces, components and boundary components) and skeletal properties
+         * (e.g., validity and orientability).  In general, this function
+         * clones the same properties and data that calculateSkeleton()
+         * computes.
+         *
+         * For this parent class, cloneSkeleton() clones properties and data
+         * that are common to all dimensions.  Some Triangulation<dim>
+         * subclasses may track additional skeletal properties or data,
+         * in which case they should reimplement this function (just as they
+         * also reimplement calculateSkeleton()).  Their reimplementations
+         * _must_ call this parent implementation.
+         *
+         * This function is intended only for use by the copy constructor
+         * (and related "copy-like" constructors), and the copy assignment
+         * operator.  Other code should typically _not_ need to call this
+         * function directly.
+         *
+         * The real point of this routine is to ensure that, when a
+         * triangulation is cloned, its skeleton is cloned with exactly
+         * the same numbering/labelling of its skeletal objects.  To this end,
+         * it is fine to leave some "large" skeletal properties to be computed
+         * on demand where this is allowed (e.g., triangulated vertex links
+         * or triangulated boundary components, which are allowed to remain
+         * uncomputed until required, even when the full skeleton _has_
+         * been computed).
+         *
+         * \pre No skeletal objects have been computed for this triangulation,
+         * and the corresponding internal lists are all empty.
+         * \pre The skeleton has been fully computed for the given source
+         * triangulation.
+         * \pre The given source triangulation is combinatorially identical
+         * to this triangulation (i.e., both triangulations have the same
+         * number of top-dimensional simplices, with gluings between the same
+         * pairs of numbered simplices using the same gluing permutations).
+         *
+         * \warning Any call to cloneSkeleton() must first cast down to
+         * Triangulation<dim>, to ensure that you are catching the subclass
+         * implementation if this exists.  You should never directly call this
+         * parent implementation (unless of course you are reimplementing
+         * cloneSkeleton() in a Triangulation<dim> subclass).
+         *
+         * \param src the triangulation whose skeleton should be cloned.
+         */
+        void cloneSkeleton(const TriangulationBase& src);
 
         /**
          * Clears all properties that are managed by this base class.
@@ -3002,6 +3080,59 @@ class TriangulationBase :
         template <int subdim>
         void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
             Face<dim, dim-1>* facet);
+
+        /**
+         * Internal to cloneSkeleton().
+         *
+         * This routine takes a face of the source triangulation, and
+         * returns the corresponding face of this triangulation.
+         *
+         * \pre The <i>subdim</i>-faces of the source triangulation have
+         * already been "partially" cloned, in that all corresponding
+         * <i>subdim</i>-face objects should have been constructed and
+         * inserted into the corresponding face lists for _this_ triangulation
+         * in the correct order.  It does not matter if the internal data for
+         * these cloned facial objects is not yet completely filled.
+         */
+        template <int subdim>
+        Face<dim, subdim>* clonedFace(const Face<dim, subdim>* src) const;
+
+        /**
+         * Internal to cloneSkeleton().
+         *
+         * This routine clones the list of all <i>k</i>-faces of the source
+         * triangulation, for some fixed \a k.  The list is passed as the
+         * argument \a srcFaces; the facial dimension \a k will be determined
+         * automatically from its type.
+         *
+         * See cloneSkeleton() for further details.
+         *
+         * \param srcFaces the list of all <i>k</i>-faces of the source
+         * triangulation, as stored in the Triangulation data structure.
+         */
+        template <typename FaceList>
+        void cloneFaces(const FaceList& srcFaces);
+
+        /**
+         * Internal to cloneSkeleton().
+         *
+         * This routine clones the list of all <i>k</i>-faces of some
+         * individual boundary component of the source triangulation, for some
+         * fixed \a k.  The list is passed as the argument \a srcFaces; the
+         * facial dimension \a k will be determined automatically from its type.
+         *
+         * See cloneSkeleton() for further details.
+         *
+         * \param bc a boundary component of this triangulation.  Typically
+         * this will hold incomplete data, since its internal face lists are
+         * still in the process of being filled.
+         * \param srcFaces the list of all <i>k</i>-faces of the corresponding
+         * boundary component in the source triangulation, as stored in the
+         * BoundaryComponent data structure.
+         */
+        template <typename FaceList>
+        void cloneBoundaryFaces(BoundaryComponent<dim>* bc,
+                const FaceList& srcFaces);
 
         /**
          * Internal to isoSig().
@@ -3263,29 +3394,30 @@ inline TriangulationBase<dim>::TriangulationBase() :
 
 template <int dim>
 inline TriangulationBase<dim>::TriangulationBase(
-        const TriangulationBase<dim>& copy) : TriangulationBase(copy, true) {
+        const TriangulationBase<dim>& src) : TriangulationBase(src, true) {
 }
 
 template <int dim>
-TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
+TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& src,
         bool cloneProps) :
-        Snapshottable<Triangulation<dim>>(copy),
-        topologyLock_(0), calculatedSkeleton_(false) {
+        Snapshottable<Triangulation<dim>>(src),
+        topologyLock_(0),
+        calculatedSkeleton_(false) {
     // We don't fire a change event here since this is a constructor.
     // There should be nobody listening on events yet.
     // Likewise, we don't clearAllProperties() since no properties
     // will have been computed yet.
 
-    simplices_.reserve(copy.simplices_.size());
+    simplices_.reserve(src.simplices_.size());
 
-    for (auto s : copy.simplices_)
+    for (auto s : src.simplices_)
         simplices_.push_back(new Simplex<dim>(s->description(),
             static_cast<Triangulation<dim>*>(this)));
 
     // Copy the internal simplex data, including gluings.
     int f;
     auto me = simplices_.begin();
-    auto you = copy.simplices_.begin();
+    auto you = src.simplices_.begin();
     for ( ; me != simplices_.end(); ++me, ++you) {
         for (f = 0; f <= dim; ++f) {
             if ((*you)->adj_[f]) {
@@ -3296,10 +3428,15 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
         }
     }
 
+    // Clone the skeleton:
+    if (src.calculatedSkeleton_)
+        static_cast<Triangulation<dim>*>(this)->cloneSkeleton(
+            static_cast<const Triangulation<dim>&>(src));
+
     // Clone properties:
     if (cloneProps) {
-        fundGroup_ = copy.fundGroup_;
-        H1_ = copy.H1_;
+        fundGroup_ = src.fundGroup_;
+        H1_ = src.H1_;
     }
 }
 
@@ -3370,13 +3507,14 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
         }
     }
 
-    // Leave the skeleton to be recomputed on demand.
-
     // Do not touch topologyLock_, since other objects are managing this.
 
+    // Clone the skeleton:
+    if (src.calculatedSkeleton_)
+        static_cast<Triangulation<dim>*>(this)->cloneSkeleton(
+            static_cast<const Triangulation<dim>&>(src));
+
     // Clone properties:
-    valid_ = src.valid_;
-    orientable_ = src.orientable_;
     fundGroup_ = src.fundGroup_;
     H1_ = src.H1_;
 
@@ -4943,6 +5081,26 @@ void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
         H1_->writeXMLData(out);
         out << "</H1>\n";
     }
+}
+
+template <int dim>
+template <int subdim>
+inline Face<dim, subdim>* TriangulationBase<dim>::clonedFace(
+        const Face<dim, subdim>* src) const {
+    // This is a tiny function; it exists mainly to help in scenarios where
+    // the integer subdim is awkward to obtain (since it will be deduced
+    // here automatically from the type of the argument \a src).
+    return std::get<subdim>(faces_)[src->index()];
+}
+
+template <int dim>
+template <typename FaceList>
+inline void TriangulationBase<dim>::cloneBoundaryFaces(
+        BoundaryComponent<dim>* bc, const FaceList& srcFaces) {
+    // This is a tiny function; it exists so it can be used within a
+    // C++17 fold expression.
+    for (auto f : srcFaces)
+        bc->push_back(clonedFace(f));
 }
 
 template <int dim>

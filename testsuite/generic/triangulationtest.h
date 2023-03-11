@@ -1162,6 +1162,26 @@ class TriangulationTest : public CppUnit::TestFixture,
                     // appear to be ordered and labelled correctly.
 
                     BoundaryHelper<dim, dim-2>::verifyFaces(bc, built, name);
+
+                    // Do the same thing but with a deep copy of the
+                    // triangulated boundary, not a reference to the
+                    // original that is cached within BoundaryComponent.
+                    // This essentially tests that the Triangulation
+                    // copy constructor preserves the numbering/labelling of
+                    // faces of all dimensions.
+
+                    std::string name2 = std::string(name) + " (cloned bdry)";
+                    BoundaryHelper<dim, dim-2>::verifyFaces(bc,
+                        Triangulation<dim-1>(built), name2.c_str());
+
+                    // And again, this time with an assigned copy.
+
+                    name2 = std::string(name) + " (assigned bdry)";
+                    Triangulation<dim-1> assigned;
+                    assigned.newSimplex(); // junk for the assignment to replace
+                    assigned = built;
+                    BoundaryHelper<dim, dim-2>::verifyFaces(bc, assigned,
+                        name2.c_str());
                 }
         }
 
