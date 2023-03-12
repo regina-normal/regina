@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Note: you can set $DOCSTRING_PYTHON in the environment if you wish to
+# force a particular python executable (in particular, one for which the
+# clang module is available).
+#
 set -e
 
 if [ "$#" = 0 ]; then
@@ -18,6 +23,13 @@ if [ ! -e gendoc.sh ]; then
   usage "This script must be run from python/docstrings/ in Regina's source tree."
 fi
 
+# Work out which python executable to run.
+if [ -n "$DOCSTRING_PYTHON" ]; then
+  PYTHON="$DOCSTRING_PYTHON"
+else
+  PYTHON=python3
+fi
+
 # For the include path, we grab the pre-rolled macOS config file.
 # The choice of config file shouldn't actually affect the docstrings.
 export PYTHONPATH=".:$PYTHONPATH"
@@ -27,31 +39,28 @@ for dir in $dirs; do
   case "$dir" in
     *[/\\:\;]* )
       usage "Argument $dir should be a single directory name, not a full path"
-      exit 1
       ;;
     * )
       ;;
   esac
   if [ "$dir" != python -a ! -d ../../engine/"$dir" ]; then
     usage "Argument $dir should be a subdirectory of ../../engine"
-    exit 1
   fi
   if [ ! -d "$dir" ]; then
     usage "Argument $dir does not have a docstring output directory"
-    exit 1
   fi
 
   if [ "$dir" = python ]; then
-    python3 ./mkdoc.py -std=c++17 \
+    "$PYTHON" ./mkdoc.py -std=c++17 \
       -o python/equality.h "../helpers/equality.h"
   else
     if [ "$dir" = core ]; then
-      python3 ./mkdoc.py -std=c++17 \
+      "$PYTHON" ./mkdoc.py -std=c++17 \
         -o core/regina-core.h "../../engine/regina-core.h"
     elif [ "$dir" = maths ]; then
       for i in ../../engine/"$dir"/spec/*.h; do
         header=`basename "$i"`
-        python3 ./mkdoc.py -std=c++17 \
+        "$PYTHON" ./mkdoc.py -std=c++17 \
           -o "$dir/$header" ../../engine/"$dir/spec/$header"
       done
     elif [ "$dir" = triangulation ]; then
@@ -62,7 +71,7 @@ for dir in $dirs; do
             *-impl.h ) ;;
             detail/retriangulate.h ) ;;
             * )
-              python3 ./mkdoc.py -std=c++17 \
+              "$PYTHON" ./mkdoc.py -std=c++17 \
                 -o "$dir/$sub/$header" ../../engine/"$dir/$sub/$header"
               ;;
           esac
@@ -88,7 +97,7 @@ for dir in $dirs; do
         utilities/typeutils.h ) ;;
         utilities/zstr.h ) ;;
         * )
-          python3 ./mkdoc.py -std=c++17 \
+          "$PYTHON" ./mkdoc.py -std=c++17 \
             -o "$dir/$header" ../../engine/"$dir/$header"
           ;;
       esac
