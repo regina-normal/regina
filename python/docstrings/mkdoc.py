@@ -709,6 +709,12 @@ def read_args(args):
             sysroot_dir = os.path.join(sdk_dir, next(os.walk(sdk_dir))[1][0])
             parameters.append('-isysroot')
             parameters.append(sysroot_dir)
+
+        # There is no standard place on macOS for headers such as gmp.h, etc.
+        # Here we hope that the user has a macports installation where they
+        # might be found.
+        if os.path.exists('/opt/local/include'):
+            parameters.extend(['-isystem', '/opt/local/include'])
     elif platform.system() == 'Windows':
         if 'LIBCLANG_PATH' in os.environ:
             library_file = os.environ['LIBCLANG_PATH']
@@ -779,11 +785,6 @@ def read_args(args):
         cpp_dirs.append('/usr/include/%s-linux-gnu' % platform.machine())
         cpp_dirs.append('/usr/include')
 
-        # Capability to specify additional include directories manually
-        if 'CPP_INCLUDE_DIRS' in os.environ:
-            cpp_dirs.extend([cpp_dir for cpp_dir in os.environ['CPP_INCLUDE_DIRS'].split()
-                             if os.path.exists(cpp_dir)])
-
         for cpp_dir in cpp_dirs:
             if cpp_dir is None:
                 continue
@@ -794,6 +795,13 @@ def read_args(args):
             parameters.append(item)
         else:
             filenames.append(item)
+
+    # Capability to specify additional include directories manually
+    if 'CPP_INCLUDE_DIRS' in os.environ:
+        for cpp_dir in os.environ['CPP_INCLUDE_DIRS'].split():
+            if os.path.exists(cpp_dir):
+                print('INCLUDE:', cpp_dir)
+                parameters.append('-I' + cpp_dir)
 
     if len(filenames) == 0:
         raise NoFilenamesError("args parameter did not contain any filenames")
