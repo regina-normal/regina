@@ -1,6 +1,6 @@
 # CMake macros specific to Regina.
 #
-# Copyright (c) Ben Burton, 2012-2022
+# Copyright (c) Ben Burton, 2012-2023
 # Licensed under the GNU General Public License, version 2 or later
 #
 # As an exception, when this program is distributed through (i) the

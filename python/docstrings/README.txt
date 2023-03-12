@@ -55,5 +55,5 @@ The original pybind11_mkdoc tool is distributed under the following license:
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   THE SOFTWARE.
 
-All modifications are Copyright (c) 2022 Ben Burton, and released under the
-same license as above.
+All modifications are Copyright (c) 2022-2023 Ben Burton, and released under
+the same license as above.
