@@ -1017,6 +1017,10 @@ class GroupPresentation : public Output<GroupPresentation> {
          * then this routine might (as part of the reduction process) transform
          * \a w into a different group element of the form `g w g^-1`.
          *
+         * In Regina 7.2 and earlier, this routine was called simplifyWord().
+         * It was renamed to simplifyAndConjugate() in Regina 7.2.1 to make it
+         * clear to the user that conjugation might take place.
+         *
          * \warning This routine is only as good as the relator table for the
          * group.  You might want to consider running intelligentSimplify(),
          * possibly in concert with proliferateRelators(), before using this
@@ -1026,7 +1030,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * This must be a word in the generators of this group.
          * \return \c true if and only if the input word was modified.
          */
-        bool simplifyWord(GroupExpression &input) const;
+        bool simplifyAndConjugate(GroupExpression &input) const;
 
         /**
          * A routine to help escape local wells when simplifying

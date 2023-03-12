@@ -158,8 +158,8 @@ void addGroupPresentation(pybind11::module_& m) {
             rdoc::intelligentSimplify)
         .def("smallCancellation", &GroupPresentation::smallCancellation,
             rdoc::smallCancellation)
-        .def("simplifyWord", &GroupPresentation::simplifyWord,
-            rdoc::simplifyWord)
+        .def("simplifyAndConjugate", &GroupPresentation::simplifyAndConjugate,
+            rdoc::simplifyAndConjugate)
         .def("proliferateRelators", &GroupPresentation::proliferateRelators,
             pybind11::arg("depth") = 1, rdoc::proliferateRelators)
         .def("identifyAbelian", &GroupPresentation::identifyAbelian,

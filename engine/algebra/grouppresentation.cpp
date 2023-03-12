@@ -737,7 +737,7 @@ GroupPresentation::GroupPresentation(unsigned long nGens,
     }
 }
 
-bool GroupPresentation::simplifyWord(GroupExpression &input) const {
+bool GroupPresentation::simplifyAndConjugate(GroupExpression &input) const {
     bool retval( input.simplify(false) );
     if (input.isTrivial())
         return retval;
@@ -1225,7 +1225,7 @@ bool GroupPresentation::identifyAbelian() const
             COM.addTermLast( j, 1 );
             COM.addTermLast( i, -1 );
             COM.addTermLast( j, -1 );
-            simplifyWord( COM );
+            simplifyAndConjugate( COM );
             if (!COM.isTrivial()) return false;
         }
     return true;

@@ -1284,8 +1284,8 @@ measure of the complexity of the presentation.
 Returns:
     the sum of word lengths.)doc";
 
-// Docstring regina::python::doc::GroupPresentation_::simplifyWord
-static const char *simplifyWord =
+// Docstring regina::python::doc::GroupPresentation_::simplifyAndConjugate
+static const char *simplifyAndConjugate =
 R"doc(Uses small cancellation theory to reduce the input word, using the
 current presentation of the group. The input word will be modified
 directly.

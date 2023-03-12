@@ -135,12 +135,12 @@ bool HomGroupPresentation::smallCancellation() {
 
     map_ = std::move(newMap);
     for (GroupExpression& e : map_)
-        retval |= codomain_.simplifyWord(e);
+        retval |= codomain_.simplifyAndConjugate(e);
 
     if (inv_) {
         *inv_ = std::move(newInvMap);
         for (GroupExpression& e : *inv_)
-            retval |= domain_.simplifyWord(e);
+            retval |= domain_.simplifyAndConjugate(e);
     }
 
     return retval;
@@ -199,12 +199,12 @@ bool HomGroupPresentation::intelligentNielsen()
 
  map_ = std::move(newMap);
  for (GroupExpression& e : map_)
-     retval |= codomain_.simplifyWord(e);
+     retval |= codomain_.simplifyAndConjugate(e);
 
  if (inv_) {
      *inv_ = std::move(newInvMap);
      for (GroupExpression& e : *inv_)
-         retval |= domain_.simplifyWord(e);
+         retval |= domain_.simplifyAndConjugate(e);
  }
 
  return retval;
@@ -240,12 +240,12 @@ bool HomGroupPresentation::intelligentSimplify()
  // step 3: rewrite this map, and simplify
  map_ = std::move(newMap);
  for (GroupExpression& e : map_)
-     retval |= codomain_.simplifyWord(e);
+     retval |= codomain_.simplifyAndConjugate(e);
 
  if (inv_) {
      *inv_ = std::move(newInvMap);
      for (GroupExpression& e : *inv_)
-         retval |= domain_.simplifyWord(e);
+         retval |= domain_.simplifyAndConjugate(e);
  }
 
  return retval;
@@ -263,7 +263,7 @@ bool HomGroupPresentation::invert() {
 bool HomGroupPresentation::verify() const {
     for (const auto& r : domain_.relations()) {
         GroupExpression imgRel( evaluate(r) );
-        codomain_.simplifyWord(imgRel);
+        codomain_.simplifyAndConjugate(imgRel);
         if (!imgRel.isTrivial())
             return false;
     }
@@ -280,7 +280,7 @@ bool HomGroupPresentation::verifyIsomorphism() const {
     for (unsigned long i=0; i<domain_.countGenerators(); i++) {
         GroupExpression tempW( invEvaluate(evaluate(i)) );
         tempW.addTermLast( i, -1 );
-        domain_.simplifyWord(tempW);
+        domain_.simplifyAndConjugate(tempW);
         if (! tempW.isTrivial())
             return false;
     }
@@ -288,7 +288,7 @@ bool HomGroupPresentation::verifyIsomorphism() const {
     for (unsigned long i=0; i<codomain_.countGenerators(); i++) {
         GroupExpression tempW( evaluate(invEvaluate(i)) );
         tempW.addTermLast( i, -1 );
-        codomain_.simplifyWord(tempW);
+        codomain_.simplifyAndConjugate(tempW);
         if (! tempW.isTrivial())
             return false;
     }
