@@ -293,7 +293,7 @@
   <sect2 id="python-docstrings">
    <title>Inline Documentation</title>
    <para>
-    As of version;&nbsp;7.2, &regina; now provides &python; docstrings
+    Since version;&nbsp;7.2, &regina; now provides &python; docstrings
     for all of its classes and functions.  This means that you can get help
     directly from the &python; prompt, as illustrated below.
    </para>
