@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 7.2.1  [ (to be determined) ]
+Version 7.3  [ (to be determined) ]
 
     ENGINE:
         Class BitManipulator<T>:
