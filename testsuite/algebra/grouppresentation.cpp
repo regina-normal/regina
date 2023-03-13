@@ -33,7 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "algebra/grouppresentation.h"
+#include "algebra/homgrouppresentation.h"
 #include "algebra/markedabeliangroup.h"
 #include "utilities/stringutils.h"
 
@@ -56,6 +56,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(wordReduction); // inversion, multiplication, word reduction.
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(homologicalAlignment);
+    CPPUNIT_TEST(simplifyHomomorphism);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -265,6 +266,31 @@ class GroupPresentationTest : public CppUnit::TestFixture {
             } // end j loop
         } // end presList loop
     } // end homologicalAlignment()
+
+    void simplifyHomomorphism() {
+        // This test was added in regina 7.3 to address an issue where
+        // the high-level HomGroupPresentation simplification routines
+        // were incorrectly conjugating images/preimages of generators.
+
+        GroupPresentation D(2);
+        GroupPresentation G(4, { "aaaaacBCB" });
+
+        HomGroupPresentation H(D, G,
+            { GroupExpression("daaaaaD"), GroupExpression("dbcbCD") });
+        HomGroupPresentation H2(H);
+
+        // In regina 7.2 and earlier, this incorrectly conjugated the image of
+        // the first generator, resulting in the incorrectly simplified image
+        // bcbC instead of the correct image daaaaaD.
+        H2.intelligentSimplify();
+
+        if (H != H2) {
+            std::ostringstream msg;
+            msg << "HomGroupPresentation was incorrectly simplified: "
+                << H << " != " << H2;
+            CPPUNIT_FAIL(msg.str());
+        }
+    }
 };
 
 void addGroupPresentation(CppUnit::TextUi::TestRunner& runner) {
