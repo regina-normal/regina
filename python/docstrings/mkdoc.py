@@ -800,7 +800,6 @@ def read_args(args):
     if 'CPP_INCLUDE_DIRS' in os.environ:
         for cpp_dir in os.environ['CPP_INCLUDE_DIRS'].split():
             if os.path.exists(cpp_dir):
-                print('INCLUDE:', cpp_dir)
                 parameters.append('-I' + cpp_dir)
 
     if len(filenames) == 0:
