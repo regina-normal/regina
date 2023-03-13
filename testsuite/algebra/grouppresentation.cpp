@@ -56,9 +56,6 @@ class GroupPresentationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(word_reduction_test); // inversion, multiplication,
                                        // word reduction.
     CPPUNIT_TEST(presValid_test); // validity of presentation.
-    // CPPUNIT_TEST(simplify_word_test); // TODO: word simplification in pres.
-    // CPPUNIT_TEST(ab_test); // TODO: abelianization tests.
-    // CPPUNIT_TEST(nielsen_test); // TODO: nielsen moves
     CPPUNIT_TEST(homalign_test); // homological alignment.
 
     CPPUNIT_TEST_SUITE_END();
@@ -206,17 +203,6 @@ class GroupPresentationTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL("DPRES: invalid presentation.");
     }
 
-    /*
-    void simplify_word_test() { // this is with respect to a presentation.
-        // TODO
-    }
-    void ab_test() { // abelianize, marked abelianize, and isAbelian
-        // TODO
-    }
-    void nielsen_test() {
-        // TODO
-    }
-    */
     void homalign_test() {
         // ensure homological alignment does what we claim
         for (GroupPresentation* g : presList) {
