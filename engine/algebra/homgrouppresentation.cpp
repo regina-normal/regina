@@ -181,86 +181,85 @@ HomGroupPresentation HomGroupPresentation::operator * (
     }
 }
 
-bool HomGroupPresentation::intelligentNielsen()
-{ // modelled on intelligentSimplify
- auto codomainMap = codomain_.intelligentNielsen();
- auto domainMap = domain_.intelligentNielsen();
- bool retval = codomainMap || domainMap;
- if (! domainMap)
-    domainMap = HomGroupPresentation(domain_);
- if (! codomainMap)
-    codomainMap = HomGroupPresentation(codomain_);
- std::vector< GroupExpression > newMap( domain_.countGenerators() );
- for (unsigned long i=0; i<newMap.size(); i++)
-  newMap[i] = codomainMap->evaluate( evaluate( domainMap->invEvaluate(i) ) );
- std::vector< GroupExpression > newInvMap;
- if (inv_) {
-     newInvMap.resize( codomain_.countGenerators() );
-     for (unsigned long i=0; i<newInvMap.size(); i++)
-       newInvMap[i] = domainMap->evaluate( invEvaluate(
-          codomainMap->invEvaluate(i) ) );
- }
+bool HomGroupPresentation::intelligentNielsen() {
+    // modelled on intelligentSimplify
+    auto codomainMap = codomain_.intelligentNielsen();
+    auto domainMap = domain_.intelligentNielsen();
+    bool retval = codomainMap || domainMap;
+    if (! domainMap)
+        domainMap = HomGroupPresentation(domain_);
+    if (! codomainMap)
+        codomainMap = HomGroupPresentation(codomain_);
+    std::vector< GroupExpression > newMap( domain_.countGenerators() );
+    for (unsigned long i=0; i<newMap.size(); i++)
+        newMap[i] = codomainMap->evaluate(evaluate(domainMap->invEvaluate(i)));
+    std::vector< GroupExpression > newInvMap;
+    if (inv_) {
+        newInvMap.resize( codomain_.countGenerators() );
+        for (unsigned long i=0; i<newInvMap.size(); i++)
+            newInvMap[i] = domainMap->evaluate( invEvaluate(
+                codomainMap->invEvaluate(i) ) );
+    }
 
- map_ = std::move(newMap);
- /*
- for (GroupExpression& e : map_)
-     retval |= codomain_.simplifyAndConjugate(e); // must not conjugate
- */
+    map_ = std::move(newMap);
+    /*
+    for (GroupExpression& e : map_)
+        retval |= codomain_.simplifyAndConjugate(e); // must not conjugate
+    */
 
- if (inv_) {
-     *inv_ = std::move(newInvMap);
-     /*
-     for (GroupExpression& e : *inv_)
-         retval |= domain_.simplifyAndConjugate(e); // must not conjugate
-     */
- }
+    if (inv_) {
+        *inv_ = std::move(newInvMap);
+        /*
+        for (GroupExpression& e : *inv_)
+            retval |= domain_.simplifyAndConjugate(e); // must not conjugate
+        */
+    }
 
- return retval;
+    return retval;
 }
 
-bool HomGroupPresentation::intelligentSimplify()
-{
- // step 1: simplify presentation of domain and codomain
- auto codomainMap = codomain_.intelligentSimplify();
- auto domainMap = domain_.intelligentSimplify();
- bool retval = codomainMap || domainMap;
+bool HomGroupPresentation::intelligentSimplify() {
+    // step 1: simplify presentation of domain and codomain
+    auto codomainMap = codomain_.intelligentSimplify();
+    auto domainMap = domain_.intelligentSimplify();
+    bool retval = codomainMap || domainMap;
 
- // build identity maps if either of the above is null.
- if (! domainMap)
-    domainMap = HomGroupPresentation(domain_);
- if (! codomainMap)
-    codomainMap = HomGroupPresentation(codomain_);
+    // build identity maps if either of the above is null.
+    if (! domainMap)
+        domainMap = HomGroupPresentation(domain_);
+    if (! codomainMap)
+        codomainMap = HomGroupPresentation(codomain_);
 
- // step 2: compute codomainMap*(*oldthis)*domainMap.inverse()
- //         and replace "map" appropriately.  Simplify the words in the codomain.
- //         Do the same for the inverse map if we have one.
- std::vector< GroupExpression > newMap( domain_.countGenerators() );
- for (unsigned long i=0; i<newMap.size(); i++)
-  newMap[i] = codomainMap->evaluate( evaluate( domainMap->invEvaluate(i) ) );
- std::vector< GroupExpression > newInvMap;
- if (inv_) {
-     newInvMap.resize( codomain_.countGenerators() );
-     for (unsigned long i=0; i<newInvMap.size(); i++)
-       newInvMap[i] = domainMap->evaluate(
-          invEvaluate( codomainMap->invEvaluate(i) ) );
- }
+    // step 2: compute codomainMap*(*oldthis)*domainMap.inverse() and replace
+    //         "map" appropriately.  Simplify the words in the codomain.
+    //         Do the same for the inverse map if we have one.
+    std::vector< GroupExpression > newMap( domain_.countGenerators() );
+    for (unsigned long i=0; i<newMap.size(); i++)
+        newMap[i] = codomainMap->evaluate(evaluate(domainMap->invEvaluate(i)));
+    std::vector< GroupExpression > newInvMap;
+    if (inv_) {
+        newInvMap.resize( codomain_.countGenerators() );
+        for (unsigned long i=0; i<newInvMap.size(); i++)
+            newInvMap[i] = domainMap->evaluate(
+                invEvaluate( codomainMap->invEvaluate(i) ) );
+    }
 
- // step 3: rewrite this map, and simplify
- map_ = std::move(newMap);
- /*
- for (GroupExpression& e : map_)
-     retval |= codomain_.simplifyAndConjugate(e); // must not conjugate
- */
+    // step 3: rewrite this map, and simplify
+    map_ = std::move(newMap);
+    /*
+    for (GroupExpression& e : map_)
+        retval |= codomain_.simplifyAndConjugate(e); // must not conjugate
+    */
 
- if (inv_) {
-     *inv_ = std::move(newInvMap);
-     /*
-     for (GroupExpression& e : *inv_)
-         retval |= domain_.simplifyAndConjugate(e); // must not conjugate
-     */
- }
+    if (inv_) {
+        *inv_ = std::move(newInvMap);
+        /*
+        for (GroupExpression& e : *inv_)
+            retval |= domain_.simplifyAndConjugate(e); // must not conjugate
+        */
+    }
 
- return retval;
+    return retval;
 }
 
 bool HomGroupPresentation::invert() {
