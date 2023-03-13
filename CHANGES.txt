@@ -29,6 +29,15 @@ Version 7.3  [ (to be determined) ]
             - Renamed simplifyWord() to simplifyAndConjugate(), to make it
               clear to the user that conjugation might take place.  The old
               name simplifyWord() has been removed completely.
+            - Fixed a bug in the text-based recogniseGroup(), which could have
+              reported the wrong monodromy for a group that was (correctly)
+              recognised as an extension over Z.  This was a side-effect of
+              the simplification bug in HomGroupPresentation (see below).
+        Class HomGroupPresentation:
+            - Fixed a bug in intelligentSimplify(), intelligentNielsen() and
+              smallCancellation() where images/preimages of generators were
+              potentially being conjugated.  See
+              https://regina-normal.github.io/bugs.html for further discussion.
         Class Perm<n>:
             - Extended the generic Perm<n> class to make its API as rich as the
               specialised classes for smaller n.  This means the generic class
