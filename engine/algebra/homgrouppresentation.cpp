@@ -134,13 +134,17 @@ bool HomGroupPresentation::smallCancellation() {
     }
 
     map_ = std::move(newMap);
+    /*
     for (GroupExpression& e : map_)
-        retval |= codomain_.simplifyAndConjugate(e);
+        retval |= codomain_.simplifyAndConjugate(e); // must not conjugate
+    */
 
     if (inv_) {
         *inv_ = std::move(newInvMap);
+        /*
         for (GroupExpression& e : *inv_)
-            retval |= domain_.simplifyAndConjugate(e);
+            retval |= domain_.simplifyAndConjugate(e); // must not conjugate
+        */
     }
 
     return retval;
@@ -198,13 +202,17 @@ bool HomGroupPresentation::intelligentNielsen()
  }
 
  map_ = std::move(newMap);
+ /*
  for (GroupExpression& e : map_)
-     retval |= codomain_.simplifyAndConjugate(e);
+     retval |= codomain_.simplifyAndConjugate(e); // must not conjugate
+ */
 
  if (inv_) {
      *inv_ = std::move(newInvMap);
+     /*
      for (GroupExpression& e : *inv_)
-         retval |= domain_.simplifyAndConjugate(e);
+         retval |= domain_.simplifyAndConjugate(e); // must not conjugate
+     */
  }
 
  return retval;
@@ -239,13 +247,17 @@ bool HomGroupPresentation::intelligentSimplify()
 
  // step 3: rewrite this map, and simplify
  map_ = std::move(newMap);
+ /*
  for (GroupExpression& e : map_)
-     retval |= codomain_.simplifyAndConjugate(e);
+     retval |= codomain_.simplifyAndConjugate(e); // must not conjugate
+ */
 
  if (inv_) {
      *inv_ = std::move(newInvMap);
+     /*
      for (GroupExpression& e : *inv_)
-         retval |= domain_.simplifyAndConjugate(e);
+         retval |= domain_.simplifyAndConjugate(e); // must not conjugate
+     */
  }
 
  return retval;
