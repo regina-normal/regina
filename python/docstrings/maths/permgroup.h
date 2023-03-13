@@ -173,9 +173,9 @@ Parameter ``test``:
     a function (or other callable object) that determines which
     permutations in *parent* become members of this subgroup.
 
-Parameter ``any``:
-    additional arguments that should be passed to *test*, following
-    the initial permutation argument.)doc";
+Parameter ``args``:
+    any additional arguments that should be passed to *test*,
+    following the initial permutation argument.)doc";
 
 // Docstring regina::python::doc::PermGroup_::__iter__
 static const char *__iter__ =
@@ -205,6 +205,31 @@ internal representations.
 Returns:
     ``True`` if and only if there is some permutation that belongs to
     one group but not the other.)doc";
+
+// Docstring regina::python::doc::PermGroup_::centraliser
+static const char *centraliser =
+R"doc(Returns the group of all permutations that fix the minimal
+representative of the given conjugacy class under conjugation.
+
+Specifically, if *r* is the minimal representative of the given class
+as returned by ``conj.rep()``, then this routine constructs the
+subgroup of all permutations *p* for which ``p.inverse() * r * p ==
+r``.
+
+.. warning::
+    While "most" such centraliser groups are small, they _could_ get
+    very large. For example, if *conj* represents the identity
+    permutation, then the centraliser will be all of S_n. For *n* ≥ 5,
+    it can be show that the next-worst case is where *conj* represents
+    a single pair swap, in which case the centraliser has size
+    ``2⋅(n-2)!``.
+
+Precondition:
+    *conj* is not the past-the-end conjugacy class.
+
+Returns:
+    the group of all permutations that leave rep() fixed under
+    conjugation.)doc";
 
 // Docstring regina::python::doc::PermGroup_::contains
 static const char *contains =

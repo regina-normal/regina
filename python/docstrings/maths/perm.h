@@ -210,44 +210,38 @@ Returns:
     ``True`` if and only if this and the given conjugacy class are
     different.)doc";
 
-// Docstring regina::python::doc::PermClass_::centraliser
-static const char *centraliser =
-R"doc(Returns the set of all permutations that fix the minimal
-representative of this conjugacy class under conjugation.
+// Docstring regina::python::doc::PermClass_::countCycles
+static const char *countCycles =
+R"doc(Returns the number of cycles in this conjugacy class.
 
-Specifically, if *r* is the minimal representative of this class as
-returned by rep(), then this routine constructs the subgroup of all
-permutations *p* for which ``p.inverse() * r * p == r``.
-
-The permutations will be returned in an arbitrary order (and in
-particular, this order may be subject to change in future releases of
-Regina).
-
-.. warning::
-    This group could get *very* large. If this conjugacy class
-    represents the identity permutation, then the centraliser will be
-    all of S_n. For *n* ≥ 5, it can be show that the next-worst case
-    is where this conjugacy class represents a single pair swap, in
-    which case the centraliser has size ``2⋅(n-2)!``.
-
-Precondition:
-    This is not the past-the-end conjugacy class.
-
-Precondition:
-    Arrays on this system can be large enough to store n! objects.
-    This is a technical condition on the bit-size of ``size_t`` that
-    will be explicitly checked (with an exception thrown if it fails).
-    On a 64-bit system this condition should be true for all supported
-    *n* (that is, *n* ≤ 16), but on a 32-bit or 16-bit system it will
-    mean that centraliser() cannot be used for larger values of *n*.
-
-Exception ``FailedPrecondition``:
-    A signed integer of the same bit-size as ``size_t`` cannot hold
-    (n!). See the precondition above for further discussion on this
-    constraint.
+Recall from the class notes that a conjugacy class identifies the
+cycle structure of a permutation. This routine simply returns the
+number of cycles for this conjugacy class. Fixed points are also
+counted (they are considered to be cycles of length 1).
 
 Returns:
-    all permutations that leave rep() fixed under conjugation.)doc";
+    the number of cycles.)doc";
+
+// Docstring regina::python::doc::PermClass_::cycle
+static const char *cycle =
+R"doc(Returns the length of the given cycle in this conjugacy class.
+
+Recall from the class notes that a conjugacy class identifies the
+cycle structure of a permutation. If the cycle lengths are listed in
+order from shortest to longest, then this routine returns the
+*which*th cycle length in this sequence. Fixed points are included in
+this sequence (they are considered to be cycles of length 1, and will
+appear at the beginning of the sequence).
+
+For example, for a conjugacy class in ``PermClass<9>`` with cycle
+lengths ``(1,1,3,4)``, calling ``cycle(2)`` will return 3.
+
+Parameter ``which``:
+    indicates which cycle length to return; this must be between 0 and
+    countCycles()-1 inclusive.
+
+Returns:
+    the requested cycle length.)doc";
 
 // Docstring regina::python::doc::PermClass_::isIdentity
 static const char *isIdentity =
@@ -904,8 +898,7 @@ This only needs to be done once in the lifetime of the program. If you
 do try to call precompute() a second time then it will do nothing and
 return immediately.
 
-TODO: Add details on how much memory the precomputed tables will
-consume.
+TODO: Details on how much memory the precomputed tables will consume.
 
 This routine is thread-safe.)doc";
 
