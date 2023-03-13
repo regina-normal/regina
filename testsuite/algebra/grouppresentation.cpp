@@ -52,11 +52,10 @@ using regina::HomGroupPresentation;
 class GroupPresentationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(GroupPresentationTest);
 
-    CPPUNIT_TEST(RS_test); // Reidemeister-Schreir
-    CPPUNIT_TEST(word_reduction_test); // inversion, multiplication,
-                                       // word reduction.
-    CPPUNIT_TEST(presValid_test); // validity of presentation.
-    CPPUNIT_TEST(homalign_test); // homological alignment.
+    CPPUNIT_TEST(reidemeisterSchreir);
+    CPPUNIT_TEST(wordReduction); // inversion, multiplication, word reduction.
+    CPPUNIT_TEST(validity);
+    CPPUNIT_TEST(homologicalAlignment);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -131,7 +130,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
         // so far nothing.
     }
 
-    void RS_test() {
+    void reidemeisterSchreir() {
         for (GroupPresentation* g : presList) {
             g->intelligentSimplify();
             // Currently identifyExtensionOverZ() is private, so we
@@ -152,9 +151,9 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL("Reidemeister-Schreir failure.");
             }
         }
-    }; // end RS_test
+    }; // end reidemeisterSchreir
 
-    void word_reduction_test() { // pure GroupExpression tests here.
+    void wordReduction() { // pure GroupExpression tests here.
         GroupExpression word1("abcABC");
         GroupExpression word2("cbaCBA");
         GroupExpression word3("abccbaBCCBA");
@@ -192,7 +191,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
         if (word3.countTerms() != 1)
             CPPUNIT_FAIL("GroupExpression::number of terms (7). "+word3.str());
     }
-    void presValid_test() {
+    void validity() {
         for (GroupPresentation* g : presList)
             if (! g->isValid())
                 CPPUNIT_FAIL("Invalid presentation.");
@@ -203,7 +202,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL("DPRES: invalid presentation.");
     }
 
-    void homalign_test() {
+    void homologicalAlignment() {
         // ensure homological alignment does what we claim
         for (GroupPresentation* g : presList) {
             GroupPresentation tPres( *g );
@@ -265,7 +264,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                 } // end k loop
             } // end j loop
         } // end presList loop
-    } // end homalign_test()
+    } // end homologicalAlignment()
 };
 
 void addGroupPresentation(CppUnit::TextUi::TestRunner& runner) {
