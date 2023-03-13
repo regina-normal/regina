@@ -1349,7 +1349,7 @@ then this routine might (as part of the reduction process) transform
 *w* into a different group element of the form ``g w g^-1``.
 
 In Regina 7.2 and earlier, this routine was called simplifyWord(). It
-was renamed to simplifyAndConjugate() in Regina 7.2.1 to make it clear
+was renamed to simplifyAndConjugate() in Regina 7.3 to make it clear
 to the user that conjugation might take place.
 
 .. warning::
