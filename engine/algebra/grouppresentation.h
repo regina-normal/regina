@@ -1019,18 +1019,20 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * In Regina 7.2 and earlier, this routine was called simplifyWord().
          * It was renamed to simplifyAndConjugate() in Regina 7.3 to make it
-         * clear to the user that conjugation might take place.
+         * clear to the user that conjugation might take place.  Note that,
+         * even in older versions of Regina, this routine could always
+         * potentially conjugate.
          *
          * \warning This routine is only as good as the relator table for the
          * group.  You might want to consider running intelligentSimplify(),
          * possibly in concert with proliferateRelators(), before using this
          * routine for any significant tasks.
          *
-         * \param input is the word you would like to simplify.
+         * \param word the word you would like to simplify (modulo conjugation).
          * This must be a word in the generators of this group.
          * \return \c true if and only if the input word was modified.
          */
-        bool simplifyAndConjugate(GroupExpression &input) const;
+        bool simplifyAndConjugate(GroupExpression &word) const;
 
         /**
          * A routine to help escape local wells when simplifying

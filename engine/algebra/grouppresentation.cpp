@@ -737,22 +737,22 @@ GroupPresentation::GroupPresentation(unsigned long nGens,
     }
 }
 
-bool GroupPresentation::simplifyAndConjugate(GroupExpression &input) const {
-    bool retval( input.simplify(false) );
-    if (input.isTrivial())
+bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
+    bool retval = word.simplify(false);
+    if (word.isTrivial())
         return retval;
 
     // now recursively apply relators until no reduction is possible.
-    bool continueSimplify(true);
+    bool continueSimplify = true;
     while (continueSimplify) {
         continueSimplify = false;
         for (const auto& r : relations_) {
             std::set<WordSubstitutionData> sub_list; // highest score is *first*
-            dehnAlgorithmSubMetric( input, r, sub_list );
+            dehnAlgorithmSubMetric( word, r, sub_list );
             if (! sub_list.empty())
                 if ( (*sub_list.begin()).score > 0 ) {
-                    applySubstitution( input, r, *sub_list.begin() );
-                    if (input.isTrivial())
+                    applySubstitution( word, r, *sub_list.begin() );
+                    if (word.isTrivial())
                         return true;
                     continueSimplify = true;
                     retval = true;
