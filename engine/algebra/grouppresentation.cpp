@@ -769,6 +769,10 @@ bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
 // TODO: consider a homological alignment call if the abelianization
 //       has rank 1 or any other situation where we know it can be useful.
 std::optional<HomGroupPresentation> GroupPresentation::intelligentSimplify() {
+    // IMPORTANT NOTE: This routine *must* be deterministic.
+    // This matters (for example) when we simplify the domain and codomain
+    // of a monodromy, and we need both ends to simplify identically.
+
     bool doRep(true);
     std::optional<HomGroupPresentation> redHom;
     while (doRep) {
@@ -801,6 +805,10 @@ std::optional<HomGroupPresentation> GroupPresentation::intelligentSimplify() {
 }
 
 std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
+    // IMPORTANT NOTE: This routine *must* be deterministic.
+    // This matters (for example) when we simplify the domain and codomain
+    // of a monodromy, and we need both ends to simplify identically.
+
     bool didSomething(false);
     // start by taking a copy of *this group, for construction of reductionMap
     GroupPresentation oldGroup( *this );
@@ -949,6 +957,10 @@ found_a_generator_killer:
 }// end smallCancellation()
 
 std::optional<HomGroupPresentation> GroupPresentation::intelligentNielsen() {
+    // IMPORTANT NOTE: This routine *must* be deterministic.
+    // This matters (for example) when we simplify the domain and codomain
+    // of a monodromy, and we need both ends to simplify identically.
+
     if (nGenerators_ < 2) return std::nullopt;
     // let's keep a record of the best possible substitution,
     bool didSomething(true);
@@ -1925,6 +1937,10 @@ namespace { // anonymous namespace
 // this routine iteratively finds length 1 relators, and uses them to simplify
 // other relators.  In the end it deletes all length 0 relators and re-indexes.
 std::optional<HomGroupPresentation> GroupPresentation::prettyRewriting() {
+    // IMPORTANT NOTE: This routine *must* be deterministic.
+    // This matters (for example) when we simplify the domain and codomain
+    // of a monodromy, and we need both ends to simplify identically.
+
     GroupPresentation oldPres(*this);
 
     // move the relators into a separate list for now.

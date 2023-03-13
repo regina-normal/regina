@@ -967,6 +967,11 @@ class GroupPresentation : public Output<GroupPresentation> {
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
+         * This routine is guaranteed to be deterministic: within the same
+         * version of Regina, simplifying identical group presentations will
+         * give identical results.  These results could, however, change
+         * between different versions of Regina.
+         *
          * \note If you all care about is whether the presentation changed,
          * you can simply cast the return value to a \c bool.  This will
          * then mirror the behaviour of intelligentSimplify() from Regina 6.0
@@ -992,6 +997,11 @@ class GroupPresentation : public Output<GroupPresentation> {
          * presentation was changed), then this homomorphsm will in fact be
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
+         *
+         * This routine is guaranteed to be deterministic: within the same
+         * version of Regina, simplifying identical group presentations will
+         * give identical results.  These results could, however, change
+         * between different versions of Regina.
          *
          * \note If you all care about is whether the presentation changed,
          * you can simply cast the return value to a \c bool.  This will
@@ -1246,6 +1256,11 @@ class GroupPresentation : public Output<GroupPresentation> {
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
+         * This routine is guaranteed to be deterministic: within the same
+         * version of Regina, simplifying identical group presentations will
+         * give identical results.  These results could, however, change
+         * between different versions of Regina.
+         *
          * \note If you all care about is whether the presentation changed,
          * you can simply cast the return value to a \c bool.  This will
          * then mirror the behaviour of intelligentNielsen() from Regina 6.0
@@ -1308,6 +1323,11 @@ class GroupPresentation : public Output<GroupPresentation> {
          * generators was changed), then this homomorphsm will in fact be
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
+         *
+         * This routine is guaranteed to be deterministic: within the same
+         * version of Regina, simplifying identical group presentations will
+         * give identical results.  These results could, however, change
+         * between different versions of Regina.
          *
          * \note If you all care about is whether the presentation changed,
          * you can simply cast the return value to a \c bool.  This will
