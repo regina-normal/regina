@@ -436,10 +436,10 @@ __init__(...)
     
     5. __init__(self: regina.Integer, arg0: int) -> None
     
-    Initialises this to the given Python arbitrary-precision integer.
+    Initialises this to the given native Python integer.
     
-    The argument is of the Python type ``long``, which Python uses to
-    store integers of arbitrary magnitude (much like Regina does with its
+    The argument is of the Python ``int`` type, which Python uses to store
+    integers of arbitrary magnitude (much like Regina does with its
     Integer and LargeInteger classes).
     
     Parameter ``value``:
@@ -529,10 +529,10 @@ __init__(...)
     
     5. __init__(self: regina.LargeInteger, arg0: int) -> None
     
-    Initialises this to the given Python arbitrary-precision integer.
+    Initialises this to the given native Python integer.
     
-    The argument is of the Python type ``long``, which Python uses to
-    store integers of arbitrary magnitude (much like Regina does with its
+    The argument is of the Python ``int`` type, which Python uses to store
+    integers of arbitrary magnitude (much like Regina does with its
     Integer and LargeInteger classes).
     
     Parameter ``value``:

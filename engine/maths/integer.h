@@ -77,7 +77,7 @@ template <int bytes>
 class NativeInteger;
 
 #ifdef __DOCSTRINGS
-class Long; // Represents a Python arbitrary-precision integer.
+class python_int; // Represents a Python arbitrary-precision integer.
 #endif
 
 /**
@@ -321,9 +321,9 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         IntegerBase(const NativeInteger<bytes>& value);
 #ifdef __APIDOCS
         /**
-         * Initialises this to the given Python arbitrary-precision integer.
+         * Initialises this to the given native Python integer.
          *
-         * The argument is of the Python type \c long, which Python uses
+         * The argument is of the Python \c int type, which Python uses
          * to store integers of arbitrary magnitude (much like Regina does
          * with its Integer and LargeInteger classes).
          *
@@ -331,7 +331,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \param value the new value of this integer.
          */
-        IntegerBase(Long value);
+        IntegerBase(python_int value);
 #endif
 
         /**
@@ -531,6 +531,22 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \return the value of this integer as a string.
          */
         std::string stringValue(int base = 10) const;
+#ifdef __APIDOCS
+        /**
+         * Returns the value of this integer as a native Python integer.
+         *
+         * The return value will be of the Python \c int type, which Python
+         * uses to store integers of arbitrary magnitude (much like Regina
+         * does with its Integer and LargeInteger classes).
+         *
+         * \pre This integer is not infinity.
+         *
+         * \nocpp
+         *
+         * \return the value of this integer as a Python integer.
+         */
+        python_int pythonValue() const;
+#endif
 
         /**
          * Sets this integer to the given value.

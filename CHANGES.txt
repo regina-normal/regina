@@ -38,6 +38,8 @@ Version 7.3  [ (to be determined) ]
               smallCancellation() where images/preimages of generators were
               potentially being conjugated.  See
               https://regina-normal.github.io/bugs.html for further discussion.
+        Class Integer:
+            - New python-only routine pythonValue().
         Class Perm<n>:
             - Extended the generic Perm<n> class to make its API as rich as the
               specialised classes for smaller n.  This means the generic class

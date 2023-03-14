@@ -68,6 +68,16 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def("stringValue", &Int::stringValue,
             pybind11::arg("base") = 10,
             rdoc::stringValue)
+        .def("pythonValue", [](const Int& i) {
+            if (i.isNative())
+                return pybind11::int_(i.longValue());
+            else if (i.isInfinite())
+                throw pybind11::value_error("Cannot represent infinity "
+                    "as a Python int");
+            else
+                return pybind11::reinterpret_steal<pybind11::int_>(
+                    PyLong_FromString(i.stringValue(16).c_str(), nullptr, 16));
+        }, rdoc::pythonValue)
         .def("swap", &Int::swap, rdoc::swap)
         .def(pybind11::self == AltInt(), rdoc::__eq_2)
         .def(pybind11::self == long(), rdoc::__eq_3)

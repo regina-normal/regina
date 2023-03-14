@@ -39,4 +39,18 @@ for IntegerType in [Integer, LargeInteger]:
     
     print(IntegerType('3141592'))
     print(IntegerType(1234567.89))
+    
+    x = IntegerType(123)
+    y = IntegerType(-123456789123456789123456789123456789123456789123456789)
 
+for IntegerType in [Integer, LargeInteger]:
+    for i in [ x, y ]:
+        print(i)
+        z = i.pythonValue()
+        print(type(z), z)
+
+try:
+    print(LargeInteger.infinity)
+    print(LargeInteger.infinity.pythonValue())
+except:
+    print('Could not convert')

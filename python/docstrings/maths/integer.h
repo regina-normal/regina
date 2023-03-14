@@ -468,10 +468,10 @@ Parameter ``src``:
 
 // Docstring regina::python::doc::IntegerBase_::__init_4
 static const char *__init_4 =
-R"doc(Initialises this to the given Python arbitrary-precision integer.
+R"doc(Initialises this to the given native Python integer.
 
-The argument is of the Python type ``long``, which Python uses to
-store integers of arbitrary magnitude (much like Regina does with its
+The argument is of the Python ``int`` type, which Python uses to store
+integers of arbitrary magnitude (much like Regina does with its
 Integer and LargeInteger classes).
 
 Parameter ``value``:
@@ -1154,6 +1154,20 @@ static const char *negate =
 R"doc(Negates this integer. This integer is changed to reflect the result.
 
 Negating infinity will result in infinity.)doc";
+
+// Docstring regina::python::doc::IntegerBase_::pythonValue
+static const char *pythonValue =
+R"doc(Returns the value of this integer as a native Python integer.
+
+The return value will be of the Python ``int`` type, which Python uses
+to store integers of arbitrary magnitude (much like Regina does with
+its Integer and LargeInteger classes).
+
+Precondition:
+    This integer is not infinity.
+
+Returns:
+    the value of this integer as a Python integer.)doc";
 
 // Docstring regina::python::doc::IntegerBase_::raiseToPower
 static const char *raiseToPower =
