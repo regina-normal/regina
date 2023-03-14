@@ -1069,6 +1069,11 @@ performed), then this homomorphsm will in fact be a declared
 isomorphism. See the HomGroupPresentation class notes for details on
 what this means.
 
+This routine is guaranteed to be deterministic: within the same
+version of Regina, simplifying identical group presentations will give
+identical results. These results could, however, change between
+different versions of Regina.
+
 .. note::
     If you all care about is whether the presentation changed, you can
     simply cast the return value to a ``bool``. This will then mirror
@@ -1092,6 +1097,11 @@ If this routine does return a homomorphism (because the presentation
 was changed), then this homomorphsm will in fact be a declared
 isomorphism. See the HomGroupPresentation class notes for details on
 what this means.
+
+This routine is guaranteed to be deterministic: within the same
+version of Regina, simplifying identical group presentations will give
+identical results. These results could, however, change between
+different versions of Regina.
 
 .. note::
     If you all care about is whether the presentation changed, you can
@@ -1218,6 +1228,11 @@ If this routine does return a homomorphism (because the choice of
 generators was changed), then this homomorphsm will in fact be a
 declared isomorphism. See the HomGroupPresentation class notes for
 details on what this means.
+
+This routine is guaranteed to be deterministic: within the same
+version of Regina, simplifying identical group presentations will give
+identical results. These results could, however, change between
+different versions of Regina.
 
 .. note::
     If you all care about is whether the presentation changed, you can
@@ -1350,7 +1365,9 @@ then this routine might (as part of the reduction process) transform
 
 In Regina 7.2 and earlier, this routine was called simplifyWord(). It
 was renamed to simplifyAndConjugate() in Regina 7.3 to make it clear
-to the user that conjugation might take place.
+to the user that conjugation might take place. Note that, even in
+older versions of Regina, this routine could always potentially
+conjugate.
 
 .. warning::
     This routine is only as good as the relator table for the group.
@@ -1358,9 +1375,9 @@ to the user that conjugation might take place.
     in concert with proliferateRelators(), before using this routine
     for any significant tasks.
 
-Parameter ``input``:
-    is the word you would like to simplify. This must be a word in the
-    generators of this group.
+Parameter ``word``:
+    the word you would like to simplify (modulo conjugation). This
+    must be a word in the generators of this group.
 
 Returns:
     ``True`` if and only if the input word was modified.)doc";
@@ -1380,6 +1397,11 @@ If this routine does return a homomorphism (because the presentation
 was changed), then this homomorphsm will in fact be a declared
 isomorphism. See the HomGroupPresentation class notes for details on
 what this means.
+
+This routine is guaranteed to be deterministic: within the same
+version of Regina, simplifying identical group presentations will give
+identical results. These results could, however, change between
+different versions of Regina.
 
 .. note::
     If you all care about is whether the presentation changed, you can
