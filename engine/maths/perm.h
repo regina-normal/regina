@@ -505,7 +505,28 @@ class Perm {
          * If you do try to call precompute() a second time then it will
          * do nothing and return immediately.
          *
-         * TODO: Details on how much memory the precomputed tables will consume.
+         * The precomputed tables will consume roughly:
+         *
+         * - 33 kB for \a n = 8;
+         * - 8.9 MB for \a n = 9;
+         * - 17 MB for \a n = 10;
+         * - 143 MB for \a n = 11;
+         * - 268 MB for \a n = 12;
+         * - 2.3 GB for \a n = 13;
+         * - 4.3 GB for \a n = 14;
+         * - 37 GB for \a n = 15;
+         * - 69 GB for \a n = 16.
+         *
+         * In particular, a 32-bit machine will not be able to store these
+         * tables for \a n ≥ 13, a 24-bit machine will not be these tables for
+         * \a n ≥ 9, and a 16-bit machine will not be able to store these
+         * tables for any \a n ≥ 8.
+         *
+         * \pre There is enough memory available to store the precomputed
+         * tables; see above for the estimated space requirements.
+         *
+         * \exception FailedPrecondition There was not enough memory to
+         * available to store the precomputed tables.
          *
          * This routine is thread-safe.
          */

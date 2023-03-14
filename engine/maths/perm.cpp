@@ -40,25 +40,45 @@ void Perm<n>::precompute() {
     if (invLower_)
         return;
 
-    invLower_ = new ImagePack[lowerCount];
-    invUpper_ = new ImagePack[upperCount];
+    if constexpr (sizeof(size_t) <= 2 /* we always have n >= 8 here */) {
+        // We are on a 16-bit machine.
+        throw FailedPrecondition("This appears to be a 16-bit machine, and so "
+            "cannot build tables for Perm<n>::precompute() for any n ≥ 8.");
+    } else if constexpr (sizeof(size_t) == 3 && n >= 9) {
+        // We are on a 24-bit machine.
+        throw FailedPrecondition("This appears to be a 24-bit machine, and so "
+            "cannot build tables for Perm<n>::precompute() for any n ≥ 9.");
+    } else if constexpr (sizeof(size_t) < 8 && n >= 13) {
+        // This is smaller than 64 bits; make the conservative (but very
+        // reasonable) assumption that we are on a 32-bit machine.
+        throw FailedPrecondition("This appears to be a 32-bit machine, and so "
+            "cannot build tables for Perm<n>::precompute() for any n ≥ 13.");
+    } else {
+        try {
+            invLower_ = new ImagePack[lowerCount];
+            invUpper_ = new ImagePack[upperCount];
+        } catch (const std::bad_alloc&) {
+            throw FailedPrecondition("Not enough memory available to "
+                "dynamically allocate tables for Perm<n>::precompute().");
+        }
 
-    LowerSlice lower;
-    do {
-        ImagePack d = 0;
-        for (int i = 0; i < LowerSlice::length; ++i)
-            d |= (static_cast<ImagePack>(i) << (imageBits * lower.image[i]));
-        invLower_[lower.pack()] = d;
-    } while (lower.inc());
+        LowerSlice lower;
+        do {
+            ImagePack d = 0;
+            for (int i = 0; i < LowerSlice::length; ++i)
+                d |= (static_cast<ImagePack>(i) << (imageBits * lower.image[i]));
+            invLower_[lower.pack()] = d;
+        } while (lower.inc());
 
-    UpperSlice upper;
-    do {
-        ImagePack d = 0;
-        for (int i = 0; i < UpperSlice::length; ++i)
-            d |= (static_cast<ImagePack>(i + LowerSlice::length)
-                << (imageBits * upper.image[i]));
-        invUpper_[upper.pack()] = d;
-    } while (upper.inc());
+        UpperSlice upper;
+        do {
+            ImagePack d = 0;
+            for (int i = 0; i < UpperSlice::length; ++i)
+                d |= (static_cast<ImagePack>(i + LowerSlice::length)
+                    << (imageBits * upper.image[i]));
+            invUpper_[upper.pack()] = d;
+        } while (upper.inc());
+    }
 }
 
 template void Perm<8>::precompute();

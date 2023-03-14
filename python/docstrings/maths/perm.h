@@ -898,7 +898,38 @@ This only needs to be done once in the lifetime of the program. If you
 do try to call precompute() a second time then it will do nothing and
 return immediately.
 
-TODO: Details on how much memory the precomputed tables will consume.
+The precomputed tables will consume roughly:
+
+* 33 kB for *n* = 8;
+
+* 8.9 MB for *n* = 9;
+
+* 17 MB for *n* = 10;
+
+* 143 MB for *n* = 11;
+
+* 268 MB for *n* = 12;
+
+* 2.3 GB for *n* = 13;
+
+* 4.3 GB for *n* = 14;
+
+* 37 GB for *n* = 15;
+
+* 69 GB for *n* = 16.
+
+In particular, a 32-bit machine will not be able to store these tables
+for *n* ≥ 13, a 24-bit machine will not be these tables for *n* ≥ 9,
+and a 16-bit machine will not be able to store these tables for any
+*n* ≥ 8.
+
+Precondition:
+    There is enough memory available to store the precomputed tables;
+    see above for the estimated space requirements.
+
+Exception ``FailedPrecondition``:
+    There was not enough memory to available to store the precomputed
+    tables.
 
 This routine is thread-safe.)doc";
 
