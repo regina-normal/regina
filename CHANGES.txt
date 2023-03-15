@@ -70,6 +70,10 @@ Version 7.3  [ (to be determined) ]
               the same numbering and labelling as in the source triangulation.
         Class Triangulation<2>:
             - New routines isSphere() and isBall().
+        Class Triangulation<4>:
+            - Fix a bug where single-vertex boundary components were included
+              in Triangulation<4>::boundaryComponents(), but were omitted from
+              Component<4>::boundaryComponents().
 
 Version 7.2  [ 28 October, 2022 ]
 

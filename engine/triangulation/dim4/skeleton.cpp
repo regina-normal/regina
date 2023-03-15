@@ -164,6 +164,8 @@ void Triangulation<4>::calculateVertexLinks() {
                     vertex->isLinkOrientable();
                 vertex->boundaryComponent_->push_back(vertex);
                 boundaryComponents_.push_back(vertex->boundaryComponent_);
+                vertex->component_->boundaryComponents_.push_back(
+                    vertex->boundaryComponent_);
             } else {
                 // If we have a 3-sphere link then there is nothing to do.
                 // Otherwise we have a non-sphere closed 3-manifold, and
@@ -193,6 +195,8 @@ void Triangulation<4>::calculateVertexLinks() {
                         vertex->isLinkOrientable();
                     vertex->boundaryComponent_->push_back(vertex);
                     boundaryComponents_.push_back(vertex->boundaryComponent_);
+                    vertex->component_->boundaryComponents_.push_back(
+                        vertex->boundaryComponent_);
                 }
             }
         }
