@@ -379,6 +379,26 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          */
         bool isMinimal() const;
 
+        /**
+         * Determines whether this is a triangulation of a 2-sphere.
+         *
+         * Unlike the 3-dimensional version of this routine, isSphere()
+         * for 2-manifolds is fast and simple.
+         *
+         * \return \c true if and only if this is a 2-sphere triangulation.
+         */
+        bool isSphere() const;
+
+        /**
+         * Determines whether this is a triangulation of a 2-ball.
+         *
+         * Unlike the 3-dimensional version of this routine, isBall()
+         * for 2-manifolds is fast and simple.
+         *
+         * \return \c true if and only if this is a 2-ball triangulation.
+         */
+        bool isBall() const;
+
         /*@}*/
 
     private:
@@ -479,6 +499,14 @@ inline bool Triangulation<2>::isClosed() const {
 
 inline bool Triangulation<2>::isIdeal() const {
     return false;
+}
+
+inline bool Triangulation<2>::isSphere() const {
+    return (eulerChar() == 2 && components_.size() == 1);
+}
+
+inline bool Triangulation<2>::isBall() const {
+    return (eulerChar() == 1 && isOrientable() && components_.size() == 1);
 }
 
 } // namespace regina

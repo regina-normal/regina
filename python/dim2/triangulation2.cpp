@@ -228,6 +228,8 @@ void addTriangulation2(pybind11::module_& m) {
             &Triangulation<2>::simplifiedFundamentalGroup,
             rbase::simplifiedFundamentalGroup)
         .def("isMinimal", &Triangulation<2>::isMinimal, rdoc::isMinimal)
+        .def("isSphere", &Triangulation<2>::isSphere, RDOC_TODO)
+        .def("isBall", &Triangulation<2>::isBall, RDOC_TODO)
         .def("orient", &Triangulation<2>::orient, rbase::orient)
         .def("reflect", &Triangulation<2>::reflect, rbase::reflect)
         .def("triangulateComponents", &Triangulation<2>::triangulateComponents,

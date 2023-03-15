@@ -35,6 +35,7 @@
 #include "packet/container.h"
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
+#include "utilities/typeutils.h"
 #include "testsuite/utilities/tightencodingtest.h"
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -744,6 +745,593 @@ class TriangulationTest : public CppUnit::TestFixture,
                 clearProperties(t);
                 verifyOrient(tri, t, name);
             }
+        }
+
+        static void verifySkeletonDetail(const Triangulation<dim>& tri,
+                const char* name) {
+            // Components and their boundary components and simplices:
+
+            bool allOrbl = true;
+            size_t totSize = 0;
+            size_t totBdry = 0;
+            for (auto c : tri.components()) {
+                bool allOrblInComponent = true;
+                bool allValidInComponent = true;
+                size_t boundaryFacets = 0;
+                size_t dualTree = 0;
+
+                totSize += c->size();
+                for (auto s : c->simplices()) {
+                    if (s->component() != c) {
+                        std::ostringstream msg;
+                        msg << "Mismatched simplex component "
+                            "in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (s->orientation() != 1 && s->orientation() != -1) {
+                        std::ostringstream msg;
+                        msg << "Invalid simplex orientation "
+                            "in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    for (int i = 0; i <= dim; ++i) {
+                        if (auto adj = s->adjacentSimplex(i)) {
+                            if (s->adjacentGluing(i).sign() > 0) {
+                                if (adj->orientation() != - s->orientation())
+                                    allOrbl = allOrblInComponent = false;
+                            } else {
+                                if (adj->orientation() != s->orientation())
+                                    allOrbl = allOrblInComponent = false;
+                            }
+                            if (s->facetInMaximalForest(i)) {
+                                ++dualTree;
+                                if (! adj->facetInMaximalForest(
+                                        s->adjacentFacet(i))) {
+                                    std::ostringstream msg;
+                                    msg << "Inconsistent facets in dual forest "
+                                        "in " << name << ".";
+                                    CPPUNIT_FAIL(msg.str());
+                                }
+                            }
+                        } else {
+                            ++boundaryFacets;
+                            if (s->facetInMaximalForest(i)) {
+                                std::ostringstream msg;
+                                msg << "Boundary facet in dual forest "
+                                    "in " << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                    }
+                }
+
+                totBdry += c->countBoundaryComponents();
+                for (auto b : c->boundaryComponents()) {
+                    if (b->component() != c) {
+                        std::ostringstream msg;
+                        msg << "Mismatched components and boundary components "
+                            "in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                // See if this component contains any invalid faces.
+                regina::for_constexpr<0, dim>([c, &allValidInComponent](
+                        auto subdim) {
+                    if constexpr (regina::standardDim(dim)) {
+                        for (auto f : c->template faces<subdim.value>())
+                            if (! f->isValid()) {
+                                allValidInComponent = false;
+                                return; // from lambda
+                            }
+                    } else {
+                        for (auto s : c->simplices())
+                            for (size_t j = 0;
+                                    j < regina::binomSmall(dim+1, subdim+1);
+                                    ++j)
+                                if (! s->template face<subdim>(j)->isValid()) {
+                                    allValidInComponent = false;
+                                    return; // from lambda
+                                }
+                    }
+                });
+
+                if (c->isOrientable() != allOrblInComponent) {
+                    std::ostringstream msg;
+                    msg << "Mismatched component orientability "
+                        "in " << name << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (c->isValid() != allValidInComponent) {
+                    std::ostringstream msg;
+                    msg << "Mismatched component validity in " << name << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (c->countBoundaryFacets() != boundaryFacets) {
+                    std::ostringstream msg;
+                    msg << "Mismatched boundary facet count in " << name << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (dualTree != 2 * (c->size() - 1)) {
+                    std::ostringstream msg;
+                    msg << "Incorrect size for dual tree within component "
+                        "in " << name << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            if (tri.isOrientable() != allOrbl) {
+                std::ostringstream msg;
+                msg << "Mismatched triangulation orientability "
+                    "in " << name << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (tri.size() != totSize) {
+                std::ostringstream msg;
+                msg << "Mismatched triangulation size in " << name << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (tri.countBoundaryComponents() != totBdry) {
+                std::ostringstream msg;
+                msg << "Mismatched boundary component count in " << name << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // More boundary components:
+            size_t totBdryFacets = 0;
+            for (auto b : tri.boundaryComponents()) {
+                totBdryFacets += b->size();
+                if (b->size() * dim != b->countRidges() * 2) {
+                    std::ostringstream msg;
+                    msg << "Mismatched boundary component ridge/facet "
+                        "counts in " << name << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                size_t builtSize = 0;
+                if (b->isReal()) {
+                    builtSize = b->size();
+
+                    for (auto f : b->facets()) {
+                        if (f->boundaryComponent() != b) {
+                            std::ostringstream msg;
+                            msg << "Mismatched boundary component for "
+                                "boundary facet in " << name << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+
+                    // NOTE: Below we test whether face->boundaryComponent()
+                    // matches the boundary component containing face.
+                    // This test could fail for legitimate reasons if the face
+                    // is pinched between two different boundary components.
+                    // However, none of our test cases have this property,
+                    // and so we leave the tests as they are for now.
+                    if constexpr (regina::BoundaryComponent<dim>::allFaces) {
+                        regina::for_constexpr<1, dim-1>([b, name](auto subdim) {
+                            for (auto f : b->template faces<subdim>()) {
+                                if (f->boundaryComponent() != b) {
+                                    std::ostringstream msg;
+                                    msg << "Mismatched boundary component for "
+                                        "boundary " << subdim << "-face in "
+                                        << name << ".";
+                                    CPPUNIT_FAIL(msg.str());
+                                }
+                            }
+                        });
+                    } else {
+                        // Go via boundary facets to check that the subdim-face
+                        // boundary components are marked correctly.
+                        for (auto f : b->facets()) {
+                            regina::for_constexpr<1, dim-1>(
+                                    [b, f, name](auto subdim) {
+                                // Check all subdim-faces of f.
+                                for (size_t j = 0;
+                                        j < regina::binomSmall(dim, subdim+1);
+                                        ++j) {
+                                    auto sub = f->template face<subdim>(j);
+                                    if (sub->boundaryComponent() != b) {
+                                        std::ostringstream msg;
+                                        msg << "Mismatched boundary component "
+                                            "for boundary " << subdim
+                                            << "-face in " << name << ".";
+                                        CPPUNIT_FAIL(msg.str());
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    if constexpr (regina::BoundaryComponent<dim>::allowVertex) {
+                        if (b->countVertices() != 1) {
+                            std::ostringstream msg;
+                            msg << "Bad vertex-only boundary component "
+                                "vertex count in " << name << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                        regina::for_constexpr<1, dim-1>([b, name](auto subdim) {
+                            if (b->template countFaces<subdim.value>() != 0) {
+                                std::ostringstream msg;
+                                msg << "Bad vertex-only boundary component "
+                                    "face count in " << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        });
+                        auto v = b->vertex(0);
+                        builtSize = v->degree();
+                        if (v->boundaryComponent() != b) {
+                            // NOTE: This test could fail for legitimate
+                            // reasons if the vertex is pinched between two
+                            // different boundary components.  See above
+                            // for further explanation.
+                            std::ostringstream msg;
+                            msg << "Mismatched boundary component of vertex "
+                                "in " << name << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } else {
+                        std::ostringstream msg;
+                        msg << "Non-allowed vertex-only boundary component "
+                            "in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                if constexpr (dim > 2) {
+                    Triangulation<dim - 1> built = b->build();
+
+                    if (built.size() != builtSize) {
+                        std::ostringstream msg;
+                        msg << "Mismatched triangulated boundary component "
+                            "size in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (built.isOrientable() != b->isOrientable()) {
+                        std::ostringstream msg;
+                        msg << "Mismatched triangulated boundary component "
+                            "orientability in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+            if (tri.countBoundaryFacets() != totBdryFacets) {
+                std::ostringstream msg;
+                msg << "Mismatched boundary facet count in " << name << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Faces:
+
+            bool allValid = true;
+            regina::for_constexpr<0, dim>([name, &tri, &allValid](auto subdim) {
+                size_t bdry = 0;
+                size_t degreeSum = 0;
+                for (auto f : tri.template faces<subdim.value>()) {
+                    if (! f->isValid())
+                        allValid = false;
+                    if (f->isBoundary())
+                        ++bdry;
+                    degreeSum += f->degree();
+
+                    if (f->component() != f->front().simplex()->component()) {
+                        std::ostringstream msg;
+                        msg << "Mismatched " << subdim << "-face "
+                            "component in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! f->hasBadIdentification()) {
+                        // We already test link orientability more precisely
+                        // for dim == 3,4 further below (we compare the
+                        // cached link orientability to the
+                        // orientability of the full triangulated link).
+                        // Therefore the tests here only need to be things
+                        // that are relevant in higher dimensions.
+                        if (f->isLinkOrientable()) {
+                            // What is there that's sensible to test here?
+                        } else {
+                            if (f->component()->isOrientable()) {
+                                std::ostringstream msg;
+                                msg << "Link orientability inconsistent with "
+                                    "component in " << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                    }
+
+                    for (auto emb : f->embeddings()) {
+                        auto s = emb.simplex();
+                        auto v = emb.vertices();
+                        auto which = regina::Face<dim, subdim>::faceNumber(v);
+                        if (s->template face<subdim.value>(which) != f) {
+                            std::ostringstream msg;
+                            msg << "Mismatched simplex " << subdim << "-face "
+                                "in " << name << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                        if (s->template faceMapping<subdim.value>(which) != v) {
+                            std::ostringstream msg;
+                            msg << "Mismatched simplex " << subdim << "-face "
+                                "mapping in " << name << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                }
+                if (bdry != tri.template countBoundaryFaces<subdim.value>()) {
+                    std::ostringstream msg;
+                    msg << "Mismatched boundary " << subdim << "-face "
+                        "count in " << name << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (degreeSum != tri.size() *
+                        regina::binomSmall(dim + 1, subdim + 1)) {
+                    std::ostringstream msg;
+                    msg << "Mismatched " << subdim << "-face "
+                        "degree sum in " << name << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            });
+            if (tri.isValid() != allValid) {
+                std::ostringstream msg;
+                msg << "Mismatched triangulation validity in " << name << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Additional skeletal data for low dimensions:
+
+            if constexpr (regina::standardDim(dim)) {
+                regina::for_constexpr<0, dim>([name, &tri](auto subdim) {
+                    size_t count = 0;
+                    for (auto c : tri.components()) {
+                        for (auto f : c->template faces<subdim.value>()) {
+                            if (f->component() != c) {
+                                std::ostringstream msg;
+                                msg << "Mismatched " << subdim << "-face "
+                                    "component in " << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                            ++count;
+                        }
+                    }
+                    if (count != tri.template countFaces<subdim.value>()) {
+                        std::ostringstream msg;
+                        msg << "Mismatched " << subdim << "-face "
+                            "count over all components in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                });
+            }
+
+            if constexpr (dim == 3 || dim == 4) {
+                bool foundIdeal = false;
+                bool allStandard = true;
+                for (auto c : tri.components()) {
+                    bool foundIdealInComponent = false;
+                    for (auto v : c->vertices()) {
+                        if (v->isIdeal())
+                            foundIdeal = foundIdealInComponent = true;
+
+                        const auto& link = v->buildLink();
+                        if (v->isLinkOrientable() != link.isOrientable()) {
+                            std::ostringstream msg;
+                            msg << "Mismatched vertex link "
+                                "orientability in " << name << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+
+                        if (link.isSphere()) {
+                            if (v->isIdeal() || ! v->isValid()) {
+                                std::ostringstream msg;
+                                msg << "Mismatched internal vertex "
+                                    "identification in " << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                            if constexpr (dim == 3)
+                                if (v->linkType() != Vertex<dim>::SPHERE) {
+                                    std::ostringstream msg;
+                                    msg << "Mismatched internal vertex "
+                                        "link type in " << name << ".";
+                                    CPPUNIT_FAIL(msg.str());
+                                }
+                        } else if (link.isBall()) {
+                            if (v->isIdeal() || ! v->isValid()) {
+                                std::ostringstream msg;
+                                msg << "Mismatched boundary vertex "
+                                    "identification in " << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                            if constexpr (dim == 3)
+                                if (v->linkType() != Vertex<dim>::DISC) {
+                                    std::ostringstream msg;
+                                    msg << "Mismatched boundary vertex "
+                                        "link type in " << name << ".";
+                                    CPPUNIT_FAIL(msg.str());
+                                }
+                        } else if (link.isValid() && link.isClosed()) {
+                            if (! (v->isValid() && v->isIdeal())) {
+                                std::ostringstream msg;
+                                msg << "Mismatched ideal vertex "
+                                    "identification in " << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                            if constexpr (dim == 3) {
+                                if (link.eulerCharTri() == 0) {
+                                    if (link.isOrientable()) {
+                                        if (v->linkType() !=
+                                                Vertex<dim>::TORUS) {
+                                            std::ostringstream msg;
+                                            msg << "Mismatched torus "
+                                                "vertex link type in "
+                                                << name << ".";
+                                            CPPUNIT_FAIL(msg.str());
+                                        }
+                                    } else {
+                                        if (v->linkType() !=
+                                                Vertex<dim>::KLEIN_BOTTLE) {
+                                            std::ostringstream msg;
+                                            msg << "Mismatched Klein bottle "
+                                                "vertex link type in "
+                                                << name << ".";
+                                            CPPUNIT_FAIL(msg.str());
+                                        }
+                                    }
+                                } else {
+                                    allStandard = false;
+                                    if (v->linkType() !=
+                                            Vertex<dim>::NON_STANDARD_CUSP) {
+                                        std::ostringstream msg;
+                                        msg << "Mismatched non-standard "
+                                            "vertex link type in "
+                                            << name << ".";
+                                        CPPUNIT_FAIL(msg.str());
+                                    }
+                                }
+                            }
+                        } else {
+                            allStandard = false;
+                            if (v->isValid() || v->isIdeal()) {
+                                std::ostringstream msg;
+                                msg << "Mismatched invalid vertex "
+                                    "identification in " << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                            if constexpr (dim == 3)
+                                if (v->linkType() != Vertex<dim>::INVALID) {
+                                    std::ostringstream msg;
+                                    msg << "Mismatched invalid vertex "
+                                        "link type in " << name << ".";
+                                    CPPUNIT_FAIL(msg.str());
+                                }
+                        }
+
+                        if constexpr (dim == 3) {
+                            if (link.eulerCharTri() != v->linkEulerChar()) {
+                                std::ostringstream msg;
+                                msg << "Mismatched vertex link Euler char "
+                                    "in " << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                    }
+                    if constexpr (dim == 4) {
+                        for (auto e : c->edges()) {
+                            const auto& link = e->buildLink();
+                            if ((! e->hasBadIdentification()) &&
+                                    e->isLinkOrientable() !=
+                                    link.isOrientable()) {
+                                std::ostringstream msg;
+                                msg << "Mismatched edge link "
+                                    "orientability in " << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+
+                            if (link.isSphere()) {
+                                if (e->hasBadLink()) {
+                                    std::ostringstream msg;
+                                    msg << "Mismatched internal edge "
+                                        "identification in " << name << ".";
+                                    CPPUNIT_FAIL(msg.str());
+                                }
+                            } else if (link.isBall()) {
+                                if (e->hasBadLink()) {
+                                    std::ostringstream msg;
+                                    msg << "Mismatched boundary edge "
+                                        "identification in " << name << ".";
+                                    CPPUNIT_FAIL(msg.str());
+                                }
+                            } else {
+                                if (! e->hasBadLink()) {
+                                    std::ostringstream msg;
+                                    msg << "Mismatched invalid edge "
+                                        "identification in " << name << ".";
+                                    CPPUNIT_FAIL(msg.str());
+                                }
+                            }
+                        }
+                    }
+                    if (c->isIdeal() != foundIdealInComponent) {
+                        std::ostringstream msg;
+                        msg << "Mismatched ideal component identification "
+                            "in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                if constexpr (dim == 4) {
+                    // In 4-D, we restrict the notion of "ideal triangulations"
+                    // to only include valid triangulations.
+                    // See Triangulation<4>::isIdeal() for why.
+                    if (tri.isValid() && tri.isIdeal() != foundIdeal) {
+                        std::ostringstream msg;
+                        msg << "Mismatched ideal triangulation identification "
+                            "in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } else {
+                    if (tri.isIdeal() != foundIdeal) {
+                        std::ostringstream msg;
+                        msg << "Mismatched ideal triangulation identification "
+                            "in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (tri.isStandard() != allStandard) {
+                        std::ostringstream msg;
+                        msg << "Mismatched standard triangulation "
+                            "identification in " << name << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+
+            if constexpr (dim == 3) {
+                // All triangle types should, at this point, be not yet
+                // determined.
+                for (auto t : tri.triangles()) {
+                    int sub = t->subtype();
+                    switch (t->type()) {
+                        case regina::Triangle<dim>::TRIANGLE:
+                        case regina::Triangle<dim>::PARACHUTE:
+                        case regina::Triangle<dim>::L31:
+                            if (sub != -1) {
+                                std::ostringstream msg;
+                                msg << "Unexpected triangle subtype in "
+                                    << name << " (should be -1).";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                            break;
+
+                        case regina::Triangle<dim>::SCARF:
+                        case regina::Triangle<dim>::CONE:
+                        case regina::Triangle<dim>::MOBIUS:
+                        case regina::Triangle<dim>::HORN:
+                        case regina::Triangle<dim>::DUNCEHAT:
+                            if (sub < 0 || sub > 2) {
+                                std::ostringstream msg;
+                                msg << "Unexpected triangle subtype in "
+                                    << name << " (should be 0/1/2).";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                            break;
+
+                        default:
+                            {
+                                std::ostringstream msg;
+                                msg << "Unexpected triangle type in "
+                                    << name << ".";
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                    }
+                }
+            }
+        }
+
+        static void verifySkeleton(const Triangulation<dim>& tri,
+                const char* name) {
+            verifySkeletonDetail(tri, name);
+
+            // A side-effect of the above is that tri's skeleton is computed.
+            // Now test that the skeleton is cloned correctly.
+            Triangulation<dim> copy(tri);
+            verifySkeletonDetail(copy, (std::string(name) + " (copy)").c_str());
         }
 
         static void verifyMakeCanonical(const Triangulation<dim>& tri,

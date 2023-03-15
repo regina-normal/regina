@@ -68,6 +68,8 @@ Version 7.3  [ (to be determined) ]
             - The copy constructor and copy assignment operator now clones
               skeletal objects as well, with the guarantee that they will use
               the same numbering and labelling as in the source triangulation.
+        Class Triangulation<2>:
+            - New routines isSphere() and isBall().
 
 Version 7.2  [ 28 October, 2022 ]
 

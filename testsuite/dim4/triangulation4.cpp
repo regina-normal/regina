@@ -70,6 +70,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
+    CPPUNIT_TEST(skeleton);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryFaces);
@@ -358,6 +359,10 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void orient() {
             testManualAll(verifyOrient);
+        }
+
+        void skeleton() {
+            testManualAll(verifySkeleton);
         }
 
         void doubleCover() {
