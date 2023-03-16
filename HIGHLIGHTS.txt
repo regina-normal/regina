@@ -8,6 +8,26 @@ Regina - A Normal Surface Theory Calculator
 
 Version 7.3  [ 18 March, 2023 ]
 
+    Overview:
+        - This is primarily a maintenance release.
+    Bugs fixed:
+        - Fixed an algebraic issue where homomorphisms between groups could
+          have been simplified incorrectly, and as a result, group extensions
+          over Z could have been described using incorrect monodromies.  See
+          https://regina-normal.github.io/bugs.html for details.
+        - Fixed a potential buffer overflow in the SnapPea kernel.
+        - Fixed a C++/Python issue where invalid/ideal boundary components of
+          4-manifold triangulations were accessible via the triangulation
+          objects, but not via the individual component objects.
+        - The graphical user interface now compiles under Python 3.11.
+    Other improvements:
+        - Cloned triangulations now also clone the exact numbering/labelling of
+          lower-dimensional faces also (previously these were recomputed).
+          This matters for triangulated boundary components and vertex links,
+          where the numbering/labelling of faces is non-standard.
+        - Other minor mathematical additions and improvements to the
+          C++/Python API; see the full changelog for details.
+
 Version 7.2  [ 28 October, 2022 ]
 
     Overview:

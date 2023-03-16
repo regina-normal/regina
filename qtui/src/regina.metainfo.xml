@@ -64,9 +64,8 @@
     <release version="7.3" date="2023-03-18">
       <description>
         <p>
-          Maintenance release that cleans up some unexpected behviour,
-          improves compatibility with Python 3.11, and fixes a long-standing
-          bug in simplifying homomorphisms between finitely presented groups.
+          Maintenance release that fixes some bugs, cleans up some
+          unexpected behaviour, and improves compatibility with Python 3.11.
         </p>
       </description>
     </release>
