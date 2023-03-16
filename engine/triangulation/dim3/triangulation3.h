@@ -3898,7 +3898,7 @@ namespace regina {
 
 // Inline functions for Triangulation<3>
 
-inline Triangulation<3>::Triangulation(const Triangulation<3>& src) :
+inline Triangulation<3>::Triangulation(const Triangulation& src) :
         Triangulation<3>(src, true) {
 }
 

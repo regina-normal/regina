@@ -451,7 +451,7 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          * time in \a n, but it is not as fast as (for example) directly
          * comparing the internal representations.
          *
-         * \other the group to compare this with.
+         * \param other the group to compare this with.
          * \return \c true if and only if this and the given group contain
          * the same permutations.
          */
@@ -468,7 +468,7 @@ class PermGroup : public Output<PermGroup<n, cached>> {
          * time in \a n, but it is not as fast as (for example) directly
          * comparing the internal representations.
          *
-         * \other the group to compare this with.
+         * \param other the group to compare this with.
          * \return \c true if and only if there is some permutation that
          * belongs to one group but not the other.
          */

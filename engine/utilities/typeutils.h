@@ -252,7 +252,7 @@ struct safe_tuple_element_impl<pos, tuple, out_of_range, false> {
  * type alias is identical to std::tuple_element<pos, tuple>::type.  Otherwise
  * this type alias is identical to the argument \a out_of_range.
  *
- * Note that you should not append ::type when using safe_tuple_element
+ * Note that you should not append `::type` when using safe_tuple_element
  * (i.e., this is really a drop-in replacement for the C++17 type alias
  * std::tuple_element_t, and not the C++11 structure std::tuple_element).
  *

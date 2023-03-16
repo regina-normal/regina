@@ -561,10 +561,8 @@ class Perm {
         /**
          * Creates a permutation that is a clone of the given
          * permutation.
-         *
-         * \param cloneMe the permutation to clone.
          */
-        constexpr Perm(const Perm<n>& cloneMe) = default;
+        constexpr Perm(const Perm&) = default;
 
         /**
          * Returns the internal code representing this permutation.
@@ -852,7 +850,7 @@ class Perm {
          * \param exp the exponent; this may be positive, zero or negative.
          * \return this permutation raised to the power of \a exp.
          */
-        constexpr Perm<n> cachedPow(long exp) const;
+        constexpr Perm cachedPow(long exp) const;
 
         /**
          * Returns the order of this permutation.
@@ -1619,7 +1617,7 @@ class PermClass {
  * PermClass<n>::str().
  *
  * \param out the output stream to which to write.
- * \param p the conjugacy class to write.
+ * \param c the conjugacy class to write.
  * \return a reference to \a out.
  *
  * \tparam n the number of objects being permuted.  This must be between
@@ -2201,6 +2199,9 @@ std::string Perm<n>::trunc(int len) const {
     return ans;
 }
 
+// Doxygen gets confused with templated static member functions, and
+// thinks these are new non-static functions instead.
+#ifndef __DOXYGEN
 template <int n>
 template <int k>
 constexpr Perm<n> Perm<n>::extend(Perm<k> p) {
@@ -2242,6 +2243,7 @@ constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
 
     return Perm<n>(c);
 }
+#endif // __DOXYGEN
 
 template <int n>
 inline void Perm<n>::clear(unsigned from) {
@@ -2278,6 +2280,9 @@ std::string Perm<n>::tightEncoding() const {
     return ans;
 }
 
+// Doxygen gets confused with templated static member functions, and
+// thinks this is a new non-static function instead.
+#ifndef __DOXYGEN
 template <int n>
 template <typename iterator>
 Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
@@ -2314,6 +2319,7 @@ Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
 
     return Sn[idx];
 }
+#endif
 
 template <int n>
 inline Perm<n> Perm<n>::tightDecode(std::istream& input) {
