@@ -118,6 +118,16 @@ R"doc(A dimension-specific alias for hasBoundaryFacets().
 
 See hasBoundaryFacets() for further information.)doc";
 
+// Docstring regina::python::doc::Triangulation_::isBall
+static const char *isBall =
+R"doc(Determines whether this is a triangulation of a 2-ball.
+
+Unlike the 3-dimensional version of this routine, isBall() for
+2-manifolds is fast and simple.
+
+Returns:
+    ``True`` if and only if this is a 2-ball triangulation.)doc";
+
 // Docstring regina::python::doc::Triangulation_::isClosed
 static const char *isClosed =
 R"doc(Determines if this triangulation is closed. This is the case if and
@@ -163,6 +173,16 @@ underlying manifold.
 
 Returns:
     ``True`` if and only if this is a minimal triangulation.)doc";
+
+// Docstring regina::python::doc::Triangulation_::isSphere
+static const char *isSphere =
+R"doc(Determines whether this is a triangulation of a 2-sphere.
+
+Unlike the 3-dimensional version of this routine, isSphere() for
+2-manifolds is fast and simple.
+
+Returns:
+    ``True`` if and only if this is a 2-sphere triangulation.)doc";
 
 // Docstring regina::python::doc::Triangulation_::newTriangle
 static const char *newTriangle =
