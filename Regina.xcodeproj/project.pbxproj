@@ -3944,6 +3944,7 @@
 		05721F171F97165000A83FFC /* graph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = graph.cpp; sourceTree = "<group>"; };
 		05721F181F97165000A83FFC /* testlink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testlink.h; sourceTree = "<group>"; };
 		05721F191F97165000A83FFC /* link.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = link.cpp; sourceTree = "<group>"; };
+		0573652229C3F40900EDC0DF /* regina.metainfo.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = regina.metainfo.xml; sourceTree = "<group>"; };
 		05754CC1258B38C100236ED7 /* laurent2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent2.cpp; sourceTree = "<group>"; };
 		05754CD3258B814D00236ED7 /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		05754CE5258D7D6400236ED7 /* randutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = randutils.h; sourceTree = "<group>"; };
@@ -7558,6 +7559,7 @@
 				0564A5E31811D920002CC2AE /* regina.plist */,
 				0564A5E41811D920002CC2AE /* regina.rc */,
 				0564A5E51811D920002CC2AE /* regina.xml */,
+				0573652229C3F40900EDC0DF /* regina.metainfo.xml */,
 				0564A5E61811D920002CC2AE /* reginaabout.cpp */,
 				0564A5E71811D920002CC2AE /* reginaabout.h */,
 				0564A5E81811D920002CC2AE /* reginafilter.h */,
