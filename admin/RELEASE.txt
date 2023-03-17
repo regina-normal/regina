@@ -59,6 +59,7 @@ Don't forget:
     python bindings for new routines
     rebuild python docstrings and sanity check them
     rebuild manpages
+    check for new Xcode sources
     website, including updated news, what's new and deprecation guide
     build binary packages, with appropriate BUILD_INFO settings
     update tips for building on different platforms
