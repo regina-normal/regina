@@ -707,7 +707,7 @@ class Perm<6> {
          *
          * \return the inverse of this permutation.
          */
-        constexpr Perm<6> cachedInverse() const;
+        Perm<6> cachedInverse() const;
 
         /**
          * Computes the given power of this permutation.
@@ -3327,7 +3327,7 @@ inline constexpr Perm<6> Perm<6>::inverse() const {
     return Perm<6>(invS6[code2_]);
 }
 
-inline constexpr Perm<6> Perm<6>::cachedInverse() const {
+inline Perm<6> Perm<6>::cachedInverse() const {
     return Perm<6>(invS6[code2_]);
 }
 

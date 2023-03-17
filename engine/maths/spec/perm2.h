@@ -436,7 +436,7 @@ class Perm<2> {
          * \param q the permutation to compose this with.
          * \return the composition of both permutations.
          */
-        constexpr Perm<2> cachedComp(const Perm<2>& q) const;
+        Perm<2> cachedComp(const Perm<2>& q) const;
 
         /**
          * Deprecated alias for using the composition operator twice, provided
@@ -459,8 +459,8 @@ class Perm<2> {
          * \param r the second permutation to compose this with.
          * \return the composition of both permutations.
          */
-        [[deprecated]] constexpr Perm<2> cachedComp(const Perm<2>& q,
-            const Perm<2>& r) const;
+        [[deprecated]] Perm<2> cachedComp(const Perm<2>& q, const Perm<2>& r)
+            const;
 
         /**
          * Computes the conjugate of this permutation by \a q.
@@ -501,7 +501,7 @@ class Perm<2> {
          * \param q the permutation to conjugate this by.
          * \return the conjugate of this permutation by \a q.
          */
-        constexpr Perm<2> cachedConjugate(const Perm<2>& q) const;
+        Perm<2> cachedConjugate(const Perm<2>& q) const;
 
         /**
          * Finds the inverse of this permutation.
@@ -535,7 +535,7 @@ class Perm<2> {
          *
          * \return the inverse of this permutation.
          */
-        constexpr Perm<2> cachedInverse() const;
+        Perm<2> cachedInverse() const;
 
         /**
          * Computes the given power of this permutation.
@@ -572,7 +572,7 @@ class Perm<2> {
          * \param exp the exponent; this may be positive, zero or negative.
          * \return this permutation raised to the power of \a exp.
          */
-        constexpr Perm<2> cachedPow(long exp) const;
+        Perm<2> cachedPow(long exp) const;
 
         /**
          * Returns the order of this permutation.
@@ -609,7 +609,7 @@ class Perm<2> {
          *
          * \return the order of this permutation.
          */
-        constexpr int cachedOrder() const;
+        int cachedOrder() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -1082,12 +1082,11 @@ inline constexpr Perm<2> Perm<2>::operator * (const Perm<2>& q) const {
     return Perm<2>(code_ ^ q.code_);
 }
 
-inline constexpr Perm<2> Perm<2>::cachedComp(const Perm<2>& q) const {
+inline Perm<2> Perm<2>::cachedComp(const Perm<2>& q) const {
     return Perm<2>(code_ ^ q.code_);
 }
 
-inline constexpr Perm<2> Perm<2>::cachedComp(const Perm<2>& q,
-        const Perm<2>& r) const {
+inline Perm<2> Perm<2>::cachedComp(const Perm<2>& q, const Perm<2>& r) const {
     return Perm<2>(code_ ^ q.code_ ^ r.code_);
 }
 
@@ -1096,7 +1095,7 @@ inline constexpr Perm<2> Perm<2>::conjugate(const Perm<2>& q) const {
     return *this;
 }
 
-inline constexpr Perm<2> Perm<2>::cachedConjugate(const Perm<2>& q) const {
+inline Perm<2> Perm<2>::cachedConjugate(const Perm<2>& q) const {
     // In S2, conjugation does nothing.
     return *this;
 }
@@ -1105,7 +1104,7 @@ inline constexpr Perm<2> Perm<2>::inverse() const {
     return *this;
 }
 
-inline constexpr Perm<2> Perm<2>::cachedInverse() const {
+inline Perm<2> Perm<2>::cachedInverse() const {
     return *this;
 }
 
@@ -1113,7 +1112,7 @@ inline constexpr Perm<2> Perm<2>::pow(long exp) const {
     return (exp & 1 ? *this : Perm<2>());
 }
 
-inline constexpr Perm<2> Perm<2>::cachedPow(long exp) const {
+inline Perm<2> Perm<2>::cachedPow(long exp) const {
     return (exp & 1 ? *this : Perm<2>());
 }
 
@@ -1121,7 +1120,7 @@ inline constexpr int Perm<2>::order() const {
     return (code_ + 1);
 }
 
-inline constexpr int Perm<2>::cachedOrder() const {
+inline int Perm<2>::cachedOrder() const {
     return (code_ + 1);
 }
 
