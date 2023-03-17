@@ -343,11 +343,7 @@ Returns:
     the image of *source*.)doc";
 
 // Docstring regina::python::doc::Perm_::__copy
-static const char *__copy =
-R"doc(Creates a permutation that is a clone of the given permutation.
-
-Parameter ``cloneMe``:
-    the permutation to clone.)doc";
+static const char *__copy = R"doc(Creates a permutation that is a clone of the given permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::__default
 static const char *__default = R"doc(Creates the identity permutation.)doc";

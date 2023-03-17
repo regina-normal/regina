@@ -106,7 +106,8 @@ As a result, this test is not trivial. It _is_ small polynomial time
 in *n*, but it is not as fast as (for example) directly comparing the
 internal representations.
 
-\other the group to compare this with.
+Parameter ``other``:
+    the group to compare this with.
 
 Returns:
     ``True`` if and only if this and the given group contain the same
@@ -200,7 +201,8 @@ As a result, this test is not trivial. It _is_ small polynomial time
 in *n*, but it is not as fast as (for example) directly comparing the
 internal representations.
 
-\other the group to compare this with.
+Parameter ``other``:
+    the group to compare this with.
 
 Returns:
     ``True`` if and only if there is some permutation that belongs to
