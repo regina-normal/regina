@@ -2535,6 +2535,23 @@ inline PermClass<n> PermClass<n>::operator ++(int) {
 #include "maths/spec/perm5.h"
 #include "maths/spec/perm7.h"
 
+// Explicitly declare the non-specialised classes as extern.  Otherwise the
+// linker on Windows (and *only* Windows) fails to unify their static data
+// members between the DLL and the executable (even though they are correctly
+// listed in the DLL export list, and even though Linux and macOS seem to
+// manage this just fine).  This then causes a crash, since the precomputed
+// tables are being written to and read from using different memory addresses.
+//
+extern template class regina::Perm<8>;
+extern template class regina::Perm<9>;
+extern template class regina::Perm<10>;
+extern template class regina::Perm<11>;
+extern template class regina::Perm<12>;
+extern template class regina::Perm<13>;
+extern template class regina::Perm<14>;
+extern template class regina::Perm<15>;
+extern template class regina::Perm<16>;
+
 namespace regina {
 
 // What follows are implementations that use these specialised classes.

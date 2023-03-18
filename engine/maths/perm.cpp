@@ -81,16 +81,6 @@ void Perm<n>::precompute() {
     }
 }
 
-template void Perm<8>::precompute();
-template void Perm<9>::precompute();
-template void Perm<10>::precompute();
-template void Perm<11>::precompute();
-template void Perm<12>::precompute();
-template void Perm<13>::precompute();
-template void Perm<14>::precompute();
-template void Perm<15>::precompute();
-template void Perm<16>::precompute();
-
 template <int n>
 Perm<n>& Perm<n>::operator ++() {
     // We implement a lexicographic "next permutation" algorithm; however,
@@ -164,15 +154,22 @@ Perm<n>& Perm<n>::operator ++() {
     return *this;
 }
 
-template Perm<8>& Perm<8>::operator ++();
-template Perm<9>& Perm<9>::operator ++();
-template Perm<10>& Perm<10>::operator ++();
-template Perm<11>& Perm<11>::operator ++();
-template Perm<12>& Perm<12>::operator ++();
-template Perm<13>& Perm<13>::operator ++();
-template Perm<14>& Perm<14>::operator ++();
-template Perm<15>& Perm<15>::operator ++();
-template Perm<16>& Perm<16>::operator ++();
+// Explicitly instantiate all of the higher-order permutation classes,
+// so that their static data members are defined in one and only one place.
+//
+// See the notes alongside the matching extern declarations in the header
+// for why we are doing this.  (Short answer: Windows is a terrible platform
+// to try to port software to.)
+//
+template class Perm<8>;
+template class Perm<9>;
+template class Perm<10>;
+template class Perm<11>;
+template class Perm<12>;
+template class Perm<13>;
+template class Perm<14>;
+template class Perm<15>;
+template class Perm<16>;
 
 } // namespace regina
 
