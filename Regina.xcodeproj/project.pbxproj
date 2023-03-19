@@ -9085,6 +9085,7 @@
 				052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */,
 				057ED8FC2581B49E004F0068 /* Embed Frameworks */,
 				052DB59E1D9E587C00EDEA68 /* Sign Utilities */,
+				05F37DE929C6B2A500A6203B /* Sign Libraries */,
 				05B9295C259C148700A4503B /* Prepare and Sign Python */,
 			);
 			buildRules = (
@@ -9549,6 +9550,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app\ndone\n";
+		};
+		05F37DE929C6B2A500A6203B /* Sign Libraries */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Sign Libraries";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Our shared libraries need to be signed with entitlements also.\n# These will be stripped out when uploading to the App Store;\n# however, their absence causes Xcode to manage automatic signing incorrectly.\n#\n# For details, see: https://stackoverflow.com/questions/75422505/how-to-prevent-xcode-from-adding-malformed-entitlements-to-my-dylibs/75422519#75422519%29\n#\n# For now we reuse the utilities entitlements file, which is an empty placeholder.\n\nfor i in libregina-engine.dylib python/regina/engine.so; do\n/usr/bin/codesign --force --options runtime --sign 'Apple Development:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -12025,7 +12044,7 @@
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -12076,7 +12095,7 @@
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
