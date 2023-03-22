@@ -1304,7 +1304,7 @@ class GroupPresentation : public Output<GroupPresentation> {
         std::optional<HomGroupPresentation> homologicalAlignment();
 
         /**
-         * An entirely cosmetic re-writing of the presentation, which is
+         * An entirely cosmetic rewriting of the presentation, which is
          * fast and superficial.
          *
          * -# If there are any length 1 relators, those generators are
