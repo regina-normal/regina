@@ -673,6 +673,7 @@ set(CPACK_SOURCE_IGNORE_FILES
   "^${PROJECT_SOURCE_DIR}/engine/snappea/kernel/unused/"
   "^${PROJECT_SOURCE_DIR}/ios/"
   "^${PROJECT_SOURCE_DIR}/packaging/"
+  "^${PROJECT_SOURCE_DIR}/python/docstrings/clang-support/"
   "^${PROJECT_SOURCE_DIR}/utils/local/"
   "^${PROJECT_SOURCE_DIR}/utils/snappea/"
   "^${PROJECT_SOURCE_DIR}/www/"
