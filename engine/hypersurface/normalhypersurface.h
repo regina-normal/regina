@@ -1552,5 +1552,9 @@ inline void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept {
 
 } // namespace regina
 
+// If we haven't yet seen the full definition of Triangulation<4>, include it
+// now - the SnapshotRef constructor (used inline above) needs it.
+#include "triangulation/dim4.h"
+
 #endif
 
