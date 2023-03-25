@@ -320,6 +320,16 @@ MACRO_LOG_FEATURE(Jansson_FOUND
   "http://www.digip.org/jansson/"
   TRUE)
 
+IF (NOT DISABLE_UTILS)
+  FIND_PACKAGE(POPT)
+  MACRO_LOG_FEATURE(POPT_FOUND
+    "Popt"
+    "Required for Regina's command-line utilities"
+    "http://rpm5.org/files/popt/"
+    TRUE ""
+    "To disable the command-line utilities, run: cmake -DDISABLE_UTILS=1")
+ENDIF (NOT DISABLE_UTILS)
+
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
 
@@ -360,14 +370,6 @@ MACRO_LOG_FEATURE(KVStore_FOUND
   "${KVStore_DISPLAYNAME}"
   "Essential: lightweight database library for census data"
   "${KVStore_DISPLAYURL}"
-  TRUE)
-
-# Dependencies used by only some components of Regina
-FIND_PACKAGE(POPT)
-MACRO_LOG_FEATURE(POPT_FOUND
-  "Popt"
-  "Essential: command-line option processing"
-  "http://rpm5.org/files/popt/"
   TRUE)
 
 # Optionals
@@ -463,7 +465,14 @@ endif ()
 # Core directories
 ADD_SUBDIRECTORY(admin)
 ADD_SUBDIRECTORY(engine)
-ADD_SUBDIRECTORY(utils)
+
+# Command-line utilities
+IF (POPT_FOUND)
+  ADD_SUBDIRECTORY(utils)
+  MESSAGE(STATUS "Command-line utilities enabled.")
+ELSE (POPT_FOUND)
+  MESSAGE(STATUS "Command-line utilities disabled.")
+ENDIF (POPT_FOUND)
 
 # Python support
 
