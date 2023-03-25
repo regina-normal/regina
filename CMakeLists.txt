@@ -270,7 +270,7 @@ CHECK_CXX_SOURCE_COMPILES("
 # Note that pkg-config is optional, but it does help us find some libraries
 # that we could perhaps not have found otherwise.
 # In particular, most build environments will need it to locate Graphviz.
-FIND_PACKAGE(PkgConfig)
+FIND_PACKAGE(PkgConfig QUIET)
 
 FIND_PACKAGE(ZLIB)
 INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
