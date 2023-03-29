@@ -241,33 +241,39 @@ a new Python session.)doc");
         } catch (const regina::InvalidArgument&) {
         }
         auto t1 = std::chrono::system_clock::now();
+        {
+            // A case where no exception gets thrown, for comparison.
+            regina::Perm<2>::tightDecoding("!"); // identity permutation
+        }
+        auto t2 = std::chrono::system_clock::now();
         try {
             throw regina::FailedPrecondition("Oops!");
         } catch (const regina::FailedPrecondition&) {
         }
-        auto t2 = std::chrono::system_clock::now();
+        auto t3 = std::chrono::system_clock::now();
         try {
             throw pybind11::stop_iteration();
         } catch (const pybind11::stop_iteration&) {
         }
-        auto t3 = std::chrono::system_clock::now();
+        auto t4 = std::chrono::system_clock::now();
 
-        auto d1 =
-            std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0);
-        auto d2 =
-            std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
-        auto d3 =
-            std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2);
-        return std::make_tuple(d1.count(), d2.count(), d3.count());
+        using tick = std::chrono::microseconds;
+        return std::make_tuple(
+            std::chrono::duration_cast<tick>(t1 - t0).count(),
+            std::chrono::duration_cast<tick>(t2 - t1).count(),
+            std::chrono::duration_cast<tick>(t3 - t2).count(),
+            std::chrono::duration_cast<tick>(t4 - t3).count());
     }, R"doc(Diagnostic routine to test the performance of C++ exceptions.
 
-This routine performs several C++ try/catch operations, using both
-Regina and pybind11, and measures their running times.
+This routine performs several C++ operations, most involving try/catch
+blocks using either Regina or pybind11 exceptions, and measures their
+running times.
 
 Returns:
     A tuple giving the elapsed time for each operation, measured in
-    microseconds.  The size of this tuple is subject to change in
-    future versions of Regina.)doc");
+    microseconds.  The size of this tuple, as well as the specific
+    operations performed, are subject to change in future versions of
+    Regina.)doc");
 
     RDOC_SCOPE_SWITCH(Algorithm)
 
