@@ -39,6 +39,10 @@
 #include "docstrings/core/regina-core.h"
 #include "docstrings/python/equality.h"
 
+// Additional headers for timeExceptions():
+#include "maths/perm.h"
+#include <chrono>
+
 // Docstrings that are generated once but need to be reused across many
 // source files:
 namespace regina::python::doc::common {
@@ -225,6 +229,45 @@ a new Python session.)doc");
     m.def("hasInt128", regina::hasInt128, rdoc::hasInt128);
     m.def("politeThreads", regina::politeThreads, rdoc::politeThreads);
     m.def("testEngine", regina::testEngine, rdoc::testEngine);
+
+    // Python-only:
+    m.def("timeExceptions", []() {
+        auto t0 = std::chrono::system_clock::now();
+        try {
+            // Use a routine that does a bit of work and throws an exception.
+            // We can be reasonably confident that the compiler hasn't
+            // optimised away the try/catch block.
+            regina::Perm<2>::tightDecoding("_");
+        } catch (const regina::InvalidArgument&) {
+        }
+        auto t1 = std::chrono::system_clock::now();
+        try {
+            throw regina::FailedPrecondition("Oops!");
+        } catch (const regina::FailedPrecondition&) {
+        }
+        auto t2 = std::chrono::system_clock::now();
+        try {
+            throw pybind11::stop_iteration();
+        } catch (const pybind11::stop_iteration&) {
+        }
+        auto t3 = std::chrono::system_clock::now();
+
+        auto d1 =
+            std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0);
+        auto d2 =
+            std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
+        auto d3 =
+            std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2);
+        return std::make_tuple(d1.count(), d2.count(), d3.count());
+    }, R"doc(Diagnostic routine to test the performance of C++ exceptions.
+
+This routine performs several C++ try/catch operations, using both
+Regina and pybind11, and measures their running times.
+
+Returns:
+    A tuple giving the elapsed time for each operation, measured in
+    microseconds.  The size of this tuple is subject to change in
+    future versions of Regina.)doc");
 
     RDOC_SCOPE_SWITCH(Algorithm)
 
