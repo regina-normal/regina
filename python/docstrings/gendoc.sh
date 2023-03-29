@@ -30,6 +30,32 @@ else
   PYTHON=python3
 fi
 
+# If we are using Xcode clang, we will use the matching clang python bindings
+# in the regina source tree.
+if ! clang_version=`clang --version | head -n1`; then
+  echo "ERROR: Could not find clang on the path."
+  exit 1
+fi
+case "$clang_version" in
+  'Apple clang version '* )
+    # Assume we are on macOS, and therefore have BSD sed.
+    echo "macOS: $clang_version"
+    clang_major="`echo "$clang_version" | \
+      /usr/bin/sed -E -e 's/^Apple clang version ([0-9]+)\..*$/\1/'`"
+    clang_support="clang-support/$clang_major"
+    if [ -d "$clang_support" ]; then
+      export PYTHONPATH="$clang_support:$PYTHONPATH"
+    else
+      echo "ERROR: Could not access clang python bindings"
+      echo "       Clang major version: $clang_major"
+      echo "       Bindings path: $clang_support"
+      exit 1
+    fi
+    ;;
+  * )
+    ;;
+esac
+
 # For the include path, we grab the pre-rolled macOS config file.
 # The choice of config file shouldn't actually affect the docstrings.
 export PYTHONPATH=".:$PYTHONPATH"

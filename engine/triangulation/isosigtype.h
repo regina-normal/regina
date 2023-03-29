@@ -47,6 +47,8 @@
 
 namespace regina {
 
+template <int, int> class FaceNumbering;
+
 /**
  * The default signature type to use for isomorphism signatures.
  *

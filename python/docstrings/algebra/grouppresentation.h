@@ -1207,7 +1207,7 @@ Returns:
 
 // Docstring regina::python::doc::GroupPresentation_::prettyRewriting
 static const char *prettyRewriting =
-R"doc(An entirely cosmetic re-writing of the presentation, which is fast and
+R"doc(An entirely cosmetic rewriting of the presentation, which is fast and
 superficial.
 
 1. If there are any length 1 relators, those generators are deleted,

@@ -47,6 +47,7 @@
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing.h"
+#include "triangulation/generic/isomorphism.h"
 #include "utilities/exception.h"
 
 namespace regina {

@@ -6,20 +6,12 @@
 # Copyright (c) 2003-2023, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Usage: distcheck <dist-tarball>
+# Usage: stats.pl
 #
-# Verifies that a tarball formed using "make dist" contains all the
-# files it should.  This script outputs a list of files contained in
-# the git source tree that are missing from the tarball.
+# Gives some very basic summary statistics about Regina's source code.
 #
-# Files that are not necessary for inclusion in the tarball (such as
-# auto-generated files or the Regina website) are not included in this
-# output.
-#
-# This script must be run from either the top-level source directory within
-# the git source tree, or from the admin/ directory beneath it.
-#
-# Requires: diff, find, grep, mktemp, sed, sort, tar
+# This script must be run from the top-level source directory within
+# the git source tree.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -50,9 +42,35 @@ if (not (-e 'LICENSE.txt' and -d 'engine')) {
 }
 
 my @ext = qw(cpp cc c h hpp tcc m mm py);
-my $types = '-name "*.' . join('" -o -name "*.', @ext) . '"';
+my $types = '\\( -name "*.' . join('" -o -name "*.', @ext) . '" \\)';
 
-my $all = `find . $types | xargs cat | wc -l`;
+# Find any builddirs that should be ignored.
+my @builddirs = ();
+opendir(my $dh, '.') or die 'Could not open ./';
+while (readdir $dh) {
+    ($_ eq '.' or $_ eq '..') and next;
+    -d $dh and -e "$_/CMakeCache.txt" and push @builddirs, $_;
+}
+closedir $dh;
+
+my $exclusions;
+if (@builddirs) {
+    print "Excluding build directories: @builddirs\n";
+    foreach (@builddirs) {
+        /'/ and die "Build directory name contains special characters";
+        if (not $exclusions) {
+            $exclusions = "\\( \\! \\( -path './$_/*'";
+        } else {
+            $exclusions .= " -o -path './$_/*'";
+        }
+    }
+    $exclusions .= ' \\) \\)';
+} else {
+    print "No build directories to exclude\n";
+    $exclusions = '';
+}
+
+my $all = `find . $types $exclusions | xargs cat | wc -l`;
 my $snappea = `find engine/snappea/kernel $types | xargs cat | wc -l`;
 my $snappy = `find engine/snappea/snappy $types | xargs cat | wc -l`;
 my $normaliz = `find engine/libnormaliz $types | xargs cat | wc -l`;

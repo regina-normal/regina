@@ -133,6 +133,7 @@ if ! find "$gittree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^\.' | \
     grep -v '/\.' | \
     grep -v '^engine/snappea/kernel/unused\(/\|$\)' | \
+    grep -v '^python/docstrings/clang-support\(/\|$\)' | \
     grep -v '^regina-[0-9.]\+\.tar\.gz$' | \
     grep -v '^sfdist\(/\|$\)' | \
     grep -v '^utils/local\(/\|$\)' | \

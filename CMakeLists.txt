@@ -270,7 +270,7 @@ CHECK_CXX_SOURCE_COMPILES("
 # Note that pkg-config is optional, but it does help us find some libraries
 # that we could perhaps not have found otherwise.
 # In particular, most build environments will need it to locate Graphviz.
-FIND_PACKAGE(PkgConfig)
+FIND_PACKAGE(PkgConfig QUIET)
 
 FIND_PACKAGE(ZLIB)
 INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
@@ -320,6 +320,16 @@ MACRO_LOG_FEATURE(Jansson_FOUND
   "http://www.digip.org/jansson/"
   TRUE)
 
+IF (NOT DISABLE_UTILS)
+  FIND_PACKAGE(POPT)
+  MACRO_LOG_FEATURE(POPT_FOUND
+    "Popt"
+    "Required for Regina's command-line utilities"
+    "http://rpm5.org/files/popt/"
+    TRUE ""
+    "To disable the command-line utilities, run: cmake -DDISABLE_UTILS=1")
+ENDIF (NOT DISABLE_UTILS)
+
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
 
@@ -360,14 +370,6 @@ MACRO_LOG_FEATURE(KVStore_FOUND
   "${KVStore_DISPLAYNAME}"
   "Essential: lightweight database library for census data"
   "${KVStore_DISPLAYURL}"
-  TRUE)
-
-# Dependencies used by only some components of Regina
-FIND_PACKAGE(POPT)
-MACRO_LOG_FEATURE(POPT_FOUND
-  "Popt"
-  "Essential: command-line option processing"
-  "http://rpm5.org/files/popt/"
   TRUE)
 
 # Optionals
@@ -463,7 +465,14 @@ endif ()
 # Core directories
 ADD_SUBDIRECTORY(admin)
 ADD_SUBDIRECTORY(engine)
-ADD_SUBDIRECTORY(utils)
+
+# Command-line utilities
+IF (POPT_FOUND)
+  ADD_SUBDIRECTORY(utils)
+  MESSAGE(STATUS "Command-line utilities enabled.")
+ELSE (POPT_FOUND)
+  MESSAGE(STATUS "Command-line utilities disabled.")
+ENDIF (POPT_FOUND)
 
 # Python support
 
@@ -670,9 +679,12 @@ set(CPACK_SOURCE_IGNORE_FILES
   "~$"
   "^${PROJECT_BINARY_DIR}/"
   "^${PROJECT_SOURCE_DIR}/Regina.xcodeproj/"
+  "^${PROJECT_SOURCE_DIR}/admin/RELEASE.txt"
+  "^${PROJECT_SOURCE_DIR}/admin/distcheck"
   "^${PROJECT_SOURCE_DIR}/engine/snappea/kernel/unused/"
   "^${PROJECT_SOURCE_DIR}/ios/"
   "^${PROJECT_SOURCE_DIR}/packaging/"
+  "^${PROJECT_SOURCE_DIR}/python/docstrings/clang-support/"
   "^${PROJECT_SOURCE_DIR}/utils/local/"
   "^${PROJECT_SOURCE_DIR}/utils/snappea/"
   "^${PROJECT_SOURCE_DIR}/www/"
