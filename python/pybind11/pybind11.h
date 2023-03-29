@@ -995,6 +995,16 @@ protected:
         } catch (abi::__forced_unwind &) {
             throw;
 #endif
+        } catch (const pybind11::stop_iteration& stop) {
+            /* We prioritise catching stop_iteration before any of the other
+               exception logic below, since stop_iteration is arguably the one
+               setting where exceptions are normal as opposed to "exceptional".
+               The default exception logic involves many try/catch/rethrow
+               blocks, and in settings where try/catch is slow (e.g., running
+               within SageMath on macOS), this can add to a noticeable
+               performance penalty when using iterators. */
+           PyErr_SetString(PyExc_StopIteration, stop.what());
+           return nullptr;
         } catch (...) {
             /* When an exception is caught, give each registered exception
                translator a chance to translate it to a Python exception. First
