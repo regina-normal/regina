@@ -48,9 +48,16 @@ public:
          */
         if (auto cfunc = func.cpp_function()) {
             auto *cfunc_self = PyCFunction_GET_SELF(cfunc.ptr());
-            if (isinstance<capsule>(cfunc_self)) {
+            if (cfunc_self == nullptr) {
+                PyErr_Clear();
+            } else if (isinstance<capsule>(cfunc_self)) {
                 auto c = reinterpret_borrow<capsule>(cfunc_self);
-                auto *rec = (function_record *) c;
+
+                function_record *rec = nullptr;
+                // Check that we can safely reinterpret the capsule into a function_record
+                if (detail::is_function_record_capsule(c)) {
+                    rec = c.get_pointer<function_record>();
+                }
 
                 while (rec != nullptr) {
                     if (rec->is_stateless
@@ -82,18 +89,12 @@ public:
             }
             func_handle(const func_handle &f_) { operator=(f_); }
             func_handle &operator=(const func_handle &f_) {
-                // Called on the way into a Regina function that expects
-                // a std::function argument.  In such situations the
-                // interpreter should already be holding the GIL.
-                // gil_scoped_acquire acq;
+                gil_scoped_acquire acq;
                 f = f_.f;
                 return *this;
             }
             ~func_handle() {
-                // Called on the way into and also out of a Regina function
-                // that expects a std::function argument.  In such situations
-                // the interpreter should already be holding the GIL.
-                // gil_scoped_acquire acq;
+                gil_scoped_acquire acq;
                 function kill_f(std::move(f));
             }
         };
@@ -103,10 +104,7 @@ public:
             func_handle hfunc;
             explicit func_wrapper(func_handle &&hf) noexcept : hfunc(std::move(hf)) {}
             Return operator()(Args... args) const {
-                // Called when a std::function is executed as a callback within
-                // one of Regina's own functions.  In such situations Regina's
-                // Python bindings are responsible for ensuring the GIL is held.
-                // gil_scoped_acquire acq;
+                gil_scoped_acquire acq;
                 // casts the returned object as a rvalue to the return type
                 return hfunc.f(std::forward<Args>(args)...).template cast<Return>();
             }
@@ -119,7 +117,7 @@ public:
     template <typename Func>
     static handle cast(Func &&f_, return_value_policy policy, handle /* parent */) {
         if (!f_) {
-            return none().inc_ref();
+            return none().release();
         }
 
         auto result = f_.template target<function_type>();
