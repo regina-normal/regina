@@ -1,46 +1,245 @@
-diff --git a/testsuite/generic/triangulationtest.h b/testsuite/generic/triangulationtest.h
-index efd37d730..d76efbe71 100644
---- a/testsuite/generic/triangulationtest.h
-+++ b/testsuite/generic/triangulationtest.h
-@@ -1162,6 +1162,17 @@ class TriangulationTest : public CppUnit::TestFixture,
-                     // appear to be ordered and labelled correctly.
+diff --git a/engine/snappea/kernel/my_malloc.c b/engine/snappea/kernel/my_malloc.c
+index d778b1476..1820b31fc 100644
+--- a/engine/snappea/kernel/my_malloc.c
++++ b/engine/snappea/kernel/my_malloc.c
+@@ -50,7 +50,7 @@
  
-                     BoundaryHelper<dim, dim-2>::verifyFaces(bc, built, name);
+ #include "kernel.h"
+ #include <stdlib.h> /* needed for malloc()  */
+-#include <stdio.h>  /* needed for sprintf() */
++#include <stdio.h>  /* needed for snprintf() */
+ #include "kernel_namespace.h"
+ 
+ static int  net_malloc_calls = 0;
+@@ -206,7 +206,7 @@ void verify_my_malloc_usage()
+ 
+     if (net_malloc_calls != 0)
+     {
+-        sprintf(the_message, "Memory allocation error:\rThere were %d %s calls to my_malloc() than to my_free().",
++        snprintf(the_message, 256, "Memory allocation error:\rThere were %d %s calls to my_malloc() than to my_free().",
+             net_malloc_calls > 0 ? net_malloc_calls : - net_malloc_calls,
+             net_malloc_calls > 0 ? "more" : "fewer");
+         uAcknowledge(the_message);
+diff --git a/engine/snappea/kernel/triangulations.c b/engine/snappea/kernel/triangulations.c
+index b8c3bc65b..367866f48 100644
+--- a/engine/snappea/kernel/triangulations.c
++++ b/engine/snappea/kernel/triangulations.c
+@@ -55,7 +55,7 @@
+  */
+ 
+ #include "kernel.h"
+-#include <stdio.h>  /* for sprintf() in check_neighbors_and_gluings() */
++#include <stdio.h>  /* for snprintf() in check_neighbors_and_gluings() */
+ #include "kernel_namespace.h"
+ 
+ static void check_neighbors_and_gluings(Triangulation *manifold);
+@@ -361,7 +361,7 @@ static void check_neighbors_and_gluings(
+ 
+             if (nbr->neighbor[nbr_f] != tet)
+             {
+-                sprintf(scratch, "inconsistent neighbor data, tet %d face %d to tet %d face %d",
++	        snprintf(scratch, 256, "inconsistent neighbor data, tet %d face %d to tet %d face %d",
+                         tet->index, f, nbr->index, nbr_f);
+                 uAcknowledge(scratch);
+                 uFatalError("check_neighbors_and_gluings", "triangulations");
+@@ -369,7 +369,7 @@ static void check_neighbors_and_gluings(
+ 
+             if (nbr->gluing[nbr_f] != inverse_permutation[this_gluing])
+             {
+-                sprintf(scratch, "inconsistent gluing data, tet %d face %d to tet %d face %d",
++	        snprintf(scratch, 256, "inconsistent gluing data, tet %d face %d to tet %d face %d",
+                         tet->index, f, nbr->index, nbr_f);
+                 uAcknowledge(scratch);
+                 uFatalError("check_neighbors_and_gluings", "triangulations");
+diff --git a/engine/snappea/kernel/unix_file_io.c b/engine/snappea/kernel/unix_file_io.c
+index c924b5866..2a53772c7 100644
+--- a/engine/snappea/kernel/unix_file_io.c
++++ b/engine/snappea/kernel/unix_file_io.c
+@@ -709,125 +709,131 @@ static char *StringNewFileFormat(
+         size;
+     char *buffer;
+     char *p;
+-
++    char *end;
++    
+     size = 100*(10 + data->num_or_cusps + data->num_nonor_cusps + 8*data->num_tetrahedra);
+     buffer = (char *)malloc(size);
+     if ( buffer == NULL)
+       uFatalError("StringNewFileFormat", "unix file io");
+     p = buffer;
++    end = buffer + size - 1;
 +
-+                    // Do the same thing but with a deep copy of the
-+                    // triangulated boundary, not a reference to the
-+                    // original that is cached within BoundaryComponent.
-+                    // This essentially tests that the Triangulation
-+                    // copy constructor preserves the numbering/labelling of
-+                    // faces of all dimensions.
-+
-+                    std::string name2 = std::string(name) + " (cloned bdry)";
-+                    BoundaryHelper<dim, dim-2>::verifyFaces(bc,
-+                        Triangulation<dim-1>(built), name);
-                 }
++    /* Avoid deprecation warnings with C++. */
++#define SPRINTF(pointer, ...) snprintf(pointer, end - p, __VA_ARGS__)
+ 
+-    p += sprintf(p, "%% Triangulation\n");
++    p += SPRINTF(p, "%% Triangulation\n");
+ 
+     if (data->name != NULL)
+-        p += sprintf(p, "%s\n", data->name);
++      p += SPRINTF(p, "%s\n", data->name);
+     else
+-        p += sprintf(p, "untitled\n");
++      p += SPRINTF(p, "untitled\n");
+ 
+     switch (data->solution_type)
+     {
+         case not_attempted:
+-            p += sprintf(p, "not_attempted");
++	  p += SPRINTF(p, "not_attempted");
+             break;
+ 
+         case geometric_solution:
+-            p += sprintf(p, "geometric_solution");
++	  p += SPRINTF(p, "geometric_solution");
+             break;
+ 
+         case nongeometric_solution:
+-            p += sprintf(p, "nongeometric_solution");
++            p += SPRINTF(p, "nongeometric_solution");
+             break;
+ 
+         case flat_solution:
+-            p += sprintf(p, "flat_solution");
++            p += SPRINTF(p, "flat_solution");
+             break;
+ 
+         case degenerate_solution:
+-            p += sprintf(p, "degenerate_solution");
++            p += SPRINTF(p, "degenerate_solution");
+             break;
+ 
+         case other_solution:
+-            p += sprintf(p, "other_solution");
++            p += SPRINTF(p, "other_solution");
+             break;
+ 
+         case no_solution:
+-            p += sprintf(p, "no_solution");
++            p += SPRINTF(p, "no_solution");
+             break;
+ 
+         case externally_computed:
+-            p += sprintf(p, "externally_computed");
++            p += SPRINTF(p, "externally_computed");
+             break;
+ 
+     }
+ 
+     if (data->solution_type != not_attempted && data->solution_type != externally_computed)
+-        p += sprintf(p, "  %.8f\n", (double)data->volume);
++        p += SPRINTF(p, "  %.8f\n", (double)data->volume);
+     else
+-        p += sprintf(p, "  %.1f\n", 0.0);
++        p += SPRINTF(p, "  %.1f\n", 0.0);
+ 
+     switch (data->orientability)
+     {
+         case oriented_manifold:
+-            p += sprintf(p, "oriented_manifold\n");
++            p += SPRINTF(p, "oriented_manifold\n");
+             break;
+ 
+         case nonorientable_manifold:
+-            p += sprintf(p, "nonorientable_manifold\n");
++            p += SPRINTF(p, "nonorientable_manifold\n");
+             break;
+         case unknown_orientability:
+             /* This manifold is garbage */
+-            p += sprintf(p, "ERROR: orientability not computed!\n");
++            p += SPRINTF(p, "ERROR: orientability not computed!\n");
+             break;
+     }
+ 
+     if (data->CS_value_is_known == TRUE)
+-        p += sprintf(p, "CS_known %.16f\n", (double)data->CS_value);
++        p += SPRINTF(p, "CS_known %.16f\n", (double)data->CS_value);
+     else
+-        p += sprintf(p, "CS_unknown\n");
++        p += SPRINTF(p, "CS_unknown\n");
+ 
+-    p += sprintf(p, "\n%d %d\n", data->num_or_cusps, data->num_nonor_cusps);
++    p += SPRINTF(p, "\n%d %d\n", data->num_or_cusps, data->num_nonor_cusps);
+     for (i = 0; i < data->num_or_cusps + data->num_nonor_cusps; i++)
+-        p += sprintf(p, "    %s %16.12f %16.12f\n",
++        p += SPRINTF(p, "    %s %16.12f %16.12f\n",
+             (data->cusp_data[i].topology == torus_cusp) ? "torus" : "Klein",
+ 		     (double)data->cusp_data[i].m,
+ 		     (double)data->cusp_data[i].l);
+-    p += sprintf(p, "\n");
++    p += SPRINTF(p, "\n");
+ 
+-    p += sprintf(p, "%d\n", data->num_tetrahedra);
++    p += SPRINTF(p, "%d\n", data->num_tetrahedra);
+     for (i = 0; i < data->num_tetrahedra; i++)
+     {
+         for (j = 0; j < 4; j++)
+-            p += sprintf(p, "%4d ", data->tetrahedron_data[i].neighbor_index[j]);
+-        p += sprintf(p, "\n");
++            p += SPRINTF(p, "%4d ", data->tetrahedron_data[i].neighbor_index[j]);
++        p += SPRINTF(p, "\n");
+ 
+         for (j = 0; j < 4; j++)
+         {
+-            p += sprintf(p, " ");
++            p += SPRINTF(p, " ");
+             for (k = 0; k < 4; k++)
+-                p += sprintf(p, "%d", data->tetrahedron_data[i].gluing[j][k]);
++                p += SPRINTF(p, "%d", data->tetrahedron_data[i].gluing[j][k]);
          }
+-        p += sprintf(p, "\n");
++        p += SPRINTF(p, "\n");
  
-diff --git a/timing/CMakeLists.txt b/timing/CMakeLists.txt
-index b592a772c..e48715c1b 100644
---- a/timing/CMakeLists.txt
-+++ b/timing/CMakeLists.txt
-@@ -3,6 +3,7 @@ include_directories(${ENGINE_INCLUDES})
- include_directories(${CMAKE_BINARY_DIR}/engine)
+         for (j = 0; j < 4; j++)
+-            p += sprintf(p, "%4d ", data->tetrahedron_data[i].cusp_index[j]);
+-        p += sprintf(p, "\n");
++            p += SPRINTF(p, "%4d ", data->tetrahedron_data[i].cusp_index[j]);
++        p += SPRINTF(p, "\n");
  
- set(TIMING_APPS
-+  covers
-   loadlarge
-   sizes
-   tree
-diff --git a/timing/README.txt b/timing/README.txt
-index c07be8ca4..6953d15d8 100644
---- a/timing/README.txt
-+++ b/timing/README.txt
-@@ -7,3 +7,7 @@ Developers can time these programs to help estimate how well various
- tweaks / modifications / environmental changes are working in practice.
+         for (j = 0; j < 2; j++)         /* meridian, longitude     */
+             for (k = 0; k < 2; k++)     /* righthanded, lefthanded */
+             {
+                 for (v = 0; v < 4; v++)
+                     for (f = 0; f < 4; f++)
+-                        p += sprintf(p, " %2d", data->tetrahedron_data[i].curve[j][k][v][f]);
+-                p += sprintf(p, "\n");
++                        p += SPRINTF(p, " %2d", data->tetrahedron_data[i].curve[j][k][v][f]);
++                p += SPRINTF(p, "\n");
+             }
  
- Programs must be run manually from the corresponding build directory.
-+
-+On macOS/Xcode, to trace from the command line:
-+
-+  xctrace record --output <path/to/output.trace> --template "Time Profiler" --launch <executable>
+         if (data->solution_type != not_attempted && data->solution_type != externally_computed)
+-            p += sprintf(p, "%16.12f %16.12f\n\n",
++            p += SPRINTF(p, "%16.12f %16.12f\n\n",
+ 		 (double)data->tetrahedron_data[i].filled_shape.real,
+ 		 (double)data->tetrahedron_data[i].filled_shape.imag);
+         else
+-            p += sprintf(p, "%3.1f %3.1f\n\n", 0.0, 0.0);
++            p += SPRINTF(p, "%3.1f %3.1f\n\n", 0.0, 0.0);
+    }
+    return buffer;
++#undef SPRINTF
+ }
+ 
+ #include "end_namespace.h"
+diff --git a/engine/snappea/kernel/unused/complex_volume.c b/engine/snappea/kernel/unused/complex_volume.c
+index 757710c00..791e19503 100644
+--- a/engine/snappea/kernel/unused/complex_volume.c
++++ b/engine/snappea/kernel/unused/complex_volume.c
+@@ -537,7 +537,7 @@ static void check_neighbors_and_gluings(
+ 
+             if (nbr->neighbor[nbr_f] != tet)
+             {
+-                sprintf(scratch, "inconsistent neighbor data, tet %d face %d to tet %d face %d",
++	        snprintf(scratch, 256, "inconsistent neighbor data, tet %d face %d to tet %d face %d",
+                         tet->index, f, nbr->index, nbr_f);
+                 uAcknowledge(scratch);
+                 uFatalError("check_neighbors_and_gluings", "complex_volume");
+@@ -545,7 +545,7 @@ static void check_neighbors_and_gluings(
+ 
+             if (nbr->gluing[nbr_f] != inverse_permutation[this_gluing])
+             {
+-                sprintf(scratch, "inconsistent gluing data, tet %d face %d to tet %d face %d",
++	        snprintf(scratch, 256, "inconsistent gluing data, tet %d face %d to tet %d face %d",
+                         tet->index, f, nbr->index, nbr_f);
+                 uAcknowledge(scratch);
+                 uFatalError("check_neighbors_and_gluings", "complex_volume");
