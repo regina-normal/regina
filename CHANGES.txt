@@ -9,6 +9,8 @@ Regina - A Normal Surface Theory Calculator
 
 Version 7.4  [ (to be announced) ]
 
+    GENERAL:
+        - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
     PYTHON:
         - Updated the included pybind11 library from 2.10.0 to 2.10.4.
         - Improved the speed of iteration (specifically, throwing/catching

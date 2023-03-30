@@ -360,7 +360,7 @@ static void compute_length_spectrum(
             *num_lengths    = 0;
         }
 
-        length_spectrum(polyhedron, cutoff_length, TRUE, TRUE, 0.0, spectrum, num_lengths);
+        length_spectrum(polyhedron, cutoff_length, TRUE, TRUE, TRUE, 0.0, spectrum, num_lengths);
     }
 
     /*
@@ -559,7 +559,7 @@ static void try_to_drill_curves(
      && remaining_curves.pos_multiplicity != remaining_curves.neg_multiplicity)
     {
         /*
-         *  Supress the curves with the greater multiplicity.
+         *  Suppress the curves with the greater multiplicity.
          */
         if (remaining_curves.pos_multiplicity > remaining_curves.neg_multiplicity)
         {

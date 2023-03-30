@@ -110,5 +110,5 @@
 #define PACKAGE_BUILD_STRING "Regina 7.3 (Upstream macOS build)"
 
 /* Define to the version of SnapPy that is bundled with Regina. */
-#define SNAPPY_VERSION "2.8"
+#define SNAPPY_VERSION "3.0.3"
 

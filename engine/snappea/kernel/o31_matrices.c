@@ -28,7 +28,7 @@
  *  gl4R_invert will consider a matrix to be singular iff one of the
  *  absolute value of one of the pivots is less than SINGULAR_MATRIX_EPSILON.
  */
-#define SINGULAR_MATRIX_EPSILON     1e-2
+#define SINGULAR_MATRIX_EPSILON     1e-4
 
 #define COLUMN_PRODUCT(m, i, j)     \
     (-m[0][i]*m[0][j] + m[1][i]*m[1][j] + m[2][i]*m[2][j] + m[3][i]*m[3][j])
@@ -190,7 +190,7 @@ Real gl4R_determinant(
      *  methods, so I've chosen method (2) on the assumption (which I
      *  haven't thoroughly thought out) that it will be numerically more
      *  robust.  Numerical effects could be noticeable, because O(3,1)
-     *  matrices tend to have large entires.  On the other hand, the
+     *  matrices tend to have large entries.  On the other hand, the
      *  determinant will always be plus or minus one, so it's not worth
      *  getting too concerned about the precision.
      */
@@ -362,7 +362,7 @@ Boolean o31_equal(
      *  entries, are numerically more time consuming.  For now let's just
      *  check that all entries are equal to within epsilon.  This offers the
      *  advantage that when scanning down lists, the vast majority of
-     *  matrices are diagnosed as different after the comparision of a
+     *  matrices are diagnosed as different after the comparison of a
      *  single pair of numbers.  The epsilon can be fairly large, since to
      *  qualify as equal, two matrices must have ALL their entries equal to
      *  within that precision.
