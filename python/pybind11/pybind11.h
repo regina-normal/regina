@@ -35,6 +35,10 @@
 #    include <cxxabi.h>
 #endif
 
+namespace regina {
+    const char* pythonTypename(const std::type_info*);
+}
+
 PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
 
 /* https://stackoverflow.com/questions/46798456/handling-gccs-noexcept-type-warning
@@ -432,15 +436,27 @@ protected:
                 if (!t) {
                     pybind11_fail("Internal error while parsing type signature (1)");
                 }
-                if (auto *tinfo = detail::get_type_info(*t)) {
+                if (const char* name = regina::pythonTypename(t)) {
+                    signature += name;
+                } else if (auto *tinfo = detail::get_type_info(*t)) {
                     handle th((PyObject *) tinfo->type);
-                    signature += th.attr("__module__").cast<std::string>() + "."
-                                 + th.attr("__qualname__").cast<std::string>();
+                    const auto m = th.attr("__module__").cast<std::string>();
+                    if (m == "regina.engine")
+                        signature += "regina." +
+                            th.attr("__qualname__").cast<std::string>();
+                    else
+                        signature += m + "." +
+                            th.attr("__qualname__").cast<std::string>();
                 } else if (rec->is_new_style_constructor && arg_index == 0) {
                     // A new-style `__init__` takes `self` as `value_and_holder`.
                     // Rewrite it to the proper class type.
-                    signature += rec->scope.attr("__module__").cast<std::string>() + "."
-                                 + rec->scope.attr("__qualname__").cast<std::string>();
+                    const auto m = rec->scope.attr("__module__").cast<std::string>();
+                    if (m == "regina.engine")
+                        signature += "regina."
+                            + rec->scope.attr("__qualname__").cast<std::string>();
+                    else
+                        signature += m + "."
+                            + rec->scope.attr("__qualname__").cast<std::string>();
                 } else {
                     std::string tname(t->name());
                     detail::clean_type_id(tname);
@@ -989,6 +1005,16 @@ protected:
         } catch (abi::__forced_unwind &) {
             throw;
 #endif
+        } catch (const pybind11::stop_iteration& stop) {
+            /* We prioritise catching stop_iteration before any of the other
+               exception logic below, since stop_iteration is arguably the one
+               setting where exceptions are normal as opposed to "exceptional".
+               The default exception logic involves many try/catch/rethrow
+               blocks, and in settings where try/catch is slow (e.g., running
+               within SageMath on macOS), this can add to a noticeable
+               performance penalty when using iterators. */
+           PyErr_SetString(PyExc_StopIteration, stop.what());
+           return nullptr;
         } catch (...) {
             /* When an exception is caught, give each registered exception
                translator a chance to translate it to a Python exception. First
@@ -2649,13 +2675,13 @@ void print(Args &&...args) {
 
 inline void
 error_already_set::m_fetched_error_deleter(detail::error_fetch_and_normalize *raw_ptr) {
-    gil_scoped_acquire gil;
+    safe_gil_scoped_acquire gil;
     error_scope scope;
     delete raw_ptr;
 }
 
 inline const char *error_already_set::what() const noexcept {
-    gil_scoped_acquire gil;
+    safe_gil_scoped_acquire gil;
     error_scope scope;
     return m_fetched_error->error_string().c_str();
 }
@@ -2770,7 +2796,7 @@ function get_override(const T *this_ptr, const char *name) {
 
 #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
     do {                                                                                          \
-        pybind11::gil_scoped_acquire gil;                                                         \
+        pybind11::safe_gil_scoped_acquire gil;                                                         \
         pybind11::function override                                                               \
             = pybind11::get_override(static_cast<const cname *>(this), name);                     \
         if (override) {                                                                           \

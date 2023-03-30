@@ -12,7 +12,6 @@ CONFIGURE_FILE(
 
 # A very basic interpreter to use for testing:
 INCLUDE_DIRECTORIES(${Python_INCLUDE_DIRS} ${ENGINE_INCLUDES} "${PROJECT_BINARY_DIR}/engine")
-ADD_COMPILE_DEFINITIONS(REGINA_PYTHON_USE_PYTHONPATH=1)
 ADD_LINK_OPTIONS(${Python_LINK_OPTIONS})
 add_executable(basic
   basic.cpp

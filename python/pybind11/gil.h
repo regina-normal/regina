@@ -236,4 +236,30 @@ public:
 
 #endif // WITH_THREAD
 
+/**
+ * A less lightweight version of gil_scoped_acquire that actually checks
+ * whether we are already holding the GIL before trying to acquire it.
+ *
+ * This is needed in scenarios with multiple subinterpreters, where pybind11
+ * could otherwise causes deadlocks because its TLS mechanism implicitly (and
+ * incorrectly) assumes that different subinterpreters must be running
+ * from different native OS threads.
+ *
+ * - Ben Burton, 30/09/2022.
+ */
+class safe_gil_scoped_acquire {
+    gil_scoped_acquire* gil { nullptr };
+public:
+    safe_gil_scoped_acquire() {
+        if (! PyGILState_Check())
+            gil = new gil_scoped_acquire();
+    }
+    ~safe_gil_scoped_acquire() {
+        delete gil;
+    }
+    safe_gil_scoped_acquire(const safe_gil_scoped_acquire&) = delete;
+    safe_gil_scoped_acquire& operator = (const safe_gil_scoped_acquire&) =
+        delete;
+};
+
 PYBIND11_NAMESPACE_END(PYBIND11_NAMESPACE)

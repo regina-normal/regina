@@ -1,8 +1,8 @@
 diff --git a/python/pybind11/functional.h b/python/pybind11/functional.h
-index 4034990d8..ab423203c 100644
+index 87ec4d10c..5fb4d7876 100644
 --- a/python/pybind11/functional.h
 +++ b/python/pybind11/functional.h
-@@ -82,12 +82,18 @@ public:
+@@ -89,12 +89,18 @@ public:
              }
              func_handle(const func_handle &f_) { operator=(f_); }
              func_handle &operator=(const func_handle &f_) {
@@ -23,7 +23,7 @@ index 4034990d8..ab423203c 100644
                  function kill_f(std::move(f));
              }
          };
-@@ -97,7 +103,10 @@ public:
+@@ -104,7 +110,10 @@ public:
              func_handle hfunc;
              explicit func_wrapper(func_handle &&hf) noexcept : hfunc(std::move(hf)) {}
              Return operator()(Args... args) const {
@@ -36,12 +36,12 @@ index 4034990d8..ab423203c 100644
                  return hfunc.f(std::forward<Args>(args)...).template cast<Return>();
              }
 diff --git a/python/pybind11/gil.h b/python/pybind11/gil.h
-index a0b5de151..5fa4df1ae 100644
+index 570a5581d..93355f245 100644
 --- a/python/pybind11/gil.h
 +++ b/python/pybind11/gil.h
-@@ -199,4 +199,30 @@ class gil_scoped_release {
- };
- #endif
+@@ -236,4 +236,30 @@ public:
+ 
+ #endif // WITH_THREAD
  
 +/**
 + * A less lightweight version of gil_scoped_acquire that actually checks
@@ -84,11 +84,11 @@ index 1878089e3..60586b9d7 100644
              auto size = static_cast<size_t>(pptr() - pbase());
              size_t remainder = utf8_remainder();
 diff --git a/python/pybind11/pybind11.h b/python/pybind11/pybind11.h
-index d61dcd5c7..9675827af 100644
+index 6205effd6..7686d0faa 100644
 --- a/python/pybind11/pybind11.h
 +++ b/python/pybind11/pybind11.h
-@@ -47,6 +47,10 @@
- #    pragma GCC diagnostic ignored "-Wnoexcept-type"
+@@ -35,6 +35,10 @@
+ #    include <cxxabi.h>
  #endif
  
 +namespace regina {
@@ -97,8 +97,8 @@ index d61dcd5c7..9675827af 100644
 +
  PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
  
- PYBIND11_NAMESPACE_BEGIN(detail)
-@@ -433,15 +437,27 @@ protected:
+ /* https://stackoverflow.com/questions/46798456/handling-gccs-noexcept-type-warning
+@@ -432,15 +436,27 @@ protected:
                  if (!t) {
                      pybind11_fail("Internal error while parsing type signature (1)");
                  }
@@ -131,7 +131,7 @@ index d61dcd5c7..9675827af 100644
                  } else {
                      std::string tname(t->name());
                      detail::clean_type_id(tname);
-@@ -995,6 +1011,16 @@ protected:
+@@ -989,6 +1005,16 @@ protected:
          } catch (abi::__forced_unwind &) {
              throw;
  #endif
@@ -148,7 +148,7 @@ index d61dcd5c7..9675827af 100644
          } catch (...) {
              /* When an exception is caught, give each registered exception
                 translator a chance to translate it to a Python exception. First
-@@ -2627,13 +2653,13 @@ void print(Args &&...args) {
+@@ -2649,13 +2675,13 @@ void print(Args &&...args) {
  
  inline void
  error_already_set::m_fetched_error_deleter(detail::error_fetch_and_normalize *raw_ptr) {
@@ -164,7 +164,7 @@ index d61dcd5c7..9675827af 100644
      error_scope scope;
      return m_fetched_error->error_string().c_str();
  }
-@@ -2748,7 +2774,7 @@ function get_override(const T *this_ptr, const char *name) {
+@@ -2770,7 +2796,7 @@ function get_override(const T *this_ptr, const char *name) {
  
  #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
      do {                                                                                          \
@@ -173,18 +173,3 @@ index d61dcd5c7..9675827af 100644
          pybind11::function override                                                               \
              = pybind11::get_override(static_cast<const cname *>(this), name);                     \
          if (override) {                                                                           \
-diff --git a/python/pybind11/embed.h b/python/pybind11/embed.h
-index d6999cd77..31dd7950b 100644
---- a/python/pybind11/embed.h
-+++ b/python/pybind11/embed.h
-@@ -150,6 +150,10 @@ inline void initialize_interpreter(bool init_signal_handlers = true,
- #else
-     PyConfig config;
-     PyConfig_InitIsolatedConfig(&config);
-+#if REGINA_PYTHON_USE_PYTHONPATH
-+    config.use_environment = 1;
-+    config.isolated = 0;
-+#endif
-     config.install_signal_handlers = init_signal_handlers ? 1 : 0;
- 
-     PyStatus status = PyConfig_SetBytesArgv(&config, argc, const_cast<char *const *>(argv));
