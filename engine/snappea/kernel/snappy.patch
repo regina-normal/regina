@@ -21,7 +21,7 @@ index d778b1476..1820b31fc 100644
              net_malloc_calls > 0 ? "more" : "fewer");
          uAcknowledge(the_message);
 diff --git a/engine/snappea/kernel/triangulations.c b/engine/snappea/kernel/triangulations.c
-index b8c3bc65b..367866f48 100644
+index ec27807c1..32fe5847e 100644
 --- a/engine/snappea/kernel/triangulations.c
 +++ b/engine/snappea/kernel/triangulations.c
 @@ -55,7 +55,7 @@
@@ -222,10 +222,10 @@ index c924b5866..2a53772c7 100644
  
  #include "end_namespace.h"
 diff --git a/engine/snappea/kernel/unused/complex_volume.c b/engine/snappea/kernel/unused/complex_volume.c
-index 757710c00..791e19503 100644
+index 9d1bd695b..513666f56 100644
 --- a/engine/snappea/kernel/unused/complex_volume.c
 +++ b/engine/snappea/kernel/unused/complex_volume.c
-@@ -537,7 +537,7 @@ static void check_neighbors_and_gluings(
+@@ -550,7 +550,7 @@ static void check_neighbors_and_gluings(
  
              if (nbr->neighbor[nbr_f] != tet)
              {
@@ -234,7 +234,7 @@ index 757710c00..791e19503 100644
                          tet->index, f, nbr->index, nbr_f);
                  uAcknowledge(scratch);
                  uFatalError("check_neighbors_and_gluings", "complex_volume");
-@@ -545,7 +545,7 @@ static void check_neighbors_and_gluings(
+@@ -558,7 +558,7 @@ static void check_neighbors_and_gluings(
  
              if (nbr->gluing[nbr_f] != inverse_permutation[this_gluing])
              {
