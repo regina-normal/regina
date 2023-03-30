@@ -60,11 +60,12 @@ snappymaster="addl_code.h"
 
 for i in "$headerdir"/*.h "$sourcedir"/*.c; do
     src="$i"
-    filename=`echo "$src" | sed -e 's#.*/##'`
-    if [ -e "$filename" ]; then
-      cp "$src" "$filename"
-    elif [ -e "unused/$filename" ]; then
-      cp "$src" "unused/$filename"
+    filename_c=`echo "$src" | sed -e 's#.*/##'`
+    filename_cpp=`echo "$filename_c" | sed -e 's#\.c$#.cpp#'`
+    if [ -e "$filename_cpp" ]; then
+      cp "$src" "$filename_cpp"
+    elif [ -e "unused/$filename_c" ]; then
+      cp "$src" "unused/$filename_c"
     else
       echo "ERROR: The kernel file "$src" is not mirrored in Regina."
     fi
@@ -72,9 +73,10 @@ done
 
 for i in $unixfiles; do
     src="$unixdir/$i"
-    filename="$i"
-    if [ -e "$filename" ]; then
-      cp "$src" "$filename"
+    filename_c="$i"
+    filename_cpp=`echo "$filename_c" | sed -e 's#\.c$#.cpp#'`
+    if [ -e "$filename_cpp" ]; then
+      cp "$src" "$filename_cpp"
     else
       echo "ERROR: The unix_kit file "$src" is not mirrored in Regina."
     fi
@@ -82,9 +84,10 @@ done
 
 for i in $snappyfiles; do
     src="$snappydir/$i"
-    filename="snappy_$i"
-    if [ -e "../snappy/$filename" ]; then
-      cp "$src" "../snappy/$filename"
+    filename_c="snappy_$i"
+    filename_cpp=`echo "$filename_c" | sed -e 's#\.c$#.cpp#'`
+    if [ -e "../snappy/$filename_cpp" ]; then
+      cp "$src" "../snappy/$filename_cpp"
     else
       echo "ERROR: The snappy file "$src" is not mirrored in Regina."
     fi

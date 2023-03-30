@@ -34,10 +34,10 @@ index 5cf1ac77e..006fa5ea0 100644
  
  #endif
  /* Local Variables:                      */
-diff --git a/engine/snappea/kernel/complex.c b/engine/snappea/kernel/complex.c
+diff --git a/engine/snappea/kernel/complex.cpp b/engine/snappea/kernel/complex.cpp
 index 0118f2df2..9a6b8dbcf 100644
---- a/engine/snappea/kernel/complex.c
-+++ b/engine/snappea/kernel/complex.c
+--- a/engine/snappea/kernel/complex.cpp
++++ b/engine/snappea/kernel/complex.cpp
 @@ -22,14 +22,14 @@
  #include "kernel.h"
  #include "kernel_namespace.h"
@@ -157,10 +157,10 @@ index 1d081a74c..ce1013b55 100644
  
  extern Real arcsinh(Real x);
  /**<
-diff --git a/engine/snappea/kernel/o31_matrices.c b/engine/snappea/kernel/o31_matrices.c
+diff --git a/engine/snappea/kernel/o31_matrices.cpp b/engine/snappea/kernel/o31_matrices.cpp
 index 91880f0c1..3a2228f00 100644
---- a/engine/snappea/kernel/o31_matrices.c
-+++ b/engine/snappea/kernel/o31_matrices.c
+--- a/engine/snappea/kernel/o31_matrices.cpp
++++ b/engine/snappea/kernel/o31_matrices.cpp
 @@ -33,7 +33,7 @@
  #define COLUMN_PRODUCT(m, i, j)     \
      (-m[0][i]*m[0][j] + m[1][i]*m[1][j] + m[2][i]*m[2][j] + m[3][i]*m[3][j])

@@ -1,7 +1,7 @@
-diff --git a/engine/snappea/kernel/my_malloc.c b/engine/snappea/kernel/my_malloc.c
+diff --git a/engine/snappea/kernel/my_malloc.cpp b/engine/snappea/kernel/my_malloc.cpp
 index d778b1476..1820b31fc 100644
---- a/engine/snappea/kernel/my_malloc.c
-+++ b/engine/snappea/kernel/my_malloc.c
+--- a/engine/snappea/kernel/my_malloc.cpp
++++ b/engine/snappea/kernel/my_malloc.cpp
 @@ -50,7 +50,7 @@
  
  #include "kernel.h"
@@ -20,10 +20,10 @@ index d778b1476..1820b31fc 100644
              net_malloc_calls > 0 ? net_malloc_calls : - net_malloc_calls,
              net_malloc_calls > 0 ? "more" : "fewer");
          uAcknowledge(the_message);
-diff --git a/engine/snappea/kernel/triangulations.c b/engine/snappea/kernel/triangulations.c
+diff --git a/engine/snappea/kernel/triangulations.cpp b/engine/snappea/kernel/triangulations.cpp
 index ec27807c1..32fe5847e 100644
---- a/engine/snappea/kernel/triangulations.c
-+++ b/engine/snappea/kernel/triangulations.c
+--- a/engine/snappea/kernel/triangulations.cpp
++++ b/engine/snappea/kernel/triangulations.cpp
 @@ -55,7 +55,7 @@
   */
  
@@ -51,10 +51,10 @@ index ec27807c1..32fe5847e 100644
                          tet->index, f, nbr->index, nbr_f);
                  uAcknowledge(scratch);
                  uFatalError("check_neighbors_and_gluings", "triangulations");
-diff --git a/engine/snappea/kernel/unix_file_io.c b/engine/snappea/kernel/unix_file_io.c
+diff --git a/engine/snappea/kernel/unix_file_io.cpp b/engine/snappea/kernel/unix_file_io.cpp
 index c924b5866..2a53772c7 100644
---- a/engine/snappea/kernel/unix_file_io.c
-+++ b/engine/snappea/kernel/unix_file_io.c
+--- a/engine/snappea/kernel/unix_file_io.cpp
++++ b/engine/snappea/kernel/unix_file_io.cpp
 @@ -709,125 +709,131 @@ static char *StringNewFileFormat(
          size;
      char *buffer;
