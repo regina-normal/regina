@@ -41,10 +41,6 @@ ADD_SUBDIRECTORY("treewidth")
 ADD_SUBDIRECTORY("triangulation")
 ADD_SUBDIRECTORY("utilities")
 
-# Some C files need to be compiled using the C++ compiler (e.g., snappea,
-# where we have added C++ namespaces).
-SET_SOURCE_FILES_PROPERTIES( ${SOURCES_C_AS_CPP} PROPERTIES LANGUAGE CXX )
-
 # Ensure that, when building under Windows, the linker is given the full list
 # of symbols to export in the DLL.  This avoids the need to manage attributes
 # such as __declspec(dllexport) and __declspec(dllimport) within the C++ code.
