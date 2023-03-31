@@ -89,7 +89,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
             /**< A compile-time constant that gives the dimension of this
                  simplex. */
 
-        using FacetMask = typename IntOfMinSize<(dim / 8) + 1>::utype;
+        using FacetMask = typename IntOfMinBits<dim + 1>::utype;
             /**< An unsigned integer type with at least <i>dim</i>+1 bits.
                  This can be used as a bitmask for the <i>dim</i>+1 facets
                  (or vertices) of a <i>dim</i>-simplex. */

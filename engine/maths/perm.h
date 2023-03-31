@@ -268,7 +268,7 @@ class Perm {
          * type, be careful of the special case of \a n = 8, where (8!) can be
          * stored in an \e unsigned 16-bit type but not a signed 16-bit type.
          */
-        using Index = typename IntOfMinSize<(imageBits * n + 7) / 8>::type;
+        using Index = typename IntOfMinBits<imageBits * n>::type;
 
         /**
          * Indicates the native unsigned integer type used to store a
@@ -276,7 +276,7 @@ class Perm {
          * on image packs, and how they are used as permutation codes
          * for \a n ≥ 8.
          */
-        using ImagePack = typename IntOfMinSize<(imageBits * n + 7) / 8>::utype;
+        using ImagePack = typename IntOfMinBits<imageBits * n>::utype;
 
         /**
          * A bitmask whose lowest \a imageBits bits are 1, and whose
