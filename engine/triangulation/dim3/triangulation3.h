@@ -100,15 +100,6 @@ namespace snappy {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \todo \feature Is the boundary incompressible?
- * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
- * if there is nothing left).  Am I obviously not a handlebody?
- * (Compare homology with boundary homology).
- * \todo \featurelong Is the triangulation Haken?
- * \todo \featurelong What is the Heegaard genus?
- * \todo \featurelong Have a subcomplex as a new type.  Include routines to
- * crush a subcomplex or to expand a subcomplex to a normal surface.
- *
  * \headerfile triangulation/dim3.h
  *
  * \ingroup dim3
