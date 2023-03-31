@@ -62,8 +62,9 @@ namespace regina {
  * Represents a 2-manifold triangulation.
  *
  * This is a specialisation of the generic Triangulation class template;
- * see the Triangulation documentation for a general overview of how
- * the triangulation classes work.
+ * see the generic Triangulation documentation for a general overview of how
+ * the triangulation classes work.  In Python, you can read this generic
+ * documentation by looking at a higher dimension: try `help(Triangulation5)`.
  *
  * This 2-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 2-manifolds.
