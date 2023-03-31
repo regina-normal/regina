@@ -16,7 +16,10 @@ static const char *Component =
 R"doc(Represents a connected component of a 4-manifold triangulation.
 
 This is a specialisation of the generic Component class template; see
-the Component documentation for an overview of how this class works.
+the generic Component documentation for an overview of how the
+component classes work. In Python, you can read this generic
+documentation by looking at a higher dimension: try
+``help(Component5)``.
 
 This 4-dimensional specialisation contains some extra functionality.
 In particular, each 4-dimensional component also stores details on

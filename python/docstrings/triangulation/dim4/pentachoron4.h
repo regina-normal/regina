@@ -25,8 +25,10 @@ template in order to work with top-dimensional simplices in a
 triangulation. This class Face<4, 4> specialises it further to add
 dimension-specific aliases for dimension 4.
 
-See the documentation for the partial specialisation Face<dim, dim>
-for an overview of how a top-dimensional simplex class works.
+See the generic documentation for Face<dim, dim> for an overview of
+how the top-dimensional simplex classes work. In Python, you can read
+this generic documentation by looking at a higher dimension: try
+``help(Simplex5)``.
 
 Pentachora do not support value semantics: they cannot be copied,
 swapped, or manually constructed. Their location in memory defines

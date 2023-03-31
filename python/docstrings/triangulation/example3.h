@@ -17,8 +17,10 @@ R"doc(Offers routines for constructing a variety of sample 3-dimensional
 triangulations.
 
 This is a specialisation of the generic Example class template; see
-the Example template documentation for a general overview of how the
-example triangulation classes work.
+the generic Example template documentation for a general overview of
+how the example triangulation classes work. In Python, you can read
+this generic documentation by looking at a higher dimension: try
+``help(Example5)``.
 
 This 3-dimensional specialisation offers significant extra
 functionality, by providing several more hard-coded and parameterised

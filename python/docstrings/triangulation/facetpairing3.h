@@ -16,8 +16,10 @@ static const char *FacetPairing =
 R"doc(Represents the dual graph of a 3-manifold triangulation.
 
 This is a specialisation of the generic FacetPairing class template;
-see the FacetPairing documentation for an overview of how this class
-works.
+see the generic FacetPairing documentation for an overview of how the
+facet pairing classes work. In Python, you can read this generic
+documentation by looking at a higher dimension: try
+``help(FacetPairing5)``.
 
 This 3-dimensional specialisation contains some extra functionality.
 In particular, it provides routines for finding informative subgraphs

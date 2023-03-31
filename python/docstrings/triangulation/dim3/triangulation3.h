@@ -16,8 +16,10 @@ static const char *Triangulation =
 R"doc(Represents a 3-dimensional triangulation, typically of a 3-manifold.
 
 This is a specialisation of the generic Triangulation class template;
-see the Triangulation documentation for a general overview of how the
-triangulation classes work.
+see the generic Triangulation documentation for a general overview of
+how the triangulation classes work. In Python, you can read this
+generic documentation by looking at a higher dimension: try
+``help(Triangulation5)``.
 
 This 3-dimensional specialisation offers significant extra
 functionality, including many functions specific to 3-manifolds.
