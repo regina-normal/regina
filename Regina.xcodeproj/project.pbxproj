@@ -1338,6 +1338,7 @@
 		058C305F1DCAF6F8006162D2 /* forward.h in Headers */ = {isa = PBXBuildFile; fileRef = 058C305E1DCAF6F8006162D2 /* forward.h */; };
 		058E398B1DCBC0D500D463A4 /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */; };
 		058E398D1DCBC67C00D463A4 /* generic.h in Headers */ = {isa = PBXBuildFile; fileRef = 058E398C1DCBC67C00D463A4 /* generic.h */; };
+		058F804E29DA160A00110CF5 /* triangulation-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 058F804D29DA160A00110CF5 /* triangulation-impl.h */; };
 		058FADA719D388920001B5B5 /* Tri2ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADA419D388920001B5B5 /* Tri2ViewController.mm */; };
 		058FADA819D388920001B5B5 /* SurfacesViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADA619D388920001B5B5 /* SurfacesViewController.mm */; };
 		058FADAB19D38BFC0001B5B5 /* SnapPeaViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADAA19D38BFC0001B5B5 /* SnapPeaViewController.mm */; };
@@ -4146,6 +4147,7 @@
 		0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketListenerIOS.mm; sourceTree = "<group>"; };
 		058C305E1DCAF6F8006162D2 /* forward.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = forward.h; sourceTree = "<group>"; };
 		058E398C1DCBC67C00D463A4 /* generic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generic.h; sourceTree = "<group>"; };
+		058F804D29DA160A00110CF5 /* triangulation-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "triangulation-impl.h"; sourceTree = "<group>"; };
 		058FADA319D388920001B5B5 /* Tri2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri2ViewController.h; sourceTree = "<group>"; };
 		058FADA419D388920001B5B5 /* Tri2ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri2ViewController.mm; sourceTree = "<group>"; };
 		058FADA519D388920001B5B5 /* SurfacesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesViewController.h; sourceTree = "<group>"; };
@@ -7256,6 +7258,7 @@
 				05C1BE971DCA7C77007C946B /* skeleton-impl.h */,
 				054C6A7D1DCC20DA005373F0 /* strings.h */,
 				05431F1F1C40F260009BC072 /* triangulation.h */,
+				058F804D29DA160A00110CF5 /* triangulation-impl.h */,
 			);
 			path = detail;
 			sourceTree = "<group>";
@@ -8560,6 +8563,7 @@
 				055114C61DCC45FD00EC753C /* example2.h in Headers */,
 				05431F201C40F260009BC072 /* canonical-impl.h in Headers */,
 				052F9FA8180600FB00FAE4DF /* unix_file_io.h in Headers */,
+				058F804E29DA160A00110CF5 /* triangulation-impl.h in Headers */,
 				05B4D2BB229F376B00B7B11C /* nmz_integrate.h in Headers */,
 				052F9F8E180600FB00FAE4DF /* kernel_typedefs.h in Headers */,
 				053CAB2D1DA710FE00A92F98 /* perm3.h in Headers */,
