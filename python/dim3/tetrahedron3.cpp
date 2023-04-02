@@ -63,6 +63,15 @@ void addTetrahedron3(pybind11::module_& m) {
         .def("unjoin", &Tetrahedron<3>::unjoin,
             pybind11::return_value_policy::reference, rbase::unjoin)
         .def("isolate", &Tetrahedron<3>::isolate, rbase::isolate)
+        .def("lock", &Tetrahedron<3>::lock, rbase::lock)
+        .def("lockFacet", &Tetrahedron<3>::lockFacet, rbase::lockFacet)
+        .def("unlock", &Tetrahedron<3>::unlock, rbase::unlock)
+        .def("unlockFacet", &Tetrahedron<3>::unlockFacet, rbase::unlockFacet)
+        .def("unlockAll", &Tetrahedron<3>::unlockAll, rbase::unlockAll)
+        .def("isLocked", &Tetrahedron<3>::isLocked, rbase::isLocked)
+        .def("isFacetLocked", &Tetrahedron<3>::isFacetLocked,
+            rbase::isFacetLocked)
+        .def("lockMask", &Tetrahedron<3>::lockMask, rbase::lockMask)
         .def("triangulation", &Tetrahedron<3>::triangulation,
             rbase::triangulation)
         .def("component", &Tetrahedron<3>::component,

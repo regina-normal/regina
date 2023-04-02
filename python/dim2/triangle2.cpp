@@ -62,6 +62,15 @@ void addTriangle2(pybind11::module_& m) {
         .def("unjoin", &Triangle<2>::unjoin,
             pybind11::return_value_policy::reference, rbase::unjoin)
         .def("isolate", &Triangle<2>::isolate, rbase::isolate)
+        .def("lock", &Triangle<2>::lock, rbase::lock)
+        .def("lockFacet", &Triangle<2>::lockFacet, rbase::lockFacet)
+        .def("unlock", &Triangle<2>::unlock, rbase::unlock)
+        .def("unlockFacet", &Triangle<2>::unlockFacet, rbase::unlockFacet)
+        .def("unlockAll", &Triangle<2>::unlockAll, rbase::unlockAll)
+        .def("isLocked", &Triangle<2>::isLocked, rbase::isLocked)
+        .def("isFacetLocked", &Triangle<2>::isFacetLocked,
+            rbase::isFacetLocked)
+        .def("lockMask", &Triangle<2>::lockMask, rbase::lockMask)
         .def("triangulation", &Triangle<2>::triangulation, rbase::triangulation)
         .def("component", &Triangle<2>::component,
             pybind11::return_value_policy::reference, rbase::component)

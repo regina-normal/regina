@@ -62,6 +62,15 @@ void addPentachoron4(pybind11::module_& m) {
         .def("unjoin", &Pentachoron<4>::unjoin,
             pybind11::return_value_policy::reference, rbase::unjoin)
         .def("isolate", &Pentachoron<4>::isolate, rbase::isolate)
+        .def("lock", &Pentachoron<4>::lock, rbase::lock)
+        .def("lockFacet", &Pentachoron<4>::lockFacet, rbase::lockFacet)
+        .def("unlock", &Pentachoron<4>::unlock, rbase::unlock)
+        .def("unlockFacet", &Pentachoron<4>::unlockFacet, rbase::unlockFacet)
+        .def("unlockAll", &Pentachoron<4>::unlockAll, rbase::unlockAll)
+        .def("isLocked", &Pentachoron<4>::isLocked, rbase::isLocked)
+        .def("isFacetLocked", &Pentachoron<4>::isFacetLocked,
+            rbase::isFacetLocked)
+        .def("lockMask", &Pentachoron<4>::lockMask, rbase::lockMask)
         .def("triangulation", &Pentachoron<4>::triangulation,
             rbase::triangulation)
         .def("component", &Pentachoron<4>::component,

@@ -986,6 +986,67 @@ class FaceBase :
         Perm<dim + 1> pentachoronMapping(int face) const;
 
         /**
+         * Locks this codimension-1-face.
+         *
+         * Essentially, locking a face of dimension (<i>dim</i>-1) means
+         * that the face must not change.  See Simplex<dim>::lockFacet()
+         * for full details on how locks work and what their implications are.
+         *
+         * These locks are actually stored within the top-dimensional simplices
+         * on either side of this facet.  This means that, even if the
+         * underlying triangulation changes (which means all
+         * (<i>dim</i>-1)-faces will be destroyed and re-created as part of the
+         * skeleton recomputation), this lock will nevertheless be preserved.
+         *
+         * This is equivalent to calling Simplex<dim>::lockFacet() from
+         * one of the simplices on either side of this (<i>dim</i>-1)-face.
+         *
+         * It is safe to call this function even if this face is already locked.
+         *
+         * \pre The facial dimension \a subdim is precisely <i>dim</i>-1.
+         */
+        void lock();
+        /**
+         * Unlocks this codimension-1-face.
+         *
+         * Essentially, locking a face of dimension (<i>dim</i>-1) means
+         * that the face must not change.  See Simplex<dim>::lockFacet()
+         * for full details on how locks work and what their implications are.
+         *
+         * This is equivalent to calling Simplex<dim>::unlockFacet() from
+         * one of the simplices on either side of this (<i>dim</i>-1)-face.
+         *
+         * It is safe to call this function even if this face is already
+         * unlocked.
+         *
+         * See Triangulation<dim>::unlockAll() for a convenient way to unlock
+         * all top-dimensional simplices and (<i>dim</i>-1)-faces across an
+         * entire triangulation.
+         *
+         * \pre The facial dimension \a subdim is precisely <i>dim</i>-1.
+         */
+        void unlock();
+        /**
+         * Determines whether this codimension-1-face is locked.
+         *
+         * Essentially, locking a face of dimension (<i>dim</i>-1) means
+         * that the face must not change.  See Simplex<dim>::lockFacet()
+         * for full details on how locks work and what their implications are.
+         *
+         * This is equivalent to calling Simplex<dim>::isFacetLocked() from
+         * one of the simplices on either side of this (<i>dim</i>-1)-face.
+         *
+         * See Triangulation<dim>::hasLocks() for a convenient way to test
+         * whether any top-dimensional simplex and/or (<i>dim</i>-1)-face
+         * is locked across an entire triangulation.
+         *
+         * \pre The facial dimension \a subdim is precisely <i>dim</i>-1.
+         *
+         * \return \c true if and only if this (<i>dim</i>-1)-face is locked.
+         */
+        bool isLocked() const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -1296,6 +1357,33 @@ inline Perm<dim + 1> FaceBase<dim, subdim>::pentachoronMapping(int face) const {
     static_assert(subdim >= 5, "pentachoronMapping() is only available "
         "for faces of dimension >= 5.");
     return faceMapping<4>(face);
+}
+
+template <int dim, int subdim>
+inline void FaceBase<dim, subdim>::lock() {
+    static_assert(subdim == dim - 1,
+        "lock() is only available for faces of codimension 1.");
+
+    auto emb = front();
+    emb.simplex()->lockFacet(emb.vertices()[dim]);
+}
+
+template <int dim, int subdim>
+inline void FaceBase<dim, subdim>::unlock() {
+    static_assert(subdim == dim - 1,
+        "unlock() is only available for faces of codimension 1.");
+
+    auto emb = front();
+    emb.simplex()->unlockFacet(emb.vertices()[dim]);
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::isLocked() const {
+    static_assert(subdim == dim - 1,
+        "isLocked() is only available for faces of codimension 1.");
+
+    auto emb = front();
+    return emb.simplex()->isFacetLocked(emb.vertices()[dim]);
 }
 
 template <int dim, int subdim>

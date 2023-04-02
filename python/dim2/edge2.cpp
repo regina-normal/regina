@@ -105,6 +105,9 @@ void addEdge2(pybind11::module_& m) {
             pybind11::arg("lowerdim"), pybind11::arg("face"),
             rbase::faceMapping)
         .def("vertexMapping", &Edge<2>::vertexMapping, rbase::vertexMapping)
+        .def("lock", &Edge<2>::lock, rbase::lock)
+        .def("unlock", &Edge<2>::unlock, rbase::unlock)
+        .def("isLocked", &Edge<2>::isLocked, rbase::isLocked)
         .def("isBoundary", &Edge<2>::isBoundary, rbase::isBoundary)
         .def("inMaximalForest", &Edge<2>::inMaximalForest,
             rbase::inMaximalForest)

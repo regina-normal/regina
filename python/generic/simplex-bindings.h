@@ -65,6 +65,15 @@ void addSimplex(pybind11::module_& m, const char* name) {
         .def("unjoin", &Simplex<dim>::unjoin,
             pybind11::return_value_policy::reference, rbase::unjoin)
         .def("isolate", &Simplex<dim>::isolate, rbase::isolate)
+        .def("lock", &Simplex<dim>::lock, rbase::lock)
+        .def("lockFacet", &Simplex<dim>::lockFacet, rbase::lockFacet)
+        .def("unlock", &Simplex<dim>::unlock, rbase::unlock)
+        .def("unlockFacet", &Simplex<dim>::unlockFacet, rbase::unlockFacet)
+        .def("unlockAll", &Simplex<dim>::unlockAll, rbase::unlockAll)
+        .def("isLocked", &Simplex<dim>::isLocked, rbase::isLocked)
+        .def("isFacetLocked", &Simplex<dim>::isFacetLocked,
+            rbase::isFacetLocked)
+        .def("lockMask", &Simplex<dim>::lockMask, rbase::lockMask)
         .def("triangulation", &Simplex<dim>::triangulation,
             rbase::triangulation)
         .def("component", &Simplex<dim>::component,

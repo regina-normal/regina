@@ -107,6 +107,9 @@ void addTetrahedron4(pybind11::module_& m) {
         .def("edgeMapping", &Tetrahedron<4>::edgeMapping, rbase::edgeMapping)
         .def("triangleMapping", &Tetrahedron<4>::triangleMapping,
             rbase::triangleMapping)
+        .def("lock", &Tetrahedron<4>::lock, rbase::lock)
+        .def("unlock", &Tetrahedron<4>::unlock, rbase::unlock)
+        .def("isLocked", &Tetrahedron<4>::isLocked, rbase::isLocked)
         .def("isValid", &Tetrahedron<4>::isValid, rbase::isValid)
         .def("hasBadIdentification", &Tetrahedron<4>::hasBadIdentification,
             rbase::hasBadIdentification)

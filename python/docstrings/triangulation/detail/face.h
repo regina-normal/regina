@@ -474,6 +474,27 @@ need to build a full triangulation of the link.
 Returns:
     ``True`` if and only if the link is orientable.)doc";
 
+// Docstring regina::python::doc::detail::FaceBase_::isLocked
+constexpr const char *isLocked =
+R"doc(Determines whether this codimension-1-face is locked.
+
+Essentially, locking a face of dimension (*dim*-1) means that the face
+must not change. See Simplex<dim>::lockFacet() for full details on how
+locks work and what their implications are.
+
+This is equivalent to calling Simplex<dim>::isFacetLocked() from one
+of the simplices on either side of this (*dim*-1)-face.
+
+See Triangulation<dim>::hasLocks() for a convenient way to test
+whether any top-dimensional simplex and/or (*dim*-1)-face is locked
+across an entire triangulation.
+
+Precondition:
+    The facial dimension *subdim* is precisely *dim*-1.
+
+Returns:
+    ``True`` if and only if this (*dim*-1)-face is locked.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase_::isValid
 constexpr const char *isValid =
 R"doc(Determines if this face is valid.
@@ -513,6 +534,28 @@ Returns:
     this face is valid according to both conditions (1) and (2) above;
     for non-standard dimensions *dim*, returns ``True`` if and only if
     this face is valid according to condition (1).)doc";
+
+// Docstring regina::python::doc::detail::FaceBase_::lock
+constexpr const char *lock =
+R"doc(Locks this codimension-1-face.
+
+Essentially, locking a face of dimension (*dim*-1) means that the face
+must not change. See Simplex<dim>::lockFacet() for full details on how
+locks work and what their implications are.
+
+These locks are actually stored within the top-dimensional simplices
+on either side of this facet. This means that, even if the underlying
+triangulation changes (which means all (*dim*-1)-faces will be
+destroyed and re-created as part of the skeleton recomputation), this
+lock will nevertheless be preserved.
+
+This is equivalent to calling Simplex<dim>::lockFacet() from one of
+the simplices on either side of this (*dim*-1)-face.
+
+It is safe to call this function even if this face is already locked.
+
+Precondition:
+    The facial dimension *subdim* is precisely *dim*-1.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::pentachoron
 constexpr const char *pentachoron =
@@ -568,6 +611,27 @@ R"doc(Returns the triangulation to which this face belongs.
 
 Returns:
     a reference to the triangulation containing this face.)doc";
+
+// Docstring regina::python::doc::detail::FaceBase_::unlock
+constexpr const char *unlock =
+R"doc(Unlocks this codimension-1-face.
+
+Essentially, locking a face of dimension (*dim*-1) means that the face
+must not change. See Simplex<dim>::lockFacet() for full details on how
+locks work and what their implications are.
+
+This is equivalent to calling Simplex<dim>::unlockFacet() from one of
+the simplices on either side of this (*dim*-1)-face.
+
+It is safe to call this function even if this face is already
+unlocked.
+
+See Triangulation<dim>::unlockAll() for a convenient way to unlock all
+top-dimensional simplices and (*dim*-1)-faces across an entire
+triangulation.
+
+Precondition:
+    The facial dimension *subdim* is precisely *dim*-1.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase_::vertex
 constexpr const char *vertex =

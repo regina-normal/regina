@@ -1150,6 +1150,21 @@ not glued to an adjacent simplex.
 Returns:
     ``True`` if and only if there are boundary facets.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::hasLocks
+constexpr const char *hasLocks =
+R"doc(Identifies whether any top-dimensional simplices and/or any of their
+facets are locked.
+
+In short, locking a top-dimensional simplex and/or some of its facets
+means that that the simplex and/or facets must not be changed. See
+Simplex<dim>::lock() and Simplex<dim>::lockFacet() for full details on
+how locks work and what their implications are.
+
+Returns:
+    ``True`` if and only if there is at least one locked top-
+    dimensional simplex or at least one locked facet of a top-
+    dimensional simplex within this triangulation.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::homology
 constexpr const char *homology =
 R"doc(Returns the *k*th homology group of this triangulation, treating any
@@ -2244,6 +2259,17 @@ earlier:
 
 Returns:
     a list of individual component triangulations.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::unlockAll
+constexpr const char *unlockAll =
+R"doc(Unlocks all top-dimensional simplices and their facets.
+
+In short, locking a top-dimensional simplex and/or some of its facets
+means that that the simplex and/or facets must not be changed. See
+Simplex<dim>::lock() and Simplex<dim>::lockFacet() for full details on
+how locks work and what their implications are.
+
+After this is routine called, hasLocks() will return ``False``.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::vertex
 constexpr const char *vertex =

@@ -93,6 +93,11 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
             /**< An unsigned integer type with at least <i>dim</i>+1 bits.
                  This can be used as a bitmask for the <i>dim</i>+1 facets
                  (or vertices) of a <i>dim</i>-simplex. */
+        using LockMask = typename IntOfMinBits<dim + 2>::utype;
+            /**< An unsigned integer type with at least <i>dim</i>+2 bits.
+                 The <i>i</i>th bit indicates whether facet \a i of the simplex
+                 is locked for 0 ≤ \a i ≤ \a dim, and the (<i>dim</i>+2)th bit
+                 indicates whether the simplex itself is locked. */
 
     private:
         /**
@@ -166,6 +171,15 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
                  \a i of this simplex belongs to the maximal forest in the
                  dual 1-skeleton.  See facetInMaximalForest() for details.
                  This will only be set if/when the skeleton is computed. */
+        LockMask locks_ { 0 };
+            /**< Indicates whether this simplex and/or any of its facets are
+                 locked.  This is a bitmask; see the LockMask documentation
+                 for how the individual bits of \a locks_ are interpreted.
+                 The locking/unlocking code must always ensure that facets
+                 that are glued together have consistent locks; that is, if a
+                 facet is glued to a facet of some adjacent simplex, then
+                 either both corresponding facets must be locked or both
+                 corresponding facets must be unlocked. */
 
     public:
         /**
@@ -336,6 +350,260 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * simplices (in which case it will do nothing).
          */
         void isolate();
+
+        /**
+         * Locks this top-dimensional simplex.
+         *
+         * Essentially, locking a simplex means that that simplex must not
+         * change.  Specifically:
+         *
+         * - A locked simplex cannot be removed completely (e.g., via
+         *   Triangulation<dim>::removeSimplex() or via moves such as
+         *   edge collapses or 2-0 moves).
+         *
+         * - A locked simplex cannot be subdivided (e.g., via
+         *   Triangulation<dim>::subdivide(), or via a 1-(<i>dim</i>+1)
+         *   Pachner move).
+         *
+         * - A locked simplex cannot be merged with adjacent simplices
+         *   (e.g., via any of the other Pachner moves).
+         *
+         * Regina's own automatic retriangulation routines (such as
+         * Triangulation<dim>::intelligentSimplify() or
+         * Triangulation<dim>::retriangulate()) will simply avoid changing
+         * any locked simplices.  If the user attempts to manually force a
+         * change (e.g., by calling Triangulation<dim>::subdivide()), then
+         * a FailedPrecondition exception will be thrown.
+         *
+         * It is safe to call this function even if this simplex is
+         * already locked.
+         *
+         * Note that you can also lock the individual facets of a simplex
+         * (that is, its (<i>dim</i>-1)-faces); see lockFacet() for details.
+         * Locking a simplex does _not_ imply that its facets will be
+         * automatically locked also; these are independent concepts.
+         *
+         * The Triangulation copy constructor and assignment operators will
+         * preserve locks (i.e., the simplices/facets of the new triangulation
+         * will be locked in the same way as the simplices/facets of the
+         * source).
+         *
+         * Locks will not interfere with the destruction of a triangulation
+         * (i.e., the Triangulation destructor does not check for locks).
+         *
+         * Changing locks is considered a modification of the triangulation
+         * (in particular, if the triangulation is wrapped in a packet
+         * then the appropriate change events will be fired).
+         */
+        void lock();
+        /**
+         * Locks the given facet of this top-dimensional simplex.
+         *
+         * Essentially, locking a facet means that that facet must not
+         * change.  Specifically:
+         *
+         * - A locked boundary facet cannot be glued to some other
+         *   top-dimensional simplex (e.g., via join()).
+         *
+         * - A locked internal (non-boundary) facet cannot made boundary
+         *   by explicitly ungluing.  As an exception, however, we _do_ allow
+         *   a locked internal facet to become boundary because a move was
+         *   performed on one side with the side-effect of removing all of the
+         *   top-dimensional simplices on that side (e.g., a 2-0 move,
+         *   edge collapse, or shell boundary move, where the region being
+         *   removed sits between the locked internal facet and the boundary
+         *   of the triangulation).
+         *
+         * - A locked facet cannot be removed completely (e.g., a facet
+         *   that is internal to the region that is removed by a 2-0 move
+         *   or an edge collapse, or a facet internal to the region where
+         *   a Pachner move is performed, or a boundary facet of the simplex
+         *   that is removed by a shell boundary move).
+         *
+         * - A locked facet cannot be subdivided (e.g., via
+         *   Triangulation<dim>::subdivide().
+         *
+         * Regina's own automatic retriangulation routines (such as
+         * Triangulation<dim>::intelligentSimplify() or
+         * Triangulation<dim>::retriangulate()) will simply avoid changing
+         * any locked facets.  If the user attempts to manually force a
+         * change (e.g., by calling Triangulation<dim>::subdivide()), then
+         * a FailedPrecondition exception will be thrown.
+         *
+         * Regina will always ensure that the locks on facets are consistent.
+         * That is, if some facet \a F of some top-dimensional simplex is
+         * glued to some facet \a G of some top-dimensional simplex, then
+         * whenever \a F is locked/unlocked, Regina will automatically
+         * lock/unlock \a G also.
+         *
+         * It is safe to call this function even if the given facet is
+         * already locked.
+         *
+         * Note that you can also lock an entire top-dimensional simplex;
+         * see lock() for details.  Locking a simplex does _not_ imply
+         * that its facets will be automatically locked also, or vice versa;
+         * these are independent concepts.
+         *
+         * The Triangulation copy constructor and assignment operators will
+         * preserve locks (i.e., the simplices/facets of the new triangulation
+         * will be locked in the same way as the simplices/facets of the
+         * source).
+         *
+         * Locks will not interfere with the destruction of a triangulation
+         * (i.e., the Triangulation destructor does not check for locks).
+         *
+         * Changing locks is considered a modification of the triangulation
+         * (in particular, if the triangulation is wrapped in a packet
+         * then the appropriate change events will be fired).
+         *
+         * \param facet indicates which facet of this simplex to lock;
+         * this must be between 0 and \a dim inclusive.
+         */
+        void lockFacet(int facet);
+        /**
+         * Unlocks this top-dimensional simplex.
+         *
+         * Essentially, locking a simplex means that that simplex must not
+         * change.  See lock() for full details on how locks work and
+         * what their implications are.
+         *
+         * It is safe to call this function even if this simplex is
+         * already unlocked.
+         *
+         * Note that you can also lock the individual facets of a simplex
+         * (that is, its (<i>dim</i>-1)-faces); see lockFacet() for details.
+         * Unlocking a simplex does _not_ imply that its facets will be
+         * automatically unlocked also; these are independent concepts.
+         *
+         * See unlockAll() for a convenient way to unlock this simplex and
+         * all of its facets in a single function call.  Also,
+         * Triangulation<dim>::unlockAll() offers a simple way to unlock all
+         * <i>dim</i>-simplices and their facets across an entire triangulation.
+         */
+        void unlock();
+        /**
+         * Unlocks the given facet of this top-dimensional simplex.
+         *
+         * Essentially, locking a facet means that that facet must not
+         * change.  See lockFacet() for full details on how locks work and
+         * what their implications are.
+         *
+         * Regina will always ensure that the locks on facets are consistent.
+         * That is, if some facet \a F of some top-dimensional simplex is
+         * glued to some facet \a G of some top-dimensional simplex, then
+         * whenever \a F is locked/unlocked, Regina will automatically
+         * lock/unlock \a G also.
+         *
+         * It is safe to call this function even if the given facet is
+         * already unlocked.
+         *
+         * Note that you can also lock an entire top-dimensional simplex;
+         * see lock() for details.  Unlocking a simplex does _not_ imply
+         * that its facets will be automatically unlocked also, or vice versa;
+         * these are independent concepts.
+         *
+         * See unlockAll() for a convenient way to unlock this simplex and
+         * all of its facets in a single function call.  Also,
+         * Triangulation<dim>::unlockAll() offers a simple way to unlock all
+         * <i>dim</i>-simplices and their facets across an entire triangulation.
+         *
+         * \param facet indicates which facet of this simplex to unlock;
+         * this must be between 0 and \a dim inclusive.
+         */
+        void unlockFacet(int facet);
+        /**
+         * Unlocks this top-dimensional simplex and all of its facets.
+         *
+         * Essentially, locking a simplex or one of its facets means that that
+         * simplex or facet must not change.  See lock() and lockFacet() for
+         * full details on how locks work and what their implications are.
+         *
+         * Regina will always ensure that the locks on facets are consistent.
+         * That is, if some facet \a F of some top-dimensional simplex is
+         * glued to some facet \a G of some top-dimensional simplex, then
+         * whenever \a F is locked/unlocked, Regina will automatically
+         * lock/unlock \a G also.
+         *
+         * It is safe to call this function even if this simplex and all
+         * of its facets are already unlocked.
+         *
+         * See also Triangulation<dim>::unlockAll() for a simple way to unlock
+         * all <i>dim</i>-simplices and their facets across an entire
+         * triangulation.
+         */
+        void unlockAll();
+        /**
+         * Determines whether this top-dimensional simplex is locked.
+         *
+         * Essentially, locking a simplex means that that simplex must not
+         * change.  See lock() for full details on how locks work and
+         * what their implications are.
+         *
+         * Note that you can also lock the individual facets of a simplex
+         * (that is, its (<i>dim</i>-1)-faces); see lockFacet() for details.
+         * This routine does _not_ test whether any facets of this simplex are
+         * locked; it only tests for a lock on the top-dimensional
+         * simplex itself.
+         *
+         * See lockMask() for a convenient way to test in a single query
+         * whether this simplex and/or any of its facets are locked.  Also,
+         * Triangulation<dim>::hasLocks() offers a simple way to test whether
+         * a triangulation has any locked <i>dim</i>-simplices or facets at all.
+         *
+         * \return \c true if and only if this simplex is locked.
+         */
+        bool isLocked() const;
+        /**
+         * Determines whether the given facet of this top-dimensional simplex
+         * is locked.
+         *
+         * Essentially, locking a facet means that that facet must not
+         * change.  See lockFacet() for full details on how locks work and
+         * what their implications are.
+         *
+         * Note that you can also lock an entire top-dimensional simplex;
+         * see lock() for details.  This routine does _not_ test whether
+         * the top-dimensional simplex is locked; it only tests for a lock
+         * on the given facet.
+         *
+         * See lockMask() for a convenient way to test in a single query
+         * whether this simplex and/or any of its facets are locked.  Also,
+         * Triangulation<dim>::hasLocks() offers a simple way to test whether
+         * a triangulation has any locked <i>dim</i>-simplices or facets at all.
+         *
+         * \param facet indicates which facet of this simplex to examine;
+         * this must be between 0 and \a dim inclusive.
+         * \return \c true if and only if the given facet of this simplex
+         * is locked.
+         */
+        bool isFacetLocked(int facet) const;
+        /**
+         * Returns a bitmask indicating which of this simplex and/or its
+         * individual facets are locked.
+         *
+         * Essentially, locking a top-dimensional simplex or one of its facets
+         * means that that simplex or facet must not change.  See lock() and
+         * lockFacet() for full details on how locks work and what their
+         * implications are.
+         *
+         * This routine returns a bitmask containing `dim+2` bits (here
+         * we number the bits so that the 0th bit is the least significant).
+         * The <i>k</i>th bit is set if and only if the <i>k</i>th facet
+         * of this simplex is locked, for 0 ≤ \a k ≤ \a dim.  Finally,
+         * the (<i>dim</i>+1)th bit is set if and only if this simplex itself
+         * is locked.
+         *
+         * See also isLocked() and isFacetLocked() for a more convenient way
+         * to query the simplex and/or one of its facets individually, and
+         * Triangulation<dim>::hasLocks() for a simple way to query all
+         * top-dimensional simplices and their facets across the entire
+         * triangulation.
+         *
+         * \return a bitmask indicating which of this simplex and/or its
+         * facets are locked.  This bitmask will be returned using a native
+         * C++ unsigned integer type of the appropriate size.
+         */
+        LockMask lockMask() const;
 
         /**
          * Returns the triangulation to which this simplex belongs.
@@ -922,6 +1190,91 @@ void SimplexBase<dim>::isolate() {
     for (int i = 0; i <= dim; ++i)
         if (adj_[i])
             unjoin(i);
+}
+
+template <int dim>
+inline void SimplexBase<dim>::lock() {
+    static constexpr LockMask mask = (LockMask(1) << (dim + 1));
+    if (! (locks_ & mask)) {
+        tri_->takeSnapshot();
+        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+        locks_ |= mask;
+    }
+}
+
+template <int dim>
+void SimplexBase<dim>::lockFacet(int facet) {
+    const LockMask mask = (LockMask(1) << facet);
+    if (! (locks_ & mask)) {
+        tri_->takeSnapshot();
+        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+        locks_ |= mask;
+
+        if (adj_[facet]) {
+            int adjFacet = gluing_[facet][facet];
+            adj_[facet]->locks_ |= (LockMask(1) << adjFacet);
+        }
+    }
+}
+
+template <int dim>
+inline void SimplexBase<dim>::unlock() {
+    static constexpr LockMask mask = (LockMask(1) << (dim + 1));
+    if (locks_ & mask) {
+        tri_->takeSnapshot();
+        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+        locks_ &= ~mask;
+    }
+}
+
+template <int dim>
+void SimplexBase<dim>::unlockFacet(int facet) {
+    const LockMask mask = (LockMask(1) << facet);
+    if (locks_ & mask) {
+        tri_->takeSnapshot();
+        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+        locks_ &= ~mask;
+
+        if (adj_[facet]) {
+            int adjFacet = gluing_[facet][facet];
+            adj_[facet]->locks_ &= ~(LockMask(1) << adjFacet);
+        }
+    }
+}
+
+template <int dim>
+void SimplexBase<dim>::unlockAll() {
+    if (locks_) {
+        tri_->takeSnapshot();
+        typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+        locks_ = 0;
+
+        for (int facet = 0; facet <= dim; ++facet)
+            if (adj_[facet] && adj_[facet] != this) {
+                int adjFacet = gluing_[facet][facet];
+                adj_[facet]->locks_ &= ~(LockMask(1) << adjFacet);
+            }
+    }
+}
+
+template <int dim>
+inline bool SimplexBase<dim>::isLocked() const {
+    return (locks_ & (LockMask(1) << (dim + 1)));
+}
+
+template <int dim>
+inline bool SimplexBase<dim>::isFacetLocked(int facet) const {
+    return (locks_ & (LockMask(1) << facet));
+}
+
+template <int dim>
+inline typename SimplexBase<dim>::LockMask SimplexBase<dim>::lockMask() const {
+    return locks_;
 }
 
 template <int dim>

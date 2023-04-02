@@ -34,6 +34,7 @@
 #include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/pachner-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
+#include "triangulation/detail/triangulation-impl.h"
 #include "triangulation/generic.h"
 
 namespace regina::detail {
@@ -80,5 +81,11 @@ template bool TriangulationBase<5>::pachner(Face<5, 2>*, bool, bool);
 template bool TriangulationBase<5>::pachner(Face<5, 3>*, bool, bool);
 template bool TriangulationBase<5>::pachner(Face<5, 4>*, bool, bool);
 template bool TriangulationBase<5>::pachner(Face<5, 5>*, bool, bool);
+
+template void TriangulationBase<5>::writeTextShort(std::ostream&) const;
+template void TriangulationBase<5>::writeTextLong(std::ostream&) const;
+
+template void TriangulationBase<5>::makeDoubleCover();
+template bool TriangulationBase<5>::finiteToIdeal();
 
 } // namespace regina::detail
