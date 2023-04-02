@@ -13,6 +13,8 @@ Caveats:
 - These configuration headers are not for general use, and have
   only been verified on the developers' specific build machine setup.
 
-- The Regina version is hard-coded into these headers, and will need to
-  be updated with each new release.
+- The Regina version number is hard-coded into these headers, and will need
+  to be updated with each new release.  Likewise for the bundled SnapPy
+  version string, which must be updated whenever Regina syncs with a newer
+  version of SnapPy.
 
