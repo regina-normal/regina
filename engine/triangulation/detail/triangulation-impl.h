@@ -172,7 +172,7 @@ void TriangulationBase<dim>::writeTextLong(std::ostream& out) const {
         for (int i = dim; i >= 0; --i) {
             adj = simp->adjacentSimplex(i);
             if (! adj) {
-                for (j = 0; j < (dim == 3 ? 2 : dim - 2); ++j)
+                for (j = 0; j < (dim == 3 ? 3 : dim - 1); ++j)
                     out << ' ';
                 out << "boundary";
             } else {
