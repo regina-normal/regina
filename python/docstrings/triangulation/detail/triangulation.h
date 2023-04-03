@@ -79,6 +79,9 @@ fundamental group, and so on), as well as the skeleton (vertices,
 edges, components, etc.). In particular, the same numbering and
 labelling will be used for all skeletal objects.
 
+If *src* has any locks on top-dimensional simplices and/or their
+facets, these locks will also be copied across.
+
 If you want a "clean" copy that resets all properties to unknown and
 leaves the skeleton uncomputed, you can use the two-argument copy
 constructor instead.
@@ -146,6 +149,10 @@ be recomputed on demand if/when they are required. Note in particular
 that, when the skeleton is recomputed, there is no guarantee that the
 numbering and labelling for skeletal objects will be the same as in
 the source triangulation.
+
+If *src* has any locks on top-dimensional simplices and/or their
+facets, these locks will always be copied across (regardless of the
+argument *cloneProps*).
 
 Parameter ``src``:
     the triangulation to copy.
@@ -1249,6 +1256,9 @@ original simplices from *source*, and any gluings between the
 simplices of *source* will likewise be copied across as gluings
 between their copies in this triangulation.
 
+If *source* has locks on any top-dimensional simplices and/or their
+facets, these locks will also be copied over to this triangulation.
+
 This routine behaves correctly when *source* is this triangulation.
 
 Parameter ``source``:
@@ -1640,9 +1650,16 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::makeDoubleCover
 constexpr const char *makeDoubleCover =
-R"doc(Converts this triangulation into its double cover. Each orientable
-component will be duplicated, and each non-orientable component will
-be converted into its orientable double cover.)doc";
+R"doc(Converts this triangulation into its double cover.
+
+Each orientable component will be duplicated, and each non-orientable
+component will be converted into its orientable double cover.
+
+If this triangulation has locks on any top-dimensional simplices
+and/or their facets, these will not prevent the double cover from
+taking place. Instead, these locks will be duplicated alongside their
+corresponding simplices and/or facets (i.e., they will appear in both
+sheets of the double cover).)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::markedHomology
 constexpr const char *markedHomology =
@@ -1713,7 +1730,9 @@ into *dest* also (but in general their indices will change).
 
 This triangulation will become empty as a result.
 
-Any pointers or references to Simplex<dim> objects will remain valid.
+Any pointers or references to Simplex<dim> objects will remain valid,
+and any locks on top-dimensional simplices and/or their facets will be
+preserved.
 
 If your intention is to _replace_ the simplices in *dest* (i.e., you
 do not need to preserve the original contents), then consider using
@@ -2256,6 +2275,10 @@ earlier:
   packet tree.
 
 * This function does not assign labels to the new components.
+
+If this triangulation has locks on any top-dimensional simplices
+and/or their facets, these locks will also be copied over to the
+newly-triangulated components.
 
 Returns:
     a list of individual component triangulations.)doc";

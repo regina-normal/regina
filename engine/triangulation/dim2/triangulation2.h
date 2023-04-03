@@ -99,6 +99,9 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * edges, components, etc.).  In particular, the same numbering and
          * labelling will be used for all skeletal objects.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
          * If you want a "clean" copy that resets all properties to unknown
          * and leaves the skeleton uncomputed, you can use the two-argument
          * copy constructor instead.
@@ -123,6 +126,10 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * no guarantee that the numbering and labelling for skeletal objects
          * will be the same as in the source triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will always be copied across (regardless of
+         * the argument \a cloneProps).
+         *
          * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
          * properties as well as the skeleton of the given triangulation,
@@ -143,6 +150,9 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * Triangle<2>, Face<2, subdim>, Component<2> or
          * BoundaryComponent<2> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
          *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
@@ -241,6 +251,9 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * will use the same numbering and labelling for all skeletal objects
          * as in the source triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
          * \return a reference to this triangulation.
          */
         Triangulation& operator = (const Triangulation&) = default;
@@ -259,6 +272,9 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * Triangle<2>, Face<2, subdim>, Component<2> or
          * BoundaryComponent<2> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
          *
          * The triangulation that is passed (\a src) will no longer be usable.
          *

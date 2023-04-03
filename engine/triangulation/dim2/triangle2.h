@@ -99,7 +99,15 @@ class Face<2, 2> : public detail::SimplexBase<2> {
          */
         Face(Triangulation<2>* tri);
         /**
-         * Creates a new triangle with the given description and
+         * Creates a new triangle whose description and locks are cloned
+         * from the given triangle, and with no edges joined to anything.
+         *
+         * \param clone the triangle whose details should be cloned.
+         * \param tri the triangulation to which the new tetrahedron belongs.
+         */
+        Face(const Face& clone, Triangulation<2>* tri);
+        /**
+         * Creates a new triangle with the given description, no locks, and
          * no edges joined to anything.
          *
          * \param desc the description to give the new triangle.
@@ -134,6 +142,10 @@ inline int Face<2, 2>::adjacentEdge(int edge) const {
 
 inline Face<2, 2>::Face(Triangulation<2>* tri) :
         detail::SimplexBase<2>(tri) {
+}
+
+inline Face<2, 2>::Face(const Face& clone, Triangulation<2>* tri) :
+        detail::SimplexBase<2>(clone, tri) {
 }
 
 inline Face<2, 2>::Face(const std::string& desc,

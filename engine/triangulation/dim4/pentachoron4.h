@@ -95,7 +95,15 @@ class Face<4, 4> : public detail::SimplexBase<4> {
          */
         Face(Triangulation<4>* tri);
         /**
-         * Creates a new pentachoron with the given description and
+         * Creates a new pentachoron whose description and locks are cloned
+         * from the given pentachoron, and with no facets joined to anything.
+         *
+         * \param clone the pentachoron whose details should be cloned.
+         * \param tri the triangulation to which the new tetrahedron belongs.
+         */
+        Face(const Face& clone, Triangulation<4>* tri);
+        /**
+         * Creates a new pentachoron with the given description, no locks, and
          * no facets joined to anything.
          *
          * \param desc the description to give the new pentachoron.
@@ -126,6 +134,10 @@ inline Simplex<4>* Face<4, 4>::adjacentPentachoron(int facet) const {
 
 inline Face<4, 4>::Face(Triangulation<4>* tri) :
         detail::SimplexBase<4>(tri) {
+}
+
+inline Face<4, 4>::Face(const Face& clone, Triangulation<4>* tri) :
+        detail::SimplexBase<4>(clone, tri) {
 }
 
 inline Face<4, 4>::Face(const std::string& desc, Triangulation<4>* tri) :

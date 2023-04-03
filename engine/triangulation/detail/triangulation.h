@@ -261,6 +261,9 @@ class TriangulationBase :
          * edges, components, etc.).  In particular, the same numbering and
          * labelling will be used for all skeletal objects.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
          * If you want a "clean" copy that resets all properties to unknown
          * and leaves the skeleton uncomputed, you can use the two-argument
          * copy constructor instead.
@@ -285,6 +288,10 @@ class TriangulationBase :
          * no guarantee that the numbering and labelling for skeletal objects
          * will be the same as in the source triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will always be copied across (regardless of
+         * the argument \a cloneProps).
+         *
          * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
          * properties as well as the skeleton of the given triangulation,
@@ -305,6 +312,9 @@ class TriangulationBase :
          * Simplex<dim>, Face<dim, subdim>, Component<dim> or
          * BoundaryComponent<dim> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
          *
          * The triangulation that is passed (\a src) will no longer be usable.
          *
@@ -526,7 +536,9 @@ class TriangulationBase :
          *
          * This triangulation will become empty as a result.
          *
-         * Any pointers or references to Simplex<dim> objects will remain valid.
+         * Any pointers or references to Simplex<dim> objects will remain
+         * valid, and any locks on top-dimensional simplices and/or their
+         * facets will be preserved.
          *
          * If your intention is to _replace_ the simplices in \a dest
          * (i.e., you do not need to preserve the original contents),
@@ -1951,9 +1963,16 @@ class TriangulationBase :
 
         /**
          * Converts this triangulation into its double cover.
+         *
          * Each orientable component will be duplicated, and each
-         * non-orientable component will be converted into its
-         * orientable double cover.
+         * non-orientable component will be converted into its orientable
+         * double cover.
+         *
+         * If this triangulation has locks on any top-dimensional simplices
+         * and/or their facets, these will not prevent the double cover from
+         * taking place.  Instead, these locks will be duplicated alongside
+         * their corresponding simplices and/or facets (i.e., they will appear
+         * in both sheets of the double cover).
          */
         void makeDoubleCover();
 
@@ -2077,6 +2096,10 @@ class TriangulationBase :
          *   the packet tree.
          *
          * - This function does not assign labels to the new components.
+         *
+         * If this triangulation has locks on any top-dimensional simplices
+         * and/or their facets, these locks will also be copied over to the
+         * newly-triangulated components.
          *
          * \return a list of individual component triangulations.
          */
@@ -2394,6 +2417,9 @@ class TriangulationBase :
          * as the original simplices from \a source, and any gluings
          * between the simplices of \a source will likewise be copied
          * across as gluings between their copies in this triangulation.
+         *
+         * If \a source has locks on any top-dimensional simplices and/or their
+         * facets, these locks will also be copied over to this triangulation.
          *
          * This routine behaves correctly when \a source is this triangulation.
          *
@@ -2882,6 +2908,9 @@ class TriangulationBase :
          * will use the same numbering and labelling for all skeletal objects
          * as in the source triangulation.
          *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
          * TriangulationBase never calls this operator itself; it is only
          * ever called by the Triangulation<dim> assignment operator.
          *
@@ -2904,6 +2933,9 @@ class TriangulationBase :
          * Simplex<dim>, Face<dim, subdim>, Component<dim> or
          * BoundaryComponent<dim> objects will remain valid.  Likewise, all
          * cached properties will be moved into this triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
          *
          * TriangulationBase never calls this operator itself; it is only
          * ever called by the Triangulation<dim> assignment operator.
@@ -3437,7 +3469,7 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& src,
     simplices_.reserve(src.simplices_.size());
 
     for (auto s : src.simplices_)
-        simplices_.push_back(new Simplex<dim>(s->description(),
+        simplices_.push_back(new Simplex<dim>(*s,
             static_cast<Triangulation<dim>*>(this)));
 
     // Copy the internal simplex data, including gluings.
@@ -3516,7 +3548,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
     simplices_.reserve(src.simplices_.size());
 
     for (auto s : src.simplices_)
-        simplices_.push_back(new Simplex<dim>(s->description(),
+        simplices_.push_back(new Simplex<dim>(*s,
             static_cast<Triangulation<dim>*>(this)));
 
     // Copy the internal simplex data, including gluings.
@@ -4204,8 +4236,7 @@ void TriangulationBase<dim>::insertTriangulation(
 
     size_t i;
     for (i = 0; i < nSource; ++i)
-        simplices_.push_back(new Simplex<dim>(
-            source.simplices_[i]->description_,
+        simplices_.push_back(new Simplex<dim>(*source.simplices_[i],
             static_cast<Triangulation<dim>*>(this)));
 
     Simplex<dim> *me, *you;
@@ -4512,26 +4543,23 @@ std::vector<Triangulation<dim>>
 
     // Clone the simplices, sorting them into the new components.
     auto* newSimp = new Simplex<dim>*[size()];
-    Simplex<dim> *simp, *adj;
-    size_t simpPos, adjPos;
-    Perm<dim + 1> adjPerm;
-    int facet;
 
-    for (simpPos = 0; simpPos < size(); ++simpPos)
-        newSimp[simpPos] = ans[simplices_[simpPos]->component()->index()].
-            newSimplex(simplices_[simpPos]->description());
+    for (size_t simpPos = 0; simpPos < size(); ++simpPos) {
+        Triangulation<dim>& tri =
+            ans[simplices_[simpPos]->component()->index()];
+        newSimp[simpPos] = new Simplex<dim>(*simplices_[simpPos],
+            std::addressof(tri));
+        tri.simplices_.push_back(newSimp[simpPos]);
+    }
 
     // Clone the simplex gluings also.
-    for (simpPos = 0; simpPos < size(); ++simpPos) {
-        simp = simplices_[simpPos];
-        for (facet = 0; facet <= dim; ++facet) {
-            adj = simp->adjacentSimplex(facet);
+    for (size_t simpPos = 0; simpPos < size(); ++simpPos) {
+        Simplex<dim>* simp = simplices_[simpPos];
+        for (int facet = 0; facet <= dim; ++facet) {
+            Simplex<dim>* adj = simp->adjacentSimplex(facet);
             if (adj) {
-                adjPos = adj->index();
-                adjPerm = simp->adjacentGluing(facet);
-                if (adjPos > simpPos ||
-                        (adjPos == simpPos && adjPerm[facet] > facet))
-                    newSimp[simpPos]->join(facet, newSimp[adjPos], adjPerm);
+                newSimp[simpPos]->adj_[facet] = newSimp[adj->index()];
+                newSimp[simpPos]->gluing_[facet] = simp->adjacentGluing(facet);
             }
         }
     }

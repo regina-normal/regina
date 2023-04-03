@@ -326,18 +326,26 @@ void TriangulationBase<dim>::makeDoubleCover() {
     if (sheetSize == 0)
         return;
 
-    // Ensure only one event pair is fired in this sequence of changes.
+    // Manage change events and snapshots manually, since we will be managing
+    // simplices and gluings manually also.  The reason for this manual work
+    // is so that we can do the right thing with simplex/facet locks.
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+
+    // Clear all properties now, so that the skeleton is deleted.
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 
     // Create a second sheet of simplices.
     auto* upper = new Simplex<dim>*[sheetSize];
-    size_t i;
-    for (i = 0; i < sheetSize; i++)
-        upper[i] = newSimplex(simplices_[i]->description());
+    for (size_t i = 0; i < sheetSize; i++) {
+        upper[i] = new Simplex<dim>(*simplices_[i],
+            static_cast<Triangulation<dim>*>(this));
+        simplices_.push_back(upper[i]);
+    }
 
     // Reset each simplex orientation.
     auto sit = simplices_.begin();
-    for (i = 0; i < sheetSize; i++) {
+    for (size_t i = 0; i < sheetSize; i++) {
         (*sit++)->orientation_ = 0;
         upper[i]->orientation_ = 0;
     }
@@ -351,19 +359,12 @@ void TriangulationBase<dim>::makeDoubleCover() {
     //
     // We will ignore the requirement that the lowest-index simplex in each
     // component must have orientation +1: this is because our new orientations
-    // are temporary only.  (The calls to newSimplex() above will force a full
-    // recomputation of the skeleton when next required.)
+    // are temporary only.  (We called clearAllProperties() above, which will
+    // force a full recomputation of the skeleton when next required.)
     auto* queue = new size_t[sheetSize];
     size_t queueStart = 0, queueEnd = 0;
 
-    int facet;
-    size_t upperSimp;
-    Simplex<dim>* lowerSimp;
-    size_t upperAdj;
-    Simplex<dim>* lowerAdj;
-    int lowerAdjOrientation;
-    Perm<dim + 1> gluing;
-    for (i = 0; i < sheetSize; i++)
+    for (size_t i = 0; i < sheetSize; i++)
         if (upper[i]->orientation_ == 0) {
             // We've found a new component.
             // Completely recreate the gluings for this component.
@@ -372,46 +373,44 @@ void TriangulationBase<dim>::makeDoubleCover() {
             queue[queueEnd++] = i;
 
             while (queueStart < queueEnd) {
-                upperSimp = queue[queueStart++];
-                lowerSimp = simplices_[upperSimp];
+                size_t upperSimp = queue[queueStart++];
+                Simplex<dim>* lowerSimp = simplices_[upperSimp];
 
-                for (facet = 0; facet <= dim; ++facet) {
-                    lowerAdj = lowerSimp->adjacentSimplex(facet);
+                for (int facet = 0; facet <= dim; ++facet) {
+                    Simplex<dim>* lowerAdj = lowerSimp->adjacentSimplex(facet);
 
                     // See if this simplex is glued to something in the
                     // lower sheet.
                     if (! lowerAdj)
                         continue;
 
-                    // Make sure we haven't already fixed this gluing in
-                    // the upper sheet.
-                    if (upper[upperSimp]->adjacentSimplex(facet))
-                        continue;
-
                     // Determine the expected orientation of the
                     // adjacent simplex in the lower sheet.
-                    gluing = lowerSimp->adjacentGluing(facet);
-                    lowerAdjOrientation = (gluing.sign() == 1 ?
+                    Perm<dim + 1> gluing = lowerSimp->adjacentGluing(facet);
+                    int lowerAdjOrientation = (gluing.sign() == 1 ?
                         -lowerSimp->orientation_ : lowerSimp->orientation_);
 
-                    upperAdj = lowerAdj->index();
+                    size_t upperAdj = lowerAdj->index();
                     if (lowerAdj->orientation_ == 0) {
                         // We haven't seen the adjacent simplex yet.
                         lowerAdj->orientation_ = lowerAdjOrientation;
                         upper[upperAdj]->orientation_ = -lowerAdjOrientation;
-                        upper[upperSimp]->join(facet, upper[upperAdj], gluing);
+                        upper[upperSimp]->adj_[facet] = upper[upperAdj];
+                        upper[upperSimp]->gluing_[facet] = gluing;
                         queue[queueEnd++] = upperAdj;
                     } else if (lowerAdj->orientation_ == lowerAdjOrientation) {
                         // The adjacent simplex already has the
                         // correct orientation.
-                        upper[upperSimp]->join(facet, upper[upperAdj], gluing);
+                        upper[upperSimp]->adj_[facet] = upper[upperAdj];
+                        upper[upperSimp]->gluing_[facet] = gluing;
                     } else {
                         // The adjacent simplex already has the
                         // incorrect orientation.  Make a cross between
                         // the two sheets.
-                        lowerSimp->unjoin(facet);
-                        lowerSimp->join(facet, upper[upperAdj], gluing);
-                        upper[upperSimp]->join(facet, lowerAdj, gluing);
+                        lowerSimp->adj_[facet] = upper[upperAdj];
+                        lowerSimp->gluing_[facet] = gluing;
+                        upper[upperSimp]->adj_[facet] = lowerAdj;
+                        upper[upperSimp]->gluing_[facet] = gluing;
                     }
                 }
             }

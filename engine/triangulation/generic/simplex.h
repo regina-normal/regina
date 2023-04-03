@@ -111,8 +111,16 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
          */
         Face(Triangulation<dim>* tri);
         /**
-         * Creates a new simplex with the given description and no facets
-         * joined to anything.
+         * Creates a new simplex whose description and locks are cloned
+         * from the given simplex, and with no faces joined to anything.
+         *
+         * \param clone the simplex whose details should be cloned.
+         * \param tri the triangulation to which the new tetrahedron belongs.
+         */
+        Face(const Face& clone, Triangulation<dim>* tri);
+        /**
+         * Creates a new simplex with the given description, no locks, and
+         * no facets joined to anything.
          *
          * \param desc the description to give the new simplex.
          * \param tri the triangulation to which the new simplex belongs.
@@ -146,6 +154,11 @@ using Simplex = Face<dim, dim>;
 template <int dim>
 inline Face<dim, dim>::Face(Triangulation<dim>* tri) :
         detail::SimplexBase<dim>(tri) {
+}
+
+template <int dim>
+inline Face<dim, dim>::Face(const Face& clone, Triangulation<dim>* tri) :
+        detail::SimplexBase<dim>(clone, tri) {
 }
 
 template <int dim>

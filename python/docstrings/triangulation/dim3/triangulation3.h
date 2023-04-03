@@ -39,6 +39,9 @@ fundamental group, and so on), as well as the skeleton (vertices,
 edges, components, etc.). In particular, the same numbering and
 labelling will be used for all skeletal objects.
 
+If *src* has any locks on top-dimensional simplices and/or their
+facets, these locks will also be copied across.
+
 If you want a "clean" copy that resets all properties to unknown and
 leaves the skeleton uncomputed, you can use the two-argument copy
 constructor instead.
@@ -69,6 +72,10 @@ be recomputed on demand if/when they are required. Note in particular
 that, when the skeleton is recomputed, there is no guarantee that the
 numbering and labelling for skeletal objects will be the same as in
 the source triangulation.
+
+If *src* has any locks on top-dimensional simplices and/or their
+facets, these locks will always be copied across (regardless of the
+argument *cloneProps*).
 
 Parameter ``src``:
     the triangulation to copy.

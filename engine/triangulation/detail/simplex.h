@@ -946,8 +946,16 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          */
         SimplexBase(Triangulation<dim>* tri);
         /**
-         * Creates a new simplex with the given description and no facets
-         * joined to anything.
+         * Creates a new simplex whose description and locks are cloned
+         * from the given simplex, and with no facets joined to anything.
+         *
+         * \param clone the simplex whose details should be cloned.
+         * \param tri the triangulation to which the new simplex belongs.
+         */
+        SimplexBase(const SimplexBase& clone, Triangulation<dim>* tri);
+        /**
+         * Creates a new simplex with the given description, no locks,
+         * and no facets joined to anything.
          *
          * \param desc the description to give the new simplex.
          * \param tri the triangulation to which the new simplex belongs.
@@ -993,6 +1001,14 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
 
 template <int dim>
 inline SimplexBase<dim>::SimplexBase(Triangulation<dim>* tri) : tri_(tri) {
+    for (int i = 0; i <= dim; ++i)
+        adj_[i] = nullptr;
+}
+
+template <int dim>
+inline SimplexBase<dim>::SimplexBase(const SimplexBase& clone,
+        Triangulation<dim>* tri) :
+        description_(clone.description_), locks_(clone.locks_), tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = nullptr;
 }
