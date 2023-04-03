@@ -64,8 +64,10 @@ namespace regina {
  * facets.  Typically (but not necessarily) such triangulations are used
  * to represent <i>dim</i>-manifolds.
  *
- * Such triangulations are not the same as pure simplicial complexes, for two
- * reasons:
+ * ### Structure of triangulations
+ *
+ * Triangulations in Regina are not the same as pure simplicial complexes,
+ * for two reasons:
  *
  * - The only identifications that the user can explicitly specify are
  *   gluings between <i>dim</i>-dimensional simplices along their
@@ -94,6 +96,8 @@ namespace regina {
  * fromIsoSig() (which use _isomorphism signatures_), or dumpConstruction()
  * and fromGluings() (which use C++ code).
  *
+ * ### Skeleta and components
+ *
  * In additional to top-dimensional simplices, this class also tracks:
  *
  * - connected components of the triangulation, as represented by the
@@ -107,6 +111,8 @@ namespace regina {
  * be deleted and rebuilt, and any pointers to them will become invalid.
  * Likewise, if the triangulation is deleted then all component objects
  * will be deleted alongside it.
+ *
+ * ### The packet tree
  *
  * Since Regina 7.0, this is no longer a "packet type" that can be
  * inserted directly into the packet tree.  Instead a Triangulation is now a
@@ -128,6 +134,8 @@ namespace regina {
  *   then the appropriate packet change events will be fired.  All other events
  *   (aside from packetToBeChanged() and packetWasChanged() are managed
  *   directly by the PacketOf<Triangulation> wrapper class.
+ *
+ * ### C++ housekeeping
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,

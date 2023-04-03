@@ -356,6 +356,50 @@ def process_comment(comment, preserveAmpersands):
         else:
             # Split into paragraphs.
             for y in re.split(r'(?: *\n *){2,}', x):
+                # See if this paragraph looks like a heading.
+                #
+                # Here we assume that headings are contained in a single line,
+                # and we will treat them as being outside any lists.
+                #
+                # For now we support heading levels 1-6.
+                #
+                header = 0
+                if len(y) > 2 and y[:2] == '# ':
+                    header = y[2:]
+                    header_pre = '#' * len(header)
+                    header_post = header_pre
+                elif len(y) > 3 and y[:3] == '## ':
+                    header = y[3:]
+                    header_pre = '*' * len(header)
+                    header_post = header_pre
+                elif len(y) > 4 and y[:4] == '### ':
+                    header = y[4:]
+                    header_pre = None
+                    header_post = '=' * len(header)
+                elif len(y) > 5 and y[:5] == '#### ':
+                    header = y[5:]
+                    header_pre = None
+                    header_post = '-' * len(header)
+                elif len(y) > 6 and y[:6] == '##### ':
+                    header = y[6:]
+                    header_pre = None
+                    header_post = '^' * len(header)
+                elif len(y) > 7 and y[:7] == '###### ':
+                    header = y[7:]
+                    header_pre = None
+                    header_post = '"' * len(header)
+                if header:
+                    if header_pre:
+                        result += header_pre + '\n'
+                    result += header + '\n'
+                    if header_post:
+                        result += header_post + '\n'
+                    result += '\n'
+
+                    wrapper.initial_indent = wrapper.subsequent_indent = ''
+                    last_indent = ''
+                    continue
+
                 # Split out any list items in this paragraph.
                 # A paragraph has optional plain text, followed by one or more
                 # optional list items.  (In particular, the list items can
