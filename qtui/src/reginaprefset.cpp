@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "regina-config.h"
+#include "core/engine.h"
 #include "file/globaldirs.h"
 #include "snappea/snappeatriangulation.h"
 #include "surface/normalsurfaces.h"
@@ -41,6 +42,7 @@
 #include "shortrunner.h"
 
 #include <fstream>
+#include <thread>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -88,6 +90,7 @@ ReginaPrefSet::ReginaPrefSet() :
         surfacesCreationList(regina::NS_LIST_DEFAULT),
         surfacesInitialCompat(LocalCompat),
         surfacesSupportOriented(false),
+        threadCount(ThreadPolite),
         treeJumpSize(10),
         tabDim2Tri(0),
         tabDim2TriSkeleton(0),
@@ -218,6 +221,16 @@ void ReginaPrefSet::readInternal() {
     anglesCreationTaut = settings.value("CreationTaut", false).toBool();
     settings.endGroup();
 
+    settings.beginGroup("Compute");
+    QString str = settings.value("ThreadCount").toString();
+    if (str == "Single")
+        threadCount = ReginaPrefSet::ThreadSingle;
+    else if (str == "All")
+        threadCount = ReginaPrefSet::ThreadAll;
+    else
+        threadCount = ReginaPrefSet::ThreadPolite; /* default */
+    settings.endGroup();
+
     settings.beginGroup("Display");
     displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
     displayUnicode = settings.value("DisplayUnicode", true).toBool();
@@ -241,7 +254,7 @@ void ReginaPrefSet::readInternal() {
 
     settings.beginGroup("Link");
     linkCreationType = settings.value("CreationType", 0).toInt();
-    QString str = settings.value("CodeType").toString();
+    str = settings.value("CodeType").toString();
     if (str == "DowkerThistlethwaite")
         linkCodeType = ReginaPrefSet::DowkerThistlethwaite;
     else if (str == "KnotSig")
@@ -366,6 +379,17 @@ void ReginaPrefSet::saveInternal() const {
     QSettings settings;
     settings.beginGroup("Angles");
     settings.setValue("CreationTaut", anglesCreationTaut);
+    settings.endGroup();
+
+    settings.beginGroup("Compute");
+    switch (threadCount) {
+        case ReginaPrefSet::ThreadSingle:
+            settings.setValue("ThreadCount", "Single"); break;
+        case ReginaPrefSet::ThreadAll:
+            settings.setValue("ThreadCount", "All"); break;
+        default:
+            settings.setValue("ThreadCount", "Polite"); break;
+    }
     settings.endGroup();
 
     settings.beginGroup("Display");
@@ -516,3 +540,17 @@ ReginaPrefSet::Codec ReginaPrefSet::importExportCodec() {
 #endif
 }
 
+int ReginaPrefSet::threads() {
+    switch (global().threadCount) {
+        case ThreadSingle:
+            return 1;
+        case ThreadAll:
+        {
+            int ans = std::thread::hardware_concurrency();
+            return (ans >= 1 ? ans : 1);
+        }
+        default:
+            // Use the ThreadPolite setting.
+            return regina::politeThreads();
+    }
+}

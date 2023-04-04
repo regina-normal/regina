@@ -111,6 +111,9 @@ class ReginaPrefSet : public QObject {
         enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
             /**< Possible compatibility matrices that can be displayed for a
                  normal surface list. */
+        enum ThreadCount { ThreadSingle, ThreadPolite, ThreadAll };
+            /**< Options for how aggressively we use multithreading in long
+                 computation. */
         enum TriGraphType { DualGraph, TreeDecomposition,
                 NiceTreeDecomposition };
             /**< Possible types of graph that can be displayed in a
@@ -209,6 +212,9 @@ class ReginaPrefSet : public QObject {
         int tabSurfaceList;
             /**< The index of the initial sub-tab to open in a normal
                  surface list viewer. */
+        ThreadCount threadCount;
+            /**< Indicates how aggressively we should use multithreading in
+                 long computations. */
         unsigned treeJumpSize;
             /**< The number of steps corresponding to a jump up or down in
                  the packet tree. */
@@ -295,6 +301,12 @@ class ReginaPrefSet : public QObject {
          * This routine will never return null.
          */
         static Codec importExportCodec();
+
+        /**
+         * Returns a sensible number of threads to use for a long computation,
+         * according to the user's thread count setting.
+         */
+        static int threads();
 
         /**
          * Opens the given section of an arbitrary handbook in an appropriate
