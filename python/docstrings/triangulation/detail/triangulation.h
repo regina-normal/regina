@@ -1623,6 +1623,21 @@ Returns:
     and the triangulation that would be reconstructed from
     fromIsoSig().)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::lockBoundary
+constexpr const char *lockBoundary =
+R"doc(Locks all boundary facets of this triangulation.
+
+In short, this means that the boundary facets must not be changed. See
+Simplex<dim>::lockFacet() for full details on how locks work and what
+their implications are.
+
+If there are any other locks on top-dimensional simplices and/or their
+facets, these other locks will be left intact.
+
+Note that this only locks the facets of real boundary components.
+Ideal boundary components are not affected (since they have no facets
+to lock).)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::makeCanonical
 constexpr const char *makeCanonical =
 R"doc(Relabel the top-dimensional simplices and their vertices so that this

@@ -128,6 +128,8 @@ void addTriangulation4(pybind11::module_& m) {
         .def("moveContentsTo", &Triangulation<4>::moveContentsTo,
             rbase::moveContentsTo)
         .def("hasLocks", &Triangulation<4>::hasLocks, rbase::hasLocks)
+        .def("lockBoundary", &Triangulation<4>::lockBoundary,
+            rbase::lockBoundary)
         .def("unlockAll", &Triangulation<4>::unlockAll, rbase::unlockAll)
         .def("countComponents", &Triangulation<4>::countComponents,
             rbase::countComponents)

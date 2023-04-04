@@ -567,6 +567,21 @@ class TriangulationBase :
          */
         bool hasLocks() const;
         /**
+         * Locks all boundary facets of this triangulation.
+         *
+         * In short, this means that the boundary facets must not be changed.
+         * See Simplex<dim>::lockFacet() for full details on how locks work
+         * and what their implications are.
+         *
+         * If there are any other locks on top-dimensional simplices and/or
+         * their facets, these other locks will be left intact.
+         *
+         * Note that this only locks the facets of real boundary components.
+         * Ideal boundary components are not affected (since they have no
+         * facets to lock).
+         */
+        void lockBoundary();
+        /**
          * Unlocks all top-dimensional simplices and their facets.
          *
          * In short, locking a top-dimensional simplex and/or some of its
@@ -3758,6 +3773,26 @@ bool TriangulationBase<dim>::hasLocks() const {
         if (s->locks_)
             return true;
     return false;
+}
+
+template <int dim>
+void TriangulationBase<dim>::lockBoundary() {
+    // We could do this without the skeleton, but this would require a full
+    // scan through all top-dimensional simplices.  Instead we guess that the
+    // user is likely to have already computed the skeleton (which means
+    // that ensureSkeleton() has no cost), and this will allow us to iterate
+    // through just the boundary facets only.
+
+    // The following test ensures that the skeleton is computed.
+    if (! hasBoundaryFacets())
+        return;
+
+    // Ensure that only one change event is fired.
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+
+    for (auto b : boundaryComponents_)
+        for (auto f : b->facets())
+            f->lock();
 }
 
 template <int dim>
