@@ -657,7 +657,7 @@ void LinkCrossingsUI::simplifyExhaustive(int height) {
         (knot ? tr("Tried %1 knots") : tr("Tried %1 links")), ui);
 
     std::thread(&Link::simplifyExhaustive, link, height,
-        regina::politeThreads(), std::addressof(tracker)).detach();
+        ReginaPrefSet::threads(), std::addressof(tracker)).detach();
 
     if (dlg.run() && link->size() == initSize) {
         dlg.hide();

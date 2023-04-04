@@ -682,7 +682,7 @@ void Tri4GluingsUI::simplifyExhaustive(int height) {
         tr("Tried %1 triangulations"), ui);
 
     std::thread(&Triangulation<4>::simplifyExhaustive, tri, height,
-        regina::politeThreads(), &tracker).detach();
+        ReginaPrefSet::threads(), &tracker).detach();
 
     if (dlg.run() && tri->size() == initSize) {
         dlg.hide();
