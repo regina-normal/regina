@@ -49,7 +49,11 @@
 #include <cassert>
 #include <tuple>
 
-namespace regina::detail {
+namespace regina {
+
+template <int> class XMLSimplexReader;
+
+namespace detail {
 
 template <int> class TriangulationBase;
 
@@ -995,6 +999,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
 
     friend class TriangulationBase<dim>;
     friend class Triangulation<dim>;
+    friend class regina::XMLSimplexReader<dim>;
 };
 
 // Inline functions for SimplexBase
@@ -1384,7 +1389,7 @@ inline bool SimplexBase<dim>::sameDegreesAt(const SimplexBase& other,
     return (sameDegreesAt<useDim>(other, p) && ...);
 }
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #endif
 
