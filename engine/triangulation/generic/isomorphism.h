@@ -376,6 +376,12 @@ class Isomorphism :
          * describes the mapping from the simplices of \a T and their facets
          * to the simplices of \a U and their facets.
          *
+         * If the given triangulation \a T has any locks on top-dimensional
+         * simplices and/or their facets, then the resulting triangulation \a U
+         * will have matching locks that have been carried through the
+         * isomorphism correctly (i.e., the locks will be copied over to the
+         * appropriate destination simplices and/or facets).
+         *
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
@@ -463,6 +469,12 @@ class Isomorphism :
          * Deprecated routine that applies this isomorphism to the given
          * triangulation, and returns the result as a new triangulation.
          *
+         * If the given triangulation has any locks on top-dimensional
+         * simplices and/or their facets, then the triangulation that is
+         * returned will have matching locks that have been carried through
+         * the isomorphism correctly (i.e., the locks will be copied over
+         * to the appropriate destination simplices and/or facets).
+         *
          * \deprecated If this isomorphism is \a iso, then this routine
          * is equivalent to calling `iso(tri)`.  See the bracket
          * operator for further details.
@@ -485,6 +497,11 @@ class Isomorphism :
         /**
          * Deprecated routine that applies this isomorphism to the given
          * triangulation, modifying the given triangulation directly.
+         *
+         * If the given triangulation has any locks on top-dimensional
+         * simplices and/or their facets, then these locks will be carried
+         * through the isomorphism correctly (i.e., the locks will be moved
+         * to the appropriate destination simplices and/or facets).
          *
          * \deprecated If this isomorphism is \a iso, then this routine
          * is equivalent to calling `tri = iso(tri)`.  See the bracket
@@ -901,26 +918,39 @@ Triangulation<dim> Isomorphism<dim>::operator ()(
     for (size_t t = 0; t < size_; t++)
         tet[t] = ans.newSimplex();
 
-    for (size_t t = 0; t < size_; t++)
-        tet[simpImage_[t]]->setDescription(
-            original.simplex(t)->description());
+    const Simplex<dim> *src, *adj;
+    Simplex<dim> *dest;
 
-    const Simplex<dim> *myTet, *adjTet;
     for (size_t t = 0; t < size_; t++) {
-        myTet = original.simplex(t);
-        for (int f = 0; f <= dim; f++)
-            if ((adjTet = myTet->adjacentSimplex(f))) {
-                // We have an adjacent simplex.
-                size_t adjTetIndex = adjTet->index();
-                Perm<dim+1> gluingPerm = myTet->adjacentGluing(f);
+        src = original.simplex(t);
+        dest = tet[simpImage_[t]];
 
-                // Make the gluing from one side only.
+        dest->setDescription(src->description());
+        if (src->isLocked())
+            dest->lock();
+    }
+
+    for (size_t t = 0; t < size_; t++) {
+        src = original.simplex(t);
+        for (int f = 0; f <= dim; f++)
+            if ((adj = src->adjacentSimplex(f))) {
+                // We have an adjacent simplex.
+                size_t adjTetIndex = adj->index();
+                Perm<dim+1> gluingPerm = src->adjacentGluing(f);
+
+                // Make the gluing (and any necessary locks) from one side only.
                 if (adjTetIndex > t || (adjTetIndex == t &&
-                        gluingPerm[f] > f))
-                    tet[simpImage_[t]]->join(facetPerm_[t][f],
-                        tet[simpImage_[adjTetIndex]],
+                        gluingPerm[f] > f)) {
+                    dest = tet[simpImage_[t]];
+                    dest->join(facetPerm_[t][f], tet[simpImage_[adjTetIndex]],
                         facetPerm_[adjTetIndex] * gluingPerm *
                             facetPerm_[t].inverse());
+                    if (src->isFacetLocked(f))
+                        dest->lockFacet(facetPerm_[t][f]);
+                }
+            } else {
+                if (src->isFacetLocked(f))
+                    tet[simpImage_[t]]->lockFacet(facetPerm_[t][f]);
             }
     }
 

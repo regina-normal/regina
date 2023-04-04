@@ -95,6 +95,12 @@ combinatorially isomorphic triangulations, and this isomorphism
 describes the mapping from the simplices of *T* and their facets to
 the simplices of *U* and their facets.
 
+If the given triangulation *T* has any locks on top-dimensional
+simplices and/or their facets, then the resulting triangulation *U*
+will have matching locks that have been carried through the
+isomorphism correctly (i.e., the locks will be copied over to the
+appropriate destination simplices and/or facets).
+
 Precondition:
     The simplex images are precisely 0,1,...,size()-1 in some order
     (i.e., this isomorphism does not represent a mapping from a
@@ -318,6 +324,12 @@ constexpr const char *apply =
 R"doc(Deprecated routine that applies this isomorphism to the given
 triangulation, and returns the result as a new triangulation.
 
+If the given triangulation has any locks on top-dimensional simplices
+and/or their facets, then the triangulation that is returned will have
+matching locks that have been carried through the isomorphism
+correctly (i.e., the locks will be copied over to the appropriate
+destination simplices and/or facets).
+
 .. deprecated::
     If this isomorphism is *iso*, then this routine is equivalent to
     calling ``iso(tri)``. See the bracket operator for further
@@ -342,6 +354,11 @@ Returns:
 constexpr const char *applyInPlace =
 R"doc(Deprecated routine that applies this isomorphism to the given
 triangulation, modifying the given triangulation directly.
+
+If the given triangulation has any locks on top-dimensional simplices
+and/or their facets, then these locks will be carried through the
+isomorphism correctly (i.e., the locks will be moved to the
+appropriate destination simplices and/or facets).
 
 .. deprecated::
     If this isomorphism is *iso*, then this routine is equivalent to
