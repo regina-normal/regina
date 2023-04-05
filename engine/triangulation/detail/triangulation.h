@@ -2140,8 +2140,9 @@ class TriangulationBase :
          * which allows relabelling of the top-dimensional simplices and their
          * vertices, see isIsomorphicTo() instead.
          *
-         * This test does _not_ examine the textual simplex descriptions,
-         * as seen in Simplex<dim>::description(); these may still differ.
+         * This test does _not_ examine the textual simplex descriptions or
+         * simplex/facet locks, as seen in Simplex<dim>::description() and
+         * Simplex<dim>::lockMask(); these may still differ.
          * It also does not test whether lower-dimensional faces are
          * numbered identically (vertices, edges and so on); this routine
          * is only concerned with top-dimensional simplices.
@@ -2175,8 +2176,9 @@ class TriangulationBase :
          * which allows relabelling of the top-dimensional simplices and their
          * vertices, see isIsomorphicTo() instead.
          *
-         * This test does _not_ examine the textual simplex descriptions,
-         * as seen in Simplex<dim>::description(); these may still differ.
+         * This test does _not_ examine the textual simplex descriptions or
+         * simplex/facet locks, as seen in Simplex<dim>::description() and
+         * Simplex<dim>::lockMask(); these may still differ.
          * It also does not test whether lower-dimensional faces are
          * numbered identically (vertices, edges and so on); this routine
          * is only concerned with top-dimensional simplices.
