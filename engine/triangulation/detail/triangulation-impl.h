@@ -435,7 +435,7 @@ void TriangulationBase<dim>::subdivide() {
         throw LockViolation("An attempt was made to subdivide a "
             "triangulation with one or more locked simplices or facets");
 
-    // Since staging is new here, we will use the "raw" simplex routines
+    // Since staging is new here, we can use the "raw" simplex routines
     // that do not generate change events / snapshots, check locks, etc.
     Triangulation<dim> staging;
 
@@ -491,7 +491,8 @@ void TriangulationBase<dim>::subdivide() {
         }
 
     // Delete the existing simplices and put in the new ones.
-    // The change event and snapshot will be fired here, during swap().
+    // The change event and snapshot will be fired here, and computed
+    // properties will be cleared, all during swap().
 
     // TODO: If the skeleton has been calculated and we know the
     // triangulation to be valid, then preserve vertex link properties.
@@ -516,9 +517,9 @@ bool TriangulationBase<dim>::finiteToIdeal() {
     auto* bdryPerm = new Perm<dim + 1>[nFaces];
     auto* cone = new Simplex<dim>*[nFaces];
 
+    // Since staging is new here, we can use the "raw" simplex routines
+    // that do not generate change events / snapshots, check locks, etc.
     Triangulation<dim> staging;
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span1(staging);
 
     for (Face<dim, dim - 1>* f : faces<dim - 1>()) {
         if (f->degree() > 1) {
@@ -527,9 +528,13 @@ bool TriangulationBase<dim>::finiteToIdeal() {
             continue;
         }
 
+        if (f->isLocked())
+            throw LockViolation("An attempt was made to change the boundary "
+                "of a triangulation with one or more locked boundary facets");
+
         bdry[f->index()] = f->front().simplex();
         bdryPerm[f->index()] = f->front().vertices();
-        cone[f->index()] = staging.newSimplex();
+        cone[f->index()] = staging.newSimplexRaw();
     }
 
     // Glue the new simplices to each other.
@@ -551,14 +556,17 @@ bool TriangulationBase<dim>::finiteToIdeal() {
         f2Perm = bdryPerm[facet2->index()].inverse() * e2.vertices() *
             Perm<dim + 1>(dim - 1, dim);
 
-        cone[facet1->index()]->join(f1Perm[dim - 1],
+        cone[facet1->index()]->joinRaw(f1Perm[dim - 1],
             cone[facet2->index()], f2Perm * f1Perm.inverse());
     }
 
     // Now join the new simplices to the boundary facets of the original
-    // triangulation.
-    // Again, ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span2(static_cast<Triangulation<dim>&>(*this));
+    // triangulation.  This will be where change events, snapshots, etc. are
+    // fired and properties are cleared.  From here on we need to stop
+    // using joinRaw(), and let join() do all of its extra management.
+
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     staging.moveContentsTo(static_cast<Triangulation<dim>&>(*this));
 
