@@ -54,6 +54,12 @@ You can call inclusion() if you need to know how the simplex numbers
 of the resulting triangulations correspond to the simplex numbers of
 the original triangulation.
 
+If any of the facets that cross the partition are locked in the source
+triangulation *tri*, this will not prevent the operation from
+occurring (since the source triangulation will not be changed). The
+two triangulations that are returned will have no simplex and/or facet
+locks at all.
+
 Precondition:
     The given triangulation has precisely size() top-dimensional
     simplices.
