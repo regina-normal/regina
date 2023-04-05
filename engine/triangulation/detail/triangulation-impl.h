@@ -427,12 +427,17 @@ void TriangulationBase<dim>::subdivide() {
     if (nOld == 0)
         return;
 
-    Triangulation<dim> staging;
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(staging);
-
     static_assert(standardDim(dim),
         "subdivide() may only be used in standard dimensions.");
+
+    // Any simplex or facet locks at all will be a problem here.
+    if (hasLocks())
+        throw LockViolation("An attempt was made to subdivide a "
+            "triangulation with one or more locked simplices or facets");
+
+    // Since staging is new here, we will use the "raw" simplex routines
+    // that do not generate change events / snapshots, check locks, etc.
+    Triangulation<dim> staging;
 
     auto* newSimp = new Simplex<dim>*[nOld * Perm<dim+1>::nPerms];
 
@@ -450,7 +455,7 @@ void TriangulationBase<dim>::subdivide() {
 
     size_t simp;
     for (simp = 0; simp < Perm<dim+1>::nPerms * nOld; ++simp)
-        newSimp[simp] = staging.newSimplex();
+        newSimp[simp] = staging.newSimplexRaw();
 
     // Do all of the internal gluings
     typename Perm<dim+1>::Index permIdx, adjIdx;
@@ -464,7 +469,8 @@ void TriangulationBase<dim>::subdivide() {
             for (i = 0; i < dim; ++i) {
                 adjIdx = (perm * Perm<dim+1>(i, i+1)).orderedSnIndex();
                 if (permIdx < adjIdx)
-                    newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i],
+                    newSimp[Perm<dim+1>::nPerms * simp + permIdx]->joinRaw(
+                        perm[i],
                         newSimp[Perm<dim+1>::nPerms * simp + adjIdx],
                         Perm<dim+1>(perm[i], perm[i+1]));
             }
@@ -478,13 +484,15 @@ void TriangulationBase<dim>::subdivide() {
                 continue; // We've already done this gluing from the other side.
 
             glue = oldSimp->adjacentGluing(perm[dim]);
-            newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[dim],
+            newSimp[Perm<dim+1>::nPerms * simp + permIdx]->joinRaw(perm[dim],
                 newSimp[Perm<dim+1>::nPerms * oldSimp->adjacentSimplex(
                     perm[dim])->index() + (glue * perm).orderedSnIndex()],
                 glue);
         }
 
     // Delete the existing simplices and put in the new ones.
+    // The change event and snapshot will be fired here, during swap().
+
     // TODO: If the skeleton has been calculated and we know the
     // triangulation to be valid, then preserve vertex link properties.
     static_cast<Triangulation<dim>*>(this)->swap(staging);

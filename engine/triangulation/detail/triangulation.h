@@ -500,6 +500,11 @@ class TriangulationBase :
          * \pre The given simplex is a top-dimensional simplex in this
          * triangulation.
          *
+         * \exception LockViolation The given simplex and/or one of its
+         * facets is currently locked.  See Simplex<dim>::lock() and
+         * Simplex<dim>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
          * \param simplex the simplex to remove.
          */
         void removeSimplex(Simplex<dim>* simplex);
@@ -512,7 +517,12 @@ class TriangulationBase :
          * The given simplex will be unglued from any adjacent simplices
          * (if any), and will be destroyed immediately.
          *
-         * \param index specifies which top-dimensionalsimplex to remove; this
+         * \exception LockViolation The requested simplex and/or one of its
+         * facets is currently locked.  See Simplex<dim>::lock() and
+         * Simplex<dim>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param index specifies which top-dimensional simplex to remove; this
          * must be between 0 and size()-1 inclusive.
          */
         void removeSimplexAt(size_t index);
@@ -522,6 +532,11 @@ class TriangulationBase :
          *
          * All of the simplices that belong to this triangulation will
          * be destroyed immediately.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked top-dimensional simplex and/or facet.  See
+         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+         * details on how such locks work and what their implications are.
          */
         void removeAllSimplices();
         /**
@@ -2977,6 +2992,55 @@ class TriangulationBase :
         TriangulationBase& operator = (TriangulationBase&& src);
 
         /**
+         * A variant of newSimplex() with no management of the underlying
+         * triangulation.
+         *
+         * This routine adjusts the internal list of simplices, just like
+         * newSimplex() does.  However, this is _all_ it does.  In particular:
+         *
+         * - it does not manage the underlying triangulation in any way:
+         *   it does not take snapshots, fire change events, or clear
+         *   computed properties.
+         *
+         * This should _only_ be used in settings where the other missing tasks
+         * such as snapshots, change events and computed properties are
+         * being taken care of in some other manner (possibly manually).  An
+         * example of such a setting might be the implementation of a local
+         * move (such as a Pachner move).
+         *
+         * The return value for this routine is the same as for newSimplex().
+         * See newSimplex() for further details.
+         */
+        Simplex<dim>* newSimplexRaw();
+
+        /**
+         * A variant of removeSimplex() with no lock management, and no
+         * management of the underlying triangulation.
+         *
+         * This routine adjusts the internal list of simplices and manages
+         * the isolation and destruction of the simplex being removed,
+         * just like removeSimplex() does.  However, this is _all_ it does.
+         * In particular:
+         *
+         * - it does not check for facet or simplex locks, throw LockViolation
+         *   exceptions, or update any lock flags;
+         *
+         * - it does not manage the underlying triangulation in any way:
+         *   it does not take snapshots, fire change events, or clear
+         *   computed properties.
+         *
+         * This should _only_ be used in settings where the other missing tasks
+         * such as locks, snapshots, change events and computed properties are
+         * being taken care of in some other manner (possibly manually).  An
+         * example of such a setting might be the implementation of a
+         * subdivision routine.
+         *
+         * The arguments for this routine are the same as for removeSimplex().
+         * See removeSimplex() for further details.
+         */
+        void removeSimplexRaw(Simplex<dim>* simplex);
+
+        /**
          * Ensures that all "on demand" skeletal objects have been calculated.
          */
         void ensureSkeleton() const;
@@ -3669,6 +3733,13 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex() {
 }
 
 template <int dim>
+inline Simplex<dim>* TriangulationBase<dim>::newSimplexRaw() {
+    auto* s = new Simplex<dim>(static_cast<Triangulation<dim>*>(this));
+    simplices_.push_back(s);
+    return s;
+}
+
+template <int dim>
 template <int k>
 std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplices() {
     static_assert(k >= 0,
@@ -3711,10 +3782,17 @@ Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
 
 template <int dim>
 inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
+    if (simplex->lockMask() != 0)
+        throw LockViolation("An attempt was made to remove a "
+            "top-dimensional simplex that is locked and/or has a "
+            "locked facet");
+
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
-    simplex->isolate();
+    // We can use isolateRaw() because we are already managing locks,
+    // snapshots, change events and computed properties manually.
+    simplex->isolateRaw();
     simplices_.erase(simplices_.begin() + simplex->index());
     delete simplex;
 
@@ -3722,12 +3800,26 @@ inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
 }
 
 template <int dim>
+inline void TriangulationBase<dim>::removeSimplexRaw(Simplex<dim>* simplex) {
+    simplex->isolateRaw();
+    simplices_.erase(simplices_.begin() + simplex->index());
+    delete simplex;
+}
+
+template <int dim>
 inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
+    Simplex<dim>* simplex = simplices_[index];
+    if (simplex->lockMask() != 0)
+        throw LockViolation("An attempt was made to remove a "
+            "top-dimensional simplex that is locked and/or has a "
+            "locked facet");
+
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
-    Simplex<dim>* simplex = simplices_[index];
-    simplex->isolate();
+    // We can use isolateRaw() because we are already managing locks,
+    // snapshots, change events and computed properties manually.
+    simplex->isolateRaw();
     simplices_.erase(simplices_.begin() + index);
     delete simplex;
 
@@ -3736,6 +3828,11 @@ inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
 
 template <int dim>
 inline void TriangulationBase<dim>::removeAllSimplices() {
+    if (hasLocks())
+        throw LockViolation("An attempt was made to remove all "
+            "top-dimensional simplices in a triangulation with one or more "
+            "locked simplices or facets");
+
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
