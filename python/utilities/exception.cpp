@@ -71,6 +71,9 @@ void addException(pybind11::module_& m) {
     pybind11::register_exception<regina::UnsolvedCase>(m,
         "UnsolvedCase", PyExc_RuntimeError)
         .doc() = rdoc::UnsolvedCase;
+    pybind11::register_exception<regina::LockViolation>(m,
+        "LockViolation", PyExc_RuntimeError)
+        .doc() = rdoc::LockViolation;
     pybind11::register_exception<regina::SnapPeaUnsolvedCase>(m,
         "SnapPeaUnsolvedCase", PyExc_RuntimeError)
         .doc() = rdoc::SnapPeaUnsolvedCase;

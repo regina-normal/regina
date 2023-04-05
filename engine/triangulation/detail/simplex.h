@@ -312,6 +312,10 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * joined is already joined to something, or you are trying to
          * join the same facet of the same simplex to itself.
          *
+         * \exception LockViolation The given facet of this simplex is
+         * currently locked.  See lockFacet() for further details on how
+         * facet locks work and what their implications are.
+         *
          * \param myFacet the facet of this simplex that will be glued
          * to the given simplex \a you.  This facet number must be between
          * 0 and \a dim inclusive.
@@ -335,6 +339,10 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * This routine is safe to call even if the given facet is
          * already a boundary facet (in which case it will do nothing).
          *
+         * \exception LockViolation The given facet of this simplex is
+         * currently locked.  See lockFacet() for further details on how
+         * facet locks work and what their implications are.
+         *
          * \param myFacet the facet of this simplex whose gluing we
          * will undo.  This should be between 0 and \a dim inclusive.
          * \return the simplex that was originally glued to the given facet
@@ -352,6 +360,10 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *
          * This routine is safe to call even if there are no adjacent
          * simplices (in which case it will do nothing).
+         *
+         * \exception LockViolation At least one facet of this simplex is
+         * non-boundary and currently locked.  See lockFacet() for further
+         * details on how facet locks work and what their implications are.
          */
         void isolate();
 
@@ -997,6 +1009,86 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
         bool sameDegreesAt(const SimplexBase& other, Perm<dim+1> p,
             std::integer_sequence<int, useDim...>) const;
 
+    private:
+        /**
+         * A variant of join() with no error-checking, no lock management,
+         * and no management of the underlying triangulation.
+         *
+         * This routine adjusts the internal \a adj_ and \a gluing_ arrays
+         * from both sides of the join, just like join() does.  However,
+         * this is _all_ it does.  In particular:
+         *
+         * - it does not check preconditions or throw exceptions;
+         *
+         * - it does not check for facet locks, throw LockViolation exceptions,
+         *   or update any lock flags;
+         *
+         * - it does not manage the underlying triangulation in any way:
+         *   it does not take snapshots, fire change events, or clear
+         *   computed properties.
+         *
+         * This should _only_ be used in settings where you are sure that
+         * all preconditions hold true, and where the other missing tasks such
+         * as locks, snapshots, change events and computed properties are being
+         * taken care of in some other manner (possibly manually).  An example
+         * of such a setting might be the implementation of a local move
+         * (such as a Pachner move).
+         *
+         * The preconditions and arguments for this routine are the same as
+         * for join().  See join() for further details.
+         */
+        void joinRaw(int myFacet, Simplex<dim>* you, Perm<dim+1> gluing);
+
+        /**
+         * A variant of unjoin() with no lock management, and no management
+         * of the underlying triangulation.
+         *
+         * This routine adjusts the internal \a adj_ and \a gluing_ arrays
+         * from both sides of the join, just like unjoin() does.  However,
+         * this is _all_ it does.  In particular:
+         *
+         * - it does not check for facet locks, throw LockViolation exceptions,
+         *   or update any lock flags;
+         *
+         * - it does not manage the underlying triangulation in any way:
+         *   it does not take snapshots, fire change events, or clear
+         *   computed properties.
+         *
+         * This should _only_ be used in settings where the other missing tasks
+         * such as locks, snapshots, change events and computed properties are
+         * being taken care of in some other manner (possibly manually).  An
+         * example of such a setting might be the implementation of a local
+         * move (such as a Pachner move).
+         *
+         * The arguments for this routine are the same as for unjoin().
+         * See unjoin() for further details.
+         */
+        Simplex<dim>* unjoinRaw(int myFacet);
+        /**
+         * A variant of isolate() with no lock management, and no management
+         * of the underlying triangulation.
+         *
+         * This routine adjusts the internal \a adj_ and \a gluing_ arrays
+         * from both sides of every facet of this simplex, just like isolate()
+         * does.  However, this is _all_ it does.  In particular:
+         *
+         * - it does not check for facet locks, throw LockViolation exceptions,
+         *   or update any lock flags;
+         *
+         * - it does not manage the underlying triangulation in any way:
+         *   it does not take snapshots, fire change events, or clear
+         *   computed properties.
+         *
+         * This should _only_ be used in settings where the other missing tasks
+         * such as locks, snapshots, change events and computed properties are
+         * being taken care of in some other manner (possibly manually).  An
+         * example of such a setting might be the implementation of a local
+         * move (such as a Pachner move).
+         *
+         * See isolate() for further details.
+         */
+        void isolateRaw();
+
     friend class TriangulationBase<dim>;
     friend class Triangulation<dim>;
     friend class regina::XMLSimplexReader<dim>;
@@ -1207,13 +1299,6 @@ bool SimplexBase<dim>::hasBoundary() const {
 }
 
 template <int dim>
-void SimplexBase<dim>::isolate() {
-    for (int i = 0; i <= dim; ++i)
-        if (adj_[i])
-            unjoin(i);
-}
-
-template <int dim>
 inline void SimplexBase<dim>::lock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (! (locks_ & mask)) {
@@ -1302,14 +1387,15 @@ template <int dim>
 Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
     if (! adj_[myFacet])
         return nullptr;
+    if (isFacetLocked(myFacet))
+        throw LockViolation("An attempt was made to unjoin a locked facet "
+            "from its adjacent simplex");
 
     tri_->takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(*tri_);
 
     Simplex<dim>* you = adj_[myFacet];
-    int yourFacet = gluing_[myFacet][myFacet];
-    assert(you->adj_[yourFacet] == this);
-    you->adj_[yourFacet] = nullptr;
+    you->adj_[gluing_[myFacet][myFacet]] = nullptr;
     adj_[myFacet] = nullptr;
 
     tri_->clearAllProperties();
@@ -1317,8 +1403,60 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
 }
 
 template <int dim>
+inline Simplex<dim>* SimplexBase<dim>::unjoinRaw(int myFacet) {
+    if (! adj_[myFacet])
+        return nullptr;
+
+    Simplex<dim>* you = adj_[myFacet];
+    you->adj_[gluing_[myFacet][myFacet]] = nullptr;
+    adj_[myFacet] = nullptr;
+
+    return you;
+}
+
+template <int dim>
+void SimplexBase<dim>::isolate() {
+    int i = 0;
+    for ( ; i <= dim; ++i)
+        if (adj_[i])
+            goto hasGluings;
+    return;
+
+hasGluings:
+
+    tri_->takeSnapshot();
+    typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+
+    // Currently, i is the first facet that has a gluing.
+    for ( ; i <= dim; ++i)
+        if (auto you = adj_[i]) {
+            if (isFacetLocked(i))
+                throw LockViolation("An attempt was made to isolate a "
+                    "top-dimensional simplex with one or more locked "
+                    "non-boundary facets");
+
+            you->adj_[gluing_[i][i]] = nullptr;
+            adj_[i] = nullptr;
+        }
+
+    tri_->clearAllProperties();
+}
+
+template <int dim>
+inline void SimplexBase<dim>::isolateRaw() {
+    for (int i = 0; i <= dim; ++i)
+        if (auto you = adj_[i]) {
+            you->adj_[gluing_[i][i]] = nullptr;
+            adj_[i] = nullptr;
+        }
+}
+
+template <int dim>
 void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         Perm<dim+1> gluing) {
+    if (isFacetLocked(myFacet))
+        throw LockViolation("An attempt was made to join a locked facet "
+            "to another top-dimensional simplex");
     if (tri_ != you->tri_)
         throw InvalidArgument("You cannot join simplices from "
             "two different triangulations");
@@ -1340,6 +1478,17 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
     you->gluing_[yourFacet] = gluing.inverse();
 
     tri_->clearAllProperties();
+}
+
+template <int dim>
+inline void SimplexBase<dim>::joinRaw(int myFacet, Simplex<dim>* you,
+        Perm<dim+1> gluing) {
+    int yourFacet = gluing[myFacet];
+
+    adj_[myFacet] = you;
+    gluing_[myFacet] = gluing;
+    you->adj_[yourFacet] = static_cast<Simplex<dim>*>(this);
+    you->gluing_[yourFacet] = gluing.inverse();
 }
 
 template <int dim>

@@ -401,7 +401,12 @@ If there were any adjacent simplices to begin with, these will be
 updated automatically.
 
 This routine is safe to call even if there are no adjacent simplices
-(in which case it will do nothing).)doc";
+(in which case it will do nothing).
+
+Exception ``LockViolation``:
+    At least one facet of this simplex is non-boundary and currently
+    locked. See lockFacet() for further details on how facet locks
+    work and what their implications are.)doc";
 
 // Docstring regina::python::doc::detail::SimplexBase_::join
 constexpr const char *join =
@@ -435,6 +440,11 @@ Exception ``InvalidArgument``:
     one of the two facets being joined is already joined to something,
     or you are trying to join the same facet of the same simplex to
     itself.
+
+Exception ``LockViolation``:
+    The given facet of this simplex is currently locked. See
+    lockFacet() for further details on how facet locks work and what
+    their implications are.
 
 Parameter ``myFacet``:
     the facet of this simplex that will be glued to the given simplex
@@ -681,6 +691,11 @@ unjoin() from one side of the gluing).
 
 This routine is safe to call even if the given facet is already a
 boundary facet (in which case it will do nothing).
+
+Exception ``LockViolation``:
+    The given facet of this simplex is currently locked. See
+    lockFacet() for further details on how facet locks work and what
+    their implications are.
 
 Parameter ``myFacet``:
     the facet of this simplex whose gluing we will undo. This should

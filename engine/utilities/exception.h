@@ -239,6 +239,24 @@ class UnsolvedCase : public ReginaException {
 };
 
 /**
+ * An exception thrown when an attempt is made to violate a simplex or facet
+ * lock.  See Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+ * details on simplex/facet locks and what restrictions they impose.
+ *
+ * All member functions follow the same pattern as the parent class
+ * ReginaException, and are not documented again here.
+ *
+ * \ingroup utilities
+ */
+class LockViolation : public ReginaException {
+    public:
+        LockViolation(const std::string& msg) : ReginaException(msg) {}
+        LockViolation(const char* msg) : ReginaException(msg) {}
+        LockViolation(const LockViolation&) noexcept = default;
+        LockViolation& operator = (const LockViolation&) noexcept = default;
+};
+
+/**
  * An exception thrown when the SnapPea kernel is not able to perform some
  * computation.
  *

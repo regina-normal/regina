@@ -55,6 +55,16 @@ data from an input stream.
 All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
+// Docstring regina::python::doc::LockViolation
+static const char *LockViolation =
+R"doc(An exception thrown when an attempt is made to violate a simplex or
+facet lock. See Simplex<dim>::lock() and Simplex<dim>::lockFacet() for
+further details on simplex/facet locks and what restrictions they
+impose.
+
+All member functions follow the same pattern as the parent class
+ReginaException, and are not documented again here.)doc";
+
 // Docstring regina::python::doc::NoSolution
 static const char *NoSolution =
 R"doc(An exception thrown when Regina has certified that a mathematical
