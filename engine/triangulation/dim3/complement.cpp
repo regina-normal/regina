@@ -72,9 +72,9 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
 
     // Empty link?  Just return the 3-sphere.
     if (link.isEmpty()) {
-        Tetrahedron<3>* t = newTetrahedron();
-        t->join(0, t, Perm<4>(0,1));
-        t->join(2, t, Perm<4>(2,3));
+        Tetrahedron<3>* t = newSimplexRaw();
+        t->joinRaw(0, t, Perm<4>(0,1));
+        t->joinRaw(2, t, Perm<4>(2,3));
         return;
     }
 
@@ -100,17 +100,17 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
 
     // Create the local structure around each crossing:
     for (size_t i = 0; i < n; ++i) {
-        ctet[i] = newTetrahedra<4>();
+        ctet[i] = newSimplicesRaw<4>();
         if (link.crossing(i)->sign() > 0) {
-            ctet[i][0]->join(0, ctet[i][1], Perm<4>(2,3));
-            ctet[i][1]->join(1, ctet[i][2], Perm<4>(2,3));
-            ctet[i][2]->join(0, ctet[i][3], Perm<4>(2,3));
-            ctet[i][3]->join(1, ctet[i][0], Perm<4>(2,3));
+            ctet[i][0]->joinRaw(0, ctet[i][1], Perm<4>(2,3));
+            ctet[i][1]->joinRaw(1, ctet[i][2], Perm<4>(2,3));
+            ctet[i][2]->joinRaw(0, ctet[i][3], Perm<4>(2,3));
+            ctet[i][3]->joinRaw(1, ctet[i][0], Perm<4>(2,3));
         } else {
-            ctet[i][0]->join(1, ctet[i][1], Perm<4>(2,3));
-            ctet[i][1]->join(0, ctet[i][2], Perm<4>(2,3));
-            ctet[i][2]->join(1, ctet[i][3], Perm<4>(2,3));
-            ctet[i][3]->join(0, ctet[i][0], Perm<4>(2,3));
+            ctet[i][0]->joinRaw(1, ctet[i][1], Perm<4>(2,3));
+            ctet[i][1]->joinRaw(0, ctet[i][2], Perm<4>(2,3));
+            ctet[i][2]->joinRaw(1, ctet[i][3], Perm<4>(2,3));
+            ctet[i][3]->joinRaw(0, ctet[i][0], Perm<4>(2,3));
         }
     }
 
@@ -131,21 +131,21 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
         const Crossing* adj = s.crossing();
         if ((adj->sign() > 0 && s.strand() == 1) ||
                 (adj->sign() < 0 && s.strand() == 0)) {
-            ctet[i][3]->join(2, ctet[adj->index()][3], Perm<4>(2,3));
-            ctet[i][0]->join(3, ctet[adj->index()][2], Perm<4>(2,3));
+            ctet[i][3]->joinRaw(2, ctet[adj->index()][3], Perm<4>(2,3));
+            ctet[i][0]->joinRaw(3, ctet[adj->index()][2], Perm<4>(2,3));
         } else {
-            ctet[i][3]->join(2, ctet[adj->index()][2], Perm<4>(2,3));
-            ctet[i][0]->join(3, ctet[adj->index()][1], Perm<4>(2,3));
+            ctet[i][3]->joinRaw(2, ctet[adj->index()][2], Perm<4>(2,3));
+            ctet[i][0]->joinRaw(3, ctet[adj->index()][1], Perm<4>(2,3));
         }
 
         adj = t.crossing();
         if ((adj->sign() > 0 && t.strand() == 1) ||
                 (adj->sign() < 0 && t.strand() == 0)) {
-            ctet[i][0]->join(2, ctet[adj->index()][3], Perm<4>(2,3));
-            ctet[i][1]->join(3, ctet[adj->index()][2], Perm<4>(2,3));
+            ctet[i][0]->joinRaw(2, ctet[adj->index()][3], Perm<4>(2,3));
+            ctet[i][1]->joinRaw(3, ctet[adj->index()][2], Perm<4>(2,3));
         } else {
-            ctet[i][0]->join(2, ctet[adj->index()][2], Perm<4>(2,3));
-            ctet[i][1]->join(3, ctet[adj->index()][1], Perm<4>(2,3));
+            ctet[i][0]->joinRaw(2, ctet[adj->index()][2], Perm<4>(2,3));
+            ctet[i][1]->joinRaw(3, ctet[adj->index()][1], Perm<4>(2,3));
         }
     }
 
@@ -160,10 +160,15 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
         // our link is a k-component unlink for some k).
         // Build a 3-sphere for now; we will pick up the missing unknot
         // components shortly.
-        Tetrahedron<3>* tet = newTetrahedron();
-        tet->join(0, tet, Perm<4>(0,1));
-        tet->join(2, tet, Perm<4>(2,3));
+        Tetrahedron<3>* tet = newSimplexRaw();
+        tet->joinRaw(0, tet, Perm<4>(0,1));
+        tet->joinRaw(2, tet, Perm<4>(2,3));
     }
+
+    // The following call to isConnected() has the side-effect of computing
+    // the full skeleton.  Therefore we will stop using joinRaw() / unjoinRaw(),
+    // since we want join() and unjoin() to do their extra work of clearing
+    // computed properties (amongst other things).
 
     if (! isConnected()) {
         // Replace ans with the connected sum of its components.

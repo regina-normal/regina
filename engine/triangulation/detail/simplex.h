@@ -1034,6 +1034,19 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * of such a setting might be the implementation of a local move
          * (such as a Pachner move).
          *
+         * Such a "raw" routine would typically be safe to use _without_
+         * any manual error/lock/triangulation management in the following
+         * scenarios:
+         *
+         * - triangulation constructors, but only in settings where no
+         *   properties (including the skeleton) have been computed yet
+         *   (as an example, see the constructor that builds a link complement);
+         *
+         * - routines that create a "staging" triangulation, without computing
+         *   its skeleton or any other properties, and then swap or move this
+         *   staging triangulation into the triangulation actually being
+         *   worked upon (see Triangulation<dim>::subdivide() for an example).
+         *
          * The preconditions and arguments for this routine are the same as
          * for join().  See join() for further details.
          */
@@ -1043,22 +1056,8 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * A variant of unjoin() with no lock management, and no management
          * of the underlying triangulation.
          *
-         * This routine adjusts the internal \a adj_ and \a gluing_ arrays
-         * from both sides of the join, just like unjoin() does.  However,
-         * this is _all_ it does.  In particular:
-         *
-         * - it does not check for facet locks, throw LockViolation exceptions,
-         *   or update any lock flags;
-         *
-         * - it does not manage the underlying triangulation in any way:
-         *   it does not take snapshots, fire change events, or clear
-         *   computed properties.
-         *
-         * This should _only_ be used in settings where the other missing tasks
-         * such as locks, snapshots, change events and computed properties are
-         * being taken care of in some other manner (possibly manually).  An
-         * example of such a setting might be the implementation of a local
-         * move (such as a Pachner move).
+         * See joinRaw() for further details on what these "raw" routines
+         * do and where they can be used.
          *
          * The arguments for this routine are the same as for unjoin().
          * See unjoin() for further details.
@@ -1068,22 +1067,8 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * A variant of isolate() with no lock management, and no management
          * of the underlying triangulation.
          *
-         * This routine adjusts the internal \a adj_ and \a gluing_ arrays
-         * from both sides of every facet of this simplex, just like isolate()
-         * does.  However, this is _all_ it does.  In particular:
-         *
-         * - it does not check for facet locks, throw LockViolation exceptions,
-         *   or update any lock flags;
-         *
-         * - it does not manage the underlying triangulation in any way:
-         *   it does not take snapshots, fire change events, or clear
-         *   computed properties.
-         *
-         * This should _only_ be used in settings where the other missing tasks
-         * such as locks, snapshots, change events and computed properties are
-         * being taken care of in some other manner (possibly manually).  An
-         * example of such a setting might be the implementation of a local
-         * move (such as a Pachner move).
+         * See joinRaw() for further details on what these "raw" routines
+         * do and where they can be used.
          *
          * See isolate() for further details.
          */

@@ -3023,32 +3023,43 @@ class TriangulationBase :
          * example of such a setting might be the implementation of a local
          * move (such as a Pachner move).
          *
+         * Such a "raw" routine would typically be safe to use _without_
+         * any manual error/lock/triangulation management in the following
+         * scenarios:
+         *
+         * - triangulation constructors, but only in settings where no
+         *   properties (including the skeleton) have been computed yet
+         *   (as an example, see the constructor that builds a link complement);
+         *
+         * - routines that create a "staging" triangulation, without computing
+         *   its skeleton or any other properties, and then swap or move this
+         *   staging triangulation into the triangulation actually being
+         *   worked upon (see subdivide() for an example).
+         *
          * The return value for this routine is the same as for newSimplex().
          * See newSimplex() for further details.
          */
         Simplex<dim>* newSimplexRaw();
 
         /**
+         * A variant of newSimplices() with no lock management, and no
+         * management of the underlying triangulation.
+         *
+         * See newSimplexRaw() for further details on what these "raw" routines
+         * do and where they can be used.
+         *
+         * The return value for this routine is the same as for newSimplices().
+         * See newSimplices() for further details.
+         */
+        template <int k>
+        std::array<Simplex<dim>*, k> newSimplicesRaw();
+
+        /**
          * A variant of removeSimplex() with no lock management, and no
          * management of the underlying triangulation.
          *
-         * This routine adjusts the internal list of simplices and manages
-         * the isolation and destruction of the simplex being removed,
-         * just like removeSimplex() does.  However, this is _all_ it does.
-         * In particular:
-         *
-         * - it does not check for facet or simplex locks, throw LockViolation
-         *   exceptions, or update any lock flags;
-         *
-         * - it does not manage the underlying triangulation in any way:
-         *   it does not take snapshots, fire change events, or clear
-         *   computed properties.
-         *
-         * This should _only_ be used in settings where the other missing tasks
-         * such as locks, snapshots, change events and computed properties are
-         * being taken care of in some other manner (possibly manually).  An
-         * example of such a setting might be the implementation of a
-         * subdivision routine.
+         * See newSimplexRaw() for further details on what these "raw" routines
+         * do and where they can be used.
          *
          * The arguments for this routine are the same as for removeSimplex().
          * See removeSimplex() for further details.
@@ -3777,6 +3788,19 @@ std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplices() {
             static_cast<Triangulation<dim>*>(this)));
 
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+    return ans;
+}
+
+template <int dim>
+template <int k>
+inline std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplicesRaw() {
+    static_assert(k >= 0,
+        "The template argument k to newSimplicesRaw() must be non-negative.");
+
+    std::array<Simplex<dim>*, k> ans;
+    for (int i = 0; i < k; ++i)
+        simplices_.push_back(ans[i] = new Simplex<dim>(
+            static_cast<Triangulation<dim>*>(this)));
     return ans;
 }
 
