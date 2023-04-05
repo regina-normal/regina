@@ -289,8 +289,9 @@ class TriangulationBase :
          * will be the same as in the source triangulation.
          *
          * If \a src has any locks on top-dimensional simplices and/or their
-         * facets, these locks will always be copied across (regardless of
-         * the argument \a cloneProps).
+         * facets, these locks will be copied across _only_ if \a cloneProps
+         * is \c true.  If \a cloneProps is \c false then the new triangulation
+         * will have no locks at all.
          *
          * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
@@ -3549,9 +3550,17 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& src,
 
     simplices_.reserve(src.simplices_.size());
 
-    for (auto s : src.simplices_)
-        simplices_.push_back(new Simplex<dim>(*s,
-            static_cast<Triangulation<dim>*>(this)));
+    if (cloneProps) {
+        // Clone simplices with descriptions and locks
+        for (auto s : src.simplices_)
+            simplices_.push_back(new Simplex<dim>(*s,
+                static_cast<Triangulation<dim>*>(this)));
+    } else {
+        // Clone simplices with descriptions only, no locks
+        for (auto s : src.simplices_)
+            simplices_.push_back(new Simplex<dim>(s->description_,
+                static_cast<Triangulation<dim>*>(this)));
+    }
 
     // Copy the internal simplex data, including gluings.
     int f;

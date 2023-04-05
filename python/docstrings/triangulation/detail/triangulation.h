@@ -152,8 +152,9 @@ numbering and labelling for skeletal objects will be the same as in
 the source triangulation.
 
 If *src* has any locks on top-dimensional simplices and/or their
-facets, these locks will always be copied across (regardless of the
-argument *cloneProps*).
+facets, these locks will be copied across _only_ if *cloneProps* is
+``True``. If *cloneProps* is ``False`` then the new triangulation will
+have no locks at all.
 
 Parameter ``src``:
     the triangulation to copy.
@@ -2008,7 +2009,13 @@ R"doc(Removes all simplices from the triangulation. As a result, this
 triangulation will become empty.
 
 All of the simplices that belong to this triangulation will be
-destroyed immediately.)doc";
+destroyed immediately.
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked top-dimensional
+    simplex and/or facet. See Simplex<dim>::lock() and
+    Simplex<dim>::lockFacet() for further details on how such locks
+    work and what their implications are.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::removeSimplex
 constexpr const char *removeSimplex =
@@ -2020,6 +2027,11 @@ any), and will be destroyed immediately.
 Precondition:
     The given simplex is a top-dimensional simplex in this
     triangulation.
+
+Exception ``LockViolation``:
+    The given simplex and/or one of its facets is currently locked.
+    See Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+    details on how such locks work and what their implications are.
 
 Parameter ``simplex``:
     the simplex to remove.)doc";
@@ -2034,8 +2046,14 @@ This is equivalent to calling ``removeSimplex(simplex(index))``.
 The given simplex will be unglued from any adjacent simplices (if
 any), and will be destroyed immediately.
 
+Exception ``LockViolation``:
+    The requested simplex and/or one of its facets is currently
+    locked. See Simplex<dim>::lock() and Simplex<dim>::lockFacet() for
+    further details on how such locks work and what their implications
+    are.
+
 Parameter ``index``:
-    specifies which top-dimensionalsimplex to remove; this must be
+    specifies which top-dimensional simplex to remove; this must be
     between 0 and size()-1 inclusive.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::simplex

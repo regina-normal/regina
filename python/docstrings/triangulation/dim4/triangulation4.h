@@ -81,8 +81,9 @@ vertex links of *copy* are 3-sphere or 3-balls, this knowledge will be
 copied over to the new triangulation.
 
 If *src* has any locks on top-dimensional simplices and/or their
-facets, these locks will always be copied across (again, regardless of
-the argument *cloneProps*).
+facets, these locks will be copied across _only_ if *cloneProps* is
+``True``. If *cloneProps* is ``False`` then the new triangulation will
+have no locks at all.
 
 Parameter ``src``:
     the triangulation to copy.

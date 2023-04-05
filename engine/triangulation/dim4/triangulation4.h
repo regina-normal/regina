@@ -174,8 +174,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * knowledge will be copied over to the new triangulation.
          *
          * If \a src has any locks on top-dimensional simplices and/or their
-         * facets, these locks will always be copied across (again, regardless
-         * of the argument \a cloneProps).
+         * facets, these locks will be copied across _only_ if \a cloneProps
+         * is \c true.  If \a cloneProps is \c false then the new triangulation
+         * will have no locks at all.
          *
          * \param src the triangulation to copy.
          * \param cloneProps \c true if this should also clone any computed
