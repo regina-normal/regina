@@ -42,8 +42,7 @@ bool Triangulation<3>::idealToFinite() {
     if (isValid() && ! isIdeal())
         return false;
 
-    int i,j,k,l;
-    long numOldTet = simplices_.size();
+    size_t numOldTet = simplices_.size();
     if (! numOldTet)
         return false;
 
@@ -57,7 +56,7 @@ bool Triangulation<3>::idealToFinite() {
     Triangulation<3> staging;
 
     auto* newTet = new Tetrahedron<3>*[32*numOldTet];
-    for (i=0; i<32*numOldTet; i++)
+    for (size_t i=0; i<32*numOldTet; i++)
         newTet[i] = staging.newSimplexRaw();
 
     int tip[4];
@@ -66,11 +65,11 @@ bool Triangulation<3>::idealToFinite() {
     int vertex[4][4];
 
     int nDiv = 0;
-    for (j=0; j<4; j++) {
+    for (int j=0; j<4; j++) {
         tip[j] = nDiv++;
         interior[j] = nDiv++;
 
-        for (k=0; k<4; k++)
+        for (int k=0; k<4; k++)
             if (j != k) {
                 edge[j][k] = nDiv++;
                 vertex[j][k] = nDiv++;
@@ -79,15 +78,15 @@ bool Triangulation<3>::idealToFinite() {
 
     // First glue all of the tetrahedra inside the same
     // old tetrahedron together.
-    for (i=0; i<numOldTet; i++) {
+    for (size_t i=0; i<numOldTet; i++) {
         // Glue the tip tetrahedra to the others.
-        for (j=0; j<4; j++)
+        for (int j=0; j<4; j++)
             newTet[tip[j] + i * nDiv]->joinRaw(j,
                 newTet[interior[j] + i * nDiv], Perm<4>());
 
         // Glue the interior tetrahedra to the others.
-        for (j=0; j<4; j++) {
-            for (k=0; k<4; k++)
+        for (int j=0; j<4; j++) {
+            for (int k=0; k<4; k++)
                 if (j != k) {
                     newTet[interior[j] + i * nDiv]->joinRaw(k,
                         newTet[vertex[k][j] + i * nDiv], Perm<4>());
@@ -95,14 +94,14 @@ bool Triangulation<3>::idealToFinite() {
         }
 
         // Glue the edge tetrahedra to the others.
-        for (j=0; j<4; j++)
-            for (k=0; k<4; k++)
+        for (int j=0; j<4; j++)
+            for (int k=0; k<4; k++)
                 if (j != k) {
                     if (j < k)
                         newTet[edge[j][k] + i * nDiv]->joinRaw(j,
                             newTet[edge[k][j] + i * nDiv], Perm<4>(j,k));
 
-                    for (l=0; l<4; l++)
+                    for (int l=0; l<4; l++)
                         if ( (l != j) && (l != k) )
                             newTet[edge[j][k] + i * nDiv]->joinRaw(l,
                                 newTet[vertex[j][l] + i * nDiv], Perm<4>(k,l));
@@ -110,34 +109,31 @@ bool Triangulation<3>::idealToFinite() {
     }
 
     // Now deal with the gluings between the pieces inside adjacent tetrahedra.
-    Tetrahedron<3> *ot;
-    long oppTet;
-    Perm<4> p;
-    for (i=0; i<numOldTet; i++) {
-        ot = tetrahedron(i);
-        for (j=0; j<4; j++)
+    for (size_t i=0; i<numOldTet; i++) {
+        Tetrahedron<3>* ot = tetrahedron(i);
+        for (int j=0; j<4; j++)
             if (ot->adjacentTetrahedron(j)) {
-                 oppTet = ot->adjacentTetrahedron(j)->index();
-                 p = ot->adjacentGluing(j);
+                 size_t oppTet = ot->adjacentTetrahedron(j)->index();
+                 Perm<4> p = ot->adjacentGluing(j);
 
                  // Do each gluing from one side only.
                  if (oppTet < i || (oppTet == i && p[j] < j))
                     continue;
 
                  // First deal with the tip tetrahedra.
-                 for (k=0; k<4; k++)
+                 for (int k=0; k<4; k++)
                      if (j != k)
                           newTet[tip[k] + i * nDiv]->joinRaw(j,
                               newTet[tip[p[k]] + oppTet * nDiv], p);
 
                  // Next the edge tetrahedra.
-                 for (k=0; k<4; k++)
+                 for (int k=0; k<4; k++)
                      if (j != k)
                          newTet[edge[j][k] + i * nDiv]->joinRaw(k,
                              newTet[edge[p[j]][p[k]] + oppTet * nDiv], p);
 
                  // Finally, the vertex tetrahedra.
-                 for (k=0; k<4; k++)
+                 for (int k=0; k<4; k++)
                      if (j != k)
                          newTet[vertex[j][k] + i * nDiv]->joinRaw(k,
                              newTet[vertex[p[j]][p[k]] + oppTet * nDiv], p);

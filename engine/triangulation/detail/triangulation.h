@@ -2056,6 +2056,11 @@ class TriangulationBase :
          * Regina 5.1.  (Earlier versions of Regina made no guarantee about the
          * labelling and ordering; these guarantees are also new to Regina 5.1).
          *
+         * \exception LockViolation This triangulation contains at least one
+         * locked top-dimensional simplex and/or facet.  See
+         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+         * details on how such locks work and what their implications are.
+         *
          * \todo Lock the topological properties of the underlying manifold,
          * to avoid recomputing them after the subdivision.  However, only
          * do this for _valid_ triangulations (since we can have scenarios
@@ -2074,6 +2079,11 @@ class TriangulationBase :
          * will be modified directly.
          *
          * \pre \a dim is one of Regina's standard dimensions.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked top-dimensional simplex and/or facet.  See
+         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+         * details on how such locks work and what their implications are.
          */
         [[deprecated]] void barycentricSubdivision();
 

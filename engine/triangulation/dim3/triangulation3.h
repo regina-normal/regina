@@ -3074,10 +3074,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This may lead to more tetrahedra than are necessary.
          *
          * \warning Currently, the presence of an invalid edge will force
-         * the triangulation to be subdivided regardless of the value of
-         * parameter \a forceDivision.  The final triangulation will
-         * still have the projective plane cusp caused by the invalid
-         * edge.
+         * the triangulation to be subdivided even if there are no ideal
+         * vertices.  The final triangulation will still have the
+         * projective plane cusp caused by the invalid edge.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked top-dimensional simplex and/or facet.  See
+         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+         * details on how such locks work and what their implications are.
          *
          * \todo \optlong Have this routine only use as many tetrahedra
          * as are necessary, leaving finite vertices alone.
