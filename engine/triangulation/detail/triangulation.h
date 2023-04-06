@@ -1897,16 +1897,21 @@ class TriangulationBase :
          * if possible.
          *
          * This routine works by flipping vertices (\a dim - 1) and \a dim
-         * of each top-dimensional simplices that has negative orientation.
+         * of each top-dimensional simplex that has negative orientation.
          * The result will be a triangulation where the top-dimensional
          * simplices have their vertices labelled in a way that preserves
          * orientation across adjacent facets.
          * In particular, every gluing permutation will have negative sign.
          *
-         * If this triangulation includes both orientable and
-         * non-orientable components, the orientable components will be
-         * oriented as described above and the non-orientable
-         * components will be left untouched.
+         * If this triangulation includes both orientable and non-orientable
+         * components, the orientable components will be oriented as described
+         * above and the non-orientable components will be left untouched.
+         *
+         * If this triangulation has locks on any top-dimensional simplices
+         * and/or their facets, these will not prevent the orientation from
+         * taking place.  Instead, any locks will be transformed accordingly
+         * (i.e., facets (\a dim - 1) and \a dim will exchange their lock
+         * states for those simplices that originally had negative orientation).
          */
         void orient();
 
@@ -1919,6 +1924,12 @@ class TriangulationBase :
          *
          * This routine works by flipping vertices (\a dim - 1) and \a dim
          * of every top-dimensional simplex.
+         *
+         * If this triangulation has locks on any top-dimensional simplices
+         * and/or their facets, these will not prevent the reflection from
+         * taking place.  Instead, any locks will be transformed accordingly
+         * (i.e., facets (\a dim - 1) and \a dim will exchange their lock
+         * states in every top-dimensional simplex).
          */
         void reflect();
 
@@ -4651,6 +4662,9 @@ void TriangulationBase<dim>::orient() {
             std::swap(s->adj_[dim - 1], s->adj_[dim]);
             std::swap(s->gluing_[dim - 1], s->gluing_[dim]);
 
+            s->locks_ = BitManipulator<decltype(s->locks_)>::swapBits(
+                s->locks_, dim - 1, dim);
+
             for (f = 0; f <= dim; ++f)
                 if (s->adj_[f]) {
                     if (s->adj_[f]->orientation_ == -1) {
@@ -4688,6 +4702,9 @@ void TriangulationBase<dim>::reflect() {
         // Flip vertices (dim - 1) and dim of s.
         std::swap(s->adj_[dim - 1], s->adj_[dim]);
         std::swap(s->gluing_[dim - 1], s->gluing_[dim]);
+
+        s->locks_ = BitManipulator<decltype(s->locks_)>::swapBits(
+            s->locks_, dim - 1, dim);
 
         for (f = 0; f <= dim; ++f)
             if (s->adj_[f]) {

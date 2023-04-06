@@ -42,6 +42,7 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
+#include <type_traits>
 
 namespace regina {
 
@@ -325,6 +326,8 @@ class BitManipulatorBySize<T, 8> {
 template <typename T>
 class BitManipulator :
         public BitManipulatorByType<T>, public BitManipulatorBySize<T> {
+    static_assert(std::is_integral_v<T> && std::is_unsigned_v<T>,
+        "BitManipulator can only work with native unsigned integral types.");
     static_assert(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 ||
         sizeof(T) == 8 || sizeof(T) == 16 || sizeof(T) == 32 ||
         sizeof(T) == 64 || sizeof(T) == 128,
@@ -394,6 +397,34 @@ class BitManipulator :
                     chunkStart += chunkSize;
             }
             return chunkStart;
+        }
+
+        /**
+         * Returns a copy of the given integer with two bits swapped.
+         * Bits are indexed from 0 upwards, starting at the least
+         * significant bit.
+         *
+         * The two indices \a index0 and \a index1 may be the same (in which
+         * case the given bitmask will be returned unchanged).
+         *
+         * \param x the bitmask to examine.
+         * \param index0 the index of the first bit to swap.
+         * \param index1 the index of the second bit to swap.
+         * \return a copy of \a x with bits \a index0 and \a index1 swapped.
+         */
+        inline static constexpr T swapBits(T x, int index0, int index1) {
+            // TODO: There is surely a slicker way to do this.
+            T mask0 = (T(1) << index0);
+            T mask1 = (T(1) << index1);
+            T bit0 = (x & mask0);
+            T bit1 = (x & mask1);
+            if ((bit0 && bit1) || ! (bit0 || bit1)) {
+                // Both bits stay the same.
+                return x;
+            } else {
+                // Both bits get flipped.
+                return x ^ (mask0 | mask1);
+            }
         }
 };
 

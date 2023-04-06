@@ -2480,6 +2480,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * will become tetrahedron \a n-1, its neighbours will become
          * tetrahedra \a n-2 down to \a n-5, and so on.
          *
+         * If this triangulation has locks on any top-dimensional simplices
+         * and/or their facets, these will not prevent the reordering from
+         * taking place.  Instead, any locks will be transformed accordingly;
+         * that is, all top-dimensional simplices will carry their own locks
+         * and their facets' locks around with them as they are reordered.
+         *
          * \param reverse \c true if the new tetrahedron numbers should
          * be assigned in reverse order, as described above.
          */

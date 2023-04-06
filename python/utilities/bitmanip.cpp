@@ -42,6 +42,7 @@ void addBitManipulator(pybind11::module_& m) {
     auto c = pybind11::class_<BitManip>(m, "BitManipulator", rdoc_scope)
         .def_static("firstBit", &BitManip::firstBit, rdoc::firstBit)
         .def_static("lastBit", &BitManip::lastBit, rdoc::lastBit)
+        .def_static("swapBits", &BitManip::swapBits, rdoc::swapBits)
         .def_readonly_static("specialised", &BitManip::specialised)
     ;
     regina::python::no_eq_static(c);

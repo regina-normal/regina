@@ -208,7 +208,7 @@ namespace {
          * This array is a function of the bag being processed, and is
          * initialised by initForgetBag() and initJoinBag().
          */
-        char* mask;
+        uint8_t* mask;
 
         /**
          * The number of pairs in each key at a join bag (that is, half
@@ -271,7 +271,7 @@ namespace {
                 lastCrossing(new int[2 * l->size()]),
                 forgetStrand(new ssize_t[2 * l->size()]),
                 prefix(new int[2 * l->size()]),
-                mask(new char[l->size()]),
+                mask(new uint8_t[l->size()]),
                 local(nullptr) {
             const TreeBag* b;
             for (b = d.first(); b; b = b->next())
@@ -1429,7 +1429,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             int id[2][2];
             int pos[2][2];
             int i, j;
-            char mask;
+            uint8_t mask;
 
             id[0][0] = static_cast<int>(c->prev(0).id());
             id[0][1] = static_cast<int>(c->lower().id());
@@ -1462,7 +1462,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             size_t keySize = kFirst.size() +
                 (c->next(0).crossing() == c || c->next(1).crossing() == c ?
                     2 : 4) -
-                2 * BitManipulator<char>::bits(mask);
+                2 * BitManipulator<uint8_t>::bits(mask);
 
             for (auto& soln : *(partial[child->index()])) {
                 if (tracker) {

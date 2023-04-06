@@ -66,6 +66,26 @@ Returns:
     the position of the last ``True`` bit, or -1 if there are no
     ``True`` bits.)doc";
 
+// Docstring regina::python::doc::BitManipulator_::swapBits
+static const char *swapBits =
+R"doc(Returns a copy of the given integer with two bits swapped. Bits are
+indexed from 0 upwards, starting at the least significant bit.
+
+The two indices *index0* and *index1* may be the same (in which case
+the given bitmask will be returned unchanged).
+
+Parameter ``x``:
+    the bitmask to examine.
+
+Parameter ``index0``:
+    the index of the first bit to swap.
+
+Parameter ``index1``:
+    the index of the second bit to swap.
+
+Returns:
+    a copy of *x* with bits *index0* and *index1* swapped.)doc";
+
 }
 
 } // namespace regina::python::doc
