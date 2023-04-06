@@ -2351,7 +2351,7 @@ class PacketData {
          * \nopython
          */
         class ChangeEventSpan {
-            private:
+            protected:
                 PacketData& data_;
                     /**< The object for which - if it belongs to a
                          PacketOf<Held> - change events will be fired. */

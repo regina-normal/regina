@@ -4322,6 +4322,10 @@ class Link :
          *
          * In most cases this routine is followed immediately by firing
          * a change event.
+         *
+         * It is recommended that you use a local ChangeAndClearSpan object
+         * to manage both of these tasks (calling clearAllProperties() and
+         * firing change events), rather than calling this function manually.
          */
         void clearAllProperties();
 
@@ -4571,6 +4575,73 @@ class Link :
          * \param bracket the Kauffman bracket polynomial of this link.
          */
         void setPropertiesFromBracket(Laurent<Integer>&& bracket) const;
+
+        /**
+         * An object that facilitates both firing change events and
+         * calling clearAllProperties().
+         *
+         * An object of type ChangeAndClearSpan has two effects:
+         *
+         * - On construction and destruction, if this link is actually part of a
+         *   PacketOf<Link> then it fires a PacketListener::packetToBeChanged()
+         *   and PacketListener::packetWasChanged() event respectively to all
+         *   registered packet listeners.
+         *
+         * - On destruction, this object calls Link::clearAllProperties()
+         *   (just before the final change event is fired).  This is always
+         *   done, whether or not the link is held in a packet.
+         *
+         * The use of these objects is similar to Packet::ChangeEventSpan
+         * (and indeed, this class is intended to _replace_ ChangeEventSpan
+         * when writing Link member functions): objects of this type would
+         * typically be created on the stack, just before the internal data
+         * within a link is changed.
+         *
+         * Like ChangeEventSpan, these objects can be safely nested with other
+         * ChangeAndClearSpan and/or ChangeEventSpan objects.  However, unlike
+         * ChangeEventSpan, this comes with a cost: as always, only one
+         * set of change events will be fired; however, if there are multiple
+         * ChangeAndClearSpan objects then Link::clearAllProperties() will be
+         * called multiple times.  This is harmless but inefficient.
+         *
+         * ChangeAndClearSpan  objects are not copyable, movable or swappable.
+         * In particular, Regina does not offer any way for a ChangeAndClearSpan
+         * to transfer its duty (i.e., firing events and calling
+         * clearAllProperties() upon destruction) to another object.
+         *
+         * \nopython
+         */
+        class ChangeAndClearSpan : public PacketData<Link>::ChangeEventSpan {
+            public:
+                /**
+                 * Creates a new change-and-clear object to work with the given
+                 * link.
+                 *
+                 * If this is the only ChangeAndClearSpan or ChangeEventSpan
+                 * currently in existence for the given link, this constructor
+                 * will call PacketListener::packetToBeChanged() for all
+                 * registered listeners for the given link.
+                 *
+                 * \param link the link whose data is about to change.
+                 */
+                ChangeAndClearSpan(Link& link);
+
+                /**
+                 * Destroys this change-and-clear object.
+                 *
+                 * This destructor will first call Link::clearAllProperites().
+                 * Then, if this is the only ChangeAndClearSpan or
+                 * ChangeEventSpan currently in existence for the given link,
+                 * it will call PacketListener::packetWasChanged() for all
+                 * registered listeners for the given link.
+                 */
+                ~ChangeAndClearSpan();
+
+                // Make this class non-copyable.
+                ChangeAndClearSpan(const ChangeAndClearSpan&) = delete;
+                ChangeAndClearSpan& operator = (const ChangeAndClearSpan&) =
+                    delete;
+        };
 
     friend class ModelLinkGraph;
     friend class Tangle;
@@ -4928,6 +4999,19 @@ inline Link Link::fromSig(const std::string& sig) {
 
 inline void swap(Link& lhs, Link& rhs) {
     lhs.swap(rhs);
+}
+
+// Inline functions for Link::ChangeAndClearSpan
+
+inline Link::ChangeAndClearSpan::ChangeAndClearSpan(Link& link) :
+        PacketData<Link>::ChangeEventSpan(link) {
+}
+
+inline Link::ChangeAndClearSpan::~ChangeAndClearSpan() {
+    static_cast<Link&>(data_).clearAllProperties();
+
+    // Now fall through to the parent class destructor, which fires change
+    // events.
 }
 
 } // namespace regina
