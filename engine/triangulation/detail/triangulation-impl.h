@@ -186,7 +186,7 @@ void TriangulationBase<dim>::writeTextLong(std::ostream& out) const {
             }
             if (simp->isFacetLocked(i))
                 out << LOCKED_MARKER;
-            else
+            else if (i > 0)
                 out << ' ';
         }
         out << '\n';
