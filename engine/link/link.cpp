@@ -84,6 +84,8 @@ Link& Link::operator = (const Link& src) {
     if (std::addressof(src) == this)
         return *this;
 
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to clone computed properties (not clear them).
     ChangeEventSpan span(*this);
 
     for (Crossing* c : crossings_)
@@ -149,6 +151,8 @@ bool Link::operator == (const Link& other) const {
 }
 
 Link& Link::operator = (Link&& src) {
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to move computed properties (not clear them).
     ChangeEventSpan span(*this);
 
     // MarkedVector, pointers must eventually be destroyed:
@@ -413,6 +417,8 @@ void Link::swap(Link& other) {
     if (&other == this)
         return;
 
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to swap computed properties (not clear them).
     ChangeEventSpan span1(*this);
     ChangeEventSpan span2(other);
 

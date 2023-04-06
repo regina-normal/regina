@@ -41,7 +41,11 @@ namespace regina {
 bool Link::intelligentSimplify() {
     bool changed;
 
-    { // Begin scope for change event block.
+    { // Begin scope for change event span.
+        // We only ever modify the link through other public member functions.
+        // Therefore we just use a ChangeEventSpan (to avoid firing multiple
+        // events), rather than a full ChangeAndClearSpan.  The inner member
+        // functions will take care of clearing properties where necessary.
         ChangeEventSpan span(*this);
 
         // Reduce to a local minimum.
@@ -121,6 +125,10 @@ bool Link::simplifyToLocalMinimum(bool perform) {
     bool changedNow = true; // Did we just change something (for loop control)?
 
     { // Begin scope for change event span.
+        // We only ever modify the link through other public member functions.
+        // Therefore we just use a ChangeEventSpan (to avoid firing multiple
+        // events), rather than a full ChangeAndClearSpan.  The inner member
+        // functions will take care of clearing properties where necessary.
         ChangeEventSpan span(*this);
 
         while (changedNow) {

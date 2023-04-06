@@ -76,7 +76,7 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         }
 
         // Destroy the crossing entirely.
-        // This has to happen before the ChangeEventSpan goes out of scope.
+        // This has to happen before the ChangeAndClearSpan goes out of scope.
         crossings_.erase(crossings_.begin() + crossing->index());
         delete crossing;
     } else if (crossing->prev(1).crossing() == crossing) {
@@ -100,7 +100,7 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
             }
 
         // Destroy the crossing entirely.
-        // This has to happen before the ChangeEventSpan goes out of scope.
+        // This has to happen before the ChangeAndClearSpan goes out of scope.
         crossings_.erase(crossings_.begin() + crossing->index());
         delete crossing;
     } else {
