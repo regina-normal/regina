@@ -7,9 +7,9 @@ Boundary facets: 4
 
 Bounded orientable 5-D triangulation, f = ( 1 5 10 10 5 1 )
 
-  Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
-  ---------+-----------------------------------------------------------------------------------
-        0  |              0 (12345)    boundary    boundary    boundary    boundary   0 (01234)
+  Simplex  |  gluing:      (01234)      (01235)      (01245)      (01345)      (02345)      (12345)
+  ---------+---------------------------------------------------------------------------------------
+        0  |             0 (12345)     boundary     boundary     boundary     boundary    0 (01234)
 
 
 Triangulation: 5-D product #2
@@ -21,10 +21,10 @@ Boundary facets: 8
 
 Bounded orientable 5-D triangulation, f = ( 2 10 20 20 10 2 )
 
-  Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
-  ---------+-----------------------------------------------------------------------------------
-        0  |              1 (12345)    boundary    boundary    boundary    boundary   1 (01234)
-        1  |              0 (12345)    boundary    boundary    boundary    boundary   0 (01234)
+  Simplex  |  gluing:      (01234)      (01235)      (01245)      (01345)      (02345)      (12345)
+  ---------+---------------------------------------------------------------------------------------
+        0  |             1 (12345)     boundary     boundary     boundary     boundary    1 (01234)
+        1  |             0 (12345)     boundary     boundary     boundary     boundary    0 (01234)
 
 
 Triangulation: 6-D product #1
@@ -36,9 +36,9 @@ Boundary facets: 5
 
 Bounded non-orientable 6-D triangulation, f = ( 1 6 15 20 15 6 1 )
 
-  Simplex  |  glued to:     (012345)     (012346)     (012356)     (012456)     (013456)     (023456)     (123456)
-  ---------+------------------------------------------------------------------------------------------------------
-        0  |              0 (123456)     boundary     boundary     boundary     boundary     boundary   0 (012345)
+  Simplex  |  gluing:      (012345)      (012346)      (012356)      (012456)      (013456)      (023456)      (123456)
+  ---------+-----------------------------------------------------------------------------------------------------------
+        0  |             0 (123456)      boundary      boundary      boundary      boundary      boundary    0 (012345)
 
 
 Triangulation: 6-D product #2
@@ -50,10 +50,10 @@ Boundary facets: 10
 
 Bounded orientable 6-D triangulation, f = ( 2 12 30 40 30 12 2 )
 
-  Simplex  |  glued to:     (012345)     (012346)     (012356)     (012456)     (013456)     (023456)     (123456)
-  ---------+------------------------------------------------------------------------------------------------------
-        0  |              1 (123456)     boundary     boundary     boundary     boundary     boundary   1 (012345)
-        1  |              0 (123456)     boundary     boundary     boundary     boundary     boundary   0 (012345)
+  Simplex  |  gluing:      (012345)      (012346)      (012356)      (012456)      (013456)      (023456)      (123456)
+  ---------+-----------------------------------------------------------------------------------------------------------
+        0  |             1 (123456)      boundary      boundary      boundary      boundary      boundary    1 (012345)
+        1  |             0 (123456)      boundary      boundary      boundary      boundary      boundary    0 (012345)
 
 
 Triangulation: 7-D product #1
@@ -65,9 +65,9 @@ Boundary facets: 6
 
 Bounded orientable 7-D triangulation, f = ( 1 7 21 35 35 21 7 1 )
 
-  Simplex  |  glued to:     (0123456)     (0123457)     (0123467)     (0123567)     (0124567)     (0134567)     (0234567)     (1234567)
-  ---------+---------------------------------------------------------------------------------------------------------------------------
-        0  |              0 (1234567)      boundary      boundary      boundary      boundary      boundary      boundary   0 (0123456)
+  Simplex  |  gluing:      (0123456)      (0123457)      (0123467)      (0123567)      (0124567)      (0134567)      (0234567)      (1234567)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------
+        0  |             0 (1234567)       boundary       boundary       boundary       boundary       boundary       boundary    0 (0123456)
 
 
 Triangulation: 7-D product #2
@@ -79,10 +79,10 @@ Boundary facets: 12
 
 Bounded orientable 7-D triangulation, f = ( 2 14 42 70 70 42 14 2 )
 
-  Simplex  |  glued to:     (0123456)     (0123457)     (0123467)     (0123567)     (0124567)     (0134567)     (0234567)     (1234567)
-  ---------+---------------------------------------------------------------------------------------------------------------------------
-        0  |              1 (1234567)      boundary      boundary      boundary      boundary      boundary      boundary   1 (0123456)
-        1  |              0 (1234567)      boundary      boundary      boundary      boundary      boundary      boundary   0 (0123456)
+  Simplex  |  gluing:      (0123456)      (0123457)      (0123467)      (0123567)      (0124567)      (0134567)      (0234567)      (1234567)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------
+        0  |             1 (1234567)       boundary       boundary       boundary       boundary       boundary       boundary    1 (0123456)
+        1  |             0 (1234567)       boundary       boundary       boundary       boundary       boundary       boundary    0 (0123456)
 
 
 Triangulation: 8-D product #1
@@ -94,9 +94,9 @@ Boundary facets: 7
 
 Bounded non-orientable 8-D triangulation, f = ( 1 8 28 56 70 56 28 8 1 )
 
-  Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
-  ---------+--------------------------------------------------------------------------------------------------------------------------------------------------
-        0  |              0 (12345678)       boundary       boundary       boundary       boundary       boundary       boundary       boundary   0 (01234567)
+  Simplex  |  gluing:      (01234567)      (01234568)      (01234578)      (01234678)      (01235678)      (01245678)      (01345678)      (02345678)      (12345678)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |             0 (12345678)        boundary        boundary        boundary        boundary        boundary        boundary        boundary    0 (01234567)
 
 
 Triangulation: 8-D product #2
@@ -108,9 +108,9 @@ Boundary facets: 14
 
 Bounded orientable 8-D triangulation, f = ( 2 16 56 112 140 112 56 16 2 )
 
-  Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
-  ---------+--------------------------------------------------------------------------------------------------------------------------------------------------
-        0  |              1 (12345678)       boundary       boundary       boundary       boundary       boundary       boundary       boundary   1 (01234567)
-        1  |              0 (12345678)       boundary       boundary       boundary       boundary       boundary       boundary       boundary   0 (01234567)
+  Simplex  |  gluing:      (01234567)      (01234568)      (01234578)      (01234678)      (01235678)      (01245678)      (01345678)      (02345678)      (12345678)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |             1 (12345678)        boundary        boundary        boundary        boundary        boundary        boundary        boundary    1 (01234567)
+        1  |             0 (12345678)        boundary        boundary        boundary        boundary        boundary        boundary        boundary    0 (01234567)
 
 

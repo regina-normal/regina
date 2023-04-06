@@ -783,6 +783,9 @@ Equality type : EqualityType.BY_VALUE
 Locale : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
+LockViolation : class
+Exception type
+
 Manifold : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
