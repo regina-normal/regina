@@ -212,7 +212,6 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
 
 Link Link::fromKnotSig(const std::string& sig) {
     Link ans;
-    Link::ChangeEventSpan span(ans);
 
     const char* c = sig.c_str();
 
