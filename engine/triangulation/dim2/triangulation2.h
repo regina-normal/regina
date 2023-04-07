@@ -427,6 +427,10 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          *
          * In most cases this routine is followed immediately by firing
          * a change event.
+         *
+         * It is recommended that you use a local ChangeAndClearSpan object
+         * to manage both of these tasks (calling clearAllProperties() and
+         * firing change events), rather than calling this function manually.
          */
         void clearAllProperties();
 

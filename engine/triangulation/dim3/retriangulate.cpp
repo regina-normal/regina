@@ -110,6 +110,8 @@ bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
         *this, height, nThreads, tracker,
         [this, minSimp](Triangulation<3>&& alt) {
             if (alt.size() < minSimp) {
+                // The ChangeEventSpan is purely for optimisation purposes
+                // (to avoid firing multiple events).
                 ChangeEventSpan span(*this);
                 *this = std::move(alt);
                 intelligentSimplify();

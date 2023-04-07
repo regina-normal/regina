@@ -1206,6 +1206,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * In most cases this routine is followed immediately by firing
          * a change event.
+         *
+         * It is recommended that you use a local ChangeAndClearSpan object
+         * to manage both of these tasks (calling clearAllProperties() and
+         * firing change events), rather than calling this function manually.
          */
         void clearAllProperties();
 
@@ -1373,6 +1377,8 @@ inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned threads,
     return retriangulate(height, threads, tracker,
         [](Triangulation<4>&& alt, Triangulation<4>& original, size_t minSimp) {
             if (alt.size() < minSimp) {
+                // The ChangeEventSpan is purely for optimisation purposes
+                // (to avoid firing multiple events).
                 ChangeEventSpan span(original);
                 original = std::move(alt);
                 original.intelligentSimplify();

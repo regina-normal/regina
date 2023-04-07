@@ -3467,6 +3467,78 @@ class TriangulationBase :
 
     protected:
         /**
+         * An object that facilitates both firing change events and
+         * calling clearAllProperties().
+         *
+         * An object of type ChangeAndClearSpan has two effects:
+         *
+         * - On construction and destruction, if this triangulation is actually
+         *   part of a PacketOf<Triangulation<dim>> then it fires a
+         *   PacketListener::packetToBeChanged() and
+         *   PacketListener::packetWasChanged() event respectively to all
+         *   registered packet listeners.
+         *
+         * - On destruction, this object calls
+         *   Triangulation<dim>::clearAllProperties()
+         *   (just before the final change event is fired).  This is always
+         *   done, whether or not the triangulation is held in a packet.
+         *
+         * The use of these objects is similar to Packet::ChangeEventSpan
+         * (and indeed, this class is intended to _replace_ ChangeEventSpan
+         * when writing Triangulation member functions): objects of this type
+         * would typically be created on the stack, just before the internal
+         * data within a triangulation is changed.
+         *
+         * Like ChangeEventSpan, these objects can be safely nested with other
+         * ChangeAndClearSpan and/or ChangeEventSpan objects.  However, unlike
+         * ChangeEventSpan, this comes with a cost: as always, only one
+         * set of change events will be fired; however, if there are multiple
+         * ChangeAndClearSpan objects then
+         * Triangulation<dim>::clearAllProperties() will be called
+         * multiple times.  This is harmless but inefficient.
+         *
+         * ChangeAndClearSpan  objects are not copyable, movable or swappable.
+         * In particular, Regina does not offer any way for a ChangeAndClearSpan
+         * to transfer its duty (i.e., firing events and calling
+         * clearAllProperties() upon destruction) to another object.
+         *
+         * \nopython
+         */
+        class ChangeAndClearSpan :
+                public PacketData<Triangulation<dim>>::ChangeEventSpan {
+            public:
+                /**
+                 * Creates a new change-and-clear object to work with the given
+                 * triangulation.
+                 *
+                 * If this is the only ChangeAndClearSpan or ChangeEventSpan
+                 * currently in existence for the given triangulation, this
+                 * constructor will call PacketListener::packetToBeChanged()
+                 * for all registered listeners for the given triangulation.
+                 *
+                 * \param tri the triangulation whose data is about to change.
+                 */
+                ChangeAndClearSpan(TriangulationBase& tri);
+
+                /**
+                 * Destroys this change-and-clear object.
+                 *
+                 * This destructor will first call
+                 * Triangulation<dim>::clearAllProperites().  Then, if this is
+                 * the only ChangeAndClearSpan or ChangeEventSpan currently
+                 * in existence for the given triangulation, it will call
+                 * PacketListener::packetWasChanged() for all registered
+                 * listeners for the given triangulation.
+                 */
+                ~ChangeAndClearSpan();
+
+                // Make this class non-copyable.
+                ChangeAndClearSpan(const ChangeAndClearSpan&) = delete;
+                ChangeAndClearSpan& operator = (const ChangeAndClearSpan&) =
+                    delete;
+        };
+
+        /**
          * Creates a temporary lock on the topological properties of
          * the given triangulation.  While this object exists, any
          * computed properties of the underlying _manifold_ will be
@@ -3769,11 +3841,10 @@ inline const Simplex<dim>* TriangulationBase<dim>::simplex(size_t index) const {
 template <int dim>
 Simplex<dim>* TriangulationBase<dim>::newSimplex() {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan span(*this);
 
     auto* s = new Simplex<dim>(static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
     return s;
 }
 
@@ -3791,14 +3862,13 @@ std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplices() {
         "The template argument k to newSimplices() must be non-negative.");
 
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan span(*this);
 
     std::array<Simplex<dim>*, k> ans;
     for (int i = 0; i < k; ++i)
         simplices_.push_back(ans[i] = new Simplex<dim>(
             static_cast<Triangulation<dim>*>(this)));
 
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
     return ans;
 }
 
@@ -3818,23 +3888,20 @@ inline std::array<Simplex<dim>*, k> TriangulationBase<dim>::newSimplicesRaw() {
 template <int dim>
 void TriangulationBase<dim>::newSimplices(size_t k) {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan span(*this);
 
     for (size_t i = 0; i < k; ++i)
         simplices_.push_back(new Simplex<dim>(
             static_cast<Triangulation<dim>*>(this)));
-
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
 template <int dim>
 Simplex<dim>* TriangulationBase<dim>::newSimplex(const std::string& desc) {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan span(*this);
 
     auto* s = new Simplex<dim>(desc, static_cast<Triangulation<dim>*>(this));
     simplices_.push_back(s);
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
     return s;
 }
 
@@ -3846,15 +3913,13 @@ inline void TriangulationBase<dim>::removeSimplex(Simplex<dim>* simplex) {
             "locked facet");
 
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan span(*this);
 
     // We can use isolateRaw() because we are already managing locks,
     // snapshots, change events and computed properties manually.
     simplex->isolateRaw();
     simplices_.erase(simplices_.begin() + simplex->index());
     delete simplex;
-
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
 template <int dim>
@@ -3873,15 +3938,13 @@ inline void TriangulationBase<dim>::removeSimplexAt(size_t index) {
             "locked facet");
 
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan span(*this);
 
     // We can use isolateRaw() because we are already managing locks,
     // snapshots, change events and computed properties manually.
     simplex->isolateRaw();
     simplices_.erase(simplices_.begin() + index);
     delete simplex;
-
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
 template <int dim>
@@ -3892,13 +3955,11 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
             "locked simplices or facets");
 
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan span(*this);
 
     for (auto s : simplices_)
         delete s;
     simplices_.clear();
-
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
 template <int dim>
@@ -3906,8 +3967,8 @@ void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     dest.Snapshottable<Triangulation<dim>>::takeSnapshot();
 
-    ChangeEventSpan span1(static_cast<Triangulation<dim>&>(*this));
-    ChangeEventSpan span2(dest);
+    ChangeAndClearSpan span1(*this);
+    ChangeAndClearSpan span2(dest);
 
     for (auto* s : simplices_) {
         // This is an abuse of MarkedVector, since for a brief moment
@@ -3919,9 +3980,6 @@ void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
         dest.simplices_.push_back(s);
     }
     simplices_.clear();
-
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
-    static_cast<Triangulation<dim>&>(dest).clearAllProperties();
 }
 
 template <int dim>
@@ -4417,7 +4475,7 @@ template <int dim>
 void TriangulationBase<dim>::insertTriangulation(
         const Triangulation<dim>& source) {
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan span(*this);
 
     size_t nOrig = size();
     size_t nSource = source.size();
@@ -4444,8 +4502,6 @@ void TriangulationBase<dim>::insertTriangulation(
                 me->adj_[f] = nullptr;
         }
     }
-
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
 template <int dim>
@@ -4922,6 +4978,25 @@ inline bool TriangulationBase<dim>::sameDegreesAt(
         const TriangulationBase& other,
         std::integer_sequence<int, useDim...>) const {
     return (sameDegreesAt<useDim>(other) && ...);
+}
+
+// Inline functions for TriangulationBase::ChangeAndClearSpan
+
+template <int dim>
+inline TriangulationBase<dim>::ChangeAndClearSpan::ChangeAndClearSpan(
+        TriangulationBase& tri) :
+        PacketData<Triangulation<dim>>::ChangeEventSpan(
+            static_cast<Triangulation<dim>&>(tri)) {
+}
+
+template <int dim>
+inline TriangulationBase<dim>::ChangeAndClearSpan::~ChangeAndClearSpan() {
+    static_cast<Triangulation<dim>&>(
+        PacketData<Triangulation<dim>>::ChangeEventSpan::data_).
+        clearAllProperties();
+
+    // Now fall through to the parent class destructor, which fires change
+    // events.
 }
 
 // Inline functions for TriangulationBase::TopologyLock

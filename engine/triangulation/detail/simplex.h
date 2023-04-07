@@ -1377,13 +1377,12 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
             "from its adjacent simplex");
 
     tri_->takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+    typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
 
     Simplex<dim>* you = adj_[myFacet];
     you->adj_[gluing_[myFacet][myFacet]] = nullptr;
     adj_[myFacet] = nullptr;
 
-    tri_->clearAllProperties();
     return you;
 }
 
@@ -1410,7 +1409,7 @@ void SimplexBase<dim>::isolate() {
 hasGluings:
 
     tri_->takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+    typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
 
     // Currently, i is the first facet that has a gluing.
     for ( ; i <= dim; ++i)
@@ -1423,8 +1422,6 @@ hasGluings:
             you->adj_[gluing_[i][i]] = nullptr;
             adj_[i] = nullptr;
         }
-
-    tri_->clearAllProperties();
 }
 
 template <int dim>
@@ -1455,14 +1452,12 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         throw InvalidArgument("You cannot join a facet of a simplex to itself");
 
     tri_->takeSnapshot();
-    typename Triangulation<dim>::ChangeEventSpan span(*tri_);
+    typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
 
     adj_[myFacet] = you;
     gluing_[myFacet] = gluing;
     you->adj_[yourFacet] = static_cast<Simplex<dim>*>(this);
     you->gluing_[yourFacet] = gluing.inverse();
-
-    tri_->clearAllProperties();
 }
 
 template <int dim>

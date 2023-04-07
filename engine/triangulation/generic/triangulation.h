@@ -129,11 +129,12 @@ namespace regina {
  *   Triangulation, and so inherits the full Triangulation interface.
  *
  * - If you are adding new functions to this class that edit the triangulation,
- *   you must still remember to create a ChangeEventSpan.  This will ensure
- *   that, if the triangulation is being managed by a PacketOf<Triangulation>,
- *   then the appropriate packet change events will be fired.  All other events
- *   (aside from packetToBeChanged() and packetWasChanged() are managed
- *   directly by the PacketOf<Triangulation> wrapper class.
+ *   you must still remember to create a ChangeEventSpan (or a
+ *   ChangeAndClearSpan).  This will ensure that, if the triangulation is being
+ *   managed by a PacketOf<Triangulation>, then the appropriate packet change
+ *   events will be fired.  All other events (aside from packetToBeChanged()
+ *   and packetWasChanged() are managed directly by the PacketOf<Triangulation>
+ *   wrapper class.
  *
  * ### C++ housekeeping
  *
@@ -356,6 +357,10 @@ class Triangulation : public detail::TriangulationBase<dim> {
          *
          * In most cases this routine is followed immediately by firing
          * a change event.
+         *
+         * It is recommended that you use a local ChangeAndClearSpan object
+         * to manage both of these tasks (calling clearAllProperties() and
+         * firing change events), rather than calling this function manually.
          */
         void clearAllProperties();
 
