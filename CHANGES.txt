@@ -18,6 +18,9 @@ Version 7.4  [ (to be announced) ]
             - New type alias to simplify arithmetic when using IntOfSize<...>.
         Class Face<dim, dim-1>:
             - New routines lock(), unlock(), and isLocked().
+        Class Link:
+            - Fixed a bug where calling resolve() would not clear out any
+              cached link polynomials that had already been computed.
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.

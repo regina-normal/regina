@@ -521,7 +521,7 @@ void Link::changeAll() {
 }
 
 void Link::resolve(Crossing* c) {
-    ChangeEventSpan span(*this);
+    ChangeAndClearSpan span(*this);
 
     if (c->next_[0].crossing() == c) {
         if (c->prev_[0].crossing() == c) {
