@@ -99,9 +99,7 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
     }
 
     // Create the tetrahedra and start gluing.
-    // Ensure only one event pair is fired in this sequence of changes.
     Triangulation<3> ans;
-    ChangeEventSpan span(ans);
 
     auto* tet = new Tetrahedron<3>*[nTet];
     for (unsigned i = 0; i < nTet; i++)

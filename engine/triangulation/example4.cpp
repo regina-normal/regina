@@ -272,8 +272,6 @@ namespace {
 
 Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
     Triangulation<4> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<4>::ChangeEventSpan span(ans);
 
     size_t n = base.size();
     if (n == 0)
@@ -324,8 +322,6 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
 
 Triangulation<4> Example<4>::s1Bundle(const Triangulation<3>& base) {
     Triangulation<4> ans = iBundle(base);
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<4>::ChangeEventSpan span(ans);
 
     Perm<5> id;
     size_t n = base.size();
@@ -338,8 +334,6 @@ Triangulation<4> Example<4>::s1Bundle(const Triangulation<3>& base) {
 Triangulation<4> Example<4>::bundleWithMonodromy(
         const Triangulation<3>& base, const Isomorphism<3>& monodromy) {
     Triangulation<4> ans = iBundle(base);
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<4>::ChangeEventSpan span(ans);
 
     size_t n = base.size();
     for (size_t i = 0; i < n; ++i)

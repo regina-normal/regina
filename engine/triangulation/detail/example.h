@@ -246,8 +246,6 @@ template <int dim, bool available>
 Triangulation<dim> ExampleFromLowDim<dim, available>::singleCone(
         const Triangulation<dim-1>& base) {
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     size_t n = base.size();
     if (n == 0)
@@ -290,8 +288,6 @@ template <int dim, bool available>
 Triangulation<dim> ExampleFromLowDim<dim, available>::doubleCone(
         const Triangulation<dim-1>& base) {
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     size_t n = base.size();
     if (n == 0)
@@ -343,8 +339,6 @@ Triangulation<dim> ExampleBase<dim>::sphere() {
     // Take two simplices and join their entire boundaries according to
     // the identity map.
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     auto [p, q] = ans.template newSimplices<2>();
     for (int i = 0; i <= dim; ++i)
@@ -356,8 +350,6 @@ Triangulation<dim> ExampleBase<dim>::sphere() {
 template <int dim>
 Triangulation<dim> ExampleBase<dim>::simplicialSphere() {
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     // One top-dimensional simplex for every vertex of the (dim+1)-simplex
     auto simps = ans.template newSimplices<dim + 2>(); // One for ever
@@ -386,8 +378,6 @@ Triangulation<dim> ExampleBase<dim>::sphereBundle() {
     // Make two simplex, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     auto [p, q] = ans.template newSimplices<2>();
     for (int i = 1; i < dim; ++i)
@@ -415,8 +405,6 @@ Triangulation<dim> ExampleBase<dim>::twistedSphereBundle() {
     // Make two simplex, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     auto [p, q] = ans.template newSimplices<2>();
     for (int i = 1; i < dim; ++i)
@@ -442,8 +430,6 @@ Triangulation<dim> ExampleBase<dim>::twistedSphereBundle() {
 template <int dim>
 Triangulation<dim> ExampleBase<dim>::ball() {
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     ans.newSimplex();
     return ans;
@@ -455,8 +441,6 @@ Triangulation<dim> ExampleBase<dim>::ballBundle() {
     // In even dimensions the corresponding construction is non-orientable,
     // and we need to take its orientable double cover.
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     // Now join facet 0 to a facet dim to join up the S1 loop:
     //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
@@ -483,8 +467,6 @@ Triangulation<dim> ExampleBase<dim>::twistedBallBundle() {
     // double it (giving a two-vertex, two-simplex Bn x S1) but fiddle
     // with the second map to make it non-orientable.
     Triangulation<dim> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     // Now join facet 0 to a facet dim to join up the S1 loop:
     //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1

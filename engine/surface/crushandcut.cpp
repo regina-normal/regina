@@ -1157,8 +1157,6 @@ Triangulation<3> NormalSurface::cutAlong() const {
     }
 
     Triangulation<3> ans;
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<3>::ChangeEventSpan span(ans);
 
     size_t nTet = triangulation().size();
     if (nTet == 0)

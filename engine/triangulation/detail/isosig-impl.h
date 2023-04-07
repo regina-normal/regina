@@ -336,9 +336,6 @@ template <int dim>
 Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
     Triangulation<dim> ans;
 
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
-
     const char* c = sig.c_str();
 
     // Skip any leading whitespace.

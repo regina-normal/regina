@@ -112,9 +112,6 @@ Triangulation<3> Example<3>::layeredLoop(size_t length, bool twisted) {
     if (length == 0)
         return ans;
 
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<3>::ChangeEventSpan span(ans);
-
     // Insert a layered chain of the given length.
     // We should probably split this out into a separate routine.
     Tetrahedron<3>* base;
@@ -146,9 +143,6 @@ Triangulation<3> Example<3>::layeredLoop(size_t length, bool twisted) {
 Triangulation<3> Example<3>::augTriSolidTorus(long a1, long b1,
         long a2, long b2, long a3, long b3) {
     Triangulation<3> ans;
-
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<3>::ChangeEventSpan span(ans);
 
     // Construct the core triangular solid torus.
     auto core = ans.newTetrahedra<3>();
@@ -344,9 +338,6 @@ Triangulation<3> Example<3>::handlebody(size_t genus) {
     }
 
     Triangulation<3> ans;
-
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<3>::ChangeEventSpan span(ans);
 
     size_t n = 3*genus - 2;
     ans.newTetrahedra(n);

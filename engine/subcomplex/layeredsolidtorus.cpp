@@ -627,9 +627,6 @@ Triangulation<3> LayeredSolidTorus::flatten(int mobiusBandBdry) const {
     Tetrahedron<3>* newTop = ans.tetrahedron(top_->index());
     Tetrahedron<3>* newBase = ans.tetrahedron(base_->index());
 
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<3>::ChangeEventSpan span(ans);
-
     // Reglue the top faces before deleting the layered solid torus.
     Tetrahedron<3>* adj0 = newTop->adjacentTetrahedron(topFace_.lower());
     Tetrahedron<3>* adj1 = newTop->adjacentTetrahedron(topFace_.upper());
