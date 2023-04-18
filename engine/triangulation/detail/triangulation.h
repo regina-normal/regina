@@ -226,7 +226,9 @@ class TriangulationBase :
                  This property should be managed by creating and
                  destroying TopologyLock objects.  The precise value of
                  topologyLock_ indicates the number of TopologyLock
-                 objects that currently exist for this triangulation. */
+                 objects that currently exist for this triangulation.
+
+                 See the TopologyLock inner class for further details. */
 
     private:
         bool calculatedSkeleton_;
@@ -3541,19 +3543,41 @@ class TriangulationBase :
 
         /**
          * Creates a temporary lock on the topological properties of
-         * the given triangulation.  While this object exists, any
-         * computed properties of the underlying _manifold_ will be
-         * preserved even when the triangulation changes.  This allows
-         * you to avoid recomputing expensive invariants when the
+         * the given triangulation.
+         *
+         * While this object exists, any computed properties of the underlying
+         * _manifold_ will be preserved when clearAllProperties() is called
+         * (which would typically happen whenever the triangulation changes).
+         * This allows you to avoid recomputing expensive invariants when the
          * underlying manifold is retriangulated.
          *
-         * The lock will be created by the class constructor and removed
-         * by the class destructor.  That is, the lock will remain in
-         * effect until the TopologyLock object goes out of scope (or is
-         * otherwise destroyed).
+         * Currently, the properties that are preserved must be stable under
+         * reflection and/or subdivision.  For example, this means that the
+         * intersection form of a 4-manifold will not be preserved (since it
+         * changes under reflection), and the validity of a triangulation will
+         * not be not preserved (since subdivision can change a triangulation
+         * from invalid to valid).  This particular notion of "preserved
+         * properties" may change in future versions of Regina.
+         *
+         * This lock on the topological properties will be created by the
+         * class constructor, and removed by the class destructor.  That is,
+         * the lock will remain in effect until the TopologyLock object goes
+         * out of scope (or is otherwise destroyed).
+         *
+         * Typically a TopologyLock would be created on the stack before
+         * a call to clearAllProperties(), which could occur via:
+         *
+         * - a modifying function call, such as Simplex<dim::join();
+         * - a ChangeAndClearSpan object falling out of scope; or
+         * - a manual call to clearAllProperties().
+         *
+         * In particular, if there is a ChangeAndClearSpan in use then the
+         * TopologyLock must be declared _before_ it (so that it is still
+         * active when the ChangeAndClearSpan calls clearAllProperties()
+         * in its destructor).
          *
          * Multiple locks are allowed.  If multiple locks are created, then
-         * computed properties of the manifold will be preserved as
+         * computed topological properties of the manifold will be preserved as
          * long as any one of these locks still exists.  Multiple locks
          * do not necessarily need to be nested (i.e., the order of
          * destruction does not need to be the reverse order of construction).
@@ -3571,12 +3595,6 @@ class TriangulationBase :
          * In particular, Regina does not offer any way for a TopologyLock
          * to transfer its destructor's responsibilities (i.e., "unlocking"
          * the topological properties of the triangulation) to another object.
-         *
-         * \note If you are creating a ChangeEventSpan before retriangulating
-         * the manifold and you wish to use a TopologyLock, then you should
-         * create the TopologyLock _before_ the ChangeEventSpan (since the
-         * ChangeEventSpan calls clearAllProperties() in its destructor,
-         * and you need your topology lock to still exist at that point).
          */
         class TopologyLock {
             private:
