@@ -44,9 +44,6 @@ const Triangulation<2>& Face<3, 0>::buildLink() const {
     if (! linkTri_) {
         // Build the triangulation.
         auto* ans = new Triangulation<2>();
-        // Ensure only one event pair is fired in this sequence of changes.
-        Triangulation<2>::ChangeEventSpan span(*ans);
-
         ans->newTriangles(degree());
 
         size_t i = 0;

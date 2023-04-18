@@ -913,8 +913,6 @@ Triangulation<dim> Isomorphism<dim>::operator ()(
     Triangulation<dim> ans;
     auto* tet = new Simplex<dim>*[size_];
 
-    // Ensure only one event pair is fired in this sequence of changes.
-    typename Triangulation<dim>::ChangeEventSpan span(ans);
     for (size_t t = 0; t < size_; t++)
         tet[t] = ans.newSimplex();
 
