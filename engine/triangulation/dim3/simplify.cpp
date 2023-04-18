@@ -34,8 +34,6 @@
 #include <set>
 #include "triangulation/dim3.h"
 
-// #define SIMPLIFY_DUMP_MOVES
-
 namespace regina {
 
 namespace {
@@ -94,10 +92,6 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
 
     if (! perform)
         return true;
-
-    #ifdef SIMPLIFY_DUMP_MOVES
-    std::cerr << "Performing 4-4 move\n";
-    #endif
 
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
     // Note that, by using pachner(), we also preserve orientation
@@ -170,10 +164,6 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
 
     if (! perform)
         return true;
-
-    #ifdef SIMPLIFY_DUMP_MOVES
-    std::cerr << "Performing 2-0 move about edge\n";
-    #endif
 
     // Actually perform the move.
     TopologyLock lock(*this);
@@ -257,10 +247,6 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
 
     if (! perform)
         return true;
-
-    #ifdef SIMPLIFY_DUMP_MOVES
-    std::cerr << "Performing 2-0 move about vertex\n";
-    #endif
 
     // Actually perform the move.
     TopologyLock lock(*this);
@@ -347,10 +333,6 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
 
     if (! perform)
         return true;
-
-    #ifdef SIMPLIFY_DUMP_MOVES
-    std::cerr << "Performing 2-1 move\n";
-    #endif
 
     // Go ahead and perform the move.
     TopologyLock lock(*this);
@@ -679,10 +661,6 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef SIMPLIFY_DUMP_MOVES
-    std::cerr << "Performing open book move\n";
-    #endif
-
     // Actually perform the move.
     // Don't bother with a change event block since this is so simple.
     TopologyLock lock(*this);
@@ -717,10 +695,6 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
 
     if (! perform)
         return true;
-
-    #ifdef SIMPLIFY_DUMP_MOVES
-    std::cerr << "Performing close book move\n";
-    #endif
 
     // Actually perform the move.
     // Don't bother with a change event block since this is so simple.
@@ -776,10 +750,6 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
 
     if (! perform)
         return true;
-
-    #ifdef SIMPLIFY_DUMP_MOVES
-    std::cerr << "Performing shell boundary move\n";
-    #endif
 
     // Actually perform the move.
     // Don't bother with a change event block since this is so simple.
@@ -1004,10 +974,6 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef SIMPLIFY_DUMP_MOVES
-    std::cerr << "Performing edge collapse move\n";
-    #endif
-
     // Perform the move.
     TopologyLock lock(*this);
     ChangeEventGroup span(*this);
@@ -1056,10 +1022,6 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     // Our plan is to insert two tetrahedra in its place.
     Tetrahedron<3>* open = e->front().tetrahedron();
     Perm<4> vertices = e->front().vertices();
-
-    #ifdef SIMPLIFY_DUMP_MOVES
-    std::cerr << "Performing edge pinch move\n";
-    #endif
 
     ChangeEventGroup span(*this);
 

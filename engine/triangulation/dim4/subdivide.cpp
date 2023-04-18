@@ -34,8 +34,6 @@
 #include <map>
 #include "triangulation/dim4.h"
 
-// #define SIMPLIFY_DUMP_MOVES
-
 namespace regina {
 
 namespace {
