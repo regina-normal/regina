@@ -1111,6 +1111,8 @@ inline const std::string& SimplexBase<dim>::description() const {
 template <int dim>
 inline void SimplexBase<dim>::setDescription(const std::string& desc) {
     tri_->takeSnapshot();
+    // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+    // computed properties of the triangulation will not change.
     typename Triangulation<dim>::ChangeEventSpan span(*tri_);
     description_ = desc;
 }
@@ -1288,6 +1290,8 @@ inline void SimplexBase<dim>::lock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (! (locks_ & mask)) {
         tri_->takeSnapshot();
+        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+        // computed properties of the triangulation will not change.
         typename Triangulation<dim>::ChangeEventSpan span(*tri_);
 
         locks_ |= mask;
@@ -1299,6 +1303,8 @@ void SimplexBase<dim>::lockFacet(int facet) {
     const LockMask mask = (LockMask(1) << facet);
     if (! (locks_ & mask)) {
         tri_->takeSnapshot();
+        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+        // computed properties of the triangulation will not change.
         typename Triangulation<dim>::ChangeEventSpan span(*tri_);
 
         locks_ |= mask;
@@ -1315,6 +1321,8 @@ inline void SimplexBase<dim>::unlock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (locks_ & mask) {
         tri_->takeSnapshot();
+        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+        // computed properties of the triangulation will not change.
         typename Triangulation<dim>::ChangeEventSpan span(*tri_);
 
         locks_ &= ~mask;
@@ -1326,6 +1334,8 @@ void SimplexBase<dim>::unlockFacet(int facet) {
     const LockMask mask = (LockMask(1) << facet);
     if (locks_ & mask) {
         tri_->takeSnapshot();
+        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+        // computed properties of the triangulation will not change.
         typename Triangulation<dim>::ChangeEventSpan span(*tri_);
 
         locks_ &= ~mask;
@@ -1341,6 +1351,8 @@ template <int dim>
 void SimplexBase<dim>::unlockAll() {
     if (locks_) {
         tri_->takeSnapshot();
+        // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+        // computed properties of the triangulation will not change.
         typename Triangulation<dim>::ChangeEventSpan span(*tri_);
 
         locks_ = 0;

@@ -614,12 +614,13 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
  *   child/parent packets, and event listeners.  It derives from Link,
  *   and so inherits the full Link interface.
  *
- * - If you are adding new functions to this class that edit the link, you
- *   must still remember to create a ChangeEventSpan (or a ChangeAndClearSpan).
- *   This will ensure that, if the link is being managed by a PacketOf<Link>,
- *   then the appropriate packet change events will be fired.  All other
- *   events (aside from packetToBeChanged() and packetWasChanged() are managed
- *   directly by the PacketOf<Link> wrapper class.
+ * - If you are adding new functions to this class that edit the internal
+ *   data structures of the link, you must still remember to create a
+ *   ChangeEventSpan (or a ChangeAndClearSpan).  This will ensure that, if the
+ *   link is being managed by a PacketOf<Link>, then the appropriate packet
+ *   change events will be fired.  All other events (aside from
+ *   packetToBeChanged() and packetWasChanged() are managed directly by the
+ *   PacketOf<Link> wrapper class.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -4979,9 +4980,7 @@ inline bool Link::simplifyExhaustive(int height, unsigned threads,
     return rewrite(height, threads, tracker,
         [](Link&& alt, Link& original, size_t minCrossings) {
             if (alt.size() < minCrossings) {
-                // The ChangeEventSpan is purely for optimisation purposes
-                // (to avoid firing multiple events).
-                ChangeEventSpan span(original);
+                ChangeEventGroup span(original);
                 original = std::move(alt);
                 original.intelligentSimplify();
                 return true;

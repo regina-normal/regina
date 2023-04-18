@@ -128,13 +128,13 @@ namespace regina {
  *   tags, child/parent packets, and event listeners.  It derives from
  *   Triangulation, and so inherits the full Triangulation interface.
  *
- * - If you are adding new functions to this class that edit the triangulation,
- *   you must still remember to create a ChangeEventSpan (or a
- *   ChangeAndClearSpan).  This will ensure that, if the triangulation is being
- *   managed by a PacketOf<Triangulation>, then the appropriate packet change
- *   events will be fired.  All other events (aside from packetToBeChanged()
- *   and packetWasChanged() are managed directly by the PacketOf<Triangulation>
- *   wrapper class.
+ * - If you are adding new functions to this class that edit the internal
+ *   data structures of the triangulation, you must still remember to create a
+ *   ChangeEventSpan (or a ChangeAndClearSpan).  This will ensure that, if the
+ *   triangulation is being managed by a PacketOf<Triangulation>, then the
+ *   appropriate packet change events will be fired.  All other events (aside
+ *   from packetToBeChanged() and packetWasChanged() are managed directly by
+ *   the PacketOf<Triangulation> wrapper class.
  *
  * ### C++ housekeeping
  *
@@ -540,6 +540,8 @@ void Triangulation<dim>::swap(Triangulation<dim>& other) {
     if (&other == this)
         return;
 
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to swap computed properties (not clear them).
     typename Triangulation<dim>::ChangeEventSpan span1(*this);
     typename Triangulation<dim>::ChangeEventSpan span2(other);
 

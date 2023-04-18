@@ -176,8 +176,7 @@ void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
         tet = simplices_.front();
     }
 
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     // We will attach a pair of triangular prisms to face 123 of tet.
     // We will join the rectangular walls of the prisms together, and
@@ -225,8 +224,7 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     // From here we can assume that each triangulation contains at least
     // one tetrahedron.
 
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     // Insert the other triangulation *before* puncturing this, so that
     // things work in the case where we sum a triangulation with itself.

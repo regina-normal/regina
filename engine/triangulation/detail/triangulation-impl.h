@@ -329,10 +329,14 @@ void TriangulationBase<dim>::makeDoubleCover() {
     // Manage change events and snapshots manually, since we will be managing
     // simplices and gluings manually also.  The reason for this manual work
     // is so that we can do the right thing with simplex/facet locks.
+    //
+    // We also clear all properties at the beginning (not the end), so that
+    // the skeleton will be deleted immediately (see below for the full
+    // explanation for why we do this).  For this we use a ChangeEventSpan
+    // (not a ChangeAndClearSpan), and just call clearAllProperties() manually
+    // at the right time.
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
-
-    // Clear all properties now, so that the skeleton is deleted.
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 
     // Create a second sheet of simplices.
@@ -565,8 +569,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
     // fired and properties are cleared.  From here on we need to stop
     // using joinRaw(), and let join() do all of its extra management.
 
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeEventGroup span(static_cast<Triangulation<dim>&>(*this));
 
     staging.moveContentsTo(static_cast<Triangulation<dim>&>(*this));
 

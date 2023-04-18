@@ -58,8 +58,7 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     // tetrahedron.
 
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     Tetrahedron<3>* newTet = newTetrahedron();
 
@@ -295,8 +294,7 @@ bool Triangulation<3>::fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
 
 Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(
         unsigned long cuts0, unsigned long cuts1) {
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     unsigned long cuts2 = cuts0 + cuts1;
 

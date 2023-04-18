@@ -211,8 +211,7 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
 
     // Perform the move.
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][3]);
@@ -308,8 +307,7 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
 
     // Perform the move.
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][2]);
@@ -393,8 +391,7 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
 
     // Actually perform the move.
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     // Unglue faces from the doomed pentachora and glue them to each other.
     Pentachoron<4>* top = pent[0]->adjacentPentachoron(vertex[0]);
@@ -460,13 +457,16 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
             break;
         }
     }
-    // Location of the 2-4 move.
+    // Location of the (first) 2-4 move.
     size_t linkFront = topVert->embedding(0).triangle()->index();
     int vertFront = topVert->embedding(0).vertex();
     Pentachoron<4>* frontPent = pentachoron( linkInc.pentImage(linkFront) );
     Tetrahedron<4>* tet24 = frontPent->tetrahedron(
             linkInc.facetPerm( linkFront )[ vertFront ] );
-    // Location of the 4-2 move.
+
+    // Location of the (second) 4-2 move.
+    // We record this as a pentachoron-edge combination, since by the time we
+    // perform this second move the original skeleton will have been destroyed.
     size_t linkBack = topVert->embedding(1).triangle()->index();
     Pentachoron<4>* backPent = pentachoron( linkInc.pentImage(linkBack) );
     int edge42;
@@ -478,8 +478,7 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
     }
 
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     pachner( tet24, false, true );
     pachner( backPent->edge(edge42), false, true );
@@ -980,8 +979,8 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
 
     // Perform the move.
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
+
     Perm<5> topPerm, botPerm;
     Pentachoron<4> *top, *bot;
 
@@ -1040,8 +1039,7 @@ bool Triangulation<4>::snapEdge(
 
     // Actually perform the move.
     TopologyLock lock(*this);
-    // Ensure only one event pair is fired in this sequence of changes.
-    ChangeEventSpan span(*this);
+    ChangeEventGroup span(*this);
 
     // The four pentachora that we insert together form a "pinched 4-ball".
     // Combinatorially, the boundary of this pinched 4-ball is isomorphic to

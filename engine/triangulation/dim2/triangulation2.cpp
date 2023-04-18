@@ -54,6 +54,8 @@ void Triangulation<2>::swap(Triangulation<2>& other) {
     if (&other == this)
         return;
 
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to swap computed properties (not clear them).
     ChangeEventSpan span1(*this);
     ChangeEventSpan span2(other);
 

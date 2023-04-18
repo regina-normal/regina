@@ -473,7 +473,7 @@
         }
     }
     
-    regina::Packet::ChangeEventSpan span(self.packet);
+    regina::Packet::ChangeEventGroup span(self.packet);
     self.packet->idealToFinite();
     self.packet->intelligentSimplify();
 }
@@ -494,7 +494,7 @@
         return;
     }
 
-    regina::Packet::ChangeEventSpan span(self.packet);
+    regina::Packet::ChangeEventGroup span(self.packet);
     self.packet->finiteToIdeal();
     self.packet->intelligentSimplify();
 }
@@ -661,7 +661,7 @@
                 // Do it.
                 myEdit = YES;
                 {
-                    regina::Packet::ChangeEventSpan span(self.packet);
+                    regina::Packet::ChangeEventGroup span(self.packet);
                     
                     // First unglue from the old partner if it exists.
                     if (s->adjacentSimplex(editFacet)) {

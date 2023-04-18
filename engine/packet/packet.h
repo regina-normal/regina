@@ -1562,12 +1562,16 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * "inner" ChangeEventSpan objects earlier represent smaller events
          * that are part of a larger suite of changes.
          *
-         * If you are writing code that makes a large number of changes
-         * to a packet, it is highly recommended that you declare a
-         * ChangeEventSpan at the beginning of your code.  This will ensure
+         * If you are writing a block of code that makes a large number of
+         * changes to a packet, it is highly recommended that you declare a
+         * ChangeEventSpan at the beginning of this block.  This will ensure
          * that listeners only receive one pair of events for the
          * entire change set, instead of many events representing each
-         * individual modification.
+         * individual modification.  If a ChangeEventSpan \a s is _only_ for
+         * this purpose (i.e., the necessary events would have been fired
+         * without it, but \a s serves to merge many event pairs into just one
+         * event pair), then consider declaring \a s using the equivalent type
+         * ChangeEventGroup (which makes its purpose clearer to the reader).
          *
          * ChangeEventSpan objects are not copyable, movable or swappable.
          * In particular, Regina does not offer any way for a ChangeEventSpan
@@ -1609,6 +1613,39 @@ class Packet : public std::enable_shared_from_this<Packet>,
                 ChangeEventSpan(const ChangeEventSpan&) = delete;
                 ChangeEventSpan& operator = (const ChangeEventSpan&) = delete;
         };
+
+        /**
+         * A type alias for ChangeEventSpan, used when a span is being used
+         * purely for optimisation purposes.
+         *
+         * Suppose you have a block of code that makes many changes to a
+         * packet, and each such change fires a pair of packet change events
+         * using its own internal ChangeEventSpan.  (An example of this
+         * could be a high-level function that modifies a triangulation by
+         * calling Simplex::join() many times.)  Then it is desirable to
+         * wrap the entire block in an outer ChangeEventSpan, so that this
+         * larger sequence of event pairs will be merged into just a single
+         * pair of change events.
+         *
+         * In this scenario, the outer span is _only_ for optimisation:
+         * the code would be correct without it (i.e., the necessary
+         * initial PacketListener::packetToBeChanged() and final
+         * PacketListener::packetWasChanged() events would still have been
+         * fired), but it does serve to make the code faster (since it removes
+         * the unnecessary intermediate events).
+         *
+         * For this outer span, it is recommended that you use the equivalent
+         * type ChangeEventGroup instead.  This is for the benefit of the
+         * human reader, so that they know that the outer span is purely for
+         * optimisation (and in particular, that the code would still be
+         * correct without it).
+         *
+         * Since this is just a type alias, it is purely for readability:
+         * using ChangeEventGroup instead of ChangeEventSpan makes no
+         * changes to the compiled code, and the conventions around when
+         * it should be used are not enforced at compile time or runtime.
+         */
+        using ChangeEventGroup = ChangeEventSpan;
 
     protected:
         using PacketRefs = std::map<const Packet*, bool>;
@@ -2338,6 +2375,11 @@ class PacketData {
          * furthermore, PacketData<Held>::ChangeEventSpan objects and
          * Packet::ChangeEventSpan objects can be nested within each other.
          *
+         * Also, just like Packet::ChangeEventSpan and Packet::ChangeEventGroup,
+         * there is an equivalent type PacketData::ChangeEventGroup whose
+         * purpose is to indicate to the reader that the an object is being
+         * used _only_ to merge many event pairs into a single event pair.
+         *
          * When working with PacketData<Triangulation<3>>, this class
          * includes special code that nullifies a SnapPea triangulation
          * when its inherited Triangulation<3> data changes unexpectedly.
@@ -2387,6 +2429,19 @@ class PacketData {
                 ChangeEventSpan(const ChangeEventSpan&) = delete;
                 ChangeEventSpan& operator = (const ChangeEventSpan&) = delete;
         };
+
+        /**
+         * A type alias for ChangeEventSpan, used when a span is being used
+         * purely for optimisation purposes.
+         *
+         * This type alias is used in the same way as Packet::ChangeEventGroup:
+         * it is purely for the benefit of the human reader, used to indicate
+         * that an event span is present purely for optimisation (and in
+         * particular, that the code would still be correct without it).
+         *
+         * See Packet::ChangeEventGroup for further details.
+         */
+        using ChangeEventGroup = ChangeEventSpan;
 
     friend class PacketOf<Held>;
 };

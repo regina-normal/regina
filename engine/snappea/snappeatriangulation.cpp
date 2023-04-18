@@ -1110,8 +1110,7 @@ void SnapPeaTriangulation::fillingsHaveChanged() {
 
 void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
         Triangulation<3>& dest) {
-    // Ensure only one event pair is fired in this sequence of changes.
-    Triangulation<3>::ChangeEventSpan span(dest);
+    Triangulation<3>::ChangeEventGroup span(dest);
 
     regina::snappea::TriangulationData* tData;
     regina::snappea::triangulation_to_data(src, &tData);

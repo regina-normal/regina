@@ -3960,7 +3960,9 @@ inline Triangulation<3>& Triangulation<3>::operator = (
     // needs to be wrapped in a ChangeEventSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
     // properties specific to dimension 3.
-
+    //
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to clone computed properties (not clear them).
     ChangeEventSpan span(*this);
 
     TriangulationBase<3>::operator = (src);
@@ -3987,7 +3989,9 @@ inline Triangulation<3>& Triangulation<3>::operator = (
 inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.
-
+    //
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to move computed properties (not clear them).
     ChangeEventSpan span(*this);
 
     // The parent class assignment goes last, since its move invalidates src.

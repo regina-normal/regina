@@ -141,6 +141,7 @@ class TriangulationBase :
 
     public:
         using typename PacketData<Triangulation<dim>>::ChangeEventSpan;
+        using typename PacketData<Triangulation<dim>>::ChangeEventGroup;
 
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
@@ -3729,6 +3730,8 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
 
     Snapshottable<Triangulation<dim>>::operator =(src);
 
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to clone computed properties (not clear them).
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     for (auto s : simplices_)
@@ -3782,6 +3785,8 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
         (TriangulationBase<dim>&& src) {
     Snapshottable<Triangulation<dim>>::operator =(std::move(src));
 
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to move computed properties (not clear them).
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
     // We have already moved out of src, but this was in fact correct use
@@ -4002,8 +4007,8 @@ void TriangulationBase<dim>::lockBoundary() {
     if (! hasBoundaryFacets())
         return;
 
-    // Ensure that only one change event is fired.
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    // We let lock() manage change events / snapshotting / etc.
+    ChangeEventGroup span(static_cast<Triangulation<dim>&>(*this));
 
     for (auto b : boundaryComponents_)
         for (auto f : b->facets())
@@ -4021,6 +4026,8 @@ void TriangulationBase<dim>::unlockAll() {
 
     // There are actual locks to remove.  Set up the full machinery for
     // change events / snapshotting / etc.
+    // We use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+    // computed properties of the triangulation will not change.
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
 
@@ -4709,7 +4716,7 @@ void TriangulationBase<dim>::orient() {
 
     TopologyLock lock(*this);
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan span(static_cast<Triangulation<dim>&>(*this));
 
     int f;
     for (auto s : simplices_)
@@ -4739,10 +4746,6 @@ void TriangulationBase<dim>::orient() {
                     }
                 }
         }
-
-    // Don't forget to call clearAllProperties(), since we are manipulating
-    // the gluing-related data members of Simplex<dim> directly.
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
 template <int dim>
@@ -4751,7 +4754,7 @@ void TriangulationBase<dim>::reflect() {
 
     TopologyLock lock(*this);
     Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+    ChangeAndClearSpan span(static_cast<Triangulation<dim>&>(*this));
 
     int f;
     for (auto s : simplices_) {
@@ -4770,10 +4773,6 @@ void TriangulationBase<dim>::reflect() {
                     s->gluing_[f] * Perm<dim + 1>(dim - 1, dim);
             }
     }
-
-    // Don't forget to call clearAllProperties(), since we are manipulating
-    // the gluing-related data members of Simplex<dim> directly.
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
 template <int dim>

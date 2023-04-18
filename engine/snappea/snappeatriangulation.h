@@ -422,12 +422,12 @@ class Cusp : public ShortOutput<Cusp> {
  *   It derives from SnapPeaTriangulation, and so inherits the full
  *   SnapPeaTriangulation interface.
  *
- * - If you are adding new functions to this class that edit the
- *   triangulation, you must still remember to create a ChangeEventSpan.
- *   This will ensure that, if the triangulation is being managed by a
- *   PacketOf<SnapPeaTriangulation>, then the appropriate packet change events
- *   will be fired.  All other events (aside from packetToBeChanged() and
- *   packetWasChanged() are managed directly by the
+ * - If you are adding new functions to this class that edit the internal
+ *   data structures of the triangulation, you must still remember to create a
+ *   ChangeEventSpan.  This will ensure that, if the triangulation is being
+ *   managed by a PacketOf<SnapPeaTriangulation>, then the appropriate packet
+ *   change events will be fired.  All other events (aside from
+ *   packetToBeChanged() and packetWasChanged() are managed directly by the
  *   PacketOf<SnapPeaTriangulation> wrapper class.
  *
  * Regarding the packet interface, there is currently a deficiency when

@@ -527,6 +527,9 @@ void ScriptUI::removeSelectedVariables() {
     // Remove the variables!
     // Since std::set uses sorted order, we can delete from the bottom
     // up without affecting the indices of the rows yet to be removed.
+
+    // Wrap everything in an outer ChangeEventSpan, so we do not have to
+    // worry about the table being refreshed partway through the operation.
     Script::ChangeEventSpan span(*script);
     for (auto rit = rows.rbegin(); rit != rows.rend(); ++rit)
         script->removeVariable(*rit);

@@ -1287,7 +1287,9 @@ inline Triangulation<4>& Triangulation<4>::operator = (
     // needs to be wrapped in a ChangeEventSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
     // properties specific to dimension 4.
-
+    //
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to clone computed properties (not clear them).
     ChangeEventSpan span(*this);
 
     TriangulationBase<4>::operator = (src);
@@ -1301,7 +1303,9 @@ inline Triangulation<4>& Triangulation<4>::operator = (
 inline Triangulation<4>& Triangulation<4>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.
-
+    //
+    // We use a ChangeEventSpan here, not a ChangeAndClearSpan, since
+    // our intention is to move computed properties (not clear them).
     ChangeEventSpan span(*this);
 
     // The parent class assignment goes last, since its move invalidates src.
@@ -1377,9 +1381,7 @@ inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned threads,
     return retriangulate(height, threads, tracker,
         [](Triangulation<4>&& alt, Triangulation<4>& original, size_t minSimp) {
             if (alt.size() < minSimp) {
-                // The ChangeEventSpan is purely for optimisation purposes
-                // (to avoid firing multiple events).
-                ChangeEventSpan span(original);
+                ChangeEventGroup span(original);
                 original = std::move(alt);
                 original.intelligentSimplify();
                 return true;
