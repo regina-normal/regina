@@ -224,9 +224,9 @@ bool FilterPropUI::notifyOptionsChanged() {
     // There may be *multiple* changes in the dialog that must be enacted
     // (e.g., this can happen when editing the list of Euler
     // characteristics and then jumping directly to toggle some other
-    // checkbox).  We therefore wrap everything in a ChangeEventSpan, to
+    // checkbox).  We therefore wrap everything in a ChangeEventGroup, to
     // avoid refresh() being automatically called partway through.
-    regina::Packet::ChangeEventSpan span(*filter);
+    regina::Packet::ChangeEventGroup span(*filter);
 
     inNotify = true;
     bool success = true;

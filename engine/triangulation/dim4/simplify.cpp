@@ -549,7 +549,8 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    // Don't bother with a change event block since this is so simple.
+    // Don't bother with a change event group: this is very simple, and
+    // we will already get a ChangeEventSpan via unjoin().
     TopologyLock lock(*this);
     pent->unjoin(emb.tetrahedron());
 
@@ -630,7 +631,8 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
         return true;
 
     // Actually perform the move.
-    // Don't bother with a change event block since this is so simple.
+    // Don't bother with a change event group: this is very simple, and
+    // we will already get a ChangeEventSpan via removePentachoron().
     TopologyLock lock(*this);
     removePentachoron(p);
 

@@ -3567,7 +3567,7 @@ class TriangulationBase :
          * Typically a TopologyLock would be created on the stack before
          * a call to clearAllProperties(), which could occur via:
          *
-         * - a modifying function call, such as Simplex<dim::join();
+         * - a modifying function call, such as Simplex<dim>::join();
          * - a ChangeAndClearSpan object falling out of scope; or
          * - a manual call to clearAllProperties().
          *

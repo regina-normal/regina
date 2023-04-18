@@ -662,7 +662,8 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    // Don't bother with a change event block since this is so simple.
+    // Don't bother with a change event group: this is very simple, and
+    // we will already get a ChangeEventSpan via unjoin().
     TopologyLock lock(*this);
     tet->unjoin(emb.triangle());
     return true;
@@ -697,8 +698,8 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    // Don't bother with a change event block since this is so simple.
-
+    // Don't bother with a change event group: this is very simple, and
+    // we will already get a ChangeEventSpan via join().
     TopologyLock lock(*this);
     t0->join(p0[3], t1, p1 * Perm<4>(2, 3) * p0.inverse());
     return true;
@@ -752,7 +753,8 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
         return true;
 
     // Actually perform the move.
-    // Don't bother with a change event block since this is so simple.
+    // Don't bother with a change event group: this is very simple, and
+    // we will already get a ChangeEventSpan via removeTetrahedron().
     TopologyLock lock(*this);
     removeTetrahedron(t);
     return true;
