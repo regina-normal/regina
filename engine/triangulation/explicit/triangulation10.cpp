@@ -112,6 +112,7 @@ template bool TriangulationBase<10>::pachner(Face<10, 10>*, bool, bool);
 template void TriangulationBase<10>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<10>::writeTextLong(std::ostream&) const;
 
+template void TriangulationBase<10>::reorderBFS(bool);
 template void TriangulationBase<10>::makeDoubleCover();
 template bool TriangulationBase<10>::finiteToIdeal();
 

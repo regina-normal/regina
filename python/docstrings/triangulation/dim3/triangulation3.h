@@ -998,9 +998,15 @@ Note that this operation is a loose converse of finiteToIdeal().
 
 .. warning::
     Currently, the presence of an invalid edge will force the
-    triangulation to be subdivided regardless of the value of
-    parameter *forceDivision*. The final triangulation will still have
-    the projective plane cusp caused by the invalid edge.
+    triangulation to be subdivided even if there are no ideal
+    vertices. The final triangulation will still have the projective
+    plane cusp caused by the invalid edge.
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked top-dimensional
+    simplex and/or facet. See Simplex<dim>::lock() and
+    Simplex<dim>::lockFacet() for further details on how such locks
+    work and what their implications are.
 
 Returns:
     ``True`` if and only if the triangulation was changed.
@@ -2380,21 +2386,13 @@ See removeSimplexAt() for further information.)doc";
 
 // Docstring regina::python::doc::Triangulation_::reorderTetrahedraBFS
 static const char *reorderTetrahedraBFS =
-R"doc(Reorders the tetrahedra of this triangulation using a breadth-first
-search, so that small-numbered tetrahedra are adjacent to other small-
-numbered tetrahedra.
+R"doc(Deprecated alias for reorderBFS(), which reorders the tetrahedra of
+this triangulation using a breadth-first search.
 
-Specifically, the reordering will operate as follows. Tetrahedron 0
-will remain tetrahedron 0. Its immediate neighbours will be numbered
-1, 2, 3 and 4 (though if these neighbours are not distinct then of
-course fewer labels will be required). Their immediate neighbours will
-in turn be numbered 5, 6, and so on, ultimately following a breadth-
-first search throughout the entire triangulation.
-
-If the optional argument *reverse* is ``True``, then tetrahedron
-numbers will be assigned in reverse order. That is, tetrahedron 0 will
-become tetrahedron *n*-1, its neighbours will become tetrahedra *n*-2
-down to *n*-5, and so on.
+.. deprecated::
+    This routine has been renamed reorderBFS() (and is now available
+    for triangulations in all dimension). See reorderBFS() for further
+    details.
 
 Parameter ``reverse``:
     ``True`` if the new tetrahedron numbers should be assigned in

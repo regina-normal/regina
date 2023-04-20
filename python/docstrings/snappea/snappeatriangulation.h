@@ -116,6 +116,11 @@ Regarding the inherited Triangulation<3> interface:
   Triangulation<3> will be called instead, which will (as above)
   nullify one or both SnapPea triangulations respectively.
 
+* You cannot use simplex and/or facet locks. In particular, you must
+  not call Tetrahedron<3>::lock(), Tetrahedron<3>::lockFacet(), or
+  Triangle<3>::lock() on a SnapPea triangulation. Any attempt to do so
+  is likely to cause exceptions to be thrown in unexpected places.
+
 Null triangulations appear more generally when Regina is unable to
 represent data in SnapPea's native format. You can test for a null
 triangulation by calling isNull(). Null triangulations can occur for
@@ -200,14 +205,6 @@ are:
   listeners. It derives from SnapPeaTriangulation, and so inherits the
   full SnapPeaTriangulation interface.
 
-* If you are adding new functions to this class that edit the
-  triangulation, you must still remember to create a ChangeEventSpan.
-  This will ensure that, if the triangulation is being managed by a
-  PacketOf<SnapPeaTriangulation>, then the appropriate packet change
-  events will be fired. All other events (aside from
-  packetToBeChanged() and packetWasChanged() are managed directly by
-  the PacketOf<SnapPeaTriangulation> wrapper class.
-
 Regarding the packet interface, there is currently a deficiency when
 listening for change events on a PacketOf<SnapPeaTriangulation>:
 
@@ -227,9 +224,35 @@ listening for change events on a PacketOf<SnapPeaTriangulation>:
   via the inherited Triangulation<3> interface, this deficiency is
   being left to stay for the time being.
 
-This class implements C++ move semantics and adheres to the C++
-Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
+If you add new functions to this class that edit the triangulation,
+there are several pieces of bookkeeping to manage: this includes
+clearing computed properties, firing packet change events if
+necessary, and resyncing the internal Regina triangulation to match
+any changes made within the SnapPea kernel. Typically you would manage
+these by creating a single SnapPeaChangeSpan on the stack before the
+changes takes place. Some notes on this:
+
+* SnapPeaChangeSpan is a private inner class within
+  SnapPeaTriangulation (so it is only intended for use within member
+  functions).
+
+* SnapPeaChangeSpan _replaces_ the usual ChangeEventSpan (or
+  ChangeEventGroup) that would commonly be used with other packet
+  types. You should _not_ create a ChangeEventSpan or ChangeEventGroup
+  as well.
+
+* The SnapPeaChangeSpan class takes an optional policy template
+  argument. Do take care to ensure that you are using the correct
+  policy - for example, if you are changing the combinatorics of the
+  triangulation then you probably want the default
+  ``changeTriangulation``, but if you are only changing the fillings
+  on the cusps then ``changeFillingsOnly`` is more appropriate. See
+  the inner ChangePolicy enumeration for details.
+
+The SnapPeaTriangulation class implements C++ move semantics and
+adheres to the C++ Swappable requirement. It is designed to avoid deep
+copies wherever possible, even when passing or returning objects by
+value.
 
 The SnapPea kernel was originally written by Jeff Weeks. SnapPy, where
 this kernel is now maintained, is primarily developed by Marc Culler,

@@ -82,6 +82,7 @@ template bool TriangulationBase<4>::pachner(Face<4, 4>*, bool, bool);
 template void TriangulationBase<4>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<4>::writeTextLong(std::ostream&) const;
 
+template void TriangulationBase<4>::reorderBFS(bool);
 template void TriangulationBase<4>::makeDoubleCover();
 template void TriangulationBase<4>::subdivide();
 template bool TriangulationBase<4>::finiteToIdeal();

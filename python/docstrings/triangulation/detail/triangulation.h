@@ -211,7 +211,13 @@ triangulation.
     modified directly.
 
 Precondition:
-    *dim* is one of Regina's standard dimensions.)doc";
+    *dim* is one of Regina's standard dimensions.
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked top-dimensional
+    simplex and/or facet. See Simplex<dim>::lock() and
+    Simplex<dim>::lockFacet() for further details on how such locks
+    work and what their implications are.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::boundaryComponent
 constexpr const char *boundaryComponent =
@@ -930,6 +936,11 @@ dimension 2, triangulations cannot have cusps).
 .. warning::
     If a real boundary component contains vertices whose links are not
     discs, this operation may have unexpected results.
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked boundary facet.
+    See Simplex<dim>::lockFacet() for further details on how such
+    locks work and what their implications are.
 
 Returns:
     ``True`` if changes were made, or ``False`` if the original
@@ -1872,15 +1883,21 @@ triangulation so that all simplices are oriented consistently, if
 possible.
 
 This routine works by flipping vertices (*dim* - 1) and *dim* of each
-top-dimensional simplices that has negative orientation. The result
-will be a triangulation where the top-dimensional simplices have their
+top-dimensional simplex that has negative orientation. The result will
+be a triangulation where the top-dimensional simplices have their
 vertices labelled in a way that preserves orientation across adjacent
 facets. In particular, every gluing permutation will have negative
 sign.
 
 If this triangulation includes both orientable and non-orientable
 components, the orientable components will be oriented as described
-above and the non-orientable components will be left untouched.)doc";
+above and the non-orientable components will be left untouched.
+
+If this triangulation has locks on any top-dimensional simplices
+and/or their facets, these will not prevent the orientation from
+taking place. Instead, any locks will be transformed accordingly
+(i.e., facets (*dim* - 1) and *dim* will exchange their lock states
+for those simplices that originally had negative orientation).)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::pachner
 constexpr const char *pachner =
@@ -2001,7 +2018,13 @@ converted into an isomorphic triangulation with the opposite
 orientation.
 
 This routine works by flipping vertices (*dim* - 1) and *dim* of every
-top-dimensional simplex.)doc";
+top-dimensional simplex.
+
+If this triangulation has locks on any top-dimensional simplices
+and/or their facets, these will not prevent the reflection from taking
+place. Instead, any locks will be transformed accordingly (i.e.,
+facets (*dim* - 1) and *dim* will exchange their lock states in every
+top-dimensional simplex).)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::removeAllSimplices
 constexpr const char *removeAllSimplices =
@@ -2055,6 +2078,34 @@ Exception ``LockViolation``:
 Parameter ``index``:
     specifies which top-dimensional simplex to remove; this must be
     between 0 and size()-1 inclusive.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase_::reorderBFS
+constexpr const char *reorderBFS =
+R"doc(Reorders the top-dimensional simplices of this triangulation using a
+breadth-first search, so that small-numbered simplices are adjacent to
+other small-numbered simplices.
+
+Specifically, the reordering will operate as follows. Simplex 0 will
+remain simplex 0. Its immediate neighbours will be numbered
+1,2,...,(*dim*+1) (though if these neighbours are not distinct then of
+course fewer labels will be required). Their immediate neighbours will
+in turn be numbered (*dim*+2), (*dim*+3) and so on, ultimately
+following a breadth-first search throughout the entire triangulation.
+
+If the optional argument *reverse* is ``True``, then simplex numbers
+will be assigned in reverse order. That is, simplex 0 will become
+simplex *n*-1, its immediate neighbours will become simplices *n*-2,
+*n*-3, etc., and so on.
+
+If this triangulation has locks on any top-dimensional simplices
+and/or their facets, these will not prevent the reordering from taking
+place. Instead, any locks will be transformed accordingly; that is,
+all top-dimensional simplices will carry their own locks and their
+facets' locks around with them as they are reordered.
+
+Parameter ``reverse``:
+    ``True`` if the new simplex numbers should be assigned in reverse
+    order, as described above.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::simplex
 constexpr const char *simplex =
@@ -2204,7 +2255,13 @@ Precondition:
     simplices in the subdivided triangulation has changed as of Regina
     5.1. (Earlier versions of Regina made no guarantee about the
     labelling and ordering; these guarantees are also new to Regina
-    5.1).)doc";
+    5.1).
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked top-dimensional
+    simplex and/or facet. See Simplex<dim>::lock() and
+    Simplex<dim>::lockFacet() for further details on how such locks
+    work and what their implications are.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::tetrahedra
 constexpr const char *tetrahedra =

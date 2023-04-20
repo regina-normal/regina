@@ -95,6 +95,7 @@ template bool TriangulationBase<7>::pachner(Face<7, 7>*, bool, bool);
 template void TriangulationBase<7>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<7>::writeTextLong(std::ostream&) const;
 
+template void TriangulationBase<7>::reorderBFS(bool);
 template void TriangulationBase<7>::makeDoubleCover();
 template bool TriangulationBase<7>::finiteToIdeal();
 

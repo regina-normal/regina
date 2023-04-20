@@ -89,9 +89,10 @@ for ad-hoc use. The consequences of this are:
   from Triangulation, and so inherits the full Triangulation
   interface.
 
-* If you are adding new functions to this class that edit the
-  triangulation, you must still remember to create a ChangeEventSpan.
-  This will ensure that, if the triangulation is being managed by a
+* If you are adding new functions to this class that edit the internal
+  data structures of the triangulation, you must still remember to
+  create a ChangeEventSpan (or a ChangeAndClearSpan). This will ensure
+  that, if the triangulation is being managed by a
   PacketOf<Triangulation>, then the appropriate packet change events
   will be fired. All other events (aside from packetToBeChanged() and
   packetWasChanged() are managed directly by the

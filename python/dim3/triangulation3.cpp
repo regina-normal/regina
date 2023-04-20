@@ -543,7 +543,10 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true,
             rdoc::collapseEdge)
-        .def("reorderTetrahedraBFS", &Triangulation<3>::reorderTetrahedraBFS,
+        .def("reorderBFS", &Triangulation<3>::reorderBFS,
+            pybind11::arg("reverse") = false, rbase::reorderBFS)
+        .def("reorderTetrahedraBFS",
+            &Triangulation<3>::reorderBFS, // deprecated
             pybind11::arg("reverse") = false, rdoc::reorderTetrahedraBFS)
         .def("orient", &Triangulation<3>::orient, rbase::orient)
         .def("reflect", &Triangulation<3>::reflect, rbase::reflect)

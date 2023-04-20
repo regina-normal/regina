@@ -58,6 +58,7 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         using TriangulationTest<dim>::verifyIsomorphismSignature;
         using TriangulationTest<dim>::verifyOrient;
         using TriangulationTest<dim>::verifySkeleton;
+        using TriangulationTest<dim>::verifyReordering;
         using TriangulationTest<dim>::verifyDoubleCover;
         using TriangulationTest<dim>::verifyBoundaryFacets;
         using TriangulationTest<dim>::verifyBoundaryFaces;
@@ -106,6 +107,10 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
 
         void skeleton() {
             testManualAll(verifySkeleton);
+        }
+
+        void reordering() {
+            testManualAll(TriangulationTest<dim>::verifyReordering);
         }
 
         void doubleCover() {
@@ -333,6 +338,7 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(skeleton);
+    CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryFaces);
@@ -368,6 +374,7 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(skeleton);
+    CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryFaces);
@@ -408,6 +415,7 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
      */
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(skeleton);
+    CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryFaces);

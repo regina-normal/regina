@@ -278,6 +278,8 @@ void addTriangulation4(pybind11::module_& m) {
             &Triangulation<4>::dualToPrimal), rbase::dualToPrimal)
         .def("intersectionForm", &Triangulation<4>::intersectionForm,
             rdoc::intersectionForm)
+        .def("reorderBFS", &Triangulation<4>::reorderBFS,
+            pybind11::arg("reverse") = false, rbase::reorderBFS)
         .def("orient", &Triangulation<4>::orient, rbase::orient)
         .def("reflect", &Triangulation<4>::reflect, rbase::reflect)
         .def("triangulateComponents", &Triangulation<4>::triangulateComponents,

@@ -2463,33 +2463,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool collapseEdge(Edge<3>* e, bool check = true, bool perform = true);
 
         /**
-         * Reorders the tetrahedra of this triangulation using a
-         * breadth-first search, so that small-numbered tetrahedra are
-         * adjacent to other small-numbered tetrahedra.
+         * Deprecated alias for reorderBFS(), which reorders the tetrahedra
+         * of this triangulation using a breadth-first search.
          *
-         * Specifically, the reordering will operate as follows.
-         * Tetrahedron 0 will remain tetrahedron 0.  Its immediate
-         * neighbours will be numbered 1, 2, 3 and 4 (though if these
-         * neighbours are not distinct then of course fewer labels will
-         * be required).  Their immediate neighbours will in turn be
-         * numbered 5, 6, and so on, ultimately following a breadth-first
-         * search throughout the entire triangulation.
-         *
-         * If the optional argument \a reverse is \c true, then tetrahedron
-         * numbers will be assigned in reverse order.  That is, tetrahedron 0
-         * will become tetrahedron \a n-1, its neighbours will become
-         * tetrahedra \a n-2 down to \a n-5, and so on.
-         *
-         * If this triangulation has locks on any top-dimensional simplices
-         * and/or their facets, these will not prevent the reordering from
-         * taking place.  Instead, any locks will be transformed accordingly;
-         * that is, all top-dimensional simplices will carry their own locks
-         * and their facets' locks around with them as they are reordered.
+         * \deprecated This routine has been renamed reorderBFS() (and is now
+         * available for triangulations in all dimension).  See reorderBFS()
+         * for further details.
          *
          * \param reverse \c true if the new tetrahedron numbers should
          * be assigned in reverse order, as described above.
          */
-        void reorderTetrahedraBFS(bool reverse = false);
+        [[deprecated]] void reorderTetrahedraBFS(bool reverse = false);
 
         /**
          * Relabels tetrahedron vertices in this triangulation to give
@@ -4041,6 +4025,10 @@ inline bool Triangulation<3>::isStandard() const {
 inline bool Triangulation<3>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents().empty();
+}
+
+inline void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
+    reorderBFS(reverse);
 }
 
 inline bool Triangulation<3>::knowsZeroEfficient() const {

@@ -81,6 +81,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(skeleton);
+    CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryTriangles);
     CPPUNIT_TEST(boundaryFaces);
@@ -134,7 +135,6 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(dehydration);
     CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(retriangulation);
-    CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
     CPPUNIT_TEST(minimiseBoundary);
     CPPUNIT_TEST(minimiseVertices);
@@ -462,6 +462,10 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void skeleton() {
             testManualAll(verifySkeleton);
+        }
+
+        void reordering() {
+            testManualAll(verifyReordering);
         }
 
         void doubleCover() {
@@ -5036,70 +5040,6 @@ class Triangulation3Test : public TriangulationTest<3> {
         void retriangulation() {
             verifyRetriangulation("hLALPkbcbefgfghxwnxark", 3, 1);
             verifyRetriangulation("hLALPkbcbefgfghxwnxark", 3, 2);
-        }
-
-        static void testReordering(const Triangulation<3>& t,
-                const char* name) {
-            Triangulation<3> a(t);
-            a.reorderTetrahedraBFS();
-            clearProperties(a);
-
-            Triangulation<3> b(t);
-            b.reorderTetrahedraBFS(true);
-            clearProperties(b);
-
-            Triangulation<3> c = Isomorphism<3>::random(t.size())(t);
-            clearProperties(c);
-
-            Triangulation<3> d(c);
-            d.reorderTetrahedraBFS();
-            clearProperties(d);
-
-            Triangulation<3> e(c);
-            e.reorderTetrahedraBFS(true);
-            clearProperties(e);
-
-            if (! t.isIsomorphicTo(a)) {
-                std::ostringstream msg;
-                msg << "Triangulation " << name
-                    << " changes its isomorphism class when its tetrahedra "
-                    "are reordered in the forward direction.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (! t.isIsomorphicTo(b)) {
-                std::ostringstream msg;
-                msg << "Triangulation " << name
-                    << " changes its isomorphism class when its tetrahedra "
-                    "are reordered in the reverse direction.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (! t.isIsomorphicTo(c)) {
-                std::ostringstream msg;
-                msg << "Triangulation " << name
-                    << " changes its isomorphism class when a random "
-                    "isomorphism is applied.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (! t.isIsomorphicTo(d)) {
-                std::ostringstream msg;
-                msg << "Triangulation " << name
-                    << " changes its isomorphism class when a random "
-                    "isomorphism is applied and then its tetrahedra are "
-                    "reordered in the forward direction.";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (! t.isIsomorphicTo(e)) {
-                std::ostringstream msg;
-                msg << "Triangulation " << name
-                    << " changes its isomorphism class when a random "
-                    "isomorphism is applied and then its tetrahedra are "
-                    "reordered in the reverse direction.";
-                CPPUNIT_FAIL(msg.str());
-            }
-        }
-
-        void reordering() {
-            testManualAll(testReordering);
         }
 
         void propertyUpdates() {

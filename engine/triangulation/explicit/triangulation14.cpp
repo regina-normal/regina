@@ -132,6 +132,7 @@ template bool TriangulationBase<14>::pachner(Face<14, 14>*, bool, bool);
 template void TriangulationBase<14>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<14>::writeTextLong(std::ostream&) const;
 
+template void TriangulationBase<14>::reorderBFS(bool);
 template void TriangulationBase<14>::makeDoubleCover();
 template bool TriangulationBase<14>::finiteToIdeal();
 

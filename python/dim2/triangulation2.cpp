@@ -234,6 +234,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("isMinimal", &Triangulation<2>::isMinimal, rdoc::isMinimal)
         .def("isSphere", &Triangulation<2>::isSphere, rdoc::isSphere)
         .def("isBall", &Triangulation<2>::isBall, rdoc::isBall)
+        .def("reorderBFS", &Triangulation<2>::reorderBFS,
+            pybind11::arg("reverse") = false, rbase::reorderBFS)
         .def("orient", &Triangulation<2>::orient, rbase::orient)
         .def("reflect", &Triangulation<2>::reflect, rbase::reflect)
         .def("triangulateComponents", &Triangulation<2>::triangulateComponents,

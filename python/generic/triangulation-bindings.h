@@ -174,6 +174,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("isOriented", &Triangulation<dim>::isOriented, rbase::isOriented)
         .def("isConnected", &Triangulation<dim>::isConnected,
             rbase::isConnected)
+        .def("reorderBFS", &Triangulation<dim>::reorderBFS,
+            pybind11::arg("reverse") = false, rbase::reorderBFS)
         .def("orient", &Triangulation<dim>::orient, rbase::orient)
         .def("reflect", &Triangulation<dim>::reflect, rbase::reflect)
         .def("triangulateComponents",

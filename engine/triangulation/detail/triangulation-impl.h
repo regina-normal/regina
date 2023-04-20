@@ -321,6 +321,68 @@ void TriangulationBase<dim>::writeTextLong(std::ostream& out) const {
 }
 
 template <int dim>
+void TriangulationBase<dim>::reorderBFS(bool reverse) {
+    size_t n = size();
+    if (n == 0)
+        return;
+
+    TopologyLock lock(*this);
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
+    // Use a ChangeEventSpan, not a ChangeAndClearSpan, since the
+    // computed properties of the triangulation will not change.
+    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
+
+    // Run a breadth-first search over all top-dimensional simplices.
+    auto* ordered = new Simplex<dim>*[n];
+    bool* used = new bool[n];
+
+    std::fill(used, used + n, false);
+    size_t filled = 0;    /* Placed in ordered[]. */
+    size_t processed = 0; /* All neighbours placed in ordered[]. */
+    size_t nextSimp = 0;  /* Used to search for connected components. */
+
+    Simplex<dim> *simp, *adj;
+    while (processed < n) {
+        if (filled == processed) {
+            // Look for the next connected component.
+            while (used[nextSimp])
+                ++nextSimp;
+
+            ordered[filled++] = simplices_[nextSimp];
+            used[nextSimp] = true;
+            ++nextSimp;
+        }
+
+        simp = ordered[processed];
+
+        // Add all neighbours of simp to the queue.
+        for (int i = 0; i <= dim; ++i)
+            if ((adj = simp->adjacentSimplex(i)))
+                if (! used[adj->markedIndex()]) {
+                    ordered[filled++] = adj;
+                    used[adj->markedIndex()] = true;
+                }
+
+        ++processed;
+    }
+
+    // Flush the simplices from the triangulation, and reinsert them in
+    // the order in which they were found during the breadth-first search.
+    simplices_.clear();
+
+    if (reverse) {
+        for (size_t j = n; j > 0; )
+            simplices_.push_back(ordered[--j]);
+    } else {
+        for (size_t j = 0; j < n; )
+            simplices_.push_back(ordered[j++]);
+    }
+
+    delete[] used;
+    delete[] ordered;
+}
+
+template <int dim>
 void TriangulationBase<dim>::makeDoubleCover() {
     size_t sheetSize = simplices_.size();
     if (sheetSize == 0)

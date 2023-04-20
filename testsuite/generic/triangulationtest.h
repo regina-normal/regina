@@ -1528,6 +1528,66 @@ class TriangulationTest : public CppUnit::TestFixture,
             }
         }
 
+        static void verifyReordering(const Triangulation<dim>& t,
+                const char* name) {
+            Triangulation<dim> a(t);
+            a.reorderBFS();
+            clearProperties(a);
+
+            Triangulation<dim> b(t);
+            b.reorderBFS(true);
+            clearProperties(b);
+
+            Triangulation<dim> c = Isomorphism<dim>::random(t.size())(t);
+            clearProperties(c);
+
+            Triangulation<dim> d(c);
+            d.reorderBFS();
+            clearProperties(d);
+
+            Triangulation<dim> e(c);
+            e.reorderBFS(true);
+            clearProperties(e);
+
+            if (! t.isIsomorphicTo(a)) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " changes its isomorphism class when its simplices "
+                    "are reordered in the forward direction.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! t.isIsomorphicTo(b)) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " changes its isomorphism class when its simplices "
+                    "are reordered in the reverse direction.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! t.isIsomorphicTo(c)) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " changes its isomorphism class when a random "
+                    "isomorphism is applied.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! t.isIsomorphicTo(d)) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " changes its isomorphism class when a random "
+                    "isomorphism is applied and then its simplices are "
+                    "reordered in the forward direction.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! t.isIsomorphicTo(e)) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name
+                    << " changes its isomorphism class when a random "
+                    "isomorphism is applied and then its simplices are "
+                    "reordered in the reverse direction.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         static void verifyDoubleCover(const Triangulation<dim>& tri,
                 const char* name) {
             // PRE: tri is either empty or connected.

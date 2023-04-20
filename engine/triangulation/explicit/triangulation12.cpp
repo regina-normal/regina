@@ -122,6 +122,7 @@ template bool TriangulationBase<12>::pachner(Face<12, 12>*, bool, bool);
 template void TriangulationBase<12>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<12>::writeTextLong(std::ostream&) const;
 
+template void TriangulationBase<12>::reorderBFS(bool);
 template void TriangulationBase<12>::makeDoubleCover();
 template bool TriangulationBase<12>::finiteToIdeal();
 

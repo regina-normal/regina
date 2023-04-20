@@ -1937,6 +1937,35 @@ class TriangulationBase :
         void reflect();
 
         /**
+         * Reorders the top-dimensional simplices of this triangulation using
+         * a breadth-first search, so that small-numbered simplices are
+         * adjacent to other small-numbered simplices.
+         *
+         * Specifically, the reordering will operate as follows.
+         * Simplex 0 will remain simplex 0.  Its immediate
+         * neighbours will be numbered 1,2,...,(\a dim+1) (though if these
+         * neighbours are not distinct then of course fewer labels will
+         * be required).  Their immediate neighbours will in turn be
+         * numbered (\a dim+2), (\a dim+3) and so on, ultimately following a
+         * breadth-first search throughout the entire triangulation.
+         *
+         * If the optional argument \a reverse is \c true, then simplex
+         * numbers will be assigned in reverse order.  That is, simplex 0
+         * will become simplex \a n-1, its immediate neighbours will become
+         * simplices \a n-2, \a n-3, etc., and so on.
+         *
+         * If this triangulation has locks on any top-dimensional simplices
+         * and/or their facets, these will not prevent the reordering from
+         * taking place.  Instead, any locks will be transformed accordingly;
+         * that is, all top-dimensional simplices will carry their own locks
+         * and their facets' locks around with them as they are reordered.
+         *
+         * \param reverse \c true if the new simplex numbers should
+         * be assigned in reverse order, as described above.
+         */
+        void reorderBFS(bool reverse = false);
+
+        /**
          * Checks the eligibility of and/or performs a
          * (\a dim + 1 - \a k)-(\a k + 1) Pachner move about the given
          * <i>k</i>-face.  This involves replacing the (\a dim + 1 - \a k)

@@ -90,6 +90,7 @@ template bool TriangulationBase<6>::pachner(Face<6, 6>*, bool, bool);
 template void TriangulationBase<6>::writeTextShort(std::ostream&) const;
 template void TriangulationBase<6>::writeTextLong(std::ostream&) const;
 
+template void TriangulationBase<6>::reorderBFS(bool);
 template void TriangulationBase<6>::makeDoubleCover();
 template bool TriangulationBase<6>::finiteToIdeal();
 

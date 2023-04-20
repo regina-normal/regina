@@ -268,6 +268,14 @@ R"doc(Converts an ideal triangulation into a finite triangulation. All ideal
 or invalid vertices are truncated and thus converted into real
 boundary components made from unglued facets of pentachora.
 
+Exception ``LockViolation``:
+    This triangulation contains at least one locked top-dimensional
+    simplex and/or facet. (This 4-dimensional algorithm does not
+    necessarily subdivide _every_ pentachoron, and so this test is
+    stronger than necessary; however, it will be enforced.) See
+    Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+    details on how such locks work and what their implications are.
+
 Returns:
     ``True`` if and only if the triangulation was changed.)doc";
 
