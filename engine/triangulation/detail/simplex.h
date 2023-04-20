@@ -313,7 +313,8 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * join the same facet of the same simplex to itself.
          *
          * \exception LockViolation The given facet of this simplex is
-         * currently locked.  See lockFacet() for further details on how
+         * currently locked.  This exception will be thrown before any
+         * change is made.  See lockFacet() for further details on how
          * facet locks work and what their implications are.
          *
          * \param myFacet the facet of this simplex that will be glued
@@ -340,7 +341,8 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * already a boundary facet (in which case it will do nothing).
          *
          * \exception LockViolation The given facet of this simplex is
-         * currently locked.  See lockFacet() for further details on how
+         * currently locked.  This exception will be thrown before any
+         * change is made.  See lockFacet() for further details on how
          * facet locks work and what their implications are.
          *
          * \param myFacet the facet of this simplex whose gluing we
@@ -362,7 +364,8 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * simplices (in which case it will do nothing).
          *
          * \exception LockViolation At least one facet of this simplex is
-         * non-boundary and currently locked.  See lockFacet() for further
+         * non-boundary and currently locked.  This exception will be
+         * thrown before any change is made.  See lockFacet() for further
          * details on how facet locks work and what their implications are.
          */
         void isolate();

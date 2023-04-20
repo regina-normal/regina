@@ -505,7 +505,8 @@ class TriangulationBase :
          * triangulation.
          *
          * \exception LockViolation The given simplex and/or one of its
-         * facets is currently locked.  See Simplex<dim>::lock() and
+         * facets is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<dim>::lock() and
          * Simplex<dim>::lockFacet() for further details on how such locks
          * work and what their implications are.
          *
@@ -522,7 +523,8 @@ class TriangulationBase :
          * (if any), and will be destroyed immediately.
          *
          * \exception LockViolation The requested simplex and/or one of its
-         * facets is currently locked.  See Simplex<dim>::lock() and
+         * facets is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<dim>::lock() and
          * Simplex<dim>::lockFacet() for further details on how such locks
          * work and what their implications are.
          *
@@ -538,9 +540,10 @@ class TriangulationBase :
          * be destroyed immediately.
          *
          * \exception LockViolation This triangulation contains at least one
-         * locked top-dimensional simplex and/or facet.  See
-         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
-         * details on how such locks work and what their implications are.
+         * locked top-dimensional simplex and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<dim>::lock() and
+         * Simplex<dim>::lockFacet() for further details on how such locks
+         * work and what their implications are.
          */
         void removeAllSimplices();
         /**
@@ -2100,9 +2103,10 @@ class TriangulationBase :
          * labelling and ordering; these guarantees are also new to Regina 5.1).
          *
          * \exception LockViolation This triangulation contains at least one
-         * locked top-dimensional simplex and/or facet.  See
-         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
-         * details on how such locks work and what their implications are.
+         * locked top-dimensional simplex and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<dim>::lock() and
+         * Simplex<dim>::lockFacet() for further details on how such locks work
+         * and what their implications are.
          *
          * \todo Lock the topological properties of the underlying manifold,
          * to avoid recomputing them after the subdivision.  However, only
@@ -2124,9 +2128,10 @@ class TriangulationBase :
          * \pre \a dim is one of Regina's standard dimensions.
          *
          * \exception LockViolation This triangulation contains at least one
-         * locked top-dimensional simplex and/or facet.  See
-         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
-         * details on how such locks work and what their implications are.
+         * locked top-dimensional simplex and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<dim>::lock() and
+         * Simplex<dim>::lockFacet() for further details on how such locks work
+         * and what their implications are.
          */
         [[deprecated]] void barycentricSubdivision();
 
@@ -2158,7 +2163,8 @@ class TriangulationBase :
          * links are not discs, this operation may have unexpected results.
          *
          * \exception LockViolation This triangulation contains at least one
-         * locked boundary facet.  See Simplex<dim>::lockFacet() for further
+         * locked boundary facet.  This exception will be thrown before any
+         * changes are made.  See Simplex<dim>::lockFacet() for further
          * details on how such locks work and what their implications are.
          *
          * \return \c true if changes were made, or \c false if the

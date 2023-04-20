@@ -275,18 +275,41 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
+         *
+         * \exception LockViolation The given pentachoron and/or one of its
+         * facets is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param pent the pentachoron to remove.
          */
-        void removePentachoron(Pentachoron<4>* tet);
+        void removePentachoron(Pentachoron<4>* pent);
         /**
          * A dimension-specific alias for removeSimplexAt().
          *
          * See removeSimplexAt() for further information.
+         *
+         * \exception LockViolation The requested pentachoron and/or one of its
+         * facets is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param index specifies which pentachoron to remove; this
+         * must be between 0 and size()-1 inclusive.
          */
         void removePentachoronAt(size_t index);
         /**
          * A dimension-specific alias for removeAllSimplices().
          *
          * See removeAllSimplices() for further information.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked pentachoron and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how such locks
+         * work and what their implications are.
          */
         void removeAllPentachora();
 
@@ -1152,9 +1175,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * locked top-dimensional simplex and/or facet.  (This 4-dimensional
          * algorithm does not necessarily subdivide _every_ pentachoron,
          * and so this test is stronger than necessary; however, it will be
-         * enforced.)  See Simplex<dim>::lock() and Simplex<dim>::lockFacet()
-         * for further details on how such locks work and what their
-         * implications are.
+         * enforced.)  This exception will be thrown before any changes are
+         * made.  See Simplex<4>::lock() and Simplex<4>::lockFacet() for
+         * further details on how such locks work and what their implications
+         * are.
          *
          * \return \c true if and only if the triangulation was changed.
          */

@@ -228,18 +228,41 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
+         *
+         * \exception LockViolation The given triangle and/or one of its
+         * edges is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<2>::lock() and
+         * Simplex<2>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param tri the triangle to remove.
          */
         void removeTriangle(Triangle<2>* tri);
         /**
          * A dimension-specific alias for removeSimplexAt().
          *
          * See removeSimplexAt() for further information.
+         *
+         * \exception LockViolation The requested triangle and/or one of its
+         * edges is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<2>::lock() and
+         * Simplex<2>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param index specifies which triangle to remove; this
+         * must be between 0 and size()-1 inclusive.
          */
         void removeTriangleAt(size_t index);
         /**
          * A dimension-specific alias for removeAllSimplices().
          *
          * See removeAllSimplices() for further information.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked triangle and/or edge.  This exception will be
+         * thrown before any changes are made.  See Simplex<2>::lock() and
+         * Simplex<2>::lockFacet() for further details on how such locks
+         * work and what their implications are.
          */
         void removeAllTriangles();
 

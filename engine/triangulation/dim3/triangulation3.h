@@ -479,18 +479,41 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
+         *
+         * \exception LockViolation The given tetrahedron and/or one of its
+         * facets is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param tet the tetrahedron to remove.
          */
         void removeTetrahedron(Tetrahedron<3>* tet);
         /**
          * A dimension-specific alias for removeSimplexAt().
          *
          * See removeSimplexAt() for further information.
+         *
+         * \exception LockViolation The requested tetrahedron and/or one of its
+         * facets is currently locked.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how such locks
+         * work and what their implications are.
+         *
+         * \param index specifies which tetrahedron to remove; this
+         * must be between 0 and size()-1 inclusive.
          */
         void removeTetrahedronAt(size_t index);
         /**
          * A dimension-specific alias for removeAllSimplices().
          *
          * See removeAllSimplices() for further information.
+         *
+         * \exception LockViolation This triangulation contains at least one
+         * locked tetrahedron and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how such locks
+         * work and what their implications are.
          */
         void removeAllTetrahedra();
 
@@ -3069,9 +3092,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * projective plane cusp caused by the invalid edge.
          *
          * \exception LockViolation This triangulation contains at least one
-         * locked top-dimensional simplex and/or facet.  See
-         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
-         * details on how such locks work and what their implications are.
+         * locked top-dimensional simplex and/or facet.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how such locks work
+         * and what their implications are.
          *
          * \todo \optlong Have this routine only use as many tetrahedra
          * as are necessary, leaving finite vertices alone.

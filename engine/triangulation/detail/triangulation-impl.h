@@ -594,9 +594,13 @@ bool TriangulationBase<dim>::finiteToIdeal() {
             continue;
         }
 
-        if (f->isLocked())
+        if (f->isLocked()) {
+            delete[] cone;
+            delete[] bdryPerm;
+            delete[] bdry;
             throw LockViolation("An attempt was made to change the boundary "
                 "of a triangulation with one or more locked boundary facets");
+        }
 
         bdry[f->index()] = f->front().simplex();
         bdryPerm[f->index()] = f->front().vertices();
