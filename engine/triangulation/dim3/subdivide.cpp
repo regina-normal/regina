@@ -141,6 +141,8 @@ bool Triangulation<3>::idealToFinite() {
             }
     }
 
+    delete[] newTet;
+
     // Now remove any new tetrahedra that touch an ideal or invalid vertex.
     // We do this by making a list first, then actually doing the deletion
     // (since the first deletion will destroy the skeleton).
@@ -153,7 +155,13 @@ bool Triangulation<3>::idealToFinite() {
             for (auto& emb : *v)
                 tetList.push_back(emb.tetrahedron());
 
-    // Delete the skeleton manually, since we are using removeSimplexRaw().
+    // Just above, we computed the skeleton for staging so we could query
+    // its vertices.  We need to delete this computed property now, since
+    // we are about to edit the staging triangulation further using
+    // removeSimplexRaw() with no surrounding ChangeEventSpan.
+    // This means the skeleton will become incorrect, and we do not want
+    // this incorrect skeleton to be moved into this triangulation as
+    // part of the final swap().
     staging.clearAllProperties();
 
     for (auto t : tetList)
@@ -162,8 +170,6 @@ bool Triangulation<3>::idealToFinite() {
     // We are now ready to change the main triangulation.
     // This is where the change event and snapshot will be fired.
     swap(staging);
-
-    delete[] newTet;
     return true;
 }
 
