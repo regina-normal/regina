@@ -24,9 +24,13 @@ Version 7.4  [ (to be announced) ]
         Class LockViolation:
             - New exception class used when the user attempts to change a
               locked simplex or facet.
-        Class Packet, PacketData:
-            - New type alias ChangeEventGroup, to assist with readability
+        Class Packet:
+            - New inner type alias ChangeEventGroup, to assist with readability
               when using a ChangeEventSpan for optimisation purposes only.
+        Class PacketData<Held>:
+            - New inner type alias ChangeEventGroup, to assist with readability
+              when using a ChangeEventSpan for optimisation purposes only.
+            - The inner ChangeEventSpan class has a new member function held().
         Class Simplex<dim>:
             - New routines lock(), lockFacet(), unlock(), unlockFacet(),
               unlockAll(), isLocked(), isFacetLocked(), and lockMask().

@@ -422,14 +422,6 @@ class Cusp : public ShortOutput<Cusp> {
  *   It derives from SnapPeaTriangulation, and so inherits the full
  *   SnapPeaTriangulation interface.
  *
- * - If you are adding new functions to this class that edit the internal
- *   data structures of the triangulation, you must still remember to create a
- *   ChangeEventSpan.  This will ensure that, if the triangulation is being
- *   managed by a PacketOf<SnapPeaTriangulation>, then the appropriate packet
- *   change events will be fired.  All other events (aside from
- *   packetToBeChanged() and packetWasChanged() are managed directly by the
- *   PacketOf<SnapPeaTriangulation> wrapper class.
- *
  * Regarding the packet interface, there is currently a deficiency when
  * listening for change events on a PacketOf<SnapPeaTriangulation>:
  *
@@ -447,9 +439,31 @@ class Cusp : public ShortOutput<Cusp> {
  *   inherited Triangulation<3> interface, this deficiency is being left to
  *   stay for the time being.
  *
- * This class implements C++ move semantics and adheres to the C++ Swappable
- * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.
+ * If you add new functions to this class that edit the triangulation,
+ * there are several pieces of bookkeeping to manage: this includes clearing
+ * computed properties, firing packet change events if necessary, and
+ * resyncing the internal Regina triangulation to match any changes made
+ * within the SnapPea kernel.  Typically you would manage these by creating
+ * a single SnapPeaChangeSpan on the stack before the changes takes place.
+ * Some notes on this:
+ *
+ * - SnapPeaChangeSpan is a private inner class within SnapPeaTriangulation
+ *   (so it is only intended for use within member functions).
+ *
+ * - SnapPeaChangeSpan _replaces_ the usual ChangeEventSpan (or
+ *   ChangeEventGroup) that would commonly be used with other packet types.
+ *   You should _not_ create a ChangeEventSpan or ChangeEventGroup as well.
+ *
+ * - The SnapPeaChangeSpan class takes an optional policy template argument.
+ *   Do take care to ensure that you are using the correct policy - for example,
+ *   if you are changing the combinatorics of the triangulation then you
+ *   probably want the default \c changeTriangulation, but if you are only
+ *   changing the fillings on the cusps then \c changeFillingsOnly is
+ *   more appropriate.  See the inner ChangePolicy enumeration for details.
+ *
+ * The SnapPeaTriangulation class implements C++ move semantics and adheres
+ * to the C++ Swappable requirement.  It is designed to avoid deep copies
+ * wherever possible, even when passing or returning objects by value.
  *
  * The SnapPea kernel was originally written by Jeff Weeks.  SnapPy,
  * where this kernel is now maintained, is primarily developed by Marc Culler,
@@ -2136,30 +2150,50 @@ class SnapPeaTriangulation :
         /**
          * Synchronises the inherited Triangulation<3> data so that the
          * tetrahedra and their gluings match the raw SnapPea data.
-         * Also refreshes other internal properties and caches,
-         * such as cusps and tetrahedron shapes.
+         * Also refreshes other internal properties and caches, such as cusps
+         * and tetrahedron shapes.  In particular, this routine will always
+         * call fillingsHaveChanged() immediately before returning.
          *
          * SnapPea will be asked to recompute the hyperbolic structure
          * only if the current solution type is \a not_attempted.
          *
-         * This routine will not fire any SnapPeaTriangulation change events.
-         * It will, however, fire Triangulation<3> change events, and so
+         * Other member functions of SnapPeaTriangulation should typically
+         * _not_ call sync().  Instead, if a member function modifies the
+         * triangulation, it should do so within the scope of a local
+         * SnapPeaChangeSpan.  If the SnapPeaChangeSpan uses the
+         * \c changeTriangulation policy (which is the default), then it will
+         * call sync() in its destructor.
+         *
+         * Typically the only place you _would_ see a manual call to sync()
+         * would be in a SnapPeaTriangulation class constructor - since the
+         * triangulation is being freshly created, a constructor would
+         * typically not use change spans at all.
+         *
+         * \note As a side-effect of resyncing the Regina triangulation,
+         * this routine will fire Triangulation<3> change events.  Therefore
          * the caller must ensure that Triangulation<3>::heldBy_ is
          * (temporarily) set to to HELD_BY_NONE when sync() is called so that
-         * this does not nullify the SnapPea triangulation.  Creating a
-         * ChangeAndSyncSpan object on the stack is a good way to ensure this.
+         * this does not nullify the SnapPea triangulation.  You do not need
+         * to worry about this if you are using a SnapPeaChangeSpan (as
+         * recommended above), since SnapPeaChangeSpan manages the
+         * Triangulation<3>::heldBy_ setting automatically.  If you are
+         * writing a class constructor that calls sync() manually, then you
+         * should only set Triangulation<3>::heldBy_ to HELD_BY_SNAPPEA
+         * _after_ sync() has been called.
          */
         void sync();
 
         /**
          * Clears and where necessary refreshes any properties of the
-         * triangulation that depend only on the fillings.
+         * triangulation that depend on the fillings.
          *
-         * This routine assumes that the combinatorics of the triangulation
-         * have not changed.  It also assumes that SnapPea has already
-         * called do_Dehn_filling() (so this routine will not call it again).
+         * Some properties (such as algebraic invariants that respect
+         * the fillings) will simply be cleared.  Others (such as the
+         * array of tetrahedron shapes) will be refreshed by extracting
+         * their values from the SnapPea kernel.
          *
-         * This routine will not fire any change events.
+         * This routine assumes that SnapPea has already called
+         * do_Dehn_filling() (and so it will not call it again).
          */
         void fillingsHaveChanged();
 
@@ -2190,41 +2224,125 @@ class SnapPeaTriangulation :
             const;
 
         /**
-         * A class that helps manage internal changes that modify Regina's
-         * native Triangulation<3> structure.
+         * Provides policy options for fine-tuning the behaviour of a
+         * SnapPeaChangeSpan.
          *
-         * On construction, this class creates a SnapPeaTriangulation
-         * change event span, and also sets Triangulation<3>::heldBy_ to
-         * HELD_BY_NONE to ensure that any changes to the inherited
-         * Triangulation<3> will not cause the entire SnapPea triangulation to
-         * be nullified.  On destruction, this class resets heldBy_ to
-         * HELD_BY_SNAPPEA, and destroys the change event span.
-         *
-         * Typically you would create a local ChangeAndSyncSpan (instead
-         * of the usual ChangeEventSpan) when performing changes that affect
-         * both the SnapPea and Regina triangulation structures.  A common
-         * case of this would be calling a modifying SnapPea kernel routine and
-         * then calling sync() to update the inherited Regina structure.
-         *
-         * Using a local ChangeAndSyncSpan on the stack is preferable to
-         * managing these operations manually, since the SnapPea interface is
-         * one part of Regina where exceptions can regularly and unexpectedly
-         * be thrown, and so this helps ensure that things are always tidied
-         * up correctly.
+         * See the SnapPeaChangeSpan documentation for further details.
          */
-        class ChangeAndSyncSpan {
+        enum ChangePolicy {
+            /**
+             * Indicates that the change only affects the filling data
+             * stored alongside each cusp within the SnapPea kernel, and not
+             * the combinatorics of the triangulation.  That is, the inherited
+             * Regina triangulation data not change at all.
+             */
+            changeFillingsOnly,
+            /**
+             * Indicates that the change affects the combinatorics of the
+             * triangulation stored in the SnapPea kernel, and that the
+             * SnapPeaChangeSpan should automatically resync the inherited
+             * Regina triangulation data to match it.  Specifically, this
+             * resync will happen within the SnapPeaChangeSpan destructor.
+             */
+            changeTriangulation,
+            /**
+             * Indicates that the change affects the combinatorics of the
+             * triangulation stored in the SnapPea kernel, and that the
+             * programmer promises to manually resync the inherited Regina
+             * triangulation data themselves to match it.  Specifically,
+             * the resync will _not_ be done automatically by the
+             * SnapPeaChangeSpan; instead the programmer _must_ write their own
+             * code to update the inherited Regina triangulation data some
+             * other way before the SnapPeaChangeSpan is destroyed.
+             */
+            changeTriangulationNoSync
+        };
+
+        /**
+         * A class to help member functions manage bookkeeping tasks
+         * when they modify a SnapPea triangulation.  These bookkeeping
+         * tasks include: clearing and/or refreshing computed properties;
+         * firing packet change events if necessary; and resyncing the
+         * inherited Regina triangulation data to match changes made
+         * within the SnapPea kernel.
+         *
+         * Specifically, a member function that modifies a SnapPea triangulation
+         * should create a SnapPeaChangeSpan on the stack before the changes
+         * take place.  The exact behaviour of this SnapPeaChangeSpan will
+         * depend on the template argument \a policy, and you should check
+         * that you are using the right policy for your specific change;
+         * see the ChangePolicy enumeration for details on the various options.
+         *
+         * In summary, this SnapPeaChangeSpan will:
+         *
+         * - temporarily set Triangulation<3>::heldBy_ to HELD_BY_NONE for
+         *   the lifetime of the SnapPeaChangeSpan, unless \a policy is
+         *   \c changeFillingsOnly (which means the inherited Triangulation<3>
+         *   data does not change);
+         *
+         * - call sync() within the SnapPeaChangeSpan destructor to resync the
+         *   inherited Triangulation<3> data to match the data stored in the
+         *   SnapPea kernel, but only if \a policy is \c changeTriangulation;
+         *
+         * - call fillingsHaveChanged() within the SnapPeaChangeSpan destructor
+         *   to clear and/or refresh computed properties that depend on the
+         *   filling parameters stored in the SnapPea kernel, unless \a policy
+         *   is changeTriangulationNoSync;
+         *
+         * - fire packet change events on construction and destruction,
+         *   in the same way that ChangeEventSpan does.
+         *
+         * Using a local SnapPeaChangeSpan on the stack is preferable to
+         * managing all of this bookkeeping manually, since the SnapPea
+         * interface is one part of Regina where exceptions can regularly and
+         * unexpectedly be thrown, and so this helps ensure that things are
+         * always tidied up correctly.
+         *
+         * Note that SnapPeaChangeSpan _replaces_ the usual ChangeEventSpan
+         * (or ChangeEventGroup) that would commonly be used with other packet
+         * types.  There is no need to create a separate ChangeEventSpan or
+         * ChangeEventGroup in addition to your SnapPeaChangeSpan.
+         *
+         * Regarding nesting: this class uses a ChangeEventSpan internally,
+         * and is therefore able to nest with other ChangeEventSpan objects
+         * in the usual way.
+         */
+        template <ChangePolicy policy = changeTriangulation>
+        class SnapPeaChangeSpan {
             private:
-                SnapPeaTriangulation& tri_;
                 PacketData<SnapPeaTriangulation>::ChangeEventSpan span_;
 
             public:
-                ChangeAndSyncSpan(SnapPeaTriangulation& tri) :
-                        tri_(tri), span_(tri) {
-                    tri_.Triangulation<3>::heldBy_ = HELD_BY_NONE;
+                SnapPeaChangeSpan(SnapPeaTriangulation& tri) : span_(tri) {
+                    if constexpr (policy != changeFillingsOnly) {
+                        // Temporarily ensure that syncing the regina
+                        // triangulation will not cause the entire
+                        // SnapPeaTriangulation to be nullified.
+                        span_.held().Triangulation<3>::heldBy_ = HELD_BY_NONE;
+                    }
                 }
 
-                ~ChangeAndSyncSpan() {
-                    tri_.Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+                ~SnapPeaChangeSpan() {
+                    if constexpr (policy == changeTriangulation) {
+                        // The triangulation has changed.
+                        // Resync the regina triangulation to match what
+                        // is now stored in the SnapPea kernel.
+                        span_.held().sync();
+                    }
+
+                    if constexpr (policy == changeFillingsOnly) {
+                        // The regina triangulation should not have changed.
+                        // However, the fillings have - we need to clear any
+                        // computed properties that depend on the fillings
+                        // stored in the SnapPea kernel.
+                        span_.held().fillingsHaveChanged();
+                    } else {
+                        // Now that the regina triangulation has been synced
+                        // with the SnapPea triangulation data, restore things
+                        // to how they should be.
+                        span_.held().Triangulation<3>::heldBy_ =
+                            HELD_BY_SNAPPEA;
+                    }
                 }
         };
 

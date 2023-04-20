@@ -160,8 +160,8 @@ SnapPeaTriangulation::SnapPeaTriangulation(SnapPeaTriangulation&& src)
 
 SnapPeaTriangulation& SnapPeaTriangulation::operator = (
         SnapPeaTriangulation&& src) {
-    ChangeAndSyncSpan span(*this);
-
+    // Use the Triangulation<3> assignment operator instead of sync().
+    SnapPeaChangeSpan<changeTriangulationNoSync> span(*this);
     Triangulation<3>::operator = (std::move(src));
 
     // We have already moved out of src, but this only touches the
@@ -187,7 +187,7 @@ SnapPeaTriangulation& SnapPeaTriangulation::operator = (
     if (std::addressof(src) == this)
         return *this;
 
-    ChangeAndSyncSpan span(*this);
+    SnapPeaChangeSpan span(*this);
 
     regina::snappea::free_triangulation(data_);
     if (src.data_)
@@ -195,10 +195,8 @@ SnapPeaTriangulation& SnapPeaTriangulation::operator = (
     else
         data_ = nullptr;
 
-    sync(); // fixes everything else
-
     // The assignment operator should not touch reginaChangeEventSpans_.
-
+    // The sync() from the SnapPeaChangeSpan should fix everything else.
     return *this;
 }
 
@@ -447,10 +445,12 @@ void SnapPeaTriangulation::swap(SnapPeaTriangulation& other) {
     if (this == &other)
         return;
 
-    ChangeAndSyncSpan span1(*this);
-    ChangeAndSyncSpan span2(other);
-
+    // Instead of sync(), we use Triangulation<3>::swap() to update the
+    // regina triangulations.
+    SnapPeaChangeSpan<changeTriangulationNoSync> span1(*this);
+    SnapPeaChangeSpan<changeTriangulationNoSync> span2(other);
     Triangulation<3>::swap(other);
+
     std::swap(data_, other.data_);
     std::swap(shape_, other.shape_);
     std::swap(cusp_, other.cusp_);
@@ -463,11 +463,10 @@ void SnapPeaTriangulation::nullify() {
     if (! data_)
         return;
 
-    ChangeAndSyncSpan span(*this);
+    SnapPeaChangeSpan span(*this);
 
     regina::snappea::free_triangulation(data_);
     data_ = nullptr;
-    sync();
 }
 
 std::string SnapPeaTriangulation::name() const {
@@ -551,9 +550,7 @@ void SnapPeaTriangulation::unfill(unsigned whichCusp) {
         return;
     }
 
-    // We change the SnapPea data structures but not the inherited
-    // Triangulation<3>, and so a ChangeEventSpan is fine here.
-    PacketData<SnapPeaTriangulation>::ChangeEventSpan span(*this);
+    SnapPeaChangeSpan<changeFillingsOnly> span(*this);
 
     regina::snappea::set_cusp_info(data_, whichCusp, true, 0, 0);
 
@@ -562,7 +559,6 @@ void SnapPeaTriangulation::unfill(unsigned whichCusp) {
     --filledCusps_;
 
     regina::snappea::do_Dehn_filling(data_);
-    fillingsHaveChanged();
 }
 
 bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
@@ -598,9 +594,7 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
 
     // Do it.
 
-    // We change the SnapPea data structures but not the inherited
-    // Triangulation<3>, and so a ChangeEventSpan is fine here.
-    PacketData<SnapPeaTriangulation>::ChangeEventSpan span(*this);
+    SnapPeaChangeSpan<changeFillingsOnly> span(*this);
 
     regina::snappea::set_cusp_info(data_, whichCusp, false, mReal, lReal);
 
@@ -611,7 +605,6 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
         ++filledCusps_;
 
     regina::snappea::do_Dehn_filling(data_);
-    fillingsHaveChanged();
     return true;
 }
 
@@ -728,10 +721,8 @@ void SnapPeaTriangulation::randomise() {
     if (! data_)
         return;
 
-    ChangeAndSyncSpan span(*this);
-
+    SnapPeaChangeSpan span(*this);
     regina::snappea::randomize_triangulation(data_);
-    sync();
 }
 
 MatrixInt SnapPeaTriangulation::gluingEquations() const {
@@ -1008,74 +999,73 @@ SnapPeaTriangulation::SnapPeaTriangulation(
 void SnapPeaTriangulation::sync() {
     // TODO: Check first whether anything has changed, and only resync
     // the Triangulation<3> data if it has.
-    {
-        // Deal with the combinatorial data and cusps first.
-        if (! isEmpty())
-            removeAllTetrahedra();
 
-        delete[] cusp_;
-        filledCusps_ = 0;
+    // Deal with the combinatorial data and cusps first.
+    if (! isEmpty())
+        removeAllTetrahedra();
 
-        if (data_) {
-            fillRegina(data_, *this);
+    delete[] cusp_;
+    filledCusps_ = 0;
 
-            if (regina::snappea::get_filled_solution_type(data_) ==
-                    regina::snappea::not_attempted) {
-                regina::snappea::find_complete_hyperbolic_structure(data_);
-                regina::snappea::do_Dehn_filling(data_);
-            }
+    if (data_) {
+        fillRegina(data_, *this);
 
-            cusp_ = new Cusp[data_->num_cusps];
-            regina::snappea::Cusp* c = data_->cusp_list_begin.next;
-            for (int i = 0; i < data_->num_cusps; ++i) {
-                cusp_[c->index].vertex_ = nullptr;
-                if (c->is_complete) {
-                    cusp_[c->index].m_ = cusp_[c->index].l_ = 0;
-                } else if (c->topology == regina::snappea::Klein_cusp &&
-                        ! (regina::snappea::Dehn_coefficients_are_integers(c)
-                            && c->l == 0 && (c->m == 1 || c->m == -1))) {
-                    // Abort!  Make this a null triangulation.
-                    // We call sync() again, but this is harmless as long as
-                    // we return immediately afterwards.
-                    regina::snappea::free_triangulation(data_);
-                    data_ = nullptr;
-                    sync();
-                    return;
-                } else if (c->topology == regina::snappea::torus_cusp &&
-                        ! regina::snappea::Dehn_coefficients_are_relatively_prime_integers(c)) {
-                    // Abort, as above.
-                    regina::snappea::free_triangulation(data_);
-                    data_ = nullptr;
-                    sync();
-                    return;
-                } else {
-                    cusp_[c->index].m_ = c->m;
-                    cusp_[c->index].l_ = c->l;
-                    ++filledCusps_;
-                }
-                c = c->next;
-            }
-            regina::snappea::Tetrahedron* stet = data_->tet_list_begin.next;
-            for (size_t i = 0; i < size(); ++i) {
-                for (int j = 0; j < 4; ++j) {
-                    c = stet->cusp[j];
-                    if (cusp_[c->index].vertex_ == nullptr)
-                        cusp_[c->index].vertex_ = tetrahedron(i)->vertex(j);
-                }
-                stet = stet->next;
-            }
-        } else {
-            cusp_ = nullptr;
+        if (regina::snappea::get_filled_solution_type(data_) ==
+                regina::snappea::not_attempted) {
+            regina::snappea::find_complete_hyperbolic_structure(data_);
+            regina::snappea::do_Dehn_filling(data_);
         }
 
-        // Next, update all data that depend on the fillings (if any).
-        // Most importantly, this includes the cache of tetrahedron shapes.
-        fillingsHaveChanged();
+        cusp_ = new Cusp[data_->num_cusps];
+        regina::snappea::Cusp* c = data_->cusp_list_begin.next;
+        for (int i = 0; i < data_->num_cusps; ++i) {
+            cusp_[c->index].vertex_ = nullptr;
+            if (c->is_complete) {
+                cusp_[c->index].m_ = cusp_[c->index].l_ = 0;
+            } else if (c->topology == regina::snappea::Klein_cusp &&
+                    ! (regina::snappea::Dehn_coefficients_are_integers(c)
+                        && c->l == 0 && (c->m == 1 || c->m == -1))) {
+                // Abort!  Make this a null triangulation.
+                // We call sync() again, but this is harmless as long as
+                // we return immediately afterwards.
+                regina::snappea::free_triangulation(data_);
+                data_ = nullptr;
+                sync(); // also calls fillingsHaveChanged()
+                return;
+            } else if (c->topology == regina::snappea::torus_cusp &&
+                    ! regina::snappea::Dehn_coefficients_are_relatively_prime_integers(c)) {
+                // Abort, as above.
+                regina::snappea::free_triangulation(data_);
+                data_ = nullptr;
+                sync(); // also calls fillingsHaveChanged()
+                return;
+            } else {
+                cusp_[c->index].m_ = c->m;
+                cusp_[c->index].l_ = c->l;
+                ++filledCusps_;
+            }
+            c = c->next;
+        }
+        regina::snappea::Tetrahedron* stet = data_->tet_list_begin.next;
+        for (size_t i = 0; i < size(); ++i) {
+            for (int j = 0; j < 4; ++j) {
+                c = stet->cusp[j];
+                if (cusp_[c->index].vertex_ == nullptr)
+                    cusp_[c->index].vertex_ = tetrahedron(i)->vertex(j);
+            }
+            stet = stet->next;
+        }
+    } else {
+        cusp_ = nullptr;
     }
+
+    // Next, update all data that depend on the fillings (if any).
+    // Most importantly, this includes the cache of tetrahedron shapes.
+    fillingsHaveChanged();
 }
 
 void SnapPeaTriangulation::fillingsHaveChanged() {
-    // Clear properties that depend on the fillings.
+    // Clear computed properties that depend on the fillings.
     fundGroupFilled_.reset();
     h1Filled_.reset();
 

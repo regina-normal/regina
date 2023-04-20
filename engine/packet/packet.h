@@ -2425,6 +2425,14 @@ class PacketData {
                  */
                 ~ChangeEventSpan();
 
+                /**
+                 * Returns the underlying \a Held object.
+                 *
+                 * \return the \a Held object that was originally passed
+                 * to the ChangeEventSpan constructor.
+                 */
+                Held& held() const;
+
                 // Make this class non-copyable.
                 ChangeEventSpan(const ChangeEventSpan&) = delete;
                 ChangeEventSpan& operator = (const ChangeEventSpan&) = delete;
@@ -4177,6 +4185,11 @@ inline PacketData<Held>::ChangeEventSpan::~ChangeEventSpan() {
         if (! p.changeEventSpans_)
             p.fireEvent(&PacketListener::packetWasChanged);
     }
+}
+
+template <typename Held>
+inline Held& PacketData<Held>::ChangeEventSpan::held() const {
+    return static_cast<Held&>(data_);
 }
 
 inline void Packet::insertChildFirst(std::shared_ptr<Packet> child) {
