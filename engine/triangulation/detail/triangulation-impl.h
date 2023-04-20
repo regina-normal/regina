@@ -331,10 +331,10 @@ void TriangulationBase<dim>::makeDoubleCover() {
     // is so that we can do the right thing with simplex/facet locks.
     //
     // We also clear all properties at the beginning (not the end), so that
-    // the skeleton will be deleted immediately (see below for the full
-    // explanation for why we do this).  For this we use a ChangeEventSpan
-    // (not a ChangeAndClearSpan), and just call clearAllProperties() manually
-    // at the right time.
+    // the skeleton will be deleted immediately - this means we can
+    // temporarily hijack the Simplex::orientation_ fields for our own purposes.
+    // For this we use a ChangeEventSpan (not a ChangeAndClearSpan), and just
+    // call clearAllProperties() manually at the right time.
     Snapshottable<Triangulation<dim>>::takeSnapshot();
     ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
