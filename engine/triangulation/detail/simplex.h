@@ -1415,6 +1415,20 @@ inline Simplex<dim>* SimplexBase<dim>::unjoinRaw(int myFacet) {
 
 template <int dim>
 void SimplexBase<dim>::isolate() {
+    // We need to check for lock violations before any changes are made,
+    // since we promise to leave things unchanged if we throw a LockViolation.
+    if (locks_) {
+        for (int i = 0; i <= dim; ++i)
+            if (adj_[i] && isFacetLocked(i))
+                throw LockViolation("An attempt was made to isolate a "
+                    "top-dimensional simplex with one or more locked "
+                    "non-boundary facets");
+    }
+
+    // The slightly convoluted logic below ensures that, if this is a no-op
+    // (i.e., the simplex is already isolated), then there are no snapshots /
+    // change events / etc.
+
     int i = 0;
     for ( ; i <= dim; ++i)
         if (adj_[i])
@@ -1429,11 +1443,6 @@ hasGluings:
     // Currently, i is the first facet that has a gluing.
     for ( ; i <= dim; ++i)
         if (auto you = adj_[i]) {
-            if (isFacetLocked(i))
-                throw LockViolation("An attempt was made to isolate a "
-                    "top-dimensional simplex with one or more locked "
-                    "non-boundary facets");
-
             you->adj_[gluing_[i][i]] = nullptr;
             adj_[i] = nullptr;
         }
