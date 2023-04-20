@@ -341,6 +341,11 @@ class Cusp : public ShortOutput<Cusp> {
  *   the inherited operation on Triangulation<3> will be called instead, which
  *   will (as above) nullify one or both SnapPea triangulations respectively.
  *
+ * - You cannot use simplex and/or facet locks.  In particular, you must not
+ *   call Tetrahedron<3>::lock(), Tetrahedron<3>::lockFacet(), or
+ *   Triangle<3>::lock() on a SnapPea triangulation.  Any attempt to do so is
+ *   likely to cause exceptions to be thrown in unexpected places.
+ *
  * Null triangulations appear more generally when Regina is unable to
  * represent data in SnapPea's native format.  You can test for a
  * null triangulation by calling isNull().  Null triangulations can occur
