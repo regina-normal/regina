@@ -504,6 +504,24 @@ struct SatAnnulus {
      *
      * \pre The given value \a alpha is not zero.
      * \pre The given values \a alpha and \a beta are coprime.
+     * \pre The two faces of the given saturated annulus (i.e., face
+     * `r0[3]` of \a t0 and face `r1[3]` of \a t1) are boundary faces.
+     *
+     * \exception InvalidArgument At least one of the conditions above fails;
+     * that is, either \a alpha is zero, or \a alpha and \a beta are not
+     * coprime, or at least one of the two faces of the saturated annulus is
+     * already joined to something.  Note that the operation may already be
+     * partially complete by the time the exception is thrown (i.e., the
+     * layered solid torus might be partially constructed and/or might be
+     * already attached to one face of the annulus that was indeed boundary).
+     *
+     * \exception LockViolation At least one face of the given saturated
+     * annulus (i.e., face `r0[3]` of \a t0 and/or face `r1[3]` of \a t1) is
+     * locked.  See Simplex<3>::lockFacet() for further details on how facet
+     * locks work and what their implications are.  Note that the operation
+     * may already be partially complete by the time the exception is thrown
+     * (i.e., the layered solid torus might be already constructed and/or
+     * might be attached to one face of the annulus that was indeed unlocked).
      *
      * \param t0 the tetrahedron corresponding to SatAnnulus::tet[0].
      * \param r0 the permutation corresponding to SatAnnulus::roles[0].
