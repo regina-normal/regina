@@ -1460,9 +1460,6 @@ inline void SimplexBase<dim>::isolateRaw() {
 template <int dim>
 void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         Perm<dim+1> gluing) {
-    if (isFacetLocked(myFacet))
-        throw LockViolation("An attempt was made to join a locked facet "
-            "to another top-dimensional simplex");
     if (tri_ != you->tri_)
         throw InvalidArgument("You cannot join simplices from "
             "two different triangulations");
@@ -1474,6 +1471,9 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
             "are already joined to something");
     if (you == this && yourFacet == myFacet)
         throw InvalidArgument("You cannot join a facet of a simplex to itself");
+    if (isFacetLocked(myFacet) || you->isFacetLocked(yourFacet))
+        throw LockViolation("An attempt was made to join a locked facet "
+            "to another top-dimensional simplex");
 
     tri_->takeSnapshot();
     typename Triangulation<dim>::ChangeAndClearSpan span(*tri_);
