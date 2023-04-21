@@ -48,8 +48,12 @@ Version 7.4  [ (to be announced) ]
               work with locked top-dimensional simplices and their facets.
             - New routine reorderBFS(), which essentially makes the old
               Triangulation<3>::reorderTetrahedraBFS() available in all
-              dimensions.  The old Triangulation<3>::reorderTetrahedraBFS()
-              is now a deprecated alias.
+              dimensions.
+        Class Triangulation<3>:
+            - Routine insertLayeredSolidTorus() is now non-recursive, and
+              throws an exception if its preconditions fail.
+            - Routine reorderTetrahedraBFS() is now a deprecated alias for
+              reorderBFS() (which is available in all dimensions).
     PYTHON:
         - Updated the included pybind11 library from 2.10.0 to 2.10.4.
         - Improved the speed of iteration (specifically, throwing/catching

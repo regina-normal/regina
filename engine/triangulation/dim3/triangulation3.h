@@ -3331,6 +3331,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre 0 ≤ \a cuts0 ≤ \a cuts1;
          * \pre gcd(\a cuts0, \a cuts1) = 1.
          *
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, either \a cuts0 > \a cuts1, and/or \a cuts0 and \a cuts1
+         * are not coprime.
+         *
          * \param cuts0 the smallest of the three desired intersection numbers.
          * \param cuts1 the second smallest of the three desired intersection
          * numbers.
@@ -3338,8 +3342,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \see LayeredSolidTorus
          */
-        Tetrahedron<3>* insertLayeredSolidTorus(unsigned long cuts0,
-            unsigned long cuts1);
+        Tetrahedron<3>* insertLayeredSolidTorus(size_t cuts0, size_t cuts1);
         /**
          * Forms the connected sum of this triangulation with the given
          * triangulation.  This triangulation will be altered directly.
