@@ -76,31 +76,52 @@ Triangulation<3> Example<3>::rp3rp3() {
 
 Triangulation<3> Example<3>::lens(size_t p, size_t q) {
     Triangulation<3> ans;
+    Tetrahedron<3>* top;
 
-    Tetrahedron<3>* chain;
     if (p == 0) {
-        chain = ans.insertLayeredSolidTorus(1, 1);
-        chain->join(3, chain, Perm<4>(3, 0, 1, 2));
-    } else if (p == 1) {
-        chain = ans.insertLayeredSolidTorus(1, 2);
-        chain->join(3, chain, Perm<4>(0, 1, 3, 2));
+        if (q != 1)
+            throw InvalidArgument("lens(p, q): if p = 0 then you must "
+                "have q = 1");
+        top = ans.insertLayeredSolidTorus(1, 1);
+        top->join(3, top, Perm<4>(3, 0, 1, 2));
+        return ans;
+    }
+    if (q >= p)
+        throw InvalidArgument("lens(p, q): if p is positive then you must "
+            "have q < p");
+
+    // At this point we have 0 <= q < p.
+
+    if (p == 1) {
+        // We must have q == 0.
+        top = ans.insertLayeredSolidTorus(1, 2);
+        top->join(3, top, Perm<4>(0, 1, 3, 2));
     } else if (p == 2) {
-        chain = ans.insertLayeredSolidTorus(1, 3);
-        chain->join(3, chain, Perm<4>(0, 1, 3, 2));
+        if (q == 0)
+            throw InvalidArgument("lens(p, q): arguments p and q must "
+                "be coprime");
+        top = ans.insertLayeredSolidTorus(1, 3);
+        top->join(3, top, Perm<4>(0, 1, 3, 2));
     } else if (p == 3) {
-        chain = ans.insertLayeredSolidTorus(1, 1);
+        if (q == 0)
+            throw InvalidArgument("lens(p, q): arguments p and q must "
+                "be coprime");
+        // Both L(3,1) and L(3,2) are the same lens space, so we can ignore q.
+        top = ans.insertLayeredSolidTorus(1, 1);
         // Either of the following gluings will work.
-        chain->join(3, chain, Perm<4>(1, 3, 0, 2));
-        // chain->join(3, chain, Perm<4>(0, 1, 3, 2));
+        top->join(3, top, Perm<4>(1, 3, 0, 2));
+        // top->join(3, top, Perm<4>(0, 1, 3, 2));
     } else {
+        // If p and q are not coprime, this should be picked up by
+        // insertLayeredSolidTorus().
         if (2 * q > p)
             q = p - q;
         if (3 * q > p) {
-            chain = ans.insertLayeredSolidTorus(p - 2 * q, q);
-            chain->join(3, chain, Perm<4>(1, 3, 0, 2));
+            top = ans.insertLayeredSolidTorus(p - 2 * q, q);
+            top->join(3, top, Perm<4>(1, 3, 0, 2));
         } else {
-            chain = ans.insertLayeredSolidTorus(q, p - 2 * q);
-            chain->join(3, chain, Perm<4>(3, 0, 1, 2));
+            top = ans.insertLayeredSolidTorus(q, p - 2 * q);
+            top->join(3, top, Perm<4>(3, 0, 1, 2));
         }
     }
 
@@ -164,7 +185,13 @@ Triangulation<3> Example<3>::augTriSolidTorus(long a1, long b1,
 
         // Are we simply attaching a mobius band?
         if (absAxis <= 2 && absMajor <= 2 && absMinor <= 2) {
-            // We have either (2,1,1) or (1,1,0).
+            // We have either a valid triple (2,1,1) or (1,1,0),
+            // or an invalid triple (2,2,0) or (0,0,0).
+            if (! (absAxis == 1 || absMajor == 1 || absMinor == 1))
+                throw InvalidArgument("augTriSolidTorus() requires its "
+                    "(a_i, b_i) pairs to be coprime");
+
+            // Its one of the valid triples (2,1,1) or (1,1,0).
             if (absAxis == 2) {
                 core[i]->join(2, core[(i + 1) % 3], Perm<4>(0, 2, 1, 3));
                 continue;

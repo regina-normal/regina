@@ -98,3 +98,100 @@ except regina.InvalidArgument:
 
 # Check that t is unchanged.
 print(t.detail())
+
+print(Example3.lens(0,1).detail())
+print(Example3.lens(1,0).detail())
+print(Example3.lens(2,1).detail())
+print(Example3.lens(3,1).detail())
+print(Example3.lens(3,2).detail())
+print(Example3.lens(4,1).detail())
+print(Example3.lens(4,3).detail())
+
+try:
+    print(Example3.lens(0,0).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(0,2).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(1,1).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(1,2).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(2,0).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(2,2).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(2,3).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(3,0).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(3,3).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(3,4).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(4,0).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(4,2).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(4,4).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.lens(4,6).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+print(Example3.augTriSolidTorus(1,0, 0,-1, 1,-1).detail())
+print(Example3.augTriSolidTorus(2,-1, 1,1, 1,-2).detail())
+print(Example3.augTriSolidTorus(3,-1, 1,2, 2,-3).detail())
+
+try:
+    print(Example3.augTriSolidTorus(3,-1, 1,2, 0,0).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.augTriSolidTorus(3,-1, 2,2, 1,2).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')
+
+try:
+    print(Example3.augTriSolidTorus(4,-6, 3,-1, 1,2).detail())
+except regina.InvalidArgument:
+    print('Caught exception!')

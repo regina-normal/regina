@@ -127,6 +127,10 @@ class Example<3> : public detail::ExampleBase<3> {
          * \pre \a p \> \a q ≥ 0 unless (\a p,\a q) = (0,1).
          * \pre gcd(\a p, \a q) = 1.
          *
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, either \a q ≥ \q p and (\a p,\a q) ≠ (0,1), and/or
+         * \a p and \a q are not coprime.
+         *
          * \param p a parameter of the desired lens space.
          * \param q a parameter of the desired lens space.
          * \return the lens space `L(p,q)`.
@@ -175,6 +179,10 @@ class Example<3> : public detail::ExampleBase<3> {
          * tetrahedra in the triangulation.
          *
          * \pre gcd(\a a1, \a b1) = gcd(\a a2, \a b2) = gcd(\a a3, \a b3) = 1.
+         *
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, at least one of the pairs (\a a1, \a b1), (\a a2, \a b2)
+         * or (\a a3, \a b3) is not coprime.
          *
          * \param a1 a parameter describing the first layered solid
          * torus in the augmented triangular solid torus.
