@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <numeric> // for std::gcd()
 #include "manifold/sfs.h"
 #include "split/signature.h"
 #include "triangulation/dim3.h"
@@ -274,6 +275,20 @@ Triangulation<3> Example<3>::poincare() {
 
 Triangulation<3> Example<3>::sfsOverSphere(long a1, long b1, long a2, long b2,
         long a3, long b3) {
+    // Explicitly check the preconditions.
+    // It is a bit of work to check GCDs, but also this is the kind of
+    // function that a user may well be calling ad-hoc from a Python console,
+    // and so this is a place where such checks could be particularly helpful.
+
+    if (a1 == 0 || a2 == 0 || a3 == 0)
+        throw InvalidArgument("sfsOverSphere(a1, b1, ..., b3): "
+            "none of the a_i may be zero");
+    // Note that std::gcd promises to use absolute values, so we do not
+    // need to test for -1 also.
+    if (std::gcd(a1, b1) != 1 || std::gcd(a2, b2) != 1 || std::gcd(a3, b3) != 1)
+        throw InvalidArgument("sfsOverSphere(a1, b1, ..., b3): "
+            "each (a_i, b_i) pair must be coprime");
+
     // Use the SFS construction routine, which can handle this type of SFS.
 
     SFSpace sfs;

@@ -22,6 +22,9 @@ Version 7.4  [ (to be announced) ]
             - New routine swapBits().
         Class IntOfBits<k>:
             - New type alias to simplify arithmetic when using IntOfSize<...>.
+        Class Example<3>:
+            - Routines lst(), lens(), augTriSolidTorus() and sfsOverSphere()
+              now check their preconditions and throw an exception if they fail.
         Class Face<dim, dim-1>:
             - New routines lock(), unlock(), and isLocked().
         Class Link:

@@ -223,6 +223,11 @@ class Example<3> : public detail::ExampleBase<3> {
          * \pre None of \a a1, \a a2 or \a a3 are 0.
          * \pre gcd(\a a1, \a b1) = gcd(\a a2, \a b2) = gcd(\a a3, \a b3) = 1.
          *
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, at least one of \a a_1, \a a_2 or \a a_3 is zero, and/or
+         * at least one of the pairs (\a a1, \a b1), (\a a2, \a b2) or
+         * (\a a3, \a b3) is not coprime.
+         *
          * \param a1 a parameter describing the first exceptional fibre.
          * \param b1 a parameter describing the first exceptional fibre.
          * \param a2 a parameter describing the second exceptional fibre.
@@ -309,6 +314,9 @@ class Example<3> : public detail::ExampleBase<3> {
          * automatically as \a c = (\a a + \a b).
          *
          * \pre gcd(\a a, \a b) = 1.
+         *
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, \a a and \a b are not coprime.
          *
          * \param a the first parameter of the layered solid torus.
          * \param b the second parameter of the layered solid torus.
