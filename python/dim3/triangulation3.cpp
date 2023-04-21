@@ -616,7 +616,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def("layerOn", &Triangulation<3>::layerOn,
             pybind11::return_value_policy::reference, rdoc::layerOn)
         .def("fillTorus",
-            overload_cast<unsigned long, unsigned long, unsigned long,
+            overload_cast<size_t, size_t, size_t,
                 regina::BoundaryComponent<3>*>(
             &Triangulation<3>::fillTorus),
             pybind11::arg(), pybind11::arg(), pybind11::arg(),
@@ -624,7 +624,7 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             rdoc::fillTorus)
         .def("fillTorus",
             overload_cast<regina::Edge<3>*, regina::Edge<3>*, regina::Edge<3>*,
-                unsigned long, unsigned long, unsigned long>(
+                size_t, size_t, size_t>(
             &Triangulation<3>::fillTorus), rdoc::fillTorus_2)
         .def("insertLayeredSolidTorus",
             &Triangulation<3>::insertLayeredSolidTorus,

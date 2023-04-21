@@ -68,8 +68,8 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     return newTet;
 }
 
-bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
-        unsigned long cuts2, BoundaryComponent<3>* bc) {
+bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
+        BoundaryComponent<3>* bc) {
     // Check that the cuts arguments are valid.
     int maxCuts;
     if (cuts2 == cuts0 + cuts1)
@@ -259,7 +259,7 @@ bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
 }
 
 bool Triangulation<3>::fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
-        unsigned long cuts0, unsigned long cuts1, unsigned long cuts2) {
+        size_t cuts0, size_t cuts1, size_t cuts2) {
     if (e0 == e1 || e0 == e2 || e1 == e2)
         return false;
 

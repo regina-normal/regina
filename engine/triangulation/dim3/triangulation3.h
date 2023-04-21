@@ -3264,8 +3264,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * or \c false if one of the required conditions as described
          * above is not satisfied.
          */
-        bool fillTorus(unsigned long cuts0, unsigned long cuts1,
-            unsigned long cuts2, BoundaryComponent<3>* bc = nullptr);
+        bool fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
+            BoundaryComponent<3>* bc = nullptr);
 
         /**
          * Fills a two-triangle torus boundary component by attaching a
@@ -3309,7 +3309,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * above is not satisfied.
          */
         bool fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
-            unsigned long cuts0, unsigned long cuts1, unsigned long cuts2);
+            size_t cuts0, size_t cuts1, size_t cuts2);
 
         /**
          * Inserts a new layered solid torus into the triangulation.
