@@ -1,6 +1,7 @@
 # maths 
 
 ADD_SUBDIRECTORY("spec")
+ADD_SUBDIRECTORY("detail")
 
 # Files to compile
 SET ( FILES

@@ -254,6 +254,28 @@ class GeneralPermTest : public CppUnit::TestFixture,
                 ++p;
             } while (! p.isIdentity());
         }
+
+        template<int k>
+        void contractFrontChecks(Perm<n> expected, Perm<k> given)
+        {
+            if (expected != Perm<n>::contractFront(given)) {
+                std::ostringstream msg;
+                msg << "Perm<" << n << ">"
+                    "::contractFront(" << given << ") gives wrong result.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            constexpr int s = k - n;
+            for (int i = 0; i < Perm<s>::nPerms; ++i) {
+                const Perm<k> p = Perm<k>::extend(Perm<s>::Sn[i]) * given;
+                if (expected != Perm<n>::contractFront(p)) {
+                    std::ostringstream msg;
+                    msg << "Perm<" << n << ">"
+                        "::contractFront(" << p << ") gives wrong result.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
 };
 
 /**

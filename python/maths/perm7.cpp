@@ -128,6 +128,10 @@ void addPerm7(pybind11::module_& m) {
         c.def_static("contract", &Perm<7>::template contract<i.value>,
             rdoc::contract);
     });
+    regina::for_constexpr<8, 17>([&c](auto i) {
+        c.def_static("contractFront", &Perm<7>::template contractFront<i.value>,
+            rdoc::contractFront);
+    });
     regina::python::add_output_basic(c, rdoc::str);
     regina::python::add_tight_encoding(c, rdoc::tightEncoding,
         rdoc::tightDecoding, rdoc::hash);

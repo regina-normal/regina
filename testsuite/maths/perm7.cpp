@@ -62,6 +62,7 @@ class Perm7Test : public SmallPermTest<7> {
 
     // Tests specific to Perm<7>:
     CPPUNIT_TEST(aliases);
+    CPPUNIT_TEST(contractFront);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -71,6 +72,15 @@ class Perm7Test : public SmallPermTest<7> {
                 if (Perm<7>::S7[i] != Perm<7>::Sn[i])
                     CPPUNIT_FAIL("Arrays S7 and Sn disagree for Perm<7>.");
         }
+
+    void contractFront() {
+        if (Perm<7>(0,2,1,3,4,6,5) !=
+               Perm<7>::contractFront(Perm<8>(2,3) * Perm<8>(6,7))) {
+            CPPUNIT_FAIL("Perm<7>::contractFront(Perm<8>(2,3) * Perm<8>(6,7)) failed");
+        }
+        contractFrontChecks(Perm<7>(2,3), Perm<9>(4,5));
+        contractFrontChecks(Perm<7>(1,4), Perm<10>(4,7));
+    }
 };
 
 void addPerm7(CppUnit::TextUi::TestRunner& runner) {

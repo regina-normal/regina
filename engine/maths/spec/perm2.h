@@ -121,6 +121,12 @@ class Perm<2> {
          */
         using Code = uint8_t;
 
+        /**
+         * Alias for Code so that generic code can use Perm<n>::Code2
+         * for small n.
+         */
+        using Code2 = Code;
+
     private:
         /**
          * A lightweight array-like object used to implement Perm<2>::S2.
@@ -355,6 +361,12 @@ class Perm<2> {
         constexpr Code permCode() const;
 
         /**
+         * Alias for permCode so that generic code can use Perm<n>::permCode2()
+         * for small n.
+         */
+        constexpr Code permCode2() const;
+
+        /**
          * Sets this permutation to that represented by the given
          * internal code.
          *
@@ -376,6 +388,12 @@ class Perm<2> {
          * \return the permutation represented by the given internal code.
          */
         static constexpr Perm<2> fromPermCode(Code code);
+
+        /**
+         * Alias for fromPermCode so that generic code can use
+         * Perm<n>::fromPermCode2(c) for small n.
+         */
+        static constexpr Perm<2> fromPermCode2(Code code);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -991,6 +1009,32 @@ class Perm<2> {
         static constexpr Perm<2> contract(Perm<k> p);
 
         /**
+         * Restricts a <i>k</i>-element permutation to an 2-element
+         * permutation, where \a k > 2.
+         *
+         * This is similar to Perm<n>::contract but is considering the last
+         * two elements of the <i>k</i>-element permutation rather than
+         * the first and ignores the "unused" images
+         * \a p[0], ..., \a p[<i>k</i> - 3].
+         *
+         * The resulting permutation maps 0 and 1 to
+         * \a p[<i>k</i> - 2] + 2 - <i>k</i> and
+         * \a p[<i>k</i> - 1] + 2 - <i>k</i>.
+         *
+         * \pre The given permutation maps <i>k</i> - 2 and <i>k</i> - 1
+         * to <i>k</i> - 2 and <i>k</i> - 1 in some order.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be strictly greater than 2.
+         *
+         * \param p a permutation on \a k elements.
+         * \return the same permutation restricted to a permutation on
+         * the last two elements.
+         */
+        template <int k>
+        static constexpr Perm<2> contractFront(Perm<k> p);
+
+        /**
          * Is this permutation minimal in its conjugacy class?
          *
          * Here "minimal" means that, amongst all its conjugates, this
@@ -1082,11 +1126,19 @@ inline constexpr Perm<2>::Code Perm<2>::permCode() const {
     return code_;
 }
 
+inline constexpr Perm<2>::Code Perm<2>::permCode2() const {
+    return code_;
+}
+
 inline void Perm<2>::setPermCode(Code code) {
     code_ = code;
 }
 
 inline constexpr Perm<2> Perm<2>::fromPermCode(Code code) {
+    return Perm<2>(code);
+}
+
+inline constexpr Perm<2> Perm<2>::fromPermCode2(Code code) {
     return Perm<2>(code);
 }
 
