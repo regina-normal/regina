@@ -772,7 +772,7 @@ class Perm {
          *
          * For permutations of seven and fewer objects, inversion is extremely
          * fast because it uses hard-coded lookup tables.  However, for this
-         * generic Perm<n> class, inversion cannot uses these lookup tables
+         * generic Perm<n> class, inversion cannot use these lookup tables
          * (for multiple reasons), and so inverse() takes time linear in \a n.
          *
          * If you are going to make significant use of the generic Perm<n>
