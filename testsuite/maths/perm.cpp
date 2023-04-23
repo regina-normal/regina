@@ -735,6 +735,23 @@ class LargePermTest : public GeneralPermTest<n> {
             for (int i = 0; i < nIdx; ++i)
                 verifyTightEncoding(Perm::orderedSn[idx[i]]);
         }
+
+        void contractFront() {
+            if (regina::Perm<n-1>(n-6, n-4) !=
+                    regina::Perm<n-1>::contractFront(Perm(n-5, n-3))) {
+                std::ostringstream msg;
+                msg << "Perm<n-1>::contractFront(Perm<n>(n-5, n-3)) "
+                    "failed for n = " << n << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (regina::Perm<n-4>(n-7, n-6) !=
+                    regina::Perm<n-4>::contractFront(Perm(n-3, n-2))) {
+                std::ostringstream msg;
+                msg << "Perm<n-4>::contractFront(Perm<n>(n-3, n-2)) "
+                    "failed for n = " << n << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
 };
 
 template <int n>
@@ -752,6 +769,7 @@ class PermTest : public LargePermTest<n> {
     CPPUNIT_TEST(order);
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(tightEncoding);
+    CPPUNIT_TEST(contractFront);
 
     CPPUNIT_TEST_SUITE_END();
 };
@@ -779,6 +797,7 @@ class PermTest<8> : public LargePermTest<8> {
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacyMinimal);
     CPPUNIT_TEST(tightEncoding);
+    CPPUNIT_TEST(contractFront);
 
     CPPUNIT_TEST_SUITE_END();
 };
@@ -803,6 +822,7 @@ class PermTest<9> : public LargePermTest<9> {
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacyMinimal);
     CPPUNIT_TEST(tightEncoding);
+    CPPUNIT_TEST(contractFront);
 
     CPPUNIT_TEST_SUITE_END();
 };
@@ -827,6 +847,7 @@ class PermTest<10> : public LargePermTest<10> {
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacyMinimal);
     CPPUNIT_TEST(tightEncoding);
+    CPPUNIT_TEST(contractFront);
 
     CPPUNIT_TEST_SUITE_END();
 };
@@ -851,6 +872,7 @@ class PermTest<11> : public LargePermTest<11> {
     CPPUNIT_TEST(increment);
     CPPUNIT_TEST(conjugacyMinimal);
     CPPUNIT_TEST(tightEncoding);
+    CPPUNIT_TEST(contractFront);
 
     CPPUNIT_TEST_SUITE_END();
 };

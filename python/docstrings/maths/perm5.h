@@ -522,6 +522,33 @@ Parameter ``p``:
 Returns:
     the same permutation restricted to a permutation on 5 elements.)doc";
 
+// Docstring regina::python::doc::Perm_::contractFront
+static const char *contractFront =
+R"doc(Restricts a *k*-element permutation to a 5-element permutation, where
+*k* > 5.
+
+This is similar to Perm<n>::contract but is considering the last three
+elements of the *k*-element permutation rather than the first and
+ignores the "unused" images *p*[0], ...,*p*[*k* - 6].
+
+The resulting permutation maps 0,...,2 to *p*[*k* - 5] + 5 - *k*, ...,
+*p*[*k* - 1] + 5 - *k*.
+
+Precondition:
+    The given permutation maps *k* - 5, ..., *k* - 1 to *k* - 5, ...,
+    *k* - 1 in some order.
+
+Template parameter ``k``:
+    the number of elements for the input permutation; this must be
+    strictly greater than 5.
+
+Parameter ``p``:
+    a permutation on *k* elements.
+
+Returns:
+    the same permutation restricted to a permutation on the last three
+    elements.)doc";
+
 // Docstring regina::python::doc::Perm_::extend
 static const char *extend =
 R"doc(Extends a *k*-element permutation to a 5-element permutation, where 2

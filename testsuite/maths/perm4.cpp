@@ -67,6 +67,7 @@ class Perm4Test : public SmallPermTest<4> {
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(S2);
     CPPUNIT_TEST(S3);
+    CPPUNIT_TEST(contractFront);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -154,6 +155,38 @@ class Perm4Test : public SmallPermTest<4> {
                         Perm<3>::contract(Perm<4>::orderedS3[i]))
                     CPPUNIT_FAIL("Contracted S3 permutations do not "
                         "match Perm<3>.");
+            }
+        }
+
+        void contractFront() {
+            if (Perm<4>(1,2,0,3) !=
+                   Perm<4>::contractFront(Perm<5>(0,2,3,1,4))) {
+                CPPUNIT_FAIL("Perm<4>::contractFront(Perm<5>(0,2,3,1,4)) failed");
+            }
+            if (Perm<4>(1,2,3,0) !=
+                   Perm<4>::contractFront(Perm<5>(0,2,3,4,1))) {
+                CPPUNIT_FAIL("Perm<4>::contractFront(Perm<5>(0,2,3,4,1)) failed");
+            }
+            if (Perm<4>(1,3,0,2) !=
+                   Perm<4>::contractFront(Perm<5>(0,2,4,1,3))) {
+                CPPUNIT_FAIL("Perm<4>::contractFront(Perm<5>(0,2,4,1,3)) failed");
+            }
+            if (Perm<4>(1,3,2,0) !=
+                   Perm<4>::contractFront(Perm<5>(0,2,4,3,1))) {
+                CPPUNIT_FAIL("Perm<4>::contractFront(Perm<5>(0,2,4,3,1)) failed");
+            }
+
+            contractFrontChecks(Perm<4>(2,0,1,3), Perm<6>(0,1,4,2,3,5));
+            contractFrontChecks(Perm<4>(2,0,3,1), Perm<7>(0,1,2,5,3,6,4));
+
+            if (Perm<4>(0,1) !=
+                   Perm<4>::contractFront(Perm<10>(6,7))) {
+                CPPUNIT_FAIL("Perm<4>::contractFront(Perm<10>(6,7))");
+            }
+
+            if (Perm<4>(1,2) !=
+                   Perm<4>::contractFront(Perm<11>(8,9))) {
+                CPPUNIT_FAIL("Perm<4>::contractFront(Perm<11>(8,9))");
             }
         }
 };

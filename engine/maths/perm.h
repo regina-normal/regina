@@ -1274,6 +1274,32 @@ class Perm {
         static constexpr Perm contract(Perm<k> p);
 
         /**
+         * Restricts a <i>k</i>-element permutation to an <i>n</i>-element
+         * permutation, where \a k > \a n.
+         *
+         * This is similar to Perm<n>::contract but is considering the last
+         * <i>n</i> elements of the <i>k</i>-element permutation rather than
+         * the first and ignores the "unused" images
+         * \a p[0], ...,\a p[<i>k</i> - \a n - 1].
+         *
+         * The resulting permutation maps 0,...,<i>n</i>-1 to
+         * \a p[<i>k</i> - \a n] + \a n - <i>k</i>, ...,
+         * \a p[<i>k</i> - 1] + \a n - <i>k</i>.
+         *
+         * \pre The given permutation maps <i>k</i> - \a n, ..., <i>k</i> - 1
+         * to <i>k</i> - \a n, ..., <i>k</i> - 1 in some order.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be strictly greater than \a n.
+         *
+         * \param p a permutation on \a k elements.
+         * \return the same permutation restricted to a permutation on
+         * the last \a n elements.
+         */
+        template <int k>
+        static constexpr Perm contractFront(Perm<k> p);
+
+        /**
          * Is this permutation minimal in its conjugacy class?
          *
          * Here "minimal" means that, amongst all its conjugates, this
@@ -2261,6 +2287,7 @@ constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
 
     return Perm<n>(c);
 }
+
 #endif // __DOXYGEN
 
 template <int n>
@@ -2560,6 +2587,8 @@ inline PermClass<n> PermClass<n>::operator ++(int) {
 #include "maths/spec/perm5.h"
 #include "maths/spec/perm7.h"
 
+#include "maths/detail/permContractFront.h"
+
 // Explicitly declare the non-specialised classes as extern.  Otherwise the
 // linker on Windows (and *only* Windows) fails to unify their static data
 // members between the DLL and the executable (even though they are correctly
@@ -2579,9 +2608,24 @@ extern template class regina::Perm<16>;
 
 namespace regina {
 
+template <int n>
+template <int k>
+constexpr Perm<n> Perm<n>::contractFront(Perm<k> p) {
+    static_assert(
+        k > n,
+        "Given permutation needs to have more elements then permutation "
+        "we contract to.");
+    return detail::PermContractFront<n, k>()(p);
+}
+    
 // What follows are implementations that use these specialised classes.
 // We hide them from doxygen since specialisations can confuse it.
 #ifndef __DOXYGEN
+
+template <int k>
+inline constexpr Perm<2> Perm<2>::contractFront(Perm<k> p) {
+    return detail::PermContractFront<2, k>()(p);
+}
 
 template <int k>
 inline constexpr Perm<2> Perm<2>::contract(Perm<k> p) {
@@ -2635,6 +2679,11 @@ inline constexpr Perm<3> Perm<3>::contract(Perm<k> p) {
     return Perm<3>(p[0], p[1], p[2]);
 }
 
+template <int k>
+inline constexpr Perm<3> Perm<3>::contractFront(Perm<k> p) {
+    return detail::PermContractFront<3, k>()(p);
+}
+
 template <>
 inline constexpr Perm<3> Perm<3>::contract(Perm<4> p) {
     // Code map: 0,3,8,7,12,15 -> 0,1,2,3,4,5.
@@ -2666,6 +2715,11 @@ inline constexpr Perm<4> Perm<4>::contract(Perm<k> p) {
     return Perm<4>(p[0], p[1], p[2], p[3]);
 }
 
+template <int k>
+inline constexpr Perm<4> Perm<4>::contractFront(Perm<k> p) {
+    return detail::PermContractFront<4, k>()(p);
+}
+
 inline void Perm<4>::clear(unsigned from) {
     if (from <= 1)
         code_ = 0;
@@ -2695,6 +2749,11 @@ constexpr Perm<5> Perm<5>::contract(Perm<k> p) {
     static_assert(k > 5, "Perm<5>::contract<k> requires k > 5.");
 
     return Perm<5>(p[0], p[1], p[2], p[3], p[4]);
+}
+
+template <int k>
+inline constexpr Perm<5> Perm<5>::contractFront(Perm<k> p) {
+    return detail::PermContractFront<5, k>()(p);
 }
 
 inline void Perm<5>::clear(unsigned from) {
@@ -2745,6 +2804,11 @@ constexpr Perm<6> Perm<6>::contract(Perm<k> p) {
     static_assert(k > 6, "Perm<6>::contract<k> requires k > 6.");
 
     return Perm<6>(p[0], p[1], p[2], p[3], p[4], p[5]);
+}
+
+template <int k>
+inline constexpr Perm<6> Perm<6>::contractFront(Perm<k> p) {
+    return detail::PermContractFront<6, k>()(p);
 }
 
 inline void Perm<6>::clear(unsigned from) {
@@ -2798,6 +2862,11 @@ constexpr Perm<7> Perm<7>::contract(Perm<k> p) {
     static_assert(k > 7, "Perm<7>::contract<k> requires k > 7.");
 
     return Perm<7>(p[0], p[1], p[2], p[3], p[4], p[5], p[6]);
+}
+
+template <int k>
+inline constexpr Perm<7> Perm<7>::contractFront(Perm<k> p) {
+    return detail::PermContractFront<7, k>()(p);
 }
 
 inline void Perm<7>::clear(unsigned from) {

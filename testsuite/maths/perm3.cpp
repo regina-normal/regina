@@ -63,6 +63,7 @@ class Perm3Test : public SmallPermTest<3> {
     CPPUNIT_TEST(productsViaPerm4);
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(S2);
+    CPPUNIT_TEST(contractFront);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -131,6 +132,52 @@ class Perm3Test : public SmallPermTest<3> {
                         "match Perm<2>.");
             }
         }
+    
+        void contractFront() {
+            if (Perm<3>(0,1,2) !=
+                   Perm<3>::contractFront(Perm<4>(0,1,2,3))) {
+                CPPUNIT_FAIL("Perm<3>::contractFront(Perm<4>(0,1,2,3)) failed.");
+            }
+            if (Perm<3>(0,2,1) !=
+                   Perm<3>::contractFront(Perm<4>(0,1,3,2))) {
+                CPPUNIT_FAIL("Perm<3>::contractFront(Perm<4>(0,1,3,2)) failed.");
+            }
+            if (Perm<3>(1,0,2) !=
+                   Perm<3>::contractFront(Perm<4>(0,2,1,3))) {
+                CPPUNIT_FAIL("Perm<3>::contractFront(Perm<4>(0,2,1,3)) failed.");
+            }
+            if (Perm<3>(1,2,0) !=
+                   Perm<3>::contractFront(Perm<4>(0,2,3,1))) {
+                CPPUNIT_FAIL("Perm<3>::contractFront(Perm<4>(0,2,3,1)) failed.");
+            }
+            if (Perm<3>(2,0,1) !=
+                   Perm<3>::contractFront(Perm<4>(0,3,1,2))) {
+                CPPUNIT_FAIL("Perm<3>::contractFront(Perm<4>(0,3,1,2)) failed.");
+            }
+            if (Perm<3>(2,1,0) !=
+                   Perm<3>::contractFront(Perm<4>(0,3,2,1))) {
+                CPPUNIT_FAIL("Perm<3>::contractFront(Perm<4>(0,3,2,1)) failed.");
+            }
+
+            contractFrontChecks(Perm<3>(0,1,2), Perm<5>(0,1,2,3,4));
+            contractFrontChecks(Perm<3>(0,2,1), Perm<5>(0,1,2,4,3));
+            contractFrontChecks(Perm<3>(1,0,2), Perm<5>(0,1,3,2,4));
+            contractFrontChecks(Perm<3>(1,2,0), Perm<5>(0,1,3,4,2));
+            contractFrontChecks(Perm<3>(2,0,1), Perm<5>(0,1,4,2,3));
+            contractFrontChecks(Perm<3>(2,1,0), Perm<5>(0,1,4,3,2));
+
+            contractFrontChecks(Perm<3>(0,1,2), Perm<6>(0,1,2,3,4,5));
+            contractFrontChecks(Perm<3>(0,2,1), Perm<6>(0,1,2,3,5,4));
+            contractFrontChecks(Perm<3>(1,0,2), Perm<6>(0,1,2,4,3,5));
+            contractFrontChecks(Perm<3>(1,2,0), Perm<6>(0,1,2,4,5,3));
+            contractFrontChecks(Perm<3>(2,0,1), Perm<6>(0,1,2,5,3,4));
+            contractFrontChecks(Perm<3>(2,1,0), Perm<6>(0,1,2,5,4,3));
+
+            if (Perm<3>(1,2,0) !=
+                   Perm<3>::contractFront(Perm<10>(3,4) * Perm<10>(7,8) * Perm<10>(8,9))) {
+                CPPUNIT_FAIL("Perm<3>::contractFront(Perm<10>(...)) failed.");
+            }
+        }   
 };
 
 void addPerm3(CppUnit::TextUi::TestRunner& runner) {
