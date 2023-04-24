@@ -425,22 +425,43 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *   top-dimensional simplex (e.g., via join()).
          *
          * - A locked internal (non-boundary) facet cannot made boundary
-         *   by explicitly ungluing.  As an exception, however, we _do_ allow
-         *   a locked internal facet to become boundary because a move was
-         *   performed on one side with the side-effect of removing all of the
-         *   top-dimensional simplices on that side (e.g., a 2-0 move,
-         *   edge collapse, or shell boundary move, where the region being
-         *   removed sits between the locked internal facet and the boundary
-         *   of the triangulation).
+         *   by explicitly ungluing (e.g., via unjoin() or isolate()).
          *
          * - A locked facet cannot be removed completely (e.g., a facet
-         *   that is internal to the region that is removed by a 2-0 move
-         *   or an edge collapse, or a facet internal to the region where
-         *   a Pachner move is performed, or a boundary facet of the simplex
-         *   that is removed by a shell boundary move).
+         *   internal to the region where a Pachner move is performed, or
+         *   a facet internal to the region removed by a 2-0 move or
+         *   edge collapse).
          *
          * - A locked facet cannot be subdivided (e.g., via
          *   Triangulation<dim>::subdivide().
+         *
+         * There are some important exceptions to these rules:
+         *
+         * - We do allow moves on the triangulation that topologically
+         *   "flatten" a region beside a locked facet \a F, as long as \a F
+         *   survives topologically.  For example, we allow 2-0 moves or
+         *   edge collapses that merge \a F with a parallel (\a dim-1)-face,
+         *   even if this changes \a F from internal to boundary (because
+         *   \a F was merged with a boundary facet).  Likewise, we allow
+         *   boundary shellings that expose a internal locked facet to the
+         *   boundary (because this is a "topological flattening", not just
+         *   an arbitrary ungluing).  In all such cases, the lock "moves"
+         *   with \a F to its new (possibly merged, possibly boundary) location.
+         *
+         * - Further to the previous point: we do _not_ allow boundary
+         *   shellings that remove a locked _boundary_ facet G.  This is
+         *   because \a G does not survive topologically (i.e., the resulting
+         *   boundary facets after the shelling are not isotopies of \a G).
+         *
+         * - We also allow moves that "pry open" a (\a dim-1)-face \a F to
+         *   become a pair of parallel faces \a F1, \a F2, between which new
+         *   material is inserted.  For example, this kind of operation
+         *   happens with 0-2 moves, pinchEdge() and connected sum operations
+         *   in dimension 3, and snapEdge() in dimension 4.  In this case, the
+         *   lock will move across to one of \a F1 or \a F2.  In particular,
+         *   if \a F was originally boundary then the lock will move to
+         *   whichever of \a F1 or \a F2 is boundary after the operation is
+         *   complete; otherwise the choice of \a F1 versus \a F2 is arbitrary.
          *
          * Regina's own automatic retriangulation routines (such as
          * Triangulation<dim>::intelligentSimplify() or
