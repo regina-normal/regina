@@ -46,6 +46,7 @@
 #include "core/output.h"
 #include "maths/integer.h"
 #include "utilities/intutils.h"
+#include "utilities/tightencoding.h"
 
 namespace regina {
 
@@ -100,7 +101,7 @@ class Rational;
  * \ingroup maths
  */
 template <class T>
-class Vector : public ShortOutput<Vector<T>> {
+class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
     public:
         /**
          * The type of element that is stored in this vector.
@@ -680,6 +681,57 @@ class Vector : public ShortOutput<Vector<T>> {
             for (const T* elt = elts_; elt != end_; ++elt)
                 out << ' ' << *elt;
             out << " )";
+        }
+        /**
+         * Writes the tight encoding of this vector to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * \pre The element type \a T must have a corresponding
+         * tightEncode() function.  This is true for Regina's arbitrary
+         * precision integer types (Integer and LargeInteger).
+         *
+         * \nopython Use tightEncoding() instead, which returns a string.
+         *
+         * \param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const {
+            regina::detail::tightEncodeIndex(out, size());
+            for (const T* elt = elts_; elt != end_; ++elt)
+                elt->tightEncode(out);
+        }
+
+        /**
+         * Reconstructs a vector from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input stream _may_ contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * \pre The element type \a T must have a corresponding static
+         * tightDecode() function.  This is true for Regina's arbitrary
+         * precision integer types (Integer and LargeInteger).
+         *
+         * \exception InvalidInput The given input stream does not begin with
+         * a tight encoding of a vector of elements of type \a T.
+         *
+         * \nopython Use tightDecoding() instead, which takes a string as
+         * its argument.
+         *
+         * \param input an input stream that begins with the tight encoding
+         * for a vector of element of type \a T.
+         * \return the vector represented by the given tight encoding.
+         */
+        static Vector tightDecode(std::istream& input) {
+            Vector ans(regina::detail::tightDecodeIndex<size_t>(input));
+            for (T* elt = ans.elts_; elt != ans.end_; ++elt)
+                *elt = T::tightDecode(input);
+            return ans;
         }
 
         /**

@@ -95,7 +95,11 @@ class IntegerBase;
  * this means that you can encode a _sequence_ of objects by concatenating
  * the individual encodings with no separators, and (assuming the types
  * of the objects are fixed) this will be enough to guarantee that
- * different _sequences_ likewise have different encodngs.
+ * different _sequences_ likewise have different encodngs.  Of course, a
+ * _tight encoding_ of a sequence must encode extra information so that the
+ * sequence itself maintains the property that the end of its encoding can
+ * be detected without look-ahead - typically this extra information would be
+ * either a length written at the beginning, or a sentinel written at the end.
  *
  * Tight encodings were originally designed to support perfect hashing
  * (essentially "compressing" data into a short printable string whilst

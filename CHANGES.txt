@@ -61,6 +61,8 @@ Version 7.4  [ (to be announced) ]
               their preconditions fail.
             - Routine reorderTetrahedraBFS() is now a deprecated alias for
               reorderBFS() (which is available in all dimensions).
+        Class Vector<T>:
+            - Added support for tight encodings and decodings.
         Constant is_cpp_integer_v<T>:
             - New alternative to std::is_integeral_v<T> that allows for
               128-bit integers also.
