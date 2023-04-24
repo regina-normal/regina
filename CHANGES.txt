@@ -61,6 +61,9 @@ Version 7.4  [ (to be announced) ]
               their preconditions fail.
             - Routine reorderTetrahedraBFS() is now a deprecated alias for
               reorderBFS() (which is available in all dimensions).
+        Constant is_cpp_integer_v<T>:
+            - New alternative to std::is_integeral_v<T> that allows for
+              128-bit integers also.
     PYTHON:
         - Updated the included pybind11 library from 2.10.0 to 2.10.4.
         - Improved the speed of iteration (specifically, throwing/catching

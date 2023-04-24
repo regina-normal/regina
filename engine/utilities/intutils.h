@@ -55,6 +55,35 @@ template <int bytes>
 class NativeInteger;
 
 /**
+ * A compile-time boolean constant that indicates whether the type \a T is a
+ * native C++ integer type, allowing for 128-bit integers also.
+ *
+ * This is true precisely when either `std::is_integral_v<T>` is true and/or
+ * \a T is a native 128-bit integer.
+ *
+ * The only reason for using this constant (as opposed to `std::is_integral<T>`)
+ * is because `std::is_integral_v` treats 128-bit integers differently under
+ * different compilers.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+#if defined(INTERNAL___INT128_FOUND)
+    constexpr bool is_cpp_integer_v = std::is_integral_v<T> ||
+        std::is_same_v<T, __int128> || std::is_same_v<T, __uint128>;
+#elif defined(INTERNAL___INT128_T_FOUND)
+    constexpr bool is_cpp_integer_v = std::is_integral_v<T> ||
+        std::is_same_v<T, __int128_t> || std::is_same_v<T, __uint128_t>;
+#elif defined(INTERNAL_INT128_T_FOUND)
+    constexpr bool is_cpp_integer_v = std::is_integral_v<T> ||
+        std::is_same_v<T, int128_t> || std::is_same_v<T, uint128_t>;
+#else
+    constexpr bool is_cpp_integer_v = std::is_integral_v<T>;
+#endif
+
+/**
  * Determines if the type \a T is one of Regina's own integer types
  * (either arbitrary precision or fixed size).
  *

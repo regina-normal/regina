@@ -40,9 +40,7 @@
 #define __REGINA_BITMANIP_H
 #endif
 
-#include "regina-core.h"
-#include "regina-config.h"
-#include <type_traits>
+#include "utilities/intutils.h"
 
 namespace regina {
 
@@ -326,7 +324,7 @@ class BitManipulatorBySize<T, 8> {
 template <typename T>
 class BitManipulator :
         public BitManipulatorByType<T>, public BitManipulatorBySize<T> {
-    static_assert(std::is_integral_v<T> && std::is_unsigned_v<T>,
+    static_assert(regina::is_cpp_integer_v<T> && std::is_unsigned_v<T>,
         "BitManipulator can only work with native unsigned integral types.");
     static_assert(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 ||
         sizeof(T) == 8 || sizeof(T) == 16 || sizeof(T) == 32 ||
