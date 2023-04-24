@@ -69,6 +69,7 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
     auto c = pybind11::class_<Matrix>(m, className, rdoc_scope)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<size_t, size_t>(), rdoc::__init_2)
+        .def(pybind11::init<const Matrix&>(), rdoc::__copy)
         .def(pybind11::init([](pybind11::list l) {
             size_t rows = l.size();
             if (rows == 0)
@@ -110,7 +111,6 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
 
             return m;
         }), rdoc::__init_3)
-        .def(pybind11::init<const Matrix&>(), rdoc::__copy)
         .def("initialise", &Matrix::initialise, rdoc::initialise)
         .def("swap", &Matrix::swap, rdoc::swap)
         .def("rows", &Matrix::rows, rdoc::rows)
