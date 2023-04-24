@@ -333,6 +333,14 @@ invalid; in all cases the connected sum will be formed correctly.
 Note, however, that the result might possibly contain internal
 vertices (even if the original triangulations do not).
 
+Tetrahedron and/or facet locks will not prevent the connected sum from
+taking place. The operation essentially involves prying open two
+triangles (one from each triangulation) and joining them with a
+connector gadget; if some original triangle *t* is locked then the
+lock will be pushed across to one of two triangles that results when
+*t* is pried open. In particular, if *t* is a boundary triangle then
+the lock will be kept on the boundary (as expected).
+
 It is allowed to pass this triangulation as *other*.
 
 Parameter ``other``:

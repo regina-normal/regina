@@ -184,6 +184,30 @@ Precondition:
 Precondition:
     The given values *alpha* and *beta* are coprime.
 
+Precondition:
+    The two faces of the given saturated annulus (i.e., face ``r0[3]``
+    of *t0* and face ``r1[3]`` of *t1*) are boundary faces.
+
+Exception ``InvalidArgument``:
+    At least one of the conditions above fails; that is, either
+    *alpha* is zero, or *alpha* and *beta* are not coprime, or at
+    least one of the two faces of the saturated annulus is already
+    joined to something. Note that the operation may already be
+    partially complete by the time the exception is thrown (i.e., the
+    layered solid torus might be partially constructed and/or might be
+    already attached to one face of the annulus that was indeed
+    boundary).
+
+Exception ``LockViolation``:
+    At least one face of the given saturated annulus (i.e., face
+    ``r0[3]`` of *t0* and/or face ``r1[3]`` of *t1*) is locked. See
+    Simplex<3>::lockFacet() for further details on how facet locks
+    work and what their implications are. Note that the operation may
+    already be partially complete by the time the exception is thrown
+    (i.e., the layered solid torus might be already constructed and/or
+    might be attached to one face of the annulus that was indeed
+    unlocked).
+
 Parameter ``t0``:
     the tetrahedron corresponding to SatAnnulus::tet[0].
 
