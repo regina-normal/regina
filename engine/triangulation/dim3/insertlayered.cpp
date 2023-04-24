@@ -39,6 +39,9 @@
 namespace regina {
 
 Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
+    if (! edge->isBoundary())
+        throw InvalidArgument("layerOn() requires a boundary edge");
+
     // Locate the two boundary triangles.
     // Note that our preconditions ensure they exist and are distinct;
     // we won't test this again here.
@@ -57,13 +60,25 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     // roles1 and roles2 match up with vertices (0,1,2,3) of the new
     // tetrahedron.
 
+    if (tet1->triangle(roles1[3]) == tet2->triangle(roles2[2]))
+        throw InvalidArgument("layerOn() requires an edge between two "
+            "distinct boundary triangles");
+    if (tet1->isFacetLocked(roles1[3]) || tet2->isFacetLocked(roles2[2]))
+        throw LockViolation("An attempt was made to layer on a locked facet");
+
+    // Note: we use the "raw" routines (joinRaw, newSimplexRaw), mainly since
+    // we did all our lock checking beforehand (not during the individual
+    // joins).  This means that the takeSnapshot() and ChangeAndClearSpan here
+    // are vital.
+
     TopologyLock lock(*this);
-    ChangeEventGroup span(*this);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
-    Tetrahedron<3>* newTet = newTetrahedron();
+    Tetrahedron<3>* newTet = newSimplexRaw();
 
-    newTet->join(3, tet1, roles1);
-    newTet->join(2, tet2, roles2);
+    newTet->joinRaw(3, tet1, roles1);
+    newTet->joinRaw(2, tet2, roles2);
 
     return newTet;
 }

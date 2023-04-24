@@ -1059,7 +1059,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * A variant of unjoin() with no lock management, and no management
          * of the underlying triangulation.
          *
-         * See joinRaw() for further details on what these "raw" routines
+         * See joinRaw() for further details on what these "raw" join routines
          * do and where they can be used.
          *
          * The arguments for this routine are the same as for unjoin().
@@ -1070,12 +1070,49 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * A variant of isolate() with no lock management, and no management
          * of the underlying triangulation.
          *
-         * See joinRaw() for further details on what these "raw" routines
+         * See joinRaw() for further details on what these "raw" join routines
          * do and where they can be used.
          *
          * See isolate() for further details.
          */
         void isolateRaw();
+        /**
+         * A variant of lockFacet() with no management of the underlying
+         * triangulation, and no enforcement of lock consistency.
+         *
+         * This routine adjusts the \a lock_ member to lock the given facet
+         * of this simplex, just like lockFacet() does.  However, this is
+         * _all_ it does.  In particular:
+         *
+         * - it does not check preconditions or throw exceptions;
+         *
+         * - if the given facet is glued to something, it does not adjust
+         *   the lock on the other side of the join for consistency;
+         *
+         * - it does not manage the underlying triangulation in any way:
+         *   it does not take snapshots or fire change events.
+         *
+         * This should _only_ be used in settings where you are sure that
+         * all preconditions hold true, and where the other missing tasks such
+         * as snapshots, change events and consistency of locks are being
+         * taken care of in some other manner (possibly manually).  An example
+         * of such a setting might be the implementation of a local move
+         * (such as a Pachner move).
+         *
+         * The preconditions and arguments for this routine are the same as
+         * for lockFacet().  See lockFacet() for further details.
+         */
+        void lockFacetRaw(int facet);
+        /**
+         * A variant of unlockFacet() with no management of the underlying
+         * triangulation, and no enforcement of lock consistency.
+         *
+         * See lockFacetRaw() for further details on what these "raw" lock
+         * routines do and where they can be used.
+         *
+         * See unlockFacet() for further details.
+         */
+        void unlockFacetRaw(int facet);
 
     friend class TriangulationBase<dim>;
     friend class Triangulation<dim>;
@@ -1320,6 +1357,11 @@ void SimplexBase<dim>::lockFacet(int facet) {
 }
 
 template <int dim>
+inline void SimplexBase<dim>::lockFacetRaw(int facet) {
+    locks_ |= (LockMask(1) << facet);
+}
+
+template <int dim>
 inline void SimplexBase<dim>::unlock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (locks_ & mask) {
@@ -1348,6 +1390,11 @@ void SimplexBase<dim>::unlockFacet(int facet) {
             adj_[facet]->locks_ &= ~(LockMask(1) << adjFacet);
         }
     }
+}
+
+template <int dim>
+inline void SimplexBase<dim>::unlockFacetRaw(int facet) {
+    locks_ &= ~(LockMask(1) << facet);
 }
 
 template <int dim>

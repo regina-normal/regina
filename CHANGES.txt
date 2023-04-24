@@ -53,8 +53,12 @@ Version 7.4  [ (to be announced) ]
               Triangulation<3>::reorderTetrahedraBFS() available in all
               dimensions.
         Class Triangulation<3>:
+            - Routine puncture() now takes an optional triangle, not an
+              optional tetrahedron.  The old version is kept but deprecated.
             - Routine insertLayeredSolidTorus() is now non-recursive, and
               throws an exception if its preconditions fail.
+            - Routines layerOn() and puncture() now throw an exception if
+              their preconditions fail.
             - Routine reorderTetrahedraBFS() is now a deprecated alias for
               reorderBFS() (which is available in all dimensions).
     PYTHON:

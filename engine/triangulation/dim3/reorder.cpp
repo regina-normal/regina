@@ -291,6 +291,7 @@ bool Triangulation<3>::order(bool force_oriented) {
     if(!iso) return false;
 
     // apply the isomorphism
+    // note: the isomorphism promises to transform locks correctly
 
     (*this) = (*iso)(*this);
     delete iso;

@@ -272,9 +272,10 @@ Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
     simplex and/or facet. (This 4-dimensional algorithm does not
     necessarily subdivide _every_ pentachoron, and so this test is
-    stronger than necessary; however, it will be enforced.) See
-    Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
-    details on how such locks work and what their implications are.
+    stronger than necessary; however, it will be enforced.) This
+    exception will be thrown before any changes are made. See
+    Simplex<4>::lock() and Simplex<4>::lockFacet() for further details
+    on how such locks work and what their implications are.
 
 Returns:
     ``True`` if and only if the triangulation was changed.)doc";
@@ -482,19 +483,44 @@ Returns:
 static const char *removeAllPentachora =
 R"doc(A dimension-specific alias for removeAllSimplices().
 
-See removeAllSimplices() for further information.)doc";
+See removeAllSimplices() for further information.
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked pentachoron and/or
+    facet. This exception will be thrown before any changes are made.
+    See Simplex<4>::lock() and Simplex<4>::lockFacet() for further
+    details on how such locks work and what their implications are.)doc";
 
 // Docstring regina::python::doc::Triangulation_::removePentachoron
 static const char *removePentachoron =
 R"doc(A dimension-specific alias for removeSimplex().
 
-See removeSimplex() for further information.)doc";
+See removeSimplex() for further information.
+
+Exception ``LockViolation``:
+    The given pentachoron and/or one of its facets is currently
+    locked. This exception will be thrown before any changes are made.
+    See Simplex<4>::lock() and Simplex<4>::lockFacet() for further
+    details on how such locks work and what their implications are.
+
+Parameter ``pent``:
+    the pentachoron to remove.)doc";
 
 // Docstring regina::python::doc::Triangulation_::removePentachoronAt
 static const char *removePentachoronAt =
 R"doc(A dimension-specific alias for removeSimplexAt().
 
-See removeSimplexAt() for further information.)doc";
+See removeSimplexAt() for further information.
+
+Exception ``LockViolation``:
+    The requested pentachoron and/or one of its facets is currently
+    locked. This exception will be thrown before any changes are made.
+    See Simplex<4>::lock() and Simplex<4>::lockFacet() for further
+    details on how such locks work and what their implications are.
+
+Parameter ``index``:
+    specifies which pentachoron to remove; this must be between 0 and
+    size()-1 inclusive.)doc";
 
 // Docstring regina::python::doc::Triangulation_::retriangulate
 static const char *retriangulate =

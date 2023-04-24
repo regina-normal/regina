@@ -405,8 +405,9 @@ This routine is safe to call even if there are no adjacent simplices
 
 Exception ``LockViolation``:
     At least one facet of this simplex is non-boundary and currently
-    locked. See lockFacet() for further details on how facet locks
-    work and what their implications are.)doc";
+    locked. This exception will be thrown before any change is made.
+    See lockFacet() for further details on how facet locks work and
+    what their implications are.)doc";
 
 // Docstring regina::python::doc::detail::SimplexBase_::join
 constexpr const char *join =
@@ -442,7 +443,8 @@ Exception ``InvalidArgument``:
     itself.
 
 Exception ``LockViolation``:
-    The given facet of this simplex is currently locked. See
+    The given facet of this simplex is currently locked. This
+    exception will be thrown before any change is made. See
     lockFacet() for further details on how facet locks work and what
     their implications are.
 
@@ -693,7 +695,8 @@ This routine is safe to call even if the given facet is already a
 boundary facet (in which case it will do nothing).
 
 Exception ``LockViolation``:
-    The given facet of this simplex is currently locked. See
+    The given facet of this simplex is currently locked. This
+    exception will be thrown before any change is made. See
     lockFacet() for further details on how facet locks work and what
     their implications are.
 

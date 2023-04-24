@@ -173,18 +173,39 @@ bool Triangulation<3>::idealToFinite() {
     return true;
 }
 
-void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
-    if (! tet) {
-        // Preconditions disallow empty triangulations, but anyway:
-        if (simplices_.empty())
-            return;
+void Triangulation<3>::puncture(Triangle<3>* location) {
+    // If no triangle is passed, then we avoid ever having to compute the
+    // skeleton (since the skeleton will be destroyed after this operation
+    // anyway).  Therefore we keep the location of the puncture as a
+    // (tetrahedron, facet) pair:
+    Tetrahedron<3>* tet;
+    int facet;
 
+    if (location) {
+        if (std::addressof(location->triangulation()) != this)
+            throw InvalidArgument("puncture(): the given location is not "
+                "within this triangulation");
+        const auto& emb = location->front();
+        tet = emb.tetrahedron();
+        facet = emb.triangle();
+    } else {
+        if (simplices_.empty())
+            throw InvalidArgument("puncture(): the triangulation is empty");
+        // The default location:
         tet = simplices_.front();
+        facet = 0;
     }
 
-    ChangeEventGroup span(*this);
+    // Is there a lock that we need to preserve?
+    bool lock = tet->isFacetLocked(facet);
 
-    // We will attach a pair of triangular prisms to face 123 of tet.
+    // Note: we use the "raw" routines (joinRaw, newSimplexRaw, etc.),
+    // mainly since we want to manage facet locks manually.  This means that
+    // the takeSnapshot() and ChangeAndClearSpan here are vital.
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
+
+    // We will attach a pair of triangular prisms to the given facet of tet.
     // We will join the rectangular walls of the prisms together, and
     // one triangular end from each will join to form the new S^2 boundary.
     Tetrahedron<3>* prism[2][3];
@@ -194,29 +215,54 @@ void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
     int i, j;
     for (j = 0; j < 3; ++j)
         for (i = 0; i < 2; ++i)
-            prism[i][j] = newTetrahedron();
+            prism[i][j] = newSimplexRaw();
 
-    prism[0][0]->join(0, prism[0][1], Perm<4>(3,0,1,2));
-    prism[0][1]->join(0, prism[0][2], Perm<4>(3,0,1,2));
+    prism[0][0]->joinRaw(0, prism[0][1], {3,0,1,2});
+    prism[0][1]->joinRaw(0, prism[0][2], {3,0,1,2});
 
-    prism[1][0]->join(1, prism[1][1], Perm<4>(3,0,1,2));
-    prism[1][1]->join(1, prism[1][2], Perm<4>(3,2,0,1));
+    prism[1][0]->joinRaw(1, prism[1][1], {3,0,1,2});
+    prism[1][1]->joinRaw(1, prism[1][2], {3,2,0,1});
 
-    prism[0][0]->join(1, prism[1][0], Perm<4>(1,2,3,0));
-    prism[0][0]->join(2, prism[1][0], Perm<4>(1,2,3,0));
-    prism[0][1]->join(1, prism[1][1], Perm<4>(1,2,3,0));
-    prism[0][1]->join(2, prism[1][1], Perm<4>(1,2,3,0));
-    prism[0][2]->join(1, prism[1][2], Perm<4>(0,1,3,2));
-    prism[0][2]->join(2, prism[1][2], Perm<4>(0,1,3,2));
+    prism[0][0]->joinRaw(1, prism[1][0], {1,2,3,0});
+    prism[0][0]->joinRaw(2, prism[1][0], {1,2,3,0});
+    prism[0][1]->joinRaw(1, prism[1][1], {1,2,3,0});
+    prism[0][1]->joinRaw(2, prism[1][1], {1,2,3,0});
+    prism[0][2]->joinRaw(1, prism[1][2], {0,1,3,2});
+    prism[0][2]->joinRaw(2, prism[1][2], {0,1,3,2});
 
-    Tetrahedron<3>* adj = tet->adjacentTetrahedron(0);
-    if (adj) {
-        Perm<4> gluing = tet->adjacentGluing(0);
-        tet->unjoin(0);
-        prism[1][0]->join(0, adj, gluing);
+    // We need an even permutation that maps 0 -> facet.
+    // We will choose this to be self-inverse also.
+    Perm<4> swap;
+    switch (facet) {
+        case 1:
+            swap = Perm<4>(1,0,3,2); break;
+        case 2:
+            swap = Perm<4>(2,3,0,1); break;
+        case 3:
+            swap = Perm<4>(3,2,1,0); break;
+        default:
+            // If facet == 0 then the default (identity) permutation is fine.
+            break;
     }
 
-    tet->join(0, prism[0][0], Perm<4>(3,0,1,2));
+    Tetrahedron<3>* adj = tet->adjacentTetrahedron(facet);
+    if (adj) {
+        Perm<4> gluing = tet->adjacentGluing(facet);
+        tet->unjoinRaw(facet);
+        prism[1][0]->joinRaw(0, adj, gluing * swap /* 0 -> facet */);
+    }
+
+    tet->joinRaw(facet, prism[0][0], Perm<4>(3,0,1,2) * swap /* facet -> 0 */);
+
+    // Move the triangle lock, if there was one.
+    // If adj is non-null, its lock is already in place; we just need to
+    // fix tet (move the lock from tet:facet to the far side of the prism).
+    // If adj is null (so the triangle is boundary), this same code will push
+    // the lock out to the new boundary triangle as expected.
+    if (lock) {
+        tet->unlockFacetRaw(facet);
+        prism[1][0]->lockFacetRaw(0);
+    }
 }
 
 void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
@@ -238,7 +284,10 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     insertTriangulation(other);
 
     // Make the puncture and record the resulting new boundary triangles.
-    puncture(simplices_.front());
+    // Note: the default location for puncture() is tetrahedron 0, facet 0.
+    // which means the puncture comes from the original (this) triangulation,
+    // not the inserted copy of other.
+    puncture();
     Tetrahedron<3>* bdry[2] = {
         simplices_[simplices_.size() - 2],
         simplices_[simplices_.size() - 1]

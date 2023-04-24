@@ -611,8 +611,17 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def("barycentricSubdivision", // deprecated
             &Triangulation<3>::subdivide, rbase::barycentricSubdivision)
         .def("pinchEdge", &Triangulation<3>::pinchEdge, rdoc::pinchEdge)
-        .def("puncture", &Triangulation<3>::puncture,
-            pybind11::arg("tet") = nullptr, rdoc::puncture)
+        .def("puncture", overload_cast<regina::Triangle<3>*>(
+            &Triangulation<3>::puncture),
+            pybind11::arg("location") = nullptr, rdoc::puncture)
+        .def("puncture", [](Triangulation<3>& tri,
+                    regina::Tetrahedron<3>* tet) {
+                // This is deprecated; reimplement it here.
+                if (tet)
+                    tri.puncture(tet->triangle(0));
+                else
+                    tri.puncture();
+            }, rdoc::puncture_2)
         .def("layerOn", &Triangulation<3>::layerOn,
             pybind11::return_value_policy::reference, rdoc::layerOn)
         .def("fillTorus",

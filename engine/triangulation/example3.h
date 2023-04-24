@@ -128,7 +128,7 @@ class Example<3> : public detail::ExampleBase<3> {
          * \pre gcd(\a p, \a q) = 1.
          *
          * \exception InvalidArgument The preconditions above do not hold;
-         * that is, either \a q ≥ \q p and (\a p,\a q) ≠ (0,1), and/or
+         * that is, either \a q ≥ \a p and (\a p,\a q) ≠ (0,1), and/or
          * \a p and \a q are not coprime.
          *
          * \param p a parameter of the desired lens space.

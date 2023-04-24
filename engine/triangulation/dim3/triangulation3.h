@@ -1097,6 +1097,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception UnsolvedCase An integer overflow occurred during
          * the computation.
          *
+         * \exception LockViolation At least one of the two boundary triangles
+         * is currently locked.  This exception will be thrown before any
+         * changes are made.  See Simplex<3>::lockFacet() for further details
+         * on how such locks work and what their implications are.
+         *
          * \return the boundary edge representing the algebraic
          * longitude of the knot (after this triangulation has
          * been modified if necessary).
@@ -1160,6 +1165,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception UnsolvedCase An integer overflow occurred during
          * the computation.
          *
+         * \exception LockViolation At least one of the two boundary triangles
+         * is currently locked.  This exception will be thrown before any
+         * changes are made.  See Simplex<3>::lockFacet() for further details
+         * on how such locks work and what their implications are.
+         *
          * \return the boundary edge representing the meridian (after this
          * triangulation has been modified if necessary).
          */
@@ -1222,6 +1232,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \exception UnsolvedCase An integer overflow occurred during
          * the computation.
+         *
+         * \exception LockViolation At least one of the two boundary triangles
+         * is currently locked.  This exception will be thrown before any
+         * changes are made.  See Simplex<3>::lockFacet() for further details
+         * on how such locks work and what their implications are.
          *
          * \return a pair (\a m, \a l), where \a m is the boundary edge
          * representing the meridian and \a l is the boundary edge representing
@@ -2513,6 +2528,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * routine will return \c true.  Otherwise, this routine will
          * return \c false and the triangulation will not be changed.
          *
+         * If this triangulation has locks on any tetrahedra and/or their
+         * facets, these will not prevent the ordering from taking place.
+         * Instead, any locks will be transformed accordingly (i.e., the
+         * facets of each tetrahedron will exchange their lock states according
+         * to how the vertices of that tetrahedron have been relabelled).
+         *
          * \warning This routine may be slow, since it backtracks
          * through all possible edge orientations until a consistent one
          * has been found.
@@ -3163,25 +3184,22 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         void pinchEdge(Edge<3>* e);
 
         /**
-         * Punctures this manifold by removing a 3-ball from the interior of
-         * the given tetrahedron.  If no tetrahedron is specified (i.e.,
-         * the tetrahedron pointer is \c null), then the puncture will be
-         * taken from the interior of tetrahedron 0.
+         * Punctures this manifold by thickening the given triangle into a
+         * triangular pillow and then removing a 3-ball from its interior.
+         * If no triangle is specified (i.e., the triangle pointer is \c null),
+         * then the triangle used will be facet 0 of tetrahedron 0.
          *
-         * The puncture will not meet the boundary of the tetrahedron,
-         * so nothing will go wrong if the tetrahedron has boundary facets
-         * and/or ideal vertices.  A side-effect of this, however, is
-         * that the resulting triangulation will contain additional vertices,
-         * and will almost certainly be far from minimal.
-         * It is highly recommended that you run intelligentSimplify()
-         * if you do not need to preserve the combinatorial structure of
-         * the new triangulation.
+         * The puncture will not meet the boundary of the pillow, and so
+         * nothing will go wrong if the given triangle is boundary or has
+         * ideal vertices.  A side-effect of this, however, is that the
+         * resulting triangulation will contain additional vertices, and will
+         * almost certainly be far from minimal.  It is highly recommended
+         * that you run intelligentSimplify() if you do not need to preserve
+         * the combinatorial structure of the new triangulation.
          *
-         * The puncturing is done by subdividing the original tetrahedron.
-         * The new tetrahedra will have orientations consistent with the
-         * original tetrahedra, so if the triangulation was originally oriented
-         * then it will also be oriented after this routine has been called.
-         * See isOriented() for further details on oriented triangulations.
+         * If this triangulation was originally oriented, then it will also be
+         * oriented after this routine has been called.  See isOriented() for
+         * further details on oriented triangulations.
          *
          * The new sphere boundary will be formed from two triangles;
          * specifically, face 0 of the last and second-last tetrahedra
@@ -3189,14 +3207,49 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * that vertex 1 of each tetrahedron coincides, and vertices 2,3
          * of one map to vertices 3,2 of the other.
          *
+         * Tetrahedron and/or facet locks will not prevent the puncture
+         * from taking place.  If the given triangle was locked, then
+         * this lock will be moved to one of the two triangles surrounding
+         * the triangular pillow.  In particular, if the given triangle
+         * is boundary, then the lock will be moved to the corresponding
+         * boundary triangle.
+         *
+         * \pre This triangulation is non-empty, and if \c location is non-null
+         * then it is in fact a triangle belonging to this triangulation.
+         *
+         * \exception InvalidArgument The given triangle is non-null but
+         * not a triangle of this triangulation, or the given triangle
+         * is null but this triangulation is empty.
+         *
+         * \param location the triangle indicating where the puncture
+         * should be taken.  This may be \c null (the default), in which case
+         * facet 0 of tetrahedron 0 will be used.
+         */
+        void puncture(Triangle<3>* location = nullptr);
+
+        /**
+         * Deprecated routine that punctures this manifold by removing a
+         * 3-ball from the interior of the given tetrahedron.
+         *
+         * \deprecated Since the operation in fact involves prying open a
+         * triangle, puncture() now takes a triangle instead of a tetrahedron
+         * to indicate the location for the operation.  If \a tet is null,
+         * then this function is equivalent to calling `puncture()`; otherwise
+         * it is equivalent to calling `puncture(tet->triangle(0))`.  See
+         * puncture(Triangle<3>*) for further details.
+         *
          * \pre This triangulation is non-empty, and if \c tet is non-null
          * then it is in fact a tetrahedron of this triangulation.
          *
-         * \param tet the tetrahedron inside which the puncture will be
-         * taken.  This may be \c null (the default), in which case the
-         * first tetrahedron will be used.
+         * \exception InvalidArgument The given tetrahedron is non-null but
+         * not a tetrahedron of this triangulation, or the given tetrahedron
+         * is null but this triangulation is empty.
+         *
+         * \param tet the tetrahedron indicating where the puncture will be
+         * taken.  This may be \c null, in which case tetrahedron 0 will be
+         * used.
          */
-        void puncture(Tetrahedron<3>* tet = nullptr);
+        [[deprecated]] void puncture(Tetrahedron<3>* tet);
 
         /*@}*/
         /**
@@ -3215,6 +3268,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is a boundary edge of this triangulation,
          * and the two boundary triangles on either side of it are distinct.
+         *
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, either the given edge is non-boundary, or the same
+         * boundary triangles lie on both sides of it.
+         *
+         * \exception LockViolation At least one of the two boundary triangles
+         * on either side of the given edge is currently locked.  This
+         * exception will be thrown before any changes are made.  See
+         * Simplex<3>::lockFacet() for further details on how such locks
+         * work and what their implications are.
          *
          * \param edge the boundary edge upon which to layer.
          * \return the new tetrahedron provided by the layering.
@@ -4131,6 +4194,13 @@ inline bool Triangulation<3>::minimizeBoundary() {
 
 inline bool Triangulation<3>::minimizeVertices() {
     return minimiseVertices();
+}
+
+inline void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
+    if (tet)
+        puncture(tet->triangle(0));
+    else
+        puncture(); // use the default location
 }
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()

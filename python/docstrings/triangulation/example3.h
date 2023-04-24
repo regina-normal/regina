@@ -51,6 +51,10 @@ tetrahedra in the triangulation.
 Precondition:
     gcd(*a1*, *b1*) = gcd(*a2*, *b2*) = gcd(*a3*, *b3*) = 1.
 
+Exception ``InvalidArgument``:
+    The preconditions above do not hold; that is, at least one of the
+    pairs (*a1*, *b1*), (*a2*, *b2*) or (*a3*, *b3*) is not coprime.
+
 Parameter ``a1``:
     a parameter describing the first layered solid torus in the
     augmented triangular solid torus.
@@ -163,6 +167,10 @@ Precondition:
 Precondition:
     gcd(*p*, *q*) = 1.
 
+Exception ``InvalidArgument``:
+    The preconditions above do not hold; that is, either *q* ≥ *p* and
+    (*p*,*q*) ≠ (0,1), and/or *p* and *q* are not coprime.
+
 Parameter ``p``:
     a parameter of the desired lens space.
 
@@ -187,6 +195,10 @@ routine. The third parameter *c* will be deduced automatically as *c*
 
 Precondition:
     gcd(*a*, *b*) = 1.
+
+Exception ``InvalidArgument``:
+    The preconditions above do not hold; that is, *a* and *b* are not
+    coprime.
 
 Parameter ``a``:
     the first parameter of the layered solid torus.
@@ -254,6 +266,11 @@ Precondition:
 
 Precondition:
     gcd(*a1*, *b1*) = gcd(*a2*, *b2*) = gcd(*a3*, *b3*) = 1.
+
+Exception ``InvalidArgument``:
+    The preconditions above do not hold; that is, at least one of
+    *a_1*, *a_2* or *a_3* is zero, and/or at least one of the pairs
+    (*a1*, *b1*), (*a2*, *b2*) or (*a3*, *b3*) is not coprime.
 
 Parameter ``a1``:
     a parameter describing the first exceptional fibre.

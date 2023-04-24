@@ -215,7 +215,8 @@ Precondition:
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
-    simplex and/or facet. See Simplex<dim>::lock() and
+    simplex and/or facet. This exception will be thrown before any
+    changes are made. See Simplex<dim>::lock() and
     Simplex<dim>::lockFacet() for further details on how such locks
     work and what their implications are.)doc";
 
@@ -939,8 +940,9 @@ dimension 2, triangulations cannot have cusps).
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked boundary facet.
-    See Simplex<dim>::lockFacet() for further details on how such
-    locks work and what their implications are.
+    This exception will be thrown before any changes are made. See
+    Simplex<dim>::lockFacet() for further details on how such locks
+    work and what their implications are.
 
 Returns:
     ``True`` if changes were made, or ``False`` if the original
@@ -2036,7 +2038,8 @@ destroyed immediately.
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
-    simplex and/or facet. See Simplex<dim>::lock() and
+    simplex and/or facet. This exception will be thrown before any
+    changes are made. See Simplex<dim>::lock() and
     Simplex<dim>::lockFacet() for further details on how such locks
     work and what their implications are.)doc";
 
@@ -2053,7 +2056,8 @@ Precondition:
 
 Exception ``LockViolation``:
     The given simplex and/or one of its facets is currently locked.
-    See Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+    This exception will be thrown before any changes are made. See
+    Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
     details on how such locks work and what their implications are.
 
 Parameter ``simplex``:
@@ -2071,9 +2075,9 @@ any), and will be destroyed immediately.
 
 Exception ``LockViolation``:
     The requested simplex and/or one of its facets is currently
-    locked. See Simplex<dim>::lock() and Simplex<dim>::lockFacet() for
-    further details on how such locks work and what their implications
-    are.
+    locked. This exception will be thrown before any changes are made.
+    See Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
+    details on how such locks work and what their implications are.
 
 Parameter ``index``:
     specifies which top-dimensional simplex to remove; this must be
@@ -2259,7 +2263,8 @@ Precondition:
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
-    simplex and/or facet. See Simplex<dim>::lock() and
+    simplex and/or facet. This exception will be thrown before any
+    changes are made. See Simplex<dim>::lock() and
     Simplex<dim>::lockFacet() for further details on how such locks
     work and what their implications are.)doc";
 

@@ -1004,9 +1004,10 @@ Note that this operation is a loose converse of finiteToIdeal().
 
 Exception ``LockViolation``:
     This triangulation contains at least one locked top-dimensional
-    simplex and/or facet. See Simplex<dim>::lock() and
-    Simplex<dim>::lockFacet() for further details on how such locks
-    work and what their implications are.
+    simplex and/or facet. This exception will be thrown before any
+    changes are made. See Simplex<3>::lock() and
+    Simplex<3>::lockFacet() for further details on how such locks work
+    and what their implications are.
 
 Returns:
     ``True`` if and only if the triangulation was changed.
@@ -1081,6 +1082,10 @@ Precondition:
 
 Precondition:
     gcd(*cuts0*, *cuts1*) = 1.
+
+Exception ``InvalidArgument``:
+    The preconditions above do not hold; that is, either *cuts0* >
+    *cuts1*, and/or *cuts0* and *cuts1* are not coprime.
 
 Parameter ``cuts0``:
     the smallest of the three desired intersection numbers.
@@ -1592,6 +1597,18 @@ Precondition:
     The given edge is a boundary edge of this triangulation, and the
     two boundary triangles on either side of it are distinct.
 
+Exception ``InvalidArgument``:
+    The preconditions above do not hold; that is, either the given
+    edge is non-boundary, or the same boundary triangles lie on both
+    sides of it.
+
+Exception ``LockViolation``:
+    At least one of the two boundary triangles on either side of the
+    given edge is currently locked. This exception will be thrown
+    before any changes are made. See Simplex<3>::lockFacet() for
+    further details on how such locks work and what their implications
+    are.
+
 Parameter ``edge``:
     the boundary edge upon which to layer.
 
@@ -1682,6 +1699,12 @@ Exception ``FailedPrecondition``:
 
 Exception ``UnsolvedCase``:
     An integer overflow occurred during the computation.
+
+Exception ``LockViolation``:
+    At least one of the two boundary triangles is currently locked.
+    This exception will be thrown before any changes are made. See
+    Simplex<3>::lockFacet() for further details on how such locks work
+    and what their implications are.
 
 Returns:
     the boundary edge representing the algebraic longitude of the knot
@@ -1833,6 +1856,12 @@ Exception ``FailedPrecondition``:
 Exception ``UnsolvedCase``:
     An integer overflow occurred during the computation.
 
+Exception ``LockViolation``:
+    At least one of the two boundary triangles is currently locked.
+    This exception will be thrown before any changes are made. See
+    Simplex<3>::lockFacet() for further details on how such locks work
+    and what their implications are.
+
 Returns:
     the boundary edge representing the meridian (after this
     triangulation has been modified if necessary).)doc";
@@ -1901,6 +1930,12 @@ Exception ``FailedPrecondition``:
 
 Exception ``UnsolvedCase``:
     An integer overflow occurred during the computation.
+
+Exception ``LockViolation``:
+    At least one of the two boundary triangles is currently locked.
+    This exception will be thrown before any changes are made. See
+    Simplex<3>::lockFacet() for further details on how such locks work
+    and what their implications are.
 
 Returns:
     a pair (*m*, *l*), where *m* is the boundary edge representing the
@@ -2176,6 +2211,12 @@ tetrahedron will be relabelled accordingly and this routine will
 return ``True``. Otherwise, this routine will return ``False`` and the
 triangulation will not be changed.
 
+If this triangulation has locks on any tetrahedra and/or their facets,
+these will not prevent the ordering from taking place. Instead, any
+locks will be transformed accordingly (i.e., the facets of each
+tetrahedron will exchange their lock states according to how the
+vertices of that tetrahedron have been relabelled).
+
 .. warning::
     This routine may be slow, since it backtracks through all possible
     edge orientations until a consistent one has been found.
@@ -2252,24 +2293,22 @@ Parameter ``e``:
 
 // Docstring regina::python::doc::Triangulation_::puncture
 static const char *puncture =
-R"doc(Punctures this manifold by removing a 3-ball from the interior of the
-given tetrahedron. If no tetrahedron is specified (i.e., the
-tetrahedron pointer is ``None``), then the puncture will be taken from
-the interior of tetrahedron 0.
+R"doc(Punctures this manifold by thickening the given triangle into a
+triangular pillow and then removing a 3-ball from its interior. If no
+triangle is specified (i.e., the triangle pointer is ``None``), then
+the triangle used will be facet 0 of tetrahedron 0.
 
-The puncture will not meet the boundary of the tetrahedron, so nothing
-will go wrong if the tetrahedron has boundary facets and/or ideal
-vertices. A side-effect of this, however, is that the resulting
-triangulation will contain additional vertices, and will almost
-certainly be far from minimal. It is highly recommended that you run
+The puncture will not meet the boundary of the pillow, and so nothing
+will go wrong if the given triangle is boundary or has ideal vertices.
+A side-effect of this, however, is that the resulting triangulation
+will contain additional vertices, and will almost certainly be far
+from minimal. It is highly recommended that you run
 intelligentSimplify() if you do not need to preserve the combinatorial
 structure of the new triangulation.
 
-The puncturing is done by subdividing the original tetrahedron. The
-new tetrahedra will have orientations consistent with the original
-tetrahedra, so if the triangulation was originally oriented then it
-will also be oriented after this routine has been called. See
-isOriented() for further details on oriented triangulations.
+If this triangulation was originally oriented, then it will also be
+oriented after this routine has been called. See isOriented() for
+further details on oriented triangulations.
 
 The new sphere boundary will be formed from two triangles;
 specifically, face 0 of the last and second-last tetrahedra of the
@@ -2277,14 +2316,51 @@ triangulation. These two triangles will be joined so that vertex 1 of
 each tetrahedron coincides, and vertices 2,3 of one map to vertices
 3,2 of the other.
 
+Tetrahedron and/or facet locks will not prevent the puncture from
+taking place. If the given triangle was locked, then this lock will be
+moved to one of the two triangles surrounding the triangular pillow.
+In particular, if the given triangle is boundary, then the lock will
+be moved to the corresponding boundary triangle.
+
+Precondition:
+    This triangulation is non-empty, and if ``location`` is non-null
+    then it is in fact a triangle belonging to this triangulation.
+
+Exception ``InvalidArgument``:
+    The given triangle is non-null but not a triangle of this
+    triangulation, or the given triangle is null but this
+    triangulation is empty.
+
+Parameter ``location``:
+    the triangle indicating where the puncture should be taken. This
+    may be ``None`` (the default), in which case facet 0 of
+    tetrahedron 0 will be used.)doc";
+
+// Docstring regina::python::doc::Triangulation_::puncture_2
+static const char *puncture_2 =
+R"doc(Deprecated routine that punctures this manifold by removing a 3-ball
+from the interior of the given tetrahedron.
+
+.. deprecated::
+    Since the operation in fact involves prying open a triangle,
+    puncture() now takes a triangle instead of a tetrahedron to
+    indicate the location for the operation. If *tet* is null, then
+    this function is equivalent to calling ``puncture()``; otherwise
+    it is equivalent to calling ``puncture(tet->triangle(0))``. See
+    puncture(Triangle<3>*) for further details.
+
 Precondition:
     This triangulation is non-empty, and if ``tet`` is non-null then
     it is in fact a tetrahedron of this triangulation.
 
+Exception ``InvalidArgument``:
+    The given tetrahedron is non-null but not a tetrahedron of this
+    triangulation, or the given tetrahedron is null but this
+    triangulation is empty.
+
 Parameter ``tet``:
-    the tetrahedron inside which the puncture will be taken. This may
-    be ``None`` (the default), in which case the first tetrahedron
-    will be used.)doc";
+    the tetrahedron indicating where the puncture will be taken. This
+    may be ``None``, in which case tetrahedron 0 will be used.)doc";
 
 // Docstring regina::python::doc::Triangulation_::recogniseHandlebody
 static const char *recogniseHandlebody =
@@ -2370,19 +2446,44 @@ Returns:
 static const char *removeAllTetrahedra =
 R"doc(A dimension-specific alias for removeAllSimplices().
 
-See removeAllSimplices() for further information.)doc";
+See removeAllSimplices() for further information.
+
+Exception ``LockViolation``:
+    This triangulation contains at least one locked tetrahedron and/or
+    facet. This exception will be thrown before any changes are made.
+    See Simplex<3>::lock() and Simplex<3>::lockFacet() for further
+    details on how such locks work and what their implications are.)doc";
 
 // Docstring regina::python::doc::Triangulation_::removeTetrahedron
 static const char *removeTetrahedron =
 R"doc(A dimension-specific alias for removeSimplex().
 
-See removeSimplex() for further information.)doc";
+See removeSimplex() for further information.
+
+Exception ``LockViolation``:
+    The given tetrahedron and/or one of its facets is currently
+    locked. This exception will be thrown before any changes are made.
+    See Simplex<3>::lock() and Simplex<3>::lockFacet() for further
+    details on how such locks work and what their implications are.
+
+Parameter ``tet``:
+    the tetrahedron to remove.)doc";
 
 // Docstring regina::python::doc::Triangulation_::removeTetrahedronAt
 static const char *removeTetrahedronAt =
 R"doc(A dimension-specific alias for removeSimplexAt().
 
-See removeSimplexAt() for further information.)doc";
+See removeSimplexAt() for further information.
+
+Exception ``LockViolation``:
+    The requested tetrahedron and/or one of its facets is currently
+    locked. This exception will be thrown before any changes are made.
+    See Simplex<3>::lock() and Simplex<3>::lockFacet() for further
+    details on how such locks work and what their implications are.
+
+Parameter ``index``:
+    specifies which tetrahedron to remove; this must be between 0 and
+    size()-1 inclusive.)doc";
 
 // Docstring regina::python::doc::Triangulation_::reorderTetrahedraBFS
 static const char *reorderTetrahedraBFS =

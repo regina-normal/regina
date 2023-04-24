@@ -4492,69 +4492,65 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (n == 0)
                 return;
 
-            for (unsigned long i = 0; i <= n; ++i) {
+            for (auto location : tri.triangles()) {
+                size_t locIndex = location->index();
+                Component<3>* component = location->component();
+
                 Triangulation<3> punc(tri);
-                const Tetrahedron<3>* origTet;
-                if (i == n) {
-                    origTet = tri.tetrahedron(0);
-                    punc.puncture();
-                } else {
-                    origTet = tri.tetrahedron(i);
-                    punc.puncture(punc.tetrahedron(i));
-                }
+                punc.puncture(punc.triangle(locIndex));
 
                 if (punc.size() != n + 6) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture gives wrong # tetrahedra.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (punc.isValid() != tri.isValid()) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture changes validity.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (punc.isIdeal() != tri.isIdeal()) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture changes idealness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (punc.isStandard() != tri.isStandard()) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture changes standardness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (punc.isConnected() != tri.isConnected()) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture changes connectedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (punc.isOrientable() != tri.isOrientable()) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture changes orientability.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (punc.isOriented() != tri.isOriented()) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture changes orientedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (punc.isClosed()) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture gives a closed triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -4562,7 +4558,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 if (punc.countBoundaryComponents() !=
                         tri.countBoundaryComponents() + 1) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture gives wrong # boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -4570,7 +4566,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 if (punc.countBoundaryTriangles() !=
                         tri.countBoundaryTriangles() + 2) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture gives wrong # boundary triangles.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -4581,19 +4577,19 @@ class Triangulation3Test : public TriangulationTest<3> {
                 if ((! bc) || bc != punc.tetrahedron(nPunc - 2)->
                         triangle(0)->boundaryComponent()) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture gives wrong boundary triangles.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (bc->countTriangles() != 2) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture gives wrong number of S^2 triangles.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (bc->eulerChar() != 2) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture gives wrong S^2 Euler characteristic.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -4604,21 +4600,21 @@ class Triangulation3Test : public TriangulationTest<3> {
                         punc.tetrahedron(nPunc - 1)->vertex(3) !=
                         punc.tetrahedron(nPunc - 2)->vertex(2)) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture gives wrong S^2 vertex labels.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (punc.eulerCharTri() != tri.eulerCharTri() + 1) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture gives wrong Euler characteristic (tri).";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (punc.eulerCharManifold() != tri.eulerCharManifold() + 1) {
                     std::ostringstream msg;
-                    msg << name << ", tet " << i << ": "
+                    msg << name << ", triangle " << locIndex << ": "
                         << "puncture gives wrong Euler characteristic (mfd).";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -4626,18 +4622,17 @@ class Triangulation3Test : public TriangulationTest<3> {
                 if (tri.isValid()) {
                     if (! (punc.homology() == tri.homology())) {
                         std::ostringstream msg;
-                        msg << name << ", tet " << i << ": "
+                        msg << name << ", triangle " << locIndex << ": "
                             << "puncture changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
                     AbelianGroup expectH2 = tri.homology<2>();
                     AbelianGroup foundH2 = punc.homology<2>();
-                    Component<3>* c = origTet->component();
-                    if (! c->isClosed()) {
+                    if (! component->isClosed()) {
                         // X -> X + Z
                         expectH2.addRank();
-                    } else if (! c->isOrientable()) {
+                    } else if (! component->isOrientable()) {
                         // X + Z_2 -> X + Z
                         expectH2.addRank();
                         foundH2.addTorsion(2);
@@ -4645,7 +4640,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
                     if (foundH2 != expectH2) {
                         std::ostringstream msg;
-                        msg << name << ", tet " << i << ": "
+                        msg << name << ", triangle " << locIndex << ": "
                             << "puncture gives the wrong H2.";
                         CPPUNIT_FAIL(msg.str());
                     }

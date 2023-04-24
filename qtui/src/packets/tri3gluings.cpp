@@ -965,8 +965,8 @@ void Tri3GluingsUI::drillEdge() {
                     // belongs to the correct connected component.
                     ans = regina::make_packet<Triangulation<3>>(
                         std::in_place, *tri);
-                    ans->puncture(ans->tetrahedron(
-                        e->front().tetrahedron()->index()));
+                    size_t tet = e->front().tetrahedron()->index();
+                    ans->puncture(ans->tetrahedron(tet)->triangle(0));
                 } else if (e->vertex(0) != e->vertex(1) &&
                         (e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE ||
                          e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE)) {

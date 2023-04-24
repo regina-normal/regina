@@ -180,6 +180,9 @@ Edge<3>* Triangulation<3>::longitude() {
     BoundaryComponent<3>* bc = boundaryComponents_.front();
 
     // Layer until the longitude is a boundary edge.
+    // Note: if there is a lock violation, this will happen on the first
+    // layering (i.e., no changes will be made).
+    //
     // Since we are modifying the triangulation now, we must stop
     // referencing edges and start referencing tetrahedra instead.
     Tetrahedron<3>* bdryTet[3];
@@ -375,6 +378,8 @@ Edge<3>* Triangulation<3>::meridian() {
     }
 
     // Now layer so that the meridian is a boundary edge.
+    // Note: if there is a lock violation, this will happen on the first
+    // layering (i.e., no changes will be made).
     while (true) {
         if (merCuts[0] == 0)
             return bdryTet[0]->edge(bdryEdge[0]);
@@ -403,6 +408,9 @@ Edge<3>* Triangulation<3>::meridian() {
 }
 
 std::pair<Edge<3>*, Edge<3>*> Triangulation<3>::meridianLongitude() {
+    // As with longitude() and meridian(), if there is a lock violation,
+    // this will happen on the first layering (i.e., no changes will be made).
+
     // The easy part: find the algebraic longitude.
     // This routine also handles all our basic sanity checks.
     Edge<3>* l = longitude();
