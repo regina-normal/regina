@@ -118,6 +118,15 @@ class IntegerBase;
  * supported, these are provided through member functions tightEncoding(),
  * tightEncode(), tightDecoding() and tightDecode() within the corresponding
  * classes.
+ *
+ * Note that classes that provide a tightEncoding() member function will
+ * typically also provide a hash() member function (which often uses the
+ * tight encoding in its implementation).  Unlike tight encodings, which are
+ * string-based and preserve equality/inequality perfectly, hashes map into a
+ * fixed-size integer range and so may have collisions (i.e., different objects
+ * may have the same hash value).  In short: tight encodings are designed for
+ * compression and printability, whereas hashes are designed to be used as
+ * integer keys in hash tables (and, for Python users, dictionaries and sets).
  */
 
 /**
@@ -143,19 +152,22 @@ class IntegerBase;
  *   This should throw an InvalidInput exception if the input stream
  *   does not begin with a valid tight encoding of an object of type \a T.
  *
- * In return, this base class will provide the following two functions,
- * both of which work with strings (and which are documented in full below):
+ * In return, this base class will provide the following three functions,
+ * which work with simpler (non-stream) data types, and which are documented
+ * in full below:
  *
- * - `std::string tightEncoding() const`; and
+ * - `std::string tightEncoding() const`;
  *
- * - `static T tightDecoding(const std::string&)`.
+ * - `static T tightDecoding(const std::string&)`; and
+ *
+ * - `size_t hash() const`.
  *
  * A class \a T that supports tight encodings does not _need_ to derive from
- * TightEncodable.  However, if it does not then it should implement all four
+ * TightEncodable.  However, if it does not then it should implement all five
  * of the above functions itself.  Examples of this include the permutation
  * classes (which have optimised implementations due to their very small space
  * requirements), and the arbitrary-precision integer classes (which use the
- * global integer encoding/decoding routines).
+ * global integer encoding/decoding routines and a simple arithmetic hash).
  *
  * \tparam T the type of object being encoded/decoded; this must derive
  * from TightEncodable<T>.
@@ -164,8 +176,8 @@ class IntegerBase;
  * derived from the class \a T.  In other words, end users cannot
  * construct objects of the parent class TightEncodable<T>.
  *
- * \python Not present, but the routines tightEncoding() and
- * tightDecoding() will be provided directly through the various subclasses.
+ * \python Not present, but the routines tightEncoding(), tightDecoding()
+ * and hash() will be provided directly through the various subclasses.
  *
  * \ingroup utilities
  */
@@ -216,6 +228,25 @@ struct TightEncodable {
             // For string-based decoding we use a different exception type.
             throw InvalidArgument(exc.what());
         }
+    }
+
+    /**
+     * Hashes this object to a non-negative integer, allowing it to be used
+     * for keys in hash tables.
+     *
+     * This hash function makes use of Regina's tight encodings.  In
+     * particular, any two objects with the same tight encoding will have equal
+     * hashes.  This implementation (and therefore the specific hash value for
+     * each object) is subject to change in future versions of Regina.
+     *
+     * \python For Python users, this function uses the standard Python
+     * name __hash__().  This allows objects of this type to be used as
+     * keys in Python dictionaries and sets.
+     *
+     * \return The integer hash of this object.
+     */
+    size_t hash() const {
+        return std::hash<std::string>{}(tightEncoding());
     }
 };
 

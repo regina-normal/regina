@@ -31,7 +31,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-d = { 1: -1, 'foo': -2 }
+d = { 8: -1, 'foo': -2 }
 counter = 10
 
 def test(obj):
@@ -40,10 +40,14 @@ def test(obj):
 		print(obj)
 		d[obj] = counter
 		counter = counter + 1
+	except:
+		print('Cannot hash and insert:', obj)
+	
+	try:
 		c = type(obj)
 		print(d[c(obj)])
 	except:
-		print('Cannot hash:', obj)
+		print('Cannot hash and lookup:', obj)
 
 test('sample string')
 test(Example2.kb())

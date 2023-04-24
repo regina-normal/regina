@@ -1106,6 +1106,23 @@ class Perm<7> {
         static Perm tightDecode(std::istream& input);
 
         /**
+         * Hashes this permutation to a non-negative integer, allowing it
+         * to be used for keys in hash tables.
+         *
+         * The implementation currently returns the internal permutation code
+         * (which for Perm<7> will always fit within a \c size_t).  This
+         * implementation (and therefore the specific hash values obtained)
+         * is subject to change in future versions of Regina.
+         *
+         * \python For Python users, this function uses the standard Python
+         * name __hash__().  This allows permutations to be used as keys in
+         * Python dictionaries and sets.
+         *
+         * \return The integer hash of this permutation.
+         */
+        constexpr size_t hash() const;
+
+        /**
          * Resets the images of all integers from \a from onwards to the
          * identity map.
          *
@@ -2255,6 +2272,10 @@ Perm<7> Perm<7>::tightDecode(iterator start, iterator limit,
     return Perm<7>(code0);
 }
 #endif // __DOXYGEN
+
+inline constexpr size_t Perm<7>::hash() const {
+    return code2_;
+}
 
 inline constexpr Perm<7>::Index Perm<7>::S7Index() const {
     return code2_;

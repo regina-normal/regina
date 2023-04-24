@@ -1235,6 +1235,23 @@ class Perm<4> {
         static Perm tightDecode(std::istream& input);
 
         /**
+         * Hashes this permutation to a non-negative integer, allowing it
+         * to be used for keys in hash tables.
+         *
+         * The implementation currently returns the internal permutation code
+         * (which for Perm<4> will always fit within a \c size_t).  This
+         * implementation (and therefore the specific hash values obtained)
+         * is subject to change in future versions of Regina.
+         *
+         * \python For Python users, this function uses the standard Python
+         * name __hash__().  This allows permutations to be used as keys in
+         * Python dictionaries and sets.
+         *
+         * \return The integer hash of this permutation.
+         */
+        constexpr size_t hash() const;
+
+        /**
          * Resets the images of all integers from \a from onwards to the
          * identity map.
          *
@@ -1868,6 +1885,10 @@ Perm<4> Perm<4>::tightDecode(iterator start, iterator limit,
     return Perm<4>(code);
 }
 #endif // __DOXYGEN
+
+inline constexpr size_t Perm<4>::hash() const {
+    return code_;
+}
 
 inline constexpr int Perm<4>::S4Index(int a, int b, int c, int d) {
     // First compute the ordered S4 index.

@@ -741,6 +741,27 @@ Parameter ``code``:
 Returns:
     the permutation reprsented by the given internal code.)doc";
 
+// Docstring regina::python::doc::Perm_::hash
+static const char *hash =
+R"doc(Hashes this permutation to a non-negative integer, allowing it to be
+used for keys in hash tables.
+
+The implementation currently returns the internal permutation code,
+truncated to a ``size_t`` where necessary. For the larger permutation
+classes (*n* ≥ 8), this is almost certainly a bad choice of hash
+function (since permutation codes are image packs, which have enormous
+"holes" across their overall integer range). This implementation (and
+therefore the specific hash values obtained) is subject to change in
+future versions of Regina.
+
+Python:
+    For Python users, this function uses the standard Python name
+    __hash__(). This allows permutations to be used as keys in Python
+    dictionaries and sets.
+
+Returns:
+    The integer hash of this permutation.)doc";
+
 // Docstring regina::python::doc::Perm_::imagePack
 static const char *imagePack =
 R"doc(Returns the image pack that represents this permutation.

@@ -1031,6 +1031,24 @@ Parameter ``a``:
 Parameter ``b``:
     the second integer whose contents should be swapped.)doc";
 
+// Docstring regina::python::doc::IntegerBase_::hash
+static const char *hash =
+R"doc(Hashes this arbitrary-precision integer to a ``size_t``, allowing it
+to be used for keys in hash tables.
+
+The implementation here is fairly simple (but it is a little more
+intelligent than just casting the integer down to a ``size_t``). The
+specific implementation (and therefore the hash values obtained) is
+subject to change in future versions of Regina.
+
+Python:
+    For Python users, this function uses the standard Python name
+    __hash__(). This allows Regina's arbitrary-precision integers to
+    be used as keys in Python dictionaries and sets.
+
+Returns:
+    The hash of this arbitrary-precision integer.)doc";
+
 // Docstring regina::python::doc::IntegerBase_::isInfinite
 static const char *isInfinite =
 R"doc(Returns whether this integer is infinity.

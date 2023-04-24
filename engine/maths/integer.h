@@ -1620,6 +1620,23 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          */
         static IntegerBase tightDecode(std::istream& input);
 
+        /**
+         * Hashes this arbitrary-precision integer to a \c size_t, allowing
+         * it to be used for keys in hash tables.
+         *
+         * The implementation here is fairly simple (but it is a little more
+         * intelligent than just casting the integer down to a \c size_t).
+         * The specific implementation (and therefore the hash values
+         * obtained) is subject to change in future versions of Regina.
+         *
+         * \python For Python users, this function uses the standard Python
+         * name __hash__().  This allows Regina's arbitrary-precision integers
+         * to be used as keys in Python dictionaries and sets.
+         *
+         * \return The hash of this arbitrary-precision integer.
+         */
+        size_t hash() const;
+
     private:
         /**
          * Initialises this integer to infinity.
@@ -3559,6 +3576,29 @@ inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecode(
         // For input streams we use a different exception type.
         throw InvalidInput(exc.what());
     }
+}
+
+template <bool supportInfinity>
+inline size_t IntegerBase<supportInfinity>::hash() const {
+    if constexpr (supportInfinity) {
+        // For infinity, just return an arbitrary hard-coded constant.
+        if (isInfinite())
+            return 33651164;
+    }
+
+    // We should ensure that hash(k) != hash(-k).
+    //
+    // By casting a GMP int to a signed long (if we are using GMP) and then
+    // casting a signed long directly to size_t, we get for k > 0:
+    //
+    // - hash(k) = k;
+    // - hash(-k) = 2^n - k (where n is the bitsize of size_t).
+    //
+    // This is enough distinguishing power for the time being.
+    if (large_)
+        return static_cast<size_t>(mpz_get_si(large_));
+    else
+        return static_cast<size_t>(small_);
 }
 
 template <bool supportInfinity>

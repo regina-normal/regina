@@ -1199,6 +1199,26 @@ class Perm {
         static Perm tightDecode(std::istream& input);
 
         /**
+         * Hashes this permutation to a non-negative integer, allowing it
+         * to be used for keys in hash tables.
+         *
+         * The implementation currently returns the internal permutation code,
+         * truncated to a \c size_t where necessary.  For the larger
+         * permutation classes (\a n ≥ 8), this is almost certainly a bad
+         * choice of hash function (since permutation codes are image packs,
+         * which have enormous "holes" across their overall integer range).
+         * This implementation (and therefore the specific hash values
+         * obtained) is subject to change in future versions of Regina.
+         *
+         * \python For Python users, this function uses the standard Python
+         * name __hash__().  This allows permutations to be used as keys in
+         * Python dictionaries and sets.
+         *
+         * \return The integer hash of this permutation.
+         */
+        constexpr size_t hash() const;
+
+        /**
          * Resets the images of all integers from \a from onwards to the
          * identity map.
          *
@@ -2333,6 +2353,11 @@ inline Perm<n> Perm<n>::tightDecoding(const std::string& enc) {
         // For strings we use a different exception type.
         throw InvalidArgument(exc.what());
     }
+}
+
+template <int n>
+constexpr size_t Perm<n>::hash() const {
+    return static_cast<size_t>(code_);
 }
 
 template <int n>

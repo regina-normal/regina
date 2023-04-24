@@ -132,7 +132,7 @@ void addPerm4(pybind11::module_& m) {
     });
     regina::python::add_output_basic(c, rdoc::str);
     regina::python::add_tight_encoding(c, rdoc::tightEncoding,
-        rdoc::tightDecoding);
+        rdoc::tightDecoding, rdoc::hash);
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
 
     regina::python::add_lightweight_array<decltype(Perm<4>::S4)>(c,

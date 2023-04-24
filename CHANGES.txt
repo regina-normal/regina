@@ -18,6 +18,8 @@ Version 7.4  [ (to be announced) ]
           of their validity checks (e.g., local moves on triangulations).
         - Updated the SnapPea kernel to the one shipped with SnapPy 3.0.3.
     ENGINE:
+        Class AbelianGroup:
+            - New routine hash(), which uses the tight encoding.
         Class BitManipulator<T>:
             - New routine swapBits().
         Class IntOfBits<k>:
@@ -27,7 +29,20 @@ Version 7.4  [ (to be announced) ]
               now check their preconditions and throw an exception if they fail.
         Class Face<dim, dim-1>:
             - New routines lock(), unlock(), and isLocked().
+        Class FacetPairing<dim>:
+            - New routine hash(), which uses the tight encoding.
+        Class FacetSpec<dim>:
+            - New routine hash(), which uses the tight encoding.
+        Class Integer:
+            - New routine hash(), which hashes the integer down to a size_t.
+        Class Isomorphism<dim>:
+            - New routine hash(), which uses the tight encoding.
+        Class LargeInteger:
+            - New routine hash(), which hashes the integer down to a size_t.
+        Class Laurent<T>, Laurent2<T>:
+            - New routine hash(), which uses the tight encoding.
         Class Link:
+            - New routine hash(), which uses the tight encoding.
             - Fixed a bug where calling resolve() would not clear out any
               cached link polynomials that had already been computed.
         Class LockViolation:
@@ -40,18 +55,23 @@ Version 7.4  [ (to be announced) ]
             - New inner type alias ChangeEventGroup, to assist with readability
               when using a ChangeEventSpan for optimisation purposes only.
             - The inner ChangeEventSpan class has a new member function held().
+        Class Perm<n>:
+            - New routine hash().
         Class SatAnnulus:
             - Routine attachLST() now checks its preconditions, and throws
               an exception if they fail.
         Class Simplex<dim>:
             - New routines lock(), lockFacet(), unlock(), unlockFacet(),
               unlockAll(), isLocked(), isFacetLocked(), and lockMask().
+        Class TightEncodable<T>:
+            - Now provides a hash() function also, based on the tight encoding.
         Class Triangulation<dim>:
             - New routines hasLocks(), lockBoundary(), and unlockAll(), to
               work with locked top-dimensional simplices and their facets.
             - New routine reorderBFS(), which essentially makes the old
               Triangulation<3>::reorderTetrahedraBFS() available in all
               dimensions.
+            - New routine hash(), which uses the tight encoding.
         Class Triangulation<3>:
             - Routine puncture() now takes an optional triangle, not an
               optional tetrahedron.  The old version is kept but deprecated.
@@ -63,6 +83,7 @@ Version 7.4  [ (to be announced) ]
               reorderBFS() (which is available in all dimensions).
         Class Vector<T>:
             - Added support for tight encodings and decodings.
+            - New routine hash(), which uses the tight encoding.
         Constant is_cpp_integer_v<T>:
             - New alternative to std::is_integeral_v<T> that allows for
               128-bit integers also.

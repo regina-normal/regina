@@ -43,6 +43,7 @@ using pybind11::overload_cast;
 namespace regina::python::doc::common {
     const char* TightEncodable_encoding = TightEncodable_::tightEncoding;
     const char* TightEncodable_decoding = TightEncodable_::tightDecoding;
+    const char* TightEncodable_hash = TightEncodable_::hash;
 }
 
 void addTightEncoding(pybind11::module_& m) {

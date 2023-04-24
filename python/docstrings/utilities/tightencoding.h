@@ -36,20 +36,23 @@ decodings via input/output streams:
   input stream does not begin with a valid tight encoding of an object
   of type *T*.
 
-In return, this base class will provide the following two functions,
-both of which work with strings (and which are documented in full
-below):
+In return, this base class will provide the following three functions,
+which work with simpler (non-stream) data types, and which are
+documented in full below:
 
-* ``std::string tightEncoding() const``; and
+* ``std::string tightEncoding() const``;
 
-* ``static T tightDecoding(const std::string&)``.
+* ``static T tightDecoding(const std::string&)``; and
+
+* ``size_t hash() const``.
 
 A class *T* that supports tight encodings does not _need_ to derive
 from TightEncodable. However, if it does not then it should implement
-all four of the above functions itself. Examples of this include the
+all five of the above functions itself. Examples of this include the
 permutation classes (which have optimised implementations due to their
 very small space requirements), and the arbitrary-precision integer
-classes (which use the global integer encoding/decoding routines).
+classes (which use the global integer encoding/decoding routines and a
+simple arithmetic hash).
 
 Template parameter ``T``:
     the type of object being encoded/decoded; this must derive from
@@ -61,8 +64,8 @@ Template parameter ``T``:
     construct objects of the parent class TightEncodable<T>.
 
 Python:
-    Not present, but the routines tightEncoding() and tightDecoding()
-    will be provided directly through the various subclasses.)doc";
+    Not present, but the routines tightEncoding(), tightDecoding() and
+    hash() will be provided directly through the various subclasses.)doc";
 
 // Docstring regina::python::doc::tightDecoding
 static const char *tightDecoding =
@@ -192,6 +195,25 @@ Returns:
     the resulting encoded string.)doc";
 
 namespace TightEncodable_ {
+
+// Docstring regina::python::doc::TightEncodable_::hash
+static const char *hash =
+R"doc(Hashes this object to a non-negative integer, allowing it to be used
+for keys in hash tables.
+
+This hash function makes use of Regina's tight encodings. In
+particular, any two objects with the same tight encoding will have
+equal hashes. This implementation (and therefore the specific hash
+value for each object) is subject to change in future versions of
+Regina.
+
+Python:
+    For Python users, this function uses the standard Python name
+    __hash__(). This allows objects of this type to be used as keys in
+    Python dictionaries and sets.
+
+Returns:
+    The integer hash of this object.)doc";
 
 // Docstring regina::python::doc::TightEncodable_::tightDecoding
 static const char *tightDecoding =

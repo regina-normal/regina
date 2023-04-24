@@ -160,7 +160,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         c.def_readonly_static("infinity", &Int::infinity);
 
     regina::python::add_tight_encoding(c, rdoc::tightEncoding,
-        rdoc::tightDecoding);
+        rdoc::tightDecoding, rdoc::hash);
     regina::python::add_eq_operators(c, rdoc::__eq, rdoc::__ne);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
