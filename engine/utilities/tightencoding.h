@@ -451,7 +451,7 @@ Int tightDecoding(const std::string& enc);
  *
  * The tight encoding will be read from the given input stream.  If the input
  * stream contains leading whitespace then it will be treated as an invalid
- * encoding (i.e., this routine will throw an exception).  The input routine
+ * encoding (i.e., this routine will throw an exception).  The input stream
  * _may_ contain further data: if this routine is successful then the input
  * stream will be left positioned immediately after the encoding, without
  * skipping any trailing whitespace.
@@ -612,7 +612,7 @@ namespace detail {
      * The tight encoding will be read from the given input stream.  If the
      * input stream contains leading whitespace then it will be treated as an
      * invalid encoding (i.e., this routine will throw an exception).  The
-     * input routine _may_ contain further data: if this routine is successful
+     * input stream _may_ contain further data: if this routine is successful
      * then the input stream will be left positioned immediately after the
      * encoding, without skipping any trailing whitespace.
      *
