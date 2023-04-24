@@ -3428,6 +3428,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * contain internal vertices (even if the original triangulations
          * do not).
          *
+         * Tetrahedron and/or facet locks will not prevent the connected sum
+         * from taking place.  The operation essentially involves prying open
+         * two triangles (one from each triangulation) and joining them with a
+         * connector gadget; if some original triangle \a t is locked then the
+         * lock will be pushed across to one of two triangles that results
+         * when \a t is pried open.  In particular, if \a t is a boundary
+         * triangle then the lock will be kept on the boundary (as expected).
+         *
          * It is allowed to pass this triangulation as \a other.
          *
          * \param other the triangulation to sum with this.

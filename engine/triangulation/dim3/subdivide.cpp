@@ -276,7 +276,13 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     // From here we can assume that each triangulation contains at least
     // one tetrahedron.
 
-    ChangeEventGroup span(*this);
+    // Note: This ChangeEventSpan is essential, since we use "raw" routines
+    // (joinRaw, etc.) further down below - this is so we can manage facet
+    // locks manually.  A ChangeEventSpan is enough: we do not need to take a
+    // snapshot or clear properties, since (a) that will be managed already
+    // by insertTriangulation() and puncture(), and (b) we will not compute
+    // any fresh properties that need clearing after that.
+    ChangeEventSpan span(*this);
 
     // Insert the other triangulation *before* puncturing this, so that
     // things work in the case where we sum a triangulation with itself.
@@ -299,42 +305,28 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     // Even if the triangle we picked is a boundary triangle (i.e., has
     // degree 1, not degree 2), the overall effect remains correct.
 
-    Triangle<3>* open = simplices_[n]->triangle(0);
-    if (open->degree() == 2) {
-        const FaceEmbedding<3, 2> emb1 = open->front();
-        const FaceEmbedding<3, 2> emb2 = open->back();
+    // We will pop open facet 0 of tetrahedron 0 from the second triangulation:
+    Tetrahedron<3>* openTet = simplices_[n];
+    bool lock = openTet->isFacetLocked(0);
 
-        emb1.tetrahedron()->unjoin(emb1.vertices()[3]);
+    // We choose the gluing permutations so that, if both triangulations
+    // are oriented, the connected sum respects this orientation.
+    if (Tetrahedron<3>* adj = openTet->adjacentTetrahedron(0)) {
+        Perm<4> gluing = openTet->adjacentGluing(0);
 
-        // We choose the gluing permutations so that, if both triangulations
-        // are oriented, the connected sum respects this orientation.
-        bool even = (emb1.vertices().sign() > 0);
-
-        if (even) {
-            bdry[0]->join(0, emb1.tetrahedron(),
-                emb1.vertices() * Perm<4>(3,0,1,2));
-            bdry[1]->join(0, emb2.tetrahedron(),
-                emb2.vertices() * Perm<4>(3,0,2,1));
-        } else {
-            bdry[0]->join(0, emb1.tetrahedron(),
-                emb1.vertices() * Perm<4>(3,0,2,1));
-            bdry[1]->join(0, emb2.tetrahedron(),
-                emb2.vertices() * Perm<4>(3,0,1,2));
-        }
+        openTet->unjoinRaw(0);
+        bdry[0]->joinRaw(0, openTet, {0,3,2,1});
+        bdry[1]->joinRaw(0, adj, gluing * Perm<4>(0,3,1,2));
     } else {
-        const FaceEmbedding<3, 2> emb1 = open->front();
+        bdry[0]->joinRaw(0, openTet, {0,3,2,1});
+    }
 
-        // We choose the gluing permutations so that, if both triangulations
-        // are oriented, the connected sum respects this orientation.
-        bool even = (emb1.vertices().sign() > 0);
-
-        if (even) {
-            bdry[0]->join(0, emb1.tetrahedron(),
-                emb1.vertices() * Perm<4>(3,0,1,2));
-        } else {
-            bdry[0]->join(0, emb1.tetrahedron(),
-                emb1.vertices() * Perm<4>(3,0,2,1));
-        }
+    if (lock) {
+        // Push the lock to the other side of what openTet was originally
+        // glued to.  If adj exists, the lock on its side is already in place.
+        // If adj does not exist, this will move the lock to the boundary.
+        openTet->unlockFacetRaw(0);
+        bdry[1]->lockFacetRaw(0);
     }
 }
 
