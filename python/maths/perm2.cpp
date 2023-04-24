@@ -48,8 +48,10 @@ void addPerm2(pybind11::module_& m) {
     auto c = pybind11::class_<Perm<2>>(m, "Perm2", rdoc_scope)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<int, int>(), rdoc::__init)
-        .def(pybind11::init<const std::array<int, 2>&>(), rdoc::__init_2)
         .def(pybind11::init<const Perm<2>&>(), rdoc::__copy)
+        // The std::array constructor must come last.  Otherwise an attempt to
+        // use the copy constructor throws an exception: Perm has no len()
+        .def(pybind11::init<const std::array<int, 2>&>(), rdoc::__init_2)
         .def_static("precompute", &Perm<2>::precompute, rdoc::precompute)
         .def("permCode", &Perm<2>::permCode, rdoc::permCode)
         .def("setPermCode", &Perm<2>::setPermCode, rdoc::setPermCode)
