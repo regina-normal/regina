@@ -3,7 +3,7 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "7.3">
+  <!ENTITY regversion "7.4">
   <!ENTITY regdate "2023-03-18">
   <!ENTITY utf8intro "4.5 (May 2008)">
   <!ENTITY copyrightyears "1999&ndash;2023">
