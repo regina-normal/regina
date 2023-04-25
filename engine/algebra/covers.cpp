@@ -438,9 +438,9 @@ namespace {
     struct RelationScheme {
         size_t nGen;
         std::vector<Formula> formulae;
-        size_t* compCount; // length nGenerators + 1
-        typename Perm<index>::Index* rep;
-        Perm<index>* computed;
+        std::unique_ptr<size_t[]> compCount; // length nGenerators + 1
+        std::unique_ptr<typename Perm<index>::Index[]> rep;
+        std::unique_ptr<Perm<index>[]> computed;
 
         // Give an easy way to convert rep[i] from an Sn index to a permutation.
         inline Perm<index> perm(unsigned long gen) const {
@@ -454,7 +454,7 @@ namespace {
             Perm<index>::precompute();
 
             nGen = g.countGenerators();
-            compCount = new size_t[nGen + 1];
+            compCount = std::make_unique<size_t[]>(nGen + 1);
 
             // nSeen will be the total number of formulae that we have
             // available to work with, including the group generators as
@@ -473,12 +473,14 @@ namespace {
             // maximum length sub-expression ending at the current
             // position, using only generators of index <= i, and
             // *excluding* all trailing terms with generators of index < i.
-            auto* currExp = new std::vector<GroupExpressionTerm>[nGen];
+            auto currExp =
+                std::make_unique<std::vector<GroupExpressionTerm>[]>(nGen);
 
             // The formulae that we will compute at depth d are stored
             // as keys in the map foundExp[d].  The corresponding values
             // (as noted earlier) are the temporary indices for each formulae.
-            auto* foundExp = new std::map<Formula, long, Formula::Compare>[nGen];
+            auto foundExp =
+                std::make_unique<std::map<Formula, long, Formula::Compare>[]>(nGen);
 
             unsigned long depth;
             for (const auto& r : g.relations()) {
@@ -582,7 +584,7 @@ namespace {
             // the original indices map to the final indices; and then
             // (2) fix all the terms in all the formulae that *use* these
             // indices.
-            auto* reindex = new unsigned long[nSeen];
+            auto reindex = std::make_unique<unsigned long[]>(nSeen);
             long newIndex = nGen;
             for (depth = 0; depth < nGen; ++depth) {
                 for (const auto& exp : foundExp[depth])
@@ -625,21 +627,11 @@ namespace {
                 }
             }
 
-            delete[] reindex;
-            delete[] foundExp;
-            delete[] currExp;
-
             // Now everything else is done: prepare for the big search
             // for representatives, which is where the *real* work happens.
-            rep = new typename Perm<index>::Index[nGen];
-            std::fill(rep, rep + nGen, 0);
-            computed = new Perm<index>[compCount[nGen]];
-        }
-
-        ~RelationScheme() {
-            delete[] compCount;
-            delete[] rep;
-            delete[] computed;
+            rep = std::make_unique<typename Perm<index>::Index[]>(nGen);
+            std::fill(rep.get(), rep.get() + nGen, 0);
+            computed = std::make_unique<Perm<index>[]>(compCount[nGen]);
         }
 
         /**
@@ -757,16 +749,15 @@ namespace {
      */
     struct SignScheme {
         size_t nGen;
-        std::vector<unsigned long>** constraint;
+        std::unique_ptr<std::optional<std::vector<unsigned long>>[]> constraint;
 
         SignScheme(const GroupPresentation& g) : nGen(g.countGenerators()) {
             if (nGen == 0) {
-                constraint = nullptr;
                 return;
             }
 
-            constraint = new std::vector<unsigned long>*[nGen];
-            std::fill(constraint, constraint + nGen, nullptr);
+            constraint =
+                std::make_unique<std::optional<std::vector<unsigned long>>[]>(nGen);
 
             if (g.countRelations() == 0) {
                 return;
@@ -849,7 +840,7 @@ namespace {
                 // For now, just create the vector and stash the row number as
                 // its only entry.  We will come back and construct the full
                 // relation once the matrix reduction is complete.
-                constraint[colsRemain] = new std::vector<unsigned long>();
+                constraint[colsRemain] = std::vector<unsigned long>();
                 constraint[colsRemain]->push_back(rowsRemain);
             }
 
@@ -867,12 +858,6 @@ namespace {
                             constraint[col]->push_back(i);
                 }
         }
-
-        ~SignScheme() {
-            for (size_t i = 0; i < nGen; ++i)
-                delete constraint[i];
-            delete[] constraint;
-        }
     };
 }
 
@@ -887,8 +872,8 @@ void GroupPresentation::minimaxGenerators() {
     Matrix<bool> inc = incidence();
 
     // Note how we plan to relabel the generators.
-    auto* relabel = new unsigned long[nGenerators_];
-    auto* relabelInv = new unsigned long[nGenerators_];
+    auto relabel = std::make_unique<unsigned long[]>(nGenerators_);
+    auto relabelInv = std::make_unique<unsigned long[]>(nGenerators_);
     for (unsigned long i = 0; i < nGenerators_; ++i)
         relabel[i] = relabelInv[i] = i;
 
@@ -959,9 +944,6 @@ void GroupPresentation::minimaxGenerators() {
     for (auto& r : relations_)
         for (auto& t : r.terms())
             t.generator = relabel[t.generator];
-
-    delete[] relabelInv;
-    delete[] relabel;
 }
 
 template <int index>

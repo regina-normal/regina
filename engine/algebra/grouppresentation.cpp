@@ -158,21 +158,20 @@ bool GroupExpression::simplify(bool cyclic) {
 bool GroupExpression::substitute(unsigned long generator,
         const GroupExpression& expansion, bool cyclic) {
     bool changed = false;
-    GroupExpression* inverse = nullptr;
-    const GroupExpression* use;
-    long exponent, i;
+    std::optional<GroupExpression> inverse;
     for (auto current = terms_.begin(); current != terms_.end(); ) {
         if (current->generator != generator)
             current++;
         else {
-            exponent = current->exponent;
+            long exponent = current->exponent;
             if (exponent != 0) {
+                const GroupExpression* use;
                 if (exponent > 0)
-                    use = &expansion;
+                    use = std::addressof(expansion);
                 else {
                     if (! inverse)
-                        inverse = new GroupExpression(expansion.inverse());
-                    use = inverse;
+                        inverse = expansion.inverse();
+                    use = std::addressof(*inverse);
                     exponent = -exponent;
                 }
 
@@ -180,7 +179,7 @@ bool GroupExpression::substitute(unsigned long generator,
                 //
                 // Note that the following insertion will invalidate
                 // current if the wrong type of data structure is being used!
-                for (i = 0; i < exponent; i++)
+                for (long i = 0; i < exponent; i++)
                     terms_.insert(current, use->terms_.begin(), use->terms_.end());
             }
 
@@ -188,7 +187,6 @@ bool GroupExpression::substitute(unsigned long generator,
             changed = true;
         }
     }
-    delete inverse;
     if (changed)
         simplify(cyclic);
     return changed;
