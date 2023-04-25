@@ -110,6 +110,7 @@ std::string truncateFixture(const std::string& testName) {
 
 bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     std::map<std::string, TestSet> sets;
+    std::map<std::string, TestSet> aliases;
 
     // Utilities:
     sets.insert(std::make_pair("base64", &addBase64));
@@ -145,11 +146,13 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // 2-manifold triangulations:
     sets.insert(std::make_pair("triangulation2", &addTriangulation2));
+    aliases.insert(std::make_pair("dim2", &addTriangulation2));
     sets.insert(std::make_pair("isomorphism2", &addIsomorphism2));
     sets.insert(std::make_pair("facetpairing2", &addFacetPairing2));
 
     // 3-manifold triangulations:
     sets.insert(std::make_pair("triangulation3", &addTriangulation3));
+    aliases.insert(std::make_pair("dim3", &addTriangulation3));
     sets.insert(std::make_pair("elementarymoves", &addElementaryMoves));
     sets.insert(std::make_pair("connectedsumdecomp", &addConnectedSumDecomp));
     sets.insert(std::make_pair("isomorphism3", &addIsomorphism3));
@@ -161,6 +164,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // 4-manifold triangulations:
     sets.insert(std::make_pair("triangulation4", &addTriangulation4));
+    aliases.insert(std::make_pair("dim4", &addTriangulation4));
     sets.insert(std::make_pair("isomorphism4", &addIsomorphism4));
     sets.insert(std::make_pair("facetpairing4", &addFacetPairing4));
 
@@ -168,6 +172,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("facenumbering", &addFaceNumbering));
     sets.insert(std::make_pair("generictriangulation",
         &addGenericTriangulation));
+    aliases.insert(std::make_pair("generic", &addGenericTriangulation));
 
     // Manifolds:
     sets.insert(std::make_pair("sfs", &addSFS));
@@ -192,6 +197,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // SnapPea:
     sets.insert(std::make_pair("snappeatriangulation",
         &addSnapPeaTriangulation));
+    aliases.insert(std::make_pair("snappea", &addSnapPeaTriangulation));
 
     // Knots and links:
     sets.insert(std::make_pair("link", &addLink));
@@ -208,12 +214,18 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     else {
         for (int i = 1; i < argc; ++i) {
             auto it = sets.find(std::string(argv[i]));
-            if (it == sets.end()) {
-                std::cerr << "ERROR: No test set named " << argv[i] << '.'
-                    << std::endl;
-                return false;
-            } else
+            if (it != sets.end()) {
                 (it->second)(runner);
+            } else {
+                auto alias = aliases.find(std::string(argv[i]));
+                if (alias != aliases.end()) {
+                    (alias->second)(runner);
+                } else {
+                    std::cerr << "ERROR: No test set named "
+                        << argv[i] << '.' << std::endl;
+                    return false;
+                }
+            }
         }
     }
 
