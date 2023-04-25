@@ -1101,7 +1101,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * A variant of lockFacet() with no management of the underlying
          * triangulation, and no enforcement of lock consistency.
          *
-         * This routine adjusts the \a lock_ member to lock the given facet
+         * This routine adjusts the \a locks_ member to lock the given facet
          * of this simplex, just like lockFacet() does.  However, this is
          * _all_ it does.  In particular:
          *

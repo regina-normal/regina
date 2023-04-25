@@ -1983,9 +1983,9 @@ class TriangulationBase :
          * the boundary of a (\a dim - \a k)-simplex.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.  In
-         * In the special case \a k = \a dim, the move is always legal
-         * and so the \a check argument will simply be ignored.
+         * will only be performed if the check shows it is legal and will
+         * not violate any simplex and/or facet locks (see Simplex<dim>::lock()
+         * and Simplex<dim>::lockFacet() for further details on locks).
          *
          * Note that after performing this move, all skeletal objects
          * (facets, components, etc.) will be reconstructed, which means
@@ -2009,9 +2009,16 @@ class TriangulationBase :
          * it is now `simplices().back()->vertex(0)`.
          *
          * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * it must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<dim>::lock() and
+         * Simplex<dim>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
          * \param f the <i>k</i>-face about which to perform the move.
          * \param check \c true if we are to check whether the move is
@@ -2019,15 +2026,12 @@ class TriangulationBase :
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
          * \return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * if and only if the requested move may be performed without changing
+         * the topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          *
          * \tparam k the dimension of the given face.  This must be
-         * between 0 and (\a dim) inclusive.  You can still perform
-         * a Pachner move about a 0-face <i>dim</i>-face, but these moves
-         * use specialised implementations (as opposed to this generic
-         * template implementation).
+         * between 0 and (\a dim) inclusive.
          */
         template <int k>
         bool pachner(Face<dim, k>* f, bool check = true, bool perform = true);
