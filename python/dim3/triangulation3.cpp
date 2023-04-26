@@ -316,6 +316,9 @@ void addTriangulation3(pybind11::module_& m) {
         .def("fundamentalGroup", &Triangulation<3>::fundamentalGroup,
             pybind11::return_value_policy::reference_internal,
             rbase::fundamentalGroup)
+        .def("setGroupPresentation",
+             &Triangulation<3>::setGroupPresentation,
+            rbase::setGroupPresentation)
         .def("simplifiedFundamentalGroup",
             &Triangulation<3>::simplifiedFundamentalGroup,
             rbase::simplifiedFundamentalGroup)

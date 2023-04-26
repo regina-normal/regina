@@ -72,6 +72,8 @@ Version 7.4  [ (to be announced) ]
               Triangulation<3>::reorderTetrahedraBFS() available in all
               dimensions.
             - New routine hash(), which uses the tight encoding.
+            - Renamed simplifiedFundamentalGroup to setGroupPresentation()
+              (old name still exists for backwards compatibility)
         Class Triangulation<3>:
             - Routine puncture() now takes an optional triangle, not an
               optional tetrahedron.  The old version is kept but deprecated.

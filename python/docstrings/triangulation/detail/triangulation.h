@@ -2111,6 +2111,31 @@ Parameter ``reverse``:
     ``True`` if the new simplex numbers should be assigned in reverse
     order, as described above.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::setGroupPresentation
+constexpr const char *setGroupPresentation =
+R"doc(Notifies the triangulation that you have simplified the presentation
+of its fundamental group. The old group presentation will be replaced
+by the (hopefully simpler) group that is passed.
+
+This routine is useful for situations in which some external body
+(such as GAP) has simplified the group presentation better than Regina
+can.
+
+Regina does _not_ verify that the new group presentation is equivalent
+to the old, since this is - well, hard.
+
+If the fundamental group has not yet been calculated for this
+triangulation, then this routine will store the new group as the
+fundamental group, under the assumption that you have worked out the
+group through some other clever means without ever having needed to
+call group() at all.
+
+Note that this routine will not fire a packet change event.
+
+Parameter ``newGroup``:
+    a new (and hopefully simpler) presentation of the fundamental
+    group of this triangulation.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::simplex
 constexpr const char *simplex =
 R"doc(Returns the top-dimensional simplex at the given index in the
@@ -2171,28 +2196,10 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::simplifiedFundamentalGroup
 constexpr const char *simplifiedFundamentalGroup =
-R"doc(Notifies the triangulation that you have simplified the presentation
-of its fundamental group. The old group presentation will be replaced
-by the (hopefully simpler) group that is passed.
+R"doc(Deprecated alias for setGroupPresentation.
 
-This routine is useful for situations in which some external body
-(such as GAP) has simplified the group presentation better than Regina
-can.
-
-Regina does _not_ verify that the new group presentation is equivalent
-to the old, since this is - well, hard.
-
-If the fundamental group has not yet been calculated for this
-triangulation, then this routine will store the new group as the
-fundamental group, under the assumption that you have worked out the
-group through some other clever means without ever having needed to
-call group() at all.
-
-Note that this routine will not fire a packet change event.
-
-Parameter ``newGroup``:
-    a new (and hopefully simpler) presentation of the fundamental
-    group of this triangulation.)doc";
+.. deprecated::
+    This routine has been renamed to setGroupPresentation.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::size
 constexpr const char *size =
