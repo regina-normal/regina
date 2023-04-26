@@ -1418,7 +1418,14 @@ class TriangulationBase :
          * \param newGroup a new (and hopefully simpler) presentation of
          * the fundamental group of this triangulation.
          */
-        void simplifiedFundamentalGroup(GroupPresentation newGroup);
+        void setGroupPresentation(const GroupPresentation &newGroup);
+
+        /**
+         * Deprecated alias for setGroupPresentation.
+         *
+         * \deprecated This routine has been renamed to setGroupPresentation.
+         */
+        void simplifiedFundamentalGroup(const GroupPresentation &newGroup);
 
         /**
          * Returns the <i>k</i>th homology group of this triangulation,
@@ -4885,9 +4892,15 @@ inline const GroupPresentation& TriangulationBase<dim>::fundamentalGroup()
 }
 
 template <int dim>
+inline void TriangulationBase<dim>::setGroupPresentation(
+        const GroupPresentation &newGroup) {
+    fundGroup_ = newGroup;
+}
+
+template <int dim>
 inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
-        GroupPresentation newGroup) {
-    fundGroup_ = std::move(newGroup);
+        const GroupPresentation &newGroup) {
+    setGroupPresentation(newGroup);
 }
 
 template <int dim>
