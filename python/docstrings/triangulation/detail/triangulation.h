@@ -1915,9 +1915,9 @@ standard triangulation of the (*dim* - 1 - *k*)-sphere as the boundary
 of a (*dim* - *k*)-simplex.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal. In In the special case
-*k* = *dim*, the move is always legal and so the *check* argument will
-simply be ignored.
+be performed if the check shows it is legal and will not violate any
+simplex and/or facet locks (see Simplex<dim>::lock() and
+Simplex<dim>::lockFacet() for further details on locks).
 
 Note that after performing this move, all skeletal objects (facets,
 components, etc.) will be reconstructed, which means any pointers to
@@ -1941,10 +1941,18 @@ face will be formed from vertices 0,1,...,(*dim* - *k*) of
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any simplex and/or facet locks.
 
 Precondition:
     The given *k*-face is a *k*-face of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a simplex or facet lock, and *check* was
+    passed as ``False``. This exception will be thrown before any
+    changes are made. See Simplex<dim>::lock() and
+    Simplex<dim>::lockFacet() for further details on how locks work
+    and what their implications are.
 
 Parameter ``f``:
     the *k*-face about which to perform the move.
@@ -1959,14 +1967,12 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is ``False``, the function
-    simply returns ``True``.
+    topology of the manifold or violating any locks. If *check* is
+    ``False``, the function simply returns ``True``.
 
 Template parameter ``k``:
     the dimension of the given face. This must be between 0 and
-    (*dim*) inclusive. You can still perform a Pachner move about a
-    0-face *dim*-face, but these moves use specialised implementations
-    (as opposed to this generic template implementation).)doc";
+    (*dim*) inclusive.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::pairing
 constexpr const char *pairing =
@@ -2113,28 +2119,31 @@ Parameter ``reverse``:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::setGroupPresentation
 constexpr const char *setGroupPresentation =
-R"doc(Notifies the triangulation that you have simplified the presentation
-of its fundamental group. The old group presentation will be replaced
-by the (hopefully simpler) group that is passed.
+R"doc(Allows the specific presentation of the fundamental group to be
+changed by some other (external) means.
 
-This routine is useful for situations in which some external body
-(such as GAP) has simplified the group presentation better than Regina
-can.
+Specifically, this routine assumes that you have changed (and
+presumably simplified) the presentation of the fundamental group using
+some external tool (such as GAP or Magma), and it replaces the current
+presentation with the new presentation *pres* that is passed.
 
-Regina does _not_ verify that the new group presentation is equivalent
-to the old, since this is - well, hard.
+Regina does _not_ verify that the new presentation is isomorphic to
+the old, since this is an extremely hard problem.
 
 If the fundamental group has not yet been calculated for this
-triangulation, then this routine will store the new group as the
-fundamental group, under the assumption that you have worked out the
-group through some other clever means without ever having needed to
-call group() at all.
+triangulation, then this routine will cache *pres* as the fundamental
+group, under the assumption that you have worked out the group through
+some other clever means without ever having needed to call group() at
+all.
 
 Note that this routine will not fire a packet change event.
 
-Parameter ``newGroup``:
-    a new (and hopefully simpler) presentation of the fundamental
-    group of this triangulation.)doc";
+Precondition:
+    The given presentation *pres* is indeed a presentation of the
+    fundamental group of this triangulation, as described by group().
+
+Parameter ``pres``:
+    a new presentation of the fundamental group of this triangulation.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::simplex
 constexpr const char *simplex =
@@ -2196,10 +2205,19 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase_::simplifiedFundamentalGroup
 constexpr const char *simplifiedFundamentalGroup =
-R"doc(Deprecated alias for setGroupPresentation.
+R"doc(Deprecated alias for setGroupPresentation(), which allows the specific
+presentation of the fundamental group to be changed by some other
+(external) means.
 
 .. deprecated::
-    This routine has been renamed to setGroupPresentation.)doc";
+    This routine has been renamed to setGroupPresentation().
+
+Precondition:
+    The given presentation *pres* is indeed a presentation of the
+    fundamental group of this triangulation, as described by group().
+
+Parameter ``pres``:
+    a new presentation of the fundamental group of this triangulation.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase_::size
 constexpr const char *size =

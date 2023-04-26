@@ -213,7 +213,7 @@ void Tri4HomologyFundUI::refresh() {
 }
 
 void Tri4HomologyFundUI::fundGroupSimplified() {
-    tri->simplifiedFundamentalGroup(fgGroup->group());
+    tri->setGroupPresentation(fgGroup->group());
 }
 
 void Tri4HomologyFundUI::refreshLabels() {

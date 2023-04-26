@@ -259,8 +259,8 @@ void addTriangulation4(pybind11::module_& m) {
         .def("setGroupPresentation",
              &Triangulation<4>::setGroupPresentation,
             rbase::setGroupPresentation)
-        .def("simplifiedFundamentalGroup",
-            &Triangulation<4>::simplifiedFundamentalGroup,
+        .def("simplifiedFundamentalGroup", // deprecated
+            &Triangulation<4>::setGroupPresentation,
             rbase::simplifiedFundamentalGroup)
         .def("homology",
             static_cast<AbelianGroup (Triangulation<4>::*)(int) const>(

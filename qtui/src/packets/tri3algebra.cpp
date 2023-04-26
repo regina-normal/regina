@@ -272,7 +272,7 @@ void Tri3HomologyFundUI::refresh() {
 }
 
 void Tri3HomologyFundUI::fundGroupSimplified() {
-    tri->simplifiedFundamentalGroup(fgGroup->group());
+    tri->setGroupPresentation(fgGroup->group());
 }
 
 void Tri3HomologyFundUI::refreshLabels() {

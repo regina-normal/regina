@@ -191,8 +191,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("setGroupPresentation",
              &Triangulation<dim>::setGroupPresentation,
             rbase::setGroupPresentation)
-        .def("simplifiedFundamentalGroup",
-            &Triangulation<dim>::simplifiedFundamentalGroup,
+        .def("simplifiedFundamentalGroup", // deprecated
+            &Triangulation<dim>::setGroupPresentation,
             rbase::simplifiedFundamentalGroup)
         .def("homology",
             static_cast<AbelianGroup (Triangulation<dim>::*)(int) const>(

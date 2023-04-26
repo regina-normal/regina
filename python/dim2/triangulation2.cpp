@@ -231,8 +231,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("setGroupPresentation",
              &Triangulation<2>::setGroupPresentation,
             rbase::setGroupPresentation)
-        .def("simplifiedFundamentalGroup",
-            &Triangulation<2>::simplifiedFundamentalGroup,
+        .def("simplifiedFundamentalGroup", // deprecated
+            &Triangulation<2>::setGroupPresentation,
             rbase::simplifiedFundamentalGroup)
         .def("isMinimal", &Triangulation<2>::isMinimal, rdoc::isMinimal)
         .def("isSphere", &Triangulation<2>::isSphere, rdoc::isSphere)

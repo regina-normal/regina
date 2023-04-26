@@ -1396,36 +1396,48 @@ class TriangulationBase :
          */
         const GroupPresentation& fundamentalGroup() const;
         /**
-         * Notifies the triangulation that you have simplified the presentation
-         * of its fundamental group.  The old group presentation will be
-         * replaced by the (hopefully simpler) group that is passed.
+         * Allows the specific presentation of the fundamental group to be
+         * changed by some other (external) means.
          *
-         * This routine is useful for situations in which some external
-         * body (such as GAP) has simplified the group presentation
-         * better than Regina can.
+         * Specifically, this routine assumes that you have changed (and
+         * presumably simplified) the presentation of the fundamental group
+         * using some external tool (such as GAP or Magma), and it replaces
+         * the current presentation with the new presentation \a pres that is
+         * passed.
          *
-         * Regina does _not_ verify that the new group presentation is
-         * equivalent to the old, since this is - well, hard.
+         * Regina does _not_ verify that the new presentation is isomorphic
+         * to the old, since this is an extremely hard problem.
          *
          * If the fundamental group has not yet been calculated for this
-         * triangulation, then this routine will store the new group as the
+         * triangulation, then this routine will cache \a pres as the
          * fundamental group, under the assumption that you have worked out
          * the group through some other clever means without ever having
          * needed to call group() at all.
          *
          * Note that this routine will not fire a packet change event.
          *
-         * \param newGroup a new (and hopefully simpler) presentation of
-         * the fundamental group of this triangulation.
+         * \pre The given presentation \a pres is indeed a presentation of the
+         * fundamental group of this triangulation, as described by group().
+         *
+         * \param pres a new presentation of the fundamental group of this
+         * triangulation.
          */
-        void setGroupPresentation(const GroupPresentation &newGroup);
+        void setGroupPresentation(GroupPresentation pres);
 
         /**
-         * Deprecated alias for setGroupPresentation.
+         * Deprecated alias for setGroupPresentation(), which allows the
+         * specific presentation of the fundamental group to be changed by
+         * some other (external) means.
          *
-         * \deprecated This routine has been renamed to setGroupPresentation.
+         * \deprecated This routine has been renamed to setGroupPresentation().
+         *
+         * \pre The given presentation \a pres is indeed a presentation of the
+         * fundamental group of this triangulation, as described by group().
+         *
+         * \param pres a new presentation of the fundamental group of this
+         * triangulation.
          */
-        void simplifiedFundamentalGroup(const GroupPresentation &newGroup);
+        [[deprecated]] void simplifiedFundamentalGroup(GroupPresentation pres);
 
         /**
          * Returns the <i>k</i>th homology group of this triangulation,
@@ -4893,14 +4905,16 @@ inline const GroupPresentation& TriangulationBase<dim>::fundamentalGroup()
 
 template <int dim>
 inline void TriangulationBase<dim>::setGroupPresentation(
-        const GroupPresentation &newGroup) {
-    fundGroup_ = newGroup;
+        GroupPresentation pres) {
+    fundGroup_ = std::move(pres);
 }
 
 template <int dim>
 inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
-        const GroupPresentation &newGroup) {
-    setGroupPresentation(newGroup);
+        GroupPresentation pres) {
+    // Reimplement instead of calling setGroupPresentation(), to avoid two
+    // moves.
+    fundGroup_ = std::move(pres);
 }
 
 template <int dim>
