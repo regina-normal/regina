@@ -126,6 +126,15 @@ QVariant GluingsModel4::data(const QModelIndex& index, int role) const {
                 p->adjacentSimplex(facet),
                 p->adjacentGluing(facet));
         return QVariant();
+    } else if (role == Qt::BackgroundRole) {
+        if (index.column() == 0) {
+            if (p->isLocked())
+                return QColor(Qt::lightGray);
+        } else {
+            if (p->isFacetLocked(5 - index.column()))
+                return QColor(Qt::lightGray);
+        }
+        return QVariant();
     } else
         return QVariant();
 }
