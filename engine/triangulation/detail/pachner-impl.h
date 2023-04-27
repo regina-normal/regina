@@ -426,7 +426,6 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         // All done!
         return true;
     } else {
-        // TODO: Check locks
         // Pachner move on a face of dimension 1..(dim-1):
         if (check) {
             // The face must be valid and non-boundary.
@@ -490,9 +489,17 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
          * original and new orientations will match.
          */
 
-        // Find these original top-dimensional simplices.
+        // Prepare to record whether there are any locks on exterior facets
+        // that must be preserved.  These are indexed with respect to the
+        // *new* top-dimensional simplices and their facets.
+        LockMask locks[k + 1];
+        std::fill(locks, locks + k + 1, 0);
+
+        // Find the original top-dimensional simplices.
         // We will let oldVertices[i] describe our numbering scheme for the
-        // vertices of simplex i, as described in (1) above.
+        // vertices of simplex i, as described in (1) above.  Specifically,
+        // oldVertices[i] maps the "conceptual" labels described above for
+        // old simplex i to the actual vertex labels.
         Simplex<dim>* oldSimp[dim + 1 - k];
         Perm<dim + 1> oldVertices[dim + 1 - k];
 
@@ -520,6 +527,29 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                 oldVertices[0] = oldVertices[0] * Perm<dim + 1>(0, 1);
         }
 
+        if (oldSimp[0]->locks_) {
+            if (oldSimp[0]->isLocked()) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "Pachner move using a locked top-dimensional simplex");
+            }
+            for (int v = 0; v <= k; ++v)
+                if (oldSimp[0]->isFacetLocked(oldVertices[0][v])) {
+                    // New simplex v, facet 0
+                    locks[v] |= LockMask(1);
+                }
+            for (int v = k + 1; v <= dim; ++v)
+                if (oldSimp[0]->isFacetLocked(oldVertices[0][v])) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform a "
+                            "Pachner move using a locked facet");
+                }
+        }
+
         for (int i = 1; i <= dim - k; ++i) {
             oldSimp[i] = oldSimp[0]->adjacentSimplex(oldVertices[0][i + k]);
             if (check)
@@ -528,6 +558,36 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                         return false;
             oldVertices[i] = oldSimp[0]->adjacentGluing(oldVertices[0][i + k]) *
                 oldVertices[0] * Perm<dim + 1>(k, i + k);
+            if (oldSimp[i]->locks_) {
+                if (oldSimp[i]->isLocked()) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform a "
+                            "Pachner move using a locked top-dimensional "
+                            "simplex");
+                }
+                for (int v = 0; v < k; ++v)
+                    if (oldSimp[i]->isFacetLocked(oldVertices[i][v])) {
+                        // New simplex v, facet (i<d-k ? i : d-k+v)
+                        locks[v] |= (LockMask(1) <<
+                            (i < dim - k ? i : dim - k + v));
+                    }
+                if (oldSimp[i]->isFacetLocked(oldVertices[i][k + i])) {
+                    // New simplex k, facet (i<d-k ? i : d)
+                    locks[k] |= (LockMask(1) << (i < dim - k ? i : dim));
+                }
+                for (int v = k; v <= dim; ++v)
+                    if (v != k + i)
+                        if (oldSimp[i]->isFacetLocked(oldVertices[i][v])) {
+                            if (check)
+                                return false;
+                            if (perform)
+                                throw LockViolation("An attempt was made to "
+                                    "perform a Pachner move using a "
+                                    "locked facet");
+                        }
+            }
         }
 
         if (check) {
@@ -542,6 +602,8 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                         return false;
                 }
         }
+
+        // The move is legal, and there are no locks that will get in the way.
 
         if (! perform)
             return true;
@@ -620,7 +682,7 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
             }
         }
 
-        // Delete the old pentachora.
+        // Delete the old simplices.
         for (int i = 0; i <= dim - k; ++i)
             removeSimplexRaw(oldSimp[i]);
 
@@ -641,6 +703,11 @@ bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
             for (int j = 0; j < i; ++j)
                 newSimp[i]->joinRaw(j + dim - k, newSimp[j],
                     Perm<dim + 1>(i + dim - k, j + dim - k));
+
+        // Put back any facet locks from the inside.
+        // They should already be in place from the outside.
+        for (int i = 0; i <= k; ++i)
+            newSimp[i]->locks_ = locks[i];
 
         // All done!
         return true;
