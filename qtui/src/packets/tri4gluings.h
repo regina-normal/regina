@@ -84,6 +84,14 @@ class GluingsModel4 : public QAbstractItemModel {
         bool setData(const QModelIndex& index, const QVariant& value,
             int role) override;
 
+        /**
+         * Return a short string describing the destination of a
+         * facet gluing.  This routine handles both boundary and
+         * non-boundary facets.  The destination is deduced by looking at
+         * whatever the given source facet is glued to.
+         */
+        static QString destString(regina::Simplex<4>* srcPent, int srcFacet);
+
     private:
         /**
          * Determine whether the given destination pentachoron and facet
@@ -96,15 +104,6 @@ class GluingsModel4 : public QAbstractItemModel {
         QString isFacetStringValid(unsigned long srcPent, int srcFacet,
             unsigned long destPent, const QString& destFacet,
             regina::Perm<5>* gluing);
-
-        /**
-         * Return a short string describing the destination of a
-         * facet gluing.  This routine handles both boundary and
-         * non-boundary facets.
-         */
-        static QString destString(int srcFacet,
-            regina::Pentachoron<4>* destPent,
-            const regina::Perm<5>& gluing);
 
         /**
          * Convert a facet string (e.g., "1304") to a facet permutation.
@@ -139,6 +138,13 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         QWidget* ui;
         EditTableView* facetTable;
         GluingsModel4* model;
+
+        /**
+         * Pop-up menus
+         */
+        ssize_t lockSimplex { -1 };
+        int lockFacet { -1 }; // -1 for simplex, 0..4 for facet
+        bool lockAdd { false }; // true to lock, false to unlock
 
         /**
          * Gluing actions
@@ -182,6 +188,12 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
          */
         void addPent();
         void removeSelectedPents();
+
+        /**
+         * Lock menu actions.
+         */
+        void lockMenu(const QPoint&);
+        void changeLock();
 
         /**
          * Triangulation actions.

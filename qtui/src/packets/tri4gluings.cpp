@@ -53,6 +53,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QMessageBox>
+#include <QMenu>
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QToolBar>
@@ -110,9 +111,7 @@ QVariant GluingsModel4::data(const QModelIndex& index, int role) const {
         // Facet gluing?
         int facet = 5 - index.column();
         if (facet >= 0)
-            return destString(facet,
-                p->adjacentSimplex(facet),
-                p->adjacentGluing(facet));
+            return destString(p, facet);
         return QVariant();
     } else if (role == Qt::EditRole) {
         // Pentachoron name?
@@ -122,9 +121,7 @@ QVariant GluingsModel4::data(const QModelIndex& index, int role) const {
         // Facet gluing?
         int facet = 5 - index.column();
         if (facet >= 0)
-            return destString(facet,
-                p->adjacentSimplex(facet),
-                p->adjacentGluing(facet));
+            return destString(p, facet);
         return QVariant();
     } else if (role == Qt::BackgroundRole) {
         if (index.column() == 0) {
@@ -157,8 +154,13 @@ QVariant GluingsModel4::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-Qt::ItemFlags GluingsModel4::flags(const QModelIndex& /* index */) const {
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+Qt::ItemFlags GluingsModel4::flags(const QModelIndex& index) const {
+    // Do not allow locked facets to be edited.
+    if (index.column() == 0 ||
+            ! tri_->simplex(index.row())->isFacetLocked(5 - index.column()))
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
 bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
@@ -226,6 +228,13 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
             newAdjPerm == p->adjacentGluing(facet))
         return false;
 
+    // There is a change.  Will it violate a lock?
+    if (p->isFacetLocked(facet)) {
+        showError(tr("This facet is currently locked. "
+            "You can unlock it by right-clicking within the table cell."));
+        return false;
+    }
+
     // Yes!  Go ahead and make the change.
     regina::Triangulation<4>::ChangeEventGroup span(*tri_);
 
@@ -287,15 +296,14 @@ void GluingsModel4::showError(const QString& message) {
         tr("This is not a valid gluing."), message);
 }
 
-QString GluingsModel4::destString(int srcFacet,
-        regina::Pentachoron<4>* destPent,
-        const regina::Perm<5>& gluing) {
+QString GluingsModel4::destString(regina::Simplex<4>* srcPent, int srcFacet) {
+    regina::Simplex<4>* destPent = srcPent->adjacentSimplex(srcFacet);
     if (! destPent)
         return "";
     else
         return QString::number(destPent->markedIndex()) + " (" +
-            (gluing * regina::Tetrahedron<4>::ordering(srcFacet)).
-            trunc4().c_str() + ')';
+            (srcPent->adjacentGluing(srcFacet) *
+            regina::Tetrahedron<4>::ordering(srcFacet)).trunc4().c_str() + ')';
 }
 
 regina::Perm<5> GluingsModel4::facetStringToPerm(int srcFacet,
@@ -350,6 +358,10 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     //facetTable->setColumnStretchable(3, true);
     //facetTable->setColumnStretchable(4, true);
     //facetTable->setColumnStretchable(5, true);
+
+    facetTable->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(facetTable, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(lockMenu(const QPoint&)));
 
     ui = facetTable;
 
@@ -643,6 +655,72 @@ void Tri4GluingsUI::removeSelectedPents() {
         for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
+}
+
+void Tri4GluingsUI::lockMenu(const QPoint& pos) {
+    QModelIndex index = facetTable->indexAt(pos);
+    if ((! index.isValid()) ||
+            static_cast<size_t>(index.row()) >= tri->size()) {
+        lockSimplex = -1;
+        return;
+    }
+
+    lockSimplex = index.row();
+    auto s = tri->simplex(lockSimplex);
+
+    QMenu m(tr("Context menu"), ui);
+    QAction lock(this);
+    if (index.column() == 0) {
+        lockFacet = -1;
+        lockAdd = ! s->isLocked();
+
+        if (lockAdd)
+            lock.setText(tr("Lock pentachoron %1").arg(index.row()));
+        else
+            lock.setText(tr("Unlock pentachoron %1").arg(index.row()));
+    } else {
+        lockFacet = 5 - index.column();
+        auto f = s->tetrahedron(lockFacet);
+        lockAdd = ! f->isLocked();
+
+        QString action = lockAdd ? tr("Lock") : tr("Unlock");
+        QString facetDesc;
+        switch (lockFacet) {
+            case 4: facetDesc = tr("0123"); break;
+            case 3: facetDesc = tr("0124"); break;
+            case 2: facetDesc = tr("0134"); break;
+            case 1: facetDesc = tr("0234"); break;
+            case 0: facetDesc = tr("1234"); break;
+        }
+
+        if (f->isBoundary())
+            lock.setText(tr("%1 boundary facet %2 (%3)")
+                .arg(action).arg(index.row()).arg(facetDesc));
+        else
+            lock.setText(tr("%1 facet %2 (%3) = %4")
+                .arg(action).arg(index.row()).arg(facetDesc)
+                .arg(GluingsModel4::destString(s, lockFacet)));
+    }
+    connect(&lock, SIGNAL(triggered()), this, SLOT(changeLock()));
+    m.addAction(&lock);
+    m.exec(facetTable->viewport()->mapToGlobal(pos));
+}
+
+void Tri4GluingsUI::changeLock() {
+    if (lockSimplex < 0 || lockSimplex >= tri->size())
+        return;
+    if (lockFacet < 0) {
+        if (lockAdd)
+            tri->simplex(lockSimplex)->lock();
+        else
+            tri->simplex(lockSimplex)->unlock();
+    } else {
+        if (lockAdd)
+            tri->simplex(lockSimplex)->lockFacet(lockFacet);
+        else
+            tri->simplex(lockSimplex)->unlockFacet(lockFacet);
+    }
+    lockSimplex = -1;
 }
 
 void Tri4GluingsUI::simplify() {

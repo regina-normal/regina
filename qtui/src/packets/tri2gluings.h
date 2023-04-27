@@ -84,6 +84,14 @@ class GluingsModel2 : public QAbstractItemModel {
         bool setData(const QModelIndex& index, const QVariant& value,
             int role) override;
 
+        /**
+         * Return a short string describing the destination of an
+         * edge gluing.  This routine handles both boundary and
+         * non-boundary edges.  The destination is deduced by looking at
+         * whatever the given source edge is glued to.
+         */
+        static QString destString(regina::Simplex<2>* srcTriangle, int srcEdge);
+
     private:
         /**
          * Determine whether the given destination triangle and edge
@@ -96,14 +104,6 @@ class GluingsModel2 : public QAbstractItemModel {
         QString isEdgeStringValid(unsigned long srcTri, int srcEdge,
             unsigned long destTri, const QString& destEdge,
             regina::Perm<3>* gluing);
-
-        /**
-         * Return a short string describing the destination of an
-         * edge gluing.  This routine handles both boundary and
-         * non-boundary edges.
-         */
-        static QString destString(int srcEdge, regina::Simplex<2>* destTri,
-            const regina::Perm<3>& gluing);
 
         /**
          * Convert an edge string (e.g., "20") to an edge permutation.
@@ -137,6 +137,13 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         QWidget* ui;
         EditTableView* edgeTable;
         GluingsModel2* model;
+
+        /**
+         * Pop-up menus
+         */
+        ssize_t lockSimplex { -1 };
+        int lockFacet { -1 }; // -1 for simplex, 0..2 for facet
+        bool lockAdd { false }; // true to lock, false to unlock
 
         /**
          * Gluing actions
@@ -178,6 +185,12 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
          */
         void addTri();
         void removeSelectedTris();
+
+        /**
+         * Lock menu actions.
+         */
+        void lockMenu(const QPoint&);
+        void changeLock();
 
         /**
          * Triangulation actions.
