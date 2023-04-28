@@ -2339,7 +2339,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   triangulation) is valid.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<3>::lockFacet() for further
+         * details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will (trivially) preserve the orientation.
@@ -2349,19 +2351,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The given triangle is a triangle of this triangulation.
+         *
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lockFacet() for
+         * details on how facet locks work and what their implications are.
          *
          * \param t the triangle about which to perform the move.
          * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool openBook(Triangle<3>* t, bool check = true, bool perform = true);
@@ -2387,7 +2394,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * from the conditions above.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<3>::lockFacet() for further
+         * details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will (trivially) preserve the orientation.
@@ -2397,19 +2406,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The given edge is an edge of this triangulation.
+         *
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lockFacet() for
+         * details on how facet locks work and what their implications are.
          *
          * \param e the edge about which to perform the move.
          * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool closeBook(Edge<3>* e, bool check = true, bool perform = true);

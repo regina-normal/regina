@@ -596,6 +596,14 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
 }
 
 bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
+    if (t->isLocked()) {
+        if (check)
+            return false;
+        if (perform)
+            throw LockViolation("An attempt was made to perform an "
+                "open book move using a locked tetrahedron");
+    }
+
     const TetrahedronEmbedding<4>& emb = t->front();
     Pentachoron<4>* pent = emb.pentachoron();
 

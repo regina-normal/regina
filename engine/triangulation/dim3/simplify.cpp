@@ -682,6 +682,14 @@ bool Triangulation<3>::zeroTwoMove(
 }
 
 bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
+    if (f->isLocked()) {
+        if (check)
+            return false;
+        if (perform)
+            throw LockViolation("An attempt was made to perform an "
+                "open book move using a locked triangle");
+    }
+
     const TriangleEmbedding<3>& emb = f->front();
     Tetrahedron<3>* tet = emb.tetrahedron();
     Perm<4> vertices = emb.vertices();
@@ -742,6 +750,14 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     Tetrahedron<3>* t1 = back.tetrahedron();
     Perm<4> p0 = front.vertices();
     Perm<4> p1 = back.vertices();
+
+    if (t0->isFacetLocked(p0[3]) || t1->isFacetLocked(p1[2])) {
+        if (check)
+            return false;
+        if (perform)
+            throw LockViolation("An attempt was made to perform a "
+                "close book move using a locked boundary triangle");
+    }
 
     if (check) {
         if (t0->vertex(p0[2]) == t1->vertex(p1[3]))

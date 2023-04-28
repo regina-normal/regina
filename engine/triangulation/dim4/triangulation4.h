@@ -996,7 +996,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * affect invalid triangulations.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<4>::lockFacet() for further
+         * details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will (trivially) preserve the orientation.
@@ -1007,17 +1009,23 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \a t) can no longer be used.
          *
          * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * it must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
+         *
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<4>::lockFacet() for
+         * details on how facet locks work and what their implications are.
          *
          * \param t the tetrahedron about which to perform the move.
          * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool openBook(Tetrahedron<4>* t,
