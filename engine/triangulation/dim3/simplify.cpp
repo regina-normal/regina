@@ -43,9 +43,10 @@ namespace {
     // This routine returns true if the given edge connects two distinct
     // components of the graph, or false if both endpoints of the edge
     // are already in the same component (i.e., a cycle has been created).
-    bool unionFindInsert(long* parent, long* depth, long vtx1, long vtx2) {
+    bool unionFindInsert(ssize_t* parent, size_t* depth,
+            size_t vtx1, size_t vtx2) {
         // Find the root of the tree containing vtx1 and vtx2.
-        long top1, top2;
+        ssize_t top1, top2;
 
         for (top1 = vtx1; parent[top1] >= 0; top1 = parent[top1])
             ;
@@ -857,10 +858,6 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
 
 bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     // Find the tetrahedra to remove.
-    std::deque<EdgeEmbedding<3>>::const_iterator it;
-    Tetrahedron<3>* tet = nullptr;
-    Perm<4> p;
-
     if (check) {
         // Note: We never check whether the edge is valid, but this
         // comes automatically from the other tests.  In particular, an
@@ -957,25 +954,22 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
             // Although we might not use many of these edges, it's fast
             // and simple.  The "unified boundary" is assigned the edge
             // number nEdges.
-            long* parent = new long[nEdges + 1];
+            auto* parent = new ssize_t[nEdges + 1];
             std::fill(parent, parent + nEdges + 1, -1);
 
             // The depth of each subtree in the union-find tree.
-            long* depth = new long[nEdges + 1];
+            auto* depth = new size_t[nEdges + 1];
             std::fill(depth, depth + nEdges + 1, 0);
 
-            Edge<3> *upper, *lower;
-            long id1, id2;
-
             // Run through all triangles containing e.
-            it = e->begin();
+            auto it = e->begin();
 
             for ( ; it != e->end(); ++it) {
-                tet = it->tetrahedron();
-                p = it->vertices();
+                Tetrahedron<3>* tet = it->tetrahedron();
+                Perm<4> p = it->vertices();
 
-                upper = tet->edge(Edge<3>::edgeNumber[p[0]][p[2]]);
-                lower = tet->edge(Edge<3>::edgeNumber[p[1]][p[2]]);
+                Edge<3>* upper = tet->edge(Edge<3>::edgeNumber[p[0]][p[2]]);
+                Edge<3>* lower = tet->edge(Edge<3>::edgeNumber[p[1]][p[2]]);
 
                 if (upper == e || lower == e) {
                     // [0a]: Check 0 fails (see explanation earlier).
@@ -995,9 +989,9 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
                 if (e->isBoundary() && it == e->begin())
                     continue;
 
-                id1 = ((upper->isBoundary() || ! upper->isValid()) ?
+                size_t id1 = ((upper->isBoundary() || ! upper->isValid()) ?
                     nEdges : upper->markedIndex());
-                id2 = ((lower->isBoundary() || ! lower->isValid()) ?
+                size_t id2 = ((lower->isBoundary() || ! lower->isValid()) ?
                     nEdges : lower->markedIndex());
 
                 // This bigon joins nodes id1 and id2 in the graph G.
@@ -1034,25 +1028,21 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
             // This array is indexed by triangle number in the triangulation.
             // The "unified boundary" is assigned the triangle number
             // nTriangles.
-            long* parent = new long[nTriangles + 1];
+            auto* parent = new ssize_t[nTriangles + 1];
             std::fill(parent, parent + nTriangles + 1, -1);
 
             // The depth of each subtree in the union-find tree.
-            long* depth = new long[nTriangles + 1];
+            auto* depth = new size_t[nTriangles + 1];
             std::fill(depth, depth + nTriangles + 1, 0);
 
-            Triangle<3> *upper, *lower;
-            long id1, id2;
+            for (auto& emb : *e) {
+                Triangle<3>* upper = emb.simplex()->triangle(emb.vertices()[0]);
+                Triangle<3>* lower = emb.simplex()->triangle(emb.vertices()[1]);
 
-            for (it = e->begin(); it != e->end(); ++it) {
-                tet = it->tetrahedron();
-                p = it->vertices();
-
-                upper = tet->triangle(p[0]);
-                lower = tet->triangle(p[1]);
-
-                id1 = (upper->isBoundary() ? nTriangles : upper->markedIndex());
-                id2 = (lower->isBoundary() ? nTriangles : lower->markedIndex());
+                size_t id1 = (upper->isBoundary() ? nTriangles :
+                    upper->markedIndex());
+                size_t id2 = (lower->isBoundary() ? nTriangles :
+                    lower->markedIndex());
 
                 // This pillow joins nodes id1 and id2 in the graph G.
                 if (! unionFindInsert(parent, depth, id1, id2)) {
@@ -1084,10 +1074,11 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     auto* embTet = new Tetrahedron<3>*[degree];
     auto* embVertices = new Perm<4>[degree];
 
-    unsigned i;
-    for (i = 0, it = e->begin(); it != e->end(); ++i, ++it) {
-        embTet[i] = (*it).tetrahedron();
-        embVertices[i] = (*it).vertices();
+    size_t i = 0;
+    for (auto& emb : *e) {
+        embTet[i] = emb.tetrahedron();
+        embVertices[i] = emb.vertices();
+        ++i;
     }
 
     for (i = 0; i < degree; ++i) {

@@ -2490,7 +2490,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * tetrahedra.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on locks).
          *
          * If you are trying to reduce the number of vertices without changing
          * the topology, and if \a e is an edge connecting an internal vertex
@@ -2519,18 +2521,25 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * involved, and are discussed in detail in the collapseEdge()
          * source code for those who are interested.
          *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge is an edge of this triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
          * \param e the edge to collapse.
          * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true
-         * if and only if the given edge may be collapsed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the given edge may be collapsed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool collapseEdge(Edge<3>* e, bool check = true, bool perform = true);

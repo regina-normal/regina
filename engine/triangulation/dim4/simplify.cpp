@@ -1153,7 +1153,6 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
 
     delete[] embPent;
     delete[] embVert;
-
     return true;
 }
 
