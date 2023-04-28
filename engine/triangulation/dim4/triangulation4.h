@@ -764,17 +764,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
             Action&& action, Args&&... args) const;
 
         /**
-         * Checks the eligibility of and/or performs a 2-0 move about
-         * the given triangle of degree 2.
-         * This involves taking the two pentachora joined at that triangle
-         * and squashing them flat.
+         * Checks the eligibility of and/or performs a 2-0 move about the given
+         * triangle of degree 2.  This involves taking the two pentachora
+         * joined at that triangle and squashing them flat.
          *
          * The eligibility requirements for this move are somewhat
          * involved, and are discussed in detail in the source code for
          * those who are interested.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -785,27 +786,32 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * can no longer be used.
          *
          * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * it must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given triangle is a triangle of this triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
          * \param t the triangle about which to perform the move.
          * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(Triangle<4>* t, bool check = true,
             bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 2-0 move about
-         * the given edge of degree 2.
-         * This involves taking the two pentachora joined at that edge
-         * and squashing them flat.
-         * This can be done if:
+         * Checks the eligibility of and/or performs a 2-0 move about the
+         * given edge of degree 2.  This involves taking the two pentachora
+         * joined at that edge and squashing them flat.  This can be done if:
          *
          * - the edge is valid and non-boundary and has a 2-sphere edge link;
          *
@@ -829,7 +835,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *   facet and being glued to themselves along the other two).
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -840,26 +848,31 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * can no longer be used.
          *
          * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * it must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge is an edge of this triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
          * \param e the edge about which to perform the move.
          * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(Edge<4>* e, bool check = true, bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 2-0 move
-         * about the given vertex of degree 2.
-         * This involves taking the two pentachora joined at that vertex
-         * and squashing them flat.
-         * This can be done if:
+         * Checks the eligibility of and/or performs a 2-0 move about the
+         * given vertex of degree 2.  This involves taking the two pentachora
+         * joined at that vertex and squashing them flat.  This can be done if:
          *
          * - the vertex is non-boundary and has a 3-sphere vertex link;
          *
@@ -873,7 +886,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *   being glued to themselves along the other two).
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -884,17 +899,24 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * can no longer be used.
          *
          * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
+         * it must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given vertex is a vertex of this triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
          * \param v the vertex about which to perform the move.
          * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(Vertex<4>* v, bool check = true, bool perform = true);

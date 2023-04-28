@@ -114,6 +114,8 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
 }
 
 bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
+    using LockMask = Simplex<3>::LockMask;
+
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
@@ -123,11 +125,36 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
 
     Tetrahedron<3>* tet[2];
     Perm<4> perm[2];
+    // Note whether we need to merge facet locks opposite vertices 0,1 of e:
+    bool lockExterior[2] = { false, false };
 
     int i = 0;
     for (auto& emb : *e) {
         tet[i] = emb.tetrahedron();
         perm[i] = emb.vertices();
+
+        if (tet[i]->locks_) {
+            // The only things that can be locked are the two exterior facets.
+            if (tet[i]->isLocked()) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "2-0 move using a locked tetrahedron");
+            }
+            for (int v = 0; v < 2; ++v)
+                if (tet[i]->isFacetLocked(perm[i][v]))
+                    lockExterior[v] = true;
+            for (int v = 2; v < 4; ++v)
+                if (tet[i]->isFacetLocked(perm[i][v])) {
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform a "
+                            "2-0 move around a locked triangle");
+                }
+        }
+
         i++;
     }
 
@@ -166,47 +193,55 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    ChangeEventGroup span(*this);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
-    // Unglue faces from the doomed tetrahedra and glue them to each
-    // other.
+    // Unglue faces from the doomed tetrahedra and glue them to each other.
     Perm<4> crossover = tet[0]->adjacentGluing(perm[0][2]);
-    Perm<4> gluing;
-    Tetrahedron<3>* top;
-    Tetrahedron<3>* bottom;
-    int topFace;
     for (i=0; i<2; i++) {
-        top = tet[0]->adjacentTetrahedron(perm[0][i]);
-        bottom = tet[1]->adjacentTetrahedron(perm[1][i]);
+        // Process the facets opposite vertex i of the edge e.
+        Tetrahedron<3>* top = tet[0]->adjacentTetrahedron(perm[0][i]);
+        Tetrahedron<3>* bottom = tet[1]->adjacentTetrahedron(perm[1][i]);
 
         if (! top) {
             // Bottom triangle becomes boundary.
-            tet[1]->unjoin(perm[1][i]);
+            if (lockExterior[i])
+                bottom->lockFacetRaw(tet[1]->adjacentFacet(perm[1][i]));
+            tet[1]->unjoinRaw(perm[1][i]);
         } else if (! bottom) {
             // Top triangle becomes boundary.
-            tet[0]->unjoin(perm[0][i]);
+            if (lockExterior[i])
+                top->lockFacetRaw(tet[0]->adjacentFacet(perm[0][i]));
+            tet[0]->unjoinRaw(perm[0][i]);
         } else {
             // Bottom and top triangles join.
-            topFace = tet[0]->adjacentFace(perm[0][i]);
-            gluing = tet[1]->adjacentGluing(perm[1][i]) *
+            int topFace = tet[0]->adjacentFace(perm[0][i]);
+            int bottomFace = tet[1]->adjacentFace(perm[1][i]);
+            if (lockExterior[i]) {
+                top->lockFacetRaw(topFace);
+                bottom->lockFacetRaw(bottomFace);
+            }
+            Perm<4> gluing = tet[1]->adjacentGluing(perm[1][i]) *
                 crossover * top->adjacentGluing(topFace);
-            tet[0]->unjoin(perm[0][i]);
-            tet[1]->unjoin(perm[1][i]);
-            top->join(topFace, bottom, gluing);
+            tet[0]->unjoinRaw(perm[0][i]);
+            tet[1]->unjoinRaw(perm[1][i]);
+            top->joinRaw(topFace, bottom, gluing);
         }
     }
 
     // Finally remove and dispose of the tetrahedra.
-    removeTetrahedron(tet[0]);
-    removeTetrahedron(tet[1]);
+    removeSimplexRaw(tet[0]);
+    removeSimplexRaw(tet[1]);
 
-    // Tidy up.
-    // Properties have already been cleared in removeTetrahedron().
     return true;
 }
 
 bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
+    using LockMask = Simplex<3>::LockMask;
+
     if (check) {
         if (v->linkType() != Vertex<3>::SPHERE)
             return false;
@@ -216,11 +251,27 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
 
     Tetrahedron<3>* tet[2];
     int vertex[2];
+    bool lockExterior = false;
 
     int i = 0;
     for (auto& emb : *v) {
         tet[i] = emb.tetrahedron();
         vertex[i] = emb.vertex();
+
+        if (tet[i]->locks_) {
+            // The only thing that can be locked is the exterior facet.
+            if (tet[i]->locks_ != (LockMask(1) << vertex[i])) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "2-0 move using a locked tetrahedron and/or facet");
+            }
+            // Remember that, when we perform the move, the two merged
+            // exterior facets need to be locked from both sides.
+            lockExterior = true;
+        }
+
         i++;
     }
 
@@ -249,8 +300,11 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use "raw" routines (newSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    ChangeEventGroup span(*this);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
@@ -258,29 +312,32 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
     Tetrahedron<3>* bottom = tet[1]->adjacentTetrahedron(vertex[1]);
 
     if (! top) {
-        tet[1]->unjoin(vertex[1]);
+        if (lockExterior)
+            bottom->lockFacetRaw(tet[1]->adjacentFacet(vertex[1]));
+        tet[1]->unjoinRaw(vertex[1]);
     } else if (! bottom) {
-        tet[0]->unjoin(vertex[0]);
+        if (lockExterior)
+            top->lockFacetRaw(tet[0]->adjacentFacet(vertex[0]));
+        tet[0]->unjoinRaw(vertex[0]);
     } else {
-        Perm<4> crossover;
-        if (vertex[0] == 0)
-            crossover = tet[0]->adjacentGluing(1);
-        else
-            crossover = tet[0]->adjacentGluing(0);
         int topFace = tet[0]->adjacentFace(vertex[0]);
+        int bottomFace = tet[1]->adjacentFace(vertex[1]);
+        if (lockExterior) {
+            top->lockFacetRaw(topFace);
+            bottom->lockFacetRaw(bottomFace);
+        }
+        Perm<4> crossover = tet[0]->adjacentGluing(vertex[0] == 0 ? 1 : 0);
         Perm<4> gluing = tet[1]->adjacentGluing(vertex[1]) *
             crossover * top->adjacentGluing(topFace);
-        tet[0]->unjoin(vertex[0]);
-        tet[1]->unjoin(vertex[1]);
-        top->join(topFace, bottom, gluing);
+        tet[0]->unjoinRaw(vertex[0]);
+        tet[1]->unjoinRaw(vertex[1]);
+        top->joinRaw(topFace, bottom, gluing);
     }
 
     // Finally remove and dispose of the tetrahedra.
-    removeTetrahedron(tet[0]);
-    removeTetrahedron(tet[1]);
+    removeSimplexRaw(tet[0]);
+    removeSimplexRaw(tet[1]);
 
-    // Tidy up.
-    // Properties have already been cleared in removeTetrahedron().
     return true;
 }
 
