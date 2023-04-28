@@ -2448,7 +2448,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   tetrahedron are not identified.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will (trivially) preserve the orientation.
@@ -2457,19 +2459,25 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
          * \param t the tetrahedron upon which to perform the move.
          * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool shellBoundary(Tetrahedron<3>* t,

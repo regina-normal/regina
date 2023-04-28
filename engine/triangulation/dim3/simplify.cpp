@@ -780,6 +780,23 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
 
 bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
         bool check, bool perform) {
+    if (t->isLocked()) {
+        if (check)
+            return false;
+        if (perform)
+            throw LockViolation("An attempt was made to perform a "
+                "boundary shelling move on a locked tetrahedron");
+    }
+    for (int i = 0; i < 4; ++i)
+        if ((! t->adjacentSimplex(i)) && t->isFacetLocked(i)) {
+            if (check)
+                return false;
+            if (perform)
+                throw LockViolation("An attempt was made to perform a "
+                    "boundary shelling move that would remove a "
+                    "locked boundary triangle");
+        }
+
     // To perform the move we don't even need a skeleton.
     if (check) {
         ensureSkeleton();
@@ -826,10 +843,15 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
         return true;
 
     // Actually perform the move.
-    // Don't bother with a change event group: this is very simple, and
-    // we will already get a ChangeEventSpan via removeTetrahedron().
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use the "raw" routines removeSimplexRaw() below.  This is
+    // because the facets on the internal side of the shelling _are_ allowed
+    // to be locked, and we do not want to throw an exception because of this.
     TopologyLock lock(*this);
-    removeTetrahedron(t);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
+
+    removeSimplexRaw(t);
     return true;
 }
 

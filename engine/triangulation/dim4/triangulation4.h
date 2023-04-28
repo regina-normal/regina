@@ -1059,7 +1059,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * affect invalid triangulations.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this operation
          * will (trivially) preserve the orientation.
@@ -1068,19 +1070,26 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * (edges, components, etc.) will be reconstructed, which means
          * that any pointers to old skeletal objects can no longer be used.
          *
-         * \pre If the move is being performed and no check is being
-         * run, it must be known in advance that the move is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given pentachoron is a pentachoron of this triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
          * \param p the pentachoron upon which to perform the move.
          * \param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \a true, this function returns \c true
-         * if and only if the requested move may be performed without
-         * changing the topology of the manifold.  If \a check is \c false,
-         * this function simply returns \c true.
+         * \return If \a check is \a true, this function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check is
+         * \c false, this function simply returns \c true.
          */
         bool shellBoundary(Pentachoron<4>* p,
             bool check = true, bool perform = true);

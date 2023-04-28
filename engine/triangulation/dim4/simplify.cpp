@@ -675,6 +675,23 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
 
 bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
         bool check, bool perform) {
+    if (p->isLocked()) {
+        if (check)
+            return false;
+        if (perform)
+            throw LockViolation("An attempt was made to perform a "
+                "boundary shelling move on a locked pentachoron");
+    }
+    for (int i = 0; i < 5; ++i)
+        if ((! p->adjacentSimplex(i)) && p->isFacetLocked(i)) {
+            if (check)
+                return false;
+            if (perform)
+                throw LockViolation("An attempt was made to perform a "
+                    "boundary shelling move that would remove a "
+                    "locked boundary tetrahedron");
+        }
+
     // To perform the move we don't even need a skeleton.
     if (check) {
         ensureSkeleton();
@@ -747,11 +764,15 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
         return true;
 
     // Actually perform the move.
-    // Don't bother with a change event group: this is very simple, and
-    // we will already get a ChangeEventSpan via removePentachoron().
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use the "raw" routines removeSimplexRaw() below.  This is
+    // because the facets on the internal side of the shelling _are_ allowed
+    // to be locked, and we do not want to throw an exception because of this.
     TopologyLock lock(*this);
-    removePentachoron(p);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
+    removeSimplexRaw(p);
     return true;
 }
 
