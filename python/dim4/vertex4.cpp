@@ -96,6 +96,7 @@ void addVertex4(pybind11::module_& m) {
         }, rdoc::buildLink)
         .def("buildLinkInclusion", &Vertex<4>::buildLinkInclusion,
             rdoc::buildLinkInclusion)
+        .def("link", &Vertex<4>::link, rbase::link)
         .def("isLinkOrientable", &Vertex<4>::isLinkOrientable,
             rbase::isLinkOrientable)
         .def("isValid", &Vertex<4>::isValid, rbase::isValid)

@@ -45,6 +45,7 @@
 #include "triangulation/facenumbering.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/facenumber.h"
+#include "triangulation/detail/linkbuilder.h"
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
@@ -338,14 +339,19 @@ class FaceBase :
         static constexpr int subdimension = subdim;
             /**< A compile-time constant that gives the dimension of this
                  face. */
-
-        static constexpr bool allowsNonOrientableLinks = (subdim <= dim - 3);
+        static constexpr int linkDimension = dim - subdim - 1;
+            /**< Gives the dimension of the triangulation of the link of
+                 this face. */
+        static constexpr bool allowsNonOrientableLinks = (linkDimension >= 2);
             /**< Indicates whether it is possible for a face of this dimension
                  to have a non-orientable link. */
         static constexpr bool allowsInvalidFaces =
                 (dim >= 3 && subdim <= dim - 2);
             /**< Indicates whether it is possible for a face of this dimension
                  to be invalid. */
+        static constexpr bool canBuildLink = (linkDimension >= minDim());
+            /**< Indicates whether Regina supports building the triangulation
+                 of the link of this face. */
 
     private:
         /**
@@ -374,6 +380,14 @@ class FaceBase :
                  top-dimensional simplices of the underlying triangulation. */
         Component<dim>* component_;
             /**< The component that this face belongs to. */
+        EnableIfUseDefault<
+            canBuildLink,
+            typename LinkBuilder<dim, subdim>::UniquePtr> linkTri_;
+            /**< A triangulation of the link of this face.  This will be
+                 constructed on demand; until then it will be null.
+                 We keep this as a unique pointer with custom deleter to
+                 avoid instantiating the lower-dimensional triangulation
+                 classes here in the header. */
         BoundaryComponent<dim>* boundaryComponent_;
             /**< The boundary component that this face is a part of,
                  or \c null if this face is internal. */
@@ -389,7 +403,48 @@ class FaceBase :
                  dimensions, where we only test for one type of validity
                  (bad self-identifications). */
 
+
     public:
+        /**
+         * Returns the triangulation of the link of this face.
+         *
+         * This routine caches the resulting triangulation so subsequent
+         * calls will be fast and the result is a read-only triangulation
+         * (which you can clone if you need to modify it).
+         *
+         * Note that the labelling of the simplices in the link is different
+         * than in the triangulation returned by `buildLink`:
+         *
+         * - The simplices of the link are numbered as follows.
+         *   Simplex i (that is `link().simplex(i)`) in the link corresponds
+         *   to a face of the simplex `embedding(i).simplex()` in the
+         *   triangulation. Namely, the face that is opposite to the face
+         *   indexed by `embedding(i).face()`.
+         * - Vertex v of this simplex i in the link corresponds to vertex
+         *   `embedding(i).vertices()[subdim + 1 + v]` of the simplex in the
+         *   triangulation.
+         * - In other words, to construct an embedding of the link into the
+         *   triangulation combinatorially, sending simplex i to
+         *   `embedding(i).simplex()` using the map
+         *   {0, ..., dim - subdim} -> {0, ..., dim + 1} obtained
+         *   by composing the dim+1-permutation `embedding(i).vertices()` with
+         *   the injection taking v to subdim + 1 + v.
+         *
+         * \return Triangulation of the link of this face.
+         */
+        const Triangulation<linkDimension> &
+        link()
+        {
+            static_assert(
+                canBuildLink,
+                "Link has a triangulation of dimension 0 or 1 which "
+                "is not supported by Regina");
+            if (!linkTri_.value) {
+                linkTri_.value = LinkBuilder<dim, subdim>::build(*this);
+            }
+            return *(linkTri_.value);
+        }
+    
         /**
          * Returns the index of this face within the underlying
          * triangulation.

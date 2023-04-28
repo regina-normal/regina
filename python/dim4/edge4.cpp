@@ -115,6 +115,7 @@ void addEdge4(pybind11::module_& m) {
         }, rdoc::buildLink)
         .def("buildLinkInclusion", &Edge<4>::buildLinkInclusion,
             rdoc::buildLinkInclusion)
+        .def("link", &Edge<4>::link, rbase::link)
         .def("linkingSurface", &Edge<4>::linkingSurface, rdoc::linkingSurface)
         .def_static("ordering", &Edge<4>::ordering)
         .def_static("faceNumber", &Edge<4>::faceNumber)

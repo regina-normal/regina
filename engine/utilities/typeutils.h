@@ -72,9 +72,32 @@ struct EnableIf {
         /**< The data member to store if \a condition is \c true. */
 };
 
+/**
+ * A struct that holds either a single value of type \a T or nothing at all,
+ * depending on whether the given compile-time condition holds.
+ *
+ * If \a condition is \c true, then this struct holds a single data member
+ * \a value of type \a T, which will be initialised using the default
+ * constructor of T.
+ *
+ * \tparam condition \c true if the data member should be included, or
+ * \c false if this struct should be empty.
+ * \tparam T the data type to store.
+ *
+ * \ingroup utilities
+ */
+template <bool condition, typename T>
+struct EnableIfUseDefault {
+    T value;
+};
+    
 #ifndef __DOXYGEN
 template <typename T, T defaultValue>
 struct EnableIf<false, T, defaultValue> {
+};
+
+template <typename T>
+struct EnableIfUseDefault<false, T> {
 };
 #endif // __DOXYGEN
 

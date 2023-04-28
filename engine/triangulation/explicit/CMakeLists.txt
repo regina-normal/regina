@@ -14,6 +14,7 @@ SET ( FILES
   facetpairing6.cpp
   facetpairing7.cpp
   facetpairing8.cpp
+  linkbuilder.cpp
   triangulation2.cpp
   triangulation3.cpp
   triangulation4.cpp
