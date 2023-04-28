@@ -522,6 +522,19 @@ void Tri2GluingsUI::removeSelectedTris() {
             last = row;
     }
 
+    // Look for any potential lock violations.
+    for (i = first; i <= last; ++i)
+        if (tri->simplex(i)->lockMask()) {
+            ReginaSupport::sorry(ui,
+                tr("The selection includes locks."),
+                tr("The selection includes one or more locked "
+                "triangles and/or edges, and so I cannot remove "
+                "the selected triangles.\n\n"
+                "You can unlock triangles and edges by right-clicking "
+                "within the corresponding table cells."));
+            return;
+        }
+
     // Notify the user that triangles will be removed.
     QMessageBox msgBox(ui);
     msgBox.setWindowTitle(tr("Question"));
@@ -647,7 +660,13 @@ void Tri2GluingsUI::reflect() {
 void Tri2GluingsUI::barycentricSubdivide() {
     endEdit();
 
-    tri->subdivide();
+    if (tri->hasLocks())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has locks."),
+            tr("This triangulation has one or more locked "
+            "triangles or edges, and so cannot be subdivided."));
+    else
+        tri->subdivide();
 }
 
 void Tri2GluingsUI::doubleCover() {

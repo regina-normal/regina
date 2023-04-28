@@ -721,6 +721,19 @@ void Tri3GluingsUI::removeSelectedTets() {
             last = row;
     }
 
+    // Look for any potential lock violations.
+    for (i = first; i <= last; ++i)
+        if (tri->simplex(i)->lockMask()) {
+            ReginaSupport::sorry(ui,
+                tr("The selection includes locks."),
+                tr("The selection includes one or more locked "
+                "tetrahedra and/or triangles, and so I cannot remove "
+                "the selected tetrahedra.\n\n"
+                "You can unlock tetrahedra and triangles by right-clicking "
+                "within the corresponding table cells."));
+            return;
+        }
+
     // Notify the user that tetrahedra will be removed.
     QMessageBox msgBox(ui);
     msgBox.setWindowTitle(tr("Question"));
@@ -916,7 +929,13 @@ void Tri3GluingsUI::reflect() {
 void Tri3GluingsUI::barycentricSubdivide() {
     endEdit();
 
-    tri->subdivide();
+    if (tri->hasLocks())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has locks."),
+            tr("This triangulation has one or more locked "
+            "tetrahedra or triangles, and so cannot be subdivided."));
+    else
+        tri->subdivide();
 }
 
 void Tri3GluingsUI::idealToFinite() {
@@ -926,6 +945,12 @@ void Tri3GluingsUI::idealToFinite() {
         ReginaSupport::info(ui,
             tr("This triangulation has no ideal vertices."),
             tr("Only ideal vertices can be truncated."));
+    else if (tri->hasLocks())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has locks."),
+            tr("This triangulation has one or more locked "
+            "tetrahedra or triangles, and so cannot be subdivided "
+            "to truncate ideal vertices."));
     else {
         regina::Packet::ChangeEventGroup span(*tri);
         tri->idealToFinite();
@@ -942,8 +967,19 @@ void Tri3GluingsUI::finiteToIdeal() {
             tr("Only real boundary components will be converted into "
             "ideal vertices."));
     else {
+        // We could check for locks explicitly here, but finiteToIdeal()
+        // will do it again - so just catch the exception that it would throw.
         regina::Packet::ChangeEventGroup span(*tri);
-        tri->finiteToIdeal();
+        try {
+            tri->finiteToIdeal();
+        } catch (const regina::LockViolation&) {
+            ReginaSupport::sorry(ui,
+                tr("This triangulation has boundary locks."),
+                tr("This triangulation has one or more locked "
+                "boundary triangles, and so cannot be converted to "
+                "have ideal boundary."));
+            return;
+        }
         tri->intelligentSimplify();
     }
 }
