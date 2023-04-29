@@ -84,10 +84,21 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     std::set<Tetrahedron<3>*> oldTets;
     int oldPos = 0;
     for (auto& emb : *e) {
-        oldTet[oldPos] = emb.tetrahedron();
+        oldTet[oldPos] = emb.simplex();
         if (check)
-            if (! oldTets.insert(oldTet[oldPos]).second)
+            if (! oldTets.insert(emb.simplex()).second)
                 return false;
+        if (emb.simplex()->locks_) {
+            if (emb.simplex()->isLocked() ||
+                    emb.simplex()->isFacetLocked(emb.vertices()[2]) ||
+                    emb.simplex()->isFacetLocked(emb.vertices()[3])) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "4-4 move using a locked tetrahedron and/or facet");
+            }
+        }
         oldPos++;
     }
 
@@ -100,6 +111,8 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     //
     // We store the second (3-2) move using a tetrahedron-edge pair, since
     // by the time we perform it the original skeleton will be destroyed.
+    //
+    // The two calls to pachner() can manage any lock updates without our help.
     TopologyLock lock(*this);
     ChangeEventGroup span(*this);
     Triangle<3>* tri23 = (newAxis == 0 ?

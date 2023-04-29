@@ -1936,7 +1936,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and (ii) the four tetrahedra are distinct.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this 4-4 move
          * will label the new tetrahedra in a way that preserves the
@@ -1947,10 +1949,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge is an edge of this triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
          * \param e the edge about which to perform the move.
          * \param newAxis Specifies which axis of the octahedron the new
@@ -1964,10 +1972,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
-         * is \c false, the function simply returns \c true.
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check is
+         * \c false, the function simply returns \c true.
          */
         bool fourFourMove(Edge<3>* e, int newAxis, bool check = true,
                 bool perform = true);

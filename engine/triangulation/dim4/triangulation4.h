@@ -938,7 +938,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * - the four pentachora joined at \a e are distinct.
          *
          * If the routine is asked to both check and perform, the move will
-         * only be performed if the check shows it is legal.
+         * only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<4>::lock()
+         * and Simplex<4>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this 4-4 move
          * will label the new pentachora in a way that preserves the
@@ -949,9 +951,16 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no check is being run, it
-         * must be known in advance that the move is legal.
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge \a e is an edge of this triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<4>::lock() and
+         * Simplex<4>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
          * \param e the edge about which to perform the move.
          * \param check \c true if we are to check whether the move is allowed
@@ -960,8 +969,8 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \c true).
          * \return If \a check is \c true, the function returns \c true if and
          * only if the requested move may be performed without changing the
-         * topology of the manifold. If \a check is \c false, the function
-         * simply returns \c true.
+         * topology of the manifold or violating any locks. If \a check is
+         * \c false, the function simply returns \c true.
          *
          * \author Alex He
          */

@@ -549,13 +549,29 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
         }
     }
 
-    if ( not perform ) {
-        return true;
+    for (auto& emb : *e) {
+        if (emb.simplex()->locks_) {
+            if (emb.simplex()->isLocked() ||
+                    emb.simplex()->isFacetLocked(emb.vertices()[2]) ||
+                    emb.simplex()->isFacetLocked(emb.vertices()[3]) ||
+                    emb.simplex()->isFacetLocked(emb.vertices()[4])) {
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform a "
+                        "4-4 move using a locked pentachoron and/or facet");
+            }
+        }
     }
+
+    if (! perform)
+        return true;
 
     // Perform the 4-4 move as a 2-4 move followed by a 4-2 move.
     // Note that we use pachner(), which ensures that we preserve orientation
     // (if the triangulation was originally oriented).
+    //
+    // The calls to pachner() will also manage any lock updates.
 
     // Start by working out where the 2-4 and 4-2 moves should take place.
     Vertex<2>* topVert = nullptr;
