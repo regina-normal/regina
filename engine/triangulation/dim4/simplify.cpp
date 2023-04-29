@@ -1113,46 +1113,84 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
         }
     }
 
-    if (! perform)
+    // Finally, we search for potential lock violations, and also record any
+    // locks on the exterior of the region that we need to preserve and merge.
+    auto* lockExterior = new bool[e->degree()];
+    std::fill(lockExterior, lockExterior + e->degree(), false);
+
+    size_t idx = 0;
+    for (auto& emb : *e) {
+        if (emb.simplex()->locks_) {
+            if (emb.simplex()->isLocked()) {
+                delete[] lockExterior;
+                if (check)
+                    return false;
+                if (perform)
+                    throw LockViolation("An attempt was made to perform an "
+                        "edge collapse that would remove a locked pentachoron");
+            }
+            if (emb.simplex()->isFacetLocked(emb.vertices()[0]) ||
+                    emb.simplex()->isFacetLocked(emb.vertices()[1])) {
+                // These are the two exterior facets, which will be merged.
+                lockExterior[idx] = true;
+            }
+            for (int i = 2; i <= 4; ++i)
+                if (emb.simplex()->isFacetLocked(emb.vertices()[i])) {
+                    delete[] lockExterior;
+                    if (check)
+                        return false;
+                    if (perform)
+                        throw LockViolation("An attempt was made to perform an "
+                            "edge collapse that would remove a locked "
+                            "tetrahedron");
+                }
+        }
+        ++idx;
+    }
+
+    if (! perform) {
+        delete[] lockExterior;
         return true;
+    }
 
     // Perform the move.
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use "raw" routines (removeSimplexRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    ChangeEventGroup span(*this);
-
-    Perm<5> topPerm, botPerm;
-    Pentachoron<4> *top, *bot;
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
-    size_t nEmbs = e->degree();
-    auto* embPent = new Pentachoron<4>*[nEmbs];
-    auto* embVert = new Perm<5>[nEmbs];
+    auto* embs = new EdgeEmbedding<4>[e->degree()];
+    std::copy(e->begin(), e->end(), embs);
 
-    size_t i = 0;
-    for (auto& emb : *e) {
-        embPent[i] = emb.simplex();
-        embVert[i] = emb.vertices();
-        ++i;
-    }
+    for (size_t i = 0; i < e->degree(); ++i) {
+        const auto& emb = embs[i];
 
-    for (i = 0; i < nEmbs; ++i) {
-        top = embPent[i]->adjacentPentachoron(embVert[i][0]);
-        topPerm = embPent[i]->adjacentGluing(embVert[i][0]);
-        bot = embPent[i]->adjacentPentachoron(embVert[i][1]);
-        botPerm = embPent[i]->adjacentGluing(embVert[i][1]);
+        Simplex<4>* top = emb.simplex()->adjacentPentachoron(emb.vertices()[0]);
+        Perm<5> topPerm = emb.simplex()->adjacentGluing(emb.vertices()[0]);
+        Simplex<4>* bot = emb.simplex()->adjacentPentachoron(emb.vertices()[1]);
+        Perm<5> botPerm = emb.simplex()->adjacentGluing(emb.vertices()[1]);
 
-        embPent[i]->isolate();
+        emb.simplex()->isolateRaw();
         if (top && bot)
-            top->join(topPerm[embVert[i][0]], bot,
-                botPerm * Perm<5>(embVert[i][0], embVert[i][1]) *
+            top->joinRaw(topPerm[emb.vertices()[0]], bot,
+                botPerm * Perm<5>(emb.vertices()[0], emb.vertices()[1]) *
                 topPerm.inverse());
 
-        removePentachoron(embPent[i]);
+        if (lockExterior[i]) {
+            if (top)
+                top->lockFacetRaw(topPerm[emb.vertices()[0]]);
+            if (bot)
+                bot->lockFacetRaw(botPerm[emb.vertices()[1]]);
+        }
+
+        removeSimplexRaw(emb.simplex());
     }
 
-    delete[] embPent;
-    delete[] embVert;
+    delete[] embs;
+    delete[] lockExterior;
     return true;
 }
 
