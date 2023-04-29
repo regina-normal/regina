@@ -69,6 +69,7 @@ namespace regina {
 
 template <int dim> class FacetPairing;
 template <int dim> class IsoSigClassic;
+template <int dim> class XMLLegacySimplicesReader;
 template <int dim> class XMLTriangulationReader;
 
 /**
@@ -3680,6 +3681,8 @@ class TriangulationBase :
         };
 
     template <int> friend class BoundaryComponentBase;
+    friend class regina::XMLLegacySimplicesReader<dim>;
+    friend class regina::XMLSimplexReader<dim>;
     friend class regina::XMLTriangulationReader<dim>;
     friend class regina::XMLWriter<Triangulation<dim>>;
 };

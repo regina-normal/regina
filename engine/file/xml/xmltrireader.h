@@ -199,6 +199,17 @@ class XMLLegacySimplicesReader : public XMLElementReader {
  * An XML packet reader that reads a single <i>dim</i>-dimensional
  * triangulation.
  *
+ * This triangulation will be assembled using the "raw" routines
+ * newSimplexRaw(), joinRaw(), etc., _without_ the usual protections such as
+ * takeSnapshot(), ChangeAndClearSpan, etc.  The reason we use the "raw"
+ * routines is so we can incrementally recreate simplex/facet locks and
+ * assemble top-dimensional simplices without having to worry about how these
+ * operations interact.  The reason we do not need the usual protections
+ * is because this assembly should all take place before the first call to
+ * packetToCommit(), when \a tri_ is a freshly created triangulation with no
+ * event listeners, no snapshot users, and has not yet been inserted into the
+ * packet tree.
+ *
  * \nopython
  *
  * \tparam dim The dimension of the triangulation being read.
@@ -349,9 +360,6 @@ inline void XMLSimplexReader<dim>::startElement(const std::string&,
         if ((*endPtr == 0) && (mask >> (dim + 2) == 0)) {
             // This is a valid lock mask.
             simplex_->locks_ = mask;
-
-            // TODO: We should verify that facet locks are consistent
-            // where facets are joined together.
         }
     }
 }
@@ -405,7 +413,7 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
         if (adjSimp->adjacentSimplex(adjFacet))
             continue;
 
-        simplex_->join(k, adjSimp, perm);
+        simplex_->joinRaw(k, adjSimp, perm);
     }
 }
 
@@ -424,7 +432,7 @@ void XMLLegacySimplicesReader<dim>::startElement(
     long size;
     if (valueOf(props.lookup(XMLLegacyTriangulationTags<dim>::size), size))
         for ( ; size > 0; --size)
-            tri_->newSimplex();
+            tri_->newSimplexRaw();
 }
 
 template <int dim>
@@ -453,11 +461,31 @@ inline XMLTriangulationReader<dim>::XMLTriangulationReader(
         tri_(make_packet<Triangulation<dim>>()),
         permIndex_(permIndex), readSimplices_(0) {
     for ( ; size > 0; --size)
-        tri_->newSimplex();
+        tri_->newSimplexRaw();
 }
 
 template <int dim>
 inline std::shared_ptr<Packet> XMLTriangulationReader<dim>::packetToCommit() {
+    // Here is a good time to enforce the consistency of the triangulation:
+    // this function would typically only be called once, immediately after
+    // the triangulation has been assembled, and before anything else tries
+    // to reference it or use it.
+    //
+    // This consistency checking is a little work, but again this would
+    // typically only happen once (and if it packetToCommit() does get
+    // called again, the duplicated work is unnecessary but harmless).
+    //
+    // For now, all we will do is enforce the consistency of facet locks.
+    for (auto s : tri_->simplices())
+        if (s->locks_)
+            for (int facet = 0; facet <= dim; ++facet)
+                if (auto adj = s->adjacentSimplex(facet))
+                    if (s->isFacetLocked(facet)) {
+                        auto adjFacet = s->adjacentFacet(facet);
+                        if (! adj->isFacetLocked(adjFacet))
+                            adj->lockFacetRaw(adjFacet);
+                    }
+
     return tri_;
 }
 

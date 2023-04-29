@@ -52,6 +52,7 @@
 namespace regina {
 
 template <int> class XMLSimplexReader;
+template <int> class XMLTriangulationReader;
 
 namespace detail {
 
@@ -1138,6 +1139,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
     friend class TriangulationBase<dim>;
     friend class Triangulation<dim>;
     friend class regina::XMLSimplexReader<dim>;
+    friend class regina::XMLTriangulationReader<dim>;
 };
 
 // Inline functions for SimplexBase
