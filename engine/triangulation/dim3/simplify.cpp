@@ -1141,15 +1141,19 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
 
 void Triangulation<3>::pinchEdge(Edge<3>* e) {
     if (e->isBoundary())
-        return; // Precondition fails.
+        throw InvalidArgument("pinchEdge() requires an internal edge");
 
     // Find a triangular face containing e (this will be the face that
     // connects e->front() with e->back()).
     // Our plan is to insert two tetrahedra in its place.
     Tetrahedron<3>* open = e->front().tetrahedron();
     Perm<4> vertices = e->front().vertices();
+    bool locked = open->isFacetLocked(vertices[3]);
 
-    ChangeEventGroup span(*this);
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use "raw" routines (newSimplicesRaw, joinRaw, etc.) below.
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
     // The two tetrahedra that we insert together form a pinched ball.
     // By a "pinched ball", this means a 3-ball in which some internal curve
@@ -1169,10 +1173,10 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     // Since e is an internal edge (a precondition of this routine),
     // this is topologically the same as collapsing e itself.
 
-    auto [t0, t1] = newTetrahedra<2>();
-    t0->join(0, t1, Perm<4>(1, 2));
-    t0->join(3, t1, Perm<4>(0, 1));
-    t1->join(1, t1, Perm<4>(1, 2));
+    auto [t0, t1] = newSimplicesRaw<2>();
+    t0->joinRaw(0, t1, {1, 2});
+    t0->joinRaw(3, t1, {0, 1});
+    t1->joinRaw(1, t1, {1, 2});
 
     // The boundary triangles of this auxiliary structure are t0: 013 / 023.
     // Whatever vertex is glued to t0: 3 will be (topologically) unaffected.
@@ -1187,9 +1191,19 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
 
     Tetrahedron<3>* adj = open->adjacentTetrahedron(vertices[3]);
     Perm<4> glue = open->adjacentGluing(vertices[3]);
-    open->unjoin(vertices[3]);
-    t0->join(1, adj, glue * vertices * Perm<4>(0, 3, 1, 2));
-    t0->join(2, open, vertices * Perm<4>(2, 3));
+    open->unjoinRaw(vertices[3]);
+    t0->joinRaw(1, adj, glue * vertices * Perm<4>(0, 3, 1, 2));
+    t0->joinRaw(2, open, vertices * Perm<4>(2, 3));
+
+    // If the triangle that we popped open was locked, we will (arbitrarily)
+    // choose to move the lock to the triangle that still belongs to open
+    // (as opposed to the ex-partner triangle belonging to adj).
+    if (locked) {
+        // The lock is already present from open's side.
+        // Remove it from adj's side, and put it where it needs to be in t0.
+        adj->unlockFacetRaw(glue[vertices[3]]);
+        t0->lockFacetRaw(2);
+    }
 }
 
 } // namespace regina

@@ -3212,6 +3212,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   the other hand can always be used for edges \a e of the
          *   type described above.
          *
+         * This operation works by prying open a triangle \a t and inserting a
+         * two-tetrahedron gadget \a g within the resulting triangular pillow.
+         * In particular, this means that simplex and/or facet locks will
+         * never prevent this operation from taking place: if the triangle \a t
+         * happens to be locked, then this lock will simply move across to one
+         * of the two triangles bounding the gadget \a g.
+         *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
@@ -3222,6 +3229,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is an internal edge of this triangulation
          * (that is, \a e does not lie entirely within the boundary).
+         *
+         * \exception InvalidArgument The given edge lies entirely within the
+         * boundary of the triangulation.
          *
          * \param e the edge to collapse.
          */

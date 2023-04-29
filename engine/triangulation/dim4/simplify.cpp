@@ -1194,28 +1194,28 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<4>::snapEdge(
-        Edge<4>* e, bool check, bool perform ) {
-    if ( check and
-            ( ( e->vertex(0) == e->vertex(1) ) or
-            ( e->vertex(0)->isBoundary() and
-              e->vertex(1)->isBoundary() ) ) ) {
+bool Triangulation<4>::snapEdge(Edge<4>* e, bool check, bool perform) {
+    if (check &&
+            ((e->vertex(0) == e->vertex(1)) ||
+            (e->vertex(0)->isBoundary() && e->vertex(1)->isBoundary())))
         return false;
-    }
-    if ( not perform ) {
+    if (! perform)
         return true;
-    }
 
     // Our plan is to find a tetrahedron containing e, and then insert four
     // pentachora in its place.
     Pentachoron<4>* open = e->front().pentachoron();
     Perm<5> vertices = e->front().vertices();
-    Pentachoron<4>* adj = open->adjacentPentachoron( vertices[2] );
-    Perm<5> glue = open->adjacentGluing( vertices[2] );
+    Pentachoron<4>* adj = open->adjacentPentachoron(vertices[2]);
+    Perm<5> glue = open->adjacentGluing(vertices[2]);
+    bool locked = open->isFacetLocked(vertices[2]);
 
     // Actually perform the move.
+    // The following takeSnapshot() and ChangeAndClearSpan are essential,
+    // since we use "raw" routines (newSimplicesRaw, joinRaw, etc.) below.
     TopologyLock lock(*this);
-    ChangeEventGroup span(*this);
+    takeSnapshot();
+    ChangeAndClearSpan span(*this);
 
     // The four pentachora that we insert together form a "pinched 4-ball".
     // Combinatorially, the boundary of this pinched 4-ball is isomorphic to
@@ -1228,16 +1228,16 @@ bool Triangulation<4>::snapEdge(
     // a and b are adjacent). For our purposes, the most important consequence
     // of this is that the endpoints of e will become snapped together.
 
-    auto p = newPentachora<4>();
-    p[0]->join( 0, p[1], Perm<5>(3, 4) );
-    p[0]->join( 2, p[1], Perm<5>(0, 2, 4, 1, 3) );
-    p[0]->join( 3, p[2], Perm<5>(3, 4) );
-    p[0]->join( 4, p[2], Perm<5>(3, 4) );
-    p[1]->join( 1, p[2], Perm<5>(1, 2) );
-    p[1]->join( 2, p[3], Perm<5>(3, 4) );
-    p[1]->join( 3, p[3], Perm<5>(3, 4) );
-    p[2]->join( 0, p[3], Perm<5>(3, 4) );
-    p[2]->join( 1, p[3], Perm<5>(3, 4) );
+    auto p = newSimplicesRaw<4>();
+    p[0]->joinRaw(0, p[1], {3, 4});
+    p[0]->joinRaw(2, p[1], {0, 2, 4, 1, 3});
+    p[0]->joinRaw(3, p[2], {3, 4});
+    p[0]->joinRaw(4, p[2], {3, 4});
+    p[1]->joinRaw(1, p[2], {1, 2});
+    p[1]->joinRaw(2, p[3], {3, 4});
+    p[1]->joinRaw(3, p[3], {3, 4});
+    p[2]->joinRaw(0, p[3], {3, 4});
+    p[2]->joinRaw(1, p[3], {3, 4});
 
     // The boundary tetrahedra of this auxiliary structure are p[0]: 0234 and
     // p[3]: 0214.
@@ -1251,9 +1251,19 @@ bool Triangulation<4>::snapEdge(
     // Therefore all of the gluings that we make here use odd gluing
     // permutations, and hence the orientation is preserved.
 
-    open->unjoin( vertices[2] );
-    p[0]->join( 1, open, vertices * Perm<5>(3, 2, 0, 1, 4) );
-    p[3]->join( 3, adj, glue * vertices * Perm<5>(3, 1, 0, 2, 4) );
+    open->unjoinRaw(vertices[2]);
+    p[0]->joinRaw(1, open, vertices * Perm<5>(3, 2, 0, 1, 4));
+    p[3]->joinRaw(3, adj, glue * vertices * Perm<5>(3, 1, 0, 2, 4));
+
+    // If the tetrahedron that we popped open was locked, we will (arbitrarily)
+    // choose to move the lock to the tetrahedron that still belongs to open
+    // (as opposed to the ex-partner tetrahedron belonging to adj).
+    if (locked) {
+        // The lock is already present from open's side.
+        // Remove it from adj's side, and put it where it needs to be in p[0].
+        adj->unlockFacetRaw(glue[vertices[2]]);
+        p[0]->lockFacetRaw(1);
+    }
 
     // Done!
     return true;

@@ -1181,6 +1181,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *   the other hand can always be used for edges \a e of the type
          *   described above.
          *
+         * This operation works by prying open a tetrahedron \a t and inserting
+         * a four-pentachoron gadget \a g within the resulting tetrahedral
+         * pillow.  In particular, this means that simplex and/or facet locks
+         * will never prevent this operation from taking place: if the
+         * tetrahedron \a t happens to be locked, then this lock will simply
+         * move across to one of the two tetrahedra bounding the gadget \a g.
+         *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
