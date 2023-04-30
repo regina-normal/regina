@@ -674,6 +674,11 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             &Triangulation<3>::isoSigComponentSize, rbase::isoSigComponentSize)
         .def("dumpConstruction", &Triangulation<3>::dumpConstruction,
             rbase::dumpConstruction)
+        .def("dot", &Triangulation<3>::dot,
+            pybind11::arg("prefix") = nullptr,
+            pybind11::arg("subgraph") = false,
+            pybind11::arg("labels") = false,
+            rbase::dot)
         .def("snapPea", overload_cast<>(
             &Triangulation<3>::snapPea, pybind11::const_), rdoc::snapPea)
         .def("saveSnapPea", &Triangulation<3>::saveSnapPea, rdoc::saveSnapPea)

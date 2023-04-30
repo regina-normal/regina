@@ -531,13 +531,12 @@ class FacetPairingBase :
          * \param out the output stream to which to write.
          * \param prefix a string to prepend to the name of each graph
          * vertex, and to include in the graph or subgraph name; see
-         * above for details.
+         * dot() for details.
          * \param subgraph \c false if a complete standalone DOT graph
          * should be output, or \c true if a clustered subgraph should
          * be output for use in some larger DOT file.
          * \param labels indicates whether graph vertices will be labelled
-         * with the corresponding simplex numbers.  This feature is currently
-         * experimental, and the default is \c false.
+         * with the corresponding simplex numbers.
          *
          * \see http://www.graphviz.org/
          */
@@ -590,8 +589,7 @@ class FacetPairingBase :
          * should be output, or \c true if a clustered subgraph should
          * be output for use in some larger DOT file.
          * \param labels indicates whether graph vertices will be labelled
-         * with the corresponding simplex numbers.  This feature is currently
-         * experimental, and the default is \c false.
+         * with the corresponding simplex numbers.
          * \return the output of writeDot(), as outlined above.
          */
         std::string dot(const char* prefix = nullptr, bool subgraph = false,

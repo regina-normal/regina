@@ -72,6 +72,9 @@ Version 7.4  [ (to be announced) ]
               Triangulation<3>::reorderTetrahedraBFS() available in all
               dimensions.
             - New routine hash(), which uses the tight encoding.
+            - New routines dot() and writeDot(), which are almost identical
+              to FacetPairing<dim>::dot() and FacetPairing<dim>::writeDot()
+              but which also indicate locked simplices and/or facets.
             - Renamed simplifiedFundamentalGroup to setGroupPresentation().
               The old name is deprecated but kept for backwards compatibility.
         Class Triangulation<3>:
