@@ -338,7 +338,7 @@ void FacetGraphTab::showError(const QString& msg) {
 }
 
 std::string Dim2EdgeGraphData::dual(bool withLabels) {
-    return tri_->dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
+    return tri_->dot(withLabels);
 }
 
 std::string Dim2EdgeGraphData::treeDecomp(bool nice, size_t& bags,
@@ -376,7 +376,7 @@ regina::Packet* Dim2EdgeGraphData::getPacket() {
 }
 
 std::string Dim3FaceGraphData::dual(bool withLabels) {
-    return tri_->dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
+    return tri_->dot(withLabels);
 }
 
 std::string Dim3FaceGraphData::treeDecomp(bool nice, size_t& bags,
@@ -414,7 +414,7 @@ regina::Packet* Dim3FaceGraphData::getPacket() {
 }
 
 std::string Dim4FacetGraphData::dual(bool withLabels) {
-    return tri_->dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
+    return tri_->dot(withLabels);
 }
 
 std::string Dim4FacetGraphData::treeDecomp(bool nice, size_t& bags,

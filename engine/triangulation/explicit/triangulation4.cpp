@@ -87,7 +87,6 @@ template void TriangulationBase<4>::makeDoubleCover();
 template void TriangulationBase<4>::subdivide();
 template bool TriangulationBase<4>::finiteToIdeal();
 
-template void TriangulationBase<4>::writeDot(std::ostream&, const char*,
-    bool, bool) const;
+template void TriangulationBase<4>::writeDot(std::ostream&, bool) const;
 
 } // namespace regina::detail

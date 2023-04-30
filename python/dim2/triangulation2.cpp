@@ -307,10 +307,7 @@ void addTriangulation2(pybind11::module_& m) {
         .def("dumpConstruction", &Triangulation<2>::dumpConstruction,
             rbase::dumpConstruction)
         .def("dot", &Triangulation<2>::dot,
-            pybind11::arg("prefix") = nullptr,
-            pybind11::arg("subgraph") = false,
-            pybind11::arg("labels") = false,
-            rbase::dot)
+            pybind11::arg("labels") = false, rbase::dot)
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<3>>>& g) {
             return Triangulation<2>::fromGluings(size, g.begin(), g.end());

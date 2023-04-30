@@ -651,35 +651,18 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 }
 
 template <int dim>
-void TriangulationBase<dim>::writeDot(std::ostream& out,
-        const char* prefix, bool subgraph, bool labels) const {
-    // This is almost a verbatim mashup of
-    // FacetPairingBase::writeDotHeader() and FacetPairingBase::writeDot().
-    // The main difference (other than the graph label prefix) is
-    // that we use colours to indicate locked simplices and facets.
-    //
+void TriangulationBase<dim>::writeDot(std::ostream& out, bool labels) const {
     // For a full visual list of named colours, see:
     // https://graphviz.org/doc/info/colors.html
 
-    static const char defaultPrefix[] = "g";
-
-    if ((! prefix) || (! *prefix))
-        prefix = defaultPrefix;
-
-    // We are guaranteed that prefix is a non-empty string.
-
-    if (subgraph)
-        out << "subgraph tri_" << prefix << " {" << std::endl;
-    else {
-        out << "graph " << prefix << "_tri {" << std::endl;
-        out << "edge [color=gray25];" << std::endl;
-        out << R"(node [shape=circle,style=filled,height=0.15,fixedsize=true,label="",fontsize=9,fontcolor="#751010"];)" << std::endl;
-    }
+    out << "graph tri {" << std::endl;
+    out << "edge [color=gray25];" << std::endl;
+    out << R"(node [shape=circle,style=filled,height=0.15,fixedsize=true,label="",fontsize=9,fontcolor="#751010"];)" << std::endl;
 
     // Ancient versions of graphviz seem to ignore the default label="".
     // Make this explicit for each node.
     for (size_t p = 0; p < size(); ++p) {
-        out << prefix << '_' << p << " [";
+        out << "s_" << p << " [";
         if (simplices_[p]->isLocked())
             out << "color=red4,fillcolor=lightpink,";
         out << "label=\"";
@@ -697,8 +680,7 @@ void TriangulationBase<dim>::writeDot(std::ostream& out,
             if (adj->index() < p ||
                     (adj->index() == p && s->adjacentFacet(f) < f))
                 continue;
-            out << prefix << '_' << p << " -- " << prefix << '_'
-                << adj->index();
+            out << "s_" << p << " -- s_" << adj->index();
             if (s->isFacetLocked(f))
                 out << " [color=red3]";
             out << ';' << std::endl;
