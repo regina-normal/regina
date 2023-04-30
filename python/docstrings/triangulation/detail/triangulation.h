@@ -502,6 +502,43 @@ This alias is available for all dimensions *dim*.
 
 See countFaces() for further information.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase_::dot
+constexpr const char *dot =
+R"doc(Returns a Graphviz DOT representation of the dual graph of this
+triangulation.
+
+Every vertex of this graph represents a top-dimensional simplex, and
+every edge represents a pair of simplex facets that are joined
+together. Note that for a closed triangulation this graph will be
+entirely (*dim* + 1)-valent; for triangulations with boundary facets,
+some graph vertices will have degree *dim* or less.
+
+The output from this routine can be used as a standalone DOT file,
+ready for use with Graphviz. This DOT file will describe an
+_undirected_ graph, and should be used with either the *neato* or
+*fdp* programs shipped with Graphviz.
+
+The functions Triangulation<dim>::dot() and FacetPairing<dim>::dot()
+differ in a few ways:
+
+* Triangulation<dim>::dot() does not support _subgraph_ output (where
+  you construct a large DOT file containing the dual graphs of many
+  independent triangulations). If you need subgraph output, you can
+  always call ``pairing().dot()`` instead.
+
+* Triangulation<dim>::dot() makes more use of colour, in particular to
+  indicate locked top-dimensional simplices and/or facets.
+
+If you are simply writing this string to an output stream then you
+should call writeDot() instead, which is more efficient.
+
+Parameter ``labels``:
+    indicates whether graph vertices will be labelled with the
+    corresponding simplex numbers.
+
+Returns:
+    the output of writeDot(), as outlined above.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase_::dualBoundaryMap
 constexpr const char *dualBoundaryMap =
 R"doc(Returns the boundary map from dual *subdim*-faces to dual

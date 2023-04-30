@@ -307,8 +307,7 @@ Parameter ``subgraph``:
 
 Parameter ``labels``:
     indicates whether graph vertices will be labelled with the
-    corresponding simplex numbers. This feature is currently
-    experimental, and the default is ``False``.
+    corresponding simplex numbers.
 
 Returns:
     the output of writeDot(), as outlined above.)doc";

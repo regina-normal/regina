@@ -220,7 +220,9 @@ edges and triangles, but they follow automatically from the conditions
 above.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+facet locks (see Simplex<3>::lockFacet() for further details on
+locks).
 
 If this triangulation is currently oriented, then this operation will
 (trivially) preserve the orientation.
@@ -231,10 +233,17 @@ old skeletal objects (such as the argument *f*) can no longer be used.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any facet locks.
 
 Precondition:
     The given edge is an edge of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a facet lock, and *check* was passed as
+    ``False``. This exception will be thrown before any changes are
+    made. See Simplex<3>::lockFacet() for details on how facet locks
+    work and what their implications are.
 
 Parameter ``e``:
     the edge about which to perform the move.
@@ -249,8 +258,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is ``False``, the function
-    simply returns ``True``.)doc";
+    topology of the manifold or violating any locks. If *check* is
+    ``False``, the function simply returns ``True``.)doc";
 
 // Docstring regina::python::doc::Triangulation_::collapseEdge
 static const char *collapseEdge =
@@ -260,7 +269,9 @@ does not change the topology of the manifold, decreases the number of
 vertices by one, and also decreases the number of tetrahedra.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+simplex and/or facet locks (see Simplex<3>::lock() and
+Simplex<3>::lockFacet() for further details on locks).
 
 If you are trying to reduce the number of vertices without changing
 the topology, and if *e* is an edge connecting an internal vertex with
@@ -290,10 +301,18 @@ who are interested.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any simplex and/or facet locks.
 
 Precondition:
     The given edge is an edge of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a simplex or facet lock, and *check* was
+    passed as ``False``. This exception will be thrown before any
+    changes are made. See Simplex<3>::lock() and
+    Simplex<3>::lockFacet() for further details on how locks work and
+    what their implications are.
 
 Parameter ``e``:
     the edge to collapse.
@@ -308,8 +327,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the given edge may be collapsed without changing the topology
-    of the manifold. If *check* is ``False``, the function simply
-    returns ``True``.)doc";
+    of the manifold or violating any locks. If *check* is ``False``,
+    the function simply returns ``True``.)doc";
 
 // Docstring regina::python::doc::Triangulation_::connectedSumWith
 static const char *connectedSumWith =
@@ -536,7 +555,9 @@ different axis. This move can be done iff (i) the edge is valid and
 non-boundary, and (ii) the four tetrahedra are distinct.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+simplex and/or facet locks (see Simplex<3>::lock() and
+Simplex<3>::lockFacet() for further details on locks).
 
 If this triangulation is currently oriented, then this 4-4 move will
 label the new tetrahedra in a way that preserves the orientation.
@@ -547,10 +568,18 @@ old skeletal objects (such as the argument *e*) can no longer be used.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any simplex and/or facet locks.
 
 Precondition:
     The given edge is an edge of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a simplex or facet lock, and *check* was
+    passed as ``False``. This exception will be thrown before any
+    changes are made. See Simplex<3>::lock() and
+    Simplex<3>::lockFacet() for further details on how locks work and
+    what their implications are.
 
 Parameter ``e``:
     the edge about which to perform the move.
@@ -573,8 +602,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is ``False``, the function
-    simply returns ``True``.)doc";
+    topology of the manifold or violating any locks. If *check* is
+    ``False``, the function simply returns ``True``.)doc";
 
 // Docstring regina::python::doc::Triangulation_::fromSnapPea
 static const char *fromSnapPea =
@@ -2171,7 +2200,9 @@ This move can be done if:
   triangulation) is valid.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+facet locks (see Simplex<3>::lockFacet() for further details on
+locks).
 
 If this triangulation is currently oriented, then this operation will
 (trivially) preserve the orientation.
@@ -2182,10 +2213,17 @@ old skeletal objects (such as the argument *f*) can no longer be used.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any facet locks.
 
 Precondition:
     The given triangle is a triangle of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a facet lock, and *check* was passed as
+    ``False``. This exception will be thrown before any changes are
+    made. See Simplex<3>::lockFacet() for details on how facet locks
+    work and what their implications are.
 
 Parameter ``t``:
     the triangle about which to perform the move.
@@ -2200,8 +2238,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is ``False``, the function
-    simply returns ``True``.)doc";
+    topology of the manifold or violating any locks. If *check* is
+    ``False``, the function simply returns ``True``.)doc";
 
 // Docstring regina::python::doc::Triangulation_::order
 static const char *order =
@@ -2285,6 +2323,13 @@ just to call minimiseVertices() instead).
   other hand can always be used for edges *e* of the type described
   above.
 
+This operation works by prying open a triangle *t* and inserting a
+two-tetrahedron gadget *g* within the resulting triangular pillow. In
+particular, this means that simplex and/or facet locks will never
+prevent this operation from taking place: if the triangle *t* happens
+to be locked, then this lock will simply move across to one of the two
+triangles bounding the gadget *g*.
+
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
 
@@ -2295,6 +2340,10 @@ old skeletal objects (such as the argument *e*) can no longer be used.
 Precondition:
     The given edge is an internal edge of this triangulation (that is,
     *e* does not lie entirely within the boundary).
+
+Exception ``InvalidArgument``:
+    The given edge lies entirely within the boundary of the
+    triangulation.
 
 Parameter ``e``:
     the edge to collapse.)doc";
@@ -2736,7 +2785,9 @@ that touches the boundary. This can be done if:
   are not identified.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+simplex and/or facet locks (see Simplex<3>::lock() and
+Simplex<3>::lockFacet() for further details on locks).
 
 If this triangulation is currently oriented, then this operation will
 (trivially) preserve the orientation.
@@ -2747,10 +2798,18 @@ old skeletal objects can no longer be used.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any simplex and/or facet locks.
 
 Precondition:
     The given tetrahedron is a tetrahedron of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a simplex or facet lock, and *check* was
+    passed as ``False``. This exception will be thrown before any
+    changes are made. See Simplex<3>::lock() and
+    Simplex<3>::lockFacet() for further details on how locks work and
+    what their implications are.
 
 Parameter ``t``:
     the tetrahedron upon which to perform the move.
@@ -2765,8 +2824,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is ``False``, the function
-    simply returns ``True``.)doc";
+    topology of the manifold or violating any locks. If *check* is
+    ``False``, the function simply returns ``True``.)doc";
 
 // Docstring regina::python::doc::Triangulation_::simplifyExhaustive
 static const char *simplifyExhaustive =
@@ -3304,7 +3363,9 @@ that edge and squashing them flat. This can be done if:
   triangles boundary and the other two identified.
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+simplex and/or facet locks (see Simplex<3>::lock() and
+Simplex<3>::lockFacet() for further details on locks).
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
@@ -3315,10 +3376,18 @@ old skeletal objects (such as the argument *e*) can no longer be used.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any simplex and/or facet locks.
 
 Precondition:
     The given edge is an edge of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a simplex or facet lock, and *check* was
+    passed as ``False``. This exception will be thrown before any
+    changes are made. See Simplex<3>::lock() and
+    Simplex<3>::lockFacet() for further details on how locks work and
+    what their implications are.
 
 Parameter ``e``:
     the edge about which to perform the move.
@@ -3333,8 +3402,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is ``False``, the function
-    simply returns ``True``.)doc";
+    topology of the manifold or violating any locks. If *check* is
+    ``False``, the function simply returns ``True``.)doc";
 
 // Docstring regina::python::doc::Triangulation_::twoZeroMove_2
 static const char *twoZeroMove_2 =
@@ -3354,7 +3423,9 @@ that vertex and squashing them flat. This can be done if:
   to themselves along the other two).
 
 If the routine is asked to both check and perform, the move will only
-be performed if the check shows it is legal.
+be performed if the check shows it is legal and will not violate any
+simplex and/or facet locks (see Simplex<3>::lock() and
+Simplex<3>::lockFacet() for further details on locks).
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
@@ -3365,10 +3436,18 @@ old skeletal objects (such as the argument *v*) can no longer be used.
 
 Precondition:
     If the move is being performed and no check is being run, it must
-    be known in advance that the move is legal.
+    be known in advance that the move is legal and will not violate
+    any simplex and/or facet locks.
 
 Precondition:
     The given vertex is a vertex of this triangulation.
+
+Exception ``LockViolation``:
+    This move would violate a simplex or facet lock, and *check* was
+    passed as ``False``. This exception will be thrown before any
+    changes are made. See Simplex<3>::lock() and
+    Simplex<3>::lockFacet() for further details on how locks work and
+    what their implications are.
 
 Parameter ``v``:
     the vertex about which to perform the move.
@@ -3383,8 +3462,8 @@ Parameter ``perform``:
 Returns:
     If *check* is ``True``, the function returns ``True`` if and only
     if the requested move may be performed without changing the
-    topology of the manifold. If *check* is ``False``, the function
-    simply returns ``True``.)doc";
+    topology of the manifold or violating any locks. If *check* is
+    ``False``, the function simply returns ``True``.)doc";
 
 // Docstring regina::python::doc::Triangulation_::zeroTwoMove
 static const char *zeroTwoMove =
