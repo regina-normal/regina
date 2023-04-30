@@ -664,7 +664,7 @@ void TriangulationBase<dim>::writeDot(std::ostream& out, bool labels) const {
     for (size_t p = 0; p < size(); ++p) {
         out << "s_" << p << " [";
         if (simplices_[p]->isLocked())
-            out << "color=red4,fillcolor=lightpink,";
+            out << "color=darkgoldenrod4,fontcolor=tan4,fillcolor=lightgoldenrod,";
         out << "label=\"";
         if (labels)
             out << p;
@@ -682,7 +682,7 @@ void TriangulationBase<dim>::writeDot(std::ostream& out, bool labels) const {
                 continue;
             out << "s_" << p << " -- s_" << adj->index();
             if (s->isFacetLocked(f))
-                out << " [color=red3]";
+                out << " [color=darkgoldenrod]";
             out << ';' << std::endl;
         }
     }

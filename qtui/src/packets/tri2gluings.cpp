@@ -122,10 +122,19 @@ QVariant GluingsModel2::data(const QModelIndex& index, int role) const {
     } else if (role == Qt::BackgroundRole) {
         if (index.column() == 0) {
             if (t->isLocked())
-                return QColor(Qt::lightGray);
+                return QColor(0xee, 0xdd, 0x82); // lightgoldenrod
         } else {
             if (t->isFacetLocked(3 - index.column()))
-                return QColor(Qt::lightGray);
+                return QColor(0xee, 0xdd, 0x82); // lightgoldenrod
+        }
+        return QVariant();
+    } else if (role == Qt::ForegroundRole) {
+        if (index.column() == 0) {
+            if (t->isLocked())
+                return QColor(0x8b, 0x5a, 0x2b); // tan4
+        } else {
+            if (t->isFacetLocked(3 - index.column()))
+                return QColor(0x8b, 0x5a, 0x2b); // tan4
         }
         return QVariant();
     } else
