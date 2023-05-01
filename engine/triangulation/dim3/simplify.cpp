@@ -139,8 +139,6 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
 
     Tetrahedron<3>* tet[2];
     Perm<4> perm[2];
-    // Note whether we need to merge facet locks opposite vertices 0,1 of e:
-    bool lockExterior[2] = { false, false };
 
     int i = 0;
     for (auto& emb : *e) {
@@ -156,9 +154,6 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
                     throw LockViolation("An attempt was made to perform a "
                         "2-0 move using a locked tetrahedron");
             }
-            for (int v = 0; v < 2; ++v)
-                if (tet[i]->isFacetLocked(perm[i][v]))
-                    lockExterior[v] = true;
             for (int v = 2; v < 4; ++v)
                 if (tet[i]->isFacetLocked(perm[i][v])) {
                     if (check)
@@ -222,22 +217,24 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
 
         if (! top) {
             // Bottom triangle becomes boundary.
-            if (lockExterior[i])
+            if (tet[0]->isFacetLocked(perm[0][i]))
                 bottom->lockFacetRaw(tet[1]->adjacentFacet(perm[1][i]));
             tet[1]->unjoinRaw(perm[1][i]);
         } else if (! bottom) {
             // Top triangle becomes boundary.
-            if (lockExterior[i])
+            if (tet[1]->isFacetLocked(perm[1][i]))
                 top->lockFacetRaw(tet[0]->adjacentFacet(perm[0][i]));
             tet[0]->unjoinRaw(perm[0][i]);
         } else {
             // Bottom and top triangles join.
             int topFace = tet[0]->adjacentFace(perm[0][i]);
             int bottomFace = tet[1]->adjacentFace(perm[1][i]);
-            if (lockExterior[i]) {
-                top->lockFacetRaw(topFace);
+
+            if (tet[0]->isFacetLocked(perm[0][i]))
                 bottom->lockFacetRaw(bottomFace);
-            }
+            if (tet[1]->isFacetLocked(perm[1][i]))
+                top->lockFacetRaw(topFace);
+
             Perm<4> gluing = tet[1]->adjacentGluing(perm[1][i]) *
                 crossover * top->adjacentGluing(topFace);
             tet[0]->unjoinRaw(perm[0][i]);
@@ -1112,30 +1109,19 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
         }
     }
 
-    // Finally, we search for potential lock violations, and also record any
-    // locks on the exterior of the region that we need to preserve and merge.
-    auto* lockExterior = new bool[e->degree()];
-    std::fill(lockExterior, lockExterior + e->degree(), false);
-
+    // Finally, we search for potential lock violations:
     size_t idx = 0;
     for (auto& emb : *e) {
         if (emb.simplex()->locks_) {
             if (emb.simplex()->isLocked()) {
-                delete[] lockExterior;
                 if (check)
                     return false;
                 if (perform)
                     throw LockViolation("An attempt was made to perform an "
                         "edge collapse that would remove a locked tetrahedron");
             }
-            if (emb.simplex()->isFacetLocked(emb.vertices()[0]) ||
-                    emb.simplex()->isFacetLocked(emb.vertices()[1])) {
-                // These are the two exterior facets, which will be merged.
-                lockExterior[idx] = true;
-            }
             for (int i = 2; i <= 3; ++i)
                 if (emb.simplex()->isFacetLocked(emb.vertices()[i])) {
-                    delete[] lockExterior;
                     if (check)
                         return false;
                     if (perform)
@@ -1147,10 +1133,8 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
         ++idx;
     }
 
-    if (! perform) {
-        delete[] lockExterior;
+    if (! perform)
         return true;
-    }
 
     // Perform the move.
     // The following takeSnapshot() and ChangeAndClearSpan are essential,
@@ -1172,24 +1156,22 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
         Simplex<3>* bot = emb.simplex()->adjacentTetrahedron(emb.vertices()[1]);
         Perm<4> botPerm = emb.simplex()->adjacentGluing(emb.vertices()[1]);
 
-        emb.simplex()->isolateRaw();
+        if (emb.simplex()->locks_) {
+            if (bot && emb.simplex()->isFacetLocked(emb.vertices()[0]))
+                bot->lockFacetRaw(botPerm[emb.vertices()[1]]);
+            if (top && emb.simplex()->isFacetLocked(emb.vertices()[1]))
+                top->lockFacetRaw(topPerm[emb.vertices()[0]]);
+        }
+
+        removeSimplexRaw(emb.simplex());
+
         if (top && bot)
             top->joinRaw(topPerm[emb.vertices()[0]], bot,
                 botPerm * Perm<4>(emb.vertices()[0], emb.vertices()[1]) *
                 topPerm.inverse());
-
-        if (lockExterior[i]) {
-            if (top)
-                top->lockFacetRaw(topPerm[emb.vertices()[0]]);
-            if (bot)
-                bot->lockFacetRaw(botPerm[emb.vertices()[1]]);
-        }
-
-        removeSimplexRaw(emb.simplex());
     }
 
     delete[] embs;
-    delete[] lockExterior;
     return true;
 }
 
