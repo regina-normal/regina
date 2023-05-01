@@ -456,13 +456,13 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          *
          * - We also allow moves that "pry open" a (\a dim-1)-face \a F to
          *   become a pair of parallel faces \a F1, \a F2, between which new
-         *   material is inserted.  For example, this kind of operation
-         *   happens with 0-2 moves, pinchEdge() and connected sum operations
-         *   in dimension 3, and snapEdge() in dimension 4.  In this case, the
-         *   lock will move across to one of \a F1 or \a F2.  In particular,
-         *   if \a F was originally boundary then the lock will move to
-         *   whichever of \a F1 or \a F2 is boundary after the operation is
-         *   complete; otherwise the choice of \a F1 versus \a F2 is arbitrary.
+         *   material is inserted.  For example, this kind of operation happens
+         *   with pinchEdge() and connected sum operations in dimension 3, and
+         *   snapEdge() in dimension 4.  In this case, the lock will move
+         *   across to one of \a F1 or \a F2.  In particular, if \a F was
+         *   originally boundary then the lock will move to whichever of \a F1
+         *   or \a F2 is boundary after the operation is complete; otherwise
+         *   the choice of \a F1 versus \a F2 is arbitrary.
          *
          * Regina's own automatic retriangulation routines (such as
          * Triangulation<dim>::intelligentSimplify() or

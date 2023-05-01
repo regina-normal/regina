@@ -2115,7 +2115,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * from the final condition above.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal and will not
+         * violate any simplex and/or facet locks (see Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on locks).
          *
          * If this triangulation is currently oriented, then this 2-1 move
          * will label the new tetrahedra in a way that preserves the
@@ -2126,10 +2128,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal and will not
+         * violate any simplex and/or facet locks.
          * \pre The given edge is an edge of this triangulation.
+         *
+         * \exception LockViolation This move would violate a simplex or facet
+         * lock, and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.  See Simplex<3>::lock() and
+         * Simplex<3>::lockFacet() for further details on how locks work and
+         * what their implications are.
          *
          * \param e the edge about which to perform the move.
          * \param edgeEnd the end of the edge _opposite_ that at
@@ -2141,9 +2149,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * allowed (defaults to \c true).
          * \param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * \return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
+         * \return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold or violating any locks.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoOneMove(Edge<3>* e, int edgeEnd,
@@ -2168,7 +2176,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - The edge \a e is valid.
          *
          * If the routine is asked to both check and perform, the move will
-         * only be performed if the check shows it is legal.
+         * only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<3>::lockFacet() for further
+         * details on facet locks).  In particular, since this move pries open
+         * a _pair_ of adjacent triangles and not just a single triangle, a
+         * lock on either of the two requested triangles will prevent this move
+         * from taking place.
          *
          * If this triangulation is currently oriented, then this 0-2 move
          * will label the new tetrahedra in a way that preserves the
@@ -2180,8 +2193,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and \a e1) can no longer be used.
          *
          * \pre If the move is being performed and no check is being run, it
-         * must by known in advance that the move is legal.
+         * must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The edge \a e is an edge of this triangulation.
+         *
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lockFacet() for
+         * details on how facet locks work and what their implications are.
          *
          * \param e0 an embedding of the common edge \a e of the two
          * triangles about which to perform the move.
@@ -2196,14 +2215,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \c true).
          * \return If \a check is \c true, the function returns \c true if
          * and only if the requested move may be performed without changing
-         * the topology of the manifold. If \a check is false, the function
-         * simply returns \c true.
+         * the topology of the manifold or violating any locks. If \a check
+         * is false, the function simply returns \c true.
          *
          * \author Alex He
          */
-        bool zeroTwoMove(
-                EdgeEmbedding<3> e0, int t0, EdgeEmbedding<3> e1, int t1,
-                bool check = true, bool perform = true );
+        bool zeroTwoMove(EdgeEmbedding<3> e0, int t0,
+            EdgeEmbedding<3> e1, int t1,
+            bool check = true, bool perform = true );
         /**
          * Checks the eligibility of and/or performs a 0-2 move about the
          * (not necessarily distinct) triangles incident to \a e that are
@@ -2234,7 +2253,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   where this time \a emb denotes `e->back()`.
          *
          * If the routine is asked to both check and perform, the move will
-         * only be performed if the check shows it is legal.
+         * only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<3>::lockFacet() for further
+         * details on facet locks).  In particular, since this move pries open
+         * a _pair_ of adjacent triangles and not just a single triangle, a
+         * lock on either of the two requested triangles will prevent this move
+         * from taking place.
          *
          * If this triangulation is currently oriented, then this 0-2 move
          * will label the new tetrahedra in a way that preserves the
@@ -2250,8 +2274,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * can no longer be used.
          *
          * \pre If the move is being performed and no check is being run, it
-         * must by known in advance that the move is legal.
+         * must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The given edge \a e is an edge of this triangulation.
+         *
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lockFacet() for
+         * details on how facet locks work and what their implications are.
          *
          * \param e the common edge of the two triangles about which to
          * perform the move.
@@ -2265,8 +2295,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \c true).
          * \return If \a check is \c true, the function returns \c true if
          * and only if the requested move may be performed without changing
-         * the topology of the manifold. If \a check is false, the function
-         * simply returns \c true.
+         * the topology of the manifold or violating any locks. If \a check
+         * is false, the function simply returns \c true.
          *
          * \author Alex He
          */
@@ -2287,7 +2317,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * - The edge \a e is valid.
          *
          * If the routine is asked to both check and perform, the move will
-         * only be performed if the check shows it is legal.
+         * only be performed if the check shows it is legal and will not
+         * violate any facet locks (see Simplex<3>::lockFacet() for further
+         * details on facet locks).  In particular, since this move pries open
+         * a _pair_ of adjacent triangles and not just a single triangle, a
+         * lock on either of the two given triangles will prevent this move
+         * from taking place.
          *
          * If this triangulation is currently oriented, then this 0-2 move
          * will label the new tetrahedra in a way that preserves the
@@ -2303,10 +2338,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \a t0 and \a t1) can no longer be used.
          *
          * \pre If the move is being performed and no check is being run, it
-         * must by known in advance that the move is legal.
+         * must be known in advance that the move is legal and will not
+         * violate any facet locks.
          * \pre The given triangles \a t0 and \a t1 are triangles of this
          * triangulation.
          * \pre The numbers \a e0 and \a e1 are both 0, 1 or 2.
+         *
+         * \exception LockViolation This move would violate a facet lock, and
+         * \a check was passed as \c false.  This exception will be thrown
+         * before any changes are made.  See Simplex<3>::lockFacet() for
+         * details on how facet locks work and what their implications are.
          *
          * \param t0 one of the two triangles about which to perform the move.
          * \param e0 the edge at which \a t0 meets the other triangle about
@@ -2319,8 +2360,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \c true).
          * \return If \a check is \c true, the function returns \c true if
          * and only if the requested move may be performed without changing
-         * the topology of the manifold. If \a check is false, the function
-         * simply returns \c true.
+         * the topology of the manifold or violating any locks. If \a check
+         * is false, the function simply returns \c true.
          *
          * \author Alex He
          */
