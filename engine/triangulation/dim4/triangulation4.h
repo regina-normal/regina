@@ -520,6 +520,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
+         * If any pentachora and/or tetrahedra are locked, these locks will be
+         * respected: that is, the simplification operation will avoid any
+         * moves that would violate these locks (and in particular, no
+         * LockException exceptions should be thrown).  Of course, however,
+         * having locks may make the simplification less effective in reducing
+         * the number of pentachora.
+         *
          * \warning The specific behaviour of this routine will almost
          * certainly change between releases.  At present,
          * simplification for 4-manifold triangulations is extremely
@@ -546,6 +553,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
+         *
+         * If any pentachora and/or tetrahedra are locked, these locks will be
+         * respected: that is, the simplification operation will avoid any
+         * moves that would violate these locks (and in particular, no
+         * LockException exceptions should be thrown).  Of course, however,
+         * having locks may make the simplification less effective in reducing
+         * the number of pentachora.
          *
          * \warning The specific behaviour of this routine will almost
          * certainly change between releases.  At present,

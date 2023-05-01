@@ -1563,6 +1563,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
+         * If any tetrahedra and/or triangles are locked, these locks will be
+         * respected: that is, the simplification operation will avoid any
+         * moves that would violate these locks (and in particular, no
+         * LockException exceptions should be thrown).  Of course, however,
+         * having locks may make the simplification less effective in reducing
+         * the number of tetrahedra.
+         *
          * \warning Running this routine multiple times upon the same
          * triangulation may return different results, since the implementation
          * makes random decisions.  More broadly, the implementation of this
@@ -1594,6 +1601,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
+         *
+         * If any tetrahedra and/or triangles are locked, these locks will be
+         * respected: that is, the simplification operation will avoid any
+         * moves that would violate these locks (and in particular, no
+         * LockException exceptions should be thrown).  Of course, however,
+         * having locks may make the simplification less effective in reducing
+         * the number of tetrahedra.
          *
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.
