@@ -61,9 +61,9 @@ class NativeInteger;
  * This is true precisely when either `std::is_integral_v<T>` is true and/or
  * \a T is a native 128-bit integer.
  *
- * The only reason for using this constant (as opposed to `std::is_integral<T>`)
- * is because `std::is_integral_v` treats 128-bit integers differently under
- * different compilers.
+ * The only reason for using this constant (as opposed to
+ * `std::is_integral_v<T>`) is because the C++ standard constants treat
+ * 128-bit integers differently under different compilers.
  *
  * \nopython
  *
@@ -81,6 +81,40 @@ template <typename T>
         std::is_same_v<T, int128_t> || std::is_same_v<T, uint128_t>;
 #else
     constexpr bool is_cpp_integer_v = std::is_integral_v<T>;
+#endif
+
+/**
+ * A compile-time boolean constant that indicates whether the type \a T is an
+ * unsigned native C++ integer type, allowing for 128-bit integers also.
+ *
+ * This is true precisely when (i) either `std::is_integral_v<T>` is true
+ * and/or \a T is a native 128-bit integer, and (ii) \a T is an unsigned type.
+ *
+ * The only reason for using this constant (as opposed to
+ * `std::is_integral_v<T>` and `std::is_unsigned_v<T>`)
+ * is because the C++ standard constants treat 128-bit integers differently
+ * under different compilers.
+ *
+ * \nopython
+ *
+ * \ingroup utilities
+ */
+template <typename T>
+#if defined(INTERNAL___INT128_FOUND)
+    constexpr bool is_unsigned_cpp_integer_v =
+        (std::is_integral_v<T> && std::is_unsigned_v<T>) ||
+        std::is_same_v<T, __uint128>;
+#elif defined(INTERNAL___INT128_T_FOUND)
+    constexpr bool is_unsigned_cpp_integer_v =
+        (std::is_integral_v<T> && std::is_unsigned_v<T>) ||
+        std::is_same_v<T, __uint128_t>;
+#elif defined(INTERNAL_INT128_T_FOUND)
+    constexpr bool is_unsigned_cpp_integer_v =
+        (std::is_integral_v<T> && std::is_unsigned_v<T>) ||
+        std::is_same_v<T, uint128_t>;
+#else
+    constexpr bool is_unsigned_cpp_integer_v =
+        (std::is_integral_v<T> && std::is_unsigned_v<T>);
 #endif
 
 /**
