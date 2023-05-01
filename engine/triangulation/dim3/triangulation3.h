@@ -1649,12 +1649,19 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * either you find a simplification or the routine becomes
          * too expensive to run.
          *
-         * If \a height is negative, then there will be _no_ bound on
-         * the number of additional tetrahedra.  This means that the
-         * routine will not terminate until a simpler triangulation is found.
-         * If no simpler diagram exists then the only way to terminate this
-         * function is to cancel the operation via a progress tracker
-         * (read on for details).
+         * If \a height is negative, then there will be _no_ bound on the
+         * number of additional tetrahedra.  This means that the routine will
+         * not terminate until a simpler triangulation is found (unless there
+         * are so many locks that the number of reachable triangulations is
+         * finite).  This means that, if no simpler triangulation exists, the
+         * only way to terminate this function is to cancel the operation via
+         * a progress tracker (read on for details).
+         *
+         * If any tetrahedra and/or triangles are locked, these locks will be
+         * respected: that is, the retriangulation will avoid any moves that
+         * would violate these locks (and in particular, no LockException
+         * exceptions should be thrown).  Of course, however, having locks may
+         * reduce the number of distinct triangulations that can be reached.
          *
          * If you want a _fast_ simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
@@ -1757,10 +1764,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
-         * If \a height is negative, then there will be _no_ bound on
-         * the number of additional tetrahedra.  This means that the
-         * routine will _never terminate_, unless \a action returns
-         * \c true for some triangulation that is passed to it.
+         * If \a height is negative, then there will be _no_ bound on the
+         * number of additional tetrahedra.  This means that the routine will
+         * _never terminate_, unless \a action returns \c true for some
+         * triangulation that is passed to it (or unless there are so many
+         * locks that the number of reachable triangulations becomes finite).
+         *
+         * If any tetrahedra and/or triangles are locked, these locks will be
+         * respected: that is, the retriangulation will avoid any moves that
+         * would violate these locks (and in particular, no LockException
+         * exceptions should be thrown).  Of course, however, having locks may
+         * reduce the number of distinct triangulations that can be reached.
          *
          * Since Regina 7.0, this routine will not return until the exploration
          * of triangulations is complete, regardless of whether a progress
